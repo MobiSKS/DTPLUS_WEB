@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HPCL.Common;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,28 @@ namespace HPCL_Web.Helper
 {
     public class HelperAPI : ConfigurationBase
     {
-        private readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
         internal HttpClient _client;
+
+        public HelperAPI(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        
 
         private string apiBaseurl = "apiBaseurl";
         private string AuthConnectionKey = "onionAuthConnection";
         public HttpClient GetApiBaseUrlString()
         {
             // return GetAPIBaseUrl().GetConnectionString(apiBaseurl);
-
-            var ApiUrl = GetAPIBaseUrl().GetConnectionString(apiBaseurl); 
+            TokenManager objTokenManager  =new TokenManager(_configuration);
+            var ApiUrl = objTokenManager.ApiBaseurl;
             _client = new HttpClient();
             _client.BaseAddress = new Uri(ApiUrl);
+
+            _client.DefaultRequestHeaders.Add("Secret_Key", objTokenManager.StrSecretKey);
+            _client.DefaultRequestHeaders.Add("API_Key", objTokenManager.StrAPI_Key);
             return _client;
 
         }

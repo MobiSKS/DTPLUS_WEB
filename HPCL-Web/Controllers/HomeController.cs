@@ -12,6 +12,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Formatting;
+using System.Text;
+using HPCL.Common;
 
 //using System.Net.Http.Formatting;
 
@@ -22,78 +24,34 @@ namespace HPCL_Web.Controllers
         private readonly ILogger<HomeController> _logger;
         HelperAPI _api;
         HttpClient _client;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration _configuration;
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
+            TokenManager objTokenManager = new TokenManager(_configuration);
 
-            //_client = new HelperAPI().GetApiBaseUrlString();
-
-            _client = new HttpClient();
-
+            HelperAPI objHelperAPI = new HelperAPI(_configuration);
+            _client = objHelperAPI.GetApiBaseUrlString();
             Token token = new Token();
-
-            var api_key = "3C25F265-F86D-419D-9A04-EA74A503C197";
-
             var forms = new Dictionary<string, string>
                {
-                   {"useragent", "web"},
-                   {"userip", "1"},
-                   {"userid", "1"},
+                   {"useragent", objTokenManager.UserAgent},
+                   {"userip", objTokenManager.Userip},
+                   {"userid", objTokenManager.Userid},
                };
-
-            //HttpRequestMessage request = new HttpRequestMessage();
-            //request.RequestUri = new Uri("");
-            //request.Method = HttpMethod.Get;
-            //request.Headers.Add("Secret_Key", "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5");
-            //request.Headers.Add("API_Key", api_key);
-
-            //HttpRequestMessage response = await _client.SendAsync(request,,);
-
-            //var headers = new Dictionary<string, string>
-            //   {
-            //       {"Content-Type", "application/json"},
-            //       {"Secret_Key", "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5"},
-            //       {"API_Key", api_key},
-            //   };
-
-            _client.BaseAddress = new Uri("http://180.179.222.161/dtp/api/dtplus/generatetoken");
-
-           // _client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-            _client.DefaultRequestHeaders.Add("Secret_Key", "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5");
-            _client.DefaultRequestHeaders.Add("API_Key", api_key);
-
-
-            var tokenResponse = _client.PostAsync(_client.BaseAddress, new FormUrlEncodedContent(forms)).Result;
-
+            var jsonformdata = JsonConvert.SerializeObject(forms);
+            var tokenResponse = _client.PostAsync(_client.BaseAddress, new StringContent(jsonformdata, Encoding.UTF8, "application/json")).Result;
             if(tokenResponse.IsSuccessStatusCode)
             {
                 var JsonContent = tokenResponse.Content.ReadAsStringAsync().Result;
                 token = JsonConvert.DeserializeObject<Token>(JsonContent);
             }
 
-            //var token = tokenResponse.Content.ReadAsAsync<Token>(new[] { new JsonMediaTypeFormatter() }).Result;
-
-            //if (string.IsNullOrEmpty(token.Error))
-            //{
-            //    Console.WriteLine("Token issued is: {0}", token.AccessToken);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Error : {0}", token.Error);
-            //}
-
-            //HttpResponseMessage res = await _client.GetAsync("api/dtplus/login/get_user_login");
-
-            //if (res.IsSuccessStatusCode)
-            //{
-            //    var result = res.Content.ReadAsStringAsync().Result;
-            //    // var data = JsonConvert.DeserializeObject<List<>>(result);
-            //}
             return View();
         }
 
