@@ -24,6 +24,13 @@ namespace HPCL.Common
                 return _configuration.GetSection("TokenSettings:apiBaseurl").Value.ToString();
             }
         }
+        public string TokenBaseUrl
+        {
+            get
+            {
+                return _configuration.GetSection("TokenSettings:tokenBaseurl").Value.ToString();
+            }
+        }
         public string StrSecretKey
         {
             get

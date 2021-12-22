@@ -26,7 +26,7 @@ namespace HPCL_Web.Helper
         {
             // return GetAPIBaseUrl().GetConnectionString(apiBaseurl);
             TokenManager objTokenManager  =new TokenManager(_configuration);
-            var ApiUrl = objTokenManager.ApiBaseurl;
+            var ApiUrl = objTokenManager.TokenBaseUrl;
             _client = new HttpClient();
             _client.BaseAddress = new Uri(ApiUrl);
 
