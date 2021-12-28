@@ -33,7 +33,10 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+
             TokenManager objTokenManager = new TokenManager(_configuration);
+
+
 
             HelperAPI objHelperAPI = new HelperAPI(_configuration);
             _client = objHelperAPI.GetApiBaseUrlString();
