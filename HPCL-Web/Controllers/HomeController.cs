@@ -13,51 +13,80 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Formatting;
 using System.Text;
-using HPCL.Common;
 
-//using System.Net.Http.Formatting;
 
 namespace HPCL_Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        HelperAPI _api;
-        HttpClient _client;
-        private readonly IConfiguration _configuration;
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
+        HelperAPI _api = new HelperAPI();
+        Common _common = new Common();
+
+        WebApiUrl _apiUrl = new WebApiUrl();
+
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
 
-            TokenManager objTokenManager = new TokenManager(_configuration);
-
-
-
-            HelperAPI objHelperAPI = new HelperAPI(_configuration);
-            _client = objHelperAPI.GetApiBaseUrlString();
-            Token token = new Token();
-            var forms = new Dictionary<string, string>
-               {
-                   {"useragent", objTokenManager.UserAgent},
-                   {"userip", objTokenManager.Userip},
-                   {"userid", objTokenManager.Userid},
-               };
-            var jsonformdata = JsonConvert.SerializeObject(forms);
-            var tokenResponse = _client.PostAsync(_client.BaseAddress, new StringContent(jsonformdata, Encoding.UTF8, "application/json")).Result;
-            if(tokenResponse.IsSuccessStatusCode)
-            {
-                var JsonContent = tokenResponse.Content.ReadAsStringAsync().Result;
-                token = JsonConvert.DeserializeObject<Token>(JsonContent);
-            }
+            //var access_token = _api.GetToken();
+            //string result = access_token.Result;
 
             return View();
         }
 
+        public async Task<IActionResult> Profile()
+        {
+
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserInfoModel user)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+
+               var forms = new Dictionary<string, string>
+               {
+                    { "mobileno", user.MobileNo},
+                    { "username", user.Username},
+                    { "password", user.Password},
+                    {"useragent", _common.useragent},
+                    {"userip", _common.userip},
+                    {"userid", _common.userid},
+               };
+
+                client.DefaultRequestHeaders.Add("Secret_Key", _common.Secret_Key);
+                client.DefaultRequestHeaders.Add("API_Key", _common.Api_Key);
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(_apiUrl.getuserlogin, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["Profile"] = JsonConvert.SerializeObject(user);
+
+                        return RedirectToAction("Profile");
+
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
+                        return View();
+
+                    }
+                }
+
+            }
+        }
 
         public IActionResult Privacy()
         {
@@ -69,20 +98,5 @@ namespace HPCL_Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
-
-    public class Token
-    {
-        public string success { get; set; }
-        public string message { get; set; }
-        public int status_Code { get; set; }
-
-        public string method_Name { get; set; }
-
-        [JsonProperty("token")]
-        public string token { get; set; }
-
-        //[JsonProperty("model_State")]
-        //public string model_State { get; set; }
     }
 }
