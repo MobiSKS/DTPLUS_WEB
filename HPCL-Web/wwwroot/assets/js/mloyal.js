@@ -1,23 +1,584 @@
 // JavaScript Document
 
+	document.addEventListener("contextmenu", (event)=> event.preventDefault())
 	$(document).ready(function(){
+		
+		var userinput = document.querySelector(".searchUserInput");
+		var searchFileds = document.querySelector(".searchFileds");
+		if (userinput) {
+			userinput.addEventListener("mouseenter", function(){			
+				searchFileds.style.display ="block";
+			})		
+			userinput.addEventListener("mouseleave", function(){
+				setTimeout(function(){
+					searchFileds.style.display ="none";
+				},1000)
+			})
+		}
+
+		$('input[type=password], input.captcha').bind('copy paste', function (e) {
+		   e.preventDefault();
+		});
+		
 		$('.drawermenu').drawermenu( {
 			speed: 300,
 			position: 'left'
 		});
 		
 		
-		if (window.outerWidth() < 991) {
+		if ($(window).outerWidth() < 991) {
 			$('#sidebar').slideReveal({
 				trigger: $("#trigger"),
 				push: false,
-				top:87,
+				top:0,
 				width:225,
 				overlay: false
 			});
 		}
 		
+		//if ($(window).outerWidth() < 991) {
+			$('#sidebar_inner').slideReveal({
+				trigger: $("#trigger_inner"),
+				push: false,
+				top:0,
+				width:225,
+				overlay: false
+			});
+		//}
+		
 	})
+
+if(localStorage.getItem("showregAddress")) {
+		var addressTab = document.getElementById("address-tab");
+		if (addressTab) {
+			addressTab.click();
+			addressTab.classList.remove("disable");
+		}
+		
+	}
+ 
+if (localStorage.getItem("keyOfficial")){
+		document.getElementById("address-tab").classList.remove("disable");
+		document.getElementById("officialDetails-tab").click();
+		document.getElementById("officialDetails-tab").classList.remove("disable");
+	}
+
+if (localStorage.getItem("cardDetails")){
+		document.getElementById("cardDetails-tab").click();
+		document.getElementById("address-tab").classList.remove("disable");
+		document.getElementById("officialDetails-tab").classList.remove("disable");
+		document.getElementById("cardDetails-tab").classList.remove("disable");
+		document.getElementById("uploadDocuments-tab").classList.remove("disable");
+	}
+
+function showregAddress() {	
+	
+//	if(localStorage.getItem("showregAddress")) {
+//		document.getElementById("address-tab").click();
+//		document.getElementById("address-tab").classList.remove("disable");
+//	}
+//	else {	
+			var ret = false;
+	
+			//console.log(ret);
+	
+        	if (document.applicationForm.customerType.value == "-1") {
+        		document.getElementById("customerType_error").innerHTML="This information is required";
+				document.applicationForm.customerType.focus();
+        		return ret;
+        	} 
+        	else {
+        		document.getElementById("customerType_error").innerHTML="";
+        	}
+	
+        	if (document.applicationForm.zonalOffice.value == "-1") {
+        		document.getElementById("zonalOffice_error").innerHTML="This information is required";
+				document.applicationForm.zonalOffice.focus();
+        		return ret;
+        	}         	
+        	else {
+        		document.getElementById("zonalOffice_error").innerHTML="";
+        	}
+	
+        	if (document.applicationForm.applicationDate.value == "") {
+        		document.getElementById("applicationDate_error").innerHTML="This information is required";
+				document.applicationForm.applicationDate.focus();
+        		return ret;
+        	}         	
+        	else {
+        		document.getElementById("applicationDate_error").innerHTML="";
+        	}
+        	
+        	if(document.applicationForm.salesArea.value == ""){
+        		document.getElementById("salesArea_error").innerHTML="This information is required";
+				document.applicationForm.salesArea.focus();
+        		return ret;	        		
+        	}	
+        	else {
+        			document.getElementById("salesArea_error").innerHTML="";
+        		}
+	
+	
+        	if(document.applicationForm.customerSubType.value == "-1"){
+        		document.getElementById("customerSubType_error").innerHTML="This information is required";
+				document.applicationForm.customerSubType.focus();
+        		return ret;	        		
+        	}		
+        	else {
+        			document.getElementById("customerSubType_error").innerHTML="";
+        		}
+        	/*else {
+        		y = document.applicationForm.mobileno.value;
+        		if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
+        		{
+        			document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
+        			document.applicationForm.mobileno.focus();
+        			return false
+        		}
+        		else if (y.length<10)
+        		{
+        			document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
+        			document.applicationForm.mobileno.focus();
+        			return false;
+        		}
+        		
+        			else {
+        				document.getElementById("phone_error").innerHTML="";
+        			}
+        	}*/
+        	
+        	 if (document.applicationForm.regionalOffice.value == "-1") {
+        		document.getElementById("regionalOffice_error").innerHTML="This information is required";
+				 document.applicationForm.regionalOffice.focus();
+        		return ret;
+        	} 
+			else {
+					document.getElementById("regionalOffice_error").innerHTML="";
+				}
+	
+	
+        	 if (document.applicationForm.individualName.value == "") {
+        		document.getElementById("individualName_error").innerHTML="This information is required";
+				 document.applicationForm.individualName.focus();
+        		return ret;
+        	} 
+			else {
+					document.getElementById("individualName_error").innerHTML="";
+				}
+	
+	
+	
+        	 if (document.applicationForm.nameOnCard.value == "") {
+        		document.getElementById("nameOnCard_error").innerHTML="This information is required";
+				 document.applicationForm.nameOnCard.focus();
+        		return ret;
+        	} 
+        	else {
+        			document.getElementById("nameOnCard_error").innerHTML="";
+        		}
+	
+	
+        	 /*if (document.applicationForm.pincode.value == "") {
+        		document.getElementById("picode_error").innerHTML="This information is required";
+        		return (false);
+        	} 
+        	else {
+        		var pin = document.applicationForm.pincode.value;
+        		 if (pin.length<6)
+        		{
+        			document.getElementById("picode_error").innerHTML="Invalid Pincode, Must be six digits";
+        			document.applicationForm.pincode.focus();
+        			return false;
+        		}
+        		else {
+        				document.getElementById("picode_error").innerHTML="";
+        			}
+        	}*/
+        	 if (document.applicationForm.typeOfbusiness.value == "-1") {
+        		document.getElementById("typeOfbusiness_error").innerHTML="This information is required";
+				 document.applicationForm.typeOfbusiness.focus();
+        		return ret;
+        	} 
+        		else {
+        				document.getElementById("typeOfbusiness_error").innerHTML="";
+        			}
+	
+	
+        	 if (document.applicationForm.incomeTaxPan.value == "") {
+        		document.getElementById("incomeTaxPan_error").innerHTML="This information is required";
+				 document.applicationForm.incomeTaxPan.focus();
+        		 return ret;			
+        	}
+        	else {
+				document.getElementById("incomeTaxPan_error").innerHTML="";
+				ret = true
+        	}
+        	
+        	/*if (!document.applicationForm.tc.checked) {
+        		//toast("true");
+        		document.getElementById("tc_error").innerHTML="Must Agree to Terms and Conditions";
+        		return (false);
+        	} 
+    		else {
+    			// toast("false");
+    				document.getElementById("tc_error").innerHTML="";
+    			}*/
+	
+			//document.applicationForm.submit();			
+			document.getElementById("address-tab").click();
+			document.getElementById("address-tab").classList.remove("disable");
+			localStorage.setItem("showregAddress", true)
+			return ret;
+		//}
+	}
+
+function showBasicInfo() {
+	document.getElementById("basicInfo-tab").click();
+}
+function showregAddressInfo() {
+	document.getElementById("address-tab").click();
+}
+function showkeyOfficialInfo() {
+	document.getElementById("officialDetails-tab").click();
+}
+function showCardInfo() {
+	document.getElementById("cardDetails-tab").click();
+}
+function showUploadDocument() {
+	document.getElementById("uploadDocuments-tab").click();
+}
+
+var sameAscheck = document.getElementById("sameAddressCheck");
+var sameas = false;
+if(sameAscheck){
+ sameAscheck.addEventListener("change", function(){
+	 var permanent_add = document.querySelector("#permanent_add");
+	 
+		if(document.getElementById("sameAddressCheck").checked == true) {	
+			
+			permanent_add.querySelectorAll("input, select").forEach(function(i){
+				 i.setAttribute("disabled" , true);
+			})
+			sameas = true
+					  
+	 	}
+	 else {
+			permanent_add.querySelectorAll("input, select").forEach(function(i){
+				 i.removeAttribute("disabled" , true);
+			})
+		 sameas = false
+	 }
+	})
+}
+function showOfficialDetails() {	
+		
+	//if (localStorage.getItem("keyOfficial")){
+//		console.log("ask");
+//			document.getElementById("officialDetails-tab").click();
+//			document.getElementById("officialDetails-tab").classList.remove("disable");
+//	}
+//	
+//	else {
+		console.log("Dont ask")
+		if (document.applicationForm.comm_address1.value == "") {
+			document.getElementById("comm_address1_error").innerHTML="This information is required";
+			document.applicationForm.comm_address1.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("comm_address1_error").innerHTML="";
+		}
+	
+		if (document.applicationForm.comm_city.value == "") {
+			document.getElementById("comm_city_error").innerHTML="This information is required";
+			document.applicationForm.comm_city.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("comm_city_error").innerHTML="";
+		}
+	
+	 if (document.applicationForm.comm_pincode.value == "") {
+        		document.getElementById("comm_pincode_error").innerHTML="This information is required";
+		 		document.applicationForm.comm_pincode.focus()
+        		return (false);
+        	} 
+		else {
+			var pin = document.applicationForm.comm_pincode.value;
+			 if (pin.length<6)
+			{
+				document.getElementById("comm_pincode_error").innerHTML="Invalid Pincode, Must be six digits";
+				document.applicationForm.comm_pincode.focus();
+				return false;
+			}
+			else {
+					document.getElementById("comm_pincode_error").innerHTML="";
+				}
+		}
+	
+		if (document.applicationForm.comm_states.value == "-1") {
+			document.getElementById("comm_states_error").innerHTML="This information is required";
+			document.applicationForm.comm_states.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("comm_states_error").innerHTML="";
+		}
+	
+		if (document.applicationForm.comm_district.value == "-1") {
+			document.getElementById("comm_district_error").innerHTML="This information is required";
+			document.applicationForm.comm_district.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("comm_district_error").innerHTML="";
+		}
+	
+	
+		if (document.applicationForm.comm_dial_code.value == "") {
+			document.getElementById("comm_officePhone_error").innerHTML="Dial Code is required";
+			document.applicationForm.comm_dial_code.focus();
+			return false;
+		} 
+		else if(document.applicationForm.comm_officePhone.value == "") {
+			document.getElementById("comm_officePhone_error").innerHTML="Phone (Office) is required";
+			document.applicationForm.comm_officePhone.focus();
+			return false;
+		}
+		else {
+			document.getElementById("comm_officePhone_error").innerHTML="";
+		}
+	
+		if(document.applicationForm.comm_mobileNumber.value == ""){
+        		document.getElementById("comm_mobileNumber_error").innerHTML="This information is required";
+				document.applicationForm.comm_mobileNumber.focus();
+        		return false;	
+        		
+        	}	
+        	else {
+        		y = document.applicationForm.comm_mobileNumber.value;
+        		if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
+        		{
+        			document.getElementById("comm_mobileNumber_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
+        			document.applicationForm.comm_mobileNumber.focus();
+        			return false
+        		}
+        		else if (y.length<10)
+        		{
+        			document.getElementById("comm_mobileNumber_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
+        			document.applicationForm.comm_mobileNumber.focus();
+        			return false;
+        		}
+        		
+        			else {
+        				document.getElementById("comm_mobileNumber_error").innerHTML="";
+        			}
+        	}
+	
+		if (document.applicationForm.comm_email.value == "") {
+			document.getElementById("comm_email_error").innerHTML="This information is required";
+			document.applicationForm.comm_email.focus();
+			return (false);	
+		}
+		else {
+			var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+			if(document.applicationForm.comm_email.value.match(mailformat)){
+				document.getElementById("comm_email_error").innerHTML="";
+				//return true
+			}
+			else {
+				document.getElementById("comm_email_error").innerHTML="Invalid email id (e.g.: abc@gmail.com)";
+				document.applicationForm.comm_email.focus();
+				return (false);	
+			}
+		}
+	
+		if (sameas == false) {
+			
+			if (document.applicationForm.perma_address1.value == "") {
+				document.getElementById("perma_address1_error").innerHTML="This information is required";
+				document.applicationForm.perma_address1.focus();
+				return false;
+			} 
+			else {
+				document.getElementById("perma_address1_error").innerHTML="";
+			}
+			
+			
+			if (document.applicationForm.perma_city.value == "") {
+				document.getElementById("perma_city_error").innerHTML="This information is required";
+				document.applicationForm.perma_city.focus();
+				return false;
+			} 
+			else {
+				document.getElementById("perma_city_error").innerHTML="";
+			}
+			
+			
+			if (document.applicationForm.perma_pincode.value == "") {
+        		document.getElementById("perma_pincode_error").innerHTML="This information is required";
+		 		document.applicationForm.perma_pincode.focus()
+        		return (false);
+        	} 
+			else {
+				var pin = document.applicationForm.perma_pincode.value;
+				 if (pin.length<6)
+				{
+					document.getElementById("perma_pincode_error").innerHTML="Invalid Pincode, Must be six digits";
+					document.applicationForm.perma_pincode.focus();
+					return false;
+				}
+				else {
+						document.getElementById("perma_pincode_error").innerHTML="";
+					}
+			}
+			
+			
+			
+			if (document.applicationForm.perma_state.value == "-1") {
+				document.getElementById("perma_state_error").innerHTML="This information is required";
+				document.applicationForm.perma_state.focus();
+				return false;
+			} 
+			else {
+				document.getElementById("perma_state_error").innerHTML="";
+			}
+
+			if (document.applicationForm.perma_district.value == "-1") {
+				document.getElementById("perma_district_error").innerHTML="This information is required";
+				document.applicationForm.perma_district.focus();
+				return false;
+			} 
+			else {
+				document.getElementById("perma_district_error").innerHTML="";
+			}
+			
+			
+			if (document.applicationForm.perma_dial_code.value == "") {
+				document.getElementById("perma_officePhone_error").innerHTML="Dial Code is required";
+				document.applicationForm.perma_dial_code.focus();
+				return false;
+			} 
+			else if(document.applicationForm.perma_officePhone.value == "") {
+				document.getElementById("perma_officePhone_error").innerHTML="Phone (Home) is required";
+				document.applicationForm.perma_officePhone.focus();
+				return false;
+			}
+			else {
+				document.getElementById("perma_officePhone_error").innerHTML="";
+				//console.log("dfgdf");				
+				//document.getElementById("officialDetails-tab").click();
+				//document.getElementById("officialDetails-tab").classList.remove("disable");
+				return true;
+			}
+			
+			
+		}
+		else {
+
+			permanent_add.querySelectorAll(".error").forEach(function(i){
+				 i.innerHTML='';
+			})
+			
+			
+			//$("#officialDetails-tab").click();
+		}
+	
+		document.getElementById("officialDetails-tab").click();
+		document.getElementById("officialDetails-tab").classList.remove("disable");
+		localStorage.setItem("keyOfficial", true)
+		localStorage.removeItem("showregAddress")
+		
+	//}	
+		
+}
+
+function showCardDetails() {	
+		
+	//if (localStorage.getItem("cardDetails")){
+		//console.log("ask");
+	//	document.getElementById("cardDetails-tab").click();
+	//	document.getElementById("cardDetails-tab").classList.remove("disable");
+	//}
+	
+	//else {
+		//console.log("Dont ask")
+		if (document.applicationForm.officialTitle.value == "-1") {
+			document.getElementById("officialTitle_error").innerHTML="This information is required";
+			document.applicationForm.officialTitle.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("officialTitle_error").innerHTML="";
+		}	
+
+		if (document.applicationForm.official_fName.value == "") {
+			document.getElementById("official_fName_error").innerHTML="This information is required";
+			document.applicationForm.official_fName.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("official_fName_error").innerHTML="";
+		}
+
+		if (document.applicationForm.official_designation.value == "") {
+			document.getElementById("official_designation_error").innerHTML="This information is required";
+			document.applicationForm.official_designation.focus();
+			return false;
+		} 
+		else {
+			document.getElementById("official_designation_error").innerHTML="";
+		}
+	
+	
+
+		if(document.applicationForm.official_mobile.value == ""){
+        		document.getElementById("official_mobile_error").innerHTML="This information is required";
+				document.applicationForm.official_mobile.focus();
+        		return false;	
+        		
+        	}	
+        	else {
+        		y = document.applicationForm.official_mobile.value;
+        		if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
+        		{
+        			document.getElementById("official_mobile_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
+        			document.applicationForm.official_mobile.focus();
+        			return false
+        		}
+        		else if (y.length<10)
+        		{
+        			document.getElementById("official_mobile_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
+        			document.applicationForm.official_mobile.focus();
+        			return false;
+        		}
+        		
+        			else {
+        				document.getElementById("official_mobile_error").innerHTML="";
+        			}
+        	}
+	
+		
+	
+	
+		document.getElementById("cardDetails-tab").click();
+		document.getElementById("cardDetails-tab").classList.remove("disable");
+		document.getElementById("uploadDocuments-tab").classList.remove("disable");
+		localStorage.setItem("cardDetails", true)
+		localStorage.removeItem("keyOfficial")
+		
+	//}	
+	
+	
+		
+}
+
+
+function submitForm(){
+	
+	document.applicationForm.submit();
+	localStorage.clear();
+}
 
 function playVideo(e){
 	$('video').trigger('pause');
@@ -386,6 +947,10 @@ jQuery(document).ready(function($){
 	});
 
 
+$(document).ready(function(){
+	
+
+
 var x, i, j, l, ll, selElmnt, a, b, c;
 /* Look for any elements with the class "custom-select": */
 x = document.getElementsByClassName("search_filter_btn");
@@ -440,6 +1005,7 @@ for (i = 0; i < l; i++) {
     this.classList.toggle("select-arrow-active");
   });
 }
+	})	
 
 function closeAllSelect(elmnt) {
   /* A function that will close all select boxes in the document,
