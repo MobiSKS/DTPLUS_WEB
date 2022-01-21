@@ -1,22 +1,28 @@
 ﻿using HPCL_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using HPCL_Web.Helper;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Net.Http.Formatting;
 using System.Text;
-
+using Microsoft.AspNetCore.Http;
 
 namespace HPCL_Web.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
         HelperAPI _api = new HelperAPI();
-        Common _common = new Common();
+        //Common _common = new Common();
 
         WebApiUrl _apiUrl = new WebApiUrl();
 
@@ -47,27 +53,32 @@ namespace HPCL_Web.Controllers
                     { "mobileno", user.MobileNo},
                     { "username", user.Username},
                     { "password", user.Password},
-                    { "useragent", _common.useragent},
-                    { "userip", _common.userip},
-                    { "userid", _common.userid},
+                    {"useragent", Common.useragent},
+                    {"userip", Common.userip},
+                    {"userid", Common.userid},
                };
-                client.DefaultRequestHeaders.Add("Secret_Key", _common.Secret_Key);
-                client.DefaultRequestHeaders.Add("API_Key", _common.Api_Key);
+
+                //client.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+                //client.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
                 using (var Response = await client.PostAsync(_apiUrl.getuserlogin, content))
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
+                    //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    //{
                         TempData["Profile"] = JsonConvert.SerializeObject(user);
                         return RedirectToAction("Profile");
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
-                        return View();
-                    }
+                    //}
+                    //else
+                    //{
+                    //    ModelState.Clear();
+                    //    ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
+                    //    ViewBag.Login = "1";
+                    //    return View("Index");
+                    //}
                 }
+
             }
         }
 

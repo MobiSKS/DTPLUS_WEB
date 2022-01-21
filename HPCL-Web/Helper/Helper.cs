@@ -13,21 +13,23 @@ namespace HPCL_Web.Helper
     {
         private readonly IConfiguration Configuration;
         private HttpClient _client;
-        Common _common = new Common();
+        //Common _common = new Common();
         Token _token = new Token();
 
 
         WebApiUrl _apiUrl = new WebApiUrl();
 
-        private string apiBaseurl = "apiBaseurl";
+        //private string apiBaseurl = "apiBaseurl";
+        private string apiBaseurl = "TokenSettings:appBaseurl";
         private string AuthConnectionKey = "onionAuthConnection";
         public HttpClient GetApiBaseUrlString()
         {
-            var ApiUrl = GetAPIBaseUrl().GetConnectionString(apiBaseurl); 
+            var ApiUrl = GetAPIBaseUrl().GetValue<string>(apiBaseurl); 
             _client = new HttpClient();
             _client.BaseAddress = new Uri(ApiUrl);
+            _client.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+            _client.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
             return _client;
-
         }
 
         public string GetAuthConnectionString()
@@ -42,13 +44,13 @@ namespace HPCL_Web.Helper
             {
                 var forms = new Dictionary<string, string>
                {
-                   {"useragent", _common.useragent},
-                   {"userip", _common.userip},
-                   {"userid", _common.userid},
+                   {"useragent", Common.useragent},
+                   {"userip", Common.userip},
+                   {"userid", Common.userid},
                };
 
-                _customclient.DefaultRequestHeaders.Add("Secret_Key", _common.Secret_Key);
-                _customclient.DefaultRequestHeaders.Add("API_Key", _common.Api_Key);
+                _customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+                _customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
