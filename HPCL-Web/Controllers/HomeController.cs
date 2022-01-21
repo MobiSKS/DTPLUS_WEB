@@ -1,17 +1,12 @@
 ﻿using HPCL_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using HPCL_Web.Helper;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Http.Formatting;
 using System.Text;
 
 
@@ -32,17 +27,13 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-
             //var access_token = _api.GetToken();
             //string result = access_token.Result;
-
             return View();
         }
 
         public async Task<IActionResult> Profile()
         {
-
-
             return View();
         }
 
@@ -51,40 +42,32 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-
                var forms = new Dictionary<string, string>
                {
                     { "mobileno", user.MobileNo},
                     { "username", user.Username},
                     { "password", user.Password},
-                    {"useragent", _common.useragent},
-                    {"userip", _common.userip},
-                    {"userid", _common.userid},
+                    { "useragent", _common.useragent},
+                    { "userip", _common.userip},
+                    { "userid", _common.userid},
                };
-
                 client.DefaultRequestHeaders.Add("Secret_Key", _common.Secret_Key);
                 client.DefaultRequestHeaders.Add("API_Key", _common.Api_Key);
-
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
                 using (var Response = await client.PostAsync(_apiUrl.getuserlogin, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         TempData["Profile"] = JsonConvert.SerializeObject(user);
-
                         return RedirectToAction("Profile");
-
                     }
                     else
                     {
                         ModelState.Clear();
                         ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
                         return View();
-
                     }
                 }
-
             }
         }
 
