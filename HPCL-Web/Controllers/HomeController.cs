@@ -1,17 +1,12 @@
 ﻿using HPCL_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using HPCL_Web.Helper;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Http.Formatting;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
@@ -24,8 +19,6 @@ namespace HPCL_Web.Controllers
         HelperAPI _api = new HelperAPI();
         //Common _common = new Common();
 
-        WebApiUrl _apiUrl = new WebApiUrl();
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -33,8 +26,6 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var access_token = _api.GetToken();
-            //string result = access_token.Result;
             return View();
         }
 
@@ -48,25 +39,33 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-               var forms = new Dictionary<string, string>
-               {
+                var access_token = _api.GetToken();
+
+                if (access_token.Result != null)
+                {
+                    HttpContext.Session.SetString("Token", access_token.Result);
+                }
+                else
+                {
+                    HttpContext.Session.SetString("Token", "");
+                }
+
+                var forms = new Dictionary<string, string>
+                {
                     { "mobileno", user.MobileNo},
                     { "username", user.Username},
                     { "password", user.Password},
-                    {"useragent", Common.useragent},
-                    {"userip", Common.userip},
-                    {"userid", Common.userid},
-               };
-
-                //client.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
-                //client.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                };
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(_apiUrl.getuserlogin, content))
+                using (var Response = await client.PostAsync(WebApiUrl.getuserlogin, content))
                 {
                     //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    //{
+                    //{ 
                         TempData["Profile"] = JsonConvert.SerializeObject(user);
                         return RedirectToAction("Profile");
                     //}

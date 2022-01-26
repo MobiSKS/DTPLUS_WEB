@@ -17,8 +17,6 @@ namespace HPCL_Web.Helper
         Token _token = new Token();
 
 
-        WebApiUrl _apiUrl = new WebApiUrl();
-
         //private string apiBaseurl = "apiBaseurl";
         private string apiBaseurl = "TokenSettings:appBaseurl";
         private string AuthConnectionKey = "onionAuthConnection";
@@ -31,7 +29,6 @@ namespace HPCL_Web.Helper
             _client.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
             return _client;
         }
-
         public string GetAuthConnectionString()
         {
             return GetAPIBaseUrl().GetConnectionString(AuthConnectionKey);
@@ -49,12 +46,12 @@ namespace HPCL_Web.Helper
                    {"userid", Common.userid},
                };
 
-                _customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
-                _customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+                //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+                //_customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                using (var tokenResponse = await _customclient.PostAsync(_apiUrl.generatetoken, content))
+                using (var tokenResponse = await _customclient.PostAsync(WebApiUrl.generatetoken, content))
                 {
                     if (tokenResponse.StatusCode == System.Net.HttpStatusCode.OK)
                     {
