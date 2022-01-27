@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HPCL_Web.Helper
+﻿namespace HPCL_Web.Helper
 {
     public static class WebApiUrl
     {
@@ -15,7 +10,7 @@ namespace HPCL_Web.Helper
         #endregion
         #region Officer
 
-        public static string getOfficerType = "api/dtplus/settings/get_officer_type";
+        public static string getOfficerType = "api/dtplus/officer/get_officer_type";
         public static string getLocationZone = "api/dtplus/settings/get_zone";
         public static string getLocationRegion = "api/dtplus/settings/get_region";
         public static string getLocationHq = "/api/dtplus/hq/get_hq";
