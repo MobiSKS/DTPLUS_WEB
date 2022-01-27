@@ -79,7 +79,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Officer Type <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerID", "OfficerTypeName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control" })
                                                     <span class="error" style="font-size: 14px; color: #dc3545 !important " id="officerType_error"></span>
                                                 </div>
                                             </div>
@@ -265,8 +265,39 @@
                 dataType: "json",
                 success: function (data, status, xhr) {
                     var v = data;
+                    console.log(v);
                     if (status == 'success') {
-                        $("#location").html(v);
+                        if (id == "1" || id == "4" || id == "6") {
+                            $("#location").html("");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result              
+                                $('<option>',
+                                    {
+                                        value: data.regionID,
+                                        text: data.regionName
+                                    }).html(data.regionName).appendTo("#location");
+                            });
+                        }
+                        else if (id == "3" || id == "5") {
+                            $("#location").html("");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result              
+                                $('<option>',
+                                    {
+                                        value: data.zoneID,
+                                        text: data.zoneName
+                                    }).html(data.zoneName).appendTo("#location");
+                            });
+                        }
+                        else if (id == "2") {
+                            $("#location").html("");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result              
+                                $('<option>',
+                                    {
+                                        value: data.hqid,
+                                        text: data.hqName
+                                    }).html(data.hqName).appendTo("#location");
+                            });
+                        }
+
                     }
                     else {
                         console.log(v);
@@ -288,7 +319,15 @@
                 success: function (data, status, xhr) {
                     var v = data;
                     if (status == 'success') {
-                        $("#district").html(v);
+                        console.log(v);
+                        $("#district").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result              
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#district");
+                        });
                     }
                     else {
                         console.log(v);

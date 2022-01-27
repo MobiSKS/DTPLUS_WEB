@@ -47,17 +47,10 @@ namespace HPCL_Web.Controllers
                         {
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                            var jvalue = (JArray)jobject["Data"];
-
-                            foreach (var item in jvalue)
-                            {
-                                OfficerTypeModel ofcrTypMdl = new OfficerTypeModel();
-                                ofcrTypMdl.OfficerID = Convert.ToInt32((JValue)item["OfficerTypeID"]);
-                                ofcrTypMdl.OfficerTypeName = (string)(JValue)item["OfficerTypeName"];
-                                ofcrTypMdl.OfficerTypeShortName = (string)(JValue)item["OfficerTypeShortName"];
-                                ofcrMdl.OfficerTypeMdl.Add(ofcrTypMdl);
-                            }
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+                            ofcrMdl.OfficerTypeMdl.AddRange(lst);
                         }
                     }
                 }
@@ -85,17 +78,10 @@ namespace HPCL_Web.Controllers
                         {
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                            var jvalue = (JArray)jobject["Data"];
-
-                            foreach (var item in jvalue)
-                            {
-                                OfficerStateModel ofcrStateMdl = new OfficerStateModel();
-                                ofcrStateMdl.CountryID = Convert.ToInt32((JValue)item["CountryID"]);
-                                ofcrStateMdl.StateID = Convert.ToInt32((JValue)item["StateID"]);
-                                ofcrStateMdl.StateName = (string)(JValue)item["StateName"];
-                                ofcrMdl.OfficerStateMdl.Add(ofcrStateMdl);
-                            }
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<OfficerStateModel> lst = jarr.ToObject<List<OfficerStateModel>>();
+                            ofcrMdl.OfficerStateMdl.AddRange(lst);
                         }
                     }
                 }
@@ -178,26 +164,49 @@ namespace HPCL_Web.Controllers
                     {
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                        var jvalue = (JArray)jobject["Data"];
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append("<option value='0'>Select Location</option>");
-                        foreach (var item in jvalue)
+                        if (OfcrType.Contains("1") || OfcrType.Contains("4") || OfcrType.Contains("6"))
                         {
-                            if (OfcrType.Contains("1") || OfcrType.Contains("4") || OfcrType.Contains("6"))
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
+                            lst.Add(new OfficerRegionModel
                             {
-                                sb.Append("<option value=" + Convert.ToInt32((JValue)item["RegionID"]) + ">" + (string)(JValue)item["RegionName"] + "</option>");
-                            }
-                            else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
-                            {
-                                sb.Append("<option value=" + Convert.ToInt32((JValue)item["ZoneID"]) + ">" + (string)(JValue)item["ZoneName"] + "</option>");
-                            }
-                            else if (OfcrType.Contains("2"))
-                            {
-                                sb.Append("<option value=" + Convert.ToInt32((JValue)item["HQID"]) + ">" + (string)(JValue)item["HQName"] + "</option>");
-                            }
+                                RegionID = 0,
+                                RegionName = "Select Location",
+                                RegionShortName = "Select Location"
+                            });
+                            var SortedtList = lst.OrderBy(x => x.RegionID).ToList();
+                            return Json(SortedtList);
                         }
-                        return Json(sb.ToString());
+                        else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
+                        {
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
+                            lst.Add(new OfficerZoneModel
+                            {
+                                HQID = 0,
+                                ZoneID = 0,
+                                ZoneName = "Select Location"
+                            });
+                            var SortedtList = lst.OrderBy(x => x.ZoneID).ToList();
+                            return Json(SortedtList);
+                        }
+                        else if (OfcrType.Contains("2"))
+                        {
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
+                            lst.Add(new OfficerHqModel
+                            {
+                                HQID = 0,
+                                HQName = "Select Location",
+                                HQShortName = "Select Location"
+                            });
+                            var SortedtList = lst.OrderBy(x => x.HQID).ToList();
+                            return Json(SortedtList);
+                        }
+                        return Json("Error");
                     }
                     else
                     {
@@ -230,15 +239,17 @@ namespace HPCL_Web.Controllers
                     {
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                        var jvalue = (JArray)jobject["Data"];
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append("<option value='0'>Select District</option>");
-                        foreach (var item in jvalue)
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
+                        lst.Add(new OfficerDistrictModel
                         {
-                            sb.Append("<option value=" + Convert.ToInt32((JValue)item["districtID"]) + ">" + (string)(JValue)item["districtName"] + "</option>");
-                        }
-                        return Json(sb.ToString());
+                            stateID = 0,
+                            districtID = 0,
+                            districtName = "Select District"
+                        });
+                        var SortedtList = lst.OrderBy(x => x.districtID).ToList();
+                        return Json(SortedtList);
                     }
                     else
                     {

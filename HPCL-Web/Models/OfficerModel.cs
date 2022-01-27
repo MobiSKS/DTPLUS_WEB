@@ -8,12 +8,13 @@ namespace HPCL_Web.Models
 {
     public class OfficerModel
     {
+        
         public OfficerModel()
         {
             OfficerTypeMdl = new List<OfficerTypeModel>();
             OfficerTypeMdl.Add(new OfficerTypeModel
             {
-                OfficerID = 0,
+                OfficerTypeID = 0,
                 OfficerTypeName = "Select Type",
                 OfficerTypeShortName = "Select Type"
             });
@@ -68,7 +69,7 @@ namespace HPCL_Web.Models
 
     public class OfficerTypeModel
     {
-        public int OfficerID { get; set; }
+        public int OfficerTypeID { get; set; }
         public string OfficerTypeName { get; set; }
         public string OfficerTypeShortName { get; set; }
 
@@ -81,7 +82,7 @@ namespace HPCL_Web.Models
     }
     public class OfficerRegionModel
     {
-        public int ZoneID { get; set; }
+        public int RegionID { get; set; }
         public string RegionName { get; set; }
         public string RegionShortName { get; set; }
     }
@@ -99,8 +100,8 @@ namespace HPCL_Web.Models
     }
     public class OfficerDistrictModel
     {
-        public int OfficerLocationID { get; set; }
-        public string OfficerLocationName { get; set; }
-        public string OfficerLocationShortName { get; set; }
+        public int stateID { get; set; }
+        public int districtID { get; set; }
+        public string districtName { get; set; }
     }
 }
