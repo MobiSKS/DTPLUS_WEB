@@ -38,27 +38,34 @@ namespace HPCL_Web.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
-                
-                //Fetching Officer Type
-                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))    
+                try
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    //Fetching Officer Type
+                    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                        var jvalue = (JArray)jobject["Data"];
-
-                        foreach(var item in jvalue)
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            OfficerTypeModel ofcrTypMdl = new OfficerTypeModel();
-                            ofcrTypMdl.OfficerID = Convert.ToInt32((JValue)item["OfficerTypeID"]);
-                            ofcrTypMdl.OfficerTypeName = (string)(JValue)item["OfficerTypeName"];
-                            ofcrTypMdl.OfficerTypeShortName = (string)(JValue)item["OfficerTypeShortName"];
-                            ofcrMdl.OfficerTypeMdl.Add(ofcrTypMdl);
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
+                            var jvalue = (JArray)jobject["Data"];
+
+                            foreach (var item in jvalue)
+                            {
+                                OfficerTypeModel ofcrTypMdl = new OfficerTypeModel();
+                                ofcrTypMdl.OfficerID = Convert.ToInt32((JValue)item["OfficerTypeID"]);
+                                ofcrTypMdl.OfficerTypeName = (string)(JValue)item["OfficerTypeName"];
+                                ofcrTypMdl.OfficerTypeShortName = (string)(JValue)item["OfficerTypeShortName"];
+                                ofcrMdl.OfficerTypeMdl.Add(ofcrTypMdl);
+                            }
                         }
                     }
                 }
+                catch
+                {
+
+                }
+
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
@@ -69,27 +76,33 @@ namespace HPCL_Web.Controllers
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
 
-                //Fetching State
-                using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
+                try
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    //Fetching State
+                    using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
-                        var jvalue = (JArray)jobject["Data"];
-
-                        foreach (var item in jvalue)
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            OfficerStateModel ofcrStateMdl = new OfficerStateModel();
-                            ofcrStateMdl.CountryID = Convert.ToInt32((JValue)item["CountryID"]);
-                            ofcrStateMdl.StateID = Convert.ToInt32((JValue)item["StateID"]);
-                            ofcrStateMdl.StateName = (string)(JValue)item["StateName"];
-                            ofcrMdl.OfficerStateMdl.Add(ofcrStateMdl);
-                        }                        
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            var jobject = (JObject)JsonConvert.DeserializeObject(ResponseContent);
+                            var jvalue = (JArray)jobject["Data"];
+
+                            foreach (var item in jvalue)
+                            {
+                                OfficerStateModel ofcrStateMdl = new OfficerStateModel();
+                                ofcrStateMdl.CountryID = Convert.ToInt32((JValue)item["CountryID"]);
+                                ofcrStateMdl.StateID = Convert.ToInt32((JValue)item["StateID"]);
+                                ofcrStateMdl.StateName = (string)(JValue)item["StateName"];
+                                ofcrMdl.OfficerStateMdl.Add(ofcrStateMdl);
+                            }
+                        }
                     }
                 }
+                catch
+                {
 
+                }
                 if (flag == 'Y')
                 {
                     ModelState.Clear();
@@ -190,7 +203,7 @@ namespace HPCL_Web.Controllers
                     {
                         ModelState.Clear();
                         ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("1");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                     }
                 }
             }
@@ -231,7 +244,7 @@ namespace HPCL_Web.Controllers
                     {
                         ModelState.Clear();
                         ModelState.AddModelError(string.Empty, "Error Loading District Details");
-                        return Json("1");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                     }
                 }
             }
@@ -276,7 +289,7 @@ namespace HPCL_Web.Controllers
                     {
                         ModelState.Clear();
                         ModelState.AddModelError(string.Empty, "Error Loading District Details");
-                        return Json("1");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                     }
                 }
             }
