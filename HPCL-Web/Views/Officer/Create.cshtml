@@ -80,8 +80,7 @@
                                                 <label class="font-weight-normal col-md-5 col-12">Officer Type <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerID", "OfficerTypeName"), new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.OfficerTypeID, "", new { @class = "text-danger" })
-                                                    <span class="error" id="officerType_error"></span>
+                                                    <span class="error" style="font-size: 14px; color: #dc3545 !important " id="officerType_error"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group d-flex align-items-center flex-wrap">
@@ -122,12 +121,11 @@
                                                     <span class="error" id="address3_error"></span>
                                                 </div>
                                             </div>
-                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                            <div class="form-group d-flex align-items-center flex-wrap" id="statediv">
                                                 <label class="font-weight-normal col-md-5 col-12">State <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.State, "", new { @class = "text-danger" })
-                                                    <span class="error" id="state_error"></span>
+                                                    <span class="error" style="font-size: 14px; color: #dc3545 !important " id="state_error"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group d-flex align-items-center flex-wrap">
@@ -218,7 +216,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn" type="submit" id="btnAdd" name="submit" style="background-color:#084693;color:white;">Add</button>
+                                    <button class="btn" type="button" id="btnAdd" name="submit" style="background-color:#084693;color:white;">Add</button>
                                     <button class="btn" type="button" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">Cancel</button>
                                 </div>
                             </div>
@@ -231,21 +229,31 @@
         </div>
     </div>
     <script type="text/javascript">
-        //$("#btnAdd").click(function () {
-        //    let flag = 'Y';
-        //    if ($("#OfficerTypeID").val() == 0) {
-        //        $("#officerType_error").html("Officer Type is required");
-        //        flag = 'N';
-        //    }
-        //    if ($("#State").val() == 0) {
-        //        $("#state_error").html("State is required");
-        //        flag = 'N';
-        //    }
+        $("#btnAdd").click(function () {
+            let flag = 'Y';
+            let firstName = $("#FirstName").val();
+            let userName = $("#UserName").val();
+            let address1 = $("#Address1").val();
+            let mobile = $("#Mobile").val();
+            let email = $("#Email").val();
 
-        //    if (flag == 'Y') {
-        //        $("#form1").submit();
-        //    }            
-        //});
+            if ($("#OfficerTypeID").val() == 0) {
+                $("#officerType_error").html("Officer Type is required");
+                flag = 'N';
+            }
+            if ($("#State").val() == 0) {
+                $("#statediv").addClass("btmMargin");
+                $("#state_error").html("State is required");
+                flag = 'N';
+            }
+            if ($.trim(firstName) == "" || $.trim(userName) == "" || $.trim(address1) == ""
+                || $.trim(mobile) == "" || $.trim(email) == "") {
+                flag = 'NS';
+            }
+            if (flag == 'Y' || flag == 'NS') {
+                $("#form1").submit();
+            }            
+        });
         $("#OfficerTypeID").change(function () {
             var id = this.value;
 
