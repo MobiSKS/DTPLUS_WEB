@@ -186,7 +186,7 @@ namespace HPCL_Web.Controllers
                         {
                             if (OfcrType.Contains("1") || OfcrType.Contains("4") || OfcrType.Contains("6"))
                             {
-                                sb.Append("<option value=" + Convert.ToInt32((JValue)item["ZoneID"]) + ">" + (string)(JValue)item["RegionName"] + "</option>");
+                                sb.Append("<option value=" + Convert.ToInt32((JValue)item["RegionID"]) + ">" + (string)(JValue)item["RegionName"] + "</option>");
                             }
                             else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
                             {
