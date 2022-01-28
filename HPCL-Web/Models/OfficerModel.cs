@@ -39,6 +39,8 @@ namespace HPCL_Web.Models
         public string UserName { get; set; }
         [Required(ErrorMessage = "Location is Required")]
         public int LocationID { get; set; }
+        [Required(ErrorMessage = "District is Required")]
+        public int DistrictID { get; set; }
         [Required(ErrorMessage = "Officer Type is Required")]
         public int OfficerTypeID { get; set; }
         [Required(ErrorMessage = "Address1 is Required")]
@@ -48,15 +50,13 @@ namespace HPCL_Web.Models
         public string City { get; set; }
         [Required(ErrorMessage = "State is Required")]
         public int State { get; set; }
-        [Required(ErrorMessage = "District is Required")]
-        public string District { get; set; }
         public int? Pin { get; set; }
         [Required(ErrorMessage = "Mobile is Required")]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
-        public int? Mobile { get; set; }
-        public int? Phone { get; set; }
+        public string Mobile { get; set; }
+        public string Phone { get; set; }
         [Required(ErrorMessage = "Email is Required")]
-        [RegularExpression(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", ErrorMessage = "Email id is not valid")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         public string Fax { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }

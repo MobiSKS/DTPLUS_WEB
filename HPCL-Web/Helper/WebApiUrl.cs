@@ -17,6 +17,7 @@
         public static string getState = "api/dtplus/settings/get_state";
         public static string getDistrict = "api/dtplus/settings/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
+        public static string insertOfficer = "api/dtplus/officer/insert_officer";
 
         #endregion
     }

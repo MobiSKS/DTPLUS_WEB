@@ -38,27 +38,23 @@ namespace HPCL_Web.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
-                try
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
                 {
-                    //Fetching Officer Type
-                    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                        {
-                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Data"].Value<JArray>();
-                            List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
-                            ofcrMdl.OfficerTypeMdl.AddRange(lst);
-                        }
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+                        ofcrMdl.OfficerTypeMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                     }
                 }
-                catch
-                {
-
-                }
-
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
@@ -69,26 +65,24 @@ namespace HPCL_Web.Controllers
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
 
-                try
+                //Fetching State
+                using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
                 {
-                    //Fetching State
-                    using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                        {
-                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Data"].Value<JArray>();
-                            List<OfficerStateModel> lst = jarr.ToObject<List<OfficerStateModel>>();
-                            ofcrMdl.OfficerStateMdl.AddRange(lst);
-                        }
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerStateModel> lst = jarr.ToObject<List<OfficerStateModel>>();
+                        ofcrMdl.OfficerStateMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                     }
                 }
-                catch
-                {
 
-                }
                 if (flag == 'Y')
                 {
                     ModelState.Clear();
@@ -106,8 +100,57 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OfficerModel ofcrMdl)
         {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var OfficerTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"UserId", Common.userid},
+                    {"FirstName", ofcrMdl.FirstName},
+                    {"LastName", ofcrMdl.LastName},
+                    {"UserName", ofcrMdl.UserName},
+                    {"OfficerType", ofcrMdl.OfficerTypeID.ToString()},
+                    {"LocationId", ofcrMdl.LocationID.ToString()},
+                    {"Address1", ofcrMdl.Address1},
+                    {"Address2", ofcrMdl.Address2},
+                    {"Address3", ofcrMdl.Address3},
+                    {"StateId", ofcrMdl.State.ToString()},
+                    {"CityName", ofcrMdl.City},
+                    {"DistrictId", ofcrMdl.DistrictID.ToString()},
+                    {"Pin", ofcrMdl.Pin.ToString()},
+                    {"MobileNo", ofcrMdl.Mobile},
+                    {"PhoneNo", ofcrMdl.Phone},
+                    {"EmailId", ofcrMdl.Email},
+                    {"Fax", ofcrMdl.Fax},
+                    {"Createdby", "0"}
+                };
 
-            return View();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        //var jarr = obj["Status_Code"];
+                        //List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+                        //ofcrMdl.OfficerTypeMdl.AddRange(lst);
+
+                        ViewBag.Message = "Officer Added Successfully";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+            }
+            return View(ofcrMdl);
         }
         public async Task<IActionResult> EditOfficer()
         {
@@ -144,7 +187,7 @@ namespace HPCL_Web.Controllers
             {
                 getLocation = WebApiUrl.getLocationHq;
             }
-            
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 var forms = new Dictionary<string, string>
