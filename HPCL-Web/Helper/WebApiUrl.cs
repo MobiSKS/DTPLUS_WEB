@@ -18,6 +18,9 @@
         public static string getDistrict = "api/dtplus/settings/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
 
+        public static string createHeadOffice= "/dtpwebapi/api/dtplus/hq/insert_hq";
+        public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
+
         #endregion
     }
 }
