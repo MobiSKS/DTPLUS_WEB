@@ -14,7 +14,7 @@ namespace HPCL_Web.Helper
         public static string Secret_Key = "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5";
         public static string useragent = "web";
         public static string userip = GetLocalIPAddress();
-        public static string userid = "1";
+        public static string userid = "";
 
         public static string GetLocalIPAddress()
         {

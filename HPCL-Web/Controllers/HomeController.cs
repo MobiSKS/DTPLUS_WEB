@@ -39,6 +39,7 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
+                Common.userid = user.Username;
                 var access_token = _api.GetToken();
 
                 if (access_token.Result != null)
@@ -66,8 +67,8 @@ namespace HPCL_Web.Controllers
                 {
                     //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     //{ 
-                        TempData["Profile"] = JsonConvert.SerializeObject(user);
-                        return RedirectToAction("Profile");
+                    TempData["Profile"] = JsonConvert.SerializeObject(user);
+                    return RedirectToAction("Profile");
                     //}
                     //else
                     //{
