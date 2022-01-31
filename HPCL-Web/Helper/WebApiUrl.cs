@@ -25,6 +25,15 @@
         public static string zonalOffice = "api/dtplus/zonaloffice/get_zonal_office";
         public static string regionalOffice = "api/dtplus/regionaloffice/get_regional_office";
 
+        public static string createHeadOffice= "/dtpwebapi/api/dtplus/hq/insert_hq";
+        public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
+
+        #endregion
+
+        #region Customer
+
+        public static string getCustomerType= "/dtpwebapi/api/dtplus/customer/get_customer_type";
+
         #endregion
     }
 }
