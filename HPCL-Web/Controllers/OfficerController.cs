@@ -292,7 +292,6 @@ namespace HPCL_Web.Controllers
                         ViewBag.Message = "Failed to load states";
                     }
                 }
-
             }
             return View(ofcrMdl);
         }
@@ -300,9 +299,8 @@ namespace HPCL_Web.Controllers
         {
             char flag = 'N';
             OfficerModel ofcrMdl = new OfficerModel();
-            //ofcrMdl.OfficerTypeID = 1;
-            //ofcrMdl.State = 75;
-            //ofcrMdl.DistrictID = 101;
+            ofcrMdl.OfficerID = OfficerID;
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 var OfficerBindForms = new Dictionary<string, string>
@@ -477,14 +475,15 @@ namespace HPCL_Web.Controllers
                     {"EmailId", ofcrMdl.Email},
                     {"Fax", ofcrMdl.Fax},
                     {"ModifiedBy", "0" },
-                    {"OfficerId", "0"}
+                    {"OfficerId", ofcrMdl.OfficerID},
+                    {"CreatedBy","0" }
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
+                using (var Response = await client.PostAsync(WebApiUrl.updateOfficer, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -511,7 +510,52 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> EditLocation()
         {
-            return View();
+            char flag = 'N';
+            OfficerLocationModel OfcrLocMdl = new OfficerLocationModel();
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var OfficerTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.zonalOffice, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
+                        OfcrLocMdl.ZoneOffices.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+                if (flag == 'Y')
+                {
+                    ModelState.Clear();
+                    ModelState.AddModelError(string.Empty, "Error Loading Officer Type");
+                    ViewBag.Login = "1";
+                    return View("Index");
+                }
+                else
+                {
+                    return View(OfcrLocMdl);
+                }
+            }
         }
         public async Task<IActionResult> Delete(string OfficerID)
         {
@@ -554,11 +598,6 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("Details", "Officer", new { pg = 1 });
         }
-        //[HttpPost]
-        //public async Task<IActionResult> EditLocation(OfficerLocatModel OfcrLocation)
-        //{
-        //    return View();
-        //}
         [HttpPost]
         public async Task<JsonResult> GetOfficerTypeDetails()
         {

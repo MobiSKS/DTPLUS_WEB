@@ -59,6 +59,7 @@ namespace HPCL_Web.Models
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         public string Fax { get; set; }
+        public string OfficerID { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
         public virtual List<OfficerZoneModel> OfficerZoneMdl { get; set; }
         public virtual List<OfficerRegionModel> OfficerRegionMdl { get; set; }
