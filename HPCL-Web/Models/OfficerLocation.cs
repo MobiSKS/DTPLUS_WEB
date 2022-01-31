@@ -20,8 +20,8 @@ namespace HPCL_Web.Models
     }
     public class ZoneOffice
     {
-        public int ZoneOfficeID { get; set; }
-        public string ZomeOfficeName { get; set; }
+        public int ZonalOfficeID { get; set; }
+        public string ZonalOfficeName { get; set; }
     }
     public class RegionalOffice
     {
