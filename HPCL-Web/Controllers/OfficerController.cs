@@ -71,7 +71,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
@@ -126,7 +126,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
@@ -157,7 +157,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load states";
                     }
                 }
@@ -225,7 +225,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to create Officer";
                     }
                 }
@@ -257,7 +257,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
@@ -288,7 +288,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load states";
                     }
                 }
@@ -331,7 +331,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
@@ -363,7 +363,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
@@ -394,7 +394,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load states";
                     }
                 }
@@ -433,7 +433,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to load districts";
                     }
                 }
@@ -499,7 +499,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to update Officer";
                     }
                 }
@@ -591,7 +591,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         ViewBag.Message = "Failed to delete Officer";
                     }
                 }
@@ -639,7 +639,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         return Json("Failed to Load Officer Type Details");
                     }
                 }
@@ -741,7 +741,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         return Json("Failed to load Location");
                     }
                 }
@@ -789,7 +789,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         return Json("Failed to load District");
                     }
                 }
@@ -838,7 +838,7 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var Message = obj["Message"].ToString();
+                        var Message = obj["errorMessage"].ToString();
                         return Json("Failed to validate user");
                     }
                 }
