@@ -29,7 +29,26 @@ namespace HPCL_Web.Models.ManageCards
         public string YearOfReg { get; set; }
         public string OwnerType { get; set; }
         public string VinNumber { get; set; }
-       
+        public string CardBalance { get; set; }
+        public string CardStatus { get; set; }
+        public int OneTimeTransactionLimit { get; set; }
+        public int OneTimeTransactionRemaining { get; set; }
+        public int DailyTransactionLimit { get; set; }
+        public int MonthlyTransactionLimit { get; set; }
+        public int YearlyTransactionLimit { get; set; }
+        public int OneTimeCCMSTransactionLimit { get; set; }
+        public int OneTimeCCMSTransactionRemaining { get; set; }
+        public int DailyCCMSTransactionLimit { get; set; }
+        public int MonthlyCCMSTransactionLimit { get; set; }
+        public int YearlyCCMSTransactionLimit { get; set; }
+        public int DailyTransactionRemaining { get; set; }
+        public int MonthlyTransactionRemaining { get; set; }
+        public int YearlyTransactionRemaining { get; set; }
+        public int DailyCCMSTransactionRemaining { get; set; }
+        public int MonthlyCCMSTransactionRemaining { get; set; }
+        public int YearlyCCMSTransactionRemaining { get; set; }
+
+
         public virtual List<StatusModal> StatusModals { get; set; }
     }
 
@@ -63,6 +82,36 @@ namespace HPCL_Web.Models.ManageCards
         public string CardCategory { get; set; }
         public string CardIssueType { get; set; }
         public string CardIdentifier { get; set; }
+    }
+
+
+    public class LimitSearchResponse
+    {
+        public string CustomerID { get; set; }
+        public string CardBalance { get; set; }
+        public string CardStatus { get; set; }
+        public int OneTimeTransactionLimit { get; set; }
+        public int DailyTransactionLimit { get; set; }
+        public int MonthlyTransactionLimit { get; set; }
+        public int YearlyTransactionLimit { get; set; }
+        public int OneTimeCCMSTransactionLimit { get; set; }
+        public int DailyCCMSTransactionLimit { get; set; }
+        public int MonthlyCCMSTransactionLimit { get; set; }
+        public int YearlyCCMSTransactionLimit { get; set; }
+    }
+
+    public class CardReminingLimt
+    {
+        public int RemCardDaily { get; set; }
+        public int RemCardMonthly { get; set; }
+        public int RemCardYearly { get; set; }
+    }
+
+    public class CardReminingCCMSLimt
+    {
+        public int RemCCMSDaily { get; set; }
+        public int RemCCMSMonthly { get; set; }
+        public int RemCCMSYearly { get; set; }
     }
 
     public class ServicesResponse

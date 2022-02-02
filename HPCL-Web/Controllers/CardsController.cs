@@ -1,10 +1,10 @@
 ﻿using HPCL_Web.Helper;
 using HPCL_Web.Models.ManageCards;
-using HPCL_Web.Views.Cards;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,7 +19,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> ManageCards()
         {
-           var access_token = _api.GetToken();
+            var access_token = _api.GetToken();
 
             if (access_token.Result != null)
             {
@@ -88,10 +88,10 @@ namespace HPCL_Web.Controllers
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
-                CardNo=entity.CardNo,
-                MobileNumber=entity.MobileNumber,
-                VehicleNumber=entity.VehicleNumber,
-                StatusFlag=-1
+                CardNo = entity.CardNo,
+                MobileNumber = entity.MobileNumber,
+                VehicleNumber = entity.VehicleNumber,
+                StatusFlag = -1
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -126,7 +126,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewCardDetails(string CardId)
         {
-            ViewBag.CardIdVaule = CardId;
+            HttpContext.Session.SetString("CardIdSession", CardId);
 
             var access_token = _api.GetToken();
 
@@ -162,13 +162,33 @@ namespace HPCL_Web.Controllers
                         var limitResult = searchRes["GetCardLimtModel"].Value<JArray>();
                         var serviceResult = searchRes["CardServices"].Value<JArray>();
 
+                        var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
+                        var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
+
                         List<SearchCardResult> cardDetailsList = cardResult.ToObject<List<SearchCardResult>>();
+                        List<LimitSearchResponse> limitDetailsList = limitResult.ToObject<List<LimitSearchResponse>>();
                         List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
 
+                        List<CardReminingLimt> cardRemaining = cardRemainingResult.ToObject<List<CardReminingLimt>>();
+                        List<CardReminingCCMSLimt> ccmsRemaining = ccmsRemainingResult.ToObject<List<CardReminingCCMSLimt>>();
+
+                        string cusId = string.Empty;
+
+                        foreach (var item in cardDetailsList)
+                        {
+                            cusId = item.CustomerID;
+                        }
+
+                        HttpContext.Session.SetString("CustomerIdSession", cusId);
+
                         ModelState.Clear();
-                        return Json(new {
-                            cardDetailsList = cardDetailsList ,
-                            servicesDetailsList = servicesDetailsList
+                        return Json(new
+                        {
+                            cardDetailsList = cardDetailsList,
+                            limitDetailsList = limitDetailsList,
+                            servicesDetailsList = servicesDetailsList,
+                            cardRemaining = cardRemaining,
+                            ccmsRemaining = ccmsRemaining
                         });
                     }
                     else
@@ -181,7 +201,8 @@ namespace HPCL_Web.Controllers
             }
         }
 
-        public async Task<JsonResult> UpdateService(string serviceId, int flag)
+        [HttpPost]
+        public async Task<JsonResult> UpdateService(string serviceId, bool flag)
         {
             var access_token = _api.GetToken();
 
@@ -195,10 +216,10 @@ namespace HPCL_Web.Controllers
                 UserId = Common.userid,
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
-                CustomerId = "3000001",
-                CardNo = "7001",
-                ServiceId = "",
-                Flag = 0,
+                CustomerId = HttpContext.Session.GetString("CustomerIdSession"),
+                CardNo = HttpContext.Session.GetString("CardIdSession"),
+                ServiceId = Convert.ToInt32(serviceId),
+                Flag = Convert.ToInt32(flag),
                 CreatedBy = "1"
             };
 
@@ -235,8 +256,8 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> CardlessMapping(string cardNumber, string mobileNumber)
         {
             UpdateMobileModal editMobBody = new UpdateMobileModal();
-            editMobBody.CardNumber = "7001";
-            editMobBody.MobileNumber = "7896761234";
+            editMobBody.CardNumber = cardNumber;
+            editMobBody.MobileNumber = mobileNumber;
 
             return View(editMobBody);
         }
@@ -257,8 +278,8 @@ namespace HPCL_Web.Controllers
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CardNo = entity.CardNumber,
-                MobileNo=entity.MobileNumber,
-                ModifiedBy="1"
+                MobileNo = entity.MobileNumber,
+                ModifiedBy = "1"
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
