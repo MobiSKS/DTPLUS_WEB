@@ -325,6 +325,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<OfficerModel> lst = jarr.ToObject<List<OfficerModel>>();
                         ofcrMdl = lst.First();
+                        ofcrMdl.State = ofcrMdl.StateId;
                     }
                     else
                     {
@@ -534,6 +535,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
                         OfcrLocMdl.ZoneOffices.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
                     }
                     else
                     {
@@ -791,6 +793,53 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var Message = obj["errorMessage"].ToString();
                         return Json("Failed to load District");
+                    }
+                }
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetRegionalOfcDetails(string ZonalOfcID)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"ZonalID", "0" }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.regionalOffice, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<RegionalOffice> lst = jarr.ToObject<List<RegionalOffice>>();
+                        lst.Add(new RegionalOffice
+                        {
+                            RegionalOfficeID = 0,
+                            RegionalOfficeName = "--Select--"
+                        });
+                        var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
+                        return Json(SortedtList);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Regional Office Details");
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Regional Office Details");
                     }
                 }
             }

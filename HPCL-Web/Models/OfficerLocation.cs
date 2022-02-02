@@ -8,6 +8,16 @@ namespace HPCL_Web.Models
 {
     public class OfficerLocationModel
     {
+        public OfficerLocationModel()
+        {
+            ZoneOffices = new List<ZoneOffice>();
+            RegionalOffices = new List<RegionalOffice>();
+            ZoneOffices.Add(new ZoneOffice
+            { 
+                ZonalOfficeID = 0,
+                ZonalOfficeName = "-- Select --"
+            });
+        }
         [Required(ErrorMessage = "Zonal Office is Required")]
         public int ZoneOfcID { get; set; }
         public int RegionalOfcID { get; set; }

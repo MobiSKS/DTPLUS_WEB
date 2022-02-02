@@ -16,6 +16,7 @@
         public static string getLocationHq = "api/dtplus/hq/get_hq";
         public static string getState = "api/dtplus/settings/get_state";
         public static string getDistrict = "api/dtplus/settings/get_district";
+        public static string getSalesArea = "api/dtplus/settings/get_sales_area";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
         public static string updateOfficer = "api/dtplus/officer/update_officer";
@@ -33,6 +34,12 @@
 
         public static string getCustomerType= "/dtpwebapi/api/dtplus/customer/get_customer_type";
 
+        #endregion
+
+        #region Merchant
+        public static string getMerchantType = "api/dtplus/merchant/get_merchant_type";
+        public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
+        public static string getSbu = "api/dtplus/merchant/get_sbu";
         #endregion
     }
 }

@@ -7,6 +7,51 @@ namespace HPCL_Web.Models
 {
     public class MerchantModel
     {
+        public MerchantModel()
+        {
+            MerchantTypes = new List<MerchantTypeModel>();
+            OutletCategories = new List<OutletCategoryModel>();
+            SBUTypes = new List<SBUTypeModel>();
+            RetailOutletStates = new List<RetailOutletStateModel>();
+            RetailOutletDistricts = new List<RetailOutletDistrictModel>();
+            CommStates = new List<CommStateModel>();
+            CommDistricts = new List<CommDistrictModel>();
+            ZonalOffices = new List<ZonalOfficeModel>();
+            SalesAreas = new List<SalesAreaModel>();
+            PreHighwayNumbers = new List<PreHighwayNumberModel>();
+            MerchantTypes.Add(new MerchantTypeModel
+            {
+                MerchantTypeCode = 0,
+                MerchantTypeName = "--Select--"
+            });
+            OutletCategories.Add(new OutletCategoryModel    
+            {
+                OutletCategoryCode = 0,
+                OutletCategoryName = "--Select--"
+            });
+            SBUTypes.Add(new SBUTypeModel
+            {
+                SBUId = 0,
+                SBUName = "--Select--"
+            });
+            RetailOutletStates.Add(new RetailOutletStateModel
+            {
+                CountryID = 0,
+                StateID = 0,
+                StateName = "Select State"
+            });
+            CommStates.Add(new CommStateModel
+            {
+                CountryID = 0,
+                StateID = 0,
+                StateName = "Select State"
+            });
+            ZonalOffices.Add(new ZonalOfficeModel
+            {
+                ZonalOfficeID = 0,
+                ZonalOfficeName = "--Select--"
+            });
+        }
         public string MerchantID { get; set; }
         public string  MerchantType { get; set; }
         public string MappedMerchantID { get; set; }
@@ -50,8 +95,81 @@ namespace HPCL_Web.Models
         public string Comm_State { get; set; }
         public string Comm_District { get; set; }
         public string Comm_Pin { get; set; }
+        public string Comm_Pre_PhoneNumber { get; set; }
         public string Comm_PhoneNumber { get; set; }
+        public string Comm_Pre_Fax { get; set; }
         public string Comm_Fax { get; set; }
-
+        public int NumOfLiveTerminals { get; set; }
+        public string TerminalTypeRequested { get; set; }
+        public virtual List<MerchantTypeModel> MerchantTypes { get; set; }
+        public virtual List<OutletCategoryModel> OutletCategories { get; set; }
+        public virtual List<SBUTypeModel> SBUTypes { get; set; }
+        public virtual List<RetailOutletStateModel> RetailOutletStates { get; set; }
+        public virtual List<RetailOutletDistrictModel> RetailOutletDistricts { get; set; }
+        public virtual List<CommStateModel> CommStates { get; set; }
+        public virtual List<CommDistrictModel> CommDistricts { get; set; }
+        public virtual List<ZonalOfficeModel> ZonalOffices { get; set; }
+        public virtual List<SalesAreaModel> SalesAreas { get; set; }
+        public virtual List<PreHighwayNumberModel> PreHighwayNumbers { get; set; }
+    }
+    public class MerchantTypeModel
+    {
+        public int MerchantTypeCode { get; set; }
+        public string MerchantTypeName { get; set; }
+    }
+    public class OutletCategoryModel
+    {
+        public int OutletCategoryCode { get; set; }
+        public string OutletCategoryName { get; set; }
+    }
+    public class SBUTypeModel
+    {
+        public int SBUId { get; set; }
+        public string SBUName { get; set; }
+    }
+    public class RetailOutletStateModel
+    {
+        public int CountryID { get; set; }
+        public int StateID { get; set; }
+        public string StateName { get; set; }
+    }
+    public class RetailOutletDistrictModel
+    {
+        public int stateID { get; set; }
+        public int districtID { get; set; }
+        public string districtName { get; set; }
+    }
+    public class CommStateModel
+    {
+        public int CountryID { get; set; }
+        public int StateID { get; set; }
+        public string StateName { get; set; }
+    }
+    public class CommDistrictModel
+    {
+        public int stateID { get; set; }
+        public int districtID { get; set; }
+        public string districtName { get; set; }
+    }
+    public class ZonalOfficeModel
+    {
+        public int ZonalOfficeID { get; set; }
+        public string ZonalOfficeName { get; set; }
+    }
+    public class RegionalOfficeModel
+    {
+        public int RegionalOfficeID { get; set; }
+        public string RegionalOfficeName { get; set; }
+    }
+    public class SalesAreaModel
+    {
+        public int RegionID { get; set; }
+        public int SalesAreaID { get; set; }
+        public string SalesAreaName { get; set; }
+    }
+    public class PreHighwayNumberModel
+    {
+        public int PreHighwayNumberID { get; set; }
+        public string PreHighwayNumberName { get; set; }
     }
 }

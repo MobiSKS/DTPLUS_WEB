@@ -42,7 +42,7 @@
                                             <label class="font-weight-normal col-md-5 col-12">Zone Office <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.ZoneOfcID, new SelectList(Model.ZoneOffices, "ZoneOfficeID", "ZomeOfficeName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.ZoneOfcID, new SelectList(Model.ZoneOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
                                                 </div>
                                                 <span class="error" id="zonalOffice_error"></span>
                                             </div>
@@ -57,12 +57,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Is New User</label>
                                             <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control" })
-                                                    <label class="font-weight-normal col-md-5 col-12">Is New User <sup class="text-danger">*</sup></label>
-                                                </div>
-                                                <span class="error" id="regionalOffice_error"></span>
+                                                @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control", @style = "width: 5%" })
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -76,6 +73,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="display:none;">@Html.TextBoxFor(m => m.UserName, new { id = "userNameValue"})</div>
                         <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
@@ -95,7 +93,45 @@
 <script type="text/javascript">
     $("#IsNewUser").change(function () {
         if (this.checked) {
-            alert("checked");
+            $("#UserName").val("");
+        }
+        else {
+            let userNameVal = $("#userNameValue").val();
+            $("#UserName").val(userNameVal);
         }
     });
+
+    function getRegionalOfc() {
+        var id = $('#ZoneOfcID :selected').val();
+
+        //if (id != 0) {
+        //    $("#state_error").html("");
+        //}
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetRegionalOfcDetails", "Officer")',
+            data: { ZonalOfcID: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#district").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.regionalOfficeID,
+                                text: data.regionalOfficeName
+                            }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Regional Office Data");
+            }
+        });
+    };
 </script>
