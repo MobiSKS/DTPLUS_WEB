@@ -36,6 +36,15 @@
 
         #endregion
 
+        #region Cards
+
+        public static string GetStatusTypeUrl= "/dtpwebapi/api/dtplus/settings/get_entity_status_type";
+        public static string SearchCardUrl = "/dtpwebapi/api/dtplus/card/search_manage_card";
+        public static string GetCardDetailsUrl= "/dtpwebapi/api/dtplus/card/get_card_limit_features";
+        public static string UpdateMobileUrl = "/dtpwebapi/api/dtplus/card/update_mobile_in_card";
+        public static string UpdateServiceUrl = "/dtpwebapi/api/dtplus/card/update_service_on_card";
+        #endregion
+
         #region Merchant
         public static string getMerchantType = "api/dtplus/merchant/get_merchant_type";
         public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
