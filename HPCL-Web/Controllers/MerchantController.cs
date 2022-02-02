@@ -1,5 +1,5 @@
 ﻿using HPCL_Web.Helper;
-using HPCL_Web.Models;
+using HPCL_Web.Models.Merchant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

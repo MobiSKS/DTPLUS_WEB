@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HPCL_Web.Models
+namespace HPCL_Web.Models.Merchant
 {
     public class MerchantModel
     {
