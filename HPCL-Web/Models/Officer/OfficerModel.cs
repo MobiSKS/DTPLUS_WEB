@@ -55,10 +55,12 @@ namespace HPCL_Web.Models.Officer
         [Required(ErrorMessage = "Mobile is Required")]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string Mobile { get; set; }
+        public string MobileNo { get; set; }
         public string Phone { get; set; }
         [Required(ErrorMessage = "Email is Required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
+        public string EmailId { get; set; }
         public string Fax { get; set; }
         public string OfficerID { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }

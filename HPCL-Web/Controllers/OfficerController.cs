@@ -327,6 +327,8 @@ namespace HPCL_Web.Controllers
                         List<OfficerModel> lst = jarr.ToObject<List<OfficerModel>>();
                         ofcrMdl = lst.First();
                         ofcrMdl.State = ofcrMdl.StateId;
+                        ofcrMdl.Mobile = ofcrMdl.MobileNo;
+                        ofcrMdl.Email = ofcrMdl.EmailId;
                     }
                     else
                     {
@@ -507,7 +509,7 @@ namespace HPCL_Web.Controllers
                 }
             }
             ModelState.Clear();
-            return View(ofcrMdl);
+            return RedirectToAction("Details");
         }
 
         public async Task<IActionResult> EditLocation()
