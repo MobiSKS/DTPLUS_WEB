@@ -23,7 +23,13 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> HeadOfficeDetails(HeadOfficeDetails headOfficeDetails)
+        public async Task<IActionResult> HeadOfficeDetails()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> HeadOfficeDetails(HeadOfficeDetails headOfficeDetails)
         {
             var access_token = _api.GetToken();
 
@@ -89,9 +95,16 @@ namespace HPCL_Web.Controllers
                             if (obj["Message"].Value<string>() == "Success")
                             {
                                 var jarr = obj["Data"].Value<JArray>();
-                                List<InsertHeadOfficeDetailsResponse> updateResponse = jarr.ToObject<List<InsertHeadOfficeDetailsResponse>>();
-                                ViewBag.Message = updateResponse.Select(x => x.Reason).FirstOrDefault();
+                                List<InsertHeadOfficeDetailsResponse> insertResponse = jarr.ToObject<List<InsertHeadOfficeDetailsResponse>>();
+                                ModelState.Clear();
+                                return Json(insertResponse[0].Reason);
                             }
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                         }
                     }
                 }
@@ -125,15 +138,20 @@ namespace HPCL_Web.Controllers
                             {
                                 var jarr = obj["Data"].Value<JArray>();
                                 List<UpdateHeadOfficeDetailsResponse> updateResponse = jarr.ToObject<List<UpdateHeadOfficeDetailsResponse>>();
-                                ViewBag.Message = updateResponse.Select(x => x.Reason).FirstOrDefault();
+                                ModelState.Clear();
+                                return Json(updateResponse[0].Reason);
                             }
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                         }
                     }
                 }
-
                 ModelState.Clear();
-
-                return View("HeadOfficeDetails");
+                return Json("Isuue with the request");
             }
         }
     }

@@ -32,13 +32,11 @@ namespace HPCL_Web.Models.Locations
 
     public class InsertHeadOfficeDetailsResponse
     {
-        public int Status { get; set; }
         public string Reason { get; set; }
     }
 
     public class UpdateHeadOfficeDetailsResponse
     {
-        public int Status { get; set; }
         public string Reason { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -106,6 +107,10 @@ namespace HPCL_Web.Controllers
                     {
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
                         List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
@@ -122,18 +127,10 @@ namespace HPCL_Web.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<JsonResult> ViewCardDetails(string CardId)
         {
             HttpContext.Session.SetString("CardIdSession", CardId);
-
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
 
             var cardDetailsBody = new CardsSearch
             {
