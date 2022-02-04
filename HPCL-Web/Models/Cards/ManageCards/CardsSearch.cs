@@ -1,6 +1,6 @@
 ﻿using HPCL_Web.Models;
 
-namespace HPCL_Web.Models.ManageCards
+namespace HPCL_Web.Models.Cards.ManageCards
 {
     public class CardsSearch : BaseEntity
     {

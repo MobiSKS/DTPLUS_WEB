@@ -1,5 +1,6 @@
 ﻿using HPCL_Web.Helper;
-using HPCL_Web.Models.ManageCards;
+using HPCL_Web.Models.Cards.ActivateReActivate;
+using HPCL_Web.Models.Cards.ManageCards;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -76,13 +77,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ManageCards(CustomerCards entity)
         {
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
             var searchBody = new CustomerCards
             {
                 UserId = Common.userid,
@@ -201,13 +195,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> UpdateService(string serviceId, bool flag)
         {
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
             var updateServiceBody = new UpdateService
             {
                 UserId = Common.userid,
@@ -262,13 +249,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CardlessMapping(UpdateMobileModal entity)
         {
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
             var cardDetailsBody = new UpdateMobile
             {
                 UserId = Common.userid,
@@ -298,6 +278,147 @@ namespace HPCL_Web.Controllers
 
                         ModelState.Clear();
                         return Json(updateResponse[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        public async Task<IActionResult> AcDcCardSearch()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AcDcCardSearch(SearchCards entity)
+        {
+            HttpContext.Session.SetString("AcDcCustomerId", entity.CustomerId);
+
+            var searchBody = new SearchCards
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = entity.CustomerId,
+                CardNo = entity.CardNo,
+                MobileNo = entity.MobileNo
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetAllCardStatusUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCardsResponse> searchList = jarr.ToObject<List<SearchCardsResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatus(string cardNo, int Statusflag)
+        {
+            var updateServiceBody = new UpdateStatus
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CardNo = cardNo,
+                Statusflag = Statusflag,
+                ModifiedBy = Common.userid
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.UpdateCardStatusUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+
+                        var updateRes = obj["Data"].Value<JArray>();
+                        List<UpdateMobileResponse> updateResponse = updateRes.ToObject<List<UpdateMobileResponse>>();
+
+                        ModelState.Clear();
+                        return Json(updateResponse[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> RefreshGrid()
+        {
+            var searchBody = new SearchCards
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("AcDcCustomerId"),
+                CardNo = "",
+                MobileNo = ""
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetAllCardStatusUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCardsResponse> searchList = jarr.ToObject<List<SearchCardsResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
                     }
                     else
                     {

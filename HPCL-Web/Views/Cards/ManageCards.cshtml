@@ -1,4 +1,4 @@
-﻿@model HPCL_Web.Models.ManageCards.CustomerCards
+﻿@model HPCL_Web.Models.Cards.ManageCards.CustomerCards
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -536,6 +536,12 @@
         }
     });
 
+
+    //$("#CustomerCardsSection").click(function () {
+    //    $('#CardDetailsTab').tab('show');
+    //    $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards</p>");
+    //});
+
     function OnSuccess(data) {
         $("#CardSearch td").parent().remove();
 
@@ -560,7 +566,7 @@
                 + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
 
 
-            $('#CardSearch').append(rows + this.data ?? "");
+            $('#CardSearch').append(rows);
         }
         let tableData = $('#CardSearch').html();
         sessionStorage.setItem("tableData", tableData);
@@ -596,12 +602,7 @@
 
         var CardId = o.innerText;
 
-        $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards CARD PAN: ( " + CardId + ") </p>");
 
-        $("#CardDetailsTab").removeClass("disabled");
-        $("#LimitTab").removeClass("disabled");
-        $("#ServicesTab").removeClass("disabled");
-        $('#CardDetailsTab').tab('show');
 
         $.ajax({
             url: "@Url.Action("ViewCardDetails", "Cards")",
@@ -680,6 +681,13 @@
                         $('input[name *= "' + res.servicesDetailsList[i].serviceID+'"]').prop('checked', true);
                     }
                 }
+
+                $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards CARD PAN: ( " + CardId + ") </p>");
+
+                $("#CardDetailsTab").removeClass("disabled");
+                $("#LimitTab").removeClass("disabled");
+                $("#ServicesTab").removeClass("disabled");
+                $('#CardDetailsTab').tab('show');
 
                 },
                 error: function (ex) {
