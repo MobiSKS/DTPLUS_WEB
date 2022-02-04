@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,13 +22,6 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> ManageCards()
         {
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
             CustomerCards modals = new CustomerCards();
 
             var statusType = new StatusType
@@ -64,6 +58,25 @@ namespace HPCL_Web.Controllers
                             }
                         }
                         modals.StatusModals.AddRange(lsts);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetLimitTypeUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LimitTypeModal> limitList = jarr.ToObject<List<LimitTypeModal>>();
+
+                        modals.LimitTypeModals.AddRange(limitList);
+
                     }
                     else
                     {
@@ -153,15 +166,15 @@ namespace HPCL_Web.Controllers
                         var limitResult = searchRes["GetCardLimtModel"].Value<JArray>();
                         var serviceResult = searchRes["CardServices"].Value<JArray>();
 
-                        var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
-                        var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
+                        //var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
+                        //var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
 
                         List<SearchCardResult> cardDetailsList = cardResult.ToObject<List<SearchCardResult>>();
-                        List<LimitSearchResponse> limitDetailsList = limitResult.ToObject<List<LimitSearchResponse>>();
+                        List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
                         List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
 
-                        List<CardReminingLimt> cardRemaining = cardRemainingResult.ToObject<List<CardReminingLimt>>();
-                        List<CardReminingCCMSLimt> ccmsRemaining = ccmsRemainingResult.ToObject<List<CardReminingCCMSLimt>>();
+                        //List<CardReminingLimt> cardRemaining = cardRemainingResult.ToObject<List<CardReminingLimt>>();
+                        //List<CardReminingCCMSLimt> ccmsRemaining = ccmsRemainingResult.ToObject<List<CardReminingCCMSLimt>>();
 
                         string cusId = string.Empty;
 
@@ -178,8 +191,8 @@ namespace HPCL_Web.Controllers
                             cardDetailsList = cardDetailsList,
                             limitDetailsList = limitDetailsList,
                             servicesDetailsList = servicesDetailsList,
-                            cardRemaining = cardRemaining,
-                            ccmsRemaining = ccmsRemaining
+                            //cardRemaining = cardRemaining,
+                            //ccmsRemaining = ccmsRemaining
                         });
                     }
                     else
