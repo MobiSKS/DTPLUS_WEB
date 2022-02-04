@@ -37,6 +37,8 @@
         public static string GetCardDetailsUrl= "/dtpwebapi/api/dtplus/card/get_card_limit_features";
         public static string UpdateMobileUrl = "/dtpwebapi/api/dtplus/card/update_mobile_in_card";
         public static string UpdateServiceUrl = "/dtpwebapi/api/dtplus/card/update_service_on_card";
+        public static string GetAllCardStatusUrl = "/dtpwebapi/api/dtplus/card/get_all_card_with_status";
+        public static string UpdateCardStatusUrl = "/dtpwebapi/api/dtplus/card/update_card_status";
         #endregion
 
         #region Merchant
