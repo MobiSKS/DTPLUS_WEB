@@ -1,5 +1,6 @@
 ﻿@model HPCL_Web.Models.CustomerModel
 
+
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <h5>Online Form</h5>
@@ -10,7 +11,10 @@
             <li class="nav-item"> <a class="nav-link disable" id="cardDetails-tab" data-toggle="tab" href="#cardDetails" role="tab" aria-controls="cardDetails" aria-selected="false">Card Details</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="uploadDocuments-tab" data-toggle="tab" href="#uploadDocuments" role="tab" aria-controls="uploadDocuments" aria-selected="false">Upload Documents</a> </li>
         </ul>
-        <form name="applicationForm" onsubmit="return submitForm()" class="w-100">
+        @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
+        <form name="applicationForm" method="post" asp-action="OnlineForm" class="w-100">
+            @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
+                {*@
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="w-100">
@@ -22,80 +26,90 @@
                                         <label class="font-weight-normal col-md-5 col-12">Customer Type <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="customerType" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="901">Fleet</option>
-                                                    <option value="902">Corporate</option>
-                                                    <option value="905">Attached</option>
-                                                    <option value="906">Credit</option>
-                                                    <option value="909">Generic</option>
-                                                    <option value="917">Non Fleet</option>
-                                                    <option value="918">OTC</option>
-                                                    <option value="925">Agent</option>
-                                                    <option value="970">CargoFL</option>
-                                                    <option value="978">M2P</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.CustomerTypeID, new SelectList(Model.CustomerTypeMdl, "CustomerTypeID", "CustomerTypeName"), new { @class = "form-control" })
+
+                                                @*<select name="customerType" id="" class="form-control">
+                                                        <option selected="selected" value="-1">--Select--</option>
+                                                        <option value="901">Fleet</option>
+                                                        <option value="902">Corporate</option>
+                                                        <option value="905">Attached</option>
+                                                        <option value="906">Credit</option>
+                                                        <option value="909">Generic</option>
+                                                        <option value="917">Non Fleet</option>
+                                                        <option value="918">OTC</option>
+                                                        <option value="925">Agent</option>
+                                                        <option value="970">CargoFL</option>
+                                                        <option value="978">M2P</option>
+                                                    </select>*@
+
                                             </div>
                                             <span class="error" id="customerType_error"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Zonal Office <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">NORTH ZONE</option>
-                                                    <option value="9">WEST ZONE</option>
-                                                </select>
-                                            </div>
-                                            <span class="error" id="zonalOffice_error"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Date of Application <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <input type="date" name="applicationDate" class="form-control">
-                                            <span class="error" id="applicationDate_error"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Sales Area <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <input type="text" name="salesArea" class="form-control">
-                                            <span class="error" id="salesArea_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="customerSubType" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="901">Fleet</option>
-                                                    <option value="902">Corporate</option>
-                                                    <option value="905">Attached</option>
-                                                    <option value="906">Credit</option>
-                                                    <option value="909">Generic</option>
-                                                    <option value="917">Non Fleet</option>
-                                                    <option value="918">OTC</option>
-                                                    <option value="925">Agent</option>
-                                                    <option value="970">CargoFL</option>
-                                                    <option value="978">M2P</option>
-                                                </select>
+                                                <select id="customerSubType" class="form-control"></select>
+                                                @*<select name="zonalOffice" id="" class="form-control">
+                                                        <option selected="selected" value="-1">--Select--</option>
+                                                        <option value="7">NORTH ZONE</option>
+                                                        <option value="9">WEST ZONE</option>
+                                                    </select>*@
                                             </div>
                                             <span class="error" id="customerSubType_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Date of Application <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @type = "date", @class = "form-control" })
+                                            @*<input type="date" name="applicationDate" class="form-control">*@
+                                            <span class="error" id="applicationDate_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Sales Area <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @*<input type="text" name="salesArea" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.SalesArea, new { @class = "form-control" })
+                                            <span class="error" id="salesArea_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
+                                                @*<select id="customerSubType" class="form-control"></select>*@
+
+                                                @*<select name="customerSubType" id="" class="form-control">
+                                                         <option selected="selected" value="-1">--Select--</option>
+                                                        <option value="901">Fleet</option>
+                                                        <option value="902">Corporate</option>
+                                                        <option value="905">Attached</option>
+                                                        <option value="906">Credit</option>
+                                                        <option value="909">Generic</option>
+                                                        <option value="917">Non Fleet</option>
+                                                        <option value="918">OTC</option>
+                                                        <option value="925">Agent</option>
+                                                        <option value="970">CargoFL</option>
+                                                        <option value="978">M2P</option>
+                                                    </select>*@
+                                            </div>
+                                            <span class="error" id="zonalOffice_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="regionalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">NORTH ZONE</option>
-                                                    <option value="9">WEST ZONE</option>
-                                                </select>
+                                                <select id="regionalOffice" class="form-control"></select>
+                                                @*<select name="regionalOffice" id="" class="form-control">
+                                                        <option selected="selected" value="-1">--Select--</option>
+                                                        <option value="7">NORTH ZONE</option>
+                                                        <option value="9">WEST ZONE</option>
+                                                    </select>*@
                                             </div>
                                             <span class="error" id="regionalOffice_error"></span>
                                         </div>
@@ -113,16 +127,22 @@
                                             <div class="row">
                                                 <div class="col-4">
                                                     <div class="custom_select">
+                                                        @*@{
+                                                                var listItems = new List<SelectListItem> { new SelectListItem { Text = "Mr.", Value = "Mr." }, new SelectListItem { Text = "Mrs.", Value = "Mrs." }, new SelectListItem { Text = "Ms.", Value = "Ms." } };
+                                                            }
+                                                            @Html.DropDownListFor(m => m.IndividualOrgNameTitle, new SelectList(listItems), "-- Select --")*@
+                                                        @* @Html.DropDownList(m => m.IndividualOrgNameTitle, new List<SelectListItem>() { new SelectListItem { Text = "Exact match", Value = "Match" }, new SelectListItem { Text = "Starts With", Value = "Starts" } })*@
                                                         <select name="salutaion" id="" class="form-control">
-                                                            <option value="">Mr.</option>
-                                                            <option value="">Mrs.</option>
-                                                            <option value="">Ms.</option>
+                                                            <option value="Mr.">Mr.</option>
+                                                            <option value="Mrs.">Mrs.</option>
+                                                            <option value="Ms.">Ms.</option>
                                                         </select>
                                                     </div>
                                                     <span class="error" id="salutaion_error"></span>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    <input type="text" name="individualName" class="form-control">
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control" })
+                                                    @*<input type="text" name="individualName" class="form-control">*@
                                                     <span class="error" id="individualName_error"></span>
                                                 </div>
                                                 <a href="#" class="form_info" title="Name of Individual/Org.">?</a>
@@ -132,7 +152,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Name on Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="nameOnCard" class="form-control">
+                                            @*<input type="text" name="nameOnCard" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.CustomerNameOnCard, new { @class = "form-control" })
                                             <span class="error" id="nameOnCard_error"></span> <a href="#" class="form_info" title="As it will appear on the card, characters including spaces not to exceed 22">?</a>
                                         </div>
                                     </div>
@@ -140,18 +161,21 @@
                                         <label class="font-weight-normal col-md-5 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="typeOfbusiness" id="" class="form-control">
-                                                    <option selected="selected" value="1601">Partnership</option>
-                                                    <option value="1602">Sole Proprietorship</option>
-                                                    <option value="1603">Public/Pvt Ltd Co</option>
-                                                    <option value="1604">HUF</option>
-                                                    <option value="1605">Others</option>
-                                                    <option value="1606">KYC For Companies</option>
-                                                    <option value="1607">KYC For Partnership firms</option>
-                                                    <option value="1608">Trust and Foundation</option>
-                                                    <option value="1609">KYC For properitership</option>
-                                                    <option value="1610">Govt Dept Does Not Have PAN</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
+
+
+                                                @*<select name="typeOfbusiness" id="" class="form-control">
+                                                        <option selected="selected" value="1601">Partnership</option>
+                                                        <option value="1602">Sole Proprietorship</option>
+                                                        <option value="1603">Public/Pvt Ltd Co</option>
+                                                        <option value="1604">HUF</option>
+                                                        <option value="1605">Others</option>
+                                                        <option value="1606">KYC For Companies</option>
+                                                        <option value="1607">KYC For Partnership firms</option>
+                                                        <option value="1608">Trust and Foundation</option>
+                                                        <option value="1609">KYC For properitership</option>
+                                                        <option value="1610">Govt Dept Does Not Have PAN</option>
+                                                    </select>*@
                                             </div>
                                             <span class="error" id="typeOfbusiness_error"></span> <a href="#" class="form_info" title="Type of Business Entity">?</a>
                                         </div>
@@ -161,8 +185,8 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 <select name="residenceStatus" id="" class="form-control">
-                                                    <option value="">Indian</option>
-                                                    <option value="">NRI</option>
+                                                    <option value="Indian">Indian</option>
+                                                    <option value="NRI">NRI</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -170,7 +194,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Income Tax PAN<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="incomeTaxPan" class="form-control">
+                                            @*<input type="text" name="incomeTaxPan" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control" })
                                             <span class="error" id="incomeTaxPan_error"></span>
                                         </div>
                                     </div>
@@ -195,7 +220,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Address 1<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="comm_address1" class="form-control">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control" })
+                                            @*<input type="text" name="comm_address1" class="form-control">*@
                                             <span class="error" id="comm_address1_error"></span>
                                         </div>
                                     </div>
@@ -204,7 +230,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Address 2</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="comm_address2" class="form-control">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control" })
+                                            @* <input type="text" name="comm_address2" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +239,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Address 3</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="comm_address3" class="form-control">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control" })
+                                            @*<input type="text" name="comm_address3" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +248,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Location</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="comm_location" class="form-control">
+                                            @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control" })
+                                            @* <input type="text" name="comm_location" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -228,7 +257,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="comm_city" class="form-control">
+                                            @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control" })
+                                            @*<input type="text" name="comm_city" class="form-control">*@
                                             <span class="error" id="comm_city_error"></span>
                                         </div>
                                     </div>
@@ -237,7 +267,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Pin code<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="number" name="comm_pincode" class="form-control">
+                                            @*<input type="number" name="comm_pincode" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control" })
                                             <span class="error" id="comm_pincode_error"></span>
                                         </div>
                                     </div>
@@ -247,258 +278,8 @@
                                         <label class="font-weight-normal col-md-5 col-12">State<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="comm_states" id="" class="form-control">
-                                                    <option value="-1">--Select--</option>
-                                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                                    <option value="Assam">Assam</option>
-                                                    <option value="Bihar">Bihar</option>
-                                                    <option value="Chandigarh">Chandigarh</option>
-                                                    <option value="Chhattisgarh">Chhattisgarh</option>
-                                                    <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
-                                                    <option value="Daman and Diu">Daman and Diu</option>
-                                                    <option value="Delhi">Delhi</option>
-                                                    <option value="Lakshadweep">Lakshadweep</option>
-                                                    <option value="Puducherry">Puducherry</option>
-                                                    <option value="Goa">Goa</option>
-                                                    <option value="Gujarat">Gujarat</option>
-                                                    <option value="Haryana">Haryana</option>
-                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                                    <option value="Jharkhand">Jharkhand</option>
-                                                    <option value="Karnataka">Karnataka</option>
-                                                    <option value="Kerala">Kerala</option>
-                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                                    <option value="Maharashtra">Maharashtra</option>
-                                                    <option value="Manipur">Manipur</option>
-                                                    <option value="Meghalaya">Meghalaya</option>
-                                                    <option value="Mizoram">Mizoram</option>
-                                                    <option value="Nagaland">Nagaland</option>
-                                                    <option value="Odisha">Odisha</option>
-                                                    <option value="Punjab">Punjab</option>
-                                                    <option value="Rajasthan">Rajasthan</option>
-                                                    <option value="Sikkim">Sikkim</option>
-                                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                                    <option value="Telangana">Telangana</option>
-                                                    <option value="Tripura">Tripura</option>
-                                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                                    <option value="Uttarakhand">Uttarakhand</option>
-                                                    <option value="West Bengal">West Bengal</option>
-                                                </select>
-                                            </div>
-                                            <span class="error" id="comm_states_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">District<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="comm_district" id="" class="form-control">
-                                                    <option value="-1">--Select--</option>
-                                                    <option value="Agra">Agra</option>
-                                                    <option value="Aligarh">Aligarh</option>
-                                                    <option value="Allahabad">Allahabad</option>
-                                                    <option value="Ambedkar Nagar">Ambedkar Nagar</option>
-                                                    <option value="Amethi">Amethi</option>
-                                                    <option value="Amroha">Amroha</option>
-                                                    <option value="Auraiya">Auraiya</option>
-                                                    <option value="Azamgarh">Azamgarh</option>
-                                                    <option value="Baghpat">Baghpat</option>
-                                                    <option value="Bahraich">Bahraich</option>
-                                                    <option value="Ballia">Ballia</option>
-                                                    <option value="Balrampur">Balrampur</option>
-                                                    <option value="Banda">Banda</option>
-                                                    <option value="Barabanki">Barabanki</option>
-                                                    <option value="Bareilly">Bareilly</option>
-                                                    <option value="Basti">Basti</option>
-                                                    <option value="Bhadohi">Bhadohi</option>
-                                                    <option value="Bijnor">Bijnor</option>
-                                                    <option value="Budaun">Budaun</option>
-                                                    <option value="Bulandshahr">Bulandshahr</option>
-                                                    <option value="Chandauli">Chandauli</option>
-                                                    <option value="Chitrakoot">Chitrakoot</option>
-                                                    <option value="Deoria">Deoria</option>
-                                                    <option value="Etah">Etah</option>
-                                                    <option value="Etawah">Etawah</option>
-                                                    <option value="Faizabad">Faizabad</option>
-                                                    <option value="Farrukhabad">Farrukhabad</option>
-                                                    <option value="Fatehpur">Fatehpur</option>
-                                                    <option value="Firozabad">Firozabad</option>
-                                                    <option value="Gautam Buddha Nagar">Gautam Buddha Nagar</option>
-                                                    <option value="Ghaziabad">Ghaziabad</option>
-                                                    <option value="Ghazipur">Ghazipur</option>
-                                                    <option value="Gonda">Gonda</option>
-                                                    <option value="Gorakhpur">Gorakhpur</option>
-                                                    <option value="Hamirpur">Hamirpur</option>
-                                                    <option value="Hapur">Hapur</option>
-                                                    <option value="Hardoi">Hardoi</option>
-                                                    <option value="Hathras">Hathras</option>
-                                                    <option value="Jalaun">Jalaun</option>
-                                                    <option value="Jaunpur">Jaunpur</option>
-                                                    <option value="Jhansi">Jhansi</option>
-                                                    <option value="Kannauj">Kannauj</option>
-                                                    <option value="Kanpur Dehat">Kanpur Dehat</option>
-                                                    <option value="Kanpur Nagar">Kanpur Nagar</option>
-                                                    <option value="Kasganj">Kasganj</option>
-                                                    <option value="Kaushambi">Kaushambi</option>
-                                                    <option value="Kheri">Kheri</option>
-                                                    <option value="Kushinagar">Kushinagar</option>
-                                                    <option value="Lalitpur">Lalitpur</option>
-                                                    <option value="Lucknow">Lucknow</option>
-                                                    <option value="Maharajganj">Maharajganj</option>
-                                                    <option value="Mahoba">Mahoba</option>
-                                                    <option value="Mainpuri">Mainpuri</option>
-                                                    <option value="Mathura">Mathura</option>
-                                                    <option value="Mau">Mau</option>
-                                                    <option value="Meerut">Meerut</option>
-                                                    <option value="Mirzapur">Mirzapur</option>
-                                                    <option value="Moradabad">Moradabad</option>
-                                                    <option value="Muzaffarnagar">Muzaffarnagar</option>
-                                                    <option value="Pilibhit">Pilibhit</option>
-                                                    <option value="Pratapgarh">Pratapgarh</option>
-                                                    <option value="Raebareli">Raebareli</option>
-                                                    <option value="Rampur">Rampur</option>
-                                                    <option value="Saharanpur">Saharanpur</option>
-                                                    <option value="Sambhal">Sambhal</option>
-                                                    <option value="Sant Kabir Nagar">Sant Kabir Nagar</option>
-                                                    <option value="Shahjahanpur">Shahjahanpur</option>
-                                                    <option value="Shamli">Shamli</option>
-                                                    <option value="Shravasti">Shravasti</option>
-                                                    <option value="Siddharthnagar">Siddharthnagar</option>
-                                                    <option value="Sitapur">Sitapur</option>
-                                                    <option value="Sonbhadra">Sonbhadra</option>
-                                                    <option value="Sultanpur">Sultanpur</option>
-                                                    <option value="Unnao">Unnao</option>
-                                                    <option value="Varanasi">Varanasi</option>
-                                                </select>
-                                            </div>
-                                            <span class="error" id="comm_district_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Phone (Office) <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input type="number" min="0" name="comm_dial_code" class="form-control">
-                                                </div>
-                                                <div class="col-8 pl-0">
-                                                    <input type="tel" name="comm_officePhone" class="form-control">
-                                                </div>
-                                            </div>
-                                            <span class="error" id="comm_officePhone_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Fax</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input type="number" min="0" name="comm_faxCode" class="form-control">
-                                                </div>
-                                                <div class="col-8 pl-0">
-                                                    <input type="tel" name="comm_faxNumber" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="error" id="comm_faxNumber_error"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Mobile<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <input type="tel" name="comm_mobileNumber" class="form-control">
-                                            <div class="error" id="comm_mobileNumber_error"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Email<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <input type="email" name="comm_email" class="form-control">
-                                            <div class="error" id="comm_email_error"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border-1 rounded border-grey h-100 mt-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address</p>
-                        <div class="py-2 p-md-4">
-                            <label class="d-flex align-items-center justify-content-start px-3">
-                                <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2">
-                                <p class="m-0">Same as Communication Address</p>
-                            </label>
-                            <div class="row w-100" id="permanent_add">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Address 1<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="text" name="perma_address1" class="form-control">
-                                                <div class="error" id="perma_address1_error"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Address 2</label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="text" name="perma_address2" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Address 3</label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="text" name="perma_address3" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Location</label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="text" name="perma_location" class="form-control">
-                                                <span class="error" id="perma_location_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="text" name="perma_city" class="form-control">
-                                                <span class="error" id="perma_city_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Pin code<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <input type="number" name="perma_pincode" class="form-control">
-                                                <span class="error" id="perma_pincode_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">State<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    <select name="perma_state" id="" class="form-control">
+                                                @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                @*<select name="comm_states" id="" class="form-control">
                                                         <option value="-1">--Select--</option>
                                                         <option value="Andhra Pradesh">Andhra Pradesh</option>
                                                         <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
@@ -536,18 +317,19 @@
                                                         <option value="Uttar Pradesh">Uttar Pradesh</option>
                                                         <option value="Uttarakhand">Uttarakhand</option>
                                                         <option value="West Bengal">West Bengal</option>
-                                                    </select>
-                                                </div>
-                                                <span class="error" id="perma_state_error"></span>
+                                                    </select>*@
                                             </div>
+                                            <span class="error" id="comm_states_error"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">District<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    <select name="perma_district" id="" class="form-control">
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">District<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <select id="comm_district" class="form-control"></select>
+                                                @*<select name="comm_district" id="" class="form-control">
                                                         <option value="-1">--Select--</option>
                                                         <option value="Agra">Agra</option>
                                                         <option value="Aligarh">Aligarh</option>
@@ -624,7 +406,272 @@
                                                         <option value="Sultanpur">Sultanpur</option>
                                                         <option value="Unnao">Unnao</option>
                                                         <option value="Varanasi">Varanasi</option>
-                                                    </select>
+                                                    </select>*@
+                                            </div>
+                                            <span class="error" id="comm_district_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Phone (Office) <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control" })
+                                                    @*<input type="number" min="0" name="comm_dial_code" id="commDialCode" class="form-control">*@
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control" })
+                                                    @*<input type="tel" name="comm_officePhone" class="form-control">*@
+                                                </div>
+                                            </div>
+                                            <span class="error" id="comm_officePhone_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control" })
+                                                    @*<input type="number" min="0" name="comm_faxCode" id="commFaxCode" class="form-control">*@
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control" })
+                                                    @*<input type="tel" name="comm_faxNumber" class="form-control">*@
+                                                </div>
+                                            </div>
+                                            <div class="error" id="comm_faxNumber_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Mobile<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control" })
+                                            @*<input type="tel" name="comm_mobileNumber" class="form-control">*@
+                                            <div class="error" id="comm_mobileNumber_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Email<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationEmail, new { @class = "form-control" })
+                                            @*<input type="email" name="comm_email" class="form-control">*@
+                                            <div class="error" id="comm_email_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-1 rounded border-grey h-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address</p>
+                        <div class="py-2 p-md-4">
+                            <label class="d-flex align-items-center justify-content-start px-3">
+                                <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2" onclick="sameAddressAsCommunication()">
+                                <p class="m-0">Same as Communication Address</p>
+                            </label>
+                            <div class="row w-100" id="permanent_add">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Address 1<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress1, new { @class = "form-control" })
+                                                @*<input type="text" name="perma_address1" class="form-control">*@
+                                                <div class="error" id="perma_address1_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Address 2</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress2, new { @class = "form-control" })
+                                                @*<input type="text" name="perma_address2" class="form-control">*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Address 3</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress3, new { @class = "form-control" })
+                                                @*<input type="text" name="perma_address3" class="form-control">*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Location</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control" })
+                                                @*<input type="text" name="perma_location" class="form-control">*@
+                                                <span class="error" id="perma_location_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control" })
+                                                @*<input type="text" name="perma_city" class="form-control">*@
+                                                <span class="error" id="perma_city_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control" })
+                                                @*<input type="number" name="perma_pincode" class="form-control">*@
+                                                <span class="error" id="perma_pincode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">State<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.PerOrRegAddressStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                    @*<select name="perma_state" id="" class="form-control">
+                                                            <option value="-1">--Select--</option>
+                                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chandigarh">Chandigarh</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                                                            <option value="Daman and Diu">Daman and Diu</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                        </select>*@
+                                                </div>
+                                                <span class="error" id="perma_state_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">District<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <select id="perma_district" class="form-control"></select>
+                                                    @*<select name="perma_district" id="" class="form-control">
+                                                            <option value="-1">--Select--</option>
+                                                            <option value="Agra">Agra</option>
+                                                            <option value="Aligarh">Aligarh</option>
+                                                            <option value="Allahabad">Allahabad</option>
+                                                            <option value="Ambedkar Nagar">Ambedkar Nagar</option>
+                                                            <option value="Amethi">Amethi</option>
+                                                            <option value="Amroha">Amroha</option>
+                                                            <option value="Auraiya">Auraiya</option>
+                                                            <option value="Azamgarh">Azamgarh</option>
+                                                            <option value="Baghpat">Baghpat</option>
+                                                            <option value="Bahraich">Bahraich</option>
+                                                            <option value="Ballia">Ballia</option>
+                                                            <option value="Balrampur">Balrampur</option>
+                                                            <option value="Banda">Banda</option>
+                                                            <option value="Barabanki">Barabanki</option>
+                                                            <option value="Bareilly">Bareilly</option>
+                                                            <option value="Basti">Basti</option>
+                                                            <option value="Bhadohi">Bhadohi</option>
+                                                            <option value="Bijnor">Bijnor</option>
+                                                            <option value="Budaun">Budaun</option>
+                                                            <option value="Bulandshahr">Bulandshahr</option>
+                                                            <option value="Chandauli">Chandauli</option>
+                                                            <option value="Chitrakoot">Chitrakoot</option>
+                                                            <option value="Deoria">Deoria</option>
+                                                            <option value="Etah">Etah</option>
+                                                            <option value="Etawah">Etawah</option>
+                                                            <option value="Faizabad">Faizabad</option>
+                                                            <option value="Farrukhabad">Farrukhabad</option>
+                                                            <option value="Fatehpur">Fatehpur</option>
+                                                            <option value="Firozabad">Firozabad</option>
+                                                            <option value="Gautam Buddha Nagar">Gautam Buddha Nagar</option>
+                                                            <option value="Ghaziabad">Ghaziabad</option>
+                                                            <option value="Ghazipur">Ghazipur</option>
+                                                            <option value="Gonda">Gonda</option>
+                                                            <option value="Gorakhpur">Gorakhpur</option>
+                                                            <option value="Hamirpur">Hamirpur</option>
+                                                            <option value="Hapur">Hapur</option>
+                                                            <option value="Hardoi">Hardoi</option>
+                                                            <option value="Hathras">Hathras</option>
+                                                            <option value="Jalaun">Jalaun</option>
+                                                            <option value="Jaunpur">Jaunpur</option>
+                                                            <option value="Jhansi">Jhansi</option>
+                                                            <option value="Kannauj">Kannauj</option>
+                                                            <option value="Kanpur Dehat">Kanpur Dehat</option>
+                                                            <option value="Kanpur Nagar">Kanpur Nagar</option>
+                                                            <option value="Kasganj">Kasganj</option>
+                                                            <option value="Kaushambi">Kaushambi</option>
+                                                            <option value="Kheri">Kheri</option>
+                                                            <option value="Kushinagar">Kushinagar</option>
+                                                            <option value="Lalitpur">Lalitpur</option>
+                                                            <option value="Lucknow">Lucknow</option>
+                                                            <option value="Maharajganj">Maharajganj</option>
+                                                            <option value="Mahoba">Mahoba</option>
+                                                            <option value="Mainpuri">Mainpuri</option>
+                                                            <option value="Mathura">Mathura</option>
+                                                            <option value="Mau">Mau</option>
+                                                            <option value="Meerut">Meerut</option>
+                                                            <option value="Mirzapur">Mirzapur</option>
+                                                            <option value="Moradabad">Moradabad</option>
+                                                            <option value="Muzaffarnagar">Muzaffarnagar</option>
+                                                            <option value="Pilibhit">Pilibhit</option>
+                                                            <option value="Pratapgarh">Pratapgarh</option>
+                                                            <option value="Raebareli">Raebareli</option>
+                                                            <option value="Rampur">Rampur</option>
+                                                            <option value="Saharanpur">Saharanpur</option>
+                                                            <option value="Sambhal">Sambhal</option>
+                                                            <option value="Sant Kabir Nagar">Sant Kabir Nagar</option>
+                                                            <option value="Shahjahanpur">Shahjahanpur</option>
+                                                            <option value="Shamli">Shamli</option>
+                                                            <option value="Shravasti">Shravasti</option>
+                                                            <option value="Siddharthnagar">Siddharthnagar</option>
+                                                            <option value="Sitapur">Sitapur</option>
+                                                            <option value="Sonbhadra">Sonbhadra</option>
+                                                            <option value="Sultanpur">Sultanpur</option>
+                                                            <option value="Unnao">Unnao</option>
+                                                            <option value="Varanasi">Varanasi</option>
+                                                        </select>*@
                                                 </div>
                                                 <span class="error" id="perma_district_error"></span>
                                             </div>
@@ -636,10 +683,12 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <input type="number" name="perma_dial_code" class="form-control">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control" })
+                                                        @*<input type="number" name="perma_dial_code" id="permaDialCode" class="form-control">*@
                                                     </div>
                                                     <div class="col-8 pl-0">
-                                                        <input type="tel" name="perma_officePhone" class="form-control">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { @class = "form-control" })
+                                                        @*<input type="tel" name="perma_officePhone" class="form-control">*@
                                                     </div>
                                                 </div>
                                                 <span class="error" id="perma_officePhone_error"></span>
@@ -652,10 +701,12 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <input type="number" name="perma_faxCode" class="form-control">
+                                                        @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control" })
+                                                        @*<input type="number" name="perma_faxCode" id="permaFaxCode" class="form-control">*@
                                                     </div>
                                                     <div class="col-8 pl-0">
-                                                        <input type="tel" name="perma_faxNumber_error" class="form-control">
+                                                        @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control" })
+                                                        @*<input type="tel" name="perma_faxNumber_error" class="form-control">*@
                                                     </div>
                                                 </div>
                                                 <span class="error" id="perma_faxNumber_error"></span>
@@ -688,7 +739,12 @@
                                             <div class="row">
                                                 <div class="col-4">
                                                     <div class="custom_select">
-                                                        <select name="officialTitle" id="" class="form-control">
+                                                        @*@{
+                                                                var officialTitleItems = new List<SelectListItem> { new SelectListItem { Text = "Mr.", Value = "Mr." }, new SelectListItem { Text = "Mrs.", Value = "Mrs." }, new SelectListItem { Text = "Ms.", Value = "Ms." } };
+                                                            }
+                                                            @Html.DropDownListFor(m => m.KeyOffTitle, new SelectList(officialTitleItems), "-- Select --")*@
+
+                                                        <select name="KeyOffTitle" id="" class="form-control">
                                                             <option value="-1">--Select--</option>
                                                             <option value="">Mr.</option>
                                                             <option value="">Mrs.</option>
@@ -703,20 +759,23 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">First Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="official_fName" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffFirstName, new { @class = "form-control" })
+                                            @*<input type="text" name="official_fName" class="form-control">*@
                                             <span class="error" id="official_fName_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Last Name</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffLastName, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Designation <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" name="official_designation" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control" })
+                                            @*<input type="text" name="official_designation" class="form-control">*@
                                             <span class="error" id="official_designation_error"></span>
                                         </div>
                                     </div>
@@ -725,10 +784,12 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <input type="text" class="form-control">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control" })
+                                                    @*<input type="text" class="form-control">*@
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    <input type="tel" class="form-control">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control" })
+                                                    @*<input type="tel" class="form-control">*@
                                                 </div>
                                             </div>
                                         </div>
@@ -736,7 +797,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Mobile <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <input type="tel" name="official_mobile" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control" })
+                                            @*<input type="tel" name="official_mobile" class="form-control">*@
                                             <span class="error" id="official_mobile_error"></span>
                                         </div>
                                     </div>
@@ -751,13 +813,15 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Middle Name </label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -765,10 +829,12 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <input type="text" class="form-control">
+                                                    @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control" })
+                                                    @*<input type="text" class="form-control">*@
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    <input type="text" class="form-control">
+                                                    @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control" })
+                                                    @*<input type="text" class="form-control">*@
                                                 </div>
                                             </div>
                                         </div>
@@ -776,7 +842,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Email</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="email" class="form-control">
+                                            @*<input type="email" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -799,20 +866,21 @@
                                         <label class="font-weight-normal col-md-5 col-12">Secret Question</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="" id="" class="form-control">
-                                                    <option selected="selected">--Select--</option>
-                                                    <option value="1701">Mother's maiden name</option>
-                                                    <option value="1702">Father's maiden name</option>
-                                                    <option value="1703">City of Birth</option>
-                                                    <option value="1704">Name of first school</option>
-                                                    <option value="1705">Date of marriage</option>
-                                                    <option value="1706">Name of the childhood hero</option>
-                                                    <option value="1707">Favorite pastime</option>
-                                                    <option value="1708">Favorite sport</option>
-                                                    <option value="1709">Favorite actor</option>
-                                                    <option value="1710">Favorite actress</option>
-                                                    <option value="1711">Pet's name</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.KeyOfficialSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
+                                                @*<select name="" id="" class="form-control">
+                                                        <option selected="selected">--Select--</option>
+                                                        <option value="1701">Mother's maiden name</option>
+                                                        <option value="1702">Father's maiden name</option>
+                                                        <option value="1703">City of Birth</option>
+                                                        <option value="1704">Name of first school</option>
+                                                        <option value="1705">Date of marriage</option>
+                                                        <option value="1706">Name of the childhood hero</option>
+                                                        <option value="1707">Favorite pastime</option>
+                                                        <option value="1708">Favorite sport</option>
+                                                        <option value="1709">Favorite actor</option>
+                                                        <option value="1710">Favorite actress</option>
+                                                        <option value="1711">Pet's name</option>
+                                                    </select>*@
                                             </div>
                                         </div>
                                     </div>
@@ -821,7 +889,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control" })
+                                            @* <input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -853,19 +922,23 @@
                                             <div class="d-flex align-items-center justify-content-between flex-wrap">
                                                 <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                     <span class="d-flex font-12">HCV</span>
-                                                    <input type="text" class="w-100">
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedHCV, new { @class = "w-100" })
+                                                    @* <input type="text" class="w-100">*@
                                                 </div>
                                                 <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                     <span class="d-flex font-12">LCV</span>
-                                                    <input type="text" class="w-100">
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedLCV, new { @class = "w-100" })
+                                                    @*<input type="text" class="w-100">*@
                                                 </div>
                                                 <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                     <span class="d-flex font-12">MUV/SUV</span>
-                                                    <input type="text" class="w-100">
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedMUVSUV, new { @class = "w-100" })
+                                                    @*<input type="text" class="w-100">*@
                                                 </div>
                                                 <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                     <span class="d-flex font-12">Car/Jeep</span>
-                                                    <input type="text" class="w-100">
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedCarJeep, new { @class = "w-100" })
+                                                    @*<input type="text" class="w-100">*@
                                                 </div>
                                             </div>
                                         </div>
@@ -876,10 +949,12 @@
                                         <label class="font-weight-normal col-md-5 col-12">Type of Fleet</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="" id="" class="form-control">
+                                                @Html.DropDownListFor(m => m.CustomerTypeOfFleetID, new SelectList(Model.CustomerTypeOfFleetMdl, "TypeOfFleetId", "TypeOfFleetName"), new { @class = "form-control" })
+
+                                                @*<select name="" id="" class="form-control">
                                                     <option value="1701">Owned</option>
                                                     <option value="1701">Attached</option>
-                                                </select>
+                                                    </select>*@
                                             </div>
                                         </div>
                                     </div>
@@ -888,7 +963,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Card applied for</label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.KeyOfficialCardAppliedFor, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -900,7 +976,8 @@
                                                 <div class="col-12 col-sm-8">
                                                     <div class="py-2">
                                                         <div class=" position-relative pr-4">
-                                                            <input type="text" class="form-control">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile1, new { @class = "form-control" })
+                                                            @*<input type="text" class="form-control">*@
                                                             <a href="#" class="form_info" title="Fuel in Rs.">?</a>
                                                         </div>
                                                     </div>
@@ -908,7 +985,8 @@
                                                 <div class="col-12 col-sm-4">
                                                     <div class=" py-2">
                                                         <div class=" position-relative pr-4">
-                                                            <input type="text" class="form-control">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile2, new { @class = "form-control" })
+                                                            @* <input type="text" class="form-control">*@
                                                             <a href="#" class="form_info" title="Lube in Rs.">?</a>
                                                         </div>
                                                     </div>
@@ -940,7 +1018,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Number Of Cards </label>
                                         <div class="col-md-7 col-12">
-                                            <input type="text" class="form-control">
+                                            @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCardsId", @class = "form-control" })
+                                            @*<input type="text" class="form-control">*@
                                         </div>
                                     </div>
                                 </div>
@@ -965,26 +1044,83 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
                                                     <label>DD/Cheque No</label>
-                                                    <input type="text" class="form-control">
+                                                    @Html.TextBoxFor(m => m.FeePaymentsChequeNo, new { @id = "FeePaymentsChequeNo", @class = "form-control" })
+                                                    @*<input type="text" class="form-control">*@
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
                                                     <label>DD/Cheque Date</label>
-                                                    <input type="date" class="form-control">
+                                                    @Html.TextBoxFor(m => m.FeePaymentsChequeDate, new { @id = "FeePaymentsChequeDate", @type = "date", @class = "form-control" })
+                                                    @*<input type="date" class="form-control">*@
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+
+                                        <div class="d-flex align-items-center justify-content-center mt-3">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary px-4 py-2" onclick="ClearCardDeatils()" type="button">Reset</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div>
+                                <table id="NoOfCardsTbl" class="table table-striped table-bordered table-responsive" style="display:none;">
+                                    <tr>
+                                        <th>
+                                            Sl No.
+                                        </th>
+                                        <th>
+                                            Vehicle Number/Card Identifier
+                                        </th>
+                                        <th>
+                                            Vehicle Type
+                                        </th>
+                                        <th>
+                                            Vehicle Make
+                                        </th>
+                                        <th>
+                                            Year of Registration
+                                        </th>
+                                    </tr>
+                                </table>
+
+
+                            </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.CustomerSubTypeID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.CustomerRegionID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.CommunicationDistrict)</div>
+                            <div style="display:none;">@Html.CheckBoxFor(m => m.IsSameAsCommAddress, new { id = "hdnSameAsCommAddress" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress1, new { id = "hdnPerOrRegAddress1" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress2, new { id = "hdnPerOrRegAddress2" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress3, new { id = "hdnPerOrRegAddress3" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { id = "hdnPerOrRegAddressLocation" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressCity, new { id = "hdnPerOrRegAddressCity" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { id = "hdnPerOrRegAddressPinCode" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressStateID, new { id = "hdnPerOrRegAddressStateID" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDistrict, new { id = "hdnPerOrRegAddressDistrict" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFaxCode, new { id = "hdnPermanentFaxCode" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onClick="showkeyOfficialInfo()" type="button">Previous</button>
+                                    <button class="btn btn_primary px-4 py-2" onclick="showkeyOfficialInfo()" type="button">Previous</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onClick="showUploadDocument()" type="button">Next</button>
+                                    <button class="btn btn_primary px-4 py-2" id="btnAdd" type="submit">Save</button>
+                                    @*<button class="btn btn_primary px-4 py-2" onClick="showUploadDocument()" type="button">Next</button>*@
                                 </div>
                             </div>
                         </div>
@@ -1025,19 +1161,353 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" type="button" onClick="showCardInfo();">Previous</button>
+                                    <button class="btn btn_primary px-4 py-2" type="button"  onclick="showCardInfo();">Previous</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" type="button">Save</button>
+                                    <button class="btn btn_primary px-4 py-2"  type="button">Save</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @* }*@
         </form>
+
     </div>
 </div>
+<script type="text/javascript">
+    $("#btnAdd").click(function () {
+        let flag = 'Y';
+
+        if (document.getElementById("sameAddressCheck").checked == true) {
+            $('#hdnPermAddress1').checked = true;
+            $('#hdnPermAddress1').val($('#CommunicationAddress1').val());
+            $('#hdnPerOrRegAddress2').val($('#CommunicationAddress2').val());
+            $('#hdnPerOrRegAddress3').val($('#CommunicationAddress3').val());
+            $('#hdnPerOrRegAddressLocation').val($('#CommunicationLocation').val());
+            $('#hdnPerOrRegAddressCity').val($('#CommunicationCity').val());
+            $('#hdnPerOrRegAddressStateID').val($('#CommunicationStateID').val());
+            $('#hdnPerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
+            $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+            $('#hdnPerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+            $('#hdnPermanentFax').val($('#CommunicationFax').val());
+            $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+            $('#hdnPermanentFaxCode').val($('#CommunicationFaxCode').val());
+
+        }
+
+
+        alert("Inside");
+        if (flag == 'N') {
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+    });
+    $("#customerSubType").change(function () {
+        var id = this.value;
+        $("#CustomerSubTypeID").val(id);
+    });
+
+    $("#regionalOffice").change(function () {
+        var id = this.value;
+        $("#CustomerRegionID").val(id);
+    });
+    // on customer selection Change
+    $("#CustomerTypeID").change(function () {
+        var id = this.value;
+            if (id != 0) {
+                $("#customerSubType_error").html("");
+            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetCustomerSubType", "Customer")',
+                data: { CustomerTypeID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerSubType").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.customerSubTypeID,
+                                    text: data.customerSubTypeName
+                                }).html(data.customerSubTypeName).appendTo("#customerSubType");
+                        });
+
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Sub Type");
+                }
+            });
+    });
+
+     // on Zone  selection Change
+    $("#CustomerZonalOfficeID").change(function () {
+        var id = this.value;
+            if (id != 0) {
+                $("#regionalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalDetails", "Customer")',
+                data: { ZonalOfficeID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#regionalOffice").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                        });
+
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Region");
+                }
+            });
+    });
+    $("#CommunicationStateID").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#state_error").html("");
+            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Customer")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#comm_district").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#comm_district");
+                        });
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
+                }
+            });
+    });
+    $("#PerOrRegAddressStateID").change(function () {
+            var id = this.value;
+         if (id != 0) {
+                $("#state_error").html("");
+            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Customer")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#perma_district").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#perma_district");
+                        });
+
+                        //var sameAscheck = document.getElementById("sameAddressCheck");
+                        //if (sameAscheck) {
+                        //    $('#perma_district').val($('#comm_district').val());
+                        //}
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
+                }
+
+           });
+
+    });
+
+    function sameAddressAsCommunication() {
+        var sameAscheck = document.getElementById("sameAddressCheck");
+        var permanent_add = document.querySelector("#permanent_add");
+        // var sameas = false;
+        if (document.getElementById("sameAddressCheck").checked == true) {
+
+            $('#PerOrRegAddress1').val($('#CommunicationAddress1').val());
+            $('#PerOrRegAddress2').val($('#CommunicationAddress2').val());
+            $('#PerOrRegAddress3').val($('#CommunicationAddress3').val());
+            $('#PerOrRegAddressLocation').val($('#CommunicationLocation').val());
+            $('#PerOrRegAddressCity').val($('#CommunicationCity').val());
+            $('#PerOrRegAddressStateID').val($('#CommunicationStateID').val());
+            $('#PerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
+            $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+            $('#PerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+            $('#PermanentFax').val($('#CommunicationFax').val());
+            $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+            $('#PermanentFaxCode').val($('#CommunicationFaxCode').val());
+            var Distrid = $('#comm_district').val();
+            var DistrictName = $("#comm_district option:selected").text();
+            if (Distrid != 0 || Distrid != undefined) {
+            $("#perma_district").html("");
+            $('<option>',
+                {
+                    value: Distrid ,
+                    text: DistrictName
+                }).html(DistrictName).appendTo("#perma_district");
+            }
+            if (document.getElementById("sameAddressCheck").checked == true) {
+                permanent_add.querySelectorAll("input, select").forEach(function (i) {
+                    i.setAttribute("disabled", true);
+                })
+            }
+           // sameas = true;
+
+        }
+        else {
+
+
+            $('#PerOrRegAddress1').val('');
+            $('#PerOrRegAddress2').val('');
+            $('#PerOrRegAddress3').val('');
+            $('#PerOrRegAddressLocation').val('');
+            $('#PerOrRegAddressCity').val('');
+            $('#PerOrRegAddressStateID')[0].selectedIndex = 0;
+            $('#PerOrRegAddressPinCode').val('');
+            $('#PerOrRegAddressDialCode').val('');
+            $('#PermanentFaxCode').val('');
+            $('#perma_district')[0].selectedIndex = 0;
+            $('#PerOrRegAddressPhoneNumber').val('');
+            $('#PermanentFax').val('');
+
+            $("#perma_district").html("");
+            if (document.getElementById("sameAddressCheck").checked == false) {
+                permanent_add.querySelectorAll("input, select").forEach(function (i) {
+                    i.removeAttribute("disabled", true);
+                })
+            }
+
+           // sameas = false;
+        }
+
+
+
+    }
+
+ function LoadCardDeatils() {
+
+        // var vehicleTypelst = "<select id='ppp' class='form - control'>";
+     
+
+         $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+                data: {},
+                dataType: "json",
+             success: function (data, status, xhr) {
+           
+
+                 var NoOfcards = $('#NoOfCardsId').val();
+                 $("#NoOfCardsTbl td").parent().remove();
+
+                 for (var i = 1; i < parseInt(NoOfcards) + 1; i++) {
+                     var id = 'ddlVehicleType'+i;
+                     var rows = "<tbody><tr>"
+                         + "<td><span class='rowData'>" + i + "</span></td>"
+                         + "<td><span class='rowData'><input type='text' class='form - control'> </span></td>"
+                         + "<td><select id='" + id +  "'class='vls'></select></td>"
+                         + "<td><span class='rowData'><input type='text' class='form - control'></span></td>"
+                         + "<td><span class='rowData'><input type='text' class='form - control'></span></td>";
+
+                     $('#NoOfCardsTbl').append(rows);
+                     $("#" + id).html("");
+                     $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
+                         $('<option>',
+                             {
+                                 value: data.vehicleTypeId,
+                                 text: data.vehicleTypeName
+                             }).html(data.vehicleTypeName).appendTo("#" + id);
+                     });
+                 }
+
+
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating VehicleTpeData Data");
+                 }
+
+
+           });
+
+      //  vehicleTypelst.append('</select >');
+
+     
+
+
+
+
+        document.getElementById('NoOfCardsTbl').style.display = 'block';
+
+
+        $('#NoOfCardsId').setAttribute("disabled", true);
+        $('#FeePaymentsChequeDate').setAttribute("disabled", true);
+        $('#FeePaymentsChequeNo').setAttribute("disabled", true);
+        $('#FeePaymentsChequeDate').setAttribute("disabled", true);
+
+
+
+
+
+    }
+
+    function ClearCardDeatils() {
+
+        $('#NoOfCardsId').val('');
+        $('#FeePaymentsChequeDate').val('');
+        $('#FeePaymentsChequeNo').val('');
+        $('#NoOfCardsTbl > tr').remove();
+        document.getElementById('NoOfCardsTbl').style.display = 'none';
+
+
+        $('#NoOfCardsId').setAttribute("disabled", false);
+        $('#FeePaymentsChequeDate').setAttribute("disabled", false);
+        $('#FeePaymentsChequeNo').setAttribute("disabled", false);
+        $('#FeePaymentsChequeDate').setAttribute("disabled", false);
+
+    }
+
+
+
+
+</script>

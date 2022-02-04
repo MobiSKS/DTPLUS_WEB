@@ -28,13 +28,7 @@
         public static string createHeadOffice= "/dtpwebapi/api/dtplus/hq/insert_hq";
         public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
 
-        #endregion
-
-        #region Customer
-
-        public static string getCustomerType= "/dtpwebapi/api/dtplus/customer/get_customer_type";
-
-        #endregion
+        #endregion       
 
         #region Cards
 
@@ -52,6 +46,23 @@
         public static string getMerchantType = "api/dtplus/merchant/get_merchant_type";
         public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
         public static string getSbu = "api/dtplus/merchant/get_sbu";
+        #endregion
+
+        #region customer
+
+        public static string getCustomerType = "/dtpwebapi/api/dtplus/customer/get_customer_type";
+        public static string getZonalOffice = "/dtpwebapi/api/dtplus/zonaloffice/get_zonal_office";
+        public static string getRegionalOffice = "/dtpwebapi/api/dtplus/regionaloffice/get_regional_office";
+        public static string getCustomerSubType = "/dtpwebapi/api/dtplus/customer/get_customer_sub_type";
+        public static string getTbentityName = "/dtpwebapi/api/dtplus/customer/get_tbentity_name";
+        public static string getTypeOfFleet = "/dtpwebapi/api/dtplus/customer/get_type_of_fleet";
+        public static string getSecretQuestion = "/dtpwebapi/api/dtplus/customer/get_secret_question";
+        public static string insertCustomer = "/dtpwebapi/api/dtplus/customer/insert_customer";
+        public static string getVehicleTpe = "/dtpwebapi/api/dtplus/customer/get_vehicle_type";
+        public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
+
+
+
         #endregion
     }
 }
