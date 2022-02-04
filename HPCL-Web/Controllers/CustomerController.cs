@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using HPCL_Web.Models.Officer;
 
 namespace HPCL_Web.Controllers
 {
