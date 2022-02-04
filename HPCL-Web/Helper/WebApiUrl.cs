@@ -28,13 +28,7 @@
         public static string createHeadOffice= "/dtpwebapi/api/dtplus/hq/insert_hq";
         public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
 
-        #endregion
-
-        #region Customer
-
-        public static string getCustomerType= "/dtpwebapi/api/dtplus/customer/get_customer_type";
-
-        #endregion
+        #endregion       
 
         #region Cards
 
