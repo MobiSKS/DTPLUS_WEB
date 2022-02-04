@@ -1,0 +1,326 @@
+﻿@model IEnumerable<HPCL_Web.Models.Officer.OfficerListModel>
+@{
+    ViewData["Title"] = "Details";
+    PagerModel pager = new PagerModel();
+    int pageNo = 0;
+
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<marquee width="100%" direction="left" height="30%">
+    Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+</marquee>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <h5>Manage Officers</h5>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        {
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="border-1 rounded border-grey"></div>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Search Officer</p>
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-xs-4" style="width:35%;margin-left:1.5%;">
+                                            <label class="font-weight-normal col-md-5 col-12">Officer Type</label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                    <select id="officerType" name="officerType" class="form-control" onchange="getLocationFunc()"></select>
+                                                </div>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width:35%;">
+                                            <label class="font-weight-normal col-md-5 col-12">Location <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                    <select id="location" name="location" class="form-control"></select>
+                                                </div>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="margin-left:-7%;">
+                                            <button class="btn btn-block">Search</button>
+                                        </div>
+                                        <div class="col-xs-4" style="margin-left: 20.5%;">
+                                            <a class="btn btn-block" style="background-color:cornflowerblue;color:white;" asp-controller="Officer" asp-action="Create">Add Officer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        }
+        <table class="table table-striped">
+            <thead style="background-color:lightgray;">
+                <tr>
+                    <th style="width:5%;">S No.</th>
+                    <th style="width:10%;">Officer Type</th>
+                    <th style="width:15%;">First Name</th>
+                    <th style="width:15%;">Last Name</th>
+                    <th style="width:15%;">Email</th>
+                    <th style="width:15%;">Mobile</th>
+                    <th style="width:15%;">Location</th>
+                    <th style="width:15%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.OfficerID</td>
+                        <td>@item.OfficerTypeName</td>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.EmailId</td>
+                        <td>@item.MobileNo</td>
+                        <td>@item.LocationName</td>
+                        <td>
+                            <a asp-action="EditOfficer" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editPage.png" style="width: 15%;" /></a>
+                            <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editLocation.png" style="width: 15%;" /></a>
+                            <a asp-action="Delete" asp-route-OfficerID="@item.OfficerID" onclick = "return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="container">
+            @if (pager.TotalPages > 0)
+            {
+                <ul class="pagination justify-content-end">
+                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                    {
+                        <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-controller="Officer" asp-action="Details" asp-route-pg="@pge">@pge</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var ofcType = '@ViewBag.OfficerType';
+    var loc = '@ViewBag.location';
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetOfficerTypeDetails", "Officer")',
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#officerType").html("");
+                    $.each(data, function (i, data) {
+                        if (i == 0) {
+                            if (ofcType == 0) {
+                                $('<option selected>',
+                                    {
+                                        value: 0,
+                                        text: "All"
+                                    }).html("All").appendTo("#officerType");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "All"
+                                    }).html("All").appendTo("#officerType");
+                            }
+                        }
+                        if (ofcType == data.officerTypeID) {
+                            $('<option>',
+                                {
+                                    value: data.officerTypeID,
+                                    text: data.officerTypeName,
+                                    selected: "selected"
+                                }).html(data.officerTypeName).appendTo("#officerType");
+                        }
+                        else {
+                            $('<option>',
+                                {
+                                    value: data.officerTypeID,
+                                    text: data.officerTypeName
+                                }).html(data.officerTypeName).appendTo("#officerType");
+                        }
+                    });
+                    $('<option>',
+                        {
+                            value: 0,
+                            text: "All"
+                        }).html(data.regionName).appendTo("#location");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Location Data");
+            }
+        });
+        if (loc > 0) {
+            getLocationFunc();
+        }
+    });
+
+    function getLocationFunc() {
+        var id = $('#officerType :selected').val();
+        if (!(id >= 0)) {
+            if (ofcType > 0 && loc > 0) {
+                id = ofcType;
+            }
+        }
+
+        //else if ($('#officerType :selected').val() >= 0) {
+        //    id = 
+        //}
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetLocationDetails", "Officer")',
+            data: { OfcrType: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    debugger;
+                    if (id == "1" || id == "4" || id == "6") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                if (loc == 0) {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All",
+                                            selected: "selected"
+                                        }).html("All").appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All"
+                                        }).html("All").appendTo("#location");
+                                }
+                            }
+                            if (loc == data.regionID) {
+                                $('<option>',
+                                    {
+                                        value: data.regionID,
+                                        text: data.regionName,
+                                        selected: "selected"
+                                    }).html(data.regionName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionID,
+                                        text: data.regionName
+                                    }).html(data.regionName).appendTo("#location");
+                            }
+
+                        });
+                    }
+                    else if (id == "3" || id == "5") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                if (loc == 0) {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All",
+                                            selected: "selected"
+                                        }).html("All").appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All"
+                                        }).html("All").appendTo("#location");
+                                }
+                            }
+                            if (loc == data.zoneID) {
+                                $('<option>',
+                                    {
+                                        value: data.zoneID,
+                                        text: data.zoneName,
+                                        selected: "selected"
+                                    }).html(data.zoneName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.zoneID,
+                                        text: data.zoneName
+                                    }).html(data.zoneName).appendTo("#location");
+                            }
+                        });
+                    }
+                    else if (id == "2") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                if (loc == 0) {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All",
+                                            selected: "selected"
+                                        }).html("All").appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "All"
+                                        }).html("All").appendTo("#location");
+                                }
+                            }
+                            if (loc == data.hqid) {
+                                $('<option>',
+                                    {
+                                        value: data.hqid,
+                                        text: data.hqName,
+                                        selected: "selected"
+                                    }).html(data.hqName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.hqid,
+                                        text: data.hqName
+                                    }).html(data.hqName).appendTo("#location");
+                            }
+                        });
+                    }
+                    else {
+                        $('<option>',
+                            {
+                                value: 0,
+                                text: "All"
+                            }).html("All").appendTo("#location");
+                    }
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Location Data");
+            }
+        });
+    };
+</script>
