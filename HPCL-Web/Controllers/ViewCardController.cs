@@ -58,7 +58,7 @@ namespace HPCL_Web.Controllers
                         };
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
+                        List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
                         ModelState.Clear();
                         return Json(new { searchList = searchList });
                     }
