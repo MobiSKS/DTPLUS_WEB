@@ -10,21 +10,18 @@
 
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
 
-        <form method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="ViewCardSearch" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <form method="post" data-ajax="true" data-ajax-controller="ViewCard" data-ajax-action="ViewCardSearch" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
 
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
 
                     <div class="border-1 rounded border-grey h-100 mt-3">
 
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader"> View Cards Limits </p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold"> View Cards Limits </p>
                         <div class="py-2 p-md-4">
 
                             <div class="form-group d-flex align-items-center flex-wrap">
                                 <div class="tab-content">
-
-                                    <div id="CustomerCardsSection" class="tab-pane active" role="tabpanel">
-                                        <div class="row w-100">
 
                                             <div class="d-flex align-items-center justify-content-between flex-wrap">
 
@@ -36,21 +33,20 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12">Customer ID<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                                            @Html.TextBoxFor(m => m.Customerid, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(m => m.Customerid, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        
 
 
                                         <div class="d-flex align-items-center justify-content-left mt-md-2">
+
                                             <div class="px-2">
-                                                <button class="btn" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CardSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
-                                                <a class="btn" href="@Url.Action("ViewCardSearch")" id="btnrest" name="reset" style="background-color:#084693;color:white;">
-                                                    RESET
-                                                </a>
+                                                <button class="btn" type="submit" id="btnSave" name="submit" onclick="showGrid()" style="background-color:#084693;color:white;">SEARCH</button>
+                                                <a class="btn" href="#" id="btnCancel" name="cancel" onclick="resetFields()" style="background-color:#084693;color:white;">RESET</a>
                                                 <a class="btn" href="@Url.Action("AddOrEditMobile")" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">ADD/EDIT MOBILE</a>
                                             </div>
                                         </div>
@@ -105,78 +101,130 @@
 
 
 
-
-
-
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-        </form>
+                    
+               </div> 
+   </form>
 
     </div>
 </div>
-
 <script type="text/javascript">
-
-    $(document).ready(function () {
-        let tableData = sessionStorage.getItem("tableData");
-        let getCusId = sessionStorage.getItem("cusmId");
+    function showGrid() {
         if ($("input:text").val() == "") {
             document.getElementById('CardSearch').style.display = 'none';
         }
         if (($("input:text").val() != "")) {
             document.getElementById('CardSearch').style.display = 'inline-table';
         }
-        if (tableData != null) {
-            document.getElementById('CardSearch').style.display = 'block'
-            $('#GetCustomerIdValue').val(getCusId);
-            $('#CardSearch').html(tableData);
-        }
+    }
 
+    function resetFields() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        $("#CardSearch td").parent().remove();
+        document.getElementById('CardSearch').style.display = 'none';
+    }
 
-    });
-
-
-
-    //$("#CustomerCardsSection").click(function () {
-    //    $('#CardDetailsTab').tab('show');
-    //    $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards</p>");
-    //});
 
     function OnSuccess(data) {
+
+        console.log(data);
+
         $("#CardSearch td").parent().remove();
 
         for (var i = 0; i < data.searchList.length; i++) {
 
-
             var rows = "<tbody><tr>"
-                + "<td><span class='rowData'>" + (data.searchList[i].sr || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].userName || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].monthlySaleLimits || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].mobileNumber || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].dailySaleBalance|| '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].vehicleNo || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].montlySaleBalance || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].cCMSLimts || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].typeOfLimits || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].availabeCCMSLimits || '') + "</span></td>"
-                + "<td><span class='rowData'>" + (data.searchList[i].cardNumber || '') + "</span></td>"
-
-                + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
-
+                + "<td>" + (data.searchList[i].srNumber || '') + "</td>"
+                + "<td>" + (data.searchList[i].cardNumber || '') + "</td>"
+                + "<td>" + (data.searchList[i].vechileNo || '') + "</td>"
+                + "<td>" + (data.searchList[i].mobileNumber || '') + "</td>"
+                + "<td>" + (data.searchList[i].dailySaleLimit || '') + "</td>"
+                + "<td>" + (data.searchList[i].dailySaleBal || '') + "</td>"
+                + "<td>" + (data.searchList[i].monthlySaleLimit || '') + "</td>"
+                + "<td>" + (data.searchList[i].monthlySaleBal  || '') + "</td>"
+                + "<td>" + (data.searchList[i].cCMSLimit|| '') + "</td>"
+                + "<td>" + (data.searchList[i].limitType || '') + "</td>"
+                + "<td>" + (data.searchList[i].availableCCMSLimit || '') + "</td>"
+                
+                + "</tr ></tbody > ";
 
             $('#CardSearch').append(rows);
+
+            
         }
-        let tableData = $('#CardSearch').html();
-        sessionStorage.setItem("tableData", tableData);
+    }
 
-        let custmId = $('.cusId').html();
-        sessionStorage.setItem("cusmId", custmId);
+    function OnFailure(data) {
+        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+
+    $("#CardSearch").on('click', '.updateStatus', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        var cardNumber = currentRow.find(".crdNo").text();
 
 
+        console.log(customerid, "customerID");
+        
+
+
+        $.ajax({
+            url: "@Url.Action("UpdateStatus","ViewCard")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: customerid },
+            success: function (res) {
+
+                console.log(res,"res");
+
+                $.ajax({
+                    url: "@Url.Action("RefreshGrid", "ViewCard")",
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function (res) {
+
+
+                        $("#CardSearch td").parent().remove();
+
+                        for (var i = 0; i < res.searchList.length; i++) {
+
+                            var rows = "<tbody><tr>"
+                                + "<td>" + (res.searchList[i].srNumber || '') + "</td>"
+                                + "<td>" + (res.searchList[i].cardNumber || '') + "</td>"
+                                + "<td>" + (res.searchList[i].vechileNo || '') + "</td>"
+                                + "<td>" + (res.searchList[i].mobileNumber || '') + "</td>"
+                                + "<td>" + (res.searchList[i].dailySaleBal || '') + "</td>"
+                                + "<td>" + (res.searchList[i].dailySaleLimit || '') + "</td>"
+                                + "<td>" + (res.searchList[i].monthlySaleLimit || '') + "</td>"
+                                + "<td>" + (res.searchList[i].monthlySaleBal || '') + "</td>"
+                                + "<td>" + (res.searchList[i].cCMSLimit || '') + "</td>"
+                                + "<td>" + (res.searchList[i].limitType || '') + "</td>"
+                                + "<td>" + (res.searchList[i].availableCCMSLimit || '') + "</td>"
+                               
+                                + "</tr ></tbody > ";
+
+                            $('#CardSearch').append(rows);
+
+                            
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    });
 
 </script>

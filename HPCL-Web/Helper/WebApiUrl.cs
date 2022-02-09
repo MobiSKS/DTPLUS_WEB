@@ -47,7 +47,7 @@
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
 
-        public static string ViewCardLimitsUrl = "dtpwebapi/api/dtplus/card/view_card_limits";
+        public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
         #endregion
 
         #region Merchant
@@ -69,10 +69,11 @@
         public static string insertCustomer = "/dtpwebapi/api/dtplus/customer/insert_customer";
         public static string getVehicleTpe = "/dtpwebapi/api/dtplus/customer/get_vehicle_type";
         public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
-
+        public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
 
         #endregion
 
-       
+
     }
 }

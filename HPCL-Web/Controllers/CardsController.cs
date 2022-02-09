@@ -143,9 +143,6 @@ namespace HPCL_Web.Controllers
 
             CustomerCards vGrid = JsonConvert.DeserializeObject<CustomerCards>(str);
 
-            //JObject objs = JObject.Parse(JsonConvert.DeserializeObject(str).ToString());
-            //List<CustomerCards> vGrid = objs.ToObject<List<CustomerCards>>();
-
             var searchBody = new CustomerCards
             {
                 UserId = Common.userid,
@@ -949,8 +946,6 @@ namespace HPCL_Web.Controllers
 
             JArray obj = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<ViewGird> vGrid = obj.ToObject<List<ViewGird>>();
-
-
 
             ViewGird grids = new ViewGird
             {
