@@ -54,6 +54,7 @@
         public static string getMerchantType = "api/dtplus/merchant/get_merchant_type";
         public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
         public static string getSbu = "api/dtplus/merchant/get_sbu";
+        public static string insertMerchant = "api/dtplus/merchant/insert_merchant";
         #endregion
 
         #region customer

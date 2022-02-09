@@ -51,7 +51,18 @@ namespace HPCL_Web.Models.Merchant
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "--Select--"
             });
+            PreHighwayNumbers.Add(new PreHighwayNumberModel
+            {
+                PreHighwayNumberID = 1,
+                PreHighwayNumberName = "NH"
+            });
+            PreHighwayNumbers.Add(new PreHighwayNumberModel
+            { 
+                PreHighwayNumberID = 2,
+                PreHighwayNumberName = "SH"
+            });
         }
+        public string SearchMerchantID { get; set; }
         public string MerchantID { get; set; }
         public string  MerchantType { get; set; }
         public string MappedMerchantID { get; set; }
@@ -99,8 +110,12 @@ namespace HPCL_Web.Models.Merchant
         public string Comm_PhoneNumber { get; set; }
         public string Comm_Pre_Fax { get; set; }
         public string Comm_Fax { get; set; }
-        public int NumOfLiveTerminals { get; set; }
+        public int? NumOfLiveTerminals { get; set; }
         public string TerminalTypeRequested { get; set; }
+        public string Retail_DistictID { get; set; }
+        public string RegionalOfcID { get; set; }
+        public string SalesAreaID { get; set; }
+        public string Comm_DistictID { get; set; }
         public virtual List<MerchantTypeModel> MerchantTypes { get; set; }
         public virtual List<OutletCategoryModel> OutletCategories { get; set; }
         public virtual List<SBUTypeModel> SBUTypes { get; set; }
