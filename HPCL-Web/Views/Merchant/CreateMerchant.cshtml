@@ -14,7 +14,7 @@
             <li class="nav-item"> <a class="nav-link disable" id="terminalDetails-tab" data-toggle="tab" href="#terminalDetails" role="tab" aria-controls="terminalDetails" aria-selected="false">Terminal Details</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="summaryDetails-tab" data-toggle="tab" href="#summaryDetails" role="tab" aria-controls="summaryDetails" aria-selected="false">Summary Details</a> </li>
         </ul>
-        <form name="applicationForm" onsubmit="return submitForm()" class="w-100">
+        <form name="applicationForm" method="post" action="@Url.Action("CreateMerchant", "Merchant")" class="w-100">
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="viewProfile" role="tabpanel" aria-labelledby="viewProfile-tab">
                     <div class="border-1 rounded border-grey w-100 mt-3">
@@ -27,7 +27,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-8">
-                                                    @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.SearchMerchantID, new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-4">
                                                     <button class="btn btn_primary px-4 py-2" type="button" onclick="" style="width: 130%">SEARCH</button>
@@ -131,11 +131,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @*@Html.DropDownListFor(m => m.PreHighwayNumber, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control" })*@
-                                                    <select name="comm_states" id="" class="form-control">
-                                                        <option value="1">NH</option>
-                                                        <option value="2">SH</option>
-                                                    </select>
+                                                    @Html.DropDownListFor(m => m.PreHighwayNumber, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-8 pl-0">
                                                     @Html.TextBoxFor(m => m.HighwayNumber, new { @class = "form-control" })
@@ -476,7 +472,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">State</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.Comm_State, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                @Html.DropDownListFor(m => m.Comm_State, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getCommDistrict()" })
                                             </div>
                                         </div>
                                     </div>
@@ -571,15 +567,15 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation",new { @class = "form-control" })
                                                     <p class="m-0">GPRS Installation</p>
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Desktop Installation", new { @class = "form-control" })
                                                     <p class="m-0">Desktop Installation</p>
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Wifi Installation", new { @class = "form-control" })
                                                     <p class="m-0">Wifi Installation</p>
                                                 </div>
                                             </div>
@@ -612,19 +608,18 @@
                                         <div class="col-lg-12 col-md-12 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
-                                                <div class="col-md-7 col-12">
-                                                    Test Value
+                                                <div class="col-md-7 col-12" id="SummaryMerchantID">
                                                 </div>
                                             </div>
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
-                                                <div class="col-md-7 col-12">
+                                                <div class="col-md-7 col-12" id="SummaryRetailOutletName">
                                                     Test Value
                                                 </div>
                                             </div>
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Merchant Type :</label>
-                                                <div class="col-md-7 col-12">
+                                                <div class="col-md-7 col-12" id="SummaryMerchantType">
                                                     Test Value
                                                 </div>
                                             </div>
@@ -903,6 +898,10 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.Retail_DistictID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.SalesAreaID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.Comm_DistictID)</div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
                                     <button class="btn btn_primary px-4 py-2" onClick="return showPrevMerchantTerminaldetails()" type="button">Previous</button>
@@ -920,6 +919,13 @@
 </div>
 
 <script type="text/javascript">
+
+    var model = @Html.Raw(@ViewBag.Message);
+    if (model != "Success") {
+        showAddMerchant();
+
+    }
+
     function showAddMerchant() {
         var ret = true;
 
@@ -931,11 +937,6 @@
 
     function showMerchantCommAddress() {
 
-        //	if(localStorage.getItem("showregAddress")) {
-        //		document.getElementById("address-tab").click();
-        //		document.getElementById("address-tab").classList.remove("disable");
-        //	}
-        //	else {
         var ret = false;
 
         if (document.applicationForm.RetailOutletName.value == "") {
@@ -1171,151 +1172,6 @@
             document.getElementById("email_error").innerHTML = "";
             ret = true;
         }
-       // //console.log(ret);
-
-       // if (document.applicationForm.customerType.value == "-1") {
-       //     document.getElementById("customerType_error").innerHTML = "This information is required";
-       //     document.applicationForm.customerType.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("customerType_error").innerHTML = "";
-       // }
-
-       // if (document.applicationForm.zonalOffice.value == "-1") {
-       //     document.getElementById("zonalOffice_error").innerHTML = "This information is required";
-       //     document.applicationForm.zonalOffice.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("zonalOffice_error").innerHTML = "";
-       // }
-
-       // if (document.applicationForm.applicationDate.value == "") {
-       //     document.getElementById("applicationDate_error").innerHTML = "This information is required";
-       //     document.applicationForm.applicationDate.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("applicationDate_error").innerHTML = "";
-       // }
-
-       // if (document.applicationForm.salesArea.value == "") {
-       //     document.getElementById("salesArea_error").innerHTML = "This information is required";
-       //     document.applicationForm.salesArea.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("salesArea_error").innerHTML = "";
-       // }
-
-
-       // if (document.applicationForm.customerSubType.value == "-1") {
-       //     document.getElementById("customerSubType_error").innerHTML = "This information is required";
-       //     document.applicationForm.customerSubType.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("customerSubType_error").innerHTML = "";
-       // }
-       // /*else {
-       //     y = document.applicationForm.mobileno.value;
-       //     if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
-       //     {
-       //         document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
-       //         document.applicationForm.mobileno.focus();
-       //         return false
-       //     }
-       //     else if (y.length<10)
-       //     {
-       //         document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
-       //         document.applicationForm.mobileno.focus();
-       //         return false;
-       //     }
-
-       //         else {
-       //             document.getElementById("phone_error").innerHTML="";
-       //         }
-       // }*/
-
-       // if (document.applicationForm.regionalOffice.value == "-1") {
-       //     document.getElementById("regionalOffice_error").innerHTML = "This information is required";
-       //     document.applicationForm.regionalOffice.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("regionalOffice_error").innerHTML = "";
-       // }
-
-
-       // if (document.applicationForm.individualName.value == "") {
-       //     document.getElementById("individualName_error").innerHTML = "This information is required";
-       //     document.applicationForm.individualName.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("individualName_error").innerHTML = "";
-       // }
-
-
-
-       // if (document.applicationForm.nameOnCard.value == "") {
-       //     document.getElementById("nameOnCard_error").innerHTML = "This information is required";
-       //     document.applicationForm.nameOnCard.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("nameOnCard_error").innerHTML = "";
-       // }
-
-
-       // /*if (document.applicationForm.pincode.value == "") {
-       //    document.getElementById("picode_error").innerHTML="This information is required";
-       //    return (false);
-       //}
-       //else {
-       //    var pin = document.applicationForm.pincode.value;
-       //     if (pin.length<6)
-       //    {
-       //        document.getElementById("picode_error").innerHTML="Invalid Pincode, Must be six digits";
-       //        document.applicationForm.pincode.focus();
-       //        return false;
-       //    }
-       //    else {
-       //            document.getElementById("picode_error").innerHTML="";
-       //        }
-       //}*/
-       // //if (document.applicationForm.typeOfbusiness.value == "-1") {
-       //     document.getElementById("typeOfbusiness_error").innerHTML = "This information is required";
-       //     document.applicationForm.typeOfbusiness.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("typeOfbusiness_error").innerHTML = "";
-       // }
-
-
-       // if (document.applicationForm.incomeTaxPan.value == "") {
-       //     document.getElementById("incomeTaxPan_error").innerHTML = "This information is required";
-       //     document.applicationForm.incomeTaxPan.focus();
-       //     return ret;
-       // }
-       // else {
-       //     document.getElementById("incomeTaxPan_error").innerHTML = "";
-       //     ret = true
-       // }
-
-       // /*if (!document.applicationForm.tc.checked) {
-       //     //toast("true");
-       //     document.getElementById("tc_error").innerHTML="Must Agree to Terms and Conditions";
-       //     return (false);
-       // }
-       // else {
-       //     // toast("false");
-       //         document.getElementById("tc_error").innerHTML="";
-       //     }*/
-
-       // //document.applicationForm.submit();
         document.getElementById("address-tab").click();
         document.getElementById("address-tab").classList.remove("disable");
         localStorage.setItem("showMerchantCommAddress", true);
@@ -1350,11 +1206,13 @@
         else {
             document.getElementById("terminalTypeReq_error").innerHTML = "";
             ret = true;
+            $("#SummaryMerchantID").html($("#MerchantID").val());
         }
 
         document.getElementById("summaryDetails-tab").click();
         document.getElementById("summaryDetails-tab").classList.remove("disable");
         localStorage.setItem("showMerchantSummary", true);
+
         return ret;
     }
 
@@ -1386,13 +1244,48 @@
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    $("#district").html("");
+                    $("#retailDistrict").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
                         $('<option>',
                             {
                                 value: data.districtID,
                                 text: data.districtName
                             }).html(data.districtName).appendTo("#retailDistrict");
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating District Data");
+            }
+        });
+    };
+
+    function getCommDistrict() {
+        //var id = this.value;
+        var id = $('#Comm_State :selected').val();
+
+        //if (id != 0) {
+        //    $("#state_error").html("");
+        //}
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetDistrictDetails", "Merchant")',
+            data: { Stateid: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#commDistrict").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.districtID,
+                                text: data.districtName
+                            }).html(data.districtName).appendTo("#commDistrict");
                     });
                 }
                 else {
@@ -1472,4 +1365,24 @@
             }
         });
     };
+
+    $("#retailDistrict").change(function () {
+        var id = this.value;
+        $("#Retail_DistictID").val(id);
+    });
+    $("#regionalOfc").change(function () {
+        var id = this.value;
+        $("#RegionalOfcID").val(id);
+    });
+    $("#commDistrict").change(function () {
+        var id = this.value;
+        $("#Comm_DistictID").val(id);
+    });
+    $("#salesArea").change(function () {
+        var id = this.value;
+        $("#SalesAreaID").val(id);
+    });
+
+
+
 </script>
