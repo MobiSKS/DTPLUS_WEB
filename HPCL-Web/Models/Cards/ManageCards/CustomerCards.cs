@@ -165,6 +165,7 @@ namespace HPCL_Web.Models.Cards.ManageCards
 
     public class UpdateMobileResponse
     {
+        public int Status { get; set; }
         public string Reason { get; set; }
     }
 
