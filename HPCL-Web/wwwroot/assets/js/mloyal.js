@@ -1,23 +1,20 @@
 // JavaScript Document
 
-const { Modal } = require("bootstrap");
-const { param } = require("jquery");
-
-document.addEventListener("contextmenu", (event) => event.preventDefault())
-$(document).ready(function () {
-
-    var userinput = document.querySelector(".searchUserInput");
-    var searchFileds = document.querySelector(".searchFileds");
-    if (userinput) {
-        userinput.addEventListener("mouseenter", function () {
-            searchFileds.style.display = "block";
-        })
-        userinput.addEventListener("mouseleave", function () {
-            setTimeout(function () {
-                searchFileds.style.display = "none";
-            }, 1000)
-        })
-    }
+	document.addEventListener("contextmenu", (event)=> event.preventDefault())
+	$(document).ready(function(){
+		
+		var userinput = document.querySelector(".searchUserInput");
+		var searchFileds = document.querySelector(".searchFileds");
+		if (userinput) {
+			userinput.addEventListener("mouseenter", function(){			
+				searchFileds.style.display ="block";
+			})		
+			userinput.addEventListener("mouseleave", function(){
+				setTimeout(function(){
+					searchFileds.style.display ="none";
+				},1000)
+			})
+		}
 
     $('input[type=password], input.captcha').bind('copy paste', function (e) {
         e.preventDefault();

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HPCL_Web.Models
+namespace HPCL_Web.Models.Officer
 {
     public class OfficerModel
     {
@@ -50,15 +50,19 @@ namespace HPCL_Web.Models
         public string City { get; set; }
         [Required(ErrorMessage = "State is Required")]
         public int State { get; set; }
+        public int StateId { get; set; }
         public int? Pin { get; set; }
         [Required(ErrorMessage = "Mobile is Required")]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string Mobile { get; set; }
+        public string MobileNo { get; set; }
         public string Phone { get; set; }
         [Required(ErrorMessage = "Email is Required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
+        public string EmailId { get; set; }
         public string Fax { get; set; }
+        public string OfficerID { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
         public virtual List<OfficerZoneModel> OfficerZoneMdl { get; set; }
         public virtual List<OfficerRegionModel> OfficerRegionMdl { get; set; }
