@@ -181,10 +181,10 @@
                 + "<td>" + (data.searchList[i].issueDate || '') + "</td>"
                 + "<td>" + (data.searchList[i].expiryDate || '') + "</td>"
 
-                + "<td><input class='form-control cpl' name='" + (data.searchList[i].cashPurseLimit || '') + "' type='text' value='" + (data.searchList[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control stl' name='" + (data.searchList[i].saleTxnLimit || '') + "' type='text' value='" + (data.searchList[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control dsl' name='" + (data.searchList[i].dailySaleLimit || '') + "' type='text' value='" + (data.searchList[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control msl' name='" + (data.searchList[i].monthlySaleLimit || '') + "' type='text' value='" + (data.searchList[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
+                + "<td><input class='form-control cgl cpl' name='" + (data.searchList[i].cashPurseLimit || '') + "' type='text' value='" + (data.searchList[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
+                + "<td><input class='form-control cgl stl' name='" + (data.searchList[i].saleTxnLimit || '') + "' type='text' value='" + (data.searchList[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
+                + "<td><input class='form-control cgl dsl' name='" + (data.searchList[i].dailySaleLimit || '') + "' type='text' value='" + (data.searchList[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
+                + "<td><input class='form-control cgl msl' name='" + (data.searchList[i].monthlySaleLimit || '') + "' type='text' value='" + (data.searchList[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
 
 
             $('#CardSearch').append(rows);
@@ -192,10 +192,10 @@
     }
 
     var cardNo;
-    var cashPurseLimit;
-    var saleTxnLimit;
-    var dailySaleLimit;
-    var monthlySaleLimit;
+    var cashPurse;
+    var saleTxn;
+    var dailySale;
+    var monthlySale;
     var currentRow;
 
     $("#CardSearch").on('click', '.checkEnable', function (e) {
@@ -224,22 +224,30 @@
 
     function updateCards() {
 
-        cashPurseLimit = currentRow.find('.cpl').val();
-        saleTxnLimit = currentRow.find('.stl').val();
-        dailySaleLimit = currentRow.find('.dsl').val();
-        monthlySaleLimit = currentRow.find('.msl').val();
+        var updateArray = new Array();
+
+
+
+        cashPurse = currentRow.find('.cpl').val();
+        saleTxn = currentRow.find('.stl').val();
+        dailySale = currentRow.find('.dsl').val();
+        monthlySale = currentRow.find('.msl').val();
+
+
+        updateArray.push({            cardNo: cardNo,
+            cashPurse: cashPurse,
+            saleTxn: saleTxn,
+            dailySale: dailySale,
+            monthlySale: monthlySale
+        });
+        console.log("ObjCardLimits", updateArray);
+
 
         $.ajax({
             url: "@Url.Action("UpdateCards", "Cards")",
             type: "POST",
             dataType: "JSON",
-                    data: {
-                        cardNo : cardNo,
-                        Cashpurse : cashPurseLimit,
-                        Saletxn : saleTxnLimit,
-                        Dailysale : dailySaleLimit,
-                        Monthlysale : monthlySaleLimit
-                    },
+            data: { limitArray: updateArray},
             success: function (res) {
 
                 alert(res);

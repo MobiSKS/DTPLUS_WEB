@@ -1,12 +1,19 @@
-﻿namespace HPCL_Web.Models.Cards.SetCardLimit
+﻿using System.Collections.Generic;
+
+namespace HPCL_Web.Models.Cards.SetCardLimit
 {
     public class UpdateCardLimit : BaseEntity
     {
-        public string Cardno { get; set; }
-        public int Cashpurse { get; set; }
-        public int Saletxn { get; set; }
-        public int Dailysale { get; set; }
-        public int Monthlysale { get; set; }
+        public ObjCardLimits[] objCardLimits { get; set; }
         public string ModifiedBy { get; set; }
+    }
+
+    public class ObjCardLimits
+    {
+        public string CardNo { get; set; }
+        public int CashPurse { get; set; }
+        public int SaleTxn { get; set; }
+        public int DailySale { get; set; }
+        public int MonthlySale { get; set; }
     }
 }

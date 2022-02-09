@@ -2,6 +2,7 @@
 using HPCL_Web.Models.Cards.ActivateReActivate;
 using HPCL_Web.Models.Cards.ManageCards;
 using HPCL_Web.Models.Cards.SetCardLimit;
+using HPCL_Web.Models.Cards.SetCcmsLimit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -536,19 +537,15 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards(string cardNo, int Cashpurse, int Saletxn, int Dailysale, int Monthlysale)
+        public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
         {
             var updateServiceBody = new UpdateCardLimit
             {
                 UserId = Common.userid,
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
-                Cardno = cardNo,
-                Cashpurse = Cashpurse,
-                Saletxn = Saletxn,
-                Dailysale=Dailysale,
-                Monthlysale=Monthlysale,
-                ModifiedBy=Common.userid
+                objCardLimits = limitArray,
+                ModifiedBy =Common.userid
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -580,5 +577,338 @@ namespace HPCL_Web.Controllers
                 }
             }
         } 
+    
+        public async Task<IActionResult> SetCcmsLimitForAllCards()
+        {
+            GetCcmsLimitAll modals = new GetCcmsLimitAll();
+
+            var statusType = new StatusType
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                EntityTypeId = 3
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetStatusTypeUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
+
+                        List<StatusModal> lsts = new List<StatusModal>();
+                        lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
+                        foreach (var item in lst)
+                        {
+                            if (item.StatusId == 4)
+                            {
+                                lsts.Add(item);
+                            }
+                        }
+                        modals.CardStatusList.AddRange(lsts);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+                var forms = new Dictionary<string, string>
+                {
+                    {"useragent", Common.useragent},
+                    {"userip", Common.userip},
+                    {"userid", Common.userid},
+                };
+
+                StringContent contentLimit = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetLimitTypeUrl, contentLimit))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LimitTypeModal> limitType = jarr.ToObject<List<LimitTypeModal>>();
+
+                        modals.LimitTypeModals.AddRange(limitType);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+            }
+            ModelState.Clear();
+
+            return View(modals);
+        }
+    
+        [HttpPost]
+        public async Task<JsonResult> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)
+        {
+            HttpContext.Session.SetString("CCMSCustomerId", entity.CustomerId);
+
+            var reqBody = new GetCcmsLimitAll
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = entity.CustomerId,
+                StatusFlag = entity.StatusFlag
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCcmsAllCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCcmsLimitAllResponse> searchCcmsCard = jarr.ToObject<List<SearchCcmsLimitAllResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchCcmsCard = searchCcmsCard });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+    
+        [HttpPost]
+        public async Task<JsonResult> UpdateCcmsLimitAllCards(GetCcmsLimitAll entity)
+        {
+            var reqBody = new UpdateCcmsLimitAll
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("CCMSCustomerId"),
+                LimitType=entity.TypeOfLimit,
+                Amount = entity.CcmsLimit,
+                ModifiedBy=Common.userid
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.UpdateCcmsAllCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<UpdateMobileResponse> searchCcmsCard = jarr.ToObject<List<UpdateMobileResponse>>();
+                        ModelState.Clear();
+                        return Json(searchCcmsCard[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetLimitType()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", Common.useragent},
+                {"userip", Common.userip},
+                {"userid", Common.userid},
+            };
+
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+  
+                StringContent contentLimit = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetLimitTypeUrl, contentLimit))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LimitTypeModal> limitType = jarr.ToObject<List<LimitTypeModal>>();
+                        var sortedtList = limitType.OrderBy(x => x.LimitId).ToList();
+                        return Json(new { sortedtList = sortedtList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Region Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        public async Task<IActionResult> SetCcmsForIndCards()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SetCcmsForIndCards(SetIndividualLimit entity)
+        {
+            var searchBody = new SetIndividualLimit
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = entity.CustomerId,
+                CardNo = entity.CardNo ?? "",
+                MobileNo = entity.MobileNo ?? "",
+                VehicleNo = entity.VehicleNo ?? ""
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCcmsIndividualCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JObject>();
+
+                        var gridResponse = jarr["CCMSBasicDetail"].Value<JArray>();
+                        var balanceAmuntResponse = jarr["CCMSBalanceDetail"].Value<JArray>();
+
+
+                        List<SearchIndividualCardsResponse> searchList = gridResponse.ToObject<List<SearchIndividualCardsResponse>>();
+                        List<CCMSBalanceDetail> amounts = balanceAmuntResponse.ToObject<List<CCMSBalanceDetail>>();
+
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList, amounts = amounts });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateCcmsIndividualCard(string objCCMSLimits, string viewGirds)
+        {
+            HttpContext.Session.SetString("viewGrid", viewGirds);
+
+            ObjCCMSLimits[] arrs = JsonConvert.DeserializeObject<ObjCCMSLimits[]>(objCCMSLimits);
+
+            var searchBody = new UpdateCcmsIndLimit
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                ObjCCMSLimits = arrs,
+                ModifiedBy = Common.userid
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.UpdateCcmsIndividualCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<UpdateMobileResponse> searchList = jarr.ToObject<List<UpdateMobileResponse>>();
+                        ModelState.Clear();
+                        return Json(searchList[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+    
+        public async Task<IActionResult> ViewUpdatedGrid()
+        {
+            var str = HttpContext.Session.GetString("viewGrid");
+            //var obj = JsonConvert.DeserializeObject<ObjCCMSLimits>(str);
+
+
+            JArray obj = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<ViewGird> vGrid = obj.ToObject<List<ViewGird>>();
+
+
+
+            ViewGird grids = new ViewGird
+            {
+                Cardno = vGrid[0].Cardno,
+                vehicleNo = vGrid[0].vehicleNo,
+                issueDate = vGrid[0].issueDate,
+                expiryDate = vGrid[0].expiryDate,
+                status = vGrid[0].status,
+                Mobileno = vGrid[0].Mobileno,
+                limitTypeText = vGrid[0].limitTypeText,
+                Amount = vGrid[0].Amount
+            };
+
+            return View(grids);
+        }
     }
 }
