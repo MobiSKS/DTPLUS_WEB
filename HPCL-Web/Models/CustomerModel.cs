@@ -62,8 +62,9 @@ namespace HPCL_Web.Models
                 SecretQuestionId = 0,
                 SecretQuestionName = "Select Secret Question"
             });
-            
 
+            CardDetailsMdl = new List<CardDetails>();
+            VehicleTypeMdl = new List<VehicleTypeModel>();
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -78,7 +79,6 @@ namespace HPCL_Web.Models
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         
-
 
         [Required(ErrorMessage = "Customer Type is Required")]
         public int CustomerTypeID { get; set; }
@@ -108,6 +108,7 @@ namespace HPCL_Web.Models
         [Required(ErrorMessage = "Individual Organisation Title is Required")]
         public string IndividualOrgNameTitle { get; set; }
         [Required(ErrorMessage = "Individual Organisation Name is Required")]
+
         public string IndividualOrgName { get; set; }
         [Required(ErrorMessage = "Communication Address 1 is Required")]
         public string CommunicationAddress1 { get; set; }
@@ -125,8 +126,12 @@ namespace HPCL_Web.Models
         [Required(ErrorMessage = "State is Required under communication Address")]
         public string CommunicationState { get; set; }
         [Required(ErrorMessage = "District is Required under communication Address")]
-        public string CommunicationDistrict { get; set; }
+        public string CommunicationDistrictId { get; set; }
         public bool IsSameAsCommAddress { get; set; }
+
+        public bool InterState { get; set; }
+        public bool InterCity { get; set; }
+        public bool IntraCity { get; set; }
 
         [Required(ErrorMessage = "Dial code is Required under communication Address")]
         public string CommunicationDialCode { get; set; }
@@ -167,16 +172,18 @@ namespace HPCL_Web.Models
         [Required(ErrorMessage = "District is Required under Permanent/Registered Address")]
         public string PerOrRegAddressDistrict { get; set; }
 
+        public int PermanentDistrictId { get; set; }
+
         [Required(ErrorMessage = "Dial code is Required under Permanent/Registered Address")]
         public string PerOrRegAddressDialCode { get; set; }
-        [Required(ErrorMessage = "Phone Number is Required under Permanent/Registered Address")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        //[Required(ErrorMessage = "Phone Number is Required under Permanent/Registered Address")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string PerOrRegAddressPhoneNumber { get; set; }
         public string PermanentFaxCode { get; set; }
         public string PermanentFax { get; set; }
 
 
-
+        
 
 
         // Key Office Details
@@ -199,8 +206,8 @@ namespace HPCL_Web.Models
 
         public string KeyOffPhoneCode { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is Required under communication Address")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        //[Required(ErrorMessage = "Phone Number is Required under communication Address")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string KeyOffPhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
@@ -231,17 +238,10 @@ namespace HPCL_Web.Models
         public int FeePaymentsCollectFeeWaiver { get; set; }
         public int FeePaymentsChequeNo { get; set; }
         public string FeePaymentsChequeDate { get; set; }
-        
 
+        public int TypeOfCustomerID { get; set; }
 
-
-
-
-
-
-
-
-
+        public int TierOfCustomerID { get; set; }
 
 
 
@@ -305,17 +305,13 @@ namespace HPCL_Web.Models
 
     }
 
-    public class CardDetails {
-
-        
-        public int CardIdentifier { get; set; }
-        public int VechileNo { get; set; }
+    public class CardDetails
+    {
+        public string CardIdentifier { get; set; }
+        public string VechileNo { get; set; }
         public int VehicleType { get; set; }
-        public int VehicleMake { get; set; }
+        public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
-                
-
-
     }
     public class VehicleTypeModel
     {
@@ -323,6 +319,27 @@ namespace HPCL_Web.Models
         public int VehicleTypeId { get; set; }
         public string VehicleTypeName { get; set; }
       
+    }
+
+    public class CustomerResponse
+    {
+        public int Status_Code { get; set; }
+        public int Internel_Status_Code { get; set; }
+        public string Message { get; set; }
+
+        public Boolean Success { get; set; }
+        
+        public List<CustomerResponseData> Data { get; set; }
+    }
+
+    public class CustomerResponseData
+    {
+        public string ReferenceId { get; set; }
+        public string FormNumber { get; set; }
+        public string CustomerReferenceNo { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
+
     }
 
 

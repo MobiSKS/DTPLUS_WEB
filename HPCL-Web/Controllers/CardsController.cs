@@ -99,8 +99,10 @@ namespace HPCL_Web.Controllers
                 CardNo = entity.CardNo,
                 MobileNumber = entity.MobileNumber,
                 VehicleNumber = entity.VehicleNumber,
-                StatusFlag = -1
+                StatusFlag = entity.StatusFlag
             };
+
+            HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -123,6 +125,57 @@ namespace HPCL_Web.Controllers
                         List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
                         ModelState.Clear();
                         return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ReloadUpdatedGrid()
+        {
+            var str = HttpContext.Session.GetString("viewUpdatedGrid");
+
+            CustomerCards vGrid = JsonConvert.DeserializeObject<CustomerCards>(str);
+
+            var searchBody = new CustomerCards
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = vGrid.CustomerId,
+                CardNo = vGrid.CardNo,
+                MobileNumber = vGrid.MobileNumber,
+                VehicleNumber = vGrid.VehicleNumber,
+                StatusFlag = vGrid.StatusFlag
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCardUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchGridResponse> updatedSearchList = jarr.ToObject<List<SearchGridResponse>>();
+                        ModelState.Clear();
+                        return Json(new { updatedSearchList = updatedSearchList });
                     }
                     else
                     {
@@ -873,6 +926,8 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<UpdateMobileResponse> searchList = jarr.ToObject<List<UpdateMobileResponse>>();
                         ModelState.Clear();
+                        HttpContext.Session.SetString("ResMsg", searchList[0].Reason);
+                        HttpContext.Session.SetInt32("ResMsgCode", searchList[0].Status);
                         return Json(searchList[0].Reason);
                     }
                     else
@@ -888,13 +943,9 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ViewUpdatedGrid()
         {
             var str = HttpContext.Session.GetString("viewGrid");
-            //var obj = JsonConvert.DeserializeObject<ObjCCMSLimits>(str);
-
 
             JArray obj = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<ViewGird> vGrid = obj.ToObject<List<ViewGird>>();
-
-
 
             ViewGird grids = new ViewGird
             {

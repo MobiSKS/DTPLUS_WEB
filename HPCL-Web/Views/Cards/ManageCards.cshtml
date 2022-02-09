@@ -478,10 +478,48 @@
     $(document).ready(function () {
         let tableData = sessionStorage.getItem("tableData");
         let getCusId = sessionStorage.getItem("cusmId");
+
         if (tableData != null) {
-            document.getElementById('CardSearch').style.display = 'block'
             $('#GetCustomerIdValue').val(getCusId);
-            $('#CardSearch').html(tableData);
+            //$('#CardSearch').html(tableData);
+             $.ajax({
+                url: "@Url.Action("ReloadUpdatedGrid", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                 success: function (data) {
+                     console.log(data, "updated");
+                    $("#CardSearch td").parent().remove();
+
+                    for (var i = 0; i < data.updatedSearchList.length; i++) {
+
+                        var rows = "<tbody><tr>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].srNumber || '') + "</span></td>"
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].cardNumber || '') + "</span></a></td>"
+                            + "<td><span class='rowData cusId'>" + (data.updatedSearchList[i].customerID || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].userID || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].cardIssueType || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vechileNo || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vehicleType || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].issueDate || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].expiryDate || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].status || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].yearOfRegistration || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].manufacturer || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].ownershipType || '') + "</span></td>"
+                            + "<td><span class='rowMobNo'>" + (data.updatedSearchList[i].mobileNumber || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vinNumber || '') + "</span></td>"
+                            + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
+
+                        $('#CardSearch').append(rows);
+
+                        sessionStorage.removeItem('tableData');
+                     }
+                     document.getElementById('CardSearch').style.display = 'block'
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
         }
     });
 
@@ -525,7 +563,7 @@
     }
 
     $("#CardSearch").on('click', '.editNumber', function (e) {
-       
+
         var currentRow = $(this).closest("tr");
 
         var cardNumber = currentRow.find(".rowCardNo").text();
@@ -561,7 +599,7 @@
                 console.log("servicelist", res.servicesDetailsList);
 
                 console.log("card limit", res.limitDetailsList);
-                
+
                 $('#CustomerIdCardValue').val(res.cardDetailsList[0].customerID);
                 $('#CardNoDValue').val(res.cardDetailsList[0].cardNumber);
 
