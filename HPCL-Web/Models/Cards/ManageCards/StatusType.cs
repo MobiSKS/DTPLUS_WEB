@@ -1,4 +1,4 @@
-﻿namespace HPCL_Web.Models.ManageCards
+﻿namespace HPCL_Web.Models.Cards.ManageCards
 {
     public class StatusType : BaseEntity
     {

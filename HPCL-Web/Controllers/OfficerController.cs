@@ -203,7 +203,7 @@ namespace HPCL_Web.Controllers
                     {"PhoneNo", ofcrMdl.Phone},
                     {"EmailId", ofcrMdl.Email},
                     {"Fax", ofcrMdl.Fax},
-                    {"Createdby", "0"}
+                    {"Createdby", Common.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -665,11 +665,11 @@ namespace HPCL_Web.Controllers
             string getLocation = "";
             if (OfcrType.Contains("1") || OfcrType.Contains("4") || OfcrType.Contains("6"))
             {
-                getLocation = WebApiUrl.getLocationRegion;
+                getLocation = WebApiUrl.regionalOffice;
             }
             else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
             {
-                getLocation = WebApiUrl.getLocationZone;
+                getLocation = WebApiUrl.zonalOffice;
             }
             else if (OfcrType.Contains("2"))
             {

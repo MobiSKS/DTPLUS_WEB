@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HPCL_Web.Models.ManageCards
+namespace HPCL_Web.Models.Cards.ManageCards
 {
     public class CardDetailsResponse
     {

@@ -36,7 +36,7 @@ namespace HPCL_Web.Models.Officer
         public string MobileNo { get; set; }
         public string PhoneNo { get; set; }
         public string ReferenceId { get; set; }
-        public string LocationId { get; set; }
+        //public string LocationId { get; set; }
         public string Createdby { get; set; }
         public string StateId { get; set; }
         public string CityId { get; set; }

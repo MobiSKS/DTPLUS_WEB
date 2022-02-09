@@ -1,0 +1,369 @@
+﻿@model HPCL_Web.Models.Cards.SetCcmsLimit.SetIndividualLimit
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<marquee width="100%" direction="left" height="30%">
+    Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+</marquee>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+
+        <form method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="SetCcmsForIndCards" data-ajax-method="POST" data-ajax-success="OnSuccessSetLimitIndividual" data-ajax-failure="OnFailure">
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="border-1 rounded border-grey h-100 mt-3">
+
+
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Set CCMS Limit for Individual Cards</p>
+                        <div class="py-2 p-md-4">
+                            <div class="w-100">
+
+                                <fieldset class="border-1 rounded border-grey">
+                                    <legend class="font-weight-bold">Search Cards</legend>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Customer Id<sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Card Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Mobile Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Vehicle Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.VehicleNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    <div class="d-flex align-items-center justify-content-center mt-3">
+                                        <div class="px-2">
+                                            <button class="btn" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()" style="background-color:#084693;color:white;">SEARCH</button>
+                                            <a class="btn" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
+                                            <a class="btn" href="#" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">UPLOAD EXCEL</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                </fieldset>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="form-group d-flex align-items-center flex-wrap">
+
+                            </div>
+
+
+                            <div id="UpdateGrid" style="display:none;">
+
+                                <div id="limitSection" class="alert alert-warning" role="alert" style="width:100%;">
+
+                                </div>
+
+                                <table id="CardSearch" class="table table-striped table-bordered table-responsive" style="display:inline-table">
+                                    <tr>
+
+                                        <th>
+                                            @Html.DisplayName("Sr Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Select")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Card Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Vehicle No")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Issue Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Expiry Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Status")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Mobile Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Type Of Limit")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Amount")
+                                        </th>
+
+                                    </tr>
+                                </table>
+
+                                <div class="form-group d-flex align-items-center flex-wrap">
+
+                                </div>
+
+                                <button class="btn" type="button" id="btnSave" name="submit" onclick="updateCards()" style="background-color:#084693;color:white;float:left;margin-bottom:10px;">UPDATE</button>
+
+                                <div class="form-group d-flex align-items-center flex-wrap">
+
+                                </div>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    function openSearchGrid() {
+        if ($("input:text").val() == "") {
+            document.getElementById('UpdateGrid').style.display = 'none';
+        }
+        //if (($("input:text").val() != "")) {
+        //    document.getElementById('UpdateGrid').style.display = 'block';
+        //}
+    }
+
+    function resetClick() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        $("#UpdateGrid td").parent().remove();
+        $("#limitSection").html("");
+        document.getElementById('UpdateGrid').style.display = 'none';
+    }
+
+
+    var currentRow;
+    var Cardno;
+    var vehicleNo;
+    var issueDate;
+    var expiryDate;
+    var status;
+    var limitTypeText;
+
+    $("#CardSearch").on('click', '.checkEnable', function (e) {
+
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+
+            $(this).closest("tr").attr("style", "background-color: limegreen;" );
+           
+            //$('.vls').html("");
+
+            //currentRow.find('.vls').html("");
+
+            currentRow.find('input:text').attr("readonly", false);
+            currentRow.find('.vls').attr("readonly", false);
+
+            Cardno = currentRow.find('.cdn').text();
+
+            vehicleNo = currentRow.find('.vn').text();
+            issueDate = currentRow.find('.isd').text();
+            expiryDate = currentRow.find('.expd').text();
+            status = currentRow.find('.sts').text();
+            limitTypeText = currentRow.find('.vls option:selected').text();
+
+            console.log("txt", textBoxValue);
+        }
+        if (!$(this).is(':checked')) {
+            $(this).closest("tr").attr("style", "background-color: #f2f2f2;");
+            currentRow.find('input:text').attr("readonly", true);
+            currentRow.find('.vls').attr("readonly", true);
+        }
+    });
+
+
+    //function updateCards() {
+    //    var ddl = currentRow.find('.vls').val();
+
+    //    console.log('ddl', ddl);
+    //}
+
+    function OnSuccessSetLimitIndividual(res) {
+
+        console.log("res", res);
+
+        $("#limitSection").html("");
+        var amountAppend = "<span>Available CCMS Balance : " + res.amounts[0].actualCCMSBalance + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unallocated CCMS Balance : " + res.amounts[0].unallocatedCCMSBalance + ": </span>"
+
+        $("#limitSection").append(amountAppend);
+
+        $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetLimitType", "Cards")',
+                dataType: "json",
+             success: function (data, status, xhr) {
+
+                 console.log(data, "data");
+                 $("#CardSearch td").parent().remove();
+
+                 for (var i = 0; i < res.searchList.length; i++) {
+
+                     var rows = "<tbody><tr>"
+                         + "<td>" + (res.searchList[i].srNumber || '') +"</td>"
+                         + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                         + "<td><span class='cdn'>" + (res.searchList[i].cardNumber || '') +"</span></td>"
+                         + "<td><span class='vn'>" + (res.searchList[i].vechileNo || '') +"</span></td>"
+                         + "<td><span class='isd'>" + (res.searchList[i].issueDate || '') +"</span></td>"
+                         + "<td><span class='expd'>" + (res.searchList[i].expiryDate || '') +"</span></td>"
+                         + "<td><span class='sts'>" + (res.searchList[i].status || '') +"</span></td>"
+
+                         + "<td><input class='form-control mobn' name='" + (res.searchList[i].mobileNumber || '') + "' type='text' value='" + (res.searchList[i].mobileNumber || '') +"' readonly='readonly'></td>"
+                         + "<td><select readonly='readonly' class='form-control vls'><option value='" + (res.searchList[i].ccmsLimitOption || '') + "'>" + (res.searchList[i].description || '')+"</option></select></td>"
+                         + "<td><input class='form-control amt' name='" + (res.searchList[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (res.searchList[i].ccmsReloadSaleLimitValue || '') +"' readonly='readonly'></td>"
+                         + "</tr></tbody>";
+
+                     $('#CardSearch').append(rows);
+
+                 }
+
+                
+                 $.each(data.sortedtList, function (i, option) {
+                     $("<option/>").val(option.limitId).text(option.description).appendTo(".vls");
+                 });
+
+
+                 $(".vls option").each(function () {
+                     $(this).siblings('[value="' + this.value + '"]').remove();
+                 });
+
+
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Region");
+             }
+        });
+
+        document.getElementById('UpdateGrid').style.display = 'block';
+    }
+
+
+    function updateCards() {
+
+        var updateArray = new Array();
+
+        var Mobileno = currentRow.find('.mobn').val();
+        var Limittype = currentRow.find('.vls').val();
+        var Amount = currentRow.find('.amt').val();
+
+        updateArray.push({
+            Cardno: Cardno,
+            Mobileno: Mobileno,
+            Limittype: Limittype,
+            Amount: Amount
+        });
+
+        console.log("ObjCardLimits", updateArray);
+
+
+        var viewArray = new Array();
+
+
+        viewArray.push({
+            Cardno: Cardno,
+            vehicleNo: vehicleNo,
+            issueDate: issueDate,
+            expiryDate: expiryDate,
+            status: status,
+            Mobileno: Mobileno,
+            Amount: Amount,
+            limitTypeText: limitTypeText
+        });
+
+        console.log("updt", updateArray);
+        console.log("view", viewArray);
+
+        if (confirm('Are you sure! You want to process the selected record')) {
+            console.log('ok');
+       
+        $.ajax({
+            url: "@Url.Action("UpdateCcmsIndividualCard", "Cards")",
+            type: "POST",
+            traditional: true,
+            data: { objCCMSLimits: JSON.stringify(updateArray), viewGirds: JSON.stringify(viewArray) },
+            success: function (res) {
+
+                var url = '@Html.Raw(@Url.Action("ViewUpdatedGrid","Cards"))';
+
+                @*var url = '@Html.Raw(@Url.Action("ViewUpdatedGrid","Cards", new { @vehicleNo= "v", @issueDate="i", @expiryDate="e", @status="s", @limitTypeText="l" }))';*@
+
+                //url = url.replace("v", encodeURIComponent(vehicleNo))
+                //        .replace("i", encodeURIComponent(issueDate))
+                //        .replace("e", encodeURIComponent(expiryDate))
+                //        .replace("s", encodeURIComponent(status))
+                //        .replace("l", encodeURIComponent(limitTypeText));
+
+                window.location.href = url;
+
+
+                @*$.ajax({
+                  /*  type: "POST",*/
+                    url: "@Url.Action("ViewUpdatedGrid", "Cards")",
+                    /*data: { viewGird: viewArray },*/
+                    dataType: "JSON",
+                    success: function (msg) {
+                        console.log(msg);
+                    },
+                    error: function (req, status, error) {
+                        console.log(msg);
+                    }
+                });*@
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+        } else {
+            console.log('cancel')
+        }
+
+
+    }
+
+</script>

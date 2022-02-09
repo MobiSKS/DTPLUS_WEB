@@ -1,4 +1,4 @@
-﻿@model HPCL_Web.Models.ManageCards.UpdateMobileModal
+﻿@model HPCL_Web.Models.Cards.ManageCards.UpdateMobileModal
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -14,15 +14,7 @@
                         <div class="w-100">
                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                                 <div class="border-1 rounded border-grey"></div>
-                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Head Office Details</p>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-
-                                </div>
-
-                                <div id="ResponseMsg" class="align-items-center flex-wrap">
-
-                                </div>
-
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add Edit Cardless Mapping</p>
                                 <div class="form-group d-flex align-items-center flex-wrap">
 
                                 </div>
@@ -48,10 +40,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Limit Type</label>
                                         <div class="col-md-7 col-12">
-                                            <select name="officialTitle" id="" class="form-control">
-                                                <option value="-1">--Select--</option>
-                                            </select>
-                                            <span class="error" id="officialTitle_error"></span>
+                                            @Html.DropDownListFor(m => m.LimitType, Enumerable.Empty<SelectListItem>(), new { @id = "CCMSReloadSaleLimitTypeValue", @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
@@ -85,19 +74,30 @@
     </div>
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        function OnSuccessUpdateMobile(data) {
-            $("#ResponseMsg p").parent().remove();
-            var rows = "<p style=color:green>" + data + "</p>";
+$(document).ready(function () {
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetLimitType", "Cards")',
+            dataType: "json",
+            success: function (data, status, xhr) {
+                $.each(data.sortedtList, function (i, option) {
+                    $("<option/>").val(option.limitId).text(option.description).appendTo("#CCMSReloadSaleLimitTypeValue");
+                });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            alert("Error Populating Customer Region");
+            }
+    });
+});
+    
 
-            $('#ResponseMsg').append(rows);
-        }
-        function OnFailure(data) {
-            $("#ResponseMsg p").parent().remove();
-            var rows = "<p style=color:red>" + data + "</p>";
+function OnSuccessUpdateMobile(data) {
+    alert(data);
+}
+function OnFailure(data) {
+    alert(data);
+}
 
-            $('#ResponseMsg').append(rows);
-        }
-
-    </script>
+</script>
