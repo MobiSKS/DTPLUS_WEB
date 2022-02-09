@@ -198,6 +198,91 @@ namespace HPCL_Web.Controllers
             }
         }
         [HttpPost]
+        public async Task<IActionResult> CreateMerchant(MerchantModel merchantMdl)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var MerchantCreateForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"ErpCode", merchantMdl.ERPCode},
+                    {"RetailOutletName", merchantMdl.RetailOutletName},
+                    {"MerchantTypeId", merchantMdl.MerchantType},
+                    {"DealerName", merchantMdl.DealerName},
+                    {"MappedMerchantId", merchantMdl.MappedMerchantID},
+                    {"DealerMobileNo", merchantMdl.DealerMobileNumber},
+                    {"OutletCategoryId", merchantMdl.OutletCategory},
+                    {"HighwayNo1", merchantMdl.PreHighwayNumber},
+                    {"HighwayNo2", merchantMdl.HighwayNumber},
+                    {"HighwayName", merchantMdl.HighwayName},
+                    {"SBUTypeId", merchantMdl.SBUType},
+                    {"LPGCNGSale", merchantMdl.LPG_CNGSale},
+                    {"PancardNumber", merchantMdl.PANCardNumber},
+                    {"GSTNumber", merchantMdl.GSTNumber},
+                    {"RetailOutletAddress1", merchantMdl.Retail_Outlet_Address1},
+                    {"RetailOutletAddress2", merchantMdl.Retail_Outlet_Address2},
+                    {"RetailOutletAddress3", merchantMdl.Retail_Outlet_Address3},
+                    {"RetailOutletLocation", merchantMdl.Retail_Outlet_Location},
+                    {"RetailOutletCity", merchantMdl.Retail_Outlet_City},
+                    {"RetailOutletStateId", merchantMdl.Retail_Outlet_State},
+                    {"RetailOutletDistrictId", merchantMdl.Retail_DistictID},
+                    {"RetailOutletPinNumber", merchantMdl.Retail_Outlet_Pin},
+                    {"RetailOutletPhoneNumber", merchantMdl.Retail_Outlet_PhoneOfficeCode + " - " + merchantMdl.Retail_Outlet_PhoneOffice},
+                    {"RetailOutletFax", merchantMdl.Retail_Outlet_FaxCode + " - " + merchantMdl.Retail_Outlet_Fax},
+                    {"ZonalOfficeId", merchantMdl.ZonalOffice},
+                    {"RegionalOfficeId", merchantMdl.RegionalOfcID},
+                    {"SalesAreaId", merchantMdl.SalesAreaID},
+                    {"ContactPersonNameFirstName", merchantMdl.FName},
+                    {"ContactPersonNameMiddleName", merchantMdl.MName},
+                    {"ContactPersonNameLastName", merchantMdl.LName},
+                    {"MobileNo", merchantMdl.Mobile},
+                    {"EmailId", merchantMdl.Email},
+                    {"Mics", merchantMdl.Misc},
+                    {"CommunicationAddress1", merchantMdl.Comm_Address1},
+                    {"CommunicationAddress2", merchantMdl.Comm_Address2},
+                    {"CommunicationAddress3", merchantMdl.Comm_Address3},
+                    {"CommunicationLocation", ""},
+                    {"CommunicationCity", merchantMdl.Comm_City},
+                    {"CommunicationStateId", merchantMdl.Comm_State},
+                    {"CommunicationDistrictId", merchantMdl.Comm_DistictID == null ? "0" : merchantMdl.Comm_DistictID},
+                    {"CommunicationPinNumber", merchantMdl.Comm_Pin},
+                    {"CommunicationPhoneNumber", merchantMdl.Comm_Pre_PhoneNumber + " - " + merchantMdl.Comm_PhoneNumber},
+                    {"CommunicationFax", merchantMdl.Comm_Pre_Fax + " - " + merchantMdl.Comm_Fax},
+                    {"NoofLiveTerminals", merchantMdl.NumOfLiveTerminals.ToString() },
+                    {"TerminalTypeRequested", merchantMdl.TerminalTypeRequested },
+                    {"CreatedBy", "0"}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent MerchantCreateContent = new StringContent(JsonConvert.SerializeObject(MerchantCreateForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.insertMerchant, MerchantCreateContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Message"].ToString();
+
+                        ViewBag.Message = jarr;
+                        return View(merchantMdl);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to create Merchant";
+                    }
+                }
+            }
+            return RedirectToAction("CreateMerchant");
+        }
+        [HttpPost]
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())

@@ -47,13 +47,14 @@
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
 
-        public static string ViewCardLimitsUrl = "dtpwebapi/api/dtplus/card/view_card_limits";
+        public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
         #endregion
 
         #region Merchant
         public static string getMerchantType = "api/dtplus/merchant/get_merchant_type";
         public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
         public static string getSbu = "api/dtplus/merchant/get_sbu";
+        public static string insertMerchant = "api/dtplus/merchant/insert_merchant";
         #endregion
 
         #region customer
