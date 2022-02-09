@@ -20,5 +20,24 @@
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
 
         #endregion
+
+
+
+        #region customer
+
+        public static string getCustomerType = "/dtpwebapi/api/dtplus/customer/get_customer_type";
+        public static string getZonalOffice = "/dtpwebapi/api/dtplus/zonaloffice/get_zonal_office";
+        public static string getRegionalOffice = "/dtpwebapi/api/dtplus/regionaloffice/get_regional_office";
+        public static string getCustomerSubType = "/dtpwebapi/api/dtplus/customer/get_customer_sub_type";
+        public static string getTbentityName = "/dtpwebapi/api/dtplus/customer/get_tbentity_name";
+        public static string getTypeOfFleet = "/dtpwebapi/api/dtplus/customer/get_type_of_fleet";
+        public static string getSecretQuestion = "/dtpwebapi/api/dtplus/customer/get_secret_question";
+        public static string insertCustomer = "/dtpwebapi/api/dtplus/customer/insert_customer";
+        public static string getVehicleTpe = "/dtpwebapi/api/dtplus/customer/get_vehicle_type";
+        public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
+
+
+
+        #endregion
     }
 }
