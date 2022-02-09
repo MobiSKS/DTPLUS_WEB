@@ -46,6 +46,8 @@
         public static string UpdateCcmsAllCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limit_for_all_cards";
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
+
+        public static string ViewCardLimitsUrl = "dtpwebapi/api/dtplus/card/view_card_limits";
         #endregion
 
         #region Merchant
