@@ -342,5 +342,110 @@ namespace HPCL_Web.Models
 
     }
 
+    public class CustomerCardInfo
+    {
+        public CustomerCardInfo()
+        {
+            VehicleTypeMdl = new List<VehicleTypeModel>();
+            ObjCardDetail = new List<CardDetails>();
+        }
+
+        public String CustomerReferenceNo { get; set; }
+        public String CustomerName { get; set; }
+        public String FormNumber { get; set; }
+        public int NoOfCards { get; set; }
+        public int RBEId { get; set; }
+        public int FeePaymentsCollectFeeWaiver { get; set; }
+        public string FeePaymentNo { get; set; }
+        public string FeePaymentDate { get; set; }
+        public string CardPreference { get; set; }
+
+        public string RBEName { get; set; }
+        public int Status { get; set; }
+        public int StatusCode { get; set; }
+        public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
+        public List<CardDetails> ObjCardDetail { get; set; }
+    }
+
+    public class CustomerResponseByReferenceNo
+    {
+        public int Status_Code { get; set; }
+        public int Internel_Status_Code { get; set; }
+        public string Message { get; set; }
+
+        public Boolean Success { get; set; }
+
+        public List<CustomerResponseDataByReferenceNo> Data { get; set; }
+    }
+
+    public class CustomerResponseDataByReferenceNo
+    {
+        public string Title { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string FormNumber { get; set; }
+
+    }
+
+    public class CustomerRBE
+    {
+        public int Status_Code { get; set; }
+        public int Internel_Status_Code { get; set; }
+        public string Message { get; set; }
+
+        public Boolean Success { get; set; }
+
+        public List<CustomerRBEData> Data { get; set; }
+    }
+
+    public class CustomerRBEData
+    {
+        public int RBEId { get; set; }
+        public string RBEName { get; set; }
+        public string Reason { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class CustomerInserCardResponse
+    {
+        public int Status_Code { get; set; }
+        public int Internel_Status_Code { get; set; }
+        public string Message { get; set; }
+
+        public Boolean Success { get; set; }
+
+        public List<CustomerInserCardResponseData> Data { get; set; }
+    }
+
+    public class CustomerInserCardResponseData
+    {
+        public int Status { get; set; }
+        public string Reason { get; set; }
+
+    }
+
+    public class CustomerCardInsertInfo
+    {
+        public String CustomerReferenceNo { get; set; }
+        public String CustomerName { get; set; }
+        public String FormNumber { get; set; }
+        public int NoOfCards { get; set; }
+        public int RBEId { get; set; }
+        public int FeePaymentsCollectFeeWaiver { get; set; }
+        public string FeePaymentNo { get; set; }
+        public string FeePaymentDate { get; set; }
+        public string CardPreference { get; set; }
+
+        public string RBEName { get; set; }
+
+        public string Useragent { get; set; }
+        public string Userip { get; set; }
+        public string UserId { get; set; }
+
+        public string Createdby { get; set; }
+
+        public List<CardDetails> ObjCardDetail { get; set; }
+    }
 
 }

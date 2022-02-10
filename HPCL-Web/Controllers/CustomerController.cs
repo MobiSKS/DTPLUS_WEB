@@ -375,7 +375,7 @@ namespace HPCL_Web.Controllers
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     //{"FeePaymentsChequeNo", cust.FeePaymentsChequeNo.ToString()},
                     //{"FeePaymentsChequeDate", cust.FeePaymentsChequeDate},
-                    {"Createdby", "0"},
+                    {"Createdby", Common.userid.ToString()},
                     //{ "ObjCardDetail", json }
                      {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                      {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()}
@@ -678,6 +678,405 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
-    }
 
+        public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
+        {
+            // return View();
+
+            var access_token = _api.GetToken();
+
+            if (access_token.Result != null)
+            {
+                HttpContext.Session.SetString("Token", access_token.Result);
+            }
+
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            char flag = 'N';
+
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //Fetching CustomerType
+                var CustType = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"CTFlag",  "1" }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                //Fetching Type of Fleet
+                var CustomerTypeOfFleetForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+
+                };
+                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
+
+                        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
+                        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
+                        customerCardInfo.VehicleTypeMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+
+                if (!string.IsNullOrEmpty(customerReferenceNo))
+                {
+
+                    //fetching Customer info
+                    var CustomerRefinfo = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", Common.userid},
+                        {"CustomerReferenceNo", customerReferenceNo}
+                    };
+
+                    CustomerResponseByReferenceNo customerResponseByReferenceNo;
+                    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+                    using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
+                    {
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+
+                            customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
+                            if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
+                            {
+                                customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+                                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+
+                                StringBuilder sb = new StringBuilder();
+                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+                                    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+
+                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
+                                    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
+
+                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
+                                    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
+
+
+                                customerCardInfo.CustomerName = sb.ToString();
+                            }
+                            else
+                            {
+                                ViewBag.Message = customerResponseByReferenceNo.Message;
+                            }
+
+                        }
+                        else
+                        {
+                            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                        }
+                    }
+                }
+
+                if (flag == 'Y')
+                {
+                    ModelState.Clear();
+                    ModelState.AddModelError(string.Empty, "Error Loading Customer Type");
+                    ViewBag.Login = "1";
+                    return View("Index");
+                }
+                else
+                {
+                    return View(customerCardInfo);
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerDetails(string customerReferenceNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"ZonalID", "0" }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+
+
+                //fetching Customer info
+                var CustomerRefinfo = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", Common.userid},
+                        {"CustomerReferenceNo", customerReferenceNo}
+                    };
+
+                CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+                CustomerResponseByReferenceNo customerResponseByReferenceNo;
+                StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
+                        if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
+                        {
+                            customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+                            customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+
+                            StringBuilder sb = new StringBuilder();
+                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+                                sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+
+                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
+                                sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
+
+                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
+                                sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
+
+
+                            customerCardInfo.CustomerName = sb.ToString();
+
+                            return Json(customerCardInfo);
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                            var Message = "Failed to load Customer Details";
+                            return Json("Failed to load Customer Details");
+                        }
+
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Customer Details");
+                    }
+                }
+
+
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerRBEName(string RBEId)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"ZonalID", "0" }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+
+
+                //fetching Customer info
+                var CustomerRefinfo = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", Common.userid},
+                        {"RBEId", RBEId}
+                    };
+
+                CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+                CustomerRBE customerRBE;
+                StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getCustomerRbeId, custRefcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        customerRBE = JsonConvert.DeserializeObject<CustomerRBE>(ResponseContent);
+                        if (customerRBE.Internel_Status_Code == 1000)
+                        {
+                            customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
+                            customerCardInfo.RBEId = customerRBE.Data[0].RBEId;
+
+                            return Json(customerCardInfo);
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                            var Message = "Failed to load Customer Details";
+                            return Json("Failed to load Customer Details");
+                        }
+
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Customer Details");
+                    }
+                }
+
+
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
+        {
+            //var json = "";
+            if (customerCardInfo.ObjCardDetail.Count > 0)
+            {
+                int i = 0;
+                foreach (CardDetails CardDetails in customerCardInfo.ObjCardDetail)
+                {
+                    CardDetails.VechileNo = "";
+                }
+                //json = JsonConvert.SerializeObject(customerCardInfo.ObjCardDetail);
+            }
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //var CustomerCardData = new Dictionary<string, string>
+                //{
+                //    {"Useragent", Common.useragent},
+                //    {"Userip", Common.userip},
+                //    {"UserId", Common.userid},
+                //    {"CustomerReferenceNo", customerCardInfo.CustomerReferenceNo},
+                //    {"NoOfCards", customerCardInfo.NoOfCards.ToString()},
+                //    {"RBEId", customerCardInfo.RBEId.ToString()},
+                //    {"FeePaymentsCollectFeeWaiver", customerCardInfo.FeePaymentsCollectFeeWaiver.ToString()},
+                //    {"FeePaymentNo", customerCardInfo.FeePaymentNo},
+                //    {"FeePaymentDate", customerCardInfo.FeePaymentDate},
+                //    {"CardPreference", customerCardInfo.CardPreference},
+                //    {"Createdby", Common.userid.ToString()},
+                //    { "ObjCardDetail", json }
+                //};
+
+                #region Create Request Info
+
+                CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
+        
+                insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
+                insertInfo.CustomerName = customerCardInfo.CustomerName;
+                insertInfo.FormNumber = customerCardInfo.FormNumber;
+                insertInfo.NoOfCards = customerCardInfo.NoOfCards;
+                insertInfo.RBEId = customerCardInfo.RBEId;
+                insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
+                insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
+                insertInfo.FeePaymentDate = customerCardInfo.FeePaymentDate;
+                insertInfo.CardPreference = customerCardInfo.CardPreference;
+                insertInfo.RBEName = customerCardInfo.RBEName;
+                insertInfo.RBEName = customerCardInfo.RBEName;
+                insertInfo.Useragent = Common.useragent;
+                insertInfo.Userip = Common.userip;
+                insertInfo.UserId = Common.userid;
+                insertInfo.Createdby = Common.userid;
+                insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+
+                #endregion
+
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                //string jsonString = JsonConvert.SerializeObject(CustomerCardData);
+
+
+
+
+
+                #region Commented
+
+                //// jsonString = jsonString.Replace("\\", "");
+
+                ////StringContent content = new StringContent(CustomerCardData, Encoding.UTF8, "application/json");
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
+
+                #endregion
+
+                CustomerInserCardResponse customerInserCardResponse;
+
+
+                using (var Response = await client.PostAsync(WebApiUrl.insertCustomerCard, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+
+                        using (HttpContent contentUrl = Response.Content)
+                        {
+                            var contentString = contentUrl.ReadAsStringAsync().Result;
+                            customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(contentString);
+                            if (customerInserCardResponse.Internel_Status_Code == 1000)
+                            {
+                                ViewBag.Message = "Customer card details saved Successfully";
+                                //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
+                                customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+                                customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                            }
+                            else
+                            {
+                                ViewBag.Message = customerInserCardResponse.Message;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+            }
+
+            return View(customerCardInfo);
+        }
+
+    }
 }

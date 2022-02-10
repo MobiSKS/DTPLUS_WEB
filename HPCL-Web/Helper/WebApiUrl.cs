@@ -71,6 +71,7 @@
         public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
+        public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
 
         #endregion
 
