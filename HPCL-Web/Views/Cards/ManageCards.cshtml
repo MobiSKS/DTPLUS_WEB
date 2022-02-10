@@ -162,6 +162,12 @@
                                             <th>
                                                 @Html.DisplayName("Cardless Mapping")
                                             </th>
+                                            <th style="display: none;">
+
+                                            </th>
+                                            <th style="display: none;">
+
+                                            </th>
 
                                         </tr>
                                     </table>
@@ -479,9 +485,11 @@
         let tableData = sessionStorage.getItem("tableData");
         let getCusId = sessionStorage.getItem("cusmId");
 
+        console.log(tableData, "tbl");
+
         if (tableData != null) {
             $('#GetCustomerIdValue').val(getCusId);
-            //$('#CardSearch').html(tableData);
+            $('#CardSearch').html(tableData);
              $.ajax({
                 url: "@Url.Action("ReloadUpdatedGrid", "Cards")",
                 type: "POST",
@@ -508,19 +516,29 @@
                             + "<td><span class='rowData'>" + (data.updatedSearchList[i].ownershipType || '') + "</span></td>"
                             + "<td><span class='rowMobNo'>" + (data.updatedSearchList[i].mobileNumber || '') + "</span></td>"
                             + "<td><span class='rowData'>" + (data.updatedSearchList[i].vinNumber || '') + "</span></td>"
+                            + "<td class='statusId' style='display:none'>" + (data.updatedSearchList[i].limitTypeName || '') + "</td>"
+                            + "<td class='checkStatus' style='display:none'>" + (data.updatedSearchList[i].ccmsReloadSaleLimitValue || '') + "</td>"
                             + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
 
                         $('#CardSearch').append(rows);
 
-                        sessionStorage.removeItem('tableData');
+                        
                      }
+
+                      sessionStorage.removeItem('tableData');
+                      sessionStorage.removeItem('cusmId');
+
                      document.getElementById('CardSearch').style.display = 'block'
+
                 },
                 error: function (ex) {
                     alert('Failed' + ex);
                 }
             });
         }
+
+       
+
     });
 
 
@@ -550,6 +568,8 @@
                 + "<td><span class='rowData'>" + (data.searchList[i].ownershipType || '') + "</span></td>"
                 + "<td><span class='rowMobNo'>" + (data.searchList[i].mobileNumber || '') + "</span></td>"
                 + "<td><span class='rowData'>" + (data.searchList[i].vinNumber || '') + "</span></td>"
+                + "<td class='lmtName' style='display:none'>" + (data.searchList[i].limitTypeName || '') + "</td>"
+                + "<td class='amts' style='display:none'>" + (data.searchList[i].ccmsReloadSaleLimitValue || '') + "</td>"
                 + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
 
 
@@ -569,12 +589,15 @@
         var cardNumber = currentRow.find(".rowCardNo").text();
         var mobileNumber = currentRow.find(".rowMobNo").text();
 
+        var LimitTypeName = currentRow.find(".lmtName").text();
+        var CCMSReloadSaleLimitValue = currentRow.find(".amts").text();
+
         console.log("card number : ", cardNumber);
         console.log("mobile number : ", mobileNumber);
 
-        var url = '@Html.Raw(@Url.Action("CardlessMapping", new { cardNumber = "dd", mobileNumber = "mm"}))';
+        var url = '@Html.Raw(@Url.Action("CardlessMapping", new { cardNumber = "dd", mobileNumber = "mm", LimitTypeName = "ll", CCMSReloadSaleLimitValue = "cc" }))';
 
-        url = url.replace("dd", encodeURIComponent(cardNumber)).replace("mm", encodeURIComponent(mobileNumber));
+        url = url.replace("dd", encodeURIComponent(cardNumber)).replace("mm", encodeURIComponent(mobileNumber)).replace("ll", encodeURIComponent(LimitTypeName)).replace("cc", encodeURIComponent(CCMSReloadSaleLimitValue));
 
         $(this).attr('href', url);
 

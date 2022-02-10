@@ -16,7 +16,7 @@ namespace HPCL_Web.Models.Cards.ManageCards
         [Required(ErrorMessage ="Mobile Number is required")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage ="Enter a valid mobile number")]
         public string MobileNumber { get; set; }
-        public int LimitType { get; set; }
-        public string Amount { get; set; }
+        public string LimitTypeName { get; set; }
+        public string CCMSReloadSaleLimitValue { get; set; }
     }
 }
