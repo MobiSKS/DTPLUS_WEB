@@ -700,13 +700,12 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
-                            //lst.Add(new OfficerRegionModel
-                            //{
-                            //    RegionID = 0,
-                            //    RegionName = "Select Location",
-                            //    RegionShortName = "Select Location"
-                            //});
-                            var SortedtList = lst.OrderBy(x => x.RegionID).ToList();
+                            lst.Add(new OfficerRegionModel
+                            {
+                                RegionalOfficeID = 0,
+                                RegionalOfficeName = "Select Location"
+                            });
+                            var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
                             return Json(SortedtList);
                         }
                         else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
@@ -714,13 +713,12 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
-                            //lst.Add(new OfficerZoneModel
-                            //{
-                            //    HQID = 0,
-                            //    ZoneID = 0,
-                            //    ZoneName = "Select Location"
-                            //});
-                            var SortedtList = lst.OrderBy(x => x.ZoneID).ToList();
+                            lst.Add(new OfficerZoneModel
+                            {
+                                ZonalOfficeID = 0,
+                                ZonalOfficeName = "Select Location"
+                            });
+                            var SortedtList = lst.OrderBy(x => x.ZonalOfficeID).ToList();
                             return Json(SortedtList);
                         }
                         else if (OfcrType.Contains("2"))
@@ -728,12 +726,13 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
-                            //lst.Add(new OfficerHqModel
-                            //{
-                            //    HQID = 0,
-                            //    HQName = "Select Location",
-                            //    HQShortName = "Select Location"
-                            //});
+                            lst.Add(new OfficerHqModel
+                            {
+                                HQID = 0,
+                                HQCode = "0",
+                                HQName = "Select Location",
+                                HQShortName = "Select Location"
+                            });
                             var SortedtList = lst.OrderBy(x => x.HQID).ToList();
                             return Json(SortedtList);
                         }

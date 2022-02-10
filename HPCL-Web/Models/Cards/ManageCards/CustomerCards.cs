@@ -193,5 +193,7 @@ namespace HPCL_Web.Models.Cards.ManageCards
         public string CardCategory { get; set; }
         public string CardIssueType { get; set; }
         public string CardIdentifier { get; set; }
+        public string LimitTypeName { get; set; }
+        public string CCMSReloadSaleLimitValue { get; set; }
     }
 }

@@ -80,19 +80,18 @@ namespace HPCL_Web.Models.Officer
     }
     public class OfficerZoneModel
     {
-        public int HQID { get; set; }
-        public int ZoneID { get; set; }
-        public string ZoneName { get; set; }
+        public int ZonalOfficeID { get; set; }
+        public string ZonalOfficeName { get; set; }
     }
     public class OfficerRegionModel
     {
-        public int RegionID { get; set; }
-        public string RegionName { get; set; }
-        public string RegionShortName { get; set; }
+        public int RegionalOfficeID { get; set; }
+        public string RegionalOfficeName { get; set; }
     }
     public class OfficerHqModel
     {
         public int HQID { get; set; }
+        public string HQCode { get; set; }
         public string HQName { get; set; }
         public string HQShortName { get; set; }
     }

@@ -44,7 +44,7 @@
                                                 <div class="col-8">
                                                 </div>
                                                 <div class="col-12">
-                                                    <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;">ADD MERCHANT</button>
+                                                    <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -424,7 +424,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantCommAddress()">Next</button>
+                                <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantCommAddress()" id="showMerchantCommAddbtn">Next</button>
                             </div>
                         </div>
                     </div>
@@ -534,7 +534,7 @@
                             <button class="btn btn_primary px-4 py-2" type="button" onclick="return showPrevMerchantBasicInfoDetails()">Previous</button>
                         </div>
                         <div class="px-2">
-                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantTerminalDetails()">Next</button>
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantTerminalDetails()" id="showMerchantTerminalDtlsbtn">Next</button>
                         </div>
                     </div>
                 </div>
@@ -567,7 +567,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation",new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation", new { @class = "form-control" })
                                                     <p class="m-0">GPRS Installation</p>
                                                 </div>
                                                 <div class="col-4">
@@ -593,7 +593,7 @@
                             <button class="btn btn_primary px-4 py-2" type="button" onclick="return showPrevMerchantCommdetails()">Previous</button>
                         </div>
                         <div class="px-2">
-                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantSummary()">Next</button>
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showMerchantSummary()" id="showMerchantSummarybtn">Next</button>
                         </div>
                     </div>
                 </div>
@@ -897,6 +897,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
                             <div class="clearfix"></div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.Retail_DistictID)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcID)</div>
@@ -919,12 +920,16 @@
 </div>
 
 <script type="text/javascript">
-
-    var model = @Html.Raw(@ViewBag.Message);
-    if (model != "Success") {
-        showAddMerchant();
-
-    }
+    $(document).ready(function () {
+        var message = "@ViewBag.Message";
+        if (message != "Success" && message != "") {
+            debugger;
+            $("#addMerchantbtn").click();
+            $("#showMerchantCommAddbtn").click();
+            $("#showMerchantTerminalDtlsbtn").click();
+            $("#showMerchantSummarybtn").click();
+        }
+    });
 
     function showAddMerchant() {
         var ret = true;

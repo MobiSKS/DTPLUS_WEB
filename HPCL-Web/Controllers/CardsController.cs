@@ -5,6 +5,7 @@ using HPCL_Web.Models.Cards.SetCardLimit;
 using HPCL_Web.Models.Cards.SetCcmsLimit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -303,11 +304,15 @@ namespace HPCL_Web.Controllers
             }
         }
 
-        public async Task<IActionResult> CardlessMapping(string cardNumber, string mobileNumber)
+        public async Task<IActionResult> CardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
         {
             UpdateMobileModal editMobBody = new UpdateMobileModal();
             editMobBody.CardNumber = cardNumber;
             editMobBody.MobileNumber = mobileNumber;
+            editMobBody.LimitTypeName = LimitTypeName;
+            editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
+
+            HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
 
             return View(editMobBody);
         }
