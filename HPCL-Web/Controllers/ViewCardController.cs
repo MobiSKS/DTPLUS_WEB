@@ -19,25 +19,21 @@ namespace HPCL_Web.Controllers
 {
     public class ViewCardController : Controller
     {
-        public IActionResult ViewCardSearch()
+        public async Task<IActionResult> ViewCardSearch()
         {
             return View();
         }
         [HttpPost]
         public async Task<JsonResult> ViewCardSearch(ViewCardDetails entity)
         {
+
             var searchBody = new ViewCardDetails
             {
                 UserId = Common.userid,
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
-                CustomerId = entity.CustomerId,
-
+                Customerid = entity.Customerid
             };
-
-
-
-
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -48,14 +44,9 @@ namespace HPCL_Web.Controllers
                 using (var Response = await client.PostAsync(WebApiUrl.ViewCardLimitsUrl, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-
                     {
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        var jsonSerializerOptions = new JsonSerializerOptions()
-                        {
-                            IgnoreNullValues = true
-                        };
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
                         List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();

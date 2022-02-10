@@ -202,6 +202,159 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
+                var MerchantTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent MerchantTypeContent = new StringContent(JsonConvert.SerializeObject(MerchantTypeForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getMerchantType, MerchantTypeContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<MerchantTypeModel> lst = jarr.ToObject<List<MerchantTypeModel>>();
+                        merchantMdl.MerchantTypes.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load Merchant types";
+                    }
+                }
+
+                var OutletCategoryForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                };
+
+                StringContent OutletCategoryContent = new StringContent(JsonConvert.SerializeObject(OutletCategoryForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getOutletCategory, OutletCategoryContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OutletCategoryModel> lst = jarr.ToObject<List<OutletCategoryModel>>();
+                        merchantMdl.OutletCategories.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to Outlet Categories";
+                    }
+                }
+
+                var SBUForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                };
+
+                StringContent SBUContent = new StringContent(JsonConvert.SerializeObject(SBUForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getSbu, SBUContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SBUTypeModel> lst = jarr.ToObject<List<SBUTypeModel>>();
+                        merchantMdl.SBUTypes.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to SBUs";
+                    }
+                }
+
+                var MerchantStateForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent MerchantStateContent = new StringContent(JsonConvert.SerializeObject(MerchantStateForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getState, MerchantStateContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<RetailOutletStateModel> lst = jarr.ToObject<List<RetailOutletStateModel>>();
+                        List<CommStateModel> lst1 = jarr.ToObject<List<CommStateModel>>();
+                        merchantMdl.RetailOutletStates.AddRange(lst);
+                        merchantMdl.CommStates.AddRange(lst1);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load Merchant States";
+                    }
+                }
+
+                var MerchantZoneForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent MerchantZoneContent = new StringContent(JsonConvert.SerializeObject(MerchantZoneForms), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.zonalOffice, MerchantZoneContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<ZonalOfficeModel> lst = jarr.ToObject<List<ZonalOfficeModel>>();
+                        merchantMdl.ZonalOffices.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load Merchant Zones";
+                    }
+                }
+
                 var MerchantCreateForms = new Dictionary<string, string>
                 {
                     {"Useragent", Common.useragent},
