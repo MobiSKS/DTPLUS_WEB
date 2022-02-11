@@ -374,7 +374,7 @@ namespace HPCL_Web.Controllers
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     //{"FeePaymentsChequeNo", cust.FeePaymentsChequeNo.ToString()},
                     //{"FeePaymentsChequeDate", cust.FeePaymentsChequeDate},
-                    {"Createdby", "0"},
+                    {"Createdby", Common.userid.ToString()},
                     //{ "ObjCardDetail", json }
                      {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                      {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()}
@@ -678,25 +678,46 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-
-        public async Task<IActionResult> UploadDoc()
+        public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
         {
-            UploadDoc modals = new UploadDoc();
+            // return View();
 
-            var forms = new Dictionary<string, string>
+            var access_token = _api.GetToken();
+
+            if (access_token.Result != null)
             {
-                {"useragent", Common.useragent},
-                {"userip", Common.userip},
-                {"userid", Common.userid},
-            };
+                HttpContext.Session.SetString("Token", access_token.Result);
+            }
+
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            char flag = 'N';
+
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
+                //Fetching CustomerType
+                var CustType = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"CTFlag",  "1" }
+                };
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+                //Fetching Type of Fleet
+                var CustomerTypeOfFleetForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
 
-                using (var Response = await client.PostAsync(WebApiUrl.GetProofTyleUrl, content))
+                };
+                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -704,8 +725,11 @@ namespace HPCL_Web.Controllers
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<ProofType> lst = jarr.ToObject<List<ProofType>>();
-                        modals.ProofTypesModal.AddRange(lst);
+                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
+
+                        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
+                        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
+                        customerCardInfo.VehicleTypeMdl.AddRange(lst);
                     }
                     else
                     {
@@ -804,39 +828,6 @@ namespace HPCL_Web.Controllers
                     }
                 }
             }
-
-
-
-
-
-            //using (var client = new HttpClient())
-            //{
-            //    using (var content = new MultipartFormDataContent())
-            //    {
-            //        var values = new[]
-            //        {
-            //            new KeyValuePair<string, string>("Foo", "Bar"),
-            //            new KeyValuePair<string, string>("More", "Less"),
-            //        };
-
-            //        foreach (var keyValuePair in values)
-            //        {
-            //            content.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
-            //        }
-
-            //        var fileContent = new ByteArrayContent(System.IO.File.ReadAllBytes(fileName));
-            //        fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            //        {
-            //            FileName = "Foo.txt"
-            //        };
-            //        content.Add(fileContent);
-
-            //        var requestUri = "/api/action";
-            //        var result = client.PostAsync(requestUri, content).Result;
-            //    }
-            //}
-            //return Json("h");
-
         }
     }
 }

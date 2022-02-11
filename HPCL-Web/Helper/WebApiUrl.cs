@@ -73,6 +73,8 @@
         public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
+        public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
+
         #endregion
 
         #region Login
