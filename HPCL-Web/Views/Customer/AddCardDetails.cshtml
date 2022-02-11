@@ -1,0 +1,612 @@
+﻿@model HPCL_Web.Models.CustomerCardInfo
+
+@{
+    ViewData["Title"] = "Add Customer Card Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row w-100">
+
+    <div class="col-lg-12 p-4 p-md-4">
+        <div class="bg-white p-2 p-md-4">
+            <h5>Add Card</h5>
+            <form name="addCustomerCardsForm" method="post" asp-action="AddCardDetails" class="w-100">
+                <div class="w-100">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                        <div class="border-1 rounded border-grey">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add New Card</p>
+                            <div class="py-3 pr-4 pl-0 pr-md-4">
+                                <div class="col-lg-6 col-12 mb-3">
+                                    <div class="form-group">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-5 col-12">Customre Ref No. <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNo", @class = "form-control" })
+                                                <span class="error" id="CustomerReferenceNo_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12 d-flex align-items-center justify-content-center">
+                                                <div class="pr-2 w-50">
+                                                    <button class="btn btn_primary px-4 py-2" id="btnSearch">Search</button>
+                                                </div>
+                                                @*<div class="pl-2 w-50">
+                                                    <button class="btn btn_primary px-4 py-2" type="button">Edit</button>
+                                                </div>*@
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Customer Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerName, new { @id = "CustomerName", @class = "form-control", @readonly = "readonly" })
+                                            <span class="error" id="CustomerName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Form Number <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumber", @class = "form-control", @readonly = "readonly" })
+                                            <span class="error" id="FormNumber_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">No of Cards <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control" })
+                                            <span class="error" id="NoOfCards_error"></span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">RBE ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.RBEId, new { @id = "RBEId", @class = "form-control" })
+                                            <span class="error" id="RBEId_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">RBE Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.RBEName, new { @id = "RBEName", @class = "form-control", @readonly = "readonly" })
+                                            <span class="error" id="RBEName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Card Preference</label>
+                                        <div class="col-md-7 col-12 d-flex align-items-center justify-content-start">
+                                            <label class="d-flex align-items-center justify-content-start">
+                                                @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @checked = "checked" })
+                                                <span>Card</span>
+                                            </label>
+                                            <label class="d-flex align-items-center justify-content-start ml-3">
+                                                @Html.RadioButtonFor(m => m.CardPreference, "Cardless")
+                                                <span>Cardless</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12"></label>
+                                        <div class="col-md-7 col-12">
+                                            <h6>Fee Payment Details </h6>
+                                            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                                <label class="d-flex align-items-center justify-content-start mr-3">
+                                                    @*<input type="radio" name="feePaymentDetails" class="mr-2">*@
+                                                    @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiver, "1", new { @checked = "checked", name = "FeePaymentsCollectFeeWaiver" })
+                                                    <span>Fee Collect (CR)</span>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-start mr-3">
+                                                    @*<input type="radio" name="feePaymentDetails" class="mr-2">*@
+                                                    @Html.RadioButtonFor(model => Model.FeePaymentsCollectFeeWaiver, "2", new { name = "FeePaymentsCollectFeeWaiver" })
+                                                    <span>Fee Collect (Cheque)</span>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-start">
+                                                    @*<input type="radio" name="feePaymentDetails" class="mr-2">*@
+                                                    @Html.RadioButtonFor(model => Model.FeePaymentsCollectFeeWaiver, "3", new { name = "FeePaymentsCollectFeeWaiver" })
+                                                    <span>Fee Waiver</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Cheque No.<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @*<input type="text" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control" })
+                                            <span class="error" id="FeePaymentNo_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @*<input type="date" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDate", @type = "date", @class = "form-control" })
+                                            <span class="error" id="FeePaymentDate_error"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-5">
+                                    <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
+                                        <div class="pr-2 w-50">
+                                            <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
+                                        </div>
+                                        <div class="pl-2 w-50">
+                                            <button class="btn btn_primary px-4 py-2" type="button" onclick="ClearCardDeatils()">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-100 pl-3 ">
+                                    <div class=" table-responsive">
+                                        <table class="table table-bordered" id="NoOfCardsTbl">
+                                            <thead>
+                                                <tr>
+                                                    <th>S No.</th>
+                                                    <th>Vehicle No./Card Identifier</th>
+                                                    <th>Vehicle No.</th>
+                                                    <th>Vehicle Type</th>
+                                                    <th>Vehicle Make</th>
+                                                    <th>Year of Reg.</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cardDetails">
+                                                @for (int i = 0; i < Model.ObjCardDetail.Count; i++)
+                                                {
+                                                    var j = i + 1;
+                                                    <tr>
+                                                        <td>
+                                                            @j
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBoxFor(m => m.ObjCardDetail[i].CardIdentifier)
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBoxFor(m => m.ObjCardDetail[i].VechileNo)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownListFor(m => m.ObjCardDetail[i].VehicleType, new SelectList(Model.VehicleTypeMdl, "VehicleTypeId", "VehicleTypeName"), new { @class = "form-control" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBoxFor(m => m.ObjCardDetail[i].VehicleMake)
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBoxFor(m => m.ObjCardDetail[i].YearOfRegistration)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-5">
+                            <div class="col-md-2 col-12 d-flex align-items-center justify-content-center">
+                                <div class="pr-2 w-50">
+                                    <button class="btn btn_primary px-4 py-2" type="button" onclick="return SubmitValidations()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    //$(document).ready(function () {
+    //    $('input[name=FeePaymentsCollectFeeWaiver]').click(function () {
+    //        if ($('input[name=FeePaymentsCollectFeeWaiver]:checked').val() == "1") {
+    //            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+    //        } else {
+    //            $('#tab1').hide();
+    //        }
+    //    });
+    //});
+
+
+    $("#btnSearch").click(function () {
+        debugger;
+
+        var custRefNo = document.getElementById("CustomerReferenceNo").value; //$("#CustomerReferenceNo").value();
+        if (custRefNo == "") {
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customer Reference No is required";
+            $("#CustomerReferenceNo").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetCustomerDetails", "Customer")',
+                data: { customerReferenceNo: custRefNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    var v = data;
+                    if (status == 'success') {
+                        //$("#userNamediv").addClass("btmMargin");
+                        //$("#userName_error").html("User Name Exists");
+                        document.getElementById("CustomerName").value = data.customerName;
+                        document.getElementById("FormNumber").value = data.formNumber;
+
+                    }
+                    else {
+                        $("#CustomerReferenceNo_error").html("");
+                        console.log(v);
+                        document.getElementById("CustomerName").value = "";
+                        document.getElementById("FormNumber").value = "";
+                    }
+                }
+            });
+    });
+
+
+    $("#RBEId").on("blur", function () {
+        //debugger;
+         var custRBEId = document.getElementById("RBEId").value; //$("#CustomerReferenceNo").value();
+         if (custRBEId == "") {
+             document.getElementById("RBEId_error").innerHTML = "RBE Id is required";
+             //$("#custRBEId").focus;
+            return (false);
+        }
+        else {
+             document.getElementById("RBEId_error").innerHTML = "";
+        }
+
+        //var found = false;
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetCustomerRBEName", "Customer")',
+                data: { RBEId: custRBEId },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    var v = data;
+                    if (status == 'success') {
+                        document.getElementById("RBEName").value = data.rbeName;
+                        //found = true;
+
+                        if (data == "Failed to load Customer Details")
+                            document.getElementById("RBEName").value = "";
+                    }
+                    else {
+                        $("#RBEId_error").html("");
+                        document.getElementById("RBEName").value = "";
+                        console.log(v);
+                        //found = false;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("RBEName").value = "";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("RBEName").value = "";
+                    }
+                }
+            });
+
+        //alert(found);
+        //if (found == false) {
+        //    document.getElementById("RBEId_error").innerHTML = "RBE Id is not valid";
+        //    $("#RBEId").focus;
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("RBEId_error").innerHTML = "";
+        //}
+
+    });
+
+
+
+    function LoadCardDeatils() {
+
+        // var vehicleTypelst = "<select id='ppp' class='form - control'>";
+        debugger;
+
+        if (document.getElementById("RBEId").value == "") {
+            document.getElementById("RBEId_error").innerHTML = "RBE Id is required";
+            //$("#RBEId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("RBEId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RBEName").value == "") {
+            document.getElementById("RBEName_error").innerHTML = "RBE Name is not valid";
+            //$("#RBEId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("RBEName_error").innerHTML = "";
+        }
+
+        var noOfCards = document.getElementById("NoOfCards").value; //$("#CustomerReferenceNo").value();
+        if (noOfCards == "0" || noOfCards == "") {
+            document.getElementById("NoOfCards_error").innerHTML = "No Of Cards is required";
+            $("#NoOfCards").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("NoOfCards_error").innerHTML = "";
+        }
+
+
+        //var found = false;
+        //var custRBEId = document.getElementById("RBEId").value;
+
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetCustomerRBEName", "Customer")',
+            data: { RBEId: custRBEId },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                var v = data;
+                if (status == 'success') {
+                    found = true;
+                }
+                else {
+                    found = false;
+                }
+            }
+        });*@
+
+        //if (found == false) {
+        //    document.getElementById("RBEId_error").innerHTML = "RBE Id is not valid";
+        //    //$("#RBEId").focus;
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("RBEId_error").innerHTML = "";
+        //}
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+            data: {},
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+
+                var NoOfcards = $('#NoOfCards').val();
+                $("#NoOfCardsTbl td").parent().remove();
+
+                for (var i = 0; i < parseInt(NoOfcards); i++) {
+                    //var id = 'ddlVehicleType' + i;
+                    var j = (i + 1);
+                    var name = 'ObjCardDetail[' + (i) + '].VehicleType';
+                    var id = 'ddlVehicleType' + i;
+                    //var rows = "<tbody><tr>"
+                    //    + "<td><span class='rowData'>" + i + "</span></td>"
+                    //    + "<td><span class='rowData'><input type='text' class='form - control'> </span></td>"
+                    //    + "<td><select id='" + id +  "'class='vls'></select></td>"
+                    //    + "<td><span class='rowData'><input type='text' class='form - control'></span></td>"
+                    //    + "<td><span class='rowData'><input type='text' class='form - control'></span></td>";
+
+
+                    var rows = "<tr>"
+                        + "<td><span class='rowData'>" + j + "</span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                        + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td></tr>";
+
+                    $('#NoOfCardsTbl').append(rows);
+                    console.log(document.getElementById(id));
+
+                    $("#" + id).html("");
+                    $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.vehicleTypeId,
+                                text: data.vehicleTypeName
+                            }).html(data.vehicleTypeName).appendTo("#" + id);
+                    });
+                }
+
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating VehicleTpeData Data");
+            }
+
+
+        });
+
+        //  vehicleTypelst.append('</select >');
+
+        debugger;
+
+
+
+
+        document.getElementById('NoOfCardsTbl').style.display = 'block';
+
+
+        //$('#NoOfCards').attr("disabled", true);
+        //$('#FeePaymentDate').attr("disabled", true);
+        //$('#FeePaymentNo').attr("disabled", true);
+        //$('#FeePaymentDate').attr("disabled", true);
+
+    }
+
+    function ClearCardDeatils() {
+
+        //$('#NoOfCards').val('');
+        //$('#FeePaymentDate').val('');
+       // $('#FeePaymentNo').val('');
+        $('#NoOfCardsTbl > tr').remove();
+        document.getElementById('NoOfCardsTbl').style.display = 'none';
+
+
+        $('#NoOfCards').attr("disabled", false);
+        $('#FeePaymentDate').attr("disabled", false);
+        $('#FeePaymentNo').attr("disabled", false);
+        $('#FeePaymentDate').attr("disabled", false);
+
+        }
+
+
+        function SubmitValidations() {
+            debugger;
+
+            //else {
+            //console.log("Dont ask")
+
+            if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "Customre Ref No is required";
+                document.getElementById("CustomerReferenceNo").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+            }
+
+            if (document.getElementById("CustomerName").value == "0" || document.getElementById("CustomerName").value == "") {
+                document.getElementById("CustomerName_error").innerHTML = "Customer Name is required";
+                document.getElementById("CustomerName").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CustomerName_error").innerHTML = "";
+            }
+
+            if (document.getElementById("FormNumber").value == "0" || document.getElementById("FormNumber").value == "") {
+                document.getElementById("FormNumber_error").innerHTML = "Form Number is required";
+                document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else {
+                document.getElementById("FormNumber_error").innerHTML = "";
+            }
+
+            if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value == "") {
+                document.getElementById("NoOfCards_error").innerHTML = "No of Cards is required";
+                document.getElementById("NoOfCards").focus();
+                return false;
+            }
+            else {
+                document.getElementById("NoOfCards_error").innerHTML = "";
+            }
+
+            if (document.getElementById("RBEId").value == "0" || document.getElementById("RBEId").value == "") {
+                document.getElementById("RBEId_error").innerHTML = "RBE Id is required";
+                document.getElementById("RBEId").focus();
+                return false;
+            }
+            else {
+                document.getElementById("RBEId_error").innerHTML = "";
+            }
+
+            if (document.getElementById("RBEName").value == "0" || document.getElementById("RBEName").value == "") {
+                document.getElementById("RBEName_error").innerHTML = "RBE Name is required";
+                document.getElementById("RBEName").focus();
+                return false;
+            }
+            else {
+                document.getElementById("RBEName_error").innerHTML = "";
+            }
+
+            if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
+                document.getElementById("FeePaymentNo_error").innerHTML = "Fee Payment No is required";
+                document.getElementById("FeePaymentNo").focus();
+                return false;
+            }
+            else {
+                document.getElementById("FeePaymentNo_error").innerHTML = "";
+            }
+
+            if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
+                document.getElementById("FeePaymentDate_error").innerHTML = "Fee Payment Date is required";
+                document.getElementById("FeePaymentDate").focus();
+                return false;
+            }
+            else {
+                document.getElementById("FeePaymentDate_error").innerHTML = "";
+            }
+                                   
+            if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
+                alert("Card Preference Not Selected");
+                return;
+            }
+
+            if (!(document.querySelector('input[name="FeePaymentsCollectFeeWaiver"]:checked'))) {
+                alert("Fee Payment Details Not Selected");
+                return;
+            }
+
+            var count = $('#NoOfCardsTbl tr').length;
+
+            //alert(count);
+
+            if (count == 1) {
+                alert("Vehicle Details Not Added");
+                return;
+            }
+
+            return true;
+
+    }
+
+
+</script>
+
+@if (Model != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        debugger;
+            if (@Model.Status== 1)
+                alert("Card Created Successfully");
+            @*else if (@Model.StatusCode== 1000)
+                alert("Card Created Successfully");
+            else if (@Model.StatusCode> 0 &&  @Model.StatusCode!=1000)
+                alert(@ViewBag.Message);*@
+
+            });
+    </script>
+}
+
+<script language="javascript">
+    $(document).ready(function () {
+
+        $('input[name="FeePaymentsCollectFeeWaiver"]:radio').change(function () {
+            //alert($("input[name='FeePaymentsCollectFeeWaiver']:checked").val());
+
+            var selected = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val()
+            //alert(selected);
+            if (selected == "1") {
+                $('#lblChequeNo').text("CR No");
+                $('#lblChequeDate').text("CR Date");
+            }
+            else if (selected == "2") {
+                $('#lblChequeNo').text("Cheque No");
+                $('#lblChequeDate').text("Cheque Date");
+            }
+            else if (selected == "3") {
+                $('#lblChequeNo').text("Cheque No");
+                $('#lblChequeDate').text("Cheque Date");
+            }
+
+        });
+    });
+</script>

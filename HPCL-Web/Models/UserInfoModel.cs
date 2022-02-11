@@ -10,11 +10,12 @@ namespace HPCL_Web.Models
     {
         [Required]
         [DataType(DataType.Text)]
-        public string Username { get; set; }
+        public string UserId { get; set; }
         
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public string MobileNo { get; set; }
+        public string Useragent { get; set; }
+        public string Userip { get; set; }
     }
 }

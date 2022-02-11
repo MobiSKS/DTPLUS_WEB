@@ -42,7 +42,7 @@ namespace HPCL_Web.Controllers
             {
                 {"useragent", Common.useragent},
                 {"userip", Common.userip},
-                {"userid", Common.userid},
+                {"userid", HttpContext.Session.GetString("UserName")},
             };
 
             List<HeadOfficeDetailsResponse> lst = new List<HeadOfficeDetailsResponse>();
@@ -76,8 +76,8 @@ namespace HPCL_Web.Controllers
                         HQCode = headOfficeDetails.HQCode,
                         HQName = headOfficeDetails.HQName,
                         HQShortName = headOfficeDetails.HQShortName,
-                        CreatedBy = "1",
-                        UserId = Common.userid,
+                        CreatedBy = HttpContext.Session.GetString("UserName"),
+                        UserId = HttpContext.Session.GetString("UserName"),
                         UserAgent = Common.useragent,
                         UserIp = Common.userip
                     };
@@ -118,8 +118,8 @@ namespace HPCL_Web.Controllers
                         HQCode= headOfficeDetails.HQCode,
                         HQName=headOfficeDetails.HQName,
                         HQShortName=headOfficeDetails.HQShortName,
-                        ModifiedBy="1",
-                        UserId=Common.userid,
+                        ModifiedBy= HttpContext.Session.GetString("UserName"),
+                        UserId=HttpContext.Session.GetString("UserName"),
                         UserAgent=Common.useragent,
                         UserIp=Common.userip
                     };
