@@ -87,7 +87,7 @@ function showregAddress() {
     //console.log(ret);
 
     if (document.applicationForm.CustomerTypeID.value == "0") {
-        document.getElementById("customerType_error").innerHTML = "This information is required";
+        document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
         document.applicationForm.CustomerTypeID.focus();
         return ret;
     }
@@ -95,13 +95,85 @@ function showregAddress() {
         document.getElementById("customerType_error").innerHTML = "";
     }
 
+    if (document.applicationForm.customerSubType.value == "0") {
+        document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type Selection is required";
+        document.applicationForm.customerSubType.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("customerSubType_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerDateOfApplication.value == "") {
+        document.getElementById("applicationDate_error").innerHTML = "Date of Application Selection is required";
+        document.applicationForm.CustomerDateOfApplication.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("applicationDate_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerSalesAreaID.value == "0") {
+        document.getElementById("salesArea_error").innerHTML = "Sales Area Selection is required";
+        document.applicationForm.CustomerSalesAreaID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("salesArea_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
+        document.getElementById("zonalOffice_error").innerHTML = "Zonal Office Selection is required";
+        document.applicationForm.CustomerZonalOfficeID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("zonalOffice_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.regionalOffice.value == "0") {
+        document.getElementById("regionalOffice_error").innerHTML = "Regional Office Selection is required";
+        document.applicationForm.regionalOffice.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("regionalOffice_error").innerHTML = "";
+    }
+
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-        document.getElementById("salutaion_error").innerHTML = "Select Title";
+        document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
         document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
     else {
         document.getElementById("salutaion_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.IndividualOrgName.value == "") {
+        document.getElementById("individualName_error").innerHTML = "Enter Individual Or Organization Name";
+        document.applicationForm.IndividualOrgName.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("individualName_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerNameOnCard.value == "") {
+        document.getElementById("nameOnCard_error").innerHTML = "Enter Name on Card";
+        document.applicationForm.CustomerNameOnCard.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("nameOnCard_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerTbentityID.value == "0") {
+        document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
+        document.applicationForm.CustomerTbentityID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("typeOfbusiness_error").innerHTML = "";
     }
 
     if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
@@ -113,35 +185,18 @@ function showregAddress() {
         document.getElementById("residenceStatus_error").innerHTML = "";
     }
 
-    if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
-        document.getElementById("zonalOffice_error").innerHTML = "This information is required";
-        document.applicationForm.CustomerZonalOfficeID.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("zonalOffice_error").innerHTML = "";
-    }
-
-    if (document.applicationForm.CustomerDateOfApplication.value == "") {
-        document.getElementById("applicationDate_error").innerHTML = "This information is required";
-        document.applicationForm.CustomerDateOfApplication.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("applicationDate_error").innerHTML = "";
-    }
-
-    if (document.applicationForm.SalesArea.value == "") {
-        document.getElementById("salesArea_error").innerHTML = "This information is required";
-        document.applicationForm.salesArea.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("salesArea_error").innerHTML = "";
-    }
+        
+    //if (document.applicationForm.SalesArea.value == "") {
+    //    document.getElementById("salesArea_error").innerHTML = "This information is required";
+    //    document.applicationForm.salesArea.focus();
+    //    return ret;
+    //}
+    //else {
+    //    document.getElementById("salesArea_error").innerHTML = "";
+    //}
 
     if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-        document.getElementById("incomeTaxPan_error").innerHTML = "This information is required";
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
         document.applicationForm.CustomerIncomeTaxPan.focus();
         return ret;
     }
@@ -150,14 +205,7 @@ function showregAddress() {
     }
 
 
-    if (document.applicationForm.customerSubType.value == "0") {
-        document.getElementById("customerSubType_error").innerHTML = "This information is required";
-        document.applicationForm.customerSubType.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("customerSubType_error").innerHTML = "";
-    }
+
     /*else {
         y = document.applicationForm.mobileno.value;
         if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
@@ -178,36 +226,9 @@ function showregAddress() {
             }
     }*/
 
-    if (document.applicationForm.regionalOffice.value == "0") {
-        document.getElementById("regionalOffice_error").innerHTML = "This information is required";
-        document.applicationForm.regionalOffice.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("regionalOffice_error").innerHTML = "";
-    }
+    
 
-
-    if (document.applicationForm.IndividualOrgName.value == "") {
-        document.getElementById("individualName_error").innerHTML = "This information is required";
-        document.applicationForm.IndividualOrgName.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("individualName_error").innerHTML = "";
-    }
-
-
-
-    if (document.applicationForm.CustomerNameOnCard.value == "") {
-        document.getElementById("nameOnCard_error").innerHTML = "This information is required";
-        document.applicationForm.CustomerNameOnCard.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("nameOnCard_error").innerHTML = "";
-    }
-
+            
 
     /*if (document.applicationForm.pincode.value == "") {
        document.getElementById("picode_error").innerHTML="This information is required";
@@ -225,18 +246,10 @@ function showregAddress() {
                document.getElementById("picode_error").innerHTML="";
            }
    }*/
-    if (document.applicationForm.CustomerTbentityID.value == "0") {
-        document.getElementById("typeOfbusiness_error").innerHTML = "This information is required";
-        document.applicationForm.CustomerTbentityID.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("typeOfbusiness_error").innerHTML = "";
-    }
-
+   
 
     if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-        document.getElementById("incomeTaxPan_error").innerHTML = "This information is required";
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
         document.applicationForm.CustomerIncomeTaxPan.focus();
         return ret;
     }
@@ -251,11 +264,13 @@ function showregAddress() {
             success: function (data, status, xhr) {
                 //debugger;
                 var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['status-code']=='102') {
+                if (status == 'success' && jsonData['status-code']=='101') {
                     result = true;
 
+                    console.log(jsonData);
                     document.getElementById("address-tab").click();
                     document.getElementById("address-tab").classList.remove("disable");
+                    document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
                     localStorage.setItem("showregAddress", true)
                 }
                 else {
@@ -271,10 +286,13 @@ function showregAddress() {
         ret = result;
     }
 
+    if (ret == false)
+        return ret;
+
     document.getElementById("address-tab").click();
     document.getElementById("address-tab").classList.remove("disable");
     localStorage.setItem("showregAddress", true)
-    result = true;
+
 
     /*if (!document.applicationForm.tc.checked) {
         //toast("true");
@@ -343,7 +361,7 @@ function showOfficialDetails() {
     //	else {
     //console.log("Dont ask")
     if (document.applicationForm.CommunicationAddress1.value == "") {
-        document.getElementById("comm_address1_error").innerHTML = "This information is required";
+        document.getElementById("comm_address1_error").innerHTML = "Communication Address 1 is required";
         document.applicationForm.CommunicationAddress1.focus();
         return false;
     }
@@ -352,7 +370,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationAddress2.value == "") {
-        document.getElementById("comm_address2_error").innerHTML = "This information is required";
+        document.getElementById("comm_address2_error").innerHTML = "Communication Address 2 is required";
         document.applicationForm.CommunicationAddress2.focus();
         return false;
     }
@@ -361,7 +379,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationCity.value == "") {
-        document.getElementById("comm_city_error").innerHTML = "This information is required";
+        document.getElementById("comm_city_error").innerHTML = "Communication City is required";
         document.applicationForm.CommunicationCity.focus();
         return false;
     }
@@ -370,14 +388,14 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationPinCode.value == "") {
-        document.getElementById("comm_pincode_error").innerHTML = "This information is required";
+        document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pin Code is required";
         document.applicationForm.CommunicationPinCode.focus()
         return (false);
     }
     else {
         var pin = document.applicationForm.CommunicationPinCode.value;
         if (pin.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pincode, Must be six digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pincode, Must be six digits";
             document.applicationForm.CommunicationPinCode.focus();
             return false;
         }
@@ -387,7 +405,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
-        document.getElementById("comm_states_error").innerHTML = "This information is required";
+        document.getElementById("comm_states_error").innerHTML = "Communication Address State Selection is required";
         document.applicationForm.CommunicationStateID.focus();
         return false;
     }
@@ -396,7 +414,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value=="") {
-        document.getElementById("comm_district_error").innerHTML = "This information is required";
+        document.getElementById("comm_district_error").innerHTML = "Communication Address District Selection is required";
         document.applicationForm.CommunicationDistrictId.focus();
         return false;
     }
@@ -420,7 +438,7 @@ function showOfficialDetails() {
     //}
 
     if (document.applicationForm.CommunicationMobileNumber.value == "") {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "This information is required";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
         document.applicationForm.CommunicationMobileNumber.focus();
         return false;
 
@@ -433,7 +451,7 @@ function showOfficialDetails() {
             return false
         }
         else if (y.length < 10 || y.length > 10) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid phone number (e.g.: 9999990000)";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
             document.applicationForm.CommunicationMobileNumber.focus();
             return false;
         }
@@ -444,7 +462,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationEmail.value == "") {
-        document.getElementById("comm_email_error").innerHTML = "This information is required";
+        document.getElementById("comm_email_error").innerHTML = "Communication Address Email is required";
         document.applicationForm.CommunicationEmail.focus();
         return (false);
     }
@@ -465,7 +483,7 @@ function showOfficialDetails() {
     if (document.getElementById("sameAddressCheck").checked != true) {
 
         if (document.getElementById("PerOrRegAddress1").value == "") {
-            document.getElementById("perma_address1_error").innerHTML = "This information is required";
+            document.getElementById("perma_address1_error").innerHTML = "Permanent/Registered Office Address 1 is required";
             document.getElementById("PerOrRegAddress1").focus();
             return false;
         }
@@ -474,7 +492,7 @@ function showOfficialDetails() {
         }
 
         if (document.getElementById("PerOrRegAddress2").value == "") {
-            document.getElementById("perma_address2_error").innerHTML = "This information is required";
+            document.getElementById("perma_address2_error").innerHTML = "Permanent/Registered Office Address 2 is required";
             document.getElementById("PerOrRegAddress2").focus();
             return false;
         }
@@ -484,7 +502,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressCity").value == "") {
-            document.getElementById("perma_city_error").innerHTML = "This information is required";
+            document.getElementById("perma_city_error").innerHTML = "Permanent/Registered Office City is required";
             document.getElementById("PerOrRegAddressCity").focus();
             return false;
         }
@@ -494,7 +512,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressPinCode").value == "") {
-            document.getElementById("perma_pincode_error").innerHTML = "This information is required";
+            document.getElementById("perma_pincode_error").innerHTML = "Permanent/Registered Office Pin code is required";
             document.getElementById("PerOrRegAddressPinCode").focus()
             return (false);
         }
@@ -512,7 +530,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("CommunicationDistrict").value == "-1") {
-            document.getElementById("comm_district_error").innerHTML = "This information is required";
+            document.getElementById("comm_district_error").innerHTML = "Communication Address District is required";
             document.getElementById("CommunicationDistrict").focus();
             return false;
         }
@@ -522,7 +540,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressStateID").value == "0") {
-            document.getElementById("perma_state_error").innerHTML = "This information is required";
+            document.getElementById("perma_state_error").innerHTML = "Permanent/Registered Office State is required";
             document.getElementById("PerOrRegAddressStateID").focus();
             return false;
         }
@@ -531,7 +549,7 @@ function showOfficialDetails() {
         }
 
         if (document.getElementById("PerOrRegAddressDistrict").value == "-1" || document.getElementById("PerOrRegAddressDistrict").value == "0") {
-            document.getElementById("perma_district_error").innerHTML = "This information is required";
+            document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
             document.getElementById("PerOrRegAddressDistrict").focus();
             return false;
         }
@@ -592,7 +610,7 @@ function showCardDetails() {
     //else {
     //console.log("Dont ask")
     if (document.applicationForm.KeyOffTitle.value == "-1") {
-        document.getElementById("officialTitle_error").innerHTML = "This information is required";
+        document.getElementById("officialTitle_error").innerHTML = "Title Selection is required";
         document.applicationForm.KeyOffTitle.focus();
         return false;
     }
@@ -601,7 +619,7 @@ function showCardDetails() {
     }
 
     if (document.applicationForm.KeyOffFirstName.value == "") {
-        document.getElementById("official_fName_error").innerHTML = "This information is required";
+        document.getElementById("official_fName_error").innerHTML = "First Name is required";
         document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
@@ -610,7 +628,7 @@ function showCardDetails() {
     }
 
     if (document.applicationForm.KeyOffDesignation.value == "") {
-        document.getElementById("official_designation_error").innerHTML = "This information is required";
+        document.getElementById("official_designation_error").innerHTML = "Designation is required";
         document.applicationForm.KeyOffDesignation.focus();
         return false;
     }
@@ -634,7 +652,7 @@ function showCardDetails() {
         return false
     }
     else if (y.length < 10 || y.length > 10) {
-        document.getElementById("official_mobile_error").innerHTML = "Invalid phone number (e.g.: 9999990000)";
+        document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile number (e.g.: 9999990000)";
         document.applicationForm.KeyOffMobileNumber.focus();
         return false;
     }

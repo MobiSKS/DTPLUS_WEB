@@ -15,6 +15,7 @@ using System.Text;
 using System.Net;
 using HPCL_Web.Models.Officer;
 
+
 namespace HPCL_Web.Controllers
 {
     public class CustomerController : Controller
@@ -98,6 +99,36 @@ namespace HPCL_Web.Controllers
                         ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                     }
                 }
+
+                //sales Area Dropdown
+                var saleAreaReqData = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"RegionID", "0" }
+                };
+
+
+                StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
+                        custMdl.SalesAreaMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+                
 
                 //fetching Type of Business Entity
                 var TBEntityForms = new Dictionary<string, string>
@@ -273,18 +304,6 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> OnlineForm(CustomerModel cust)
         {
 
-            //var json = "";
-            //if (cust.CardDetailsMdl.Count > 0)
-            //{
-            //    foreach (CardDetails cardDetails in cust.CardDetailsMdl)
-            //    {
-            //        cardDetails.VechileNo = cardDetails.CardIdentifier;
-            //    }
-
-            //    json = JsonConvert.SerializeObject(cust.CardDetailsMdl);
-
-            //    cust.NoOfCards = cust.CardDetailsMdl.Count;
-            //}
 
             if (cust.InterState)
             {
@@ -318,7 +337,7 @@ namespace HPCL_Web.Controllers
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
                     {"DateOfApplication", cust.CustomerDateOfApplication},
-                    {"SalesArea", cust.SalesArea},
+                    {"SalesArea", cust.CustomerSalesAreaID.ToString()},
                     {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
                     {"IndividualOrgName", cust.IndividualOrgName},
                     {"NameOnCard", cust.CustomerNameOnCard.ToString()},
@@ -657,7 +676,7 @@ namespace HPCL_Web.Controllers
             var input = new
             {
                 consent = "Y",
-                pan = PANNumber,
+                pan = PANNumber
             };
 
             using (HttpClient client = new HelperAPI().GetApiPANUrlString())
@@ -936,7 +955,7 @@ namespace HPCL_Web.Controllers
                         if (customerRBE.Internel_Status_Code == 1000)
                         {
                             customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
-                            customerCardInfo.RBEId = customerRBE.Data[0].RBEId;
+                            customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
 
                             return Json(customerCardInfo);
                         }

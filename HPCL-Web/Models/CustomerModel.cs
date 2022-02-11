@@ -65,6 +65,13 @@ namespace HPCL_Web.Models
 
             CardDetailsMdl = new List<CardDetails>();
             VehicleTypeMdl = new List<VehicleTypeModel>();
+            SalesAreaMdl = new List<SalesAreaModel>();
+
+            SalesAreaMdl.Add(new SalesAreaModel
+            {
+                SalesAreaID = 0,
+                SalesAreaName = "Select Sales Area"
+            });
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -78,7 +85,7 @@ namespace HPCL_Web.Models
         public virtual List<CustomerTypeOfFleetModel> CustomerTypeOfFleetMdl { get; set; }
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
-        
+        public virtual List<SalesAreaModel> SalesAreaMdl { get; set; }
 
         [Required(ErrorMessage = "Customer Type is Required")]
         public int CustomerTypeID { get; set; }
@@ -243,8 +250,9 @@ namespace HPCL_Web.Models
 
         public int TierOfCustomerID { get; set; }
 
-
-
+        [Required(ErrorMessage = "Sales Area is Required")]
+        public int CustomerSalesAreaID { get; set; }
+        
     }
 
 
@@ -353,8 +361,8 @@ namespace HPCL_Web.Models
         public String CustomerReferenceNo { get; set; }
         public String CustomerName { get; set; }
         public String FormNumber { get; set; }
-        public int NoOfCards { get; set; }
-        public int RBEId { get; set; }
+        public string NoOfCards { get; set; }
+        public string RBEId { get; set; }
         public int FeePaymentsCollectFeeWaiver { get; set; }
         public string FeePaymentNo { get; set; }
         public string FeePaymentDate { get; set; }
@@ -430,8 +438,8 @@ namespace HPCL_Web.Models
         public String CustomerReferenceNo { get; set; }
         public String CustomerName { get; set; }
         public String FormNumber { get; set; }
-        public int NoOfCards { get; set; }
-        public int RBEId { get; set; }
+        public string NoOfCards { get; set; }
+        public string RBEId { get; set; }
         public int FeePaymentsCollectFeeWaiver { get; set; }
         public string FeePaymentNo { get; set; }
         public string FeePaymentDate { get; set; }
@@ -447,5 +455,9 @@ namespace HPCL_Web.Models
 
         public List<CardDetails> ObjCardDetail { get; set; }
     }
-
+    public class SalesAreaModel
+    {
+        public int SalesAreaID { get; set; }
+        public string SalesAreaName { get; set; }
+    }
 }
