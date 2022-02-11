@@ -17,7 +17,10 @@
                         <div class="py-2 p-md-4">
                             <div class="w-100">
 
+                                @Html.ValidationSummary(false)
+
                                 <form method="post" data-ajax="true" asp-controller="Customer" asp-action="UploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDoc" data-ajax-failure="OnFailure">
+
                                     <div>
                                         <fieldset class="border-1 rounded border-grey">
                                             <legend class="font-weight-bold">Search Customer</legend>
@@ -65,32 +68,9 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
 
                                     </div>
-                                    @*<div class="form-group d-flex align-items-center flex-wrap">
-
-                                    </div>
-
-                                    <div id="searchResponseName" class="alert alert-info" role="alert" style="width:100%;">
-
-                                    </div>
-
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-
-                                    </div>
-
-                                    <div id="searchResponseFormName" class="alert alert-info" role="alert" style="width:100%;">
-
-                                    </div>
-
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-
-                                    </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-
-                                    </div>*@
-
 
                                     <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
-                                        <div>
+                                        <div id="docUpdateId">
 
                                             <fieldset class="border-1 rounded border-grey">
                                                 <legend class="font-weight-bold">Id Proof</legend>
@@ -118,7 +98,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.IdProofFront, new {@id= "IdProofFront", @class = "form-control", Type = "file" })
+                                                            @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control", Type = "file" })
                                                             @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -127,7 +107,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.IdProofBack, new {@id= "IdProofBack", @class = "form-control", Type = "file" })
+                                                            @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control", Type = "file" })
                                                             @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -136,7 +116,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <div class="col-md-5 col-6"></div>
                                                         <div class="col-md-7 col-12">
-                                                           <div id="idPfrontImg"></div>
+                                                            <div id="idPfrontImg"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -184,7 +164,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.AddressProofFront, new {@id= "AddressProofFront", @class = "form-control", Type = "file" })
+                                                            @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control", Type = "file" })
                                                             @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -193,7 +173,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.AddressProofBack, new {@id= "AddressProofBack", @class = "form-control", Type = "file" })
+                                                            @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control", Type = "file" })
                                                             @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -254,6 +234,15 @@
 
 
 <script>
+
+    function resetClick() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        $("#CardSearch td").parent().remove();
+        document.getElementById('resSearch').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'none';
+    };
 
     $(document).ready(function () {
 
@@ -344,22 +333,17 @@
 
     });
 
+   /* docUpdateId*/
     function openSearchGrid() {
         if ($("#CustomerReferenceNoId").val() == "") {
+            document.getElementById('resSearch').style.display = 'none';
             document.getElementById('uploadSection').style.display = 'none';
         }
     };
 
     function OnSuccessUploadDoc(res) {
 
-        //$("#searchResponseName").html("");
-        //$("#searchResponseFormName").html("");
-
-        //$("#searchResponseName").append("<span>&nbsp;:&nbsp" + res.searchCustomer[0].title + "&nbsp;" + res.searchCustomer[0].firstName + "&nbsp;" + res.searchCustomer[0].middleName + "&nbsp;" + res.searchCustomer[0].lastName + "</span>");
-
-        //$("#searchResponseFormName").append("<span>&nbsp;:&nbsp" + res.searchCustomer[0].formNumber + "</span>");
-
-        $("#resSearch").html();
+        $("#resSearch div").parent().remove();
 
         $("#resSearch").append("<div class='row'><div class='col'>Cutomer Name</div><div class='col'>" + res.searchCustomer[0].title + "&nbsp;" + res.searchCustomer[0].firstName + "&nbsp;" + res.searchCustomer[0].middleName + "&nbsp;" + res.searchCustomer[0].lastName + "</div>"
                     + "<div class='col'>Form Number</div>"
@@ -367,6 +351,7 @@
 
         $("#resSearch").attr("class", "alert alert-dark");
         document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('resSearch').style.display = 'block';
     };
 
     function OnSuccessUploadDocSave(res) {

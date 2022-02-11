@@ -71,11 +71,11 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<LoginResponse> loginRes = jarr.ToObject<List<LoginResponse>>();
 
-                        if(loginRes[0].Status == 0)
+                        if (loginRes[0].Status == 0)
                         {
                             HttpContext.Session.Remove("Token");
                         }
-                        else if(loginRes[0].Status == 1)
+                        else if (loginRes[0].Status == 1)
                         {
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
                         }
@@ -91,51 +91,6 @@ namespace HPCL_Web.Controllers
                     }
                 }
             }
-
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    Common.userid = user.Username;
-            //    var access_token = _api.GetToken();
-
-            //    if (access_token.Result != null)
-            //    {
-            //        HttpContext.Session.SetString("Token", access_token.Result);
-            //    }
-            //    else
-            //    {
-            //        HttpContext.Session.SetString("Token", "");
-            //    }
-
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        { "mobileno", user.MobileNo},
-            //        { "username", user.Username},
-            //        { "password", user.Password},
-            //        {"Useragent", Common.useragent},
-            //        {"Userip", Common.userip},
-            //        {"Userid", Common.userid},
-            //    };
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getuserlogin, content))
-            //    {
-            //        //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        //{ 
-            //        TempData["Profile"] = JsonConvert.SerializeObject(user);
-            //        return RedirectToAction("Profile");
-            //        //}
-            //        //else
-            //        //{
-            //        //    ModelState.Clear();
-            //        //    ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
-            //        //    ViewBag.Login = "1";
-            //        //    return View("Index");
-            //        //}
-            //    }
-
-            //}
         }
 
         public IActionResult Privacy()
