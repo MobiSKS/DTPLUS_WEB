@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -110,9 +111,10 @@ namespace HPCL_Web.Models.Merchant
         public string Comm_PhoneNumber { get; set; }
         public string Comm_Pre_Fax { get; set; }
         public string Comm_Fax { get; set; }
-        public int? NumOfLiveTerminals { get; set; }
+        public string NumOfLiveTerminals { get; set; }
         public string TerminalTypeRequested { get; set; }
         public string Retail_DistictID { get; set; }
+        public string ZonalOfficeID { get; set; }
         public string RegionalOfcID { get; set; }
         public string SalesAreaID { get; set; }
         public string Comm_DistictID { get; set; }

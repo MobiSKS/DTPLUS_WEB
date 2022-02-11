@@ -27,6 +27,7 @@
         public static string regionalOffice = "api/dtplus/regionaloffice/get_regional_office";
         public static string createHeadOffice = "/dtpwebapi/api/dtplus/hq/insert_hq";
         public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
+        public static string getLocationMapping = "api/dtplus/officer/get_officer_location_mapping";
 
         #endregion       
 
@@ -55,6 +56,8 @@
         public static string getOutletCategory = "api/dtplus/merchant/get_outlet_category";
         public static string getSbu = "api/dtplus/merchant/get_sbu";
         public static string insertMerchant = "api/dtplus/merchant/insert_merchant";
+        public static string updateMerchant = "api/dtplus/merchant/update_merchant";
+        public static string getMerchantByMerchantID = "api/dtplus/merchant/get_merchant_by_merchant_Id";
         #endregion
 
         #region customer

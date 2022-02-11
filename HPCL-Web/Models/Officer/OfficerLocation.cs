@@ -12,8 +12,9 @@ namespace HPCL_Web.Models.Officer
         {
             ZoneOffices = new List<ZoneOffice>();
             RegionalOffices = new List<RegionalOffice>();
+            LocationMappings = new List<LocationMapping>();
             ZoneOffices.Add(new ZoneOffice
-            { 
+            {
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "-- Select --"
             });
@@ -27,6 +28,7 @@ namespace HPCL_Web.Models.Officer
         public virtual List<ZoneOffice> ZoneOffices { get; set; }
         public virtual List<RegionalOffice> RegionalOffices { get; set; }
         public virtual List<UserName> UserNames { get; set; }
+        public List<LocationMapping> LocationMappings { get; set; }
     }
     public class ZoneOffice
     {
@@ -42,5 +44,14 @@ namespace HPCL_Web.Models.Officer
     {
         public int UserID { get; set; }
         public string UserNameValue { get; set; }
+    }
+
+    public class LocationMapping
+    {
+        public string OfficerId { get; set; }
+        public string ZOId { get; set; }
+        public string ZOName { get; set; }
+        public string ROId { get; set; }
+        public string ROName { get; set; }
     }
 }

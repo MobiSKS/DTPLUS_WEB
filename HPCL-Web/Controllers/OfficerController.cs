@@ -512,7 +512,7 @@ namespace HPCL_Web.Controllers
             return RedirectToAction("Details");
         }
 
-        public async Task<IActionResult> EditLocation()
+        public async Task<IActionResult> EditLocation(string OfficerID)
         {
             char flag = 'N';
             OfficerLocationModel OfcrLocMdl = new OfficerLocationModel();
@@ -549,6 +549,40 @@ namespace HPCL_Web.Controllers
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
+
+                var OfficerLocationForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"OfficerID", OfficerID}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent OfficerLocationMappingContent = new StringContent(JsonConvert.SerializeObject(OfficerLocationForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getLocationMapping, OfficerLocationMappingContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
+                        OfcrLocMdl.LocationMappings.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+
                 if (flag == 'Y')
                 {
                     ModelState.Clear();
