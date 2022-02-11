@@ -3,6 +3,9 @@
     Layout = "_LayoutLogin";
 }
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
 <div class="login_wrapper py-sm-5 py-3">
     <div class="d-flex align-items-center justify-content-end flex-wrap">
         <div class="col-md-6 col-lg-6 col-12 bg-white p-3 p-sm-5 border_grey_1">
@@ -11,11 +14,11 @@
             </div>
             <div class="bg-white w-100">
                 @*<form action="" name="register_form">*@
-                <form method="post" asp-action="Login">
+                <form method="post" data-ajax="true" data-ajax-controller="Home" data-ajax-action="Index" data-ajax-method="POST" data-ajax-success="OnSuccessLogin" data-ajax-failure="OnFailure">
                     <div class="form-group mb-3 position-relative">
                         <label class="mb-1">Username</label>
-                        <input type="text" class="form-control login_input br-0" asp-for="@Model.Username">
-                        <span class="error" id="username_error" asp-validation-for="@Model.Username"></span>
+                        <input type="text" class="form-control login_input br-0" asp-for="@Model.UserId">
+                        <span class="error" id="username_error" asp-validation-for="@Model.UserId"></span>
                         <div class="clearfix"></div>
                     </div>
                     <div class="form-group mb-3 position-relative">
@@ -52,15 +55,20 @@
 <div class="text-center mt-4 mb-2">
     <h4 class="d-inline-block note_1">Now Enjoy "0" charge for your CCMS Recharge using Payment Gateway for Debit Card, Net Banking, UPI and Wallet transactions.</h4>
 </div>
-@*<script type="text/javascript">
-        var loginStatus;
-        $(document).ready(function () {
-            debugger;
-            loginStatus = parseInt(@ViewBag.Login);
 
-            if (loginStatus == 1) {
-                $("#loginError").val("Invalid Username or Password");
-            }
-        });
 
-    </script>*@
+
+<script type="text/javascript">
+    function OnSuccessLogin(res) {
+        if (res.loginRes[0].status == 0) {
+            alert(res.loginRes[0].reason);
+        }
+        if (res.loginRes[0].status == 1) {
+            window.location.href = '@Html.Raw(@Url.Action("Profile", "Home"))';
+        }
+    }
+
+    function OnFailure(data) {
+        alert(data);
+    }
+</script>

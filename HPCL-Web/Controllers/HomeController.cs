@@ -9,6 +9,9 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using HPCL_Web.Models.Login;
 
 namespace HPCL_Web.Controllers
 {
@@ -24,61 +27,69 @@ namespace HPCL_Web.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> Profile()
         {
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(UserInfoModel user)
+        public async Task<IActionResult> Index()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Index(UserInfoModel user)
+        {
+            var access_token = _api.GetToken();
+
+            if (access_token.Result != null)
+            {
+                HttpContext.Session.SetString("Token", access_token.Result);
+            }
+
+            var loginBody = new UserInfoModel
+            {
+                UserId = user.UserId,
+                Useragent = Common.useragent,
+                Userip = Common.userip,
+                Password = user.Password
+            };
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                Common.userid = user.Username;
-                var access_token = _api.GetToken();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                if (access_token.Result != null)
+                StringContent content = new StringContent(JsonConvert.SerializeObject(loginBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getLoginUrl, content))
                 {
-                    HttpContext.Session.SetString("Token", access_token.Result);
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LoginResponse> loginRes = jarr.ToObject<List<LoginResponse>>();
+
+                        if (loginRes[0].Status == 0)
+                        {
+                            HttpContext.Session.Remove("Token");
+                        }
+                        else if (loginRes[0].Status == 1)
+                        {
+                            HttpContext.Session.SetString("UserName", loginRes[0].UserName);
+                        }
+
+                        ModelState.Clear();
+                        return Json(new { loginRes = loginRes });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
                 }
-                else
-                {
-                    HttpContext.Session.SetString("Token", "");
-                }
-
-                var forms = new Dictionary<string, string>
-                {
-                    { "mobileno", user.MobileNo},
-                    { "username", user.Username},
-                    { "password", user.Password},
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
-                };
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.getuserlogin, content))
-                {
-                    //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    //{ 
-                    TempData["Profile"] = JsonConvert.SerializeObject(user);
-                    return RedirectToAction("Profile");
-                    //}
-                    //else
-                    //{
-                    //    ModelState.Clear();
-                    //    ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
-                    //    ViewBag.Login = "1";
-                    //    return View("Index");
-                    //}
-                }
-
             }
         }
 

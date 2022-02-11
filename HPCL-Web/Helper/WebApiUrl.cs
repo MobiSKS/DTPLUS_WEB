@@ -46,7 +46,6 @@
         public static string UpdateCcmsAllCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limit_for_all_cards";
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
-
         public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
         #endregion
 
@@ -71,10 +70,16 @@
         public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
+        public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
+        public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
 
         #endregion
 
+        #region Login
 
+        public static string getLoginUrl = "/dtpwebapi/api/dtplus/login/get_login";
+        #endregion
     }
 }
