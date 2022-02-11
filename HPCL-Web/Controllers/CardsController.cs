@@ -27,7 +27,7 @@ namespace HPCL_Web.Controllers
 
             var statusType = new StatusType
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 EntityTypeId = 3
@@ -93,7 +93,7 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new CustomerCards
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
@@ -146,7 +146,7 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new CustomerCards
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = vGrid.CustomerId,
@@ -195,7 +195,7 @@ namespace HPCL_Web.Controllers
 
             var cardDetailsBody = new CardsSearch
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CardNo = CardId,
@@ -264,14 +264,14 @@ namespace HPCL_Web.Controllers
         {
             var updateServiceBody = new UpdateService
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = HttpContext.Session.GetString("CustomerIdSession"),
                 CardNo = HttpContext.Session.GetString("CardIdSession"),
                 ServiceId = Convert.ToInt32(serviceId),
                 Flag = Convert.ToInt32(flag),
-                CreatedBy = "1"
+                CreatedBy = HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -322,12 +322,12 @@ namespace HPCL_Web.Controllers
         {
             var cardDetailsBody = new UpdateMobile
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CardNo = entity.CardNumber,
                 MobileNo = entity.MobileNumber,
-                ModifiedBy = "1"
+                ModifiedBy = HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -372,7 +372,7 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new SearchCards
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
@@ -417,12 +417,12 @@ namespace HPCL_Web.Controllers
         {
             var updateServiceBody = new UpdateStatus
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CardNo = cardNo,
                 Statusflag = Statusflag,
-                ModifiedBy = Common.userid
+                ModifiedBy = HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -460,7 +460,7 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new SearchCards
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = HttpContext.Session.GetString("AcDcCustomerId"),
@@ -506,7 +506,7 @@ namespace HPCL_Web.Controllers
 
             var statusType = new StatusType
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 EntityTypeId = 3
@@ -553,7 +553,7 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new GetCardLimit
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
@@ -599,11 +599,11 @@ namespace HPCL_Web.Controllers
         {
             var updateServiceBody = new UpdateCardLimit
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 objCardLimits = limitArray,
-                ModifiedBy =Common.userid
+                ModifiedBy =HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -642,7 +642,7 @@ namespace HPCL_Web.Controllers
 
             var statusType = new StatusType
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 EntityTypeId = 3
@@ -685,7 +685,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"useragent", Common.useragent},
                     {"userip", Common.userip},
-                    {"userid", Common.userid},
+                    {"userid", HttpContext.Session.GetString("UserName")},
                 };
 
                 StringContent contentLimit = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
@@ -720,7 +720,7 @@ namespace HPCL_Web.Controllers
 
             var reqBody = new GetCcmsLimitAll
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
@@ -760,13 +760,13 @@ namespace HPCL_Web.Controllers
         {
             var reqBody = new UpdateCcmsLimitAll
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = HttpContext.Session.GetString("CCMSCustomerId"),
                 LimitType=entity.TypeOfLimit,
                 Amount = entity.CcmsLimit,
-                ModifiedBy=Common.userid
+                ModifiedBy=HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -804,7 +804,7 @@ namespace HPCL_Web.Controllers
             {
                 {"useragent", Common.useragent},
                 {"userip", Common.userip},
-                {"userid", Common.userid},
+                {"userid", HttpContext.Session.GetString("UserName")},
             };
 
 
@@ -846,7 +846,7 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new SetIndividualLimit
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerId = entity.CustomerId,
@@ -903,11 +903,11 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new UpdateCcmsIndLimit
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 ObjCCMSLimits = arrs,
-                ModifiedBy = Common.userid
+                ModifiedBy = HttpContext.Session.GetString("UserName")
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())

@@ -4,16 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Net;
 using HPCL_Web.Models.Officer;
+using HPCL_Web.Models.Customer;
+using System.IO;
 
 namespace HPCL_Web.Controllers
 {
@@ -678,6 +677,166 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
-    }
 
+
+        public async Task<IActionResult> UploadDoc()
+        {
+            UploadDoc modals = new UploadDoc();
+
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", Common.useragent},
+                {"userip", Common.userip},
+                {"userid", Common.userid},
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetProofTyleUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<ProofType> lst = jarr.ToObject<List<ProofType>>();
+                        modals.ProofTypesModal.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+            }
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadDoc(UploadDoc entity)
+        {
+            var searchBody = new UploadDoc
+            {
+                UserId = Common.userid,
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerReferenceNo = entity.CustomerReferenceNo
+            };
+
+            HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
+
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.searchCustRefUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<UploadDocResponse> searchCustomer = jarr.ToObject<List<UploadDocResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchCustomer = searchCustomer });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> SaveUploadDoc(UploadDoc entity)
+        {
+            MultipartFormDataContent  form = new MultipartFormDataContent();
+
+            form.Add(new StringContent(HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
+            form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
+            form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
+            form.Add(new StringContent(HttpContext.Session.GetString("UserName")), "CreatedBy");
+            form.Add(new StringContent(HttpContext.Session.GetString("UserName")), "userid");
+            form.Add(new StringContent(Common.useragent), "useragent");
+            form.Add(new StringContent(Common.userip), "userip");
+            form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
+            form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
+            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
+            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
+            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
+            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
+
+            var abc = Path.GetFileName(entity.IdProofFront.FileName);
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                using (var Response = await client.PostAsync(WebApiUrl.UploadKycUrl, form))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+                        ModelState.Clear();
+                        return Json(insertKyc[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+
+
+
+
+
+            //using (var client = new HttpClient())
+            //{
+            //    using (var content = new MultipartFormDataContent())
+            //    {
+            //        var values = new[]
+            //        {
+            //            new KeyValuePair<string, string>("Foo", "Bar"),
+            //            new KeyValuePair<string, string>("More", "Less"),
+            //        };
+
+            //        foreach (var keyValuePair in values)
+            //        {
+            //            content.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
+            //        }
+
+            //        var fileContent = new ByteArrayContent(System.IO.File.ReadAllBytes(fileName));
+            //        fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            //        {
+            //            FileName = "Foo.txt"
+            //        };
+            //        content.Add(fileContent);
+
+            //        var requestUri = "/api/action";
+            //        var result = client.PostAsync(requestUri, content).Result;
+            //    }
+            //}
+            //return Json("h");
+
+        }
+    }
 }

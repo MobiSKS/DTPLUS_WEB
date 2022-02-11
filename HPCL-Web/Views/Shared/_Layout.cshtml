@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -32,8 +34,7 @@
     <script src="~/assets/js/jquery.slidereveal.min.js" type="text/javascript"></script>
     <script src="~/assets/js/jquery.es-drawermenu.js"></script>
     <script src="~/assets/js/mloyal.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
     <style>
         .btmMargin {
             padding-bottom: 3.5%;
@@ -72,8 +73,8 @@
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="d-flex align-items-center justify-content-start">
                             <ul class="list-unstyled d-flex align-items-center header_right m-0">
-                                <li>Welcome <a href="#"> Admin</a></li>
-                                <li><a href="#" class="logOut_btn d-flex align-items-center justify-content-center"><img src="~/assets/images/logout_logo.png" alt=""><span class="ml-2 d-none d-sm-block"> Logout</span></a></li>
+                                <li>Welcome <a href="#a"> @Context.Session.GetString("UserName")</a></li>
+                                <li><a href="@Html.Raw(@Url.Action("Index", "Home"))" id="logOutId" class="logOut_btn d-flex align-items-center justify-content-center"><img src="~/assets/images/logout_logo.png" alt=""><span class="ml-2 d-none d-sm-block"> Logout</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -232,6 +233,7 @@
                                                     <div class="level2Menu_div">
                                                         <ul class="level2Menu">
                                                             <li><a href="@Url.Action("OnlineForm", "Customer")">Add New Customer</a></li>
+                                                            <li><a href="@Url.Action("UploadDoc", "Customer")">Upload Document</a></li>
                                                         </ul>
                                                     </div>
                                                 </li>
@@ -325,3 +327,13 @@
     </script>
 </body>
 </html>
+
+
+@*<script>
+    $("#logOutId").on('click', function () {
+        console.log("token", sessionStorage.getItem("Token"));
+        sessionStorage.removeItem('Token');
+        window.location.href = '@Html.Raw(@Url.Action("Index", "Home"))';
+        $("#logOutId").attr('href', url);
+    });
+</script>*@
