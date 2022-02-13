@@ -18,7 +18,7 @@ namespace HPCL_Web.Models.Merchant
             CommStates = new List<CommStateModel>();
             CommDistricts = new List<CommDistrictModel>();
             ZonalOffices = new List<ZonalOfficeModel>();
-            SalesAreas = new List<SalesAreaModel>();
+            SalesAreas = new List<MerchantSalesAreaModel>();
             PreHighwayNumbers = new List<PreHighwayNumberModel>();
             MerchantTypes.Add(new MerchantTypeModel
             {
@@ -126,7 +126,7 @@ namespace HPCL_Web.Models.Merchant
         public virtual List<CommStateModel> CommStates { get; set; }
         public virtual List<CommDistrictModel> CommDistricts { get; set; }
         public virtual List<ZonalOfficeModel> ZonalOffices { get; set; }
-        public virtual List<SalesAreaModel> SalesAreas { get; set; }
+        public virtual List<MerchantSalesAreaModel> SalesAreas { get; set; }
         public virtual List<PreHighwayNumberModel> PreHighwayNumbers { get; set; }
     }
     public class MerchantTypeModel
@@ -178,7 +178,7 @@ namespace HPCL_Web.Models.Merchant
         public int RegionalOfficeID { get; set; }
         public string RegionalOfficeName { get; set; }
     }
-    public class SalesAreaModel
+    public class MerchantSalesAreaModel
     {
         public int RegionID { get; set; }
         public int SalesAreaID { get; set; }

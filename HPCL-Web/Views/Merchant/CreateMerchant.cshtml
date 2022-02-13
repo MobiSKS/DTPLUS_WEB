@@ -919,44 +919,52 @@
 
     $(document).ready(function () {
         var message = "@ViewBag.Message";
+        var notFoundError = "@ViewBag.NotFoundError";
 
-        if (message != "Success" && message != "") {
-            document.getElementById("viewProfile").classList.remove("active");
-            document.getElementById("viewProfile").classList.remove("show");
-            document.getElementById("viewProfile-tab").classList.remove("active");
-            document.getElementById("viewProfile-tab").classList.add("disable");
+        $("#MerchantID").prop("disabled", true);
 
-            document.getElementById("summaryDetails").classList.add("active");
-            document.getElementById("summaryDetails").classList.add("show");
-            document.getElementById("summaryDetails-tab").classList.remove("disable");
-            document.getElementById("summaryDetails-tab").classList.add("active");
+        if (notFoundError == "") {
+            if (message != "Success" && message != "") {
+                document.getElementById("viewProfile").classList.remove("active");
+                document.getElementById("viewProfile").classList.remove("show");
+                document.getElementById("viewProfile-tab").classList.remove("active");
+                document.getElementById("viewProfile-tab").classList.add("disable");
+
+                document.getElementById("summaryDetails").classList.add("active");
+                document.getElementById("summaryDetails").classList.add("show");
+                document.getElementById("summaryDetails-tab").classList.remove("disable");
+                document.getElementById("summaryDetails-tab").classList.add("active");
+            }
+
+            if (message == "LoadData") {
+                document.getElementById("viewProfile").classList.remove("active");
+                document.getElementById("viewProfile").classList.remove("show");
+                document.getElementById("viewProfile-tab").classList.remove("active");
+                document.getElementById("viewProfile-tab").classList.add("disable");
+
+                document.getElementById("basicInfo").classList.add("active");
+                document.getElementById("basicInfo").classList.add("show");
+                document.getElementById("basicInfo-tab").classList.remove("disable");
+                document.getElementById("basicInfo-tab").classList.add("active");
+
+                document.getElementById("summaryDetails").classList.remove("show");
+                document.getElementById("summaryDetails").classList.remove("active");
+                document.getElementById("summaryDetails-tab").classList.remove("active");
+
+                document.getElementById("Error").innerHTML = "";
+
+                getRetailDistrict();
+                getCommDistrict();
+                getMerchantRegionalOfc();
+                getMerchantSalesArea();
+
+                $("#ZonalOffice").prop("disabled", true);
+                $("#regionalOfc").prop("disabled", true);
+                $("#ERPCode").prop("disabled", true);
+            }
         }
-
-        if (message == "LoadData") {
-            document.getElementById("viewProfile").classList.remove("active");
-            document.getElementById("viewProfile").classList.remove("show");
-            document.getElementById("viewProfile-tab").classList.remove("active");
-            document.getElementById("viewProfile-tab").classList.add("disable");
-
-            document.getElementById("basicInfo").classList.add("active");
-            document.getElementById("basicInfo").classList.add("show");
-            document.getElementById("basicInfo-tab").classList.remove("disable");
-            document.getElementById("basicInfo-tab").classList.add("active");
-
-            document.getElementById("summaryDetails").classList.remove("show");
-            document.getElementById("summaryDetails").classList.remove("active");
-            document.getElementById("summaryDetails-tab").classList.remove("active");
-
-            document.getElementById("Error").innerHTML = "";
-
-            getRetailDistrict();
-            getCommDistrict();
-            getMerchantRegionalOfc();
-            getMerchantSalesArea();
-
-            $("#ZonalOffice").prop("disabled", true);
-            $("#regionalOfc").prop("disabled", true);
-            $("#ERPCode").prop("disabled", true);
+        else {
+            alert("Details not found");
         }
     });
 
@@ -1179,6 +1187,15 @@
         if (document.applicationForm.FName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "First Name is required";
             document.applicationForm.FName.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("contact_name_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.MName.value == "") {
+            document.getElementById("contact_name_error").innerHTML = "Middle Name is required";
+            document.applicationForm.MName.focus();
             return ret;
         }
         else {

@@ -28,6 +28,8 @@
         public static string createHeadOffice = "/dtpwebapi/api/dtplus/hq/insert_hq";
         public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
         public static string getLocationMapping = "api/dtplus/officer/get_officer_location_mapping";
+        public static string insertOfficerLocationMapping = "api/dtplus/officer/insert_officer_location_mapping";
+        public static string deleteOfficerLocationMapping = "api/dtplus/officer/delete_officer_location_mapping";
 
         #endregion       
 
@@ -57,6 +59,8 @@
         public static string insertMerchant = "api/dtplus/merchant/insert_merchant";
         public static string updateMerchant = "api/dtplus/merchant/update_merchant";
         public static string getMerchantByMerchantID = "api/dtplus/merchant/get_merchant_by_merchant_Id";
+        public static string getMerchantApprovalList = "api/dtplus/merchant/get_merchant_approval_list";
+        public static string approveRejectMerchant = "api/dtplus/merchant/approve_reject_merchant";
         #endregion
 
         #region customer

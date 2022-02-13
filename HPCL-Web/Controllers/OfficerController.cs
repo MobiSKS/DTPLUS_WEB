@@ -509,7 +509,7 @@ namespace HPCL_Web.Controllers
                 }
             }
             ModelState.Clear();
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", "Officer", new { pg = 1 });
         }
 
         public async Task<IActionResult> EditLocation(string OfficerID)
@@ -572,6 +572,7 @@ namespace HPCL_Web.Controllers
                         List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
                         OfcrLocMdl.LocationMappings.AddRange(lst);
                         OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.OfficerID = OfcrLocMdl.LocationMappings.First().OfficerId;
                     }
                     else
                     {
@@ -596,6 +597,50 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> EditLocation(OfficerLocationModel ofcrLocationMdl)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var OfficerlocationForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"OfficerId", ofcrLocationMdl.OfficerID},
+                    {"UserName", ofcrLocationMdl.UserName},
+                    {"ZO", ofcrLocationMdl.ZoneOfcID},
+                    {"RO", ofcrLocationMdl.RegionalOfcID},
+                    {"Createdby", "0"},
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerlocationForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.insertOfficerLocationMapping, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Message"].ToString();
+
+                        ViewBag.Message = jarr;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+                
+                return RedirectToAction("Details", "Officer", new { pg = 1 });
+            }
+        }
         public async Task<IActionResult> Delete(string OfficerID)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -615,6 +660,48 @@ namespace HPCL_Web.Controllers
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerDeleteForms), Encoding.UTF8, "application/json");
 
                 using (var Response = await client.PostAsync(WebApiUrl.deleteOfficer, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Message"].ToString();
+
+                        ViewBag.Message = jarr;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to delete Officer";
+                    }
+                }
+            }
+            return RedirectToAction("Details", "Officer", new { pg = 1 });
+        }
+        public async Task<IActionResult> DeleteLocation(string userName, string zonalID, string regionalID)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var DeleteLocationForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"UserId", Common.userid},
+                    {"UserName", userName},
+                    {"ZO", zonalID},
+                    {"RO", regionalID},
+                    {"ModifiedBy", "0"}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(DeleteLocationForms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.deleteOfficerLocationMapping, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {

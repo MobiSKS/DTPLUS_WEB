@@ -32,9 +32,9 @@
                                             <label class="font-weight-normal col-md-5 col-12">Select Category</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <select id="officerType" name="officerType" class="form-control" onchange="getLocationFunc()"></select>
+                                                    @Html.DropDownListFor(m => m.CategoryID, new SelectList(Model.Categories, "CategoryID", "CategoryType"), new { @class = "form-control" })
                                                 </div>
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="categoryID"></span>
                                             </div>
                                         </div>
                                         <div class="col-xs-4" style="width:35%;">
@@ -44,13 +44,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4" style="width:40%;margin-left:1.5%;">
+                                        <div class="col-xs-4" style="width: 40%; margin-left: 1.5%; margin-top: 1%;">
                                             <label class="font-weight-normal col-md-5 col-12">From Date</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.FromDate)
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
                                                 </div>
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="fromDate"></span>
                                             </div>
                                         </div>
                                         <div class="col-xs-4" style="width:35%;">
@@ -60,20 +60,30 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4" style="width:40%;margin-left:1.5%;">
+                                        <div class="col-xs-4" style="width:40%;margin-left:1.5%;margin-top:1%;">
                                             <label class="font-weight-normal col-md-5 col-12">To Date</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.ToDate)
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
                                                 </div>
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="toDate"></span>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4" style="margin-left:-7%;">
-                                            <button class="btn btn-block">Search</button>
+                                        <div class="col-xs-4" style="width:35%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-4" style="margin-left: 20.5%;">
-                                            <a class="btn btn-block" style="background-color:cornflowerblue;color:white;" asp-controller="Officer" asp-action="Create">Add Officer</a>
+                                        <div class="col-xs-4" style="width: 40%; margin-left: 1.5%; margin-top: 1%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <button class="btn btn-primary" style="display: inline-block; margin: 0 auto;  width:40%;" type="submit">Search</button>
+                                                    <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 40%;" type="button" onclick="setDates();">Reset</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -84,57 +94,148 @@
                 </div>
             </div>
         }
-        @*<table class="table table-striped">
-                <thead style="background-color:lightgray;">
-                    <tr>
-                        <th style="width:5%;">S No.</th>
-                        <th style="width:10%;">Officer Type</th>
-                        <th style="width:15%;">First Name</th>
-                        <th style="width:15%;">Last Name</th>
-                        <th style="width:15%;">Email</th>
-                        <th style="width:15%;">Mobile</th>
-                        <th style="width:15%;">Location</th>
-                        <th style="width:15%;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.OfficerID</td>
-                            <td>@item.OfficerTypeName</td>
-                            <td>@item.FirstName</td>
-                            <td>@item.LastName</td>
-                            <td>@item.EmailId</td>
-                            <td>@item.MobileNo</td>
-                            <td>@item.LocationName</td>
-                            <td>
-                                <a asp-action="EditOfficer" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editPage.png" style="width: 15%;" /></a>
-                                <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editLocation.png" style="width: 15%;" /></a>
-                                <a asp-action="Delete" asp-route-OfficerID="@item.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>*@
-        <div class="container">
-            @if (pager.TotalPages > 0)
+        <div id="show_Table">
+            @if (Model.MerchantApprovalTableDetails.Count() > 0)
             {
-                <ul class="pagination justify-content-end">
-                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                <table class="table table-striped" id="merchantApprovalDetails">
+                    <thead style="background-color:lightgray;">
+                        <tr>
+                            <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                            <th style="width:10%;">ERP Code</th>
+                            <th style="width:10%;">RO</th>
+                            <th style="width:20%;">Retail Outlet Name</th>
+                            <th style="width:10%;">City</th>
+                            <th>Type</th>
+                            <th style="width:10%;">Created Date</th>
+                            <th style="width:10%;">Created By</th>
+                            <th style="width:10%;">Verified Date</th>
+                            <th style="width:10%;">Verified By</th>
+                            <th style="width:10%;">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchMerchantTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.MerchantApprovalTableDetails)
+                        {
+                            i = i + 1;
+                            <tr>
+                                <td><input type="checkbox" id="check_@i" /></td>
+                                <td><a class="erp_code" asp-action="CreateMerchant" asp-route-MerchantIDValue="@item.ErpCode.Remove(0,2)" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID">@item.ErpCode</a></td>
+                                <td>@item.RegionalOfficeName</td>
+                                <td>@item.RetailOutletName</td>
+                                <td>@item.City</td>
+                                <td>@item.MerchantTypeName</td>
+                                <td>@item.CreatedTime</td>
+                                <td>@item.CreatedBy</td>
+                                <td>@item.VerifiedDate</td>
+                                <td>@item.VerifiedBy</td>
+                                <td><input type="text" id="comments_@i" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="container">
+                    @if (pager.TotalPages > 0)
                     {
-                        <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-controller="Officer" asp-action="Details" asp-route-pg="@pge">@pge</a>
-                        </li>
+                        <ul class="pagination justify-content-end">
+                            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                            {
+                                <li class="page-item @(pge == pager.CurrentPage ? " active" : "" )">
+                                    <a class="page-link" asp-controller="Merchant" asp-action="VerifyMerchant" asp-route-pg="@pge">@pge</a>
+                                </li>
+                            }
+                        </ul>
                     }
-                </ul>
+                </div>
+                <button class="btn btn-primary" style="display: inline-block; margin: 0 auto;  width:10%;" type="button" onclick="approvalOrReject('Approve');">APPROVE</button>
+                <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 10%;" type="button" onclick="approvalOrReject('Reject');">REJECT</button>
+
             }
         </div>
     </div>
 </div>
 <script type="text/javascript">
+    var fromdate = $("#FromDate").val();
+    var todate = $("#ToDate").val();
+    var notFoundError = "@ViewBag.NotFoundError";
+
     $(document).ready(function () {
-        $("#FromDate").datepicker();
-        $("#ToDate").datepicker();
+
+        if (notFoundError == "") {
+            if (fromdate == "") {
+                $("#FromDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true
+                });
+            }
+            else {
+                $("#FromDate").datepicker();
+            }
+
+            if (todate == "") {
+                $("#ToDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true
+                });
+                setDates();
+            }
+            else {
+                $("#ToDate").datepicker();
+            }
+        }
+        else {
+            alert("Details not found");
+        }
     });
+
+    function setDates() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (month < 10 ? '0' : '') + month + '/' +
+            (day < 10 ? '0' : '') + day + '/' +
+            d.getFullYear();
+
+        $("#FromDate").val(output);
+        $("#ToDate").val(output);
+        $("#CategoryID").val(1);
+    };
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+
+    function approvalOrReject(action) {
+        ObjApprovalRejectDetail = [];
+        $("#merchantApprovalDetails tr").each(function () {
+            if ($(this).find('input[type="checkbox"]').is(":checked")) {
+                let comment = $(this).find("input:text").val();
+                let erpCode = $(this).find("a.erp_code").html();
+                if (erpCode != undefined) {
+                    ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
+                }
+            }
+        });
+
+        if (ObjApprovalRejectDetail.length > 0) {
+            var erpnmodel = { ApprovedBy: "", ObjApprovalRejectDetail: ObjApprovalRejectDetail, StatusId: action, UserId: "", Useragent: "", Userip: "", };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ActionOnMerchantID", "Merchant")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(erpnmodel),
+                    success: function (data) {
+                        alert(data.message);
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+        }
+    };
 </script>

@@ -1,4 +1,5 @@
 ﻿using HPCL_Web.Helper;
+using HPCL_Web.Models;
 using HPCL_Web.Models.Merchant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> CreateMerchant(string MerchantIDValue)
+        public async Task<IActionResult> CreateMerchant(string MerchantIDValue, string fromDate, string toDate, string category)
         {
             char flag = 'N';
             MerchantModel merchantModel = new MerchantModel();
@@ -187,12 +188,12 @@ namespace HPCL_Web.Controllers
                 if (!String.IsNullOrEmpty(MerchantIDValue))
                 {
                     var MerchantFormDetails = new Dictionary<string, string>
-                {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
-                    {"MerchantId", MerchantIDValue}
-                };
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", Common.userid},
+                        {"MerchantId", MerchantIDValue}
+                    };
 
                     MerchantGetDetailsModel merchantDetailsModel = new MerchantGetDetailsModel();
 
@@ -207,9 +208,27 @@ namespace HPCL_Web.Controllers
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
-                            List<MerchantGetDetailsModel> dtls = jarr.ToObject<List<MerchantGetDetailsModel>>();
-                            merchantDetailsModel = dtls.First();
+                            try
+                            {
+                                List<MerchantGetDetailsModel> dtls = jarr.ToObject<List<MerchantGetDetailsModel>>();
+                                merchantDetailsModel = dtls.First();
+                            }
+                            catch (Exception ex)
+                            {
+                                if (!String.IsNullOrEmpty(fromDate))
+                                {
+                                    ViewBag.NotFoundError = "Not Found";
+                                    MerchantApprovalModel merchAppMdl = new MerchantApprovalModel();
+                                    merchAppMdl.FromDate = fromDate;
+                                    merchAppMdl.ToDate = toDate;
+                                    merchAppMdl.CategoryID = category;
+                                    merchAppMdl.ShowTable = "Error";
 
+                                    return RedirectToAction("VerifyMerchant", merchAppMdl);
+                                }    
+                                ViewBag.NotFoundError = "Not Found";
+                                return View(merchantModel);
+                            }
                             merchantModel.SearchMerchantID = merchantDetailsModel.MerchantId;
                             merchantModel.MerchantID = merchantDetailsModel.MerchantId;
                             merchantModel.ERPCode = merchantDetailsModel.ErpCode;
@@ -464,7 +483,7 @@ namespace HPCL_Web.Controllers
                         {"Useragent", Common.useragent},
                         {"Userip", Common.userip},
                         {"Userid", Common.userid},
-                        {"MerchantId", merchantMdl.MerchantID},
+                        {"MerchantId", "30" + merchantMdl.ERPCode},
                         {"RetailOutletName", merchantMdl.RetailOutletName},
                         {"MerchantTypeId", merchantMdl.MerchantType},
                         {"DealerName", merchantMdl.DealerName},
@@ -617,9 +636,135 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("CreateMerchant");
         }
-        public async Task<IActionResult> VerifyMerchant()
+        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl, int pg = 1)
         {
-            return View();
+            MerchantApprovalModel merchantApprovalMdl = new MerchantApprovalModel();
+            if (!String.IsNullOrEmpty(merchaApprovalMdl.FromDate))
+            {
+                merchantApprovalMdl.FromDate = merchaApprovalMdl.FromDate;
+                merchantApprovalMdl.ToDate = merchaApprovalMdl.ToDate;
+                merchantApprovalMdl.CategoryID = merchaApprovalMdl.CategoryID;
+
+                using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+                {
+                    string[] fromDateArr = merchantApprovalMdl.FromDate.Split("/");
+                    string[] toDateArr = merchantApprovalMdl.ToDate.Split("/");
+
+                    string fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                    string toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+                    var MerchantApprovalForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"Category", merchantApprovalMdl.CategoryID },
+                    {"FromDate", fromDate },
+                    {"ToDate", toDate }
+                };
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                    StringContent MerchantApprovalContent = new StringContent(JsonConvert.SerializeObject(MerchantApprovalForms), Encoding.UTF8, "application/json");
+                    using (var Response = await client.PostAsync(WebApiUrl.getMerchantApprovalList, MerchantApprovalContent))
+                    {
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<MerchantApprovalTableModel> lst = jarr.ToObject<List<MerchantApprovalTableModel>>();
+                            merchantApprovalMdl.MerchantApprovalTableDetails.AddRange(lst);
+                        }
+                        else
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            ViewBag.Message = "Failed to load Merchant types";
+                        }
+                    }
+                }
+
+                const int pageSize = 5;
+                if (pg < 1)
+                    pg = 1;
+
+                int resCount = merchantApprovalMdl.MerchantApprovalTableDetails.Count();
+                var pager = new PagerModel(resCount, pg, pageSize);
+                int recSkip = (pg - 1) * pageSize;
+
+                var data = merchantApprovalMdl.MerchantApprovalTableDetails.Skip(recSkip).Take(pager.PageSize).ToList();
+                this.ViewBag.Pager = pager;
+
+                merchantApprovalMdl.MerchantApprovalTableDetails.Clear();
+                merchantApprovalMdl.MerchantApprovalTableDetails.AddRange(data);
+            }
+
+            if (merchaApprovalMdl.ShowTable == "Error")
+            {
+                ViewBag.NotFoundError = "Not Found";
+            }
+            return View(merchantApprovalMdl);
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchantApprovalMdl, int pg = 1)
+        //{
+
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> ActionOnMerchantID([FromBody] ApprovalRejectionModel erpnmodel)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+
+                var forms = new ApprovalRejectionModel
+                {
+                    UserId = Common.userid,
+                    Useragent = Common.useragent,
+                    Userip = Common.userip,
+                    ObjApprovalRejectDetail = erpnmodel.ObjApprovalRejectDetail,
+                    StatusId = erpnmodel.StatusId == "Approve" ? "4":"13",
+                    ApprovedBy = "0"
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+                try
+                {
+                    using (var Response = await client.PostAsync(WebApiUrl.approveRejectMerchant, content))
+                    {
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var jarr = obj["Message"].ToString();
+
+                            return Json(new { success = true, message = "Done." });
+                            //return Json(jarr);
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading District Details");
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            return Json(new { success = false, message = "Error." });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json("Failed to Approve/Reject");
+                }
+            }
         }
         [HttpPost]
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
@@ -741,8 +886,8 @@ namespace HPCL_Web.Controllers
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                        lst.Add(new SalesAreaModel
+                        List<MerchantSalesAreaModel> lst = jarr.ToObject<List<MerchantSalesAreaModel>>();
+                        lst.Add(new MerchantSalesAreaModel
                         {
                             RegionID = 0,
                             SalesAreaID = 0,

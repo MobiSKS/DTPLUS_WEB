@@ -20,11 +20,12 @@ namespace HPCL_Web.Models.Officer
             });
         }
         [Required(ErrorMessage = "Zonal Office is Required")]
-        public int ZoneOfcID { get; set; }
-        public int RegionalOfcID { get; set; }
+        public string ZoneOfcID { get; set; }
+        public string RegionalOfcID { get; set; }
         [Required(ErrorMessage = "User Name is Required")]
         public string UserName { get; set; }
         public bool IsNewUser { get; set; }
+        public string OfficerID { get; set; }
         public virtual List<ZoneOffice> ZoneOffices { get; set; }
         public virtual List<RegionalOffice> RegionalOffices { get; set; }
         public virtual List<UserName> UserNames { get; set; }
