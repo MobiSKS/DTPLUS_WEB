@@ -917,6 +917,14 @@
     var regionalID = $("#RegionalOfcID").val();
     var salesAreaID = $("#SalesAreaID").val();
 
+    console.log(retailStateID);
+    console.log(commStateID);
+    console.log(retailDistrictID);
+    console.log(commDistrictID);
+    console.log(zonalID);
+    console.log(regionalID);
+    console.log(salesAreaID);
+
     $(document).ready(function () {
         var message = "@ViewBag.Message";
         var notFoundError = "@ViewBag.NotFoundError";
@@ -934,6 +942,11 @@
                 document.getElementById("summaryDetails").classList.add("show");
                 document.getElementById("summaryDetails-tab").classList.remove("disable");
                 document.getElementById("summaryDetails-tab").classList.add("active");
+
+                getRetailDistrict();
+                getCommDistrict();
+                getMerchantRegionalOfc();
+                getMerchantSalesArea();
             }
 
             if (message == "LoadData") {
@@ -1365,13 +1378,19 @@
     function getRetailDistrict() {
         //var id = this.value;
         var id = $('#Retail_Outlet_State :selected').val();
-        if (retailStateID != "") {
+
+        //console.log("RetailDistrict");
+        //console.log(id);
+        //console.log("retailStateID");
+        //console.log(retailStateID);
+
+        if (retailStateID != "0") {
             id = retailStateID;
         }
+
         //if (id != 0) {
         //    $("#state_error").html("");
         //}
-
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetDistrictDetails", "Merchant")',
@@ -1384,6 +1403,7 @@
                     $.each(data, function (i, data) { // bind the dropdown list using json result
                         if (retailStateID != "") {
                             if (data.districtID == retailDistrictID) {
+                                alert("Test");
                                 $('<option selected = "selected">',
                                     {
                                         value: data.districtID,
@@ -1420,9 +1440,15 @@
     function getCommDistrict() {
         //var id = this.value;
         var id = $('#Comm_State :selected').val();
-        if (commStateID != "") {
+        //console.log("CommDistrict");
+        //console.log(id);
+        //console.log("CommState");
+        //console.log(commStateID);
+
+        if (commStateID != "0") {
             id = commStateID;
         }
+
         //if (id != 0) {
         //    $("#state_error").html("");
         //}
@@ -1475,7 +1501,7 @@
     function getMerchantRegionalOfc() {
         var id = $('#ZonalOffice :selected').val();
 
-        if (zonalID != "") {
+        if (zonalID != "0") {
             id = zonalID;
         }
         //if (id != 0) {
@@ -1530,7 +1556,7 @@
     function getMerchantSalesArea() {
         var id = $('#regionalOfc :selected').val();
 
-        if (regionalID != "") {
+        if (regionalID != "0") {
             id = regionalID;
         }
 

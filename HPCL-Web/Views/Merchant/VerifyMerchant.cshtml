@@ -120,9 +120,10 @@
                         @foreach (var item in Model.MerchantApprovalTableDetails)
                         {
                             i = i + 1;
+                            string MerchantIDVal = "30" + @item.ErpCode;
                             <tr>
                                 <td><input type="checkbox" id="check_@i" /></td>
-                                <td><a class="erp_code" asp-action="CreateMerchant" asp-route-MerchantIDValue="@item.ErpCode.Remove(0,2)" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID">@item.ErpCode</a></td>
+                                <td><a class="erp_code" asp-action="CreateMerchant" asp-route-MerchantIDValue="@MerchantIDVal" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID">@item.ErpCode</a></td>
                                 <td>@item.RegionalOfficeName</td>
                                 <td>@item.RetailOutletName</td>
                                 <td>@item.City</td>
@@ -131,7 +132,7 @@
                                 <td>@item.CreatedBy</td>
                                 <td>@item.VerifiedDate</td>
                                 <td>@item.VerifiedBy</td>
-                                <td><input type="text" id="comments_@i" /></td>
+                                <td><input type="text" id="comments_@i" /><span class="comment_error"></span></td>
                             </tr>
                         }
                     </tbody>
@@ -202,18 +203,29 @@
         $("#FromDate").val(output);
         $("#ToDate").val(output);
         $("#CategoryID").val(1);
+
+        $("#show_Table").html("");
     };
 
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
+    var flag = "Y";
 
     function approvalOrReject(action) {
         ObjApprovalRejectDetail = [];
         $("#merchantApprovalDetails tr").each(function () {
+            $(this).find(".comment_error").html("");
             if ($(this).find('input[type="checkbox"]').is(":checked")) {
                 let comment = $(this).find("input:text").val();
+                if (comment == "") {
+                    $(this).find(".comment_error").html("Please fill comment.");
+                    flag = "N";
+                }
+                else {
+                    flag = "Y";
+                }
                 let erpCode = $(this).find("a.erp_code").html();
                 if (erpCode != undefined) {
                     ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
@@ -221,7 +233,7 @@
             }
         });
 
-        if (ObjApprovalRejectDetail.length > 0) {
+        if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
             var erpnmodel = { ApprovedBy: "", ObjApprovalRejectDetail: ObjApprovalRejectDetail, StatusId: action, UserId: "", Useragent: "", Userip: "", };
             $.ajax({
                 type: 'POST',
