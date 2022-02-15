@@ -204,7 +204,7 @@ namespace HPCL_Web.Controllers
                     {"PhoneNo", ofcrMdl.Phone},
                     {"EmailId", ofcrMdl.Email},
                     {"Fax", ofcrMdl.Fax},
-                    {"Createdby", Common.userid}
+                    {"Createdby", HttpContext.Session.GetString("UserName")}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -481,7 +481,7 @@ namespace HPCL_Web.Controllers
                     {"Fax", ofcrMdl.Fax},
                     {"ModifiedBy", "0" },
                     {"OfficerId", ofcrMdl.OfficerID},
-                    {"CreatedBy","0" }
+                    {"CreatedBy",HttpContext.Session.GetString("UserName") }
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -612,7 +612,7 @@ namespace HPCL_Web.Controllers
                     {"UserName", ofcrLocationMdl.UserName},
                     {"ZO", ofcrLocationMdl.ZoneOfcID},
                     {"RO", ofcrLocationMdl.RegionalOfcID},
-                    {"Createdby", "0"},
+                    {"Createdby", HttpContext.Session.GetString("UserName")},
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -695,7 +695,7 @@ namespace HPCL_Web.Controllers
                     {"UserName", userName},
                     {"ZO", zonalID},
                     {"RO", regionalID},
-                    {"ModifiedBy", "0"}
+                    {"ModifiedBy", HttpContext.Session.GetString("UserName")}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));

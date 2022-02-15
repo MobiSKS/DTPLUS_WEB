@@ -42,8 +42,16 @@ namespace HPCL_Web.Models.ValidateNewCards
         public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
         public string CustomerAddress { get; set; }
-        public string RBE_RSMName { get; set; }
+        public string PhoneNo { get; set; }
         public string MobileNo { get; set; }
+        public string TotalCards { get; set; }
+        public string CreatedRoleId { get; set; }
+        public string CreatedRoleName { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedDate { get; set; }
+        public string StatusId { get; set; }
+        public string StatusName { get; set; }
+        public string KYCStatus { get; set; }
     }
     public class VehicleNumberCardIdentifierList
     {

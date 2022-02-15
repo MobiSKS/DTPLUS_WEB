@@ -47,6 +47,8 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("Token", access_token.Result);
             }
 
+            Common.userid = user.UserId;
+            
             var loginBody = new UserInfoModel
             {
                 UserId = user.UserId,
