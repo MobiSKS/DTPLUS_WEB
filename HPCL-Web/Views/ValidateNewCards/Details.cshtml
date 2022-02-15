@@ -1,0 +1,162 @@
+﻿@model HPCL_Web.Models.ValidateNewCards.ValidateNewCardsModel
+@{
+    ViewData["Title"] = "Details";
+    PagerModel pager = new PagerModel();
+    int pageNo = 0;
+
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<marquee width="100%" direction="left" height="30%">
+    Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+</marquee>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <h5>Validate New Cards</h5>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        {
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="border-1 rounded border-grey"></div>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Search Officer</p>
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-xs-4" style="width:40%;margin-left:1.5%;">
+                                            <label class="font-weight-normal col-md-5 col-12">Form Number<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="categoryID"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width:35%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width: 40%; margin-left: 1.5%; margin-top: 1%;">
+                                            <label class="font-weight-normal col-md-5 col-12">Date</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.Date, new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="fromDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width:35%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width:40%;margin-left:1.5%;margin-top:1%;">
+                                            <label class="font-weight-normal col-md-5 col-12">Created By</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.CreatedBy, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="toDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width:35%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12" style="margin-left:-20%;">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4" style="width: 40%; margin-left: 1.5%; margin-top: 1%;">
+                                            <label class="font-weight-normal col-md-5 col-12"></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                                <div>
+                                    <div class="row">
+                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%; margin-left: 19.3%;" type="submit">Search</button>
+                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 12%; margin-left: -53%; margin-right:-53%;" type="button">Advance Search</button>
+                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%;" type="button" onclick="setDates();">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        }
+        <div id="show_Table">
+            @if (Model.NewCardsLists.Count() > 0)
+            {
+                <table class="table table-striped" id="merchantApprovalDetails">
+                    <thead style="background-color:lightgray;">
+                        <tr>
+                            <th style="width:5%;">S.No.</th>
+                            <th style="width:10%;">Customer Ref. No.</th>
+                            <th style="width:10%;">Form No.</th>
+                            <th style="width:20%;">Customer Name</th>
+                            <th style="width:10%;">RBE/RSM Name</th>
+                            <th>Mobile No.</th>
+                            <th style="width:10%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchMerchantTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.NewCardsLists)
+                        {
+                            i = i + 1;
+                            <tr>
+                                <td>@i</td>
+                                <td>@item.CustomerRefNo</td>
+                                <td>@item.FormNo</td>
+                                <td>@item.CustomerName</td>
+                                <td>@item.RBE_RSMName</td>
+                                <td>@item.MobileNo</td>
+                                <td><a href="#">Validate</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="container">
+                    @if (pager.TotalPages > 0)
+                    {
+                        <ul class="pagination justify-content-end">
+                            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                            {
+                                <li class="page-item @(pge == pager.CurrentPage ? " active" : "" )">
+                                    <a class="page-link" asp-controller="Merchant" asp-action="VerifyMerchant" asp-route-pg="@pge">@pge</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Date").datepicker({
+            "setDate": new Date(),
+            "autoclose": true
+        });
+    });
+</script>

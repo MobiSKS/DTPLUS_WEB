@@ -906,9 +906,15 @@
 </div>
 
 <script type="text/javascript">
-    var phoneno = /^\d{10}$/;
+    var phoneno = /^(?!(0))[0-9]{10}$/;
     var email = /^\b[A-Z0-9._%-]+@@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
     var number = /^\d+$/;
+    var pincode = /^[1-9][0-9]{5}$/;
+    var mappedMerchantID = /^(?=(3))[0-9]{10}$/;
+    var pancard = /[A-Z]{5}\d{4}[A-Z]{1}/;
+    var gstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+    var lpgCngSale = /^(?:[1-9][0-9]{0,4}(d{1,2})?|100000|100000.00)$/;
+
     var retailStateID = $("#Retail_Outlet_State").val();
     var commStateID = $("#Comm_State").val();
     var retailDistrictID = $("#Retail_DistictID").val();
@@ -1011,18 +1017,25 @@
             document.getElementById("merchantType_error").innerHTML = "";
         }
 
-        if (document.applicationForm.MappedMerchantID.value == "") {
-            document.getElementById("mappedMerchantId_error").innerHTML = "Mapped Merchant ID is required";
-            document.applicationForm.MappedMerchantID.focus();
-            return ret;
-        }
-        else if (!document.applicationForm.MappedMerchantID.value.match(number)) {
-            document.getElementById("mappedMerchantId_error").innerHTML = "Numeric Only";
-            document.applicationForm.MappedMerchantID.focus();
-            return ret;
-        }
-        else {
-            document.getElementById("mappedMerchantId_error").innerHTML = "";
+        if ($('#MerchantType :selected').text() == "Mobile Dispenser"){
+            if (document.applicationForm.MappedMerchantID.value == "") {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Mapped Merchant ID is required";
+                document.applicationForm.MappedMerchantID.focus();
+                return ret;
+            }
+            else if (!document.applicationForm.MappedMerchantID.value.match(mappedMerchantID)) {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Should start with 3 and 10 Digits Only";
+                document.applicationForm.MappedMerchantID.focus();
+                return ret;
+            }
+            else if (!document.applicationForm.MappedMerchantID.value.match(number)) {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Numeric Only";
+                document.applicationForm.MappedMerchantID.focus();
+                return ret;
+            }
+            else {
+                document.getElementById("mappedMerchantId_error").innerHTML = "";
+            }
         }
 
         if (document.applicationForm.DealerMobileNumber.value == "") {
@@ -1076,6 +1089,11 @@
             document.applicationForm.LPG_CNGSale.focus();
             return ret;
         }
+        else if (!document.applicationForm.LPG_CNGSale.value.match(lpgCngSale)) {
+            document.getElementById("lpgCngSale_error").innerHTML = "LPG CNG Sale value is invalid - From 1 to 1,00,000 Only";
+            document.applicationForm.LPG_CNGSale.focus();
+            return ret;
+        }
         else {
             document.getElementById("lpgCngSale_error").innerHTML = "";
         }
@@ -1085,8 +1103,22 @@
             document.applicationForm.PANCardNumber.focus();
             return ret;
         }
+        else if (!document.applicationForm.PANCardNumber.value.match(pancard)) {
+            document.getElementById("panCardNum_error").innerHTML = "PAN Card is Invalid";
+            document.applicationForm.PANCardNumber.focus();
+            return ret;
+        }
         else {
             document.getElementById("panCardNum_error").innerHTML = "";
+        }
+
+        if (!document.applicationForm.GSTNumber.value.match(gstNumber)) {
+            document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
+            document.applicationForm.GSTNumber.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("gstNum_error").innerHTML = "";
         }
 
         if (document.applicationForm.Retail_Outlet_Address1.value == "") {
@@ -1140,6 +1172,11 @@
         }
         else if (!document.applicationForm.Retail_Outlet_Pin.value.match(number)) {
             document.getElementById("retail_pincode_error").innerHTML = "Numeric Only";
+            document.applicationForm.Retail_Outlet_Pin.focus();
+            return ret;
+        }
+        else if (!document.applicationForm.Retail_Outlet_Pin.value.match(pincode)) {
+            document.getElementById("retail_pincode_error").innerHTML = "6 Digits Only";
             document.applicationForm.Retail_Outlet_Pin.focus();
             return ret;
         }
@@ -1263,6 +1300,11 @@
 
         if (document.applicationForm.Comm_Pin.value != "" && !document.applicationForm.Comm_Pin.value.match(number)) {
             document.getElementById("comm_pin_error").innerHTML = "Numeric Only";
+            document.applicationForm.Comm_Pin.focus();
+            return ret;
+        }
+        else if (!document.applicationForm.Comm_Pin.value.match(pincode)) {
+            document.getElementById("comm_pin_error").innerHTML = "6 Digits Only";
             document.applicationForm.Comm_Pin.focus();
             return ret;
         }
@@ -1403,7 +1445,6 @@
                     $.each(data, function (i, data) { // bind the dropdown list using json result
                         if (retailStateID != "") {
                             if (data.districtID == retailDistrictID) {
-                                alert("Test");
                                 $('<option selected = "selected">',
                                     {
                                         value: data.districtID,
@@ -1626,4 +1667,15 @@
         $("#SalesAreaID").val(id);
     });
 
+    $("#MerchantType").change(function () {
+        var MerchantTypeVal = $('#MerchantType :selected').text();
+
+        if (MerchantTypeVal != "Mobile Dispenser") {
+            $("#MappedMerchantID").html("");
+            $("#MappedMerchantID").prop("disabled", true);
+        }
+        else {
+            $("#MappedMerchantID").removeAttr("disabled");
+        }
+    });
 </script>
