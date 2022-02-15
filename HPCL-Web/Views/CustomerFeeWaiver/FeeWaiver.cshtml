@@ -1,0 +1,455 @@
+﻿@model HPCL_Web.Models.CustomerFeeWaiver.PendingCustomer
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<marquee width="100%" direction="left" height="30%">
+    Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+</marquee>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="border-1 rounded border-grey h-100 mt-3">
+
+
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Approve Fee Waiver</p>
+                    <div class="py-2 p-md-4">
+                        <div class="w-100">
+
+                            <form method="post" data-ajax="true" asp-controller="CustomerFeeWaiver" asp-action="FeeWaiver" data-ajax-method="POST" data-ajax-success="OnSuccessFeeWaiverLoad" data-ajax-failure="OnFailure">
+
+                                <div>
+                                    <fieldset class="border-1 rounded border-grey">
+                                        @*<legend class="font-weight-bold">Search Customer</legend>*@
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap" style="padding-top:1%">
+
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">Form Number</label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-7 col-12">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <button class="btn" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SEARCH</button>
+                                                        <a class="btn" href="#" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">RESET</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+                                    </fieldset>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                    <div>
+                                        <table id="customerSearch" class="table table-striped table-bordered table-responsive"style="display:none;">
+                                            <tr>
+
+                                                <th>
+                                                    @Html.DisplayName("Customer Reference No")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Customer Code")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Form No")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Customer Name")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("RBE Name/RSM")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Mobile No")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Action")
+                                                </th>
+
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <div id="detailsSection">
+
+                                <div class="form-group d-flex align-items-center flex-wrap">
+
+                                </div>
+
+                                <div id="detailsWaiverSection" style="display:none;">
+                                    <form>
+                                        <fieldset class="border-1 rounded border-grey">
+                                            <legend class="font-weight-bold">Card Preference</legend>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-7 col-12">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                Card   @Html.RadioButtonFor(m => m.CardPreference, "Card", new { disabled = "disabled" })
+                                                            </div>
+                                                            <div class="col">
+                                                                Cardless   @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { disabled = "disabled" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <fieldset class="border-1 rounded border-grey">
+                                            <legend class="font-weight-bold">Fee Payment Details</legend>
+
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+
+                                            </div>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-12">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                Fee Collect(CR)   @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(CR)", new { disabled = "disabled" })
+                                                            </div>
+                                                            <div class="col">
+                                                                Fee Collect(Cheque)   @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(Cheque)", new { disabled = "disabled" })
+                                                            </div>
+                                                            <div class="col">
+                                                                Fee Waiver   @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Waiver", new { disabled = "disabled" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8 col-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-8 col-12">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <div class="col-md-7 col-12">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                        @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                        @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </fieldset>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+
+                                        <table id="approveDetails" class="table table-striped table-bordered table-responsive" style="display:inline-table;">
+                                            <tr>
+
+                                                <th>
+                                                    @Html.DisplayName("Sr. No.")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Vehicle Number/Card Identifier")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Vehicle Type")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Vehicle Make")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Year of Registration")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Vehicle Owner Name")
+                                                </th>
+
+                                            </tr>
+                                        </table>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <div class="d-flex mt-3">
+                                            <div class="px-2">
+                                                <button class="btn" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;float:left">EDIT</button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Comments : </label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextAreaFor(m => m.FormNumber, new { @id = "commentId", @class = "form-control", @type = "Date" })
+                                                    @Html.ValidationMessageFor(m => m.FormNumber, "", new {@id="cmtError", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <div class="col-md-7 col-12">
+                                                    <div class="d-flex align-items-center justify-content-center mt-3">
+                                                        <div class="px-2">
+                                                            <button class="btn" type="button" id="btnSave" name="submit" onclick="approveClick()" style="background-color:#084693;color:white;">APPROVE</button>
+                                                            <button class="btn" type="button" id="btnSave" name="submit" onclick="rejectClick()" style="background-color:#084693;color:white;">REJECT</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>*@
+
+<script>
+
+    @*$(document).ready(function () {
+
+         $.ajax({
+            url: "@Url.Action("getAllPendingCustomer", "CustomerFeeWaiver")",
+            type: "POST",
+            dataType: "JSON",
+            success: function (data) {
+                $("#customerSearch td").parent().remove();
+
+                for (var i = 0; i < data.allPendingList.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='cust'>" + (data.allPendingList[i].customerReferenceNo || '') + "</span></td>"
+                        + "<td></td>"
+                        + "<td>" + (data.allPendingList[i].formNumber || '') + "</td>"
+                        + "<td>" + (data.allPendingList[i].customerName || '') + "</td>"
+                        + "<td>" + (data.allPendingList[i].createdRoleName || '') + "</td>"
+                        + "<td>" + (data.allPendingList[i].mobileNo || '') + "</td>"
+                        + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
+                        + "</tr ></tbody > ";
+
+                    $('#customerSearch').append(rows);
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+         });
+
+    });*@
+
+    function OnSuccessFeeWaiverLoad(data) {
+        $("#customerSearch td").parent().remove();
+
+        for (var i = 0; i < data.pendingList.length; i++) {
+
+            var rows = "<tbody><tr>"
+                + "<td><span class='cust'>" + (data.pendingList[i].customerReferenceNo || '') + "</span></td>"
+                + "<td></td>"
+                + "<td>" + (data.pendingList[i].formNumber || '') + "</td>"
+                + "<td>" + (data.pendingList[i].customerName || '') + "</td>"
+                + "<td>" + (data.pendingList[i].createdRoleName || '') + "</td>"
+                + "<td>" + (data.pendingList[i].mobileNo || '') + "</td>"
+                + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
+                + "</tr ></tbody > ";
+
+            $('#customerSearch').append(rows);
+        }
+
+        document.getElementById('customerSearch').style.display = 'inline-table';
+        
+    }
+
+    function OnFailure(data) {
+        alert(data);
+    }
+
+    var customerReferenceNo;
+
+    $("#customerSearch").on('click', '.approveDtls', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        customerReferenceNo = currentRow.find(".cust").text();
+
+        console.log(customerReferenceNo, "cust");
+
+         $.ajax({
+            url: "@Url.Action("BindPendingCustomer", "CustomerFeeWaiver")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerReferenceNo: customerReferenceNo },
+             success: function (res) {
+                 $('input[name="CardPreference"][value="' + res.basicDetails[0].cardPreference + '"]').prop('checked', true);
+                 $('input[name="FeePaymentsCollectFeeWaiverId"][value="' + res.basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
+
+                 $('#FeePaymentNoId').val(res.basicDetails[0].feePaymentNo);
+
+                 //var dateP = (res.basicDetails[0].feePaymentDate).format('yyyy-MM-ddHH:mm:ss');
+                 //var dt = res.basicDetails[0].feePaymentDate.split(/\-|\s/);
+                 //var dts = new Date(dt.slice(0, 3).reverse().join('-') + ' ' + dt[3]);
+
+                 //var dateString = moment(dts).format('dd-mm-yyyy');
+
+                 //$('#FeePaymentDateId').datepicker('setDate', new Date(res.basicDetails[0].feePaymentDate));
+
+                 //console.log(dts.toLocaleDateString());
+
+                 $('#FeePaymentDateId').val(res.basicDetails[0].feePaymentDate);
+
+                 $("#approveDetails td").parent().remove();
+
+                 for (var i = 0; i < res.cardDetails.length; i++) {
+
+                     var rows = "<tbody><tr>"
+                         + "<td></td>"
+                         + "<td><input class='form-control' name='" + (res.cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (res.cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
+                         + "<td><select readonly='readonly' class='form-control vls'><option value='" + (res.cardDetails[i].vehicleType || '') + "'>" + (res.cardDetails[i].vehicleType || '') + "</option></select></td>"
+                         + "<td><input class='form-control' name='" + (res.cardDetails[i].vehicleMake || '') + "' type='text' value='" + (res.cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
+                         + "<td><input class='form-control' name='" + (res.cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (res.cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
+                         + "<td>" + (res.cardDetails[i].vechileOwnerName || '') +"</td>"
+                         + "</tr ></tbody > ";
+
+                     $('#approveDetails').append(rows);
+
+                     document.getElementById('detailsWaiverSection').style.display = 'block';
+                 }
+             },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    });
+
+
+    function approveClick() {
+
+        var comments = $("#commentId").val();
+
+        if ($('#commentId').val() == "") {
+            $('#cmtError').text("Comment should not be empty");
+            return false;
+        }
+        $('#cmtError').text("");
+
+
+        $.ajax({
+            url: "@Url.Action("ApproveCustomer", "CustomerFeeWaiver")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerReferenceNo: customerReferenceNo, comments: comments },
+            success: function (res) {
+
+                alert(res);
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    }
+
+
+    function rejectClick() {
+
+        var comments = $("#commentId").val();
+
+        if ($('#commentId').val() == "") {
+            $('#cmtError').text("Comment should not be empty");
+            return false;
+        }
+
+        $('#cmtError').text("");
+
+        $.ajax({
+            url: "@Url.Action("RejectCustomer", "CustomerFeeWaiver")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerReferenceNo: customerReferenceNo, comments: comments },
+            success: function (res) {
+
+                alert(res);
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    }
+</script>
