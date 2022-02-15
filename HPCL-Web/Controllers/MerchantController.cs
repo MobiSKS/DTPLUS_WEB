@@ -1,5 +1,6 @@
 ﻿using HPCL_Web.Helper;
 using HPCL_Web.Models;
+using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Merchant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -538,9 +539,22 @@ namespace HPCL_Web.Controllers
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Message"].ToString();
+                            string message = "";
 
-                            ViewBag.Message = jarr;
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            TempData["Response"] = message;
+
+                            ViewBag.Message = message;
                             return View(merchantMdl);
                         }
                         else
@@ -618,9 +632,22 @@ namespace HPCL_Web.Controllers
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Message"].ToString();
+                            string message = "";
 
-                            ViewBag.Message = jarr;
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            TempData["Response"] = message;
+                            ViewBag.Message = message;
+
                             return View(merchantMdl);
                         }
                         else

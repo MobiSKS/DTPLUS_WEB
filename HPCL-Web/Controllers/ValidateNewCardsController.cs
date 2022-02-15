@@ -56,67 +56,66 @@ namespace HPCL_Web.Controllers
                     }
                 }
 
-                if (!String.IsNullOrEmpty(validateNewCardsMdl.FormNumber))
+                validateNewCardsModel.FormNumber = validateNewCardsMdl.FormNumber;
+                validateNewCardsModel.Date = validateNewCardsMdl.Date;
+                validateNewCardsModel.CreatedBy = validateNewCardsMdl.CreatedBy;
+                string Date = "";
+
+                if (!String.IsNullOrEmpty(validateNewCardsMdl.Date))
                 {
-                    validateNewCardsModel.FormNumber = validateNewCardsMdl.FormNumber;
-                    validateNewCardsModel.Date = validateNewCardsMdl.Date;
-                    validateNewCardsModel.CreatedBy = validateNewCardsMdl.CreatedBy;
-
-
                     string[] dateArr = validateNewCardsModel.Date.Split("/");
+                    Date = dateArr[2] + "-" + dateArr[1] + "-" + dateArr[0];
+                }
 
-                    string Date = dateArr[2] + "-" + dateArr[1] + "-" + dateArr[0];
-
-                    var ValidateNewCardListForm = new Dictionary<string, string>
+                var ValidateNewCardListForm = new Dictionary<string, string>
                     {
                         {"Useragent", Common.useragent},
                         {"Userip", Common.userip},
                         {"Userid", Common.userid},
                         {"StateId", "" },
-                        {"FormNumber", validateNewCardsModel.FormNumber },
-                        {"CustomerName", validateNewCardsModel.CreatedBy },
-                        {"Createdon", validateNewCardsModel.Date },
-                        {"Createdby", "0" }
+                        {"FormNumber", "" },
+                        {"CustomerName", "" },
+                        {"Createdon", "" },
+                        {"Createdby", "" }
                     };
 
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                    StringContent ValidateNewCardListContent = new StringContent(JsonConvert.SerializeObject(ValidateNewCardListForm), Encoding.UTF8, "application/json");
-                    using (var Response = await client.PostAsync(WebApiUrl.getMerchantApprovalList, ValidateNewCardListContent))
+                StringContent ValidateNewCardListContent = new StringContent(JsonConvert.SerializeObject(ValidateNewCardListForm), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.getValidateNewCardLists, ValidateNewCardListContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                        {
-                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Data"].Value<JArray>();
-                            List<NewCardsList> lst = jarr.ToObject<List<NewCardsList>>();
-                            validateNewCardsModel.NewCardsLists.AddRange(lst);
-                        }
-                        else
-                        {
-                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var Message = obj["errorMessage"].ToString();
-                            ViewBag.Message = "Failed to load Merchant types";
-                        }
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<NewCardsList> lst = jarr.ToObject<List<NewCardsList>>();
+                        validateNewCardsModel.NewCardsLists.AddRange(lst);
                     }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                    const int pageSize = 5;
-                    if (pg < 1)
-                        pg = 1;
-
-                    int resCount = validateNewCardsModel.NewCardsLists.Count();
-                    var pager = new PagerModel(resCount, pg, pageSize);
-                    int recSkip = (pg - 1) * pageSize;
-
-                    var data = validateNewCardsModel.NewCardsLists.Skip(recSkip).Take(pager.PageSize).ToList();
-                    this.ViewBag.Pager = pager;
-
-                    validateNewCardsModel.NewCardsLists.Clear();
-                    validateNewCardsModel.NewCardsLists.AddRange(data);
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load Merchant types";
+                    }
                 }
+
+                const int pageSize = 5;
+                if (pg < 1)
+                    pg = 1;
+
+                int resCount = validateNewCardsModel.NewCardsLists.Count();
+                var pager = new PagerModel(resCount, pg, pageSize);
+                int recSkip = (pg - 1) * pageSize;
+
+                var data = validateNewCardsModel.NewCardsLists.Skip(recSkip).Take(pager.PageSize).ToList();
+                this.ViewBag.Pager = pager;
+
+                validateNewCardsModel.NewCardsLists.Clear();
+                validateNewCardsModel.NewCardsLists.AddRange(data);
             }
 
             //if (validateNewCardsMdl.ShowTable == "Error")

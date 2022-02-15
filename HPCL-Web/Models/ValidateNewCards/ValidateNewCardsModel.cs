@@ -38,9 +38,10 @@ namespace HPCL_Web.Models.ValidateNewCards
 
     public class NewCardsList
     {
-        public string CustomerRefNo { get; set; }
-        public string FormNo { get; set; }
+        public string FormNumber { get; set; }
+        public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
         public string RBE_RSMName { get; set; }
         public string MobileNo { get; set; }
     }
