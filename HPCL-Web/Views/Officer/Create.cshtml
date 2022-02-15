@@ -130,7 +130,7 @@
                                             <label class="font-weight-normal col-md-5 col-12">Pin</label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.Pin, new { @class = "form-control" })
-                                                <span class="error" id="pin_error"></span>
+                                                @Html.ValidationMessageFor(m => m.Pin, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -227,201 +227,235 @@
 </div>
 
 <script type="text/javascript">
-        $("#btnAdd").click(function () {
-            let flag = 'Y';
-            let firstName = $("#FirstName").val();
-            let userName = $("#UserName").val();
-            let address1 = $("#Address1").val();
-            let mobile = $("#Mobile").val();
-            let email = $("#Email").val();
+    var ofcrTypeID = $("#OfficerTypeID").val();
+    var locationID = $("#LocationID").val();
+    var districtID = $("#DistrictID").val();
+    var stateID = $("#State").val();
+    var message = "@ViewBag.Message";
 
-            if ($("#OfficerTypeID").val() == 0) {
-                $("#officerType_error").html("Officer Type is required");
-                flag = 'N';
-            }
-            else {
-                $("#officerType_error").html("");
-            }
-            if ($("#State").val() == 0) {
-                $("#statediv").addClass("btmMargin");
-                $("#state_error").html("State is required");
-                flag = 'N';
-            }
-            else {
-                $("#state_error").html("");
-            }
-            if ($("#location").val() == 0) {
-                $("#location_error").html("Location is required");
-                flag = 'N';
-            }
-            else {
-                $("#location_error").html("");
-            }
-            if ($("#district").val() == 0) {
-                $("#districtdiv").addClass("btmMargin");
-                $("#district_error").html("State is required");
-                flag = 'N';
-            }
-            else {
-                $("#district_error").html("");
-            }
-            if ($.trim(firstName) == "" || $.trim(userName) == "" || $.trim(address1) == ""
-                || $.trim(mobile) == "" || $.trim(email) == "") {
-                flag = 'NS';
-            }
+    $(document).ready(function () {
+        if (message != "") {
+            getLocation();
+            getDistrict();
+        }
+    });
 
-            if (flag == 'N') {
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-            }
-            else {
-                $("#form1").unbind().submit();
+    $("#btnAdd").click(function () {
+        let flag = 'Y';
+        let firstName = $("#FirstName").val();
+        let userName = $("#UserName").val();
+        let address1 = $("#Address1").val();
+        let mobile = $("#Mobile").val();
+        let email = $("#Email").val();
+
+        if ($("#OfficerTypeID").val() == 0) {
+            $("#officerType_error").html("Officer Type is required");
+            flag = 'N';
+        }
+        else {
+            $("#officerType_error").html("");
+        }
+        if ($("#State").val() == 0) {
+            $("#statediv").addClass("btmMargin");
+            $("#state_error").html("State is required");
+            flag = 'N';
+        }
+        else {
+            $("#state_error").html("");
+        }
+        if ($("#location").val() == 0) {
+            $("#location_error").html("Location is required");
+            flag = 'N';
+        }
+        else {
+            $("#location_error").html("");
+        }
+        if ($("#district").val() == 0) {
+            $("#districtdiv").addClass("btmMargin");
+            $("#district_error").html("State is required");
+            flag = 'N';
+        }
+        else {
+            $("#district_error").html("");
+        }
+        if ($.trim(firstName) == "" || $.trim(userName) == "" || $.trim(address1) == ""
+            || $.trim(mobile) == "" || $.trim(email) == "") {
+            flag = 'NS';
+        }
+
+        if (flag == 'N') {
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+        else {
+            $("#form1").unbind().submit();
+        }
+    });
+
+    //$("#OfficerTypeID").change(function () {
+    function getLocation() {
+        var id = $('#OfficerTypeID :selected').val();
+
+        if (ofcrTypeID != "" && ofcrTypeID != "0") {
+            id = ofcrTypeID;
+        }
+        if (id != 0) {
+            $("#officerType_error").html("");
+        }
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetLocationDetails", "Officer")',
+            data: { OfcrType: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    if (id == "1" || id == "4" || id == "6") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (data.regionalOfficeID == locationID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#location");
+                            }
+                        });
+                    }
+                    else if (id == "3" || id == "5") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (data.zonalOfficeID == locationID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#location");
+                            }
+                        });
+                    }
+                    else if (id == "2") {
+                        $("#location").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (data.hqi == locationID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.hqid,
+                                        text: data.hqName
+                                    }).html(data.hqName).appendTo("#location");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.hqid,
+                                        text: data.hqName
+                                    }).html(data.hqName).appendTo("#location");
+                            }
+                        });
+                    }
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Location Data");
             }
         });
+    };
 
-        //$("#OfficerTypeID").change(function () {
-        function getLocation() {
-            var id = $('#OfficerTypeID :selected').val();
+    function getDistrict() {
+        //var id = this.value;
+        var id = $('#State :selected').val();
+        if (stateID != "" && stateID != "0") {
+            id = stateID;
+        }
 
-            if (id != 0) {
-                $("#officerType_error").html("");
-            }
+        if (id != 0) {
+            $("#state_error").html("");
+        }
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetLocationDetails", "Officer")',
-                data: { OfcrType: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        if (id == "1" || id == "4" || id == "6") {
-                            $("#location").html("");
-                            $.each(data, function (i, data) { // bind the dropdown list using json result
-                                //if (i == 0) {
-                                //    $('<option>',
-                                //        {
-                                //            value: 0,
-                                //            text: "Select Location"
-                                //        }).html("Select Location").appendTo("#location");
-                                //}
-                                //else {
-                                    $('<option>',
-                                        {
-                                            value: data.regionalOfficeID,
-                                            text: data.regionalOfficeName
-                                        }).html(data.regionalOfficeName).appendTo("#location");
-                            //    }
-                            });
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetDistrictDetails", "Officer")',
+            data: { Stateid: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#district").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        if (data.districtID == districtID) {
+                            $('<option selected = "selected">',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#district");
                         }
-                        else if (id == "3" || id == "5") {
-                            $("#location").html("");
-                            $.each(data, function (i, data) { // bind the dropdown list using json result
-                                //if (i == 0) {
-                                //    $('<option>',
-                                //        {
-                                //            value: 0,
-                                //            text: "Select Location"
-                                //        }).html("Select Location").appendTo("#location");
-                                //}
-                                //else {
-                                    $('<option>',
-                                        {
-                                            value: data.zonalOfficeID,
-                                            text: data.zonalOfficeName
-                                        }).html(data.zonalOfficeName).appendTo("#location");
-                            //    }
-                            });
-                        }
-                        else if (id == "2") {
-                            debugger;
-                            $("#location").html("");
-                            $.each(data, function (i, data) { // bind the dropdown list using json result
-                                    $('<option>',
-                                        {
-                                            value: data.hqid,
-                                            text: data.hqName
-                                        }).html(data.hqName).appendTo("#location");
-                            });
-                        }
-
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Location Data");
-                }
-            });
-        };
-
-        /*$("#State").change(function () {*/
-        function getDistrict() {
-            //var id = this.value;
-            var id = $('#State :selected').val();
-
-            if (id != 0) {
-                $("#state_error").html("");
-            }
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Officer")',
-                data: { Stateid: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $("#district").html("");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                        else {
                             $('<option>',
                                 {
                                     value: data.districtID,
                                     text: data.districtName
                                 }).html(data.districtName).appendTo("#district");
-                        });
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating District Data");
+                        }
+                    });
                 }
-            });
-        };
-
-        $("#location").change(function () {
-            var id = this.value;
-            $("#LocationID").val(id);
-        });
-
-        $("#district").change(function () {
-            var id = this.value;
-            $("#DistrictID").val(id);
-        });
-
-        $("#UserName").on("blur", function () {
-            var UserName = this.value;
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("ValidateUserName", "Officer")',
-                data: { userName: UserName },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success' && v == 'Y') {
-                        $("#userNamediv").addClass("btmMargin");
-                        $("#userName_error").html("User Name Exists");
-                    }
-                    else {
-                        $("#userName_error").html("");
-                        console.log(v);
-                    }
+                else {
+                    console.log(v);
                 }
-            });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating District Data");
+            }
         });
+    };
+
+    $("#location").change(function () {
+        var id = this.value;
+        $("#LocationID").val(id);
+    });
+
+    $("#district").change(function () {
+        var id = this.value;
+        $("#DistrictID").val(id);
+    });
+
+    $("#UserName").on("blur", function () {
+        var UserName = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("ValidateUserName", "Officer")',
+            data: { userName: UserName },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success' && v == 'Y') {
+                    $("#userNamediv").addClass("btmMargin");
+                    $("#userName_error").html("User Name Exists");
+                }
+                else {
+                    $("#userName_error").html("");
+                    console.log(v);
+                }
+            }
+        });
+    });
 </script>

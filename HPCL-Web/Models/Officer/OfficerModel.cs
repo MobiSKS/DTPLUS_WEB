@@ -51,9 +51,10 @@ namespace HPCL_Web.Models.Officer
         [Required(ErrorMessage = "State is Required")]
         public int State { get; set; }
         public int StateId { get; set; }
+        [RegularExpression(@"^[1-9][0-9]{5}$", ErrorMessage = "Should be 6 Digits Only")]
         public int? Pin { get; set; }
         [Required(ErrorMessage = "Mobile is Required")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        [RegularExpression(@"^(?!(0))[0-9]{10}$", ErrorMessage = "Should not start with 0 and should be 10 Digits Only")]
         public string Mobile { get; set; }
         public string MobileNo { get; set; }
         public string Phone { get; set; }

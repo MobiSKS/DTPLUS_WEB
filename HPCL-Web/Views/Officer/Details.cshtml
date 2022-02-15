@@ -64,6 +64,7 @@
         <table class="table table-striped">
             <thead style="background-color:lightgray;">
                 <tr>
+                    <th style="width:5%;display:none;">OfficerID</th>
                     <th style="width:5%;">S No.</th>
                     <th style="width:10%;">Officer Type</th>
                     <th style="width:15%;">First Name</th>
@@ -75,10 +76,15 @@
                 </tr>
             </thead>
             <tbody>
+                @{ 
+                    int i = 0;
+                }
                 @foreach (var item in Model)
                 {
+                    i++;
                     <tr>
-                        <td>@item.OfficerID</td>
+                        <td style="display:none;">@item.OfficerID</td>
+                        <td>@i</td>
                         <td>@item.OfficerTypeName</td>
                         <td>@item.FirstName</td>
                         <td>@item.LastName</td>
@@ -88,7 +94,7 @@
                         <td>
                             <a asp-action="EditOfficer" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editPage.png" style="width: 15%;" /></a>
                             <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editLocation.png" style="width: 15%;" /></a>
-                            <a asp-action="Delete" asp-route-OfficerID="@item.OfficerID" onclick = "return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
+                            <a asp-action="Delete" asp-route-OfficerID="@item.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
                         </td>
                     </tr>
                 }
@@ -181,14 +187,13 @@
 
     function getLocationFunc() {
         var id = $('#officerType :selected').val();
-        if (!(id >= 0)) {
-            if (ofcType > 0 && loc > 0) {
-                id = ofcType;
-            }
+
+        if (ofcType != "" && ofcType != "0") {
+            id = ofcType;
         }
 
         //else if ($('#officerType :selected').val() >= 0) {
-        //    id = 
+        //    id =
         //}
         $.ajax({
             type: 'POST',  // http method
@@ -219,20 +224,19 @@
                                         }).html("All").appendTo("#location");
                                 }
                             }
-                            if (loc == data.regionID) {
-                                $('<option>',
+                            if (loc == data.regionalOfficeID) {
+                                $('<option selected = "selected">',
                                     {
-                                        value: data.regionID,
-                                        text: data.regionName,
-                                        selected: "selected"
-                                    }).html(data.regionName).appendTo("#location");
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#location");
                             }
                             else {
                                 $('<option>',
                                     {
-                                        value: data.regionID,
-                                        text: data.regionName
-                                    }).html(data.regionName).appendTo("#location");
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#location");
                             }
 
                         });
@@ -257,20 +261,20 @@
                                         }).html("All").appendTo("#location");
                                 }
                             }
-                            if (loc == data.zoneID) {
-                                $('<option>',
+                            if (loc == data.zonalOfficeID) {
+                                $('<option selected = "selected">',
                                     {
-                                        value: data.zoneID,
-                                        text: data.zoneName,
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName,
                                         selected: "selected"
-                                    }).html(data.zoneName).appendTo("#location");
+                                    }).html(data.zonalOfficeName).appendTo("#location");
                             }
                             else {
                                 $('<option>',
                                     {
-                                        value: data.zoneID,
-                                        text: data.zoneName
-                                    }).html(data.zoneName).appendTo("#location");
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#location");
                             }
                         });
                     }
@@ -295,7 +299,7 @@
                                 }
                             }
                             if (loc == data.hqid) {
-                                $('<option>',
+                                $('<option selected = "selected">',
                                     {
                                         value: data.hqid,
                                         text: data.hqName,
