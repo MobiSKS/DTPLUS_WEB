@@ -709,12 +709,6 @@ namespace HPCL_Web.Controllers
             }
             return View(merchantApprovalMdl);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchantApprovalMdl, int pg = 1)
-        //{
-
-        //}
-
         [HttpPost]
         public async Task<IActionResult> ActionOnMerchantID([FromBody] ApprovalRejectionModel erpnmodel)
         {

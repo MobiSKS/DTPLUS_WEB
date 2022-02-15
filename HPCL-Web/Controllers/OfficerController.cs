@@ -23,23 +23,23 @@ namespace HPCL_Web.Controllers
         {
             List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
 
-            if (!String.IsNullOrEmpty(officerType))
-            {
-                HttpContext.Session.SetString("OfcrType", officerType);
-            }
-            else
-            {
-                officerType = HttpContext.Session.GetString("OfcrType");
-            }
+            //if (!String.IsNullOrEmpty(officerType))
+            //{
+            //    HttpContext.Session.SetString("OfcrType", officerType);
+            //}
+            //else
+            //{
+            //    officerType = HttpContext.Session.GetString("OfcrType");
+            //}
 
-            if (!String.IsNullOrEmpty(location))
-            {
-                HttpContext.Session.SetString("Location", location);
-            }
-            else
-            {
-                location = HttpContext.Session.GetString("Location");
-            }
+            //if (!String.IsNullOrEmpty(location))
+            //{
+            //    HttpContext.Session.SetString("Location", location);
+            //}
+            //else
+            //{
+            //    location = HttpContext.Session.GetString("Location");
+            //}
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -78,8 +78,9 @@ namespace HPCL_Web.Controllers
                 }
             }
 
-            ViewBag.OfficerType = HttpContext.Session.GetString("OfcrType");
-            ViewBag.Location = HttpContext.Session.GetString("Location");
+            ViewBag.OfficerType = officerType;
+            ViewBag.Location = location;
+            ViewBag.Message = TempData["Message"];
 
             const int pageSize = 5;
             if (pg < 1)
@@ -626,7 +627,7 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Message"].ToString();
 
-                        ViewBag.Message = jarr;
+                        TempData["Message"] = jarr;
                     }
                     else
                     {
@@ -710,7 +711,7 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Message"].ToString();
 
-                        ViewBag.Message = jarr;
+                        TempData["Message"] = jarr;
                     }
                     else
                     {
@@ -774,6 +775,11 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetLocationDetails(string OfcrType)
         {
+            if (OfcrType == "All")
+            {
+                OfcrType = "0";
+            }
+
             if (OfcrType == "0")
             {
                 return Json("0");
@@ -821,11 +827,6 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
-                            lst.Add(new OfficerRegionModel
-                            {
-                                RegionalOfficeID = 0,
-                                RegionalOfficeName = "Select Location"
-                            });
                             var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
                             return Json(SortedtList);
                         }
@@ -834,11 +835,6 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
-                            lst.Add(new OfficerZoneModel
-                            {
-                                ZonalOfficeID = 0,
-                                ZonalOfficeName = "Select Location"
-                            });
                             var SortedtList = lst.OrderBy(x => x.ZonalOfficeID).ToList();
                             return Json(SortedtList);
                         }
@@ -847,13 +843,6 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
-                            lst.Add(new OfficerHqModel
-                            {
-                                HQID = 0,
-                                HQCode = "0",
-                                HQName = "Select Location",
-                                HQShortName = "Select Location"
-                            });
                             var SortedtList = lst.OrderBy(x => x.HQID).ToList();
                             return Json(SortedtList);
                         }
