@@ -87,6 +87,8 @@
         public static string bindPendingCustomerUrl = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
         public static string getFeeWaiverDetailsUrl = "/dtpwebapi/api/dtplus/customer/get_approve_fee_waiver_detail";
         public static string approveRejectFeeWaiverUrl = "/dtpwebapi/api/dtplus/customer/approve_reject_fee_waiver";
+
+        public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
         #endregion
 
         #region Login
