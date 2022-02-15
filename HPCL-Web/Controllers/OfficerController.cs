@@ -80,7 +80,7 @@ namespace HPCL_Web.Controllers
 
             ViewBag.OfficerType = HttpContext.Session.GetString("OfcrType");
             ViewBag.Location = HttpContext.Session.GetString("Location");
-
+            ViewBag.Message = TempData["Message"];
             const int pageSize = 5;
             if (pg < 1)
                 pg = 1;
@@ -626,7 +626,7 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Message"].ToString();
 
-                        ViewBag.Message = jarr;
+                        TempData["Message"] = jarr;
                     }
                     else
                     {
@@ -710,7 +710,7 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Message"].ToString();
 
-                        ViewBag.Message = jarr;
+                        TempData["Message"] = jarr;
                     }
                     else
                     {
