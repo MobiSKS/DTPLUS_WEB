@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HPCL_Web.Models.Customer
 {
 
     public class ViewCustomerSearch : BaseEntity
     {
+        public ViewCustomerSearch()
+        {
+            CustomerViewModalOutputs = new List<CustomerViewModalOutput>();
+        }
 
         public int StatusId { get; set; }
 
@@ -18,6 +23,7 @@ namespace HPCL_Web.Models.Customer
 
         public string ToDate { get; set; }
 
+        public virtual List<CustomerViewModalOutput> CustomerViewModalOutputs { get; set; }
     }
     public class CustomerViewModalOutput
     {
