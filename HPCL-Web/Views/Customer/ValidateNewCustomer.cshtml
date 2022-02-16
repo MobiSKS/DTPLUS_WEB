@@ -62,7 +62,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">Created By</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.OfficerTypeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                    @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control" })
                                                     @*@Html.ValidationMessageFor(m => m.CustomerDateOfApplication, "", new { @class = "text-danger" })*@
                                                 </div>
                                             </div>
@@ -528,7 +528,7 @@
                                                                 <div class="col-md-7 col-12">
                                                                     <div class="row">
                                                                         <div class="col-4">
-                                                                            @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                            @*@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
 
                                                                         </div>
                                                                         <div class="col-8 pl-0">
@@ -546,7 +546,7 @@
                                                                 <div class="col-md-7 col-12">
                                                                     <div class="row">
                                                                         <div class="col-4">
-                                                                            @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                            @*@Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
                                                                         </div>
                                                                         <div class="col-8 pl-0">
                                                                             @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -612,7 +612,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                        @*@Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -653,7 +653,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                        @*@Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -670,7 +670,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Date of Anniversary</label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @type = "date", @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1128,9 +1128,30 @@
                 $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.customer.keyOfficialApproxMonthlySpendsonVechile1);
                 $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.customer.keyOfficialApproxMonthlySpendsonVechile2);
                 $('#AreaOfOperation').val(res.customer.areaOfOperation);
-                $('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
-                $('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOB);
+                //$('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
+                //$('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOB);
 
+                const dateDOB = new Date(res.customer.keyOfficialDOB);
+                //$('#applicationDate').val(dateObj.getDate());
+                console.log(dateDOB);
+                var monthDOB = dateDOB.getUTCMonth() + 1; //months from 1-12
+                var dayDOB = dateDOB.getUTCDate();
+                var yearDOB = dateDOB.getUTCFullYear();
+
+                var newdateDOB = dayDOB + "/" + monthDOB + "/" + yearDOB;
+
+                $('#KeyOfficialDOB').val(newdateDOB);
+
+                const dateDOA = new Date(res.customer.keyOfficialDOA);
+                console.log(dateDOA);
+                var monthDOA = dateDOA.getUTCMonth() + 1; //months from 1-12
+                var dayDOA = dateDOA.getUTCDate();
+                var yearDOA = dateDOA.getUTCFullYear();
+
+                var newdateDOA = dayDOA + "/" + monthDOA + "/" + yearDOA;
+
+
+                $('#KeyOffDateOfAnniversary').val(newdateDOA);
 
                 $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Customer Details With Form Number: ( " + FormNumber + ") </p>");
 
