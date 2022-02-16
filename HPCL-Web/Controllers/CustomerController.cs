@@ -1399,10 +1399,13 @@ namespace HPCL_Web.Controllers
                         var searchRes = obj["Data"].Value<JObject>();
                         var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
 
-                        //var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
+                        var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
                         //var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
 
                         List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+
+                        List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
                         //List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
                         //List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
 
@@ -1429,7 +1432,7 @@ namespace HPCL_Web.Controllers
                         //    //cardRemaining = cardRemaining,
                         //    //ccmsRemaining = ccmsRemaining
                         //});
-                        return Json(new { customer = Customer });
+                        return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
                     }
                     else
                     {
