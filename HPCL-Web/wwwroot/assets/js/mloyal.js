@@ -138,7 +138,16 @@ if (document.applicationForm.regionalOffice.value == "0") {
 }
 else {
     document.getElementById("regionalOffice_error").innerHTML = "";
-}
+    }
+
+    if (document.applicationForm.TypeOfCustomerID.value == "0") {
+        document.getElementById("typeOfCustomer_error").innerHTML = "Customer Type Selection is required";
+        document.applicationForm.TypeOfCustomerID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("typeOfCustomer_error").innerHTML = "";
+    }
 
 if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
     document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
@@ -204,7 +213,14 @@ else {
     document.getElementById("incomeTaxPan_error").innerHTML = "";
 }
 
-
+    if (document.applicationForm.TierOfCustomerID.value == "0") {
+        document.getElementById("tierOfCustomer_error").innerHTML = "Select Tier Of Customer";
+        document.applicationForm.TierOfCustomerID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("tierOfCustomer_error").innerHTML = "";
+    }
 
 /*else {
     y = document.applicationForm.mobileno.value;

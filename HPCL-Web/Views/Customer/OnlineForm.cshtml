@@ -119,12 +119,13 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
                                             @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
+                                               new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
                                                new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
                                                new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
                                                new SelectListItem(){ Text = "New Customer", Value = "3"},
                                                }, null, new { @class = "form-control" })
                                         </div>
-                                        <span class="error" id="regionalOffice_error"></span>
+                                        <span class="error" id="typeOfCustomer_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -232,12 +233,13 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
                                             @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
+                                              new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
                                               new SelectListItem(){ Text = "1", Value = "1"},
                                               new SelectListItem(){ Text = "2", Value = "2"},
                                               new SelectListItem(){ Text = "3", Value = "3"},
                                               }, null, new { @class = "form-control" })
                                         </div>
-                                        <span class="error" id="regionalOffice_error"></span>
+                                        <span class="error" id="tierOfCustomer_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -310,7 +312,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">Pin code<sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         @*<input type="number" name="comm_pincode" class="form-control">*@
-                                        @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control" })
+                                        @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", @maxlength = "6" })
                                         <span class="error" id="comm_pincode_error"></span>
                                     </div>
                                 </div>
@@ -495,7 +497,7 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Mobile<sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control" })
+                                        @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control", @maxlength = "10" })
                                         @*<input type="tel" name="comm_mobileNumber" class="form-control">*@
                                         <div class="error" id="comm_mobileNumber_error"></div>
                                     </div>
@@ -576,7 +578,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Pin code<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control", @maxlength = "6" })
                                             @*<input type="number" name="perma_pincode" class="form-control">*@
                                             <span class="error" id="perma_pincode_error"></span>
                                         </div>
@@ -849,7 +851,7 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Mobile <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control" })
+                                        @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control", @maxlength = "10" })
                                         @*<input type="tel" name="official_mobile" class="form-control">*@
                                         <span class="error" id="official_mobile_error"></span>
                                     </div>
@@ -1331,6 +1333,8 @@
                     text: DistrictName
                 }).html(DistrictName).appendTo("#PerOrRegAddressDistrict");
             }
+            $('#PerOrRegAddressDistrict').val($('#CommunicationDistrict').val());
+            $("#PermanentDistrictId").val($('#CommunicationDistrict').val());
             if (document.getElementById("sameAddressCheck").checked == true) {
                 permanent_add.querySelectorAll("input, select").forEach(function (i) {
                     i.setAttribute("disabled", true);
