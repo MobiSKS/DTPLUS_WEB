@@ -1,0 +1,496 @@
+﻿@model HPCL_Web.Models.Security.BindGrid
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<marquee width="100%" direction="left" height="30%">
+    Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+</marquee>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="border-1 rounded border-grey h-100 mt-3">
+
+
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Creation Approval</p>
+                    <div class="py-2 p-md-4">
+                        <div class="w-100">
+
+                            <form method="post" data-ajax="true" data-ajax-controller="Security" data-ajax-action="UserCreationApproval" data-ajax-method="POST" data-ajax-success="OnSuccessCreationApproval" data-ajax-failure="OnFailure">
+
+                                <div>
+
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap" style="padding-top:1%">
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">First Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal col-md-5 col-12">User Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label></label>
+                                                <div class="col-md-7 col-12">
+                                                    <button class="btn" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SEARCH</button>
+                                                    <a class="btn" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                    <div>
+                                        <table id="ApprovalList" class="table table-striped table-bordered table-responsive" style="display:inline-table;">
+                                            <tr>
+
+                                                <th>
+                                                    <input type="checkbox" id="IsChecked" name="IsChecked">
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("First Name")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("User Name")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Email")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Maker Comment")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Requested On")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Requested By")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Role & Location")
+                                                </th>
+
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                    <div id="detailsWaiverSection" style="display:block;">
+
+                                        <div id="viewRbeAllDetails" style="display:none;">
+
+                                            <fieldset class="border-1 rounded border-grey">
+                                                <legend class="font-weight-bold">User Roles</legend>
+
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+
+                                                </div>
+
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap" style="padding:1%">
+
+                                                    <div style="margin-bottom:10px;" id="userNameId"></div>
+
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                                    </div>
+
+                                                    <table id="roleLoc" class="table table-bordered table-responsive" style="display:inline-table;">
+                                                        <tr>
+                                                            <th>Role</th>
+                                                            <th>Location</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                            </fieldset>
+
+                                            <fieldset class="border-1 rounded border-grey">
+                                                <legend class="font-weight-bold">KYC Details</legend>
+
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap" style="padding-top:1%">
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Id Proof</label>
+                                                            <div class="col-md-7 col-12">
+                                                                @*@Html.TextBox("Id Proof", new {@id="IdProofVal", @class = "form-control" })*@
+
+                                                                <input type="text" id="IdProofVal" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Number</label>
+                                                            <div class="col-md-7 col-12">
+                                                                @*@Html.TextBox("Document Number", new { @id = "IdPDocVal", @class = "form-control" })*@
+
+                                                                <input type="text" id="IdPDocVal" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12" style="padding-top:1%;">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Front Photo</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div>
+                                                                    <img id="IdDocFront" style="height: 200px; width: 320px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Back Photo</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div>
+                                                                    <img id="IdDocBack" style="height: 200px; width: 320px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12" style="padding-top:1%;">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Address Proof</label>
+                                                            <div class="col-md-7 col-12">
+                                                                @*@Html.TextBox("Address Proof", new { @id = "AddressProofVal", @class = "form-control" })*@
+
+                                                                <input type="text" id="AddressProofVal" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Number</label>
+                                                            <div class="col-md-7 col-12">
+                                                                @*@Html.TextBox("Document Number", new { @id = "AddDocVal", @class = "form-control" })*@
+
+                                                                <input type="text" id="AddDocVal" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12" style="padding-top:1%;">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Front Photo</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div>
+                                                                    <img id="AddDocFront" style="height: 200px; width: 320px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">Document Back Photo</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div>
+                                                                    <img id="AddDocBack" style="height: 200px; width: 320px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-12" style="padding-top:1%;">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-normal col-md-5 col-12">RBE Photo</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div>
+                                                                    <img id="RbePhotoId" style="height: 200px; width: 320px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+
+                                                </div>
+
+                                            </fieldset>
+
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-2 col-12">Comments<sup class="text-danger">*</sup></label>
+                                                <div class="col-md-10 col-12">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            @Html.TextAreaFor(m => m.Comments, new { @id = "commentId", @type = "Date", @style = "height:100px;width:400px;" })
+                                                            @Html.ValidationMessageFor(m => m.Comments, "", new { @id = "cmtError", @class = "text-danger" })
+                                                        </div>
+                                                        <div class="col">
+                                                            <div id="charRemining"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <div class="col-md-7 col-12">
+                                                    <div class="d-flex align-items-center justify-content-center mt-3">
+                                                        <div class="px-2">
+                                                            <button class="btn" type="button" id="btnSave" name="submit" onclick="approveClick()" style="background-color:#084693;color:white;">APPROVE</button>
+                                                            <button class="btn" type="button" id="btnSave" name="submit" onclick="rejectClick()" style="background-color:#084693;color:white;">REJECT</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var text_max = 1000;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#commentId').keyup(function () {
+            var text_length = $('#commentId').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+
+
+        $.ajax({
+            url: "@Url.Action("UserCreationApprovalList", "Security")",
+            type: "POST",
+            dataType: "JSON",
+            success: function (res) {
+
+                console.log(res);
+
+                $("#ApprovalList td").parent().remove();
+
+                for (var i = 0; i < res.rbeDetailsAll.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='checkedRow'><input type='checkbox' name='IsChecked'></span></td>"
+                        + "<td>" + (res.rbeDetailsAll[i].firstName || '') + "</td>"
+                        + "<td><span class='usrName'>" + (res.rbeDetailsAll[i].userName || '') + "</span></td>"
+                        + "<td>" + (res.rbeDetailsAll[i].emailId || '') + "</td>"
+                        + "<td>" + (res.rbeDetailsAll[i].makerComment || '') + "</td>"
+                        + "<td>" + (res.rbeDetailsAll[i].requestOn || '') + "</td>"
+                        + "<td>" + (res.rbeDetailsAll[i].requestedby || '') + "</td>"
+                        + "<td><a href='#aa' class='viewDetails'>View</a></td>"
+                        + "</tr ></tbody > ";
+
+                    $('#ApprovalList').append(rows);
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    });
+
+
+    function OnSuccessCreationApproval(data) {
+
+        console.log(data);
+
+        $("#ApprovalList td").parent().remove();
+
+        for (var i = 0; i < data.rbeDetails.length; i++) {
+
+            var rows = "<tbody><tr>"
+                + "<td><span class='checkedRow'><input type='checkbox' name='IsChecked'></span></td>"
+                + "<td>" + (data.rbeDetails[i].firstName || '') + "</td>"
+                + "<td><span class='usrName'>" + (data.rbeDetails[i].userName || '') + "</span></td>"
+                + "<td>" + (data.rbeDetails[i].emailId || '') + "</td>"
+                + "<td>" + (data.rbeDetails[i].makerComment || '') + "</td>"
+                + "<td>" + (data.rbeDetails[i].requestOn || '') + "</td>"
+                + "<td>" + (data.rbeDetails[i].requestedby || '') + "</td>"
+                + "<td><a href='#aa' class='viewDetails'>View</a></td>"
+                + "</tr ></tbody > ";
+
+            $('#ApprovalList').append(rows);
+        }
+    }
+
+
+
+    $("#ApprovalList").on('click', '.viewDetails', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        var userName = currentRow.find(".usrName").text();
+
+        console.log(userName, "cust");
+
+         $.ajax({
+            url: "@Url.Action("ViewRbeDetails", "Security")",
+            type: "POST",
+            dataType: "JSON",
+             data: { userName: userName },
+             success: function (res) {
+                 console.log(res);
+                 $("#userNameId").append("<span>User Name: " + (res.viewRbeDetailsList[0].name || '') + "</span>")
+                 $("#roleLoc").append("<tbody><tr><td>" + (res.viewRbeDetailsList[0].roleName || '') + "</td><td>" + (res.viewRbeDetailsList[0].location || '') +"</td></tr></tbody > ")
+                 $('#IdProofVal').val(res.viewRbeDetailsList[0].idProofTypeName);
+                 $('#IdPDocVal').val(res.viewRbeDetailsList[0].idProofDocumentNo);
+                 $("#IdDocFront").attr("src", res.viewRbeDetailsList[0].idProofFront);
+                 $("#IdDocBack").attr("src", res.viewRbeDetailsList[0].idProofBack);
+                 $('#AddressProofVal').val(res.viewRbeDetailsList[0].addressProofTypeName);
+                 $('#AddDocVal').val(res.viewRbeDetailsList[0].addressProofDocumentNo);
+                 $("#AddDocFront").attr("src", res.viewRbeDetailsList[0].addressProofFront);
+                 $("#AddDocBack").attr("src", res.viewRbeDetailsList[0].addressProofBack);
+                 $("#RbePhotoId").attr("src", res.viewRbeDetailsList[0].rbePhoto);
+
+                 document.getElementById("viewRbeAllDetails").style.display = "block";
+             },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    });
+
+
+
+    function OnFailure(data) {
+        alert(data);
+    }
+
+    var userNameChecked;
+    var currentRow;
+
+    $("#ApprovalList").on('click', '.checkedRow', function (e) {
+
+        currentRow = $(this).closest("tr");
+        userNameChecked = currentRow.find('.usrName').text();
+    });
+
+
+    function approveClick() {
+
+        var comments = $("#commentId").val();
+
+        if ($('#commentId').val() == "") {
+            $('#cmtError').text("Comment should not be empty");
+            return false;
+        }
+
+        console.log(userNameChecked, "subedita");
+
+        if (userNameChecked == undefined) {
+            alert("Please select at least one record");
+            return false;
+        }
+
+        $('#cmtError').text("");
+
+        if (confirm('Are you sure! You want to approve the selected record')) {
+
+            $.ajax({
+                url: "@Url.Action("ApproveRbeUser", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userNameChecked, comments: comments },
+                success: function (res) {
+
+                    document.getElementById("viewRbeAllDetails").style.display = "none";
+                    alert(res);
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+
+        } else {
+            console.log('cancel')
+        }
+
+    }
+
+
+    function rejectClick() {
+
+        var comments = $("#commentId").val();
+
+        if ($('#commentId').val() == "") {
+            $('#cmtError').text("Comment should not be empty");
+            return false;
+        }
+        if (userNameChecked == undefined) {
+            alert("Please select at least one record");
+            return false;
+        }
+        $('#cmtError').text("");
+
+        if (confirm('Are you sure! You want to reject the selected record')) {
+
+            $.ajax({
+                url: "@Url.Action("RejectRbeUser", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userNameChecked, comments: comments },
+                success: function (res) {
+
+                    document.getElementById("viewRbeAllDetails").style.display = "none";
+                    alert(res);
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+
+        } else {
+            console.log('cancel')
+        }
+
+    }
+</script>

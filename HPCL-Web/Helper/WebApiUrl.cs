@@ -50,6 +50,7 @@
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
         public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
+        public static string MobileAddOrEdit = "/dtpwebapi/api/dtplus/card/update_mobile_and_fastag_no_in_card";
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
@@ -90,7 +91,7 @@
         public static string approveRejectFeeWaiverUrl = "/dtpwebapi/api/dtplus/customer/approve_reject_fee_waiver";
 
         public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
-        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
+        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
         #endregion
@@ -98,6 +99,13 @@
         #region Login
 
         public static string getLoginUrl = "/dtpwebapi/api/dtplus/login/get_login";
+        #endregion
+
+        #region Security
+
+        public static string BindRbeDetailsUrl = "/dtpwebapi/api/dtplus/officer/bind_rbe_detail";
+        public static string ViewRbeDataUrl = "/dtpwebapi/api/dtplus/officer/get_rbe_detail_by_user_name";
+        public static string ApproveRejectRbeUserUrl = "/dtpwebapi/api/dtplus/officer/approve_reject_rbe";
         #endregion
     }
 }
