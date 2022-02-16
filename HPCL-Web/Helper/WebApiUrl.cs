@@ -90,7 +90,7 @@
         public static string approveRejectFeeWaiverUrl = "/dtpwebapi/api/dtplus/customer/approve_reject_fee_waiver";
 
         public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
-        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
+        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
         #endregion
