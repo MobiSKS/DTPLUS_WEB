@@ -21,6 +21,8 @@ namespace HPCL_Web.Models.CustomerFeeWaiver
         public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
         public string VechileOwnerName { get; set; }
+
+        public string Comments { get; set; }
     }
 
     public class PendingCustResponse
