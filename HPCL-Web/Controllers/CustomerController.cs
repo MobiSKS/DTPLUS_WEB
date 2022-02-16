@@ -353,8 +353,8 @@ namespace HPCL_Web.Controllers
                     {"CommunicationPincode", cust.CommunicationPinCode},
                     {"CommunicationStateId", cust.CommunicationStateID.ToString()},
                     {"CommunicationDistrictId", cust.CommunicationDistrictId.ToString()},
-                    {"CommunicationPhoneNo", cust.CommunicationPhoneNo},
-                    {"CommunicationFax", cust.CommunicationFax},
+                    {"CommunicationPhoneNo", cust.CommunicationDialCode + "-" + cust.CommunicationPhoneNo},
+                    {"CommunicationFax", cust.CommunicationFaxCode + "-" + cust.CommunicationFax},
                     {"CommunicationMobileNo", cust.CommunicationMobileNumber},
                     {"CommunicationEmailid", cust.CommunicationEmail},
                     {"PermanentAddress1", cust.PerOrRegAddress1},
@@ -365,8 +365,8 @@ namespace HPCL_Web.Controllers
                     {"PermanentPincode", cust.PerOrRegAddressPinCode},
                     {"PermanentStateId", cust.PerOrRegAddressStateID.ToString()},
                     {"PermanentDistrictId", cust.PermanentDistrictId.ToString()},
-                    {"PermanentPhoneNo", cust.PerOrRegAddressPhoneNumber},
-                    {"PermanentFax", cust.PermanentFax},
+                    {"PermanentPhoneNo", cust.PerOrRegAddressDialCode + "-" + cust.PerOrRegAddressPhoneNumber},
+                    {"PermanentFax", cust.PermanentFaxCode + "-" + cust.PermanentFax},
                     {"KeyOfficialTitle", cust.KeyOffTitle},
                     {"KeyOfficialIndividualInitials", cust.KeyOffIndividualInitials},
                     {"KeyOfficialFirstName", cust.KeyOffFirstName},
@@ -375,7 +375,7 @@ namespace HPCL_Web.Controllers
                     {"KeyOfficialFax", cust.KeyOffFax == null?"":cust.KeyOffFax.ToString()},
                     {"KeyOfficialDesignation", cust.KeyOffDesignation},
                     {"KeyOfficialEmail", cust.KeyOffEmail},
-                    {"KeyOfficialPhoneNo", cust.KeyOffPhoneNumber},
+                    {"KeyOfficialPhoneNo", cust.KeyOffPhoneCode + "-" + cust.KeyOffPhoneNumber},
                     {"KeyOfficialDOA", (string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary)?"1900-01-01":cust.KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
                     {"KeyOfficialDOB", (string.IsNullOrEmpty(cust.KeyOfficialDOB)?"1900-01-01":cust.KeyOfficialDOB)},
@@ -1098,7 +1098,7 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public async Task<IActionResult> UploadDoc()
+        public async Task<IActionResult> UploadDoc(string CustomerReferenceNo)
         {
             UploadDoc modals = new UploadDoc();
 
@@ -1108,6 +1108,11 @@ namespace HPCL_Web.Controllers
                 {"userip", Common.userip},
                 {"userid", HttpContext.Session.GetString("UserName")},
             };
+
+            if (!string.IsNullOrEmpty(CustomerReferenceNo))
+            {
+                modals.CustomerReferenceNo = CustomerReferenceNo;
+            }
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1279,7 +1284,7 @@ namespace HPCL_Web.Controllers
                 {"CustomerName" , null}
             };
 
-            HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1316,7 +1321,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
-            var str = HttpContext.Session.GetString("viewUpdatedGrid");
+            var str = HttpContext.Session.GetString("viewUpdatedCustGrid");
 
             CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
 
@@ -1394,10 +1399,13 @@ namespace HPCL_Web.Controllers
                         var searchRes = obj["Data"].Value<JObject>();
                         var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
 
-                        //var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
+                        var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
                         //var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
 
                         List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+
+                        List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
                         //List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
                         //List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
 
@@ -1424,7 +1432,7 @@ namespace HPCL_Web.Controllers
                         //    //cardRemaining = cardRemaining,
                         //    //ccmsRemaining = ccmsRemaining
                         //});
-                        return Json(new { customer = Customer });
+                        return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
                     }
                     else
                     {
@@ -1450,7 +1458,7 @@ namespace HPCL_Web.Controllers
                 {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
             };
 
-            //HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1478,6 +1486,8 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
                         ModelState.Clear();
+
+
                         return Json(insertKyc[0].Reason);
                     }
                     else

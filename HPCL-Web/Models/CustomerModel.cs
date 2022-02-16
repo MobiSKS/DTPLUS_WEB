@@ -269,6 +269,16 @@ namespace HPCL_Web.Models
         public string FormNumberForSearch { get; set; }
         public string CustomerReferenceNoForSearch { get; set; }
         public string Remarks { get; set; }
+
+        public string IdProofType { get; set; }
+        public string IdProofDocumentNo { get; set; }
+        public string IdProofFront { get; set; }
+        public string IdProofBack { get; set; }
+        public string AddressProofType { get; set; }
+        public string AddressProofDocumentNo { get; set; }
+        public string AddressProofFront { get; set; }
+        public string AddressProofBack { get; set; }
+
     }
 
 
@@ -615,5 +625,21 @@ namespace HPCL_Web.Models
         public string TypeOfCustomerId { get; set; }
         public string TierOfCustomerName { get; set; }
 
+    }
+
+    public class UploadDocResponseBody
+    {
+        public string FormNumber { get; set; }
+        public string CustomerReferenceNo { get; set; }
+        public string IdProofTypeId { get; set; }
+        public string IdProofTypeName { get; set; }
+        public string IdProofDocumentNo { get; set; }
+        public string IdProofFront { get; set; }
+        public string IdProofBack { get; set; }
+        public string AddressProofTypeId { get; set; }
+        public string AddressProofTypeName { get; set; }
+        public string AddressProofDocumentNo { get; set; }
+        public string AddressProofFront { get; set; }
+        public string AddressProofBack { get; set; }
     }
 }
