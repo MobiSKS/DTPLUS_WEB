@@ -15,6 +15,7 @@ using System.Text;
 using System.Net;
 using HPCL_Web.Models.Officer;
 using HPCL_Web.Models.Customer;
+using System.Text.Json;
 
 namespace HPCL_Web.Controllers
 {
@@ -48,7 +49,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"CTFlag",  "1" }
                 };
 
@@ -78,7 +79,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
                 StringContent Zonecontent = new StringContent(JsonConvert.SerializeObject(ZonalOfficeForms), Encoding.UTF8, "application/json");
@@ -105,7 +106,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"RegionID", "0" }
                 };
 
@@ -135,7 +136,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
                 StringContent TBEntitycontent = new StringContent(JsonConvert.SerializeObject(TBEntityForms), Encoding.UTF8, "application/json");
@@ -161,7 +162,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"Country", "0"}
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(CustomerStateForms), Encoding.UTF8, "application/json");
@@ -187,7 +188,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
                 StringContent SecretQuecontent = new StringContent(JsonConvert.SerializeObject(CustomerSecretQueForms), Encoding.UTF8, "application/json");
@@ -212,7 +213,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
                 StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
@@ -237,7 +238,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
 
@@ -331,7 +332,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"UserId", Common.userid},
+                    {"UserId", HttpContext.Session.GetString("UserName")},
                     {"CustomerType", cust.CustomerTypeID.ToString()},
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
@@ -374,8 +375,7 @@ namespace HPCL_Web.Controllers
                     {"KeyOfficialFax", cust.KeyOffFax == null?"":cust.KeyOffFax.ToString()},
                     {"KeyOfficialDesignation", cust.KeyOffDesignation},
                     {"KeyOfficialEmail", cust.KeyOffEmail},
-                    //{"KeyOfficialPhoneNo", cust.KeyOffPhoneNumber},
-                    {"KeyOfficialPhoneNo", cust.CommunicationPhoneNo},
+                    {"KeyOfficialPhoneNo", cust.KeyOffPhoneNumber},
                     {"KeyOfficialDOA", (string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary)?"1900-01-01":cust.KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
                     {"KeyOfficialDOB", (string.IsNullOrEmpty(cust.KeyOfficialDOB)?"1900-01-01":cust.KeyOfficialDOB)},
@@ -394,7 +394,7 @@ namespace HPCL_Web.Controllers
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     //{"FeePaymentsChequeNo", cust.FeePaymentsChequeNo.ToString()},
                     //{"FeePaymentsChequeDate", cust.FeePaymentsChequeDate},
-                    {"Createdby", Common.userid.ToString()},
+                    {"Createdby", HttpContext.Session.GetString("UserName")},
                     //{ "ObjCardDetail", json }
                      {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                      {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()}
@@ -460,7 +460,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -498,7 +498,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     { "CustomerTypeId", CustomerTypeID.ToString() }
             };
 
@@ -543,7 +543,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalId", ZonalOfficeID.ToString() }
 
             };
@@ -592,7 +592,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"StateID", Stateid.ToString()}
                 };
 
@@ -637,7 +637,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
 
@@ -721,7 +721,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"CTFlag",  "1" }
                 };
 
@@ -732,7 +732,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
                 StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
@@ -766,7 +766,7 @@ namespace HPCL_Web.Controllers
                     {
                         {"Useragent", Common.useragent},
                         {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CustomerReferenceNo", customerReferenceNo}
                     };
 
@@ -834,7 +834,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalID", "0" }
                 };
 
@@ -849,7 +849,7 @@ namespace HPCL_Web.Controllers
                     {
                         {"Useragent", Common.useragent},
                         {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CustomerReferenceNo", customerReferenceNo}
                     };
 
@@ -922,7 +922,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalID", "0" }
                 };
 
@@ -937,7 +937,7 @@ namespace HPCL_Web.Controllers
                     {
                         {"Useragent", Common.useragent},
                         {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
                         {"RBEId", RBEId}
                     };
 
@@ -991,15 +991,15 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
         {
             //var json = "";
-            if (customerCardInfo.ObjCardDetail.Count > 0)
-            {
-                int i = 0;
-                foreach (CardDetails CardDetails in customerCardInfo.ObjCardDetail)
-                {
-                    CardDetails.VechileNo = "";
-                }
-                //json = JsonConvert.SerializeObject(customerCardInfo.ObjCardDetail);
-            }
+            //if (customerCardInfo.ObjCardDetail.Count > 0)
+            //{
+            //    int i = 0;
+            //    foreach (CardDetails CardDetails in customerCardInfo.ObjCardDetail)
+            //    {
+            //        CardDetails.VechileNo = "";
+            //    }
+            //    //json = JsonConvert.SerializeObject(customerCardInfo.ObjCardDetail);
+            //}
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1036,8 +1036,8 @@ namespace HPCL_Web.Controllers
                 insertInfo.RBEName = customerCardInfo.RBEName;
                 insertInfo.Useragent = Common.useragent;
                 insertInfo.Userip = Common.userip;
-                insertInfo.UserId = Common.userid;
-                insertInfo.Createdby = Common.userid;
+                insertInfo.UserId = HttpContext.Session.GetString("UserName");
+                insertInfo.Createdby = HttpContext.Session.GetString("UserName");
                 insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
 
                 #endregion
@@ -1106,7 +1106,7 @@ namespace HPCL_Web.Controllers
             {
                 {"useragent", Common.useragent},
                 {"userip", Common.userip},
-                {"userid", Common.userid},
+                {"userid", HttpContext.Session.GetString("UserName")},
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
@@ -1140,7 +1140,7 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new UploadDoc
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 CustomerReferenceNo = entity.CustomerReferenceNo
@@ -1221,5 +1221,274 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
+
+        public async Task<IActionResult> ValidateNewCustomer()
+        {
+            CustomerModel customerModel = new CustomerModel();
+
+            var OfficerType = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", HttpContext.Session.GetString("UserName")}
+                };
+
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerType), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+
+                        List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+
+                        customerModel.OfficerTypeMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                    }
+                }
+
+            }
+
+            return View(customerModel);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ValidateNewCustomer(CustomerModel entity)
+        {
+            var searchBody = new Dictionary<string, string>
+            {
+                {"Useragent", Common.useragent},
+                {"Userip", Common.userip},
+                {"Userid", HttpContext.Session.GetString("UserName")},
+                {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
+                {"Createdon" , entity.CustomerDateOfApplication},
+                {"FormNumber" , entity.FormNumber},
+                {"StateId" , null},
+                {"CustomerName" , null}
+            };
+
+            HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ReloadUpdatedGrid()
+        {
+            var str = HttpContext.Session.GetString("viewUpdatedGrid");
+
+            CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
+
+            var searchBody = new Dictionary<string, string>
+            {
+               {"Useragent", Common.useragent},
+                {"Userip", Common.userip},
+                {"Userid", HttpContext.Session.GetString("UserName")},
+                {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
+                {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
+                {"FormNumber", vGrid.FormNumber},
+                {"StateId" , null},
+                {"CustomerName" , null}
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCustomerResponseGrid> updatedSearchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+                        ModelState.Clear();
+                        return Json(new { updatedSearchList = updatedSearchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ViewCustomerDetails(string FormNumber)
+        {
+            HttpContext.Session.SetString("FormNumberSession", FormNumber);
+
+            var customerBody = new Dictionary<string, string>
+            {
+                {"Useragent", Common.useragent},
+                {"Userip", Common.userip},
+                {"Userid", HttpContext.Session.GetString("UserName")},
+                {"FormNumber" , FormNumber}
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getcustomerdetailsByFormNumber, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+
+                        var searchRes = obj["Data"].Value<JObject>();
+                        var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+
+                        //var cardRemainingResult = searchRes["CardReminingLimt"].Value<JArray>();
+                        //var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
+
+                        List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+                        //List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
+                        //List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
+
+                        //List<CardReminingLimt> cardRemaining = cardRemainingResult.ToObject<List<CardReminingLimt>>();
+                        //List<CardReminingCCMSLimt> ccmsRemaining = ccmsRemainingResult.ToObject<List<CardReminingCCMSLimt>>();
+
+                        CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+
+                        FormNumber = string.Empty;
+
+                        //foreach (var item in cardDetailsList)
+                        //{
+                        //    cusId = item.CustomerID;
+                        //}
+
+                        HttpContext.Session.SetString("FormNumberSession", FormNumber);
+
+                        ModelState.Clear();
+                        //return Json(new
+                        //{
+                        //    cardDetailsList = cardDetailsList
+                        //    //limitDetailsList = limitDetailsList,
+                        //    //servicesDetailsList = servicesDetailsList,
+                        //    //cardRemaining = cardRemaining,
+                        //    //ccmsRemaining = ccmsRemaining
+                        //});
+                        return Json(new { customer = Customer });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        {
+            var approvalBody = new Dictionary<string, string>
+            {
+                {"Useragent", Common.useragent},
+                {"Userip", Common.userip},
+                {"Userid", HttpContext.Session.GetString("UserName")},
+                {"CustomerReferenceNo" , CustomerReferenceNo},
+                {"Comments" , Comments},
+                {"Approvalstatus" , Approvalstatus},
+                {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
+            };
+
+            //HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.approveOrrejectcustomer, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        //var jsonSerializerOptions = new JsonSerializerOptions()
+                        //{
+                        //    IgnoreNullValues = true
+                        //};
+                        //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        //var jarr = obj["Data"].Value<JArray>();
+                        //List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+                        //ModelState.Clear();
+                        //return Json(new { searchList = searchList });
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+                        ModelState.Clear();
+                        return Json(insertKyc[0].Reason);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
     }
 }

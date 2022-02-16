@@ -81,7 +81,9 @@
         public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
-
+        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
+        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
+        public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
         #endregion
 
         #region Login
