@@ -1279,7 +1279,7 @@ namespace HPCL_Web.Controllers
                 {"CustomerName" , null}
             };
 
-            HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1316,7 +1316,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
-            var str = HttpContext.Session.GetString("viewUpdatedGrid");
+            var str = HttpContext.Session.GetString("viewUpdatedCustGrid");
 
             CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
 
@@ -1450,7 +1450,7 @@ namespace HPCL_Web.Controllers
                 {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
             };
 
-            //HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -1478,6 +1478,8 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
                         ModelState.Clear();
+
+
                         return Json(insertKyc[0].Reason);
                     }
                     else

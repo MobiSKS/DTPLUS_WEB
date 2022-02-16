@@ -642,7 +642,8 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Date of Birth</label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @type = "date", @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                @*@Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @type = "date", @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
+                                                                <input type="text" name="KeyOfficialDOB" class="form-control" id="KeyOfficialDOB" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -840,7 +841,8 @@
                                                   <span class="error" id="Referenceno_error"></span>
                                             </div>
                                             <div>
-                                                <button class="btn" id="=btnReject" name="Reject" style="background-color:#084693;color:white;">REJECT</button>
+                                                @*<button class="btn" id="=btnReject" name="Reject" style="background-color:#084693;color:white;">REJECT</button>*@
+                                                <a id="btnReject" dis style="margin:10px" onclick="RejectCustomer()" href="#">REJECT</a>
                                             </div>
                                         </div>
 
@@ -862,15 +864,15 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        let tableData = sessionStorage.getItem("tableData");
+        let tableCustData = sessionStorage.getItem("tableCustData");
         let getCusId = sessionStorage.getItem("cusmId");
 
-        console.log(tableData, "tbl");
+        console.log(tableCustData, "tbl");
 
-        if (tableData != null) {
+        if (tableCustData != null) {
             debugger;
             $('#GetCustomerIdValue').val(getCusId);
-            $('#CustomerSearch').html(tableData);
+            $('#CustomerSearch').html(tableCustData);
              $.ajax({
                 url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
                 type: "POST",
@@ -909,7 +911,7 @@
 
                      }
 
-                      sessionStorage.removeItem('tableData');
+                     sessionStorage.removeItem('tableCustData');
                       sessionStorage.removeItem('cusmId');
 
                      document.getElementById('CustomerSearch').style.display = 'block'
@@ -963,8 +965,8 @@
             $('#CustomerSearch').append(rows);
             //console.log(rows);
         }
-        let tableData = $('#CustomerSearch').html();
-        sessionStorage.setItem("tableData", tableData);
+        let tableCustData = $('#CustomerSearch').html();
+        sessionStorage.setItem("tableCustData", tableCustData);
 
         let custmId = $('.cusId').html();
         sessionStorage.setItem("cusmId", custmId);
@@ -1203,6 +1205,68 @@
                 //if (serviceId.checked == true) {
                 //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
                 //}
+
+                ///////////////////////////
+        let tableCustData = sessionStorage.getItem("tableCustData");
+        let getCusId = sessionStorage.getItem("cusmId");
+
+        console.log(tableCustData, "tbl");
+
+        if (tableCustData != null) {
+            debugger;
+            $('#GetCustomerIdValue').val(getCusId);
+            $('#CustomerSearch').html(tableCustData);
+             $.ajax({
+                url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
+                type: "POST",
+                dataType: "JSON",
+                 success: function (data) {
+                     console.log(data, "updated");
+                     $("#CustomerSearch td").parent().remove();
+
+                    for (var i = 0; i < data.updatedSearchList.length; i++) {
+                        var s = data.updatedSearchList[i].customerReferenceNo;
+                        var rows = "<tbody><tr>"
+                            + "<td><span class='rowData'>" + (i+1) + "</span></td>"
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," +  s + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a></td>"
+                            /*+ "<td><span class='rowData'>" + (data.updatedSearchList[i].formNumber || '') + "</span></td>"*/
+                            + "<td><span class='rowData CustReferenceNo'>" + (data.updatedSearchList[i].customerReferenceNo || '') + "</span></td>"
+                            + "<td><span class='rowData cusId'>" + (data.updatedSearchList[i].customerName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].customerAddress || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].phoneNo || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].mobileNo || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].totalCards || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdRoleId || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdRoleName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdBy || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdDate || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].statusId || '') + "</span></td>"
+                            + "<td><span class='rowMobNo'>" + (data.updatedSearchList[i].statusName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].kycStatus || '') + "</span></td>"
+                            //+ "<td class='statusId' style='display:none'>" + (data.updatedSearchList[i].KYCStatus || '') + "</td>"
+                            //+ "<td class='checkStatus' style='display:none'>" + (data.updatedSearchList[i].ccmsReloadSaleLimitValue || '') + "</td>"
+                            //+ "<td><a href='#aaa' class='editNumber'>Validate</a></td></tr></tbody>";
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a></td></tr></tbody>"
+
+
+                        $('#CustomerSearch').append(rows);
+
+
+                     }
+
+                     sessionStorage.removeItem('tableCustData');
+                      sessionStorage.removeItem('cusmId');
+
+                     document.getElementById('CustomerSearch').style.display = 'block'
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+                //////////////////////////
+
                 alert(res);
             },
             error: function (ex) {
@@ -1214,7 +1278,112 @@
         return true;
     };
 
-   
+
+    function RejectCustomer() {
+        debugger;
+        console.log('btnReject');
+        var custRefNo = document.getElementById("CustomerReferenceNoForSearch").value;
+        if (custRefNo == "") {
+            document.getElementById("Remarks_error").innerHTML = "Select Customer To Approve/Reject";
+            return (false);
+        }
+        else {
+            document.getElementById("Remarks_error").innerHTML = "";
+        }
+
+        var remarks = document.getElementById("Remarks").value;
+        if (remarks == "") {
+            document.getElementById("Remarks_error").innerHTML = "Remarks is required";
+            $("#Remarks").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("Remarks_error").innerHTML = "";
+        }
+
+        $.ajax({
+            url: "@Url.Action("AproveCustomer", "Customer")",
+            type: "POST",
+            dataType: "JSON",
+            data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: 13 },
+            success: function (res) {
+                //if (serviceId.checked == true) {
+                //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
+                //}
+
+                ///////////////////////////
+        let tableCustData = sessionStorage.getItem("tableCustData");
+        let getCusId = sessionStorage.getItem("cusmId");
+
+        console.log(tableCustData, "tbl");
+
+        if (tableCustData != null) {
+            debugger;
+            $('#GetCustomerIdValue').val(getCusId);
+            $('#CustomerSearch').html(tableCustData);
+             $.ajax({
+                url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
+                type: "POST",
+                dataType: "JSON",
+                 success: function (data) {
+                     console.log(data, "updated");
+                     $("#CustomerSearch td").parent().remove();
+
+                    for (var i = 0; i < data.updatedSearchList.length; i++) {
+                        var s = data.updatedSearchList[i].customerReferenceNo;
+                        var rows = "<tbody><tr>"
+                            + "<td><span class='rowData'>" + (i+1) + "</span></td>"
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," +  s + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a></td>"
+                            /*+ "<td><span class='rowData'>" + (data.updatedSearchList[i].formNumber || '') + "</span></td>"*/
+                            + "<td><span class='rowData CustReferenceNo'>" + (data.updatedSearchList[i].customerReferenceNo || '') + "</span></td>"
+                            + "<td><span class='rowData cusId'>" + (data.updatedSearchList[i].customerName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].customerAddress || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].phoneNo || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].mobileNo || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].totalCards || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdRoleId || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdRoleName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdBy || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].createdDate || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].statusId || '') + "</span></td>"
+                            + "<td><span class='rowMobNo'>" + (data.updatedSearchList[i].statusName || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].kycStatus || '') + "</span></td>"
+                            //+ "<td class='statusId' style='display:none'>" + (data.updatedSearchList[i].KYCStatus || '') + "</td>"
+                            //+ "<td class='checkStatus' style='display:none'>" + (data.updatedSearchList[i].ccmsReloadSaleLimitValue || '') + "</td>"
+                            //+ "<td><a href='#aaa' class='editNumber'>Validate</a></td></tr></tbody>";
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a></td></tr></tbody>"
+
+
+                        $('#CustomerSearch').append(rows);
+
+
+                     }
+
+                     sessionStorage.removeItem('tableCustData');
+                      sessionStorage.removeItem('cusmId');
+
+                     document.getElementById('CustomerSearch').style.display = 'block'
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+                //////////////////////////
+
+                alert(res);
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+
+        return true;
+    };
+
+
 </script>
 <style>
     .nav-item > li.active > a,
