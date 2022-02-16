@@ -50,6 +50,8 @@
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
         public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
+        public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
+        public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         #endregion
 
         #region Merchant
@@ -81,6 +83,12 @@
         public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
+
+        public static string bindPendingCustomerUrl = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
+        public static string getFeeWaiverDetailsUrl = "/dtpwebapi/api/dtplus/customer/get_approve_fee_waiver_detail";
+        public static string approveRejectFeeWaiverUrl = "/dtpwebapi/api/dtplus/customer/approve_reject_fee_waiver";
+
+        public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
         public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";

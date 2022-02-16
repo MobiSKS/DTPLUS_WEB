@@ -1,5 +1,6 @@
 ﻿using HPCL_Web.Helper;
 using HPCL_Web.Models;
+using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Merchant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -525,7 +526,7 @@ namespace HPCL_Web.Controllers
                         {"CommunicationPinNumber", merchantMdl.Comm_Pin},
                         {"CommunicationPhoneNumber", merchantMdl.Comm_PhoneNumber},
                         {"CommunicationFax", merchantMdl.Comm_Fax},
-                        {"ModifiedBy", "0"}
+                        {"ModifiedBy", HttpContext.Session.GetString("UserName")}
                     };
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -538,9 +539,22 @@ namespace HPCL_Web.Controllers
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Message"].ToString();
+                            string message = "";
 
-                            ViewBag.Message = jarr;
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            TempData["Response"] = message;
+
+                            ViewBag.Message = message;
                             return View(merchantMdl);
                         }
                         else
@@ -605,7 +619,7 @@ namespace HPCL_Web.Controllers
                         {"CommunicationFax", merchantMdl.Comm_Fax},
                         {"NoofLiveTerminals", merchantMdl.NumOfLiveTerminals.ToString() },
                         {"TerminalTypeRequested", merchantMdl.TerminalTypeRequested },
-                        {"CreatedBy", "0"}
+                        {"CreatedBy", HttpContext.Session.GetString("UserName")}
                     };
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -618,9 +632,22 @@ namespace HPCL_Web.Controllers
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Message"].ToString();
+                            string message = "";
 
-                            ViewBag.Message = jarr;
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            TempData["Response"] = message;
+                            ViewBag.Message = message;
+
                             return View(merchantMdl);
                         }
                         else
@@ -709,12 +736,6 @@ namespace HPCL_Web.Controllers
             }
             return View(merchantApprovalMdl);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchantApprovalMdl, int pg = 1)
-        //{
-
-        //}
-
         [HttpPost]
         public async Task<IActionResult> ActionOnMerchantID([FromBody] ApprovalRejectionModel erpnmodel)
         {
@@ -743,9 +764,20 @@ namespace HPCL_Web.Controllers
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                            var jarr = obj["Message"].ToString();
+                            string message = "";
 
-                            return Json(new { success = true, message = "Done." });
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            return Json(new { success = true, message = message });
                             //return Json(jarr);
                         }
                         else
@@ -756,7 +788,7 @@ namespace HPCL_Web.Controllers
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var Message = obj["errorMessage"].ToString();
-                            return Json(new { success = false, message = "Error." });
+                            return Json(new { success = false, message = "Error" });
                         }
                     }
                 }
