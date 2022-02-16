@@ -48,7 +48,7 @@
                                                     <label></label>
                                                     <div class="col-md-7 col-12">
                                                         <button class="btn" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SEARCH</button>
-                                                        <a class="btn" href="#" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">RESET</a>
+                                                        <a class="btn" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -241,8 +241,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Comments : </label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextAreaFor(m => m.FormNumber, new { @id = "commentId", @class = "form-control", @type = "Date" })
-                                                    @Html.ValidationMessageFor(m => m.FormNumber, "", new { @id = "cmtError", @class = "text-danger" })
+                                                    @Html.TextAreaFor(m => m.Comments, new { @id = "commentId", @class = "form-control", @type = "Date", @style = "height:100px;" })
+                                                    @Html.ValidationMessageFor(m => m.Comments, "", new {@id="cmtError", @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
@@ -260,7 +260,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="clearfix"></div>
+                                         <div class="clearfix"></div>
 
                                     </form>
                                 </div>
@@ -313,6 +313,16 @@
 
     });*@
 
+
+    function resetClick() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        $("#customerSearch td").parent().remove();
+        document.getElementById('customerSearch').style.display = 'none';
+        document.getElementById('detailsWaiverSection').style.display = 'none';
+    }
+
     function OnSuccessFeeWaiverLoad(data) {
         $("#customerSearch td").parent().remove();
 
@@ -355,6 +365,7 @@
             dataType: "JSON",
             data: { customerReferenceNo: customerReferenceNo },
              success: function (res) {
+
                  $('input[name="CardPreference"][value="' + res.basicDetails[0].cardPreference + '"]').prop('checked', true);
                  $('input[name="FeePaymentsCollectFeeWaiverId"][value="' + res.basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
 
