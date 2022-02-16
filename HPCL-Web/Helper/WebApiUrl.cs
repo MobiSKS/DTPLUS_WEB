@@ -52,6 +52,7 @@
         public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
+        public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
         #endregion
 
         #region Merchant

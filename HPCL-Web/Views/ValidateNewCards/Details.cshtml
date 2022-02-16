@@ -89,9 +89,9 @@
                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                                 <div>
                                     <div class="row">
-                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%; margin-left: 19.3%;" type="submit">Search</button>
+                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%; margin-left: 19.3%;margin-right:-65%;" type="submit">Search</button>
                                         @*<button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 12%; margin-left: -53%; margin-right:-53%;" type="button">Advance Search</button>*@
-                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%;" type="button" onclick="reset();">Reset</button>
+                                        <button class="btn btn-primary" style="display: inline-block; margin: 0 auto; width: 6%;" type="button" onclick="clearDetails()">Reset</button>
                                     </div>
                                 </div>
                             </div>
@@ -118,19 +118,19 @@
                     </thead>
                     <tbody id="searchMerchantTableBody">
                         @{
-                            int i = 0;
+                            int y = 0;
                         }
                         @foreach (var item in Model.NewCardsLists)
                         {
-                            i = i + 1;
+                            y = y + 1;
                             <tr>
-                                <td>@i</td>
+                                <td>@y</td>
                                 <td>@item.CustomerReferenceNo</td>
                                 <td>@item.FormNumber</td>
                                 <td>@item.CustomerName</td>
                                 <td>@item.CreatedRoleName</td>
                                 <td style="width:10%;">@item.MobileNo</td>
-                                <td><a href="#">@item.StatusName</a></td>
+                                <td><a href="#" onclick="statusAction(@item.CustomerReferenceNo)">@item.StatusName</a></td>
                             </tr>
                         }
                     </tbody>
@@ -152,6 +152,8 @@
         </div>
     </div>
 </div>
+<div class="col-lg-12 p-4 p-md-4" id="vehicleDetails">
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#Date").datepicker({
@@ -160,9 +162,39 @@
         });
     });
 
-    function reset() {
-        $("#FormNumber").html("");
+    function clearDetails() {
+        document.getElementById("vehicleDetails").innerHTML = "";
+        $("#FormNumber").val("");
         $("#CreatedBy").val(0);
-        $("#Date").html("");
-    }
+        $("#Date").val("");
+        
+    };
+
+    function statusAction(CustomerRefNum) {
+        var id = CustomerRefNum;
+
+        $.ajax({
+            type: 'GET',  // http method
+            url: '@Url.Action("GetCardDetailsForApproval", "ValidateNewCards")',
+            contentType: "application/json; charset=utf-8",
+            data: { CustomerRefNo: id },  // data to submit
+            dataType: "text",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#vehicleDetails").html(data);
+                    $('html, body').animate({
+                        scrollTop: $("#vehicleDetails").offset().top
+                    }, 2000);
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Sales Area Data");
+            }
+        });
+    };
+
 </script>

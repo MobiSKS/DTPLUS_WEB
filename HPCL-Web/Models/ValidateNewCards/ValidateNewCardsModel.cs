@@ -23,14 +23,8 @@ namespace HPCL_Web.Models.ValidateNewCards
         public string FormNumber { get; set; }
         public string Date { get; set; }
         public string CreatedBy { get; set; }
-        public string RBEId { get; set; }
-        public string RBEName { get; set; }
-        public string CardPreference { get; set; }
-        public string FeePaymentDetails { get; set; }
-        public string CRNo { get; set; }
-        public string CRName { get; set; }
-        public string NumberOfCards { get; set; }
         public string Comments { get; set; }
+        //public virtual List<VehicleDetailsModel> VehicleDetailsMdl { get; set; }
         public virtual List<NewCardsList> NewCardsLists { get; set; }
         public virtual List<VehicleNumberCardIdentifierList> VehicleNumberCardIdentifierLists { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
