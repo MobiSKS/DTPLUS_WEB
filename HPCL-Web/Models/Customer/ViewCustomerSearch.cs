@@ -53,5 +53,7 @@ namespace HPCL_Web.Models.Customer
         public string StatusName { get; set; }
        
         public string KYCStatus { get; set; }
+
+        public string CreatedRoleName { get; set; }
     }
 }
