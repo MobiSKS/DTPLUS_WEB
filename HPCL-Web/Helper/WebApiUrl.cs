@@ -98,5 +98,12 @@
 
         public static string getLoginUrl = "/dtpwebapi/api/dtplus/login/get_login";
         #endregion
+
+        #region Security
+
+        public static string BindRbeDetailsUrl = "/dtpwebapi/api/dtplus/officer/bind_rbe_detail";
+        public static string ViewRbeDataUrl = "/dtpwebapi/api/dtplus/officer/get_rbe_detail_by_user_name";
+        public static string ApproveRejectRbeUserUrl = "/dtpwebapi/api/dtplus/officer/approve_reject_rbe";
+        #endregion
     }
 }
