@@ -1,5 +1,6 @@
 ﻿using HPCL_Web.Helper;
 using HPCL_Web.Models;
+using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Officer;
 using HPCL_Web.Models.ValidateNewCards;
 using Microsoft.AspNetCore.Http;
@@ -123,6 +124,115 @@ namespace HPCL_Web.Controllers
             //    ViewBag.NotFoundError = "Not Found";
             //}
             return View(validateNewCardsModel);
+        }
+        public async Task<IActionResult> GetCardDetailsForApproval(string CustomerRefNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"CustomerReferenceNo", CustomerRefNo }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getCardDetailsForCardApproval, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<VehicleDetailsModel> lst = jarr.ToObject<List<VehicleDetailsModel>>();
+                        //lst.Add(new MerchantSalesAreaModel
+                        //{
+                        //    RegionID = 0,
+                        //    SalesAreaID = 0,
+                        //    SalesAreaName = "--Select--"
+                        //});
+                        //var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
+                        return PartialView("~/Views/ValidateNewCards/_GetValidateFormDetails.cshtml", lst);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading District Details");
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load District");
+                    }
+                }
+            }
+        }
+        public async Task<IActionResult> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+
+                var forms = new ApproveCardDetailsModel
+                {
+                    UserId = Common.userid,
+                    UserAgent = Common.useragent,
+                    UserIp = Common.userip,
+                    CustomerReferenceNo = approveRejectModel.CustomerReferenceNo,
+                    Comments = approveRejectModel.Comments,
+                    Approvalstatus = approveRejectModel.Approvalstatus,
+                    ApprovedBy = HttpContext.Session.GetString("UserName")
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+                try
+                {
+                    using (var Response = await client.PostAsync(WebApiUrl.approveRejectCard, content))
+                    {
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            string message = "";
+
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            return Json(new { success = true, message = message });
+                            //return Json(jarr);
+                        }
+                        else
+                        {
+                            ModelState.Clear();
+                            ModelState.AddModelError(string.Empty, "Error Loading District Details");
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            return Json(new { success = false, message = "Error" });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json("Failed to Approve/Reject");
+                }
+            }
         }
     }
 }

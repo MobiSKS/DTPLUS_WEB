@@ -44,7 +44,7 @@ namespace HPCL_Web.Models
                 StateID = 0,
                 StateName = "Select State"
             });
-            CustomerDistrictMdl = new List<CustomerDistrictModel>();
+            //CustomerDistrictMdl = new List<CustomerDistrictModel>();
             CustomerTbentityMdl = new List<CustomerTbentityModel>();
             CustomerTbentityMdl.Add(new CustomerTbentityModel
             {
@@ -80,6 +80,21 @@ namespace HPCL_Web.Models
                 OfficerTypeID = 0,
                 OfficerTypeName = "Select Created By"
             });
+
+            CommunicationDistrictMdl = new List<OfficerDistrictModel>();
+            CommunicationDistrictMdl.Add(new OfficerDistrictModel
+            {
+                districtID = 0,
+                districtName = "Select Communication District"
+            });
+
+            PerOrRegAddressDistrictMdl = new List<OfficerDistrictModel>();
+            PerOrRegAddressDistrictMdl.Add(new OfficerDistrictModel
+            {
+                districtID = 0,
+                districtName = "Select Permanent District"
+            });
+
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -88,12 +103,15 @@ namespace HPCL_Web.Models
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }
         public virtual List<CustomerRegionModel> CustomerRegionMdl { get; set; }
         public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
-        public virtual List<CustomerDistrictModel> CustomerDistrictMdl { get; set; }
+        //public virtual List<CustomerDistrictModel> CustomerDistrictMdl { get; set; }
         public virtual List<CustomerTbentityModel> CustomerTbentityMdl { get; set; }
         public virtual List<CustomerTypeOfFleetModel> CustomerTypeOfFleetMdl { get; set; }
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public virtual List<SalesAreaModel> SalesAreaMdl { get; set; }
+
+        public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
+        public virtual List<OfficerDistrictModel> PerOrRegAddressDistrictMdl { get; set; }
 
         [Required(ErrorMessage = "Customer Type is Required")]
         public int CustomerTypeID { get; set; }

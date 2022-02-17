@@ -573,7 +573,7 @@ namespace HPCL_Web.Controllers
                         List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
                         OfcrLocMdl.LocationMappings.AddRange(lst);
                         OfcrLocMdl.UserName = Common.userid;
-                        OfcrLocMdl.OfficerID = OfcrLocMdl.LocationMappings.First().OfficerId;
+                        OfcrLocMdl.OfficerID = OfficerID;
                     }
                     else
                     {
