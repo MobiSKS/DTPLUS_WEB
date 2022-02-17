@@ -174,9 +174,53 @@ namespace HPCL_Web.Controllers
                         };
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<SearchGridResponse> updatedSearchList = jarr.ToObject<List<SearchGridResponse>>();
+                        List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
                         ModelState.Clear();
-                        return Json(new { updatedSearchList = updatedSearchList });
+                        return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdatedGridList()
+        {
+            var searchBody = new CustomerCards
+            {
+                UserId = HttpContext.Session.GetString("UserName"),
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("UserId"),
+                StatusFlag = -1
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCardUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
                     }
                     else
                     {
@@ -412,6 +456,51 @@ namespace HPCL_Web.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<JsonResult> AcDcAllCardSearch()
+        {
+            var searchBody = new SearchCards
+            {
+                UserId = HttpContext.Session.GetString("UserName"),
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("UserId")
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetAllCardStatusUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCardsResponse> searchList = jarr.ToObject<List<SearchCardsResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+
         [HttpPost]
         public async Task<JsonResult> UpdateStatus(string cardNo, int Statusflag)
         {
@@ -595,6 +684,50 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> SetSaleLimitGridView()
+        {
+            var searchBody = new GetCardLimit
+            {
+                UserId = HttpContext.Session.GetString("UserName"),
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("UserId"),
+                Statusflag = -1
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.GetCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<GetCardLimitResponse> searchCustList = jarr.ToObject<List<GetCardLimitResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchCustList = searchCustList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
         public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
         {
             var updateServiceBody = new UpdateCardLimit
@@ -754,7 +887,47 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
-    
+
+        [HttpPost]
+        public async Task<JsonResult> SearchCcmsLimitForAllCardsList()
+        {
+            var reqBody = new GetCcmsLimitAll
+            {
+                UserId = HttpContext.Session.GetString("UserName"),
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("UserId"),
+                StatusFlag = -1
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCcmsAllCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SearchCcmsLimitAllResponse> searchCcmsCard = jarr.ToObject<List<SearchCcmsLimitAllResponse>>();
+                        ModelState.Clear();
+                        return Json(new { searchCcmsCard = searchCcmsCard });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
         [HttpPost]
         public async Task<JsonResult> UpdateCcmsLimitAllCards(GetCcmsLimitAll entity)
         {
@@ -894,6 +1067,59 @@ namespace HPCL_Web.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<JsonResult> SetCcmsForIndCardsList()
+        {
+            var searchBody = new SetIndividualLimit
+            {
+                UserId = HttpContext.Session.GetString("UserName"),
+                UserAgent = Common.useragent,
+                UserIp = Common.userip,
+                CustomerId = HttpContext.Session.GetString("UserId")
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCcmsIndividualCardLimitUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        var jsonSerializerOptions = new JsonSerializerOptions()
+                        {
+                            IgnoreNullValues = true
+                        };
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JObject>();
+
+                        var gridResponse = jarr["CCMSBasicDetail"].Value<JArray>();
+                        var balanceAmuntResponse = jarr["CCMSBalanceDetail"].Value<JArray>();
+
+
+                        List<SearchIndividualCardsResponse> searchList = gridResponse.ToObject<List<SearchIndividualCardsResponse>>();
+                        List<CCMSBalanceDetail> amounts = balanceAmuntResponse.ToObject<List<CCMSBalanceDetail>>();
+
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList, amounts = amounts });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+
+
         [HttpPost]
         public async Task<JsonResult> UpdateCcmsIndividualCard(string objCCMSLimits, string viewGirds)
         {
@@ -952,19 +1178,19 @@ namespace HPCL_Web.Controllers
             JArray obj = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<ViewGird> vGrid = obj.ToObject<List<ViewGird>>();
 
-            ViewGird grids = new ViewGird
-            {
-                Cardno = vGrid[0].Cardno,
-                vehicleNo = vGrid[0].vehicleNo,
-                issueDate = vGrid[0].issueDate,
-                expiryDate = vGrid[0].expiryDate,
-                status = vGrid[0].status,
-                Mobileno = vGrid[0].Mobileno,
-                limitTypeText = vGrid[0].limitTypeText,
-                Amount = vGrid[0].Amount
-            };
+            //ViewGird grids = new ViewGird
+            //{
+            //    Cardno = vGrid[0].Cardno,
+            //    vehicleNo = vGrid[0].vehicleNo,
+            //    issueDate = vGrid[0].issueDate,
+            //    expiryDate = vGrid[0].expiryDate,
+            //    status = vGrid[0].status,
+            //    Mobileno = vGrid[0].Mobileno,
+            //    limitTypeText = vGrid[0].limitTypeText,
+            //    Amount = vGrid[0].Amount
+            //};
 
-            return View(grids);
+            return View(vGrid);
         }
     }
 }

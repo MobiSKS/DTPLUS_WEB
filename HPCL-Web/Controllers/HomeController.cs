@@ -83,6 +83,7 @@ namespace HPCL_Web.Controllers
                             {
                                 HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
                             }
+                            HttpContext.Session.SetString("UserId", loginRes[0].UserId);
                         }
 
                         ModelState.Clear();

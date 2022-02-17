@@ -19,7 +19,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-4 col-12 mb-0">Customer Id<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new {@id= "CustomerDefaultVal", @class = "form-control" })
                                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -86,22 +86,52 @@
                                 </table>
                             </div>
                             <div class="clearfix"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+        </form>
     </div>
 
 
+@using Microsoft.AspNetCore.Http;
+
+
 <script type="text/javascript">
+
+       $(document).ready(function () {
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("AcDcAllCardSearch", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    OnSuccessAcDcSearch(data);
+
+                    $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                    $("#CustomerDefaultVal").attr("readonly", true);
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
+
+
     function showGrid() {
         if ($("input:text").val() == "") {
             document.getElementById('CardSearch').style.display = 'none';
         }
-        if (($("input:text").val() != "")) {
-            document.getElementById('CardSearch').style.display = 'inline-table';
-        }
+        //if (($("input:text").val() != "")) {
+        //    document.getElementById('CardSearch').style.display = 'inline-table';
+        //}
     }
 
     function resetFields() {
@@ -140,6 +170,8 @@
                 $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 updateStatus text-dark' type='submit' name='submit'>DEACTIVATE CARD</button></td>");
             }
         }
+
+        document.getElementById('CardSearch').style.display = 'inline-table';
     }
 
     function OnFailure(data) {
@@ -175,7 +207,7 @@
                     type: "POST",
                     dataType: "JSON",
                     success: function (res) {
-                        
+
 
                         $("#CardSearch td").parent().remove();
 
@@ -200,7 +232,7 @@
                                 $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:black;'>DEACTIVATE CARD</button>");
                             }
                         }
-                       
+
                     },
                     error: function (ex) {
                         alert('Failed' + ex);
