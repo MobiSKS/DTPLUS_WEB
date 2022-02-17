@@ -1215,7 +1215,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
                         ModelState.Clear();
-                        return Json(insertKyc[0].Reason);
+                        return Json(insertKyc[0].Reason + "," + HttpContext.Session.GetString("CustomerReferenceNoVal"));
                     }
                     else
                     {
@@ -1545,6 +1545,12 @@ namespace HPCL_Web.Controllers
                     }
                 }
             }
+        }
+
+        public async Task<IActionResult> SuccessUploadRedirect(int customerReferenceNo)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            return View();
         }
 
     }
