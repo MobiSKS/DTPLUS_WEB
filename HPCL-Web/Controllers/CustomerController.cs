@@ -102,33 +102,33 @@ namespace HPCL_Web.Controllers
                 }
 
                 //sales Area Dropdown
-                var saleAreaReqData = new Dictionary<string, string>
-                {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"RegionID", "0" }
-                };
+                //var saleAreaReqData = new Dictionary<string, string>
+                //{
+                //    {"Useragent", Common.useragent},
+                //    {"Userip", Common.userip},
+                //    {"Userid", HttpContext.Session.GetString("UserName")},
+                //    {"RegionID", "0" }
+                //};
 
 
-                StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
+                //StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                //using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
+                //{
+                //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                //    {
+                //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                        custMdl.SalesAreaMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
+                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                //        var jarr = obj["Data"].Value<JArray>();
+                //        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
+                //        custMdl.SalesAreaMdl.AddRange(lst);
+                //    }
+                //    else
+                //    {
+                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+                //    }
+                //}
 
 
                 //fetching Type of Business Entity
@@ -372,7 +372,7 @@ namespace HPCL_Web.Controllers
                     {"KeyOfficialFirstName", cust.KeyOffFirstName},
                     {"KeyOfficialMiddleName", cust.KeyOffMiddleName},
                     {"KeyOfficialLastName", cust.KeyOffLastName},
-                    {"KeyOfficialFax", cust.KeyOffFax == null?"":cust.KeyOffFax.ToString()},
+                    {"KeyOfficialFax", cust.KeyOffFaxCode + "-" + cust.KeyOffFax == null?"":cust.KeyOffFax.ToString()},
                     {"KeyOfficialDesignation", cust.KeyOffDesignation},
                     {"KeyOfficialEmail", cust.KeyOffEmail},
                     {"KeyOfficialPhoneNo", cust.KeyOffPhoneCode + "-" + cust.KeyOffPhoneNumber},
@@ -1494,6 +1494,53 @@ namespace HPCL_Web.Controllers
                     {
                         ModelState.Clear();
                         ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetsalesAreaDetails(int RegionID)
+        {
+            CustomerModel custMdl = new CustomerModel();
+            var customerRegion = new Dictionary<string, string>
+             {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", HttpContext.Session.GetString("UserName")},
+                    {"RegionID", RegionID.ToString() }
+
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
+                        lst.Add(new SalesAreaModel
+                        {
+                            SalesAreaID = 0,
+                            SalesAreaName = "Select Sales Area",
+
+                        });
+                        var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
+                        return Json(SortedtList);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading sales Area Details");
                         return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                     }
                 }
