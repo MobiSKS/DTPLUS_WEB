@@ -1,5 +1,6 @@
 ﻿using HPCL_Web.Helper;
 using HPCL_Web.Models;
+using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Officer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,24 +23,6 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> Details(string officerType, string location, int pg = 1)
         {
             List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
-
-            //if (!String.IsNullOrEmpty(officerType))
-            //{
-            //    HttpContext.Session.SetString("OfcrType", officerType);
-            //}
-            //else
-            //{
-            //    officerType = HttpContext.Session.GetString("OfcrType");
-            //}
-
-            //if (!String.IsNullOrEmpty(location))
-            //{
-            //    HttpContext.Session.SetString("Location", location);
-            //}
-            //else
-            //{
-            //    location = HttpContext.Session.GetString("Location");
-            //}
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -80,7 +63,7 @@ namespace HPCL_Web.Controllers
 
             ViewBag.OfficerType = officerType;
             ViewBag.Location = location;
-            ViewBag.Message = TempData["Message"];
+            ViewBag.AddUpdateMessage = TempData["Message"];
 
             const int pageSize = 5;
             if (pg < 1)
@@ -91,7 +74,7 @@ namespace HPCL_Web.Controllers
             int recSkip = (pg - 1) * pageSize;
 
             var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
-            this.ViewBag.Pager = pager; 
+            this.ViewBag.Pager = pager;
 
             return View(data);
         }
@@ -218,9 +201,27 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Message"].ToString();
+                        string message = "";
+                        string status = "";
 
-                        ViewBag.Message = jarr;
+                        if (obj["Status_Code"].ToString() == "200")
+                        {
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                            message = lst.First().Reason.ToString();
+                            status = lst.First().Status.ToString();
+                            if (status == "1")
+                            {
+                                TempData["Message"] = message;
+                                return RedirectToAction("Details", "Officer", new { pg = 1 });
+                            }
+                        }
+                        else
+                        {
+                            message = obj["Message"].ToString();
+                        }
+
+                        ViewBag.Message = message;
                     }
                     else
                     {
@@ -461,7 +462,7 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                var OfficerTypeForms = new Dictionary<string, string>
+                var EditOfficerForm = new Dictionary<string, string>
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
@@ -486,18 +487,36 @@ namespace HPCL_Web.Controllers
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+                StringContent editOfficerContent = new StringContent(JsonConvert.SerializeObject(EditOfficerForm), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.updateOfficer, content))
+                using (var Response = await client.PostAsync(WebApiUrl.updateOfficer, editOfficerContent))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Message"].ToString();
+                        string message = "";
+                        string status = "";
 
-                        ViewBag.Message = jarr;
+                        if (obj["Status_Code"].ToString() == "200")
+                        {
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                            message = lst.First().Reason.ToString();
+                            status = lst.First().Status.ToString();
+                            if (status == "1")
+                            {
+                                TempData["Message"] = message;
+                                return RedirectToAction("Details", "Officer", new { pg = 1 });
+                            }
+                        }
+                        else
+                        {
+                            message = obj["Message"].ToString();
+                        }
+
+                        ViewBag.Message = message;
                     }
                     else
                     {
@@ -508,9 +527,114 @@ namespace HPCL_Web.Controllers
                         ViewBag.Message = "Failed to update Officer";
                     }
                 }
+
+                //Fetching other details
+
+                var OfficerTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+                        ofcrMdl.OfficerTypeMdl.AddRange(lst);
+                        ofcrMdl.OfficerTypeID = ofcrMdl.OfficerID;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+
+                var OfficerStateForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"Country", "0"}
+                };
+                StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
+
+                //Fetching State
+                using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerStateModel> lst = jarr.ToObject<List<OfficerStateModel>>();
+                        ofcrMdl.OfficerStateMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load states";
+                    }
+                }
+
+                var forms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent Districtcontent = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getDistrict, Districtcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
+                        lst.Add(new OfficerDistrictModel
+                        {
+                            stateID = 0,
+                            districtID = 0,
+                            districtName = "Select District"
+                        });
+                        var SortedtList = lst.OrderBy(x => x.districtID).ToList();
+                        ofcrMdl.OfficerDistrictMdl.AddRange(SortedtList);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load districts";
+                    }
+                }
             }
-            ModelState.Clear();
-            return RedirectToAction("Details", "Officer", new { pg = 1 });
+            //ModelState.Clear();
+            return View(ofcrMdl);
         }
 
         public async Task<IActionResult> EditLocation(string OfficerID)
@@ -603,6 +727,9 @@ namespace HPCL_Web.Controllers
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
+                string message = "";
+                string status = "";
+
                 var OfficerlocationForms = new Dictionary<string, string>
                 {
                     {"Useragent", Common.useragent},
@@ -625,9 +752,18 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Message"].ToString();
 
-                        TempData["Message"] = jarr;
+                        if (obj["Status_Code"].ToString() == "200")
+                        {
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                            message = lst.First().Reason.ToString();
+                            status = lst.First().Status.ToString();
+                        }
+                        else
+                        {
+                            message = obj["Message"].ToString();
+                        }
                     }
                     else
                     {
@@ -638,9 +774,80 @@ namespace HPCL_Web.Controllers
                         ViewBag.Message = "Failed to load officer types";
                     }
                 }
-                
-                return RedirectToAction("Details", "Officer", new { pg = 1 });
             }
+
+            OfficerLocationModel OfcrLocMdl = new OfficerLocationModel();
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var OfficerTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.zonalOffice, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
+                        OfcrLocMdl.ZoneOffices.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+
+                var OfficerLocationForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"OfficerID", ofcrLocationMdl.OfficerID}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent OfficerLocationMappingContent = new StringContent(JsonConvert.SerializeObject(OfficerLocationForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getLocationMapping, OfficerLocationMappingContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
+                        OfcrLocMdl.LocationMappings.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.OfficerID = ofcrLocationMdl.OfficerID;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+            }
+
+            return View(OfcrLocMdl);
         }
         public async Task<IActionResult> Delete(string OfficerID)
         {
@@ -683,10 +890,13 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("Details", "Officer", new { pg = 1 });
         }
-        public async Task<IActionResult> DeleteLocation(string userName, string zonalID, string regionalID)
+        public async Task<IActionResult> DeleteLocation(string userName, string zonalID, string regionalID, string officerID)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
+                string message = "";
+                string status = "";
+
                 var DeleteLocationForms = new Dictionary<string, string>
                 {
                     {"Useragent", Common.useragent},
@@ -709,9 +919,18 @@ namespace HPCL_Web.Controllers
                         var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Message"].ToString();
 
-                        TempData["Message"] = jarr;
+                        if (obj["Status_Code"].ToString() == "200")
+                        {
+                            var jarr = obj["Data"].Value<JArray>();
+                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                            message = lst.First().Reason.ToString();
+                            status = lst.First().Status.ToString();
+                        }
+                        else
+                        {
+                            message = obj["Message"].ToString();
+                        }
                     }
                     else
                     {
@@ -723,7 +942,79 @@ namespace HPCL_Web.Controllers
                     }
                 }
             }
-            return RedirectToAction("Details", "Officer", new { pg = 1 });
+
+            OfficerLocationModel OfcrLocMdl = new OfficerLocationModel();
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var OfficerTypeForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerTypeForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.zonalOffice, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
+                        OfcrLocMdl.ZoneOffices.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+
+                var OfficerLocationForms = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"OfficerID", officerID}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent OfficerLocationMappingContent = new StringContent(JsonConvert.SerializeObject(OfficerLocationForms), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getLocationMapping, OfficerLocationMappingContent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
+                        OfcrLocMdl.LocationMappings.AddRange(lst);
+                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.OfficerID = officerID;
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+            }
+
+            return RedirectToAction("EditLocation", "Officer", new { OfficerID = officerID });
         }
         [HttpPost]
         public async Task<JsonResult> GetOfficerTypeDetails()

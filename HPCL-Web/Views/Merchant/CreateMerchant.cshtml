@@ -1,4 +1,5 @@
 ﻿@model HPCL_Web.Models.Merchant.MerchantModel
+@using Microsoft.AspNetCore.Http;
 
 
 <marquee width="100%" direction="left" height="30%">
@@ -30,11 +31,14 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-8">
-                                                    @Html.TextBoxFor(m => m.SearchMerchantID, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.SearchMerchantID, new { @class = "form-control", @disabled = "disabled" })
                                                 </div>
-                                                <div class="col-4">
-                                                    <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
-                                                </div>
+                                                @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
+                                                {
+                                                    <div class="col-4">
+                                                        <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%"></button>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -47,7 +51,10 @@
                                                 <div class="col-8">
                                                 </div>
                                                 <div class="col-12">
-                                                    <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
+                                                    @if (Context.Session.GetString("LoginType") == "MO")
+                                                    {
+                                                        <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -589,15 +596,15 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation", new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation", new { @class = "form-control", @style = "width:20%;" })
                                                     <p class="m-0">GPRS Installation</p>
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Desktop Installation", new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Desktop Installation", new { @class = "form-control", @style = "width:20%;" })
                                                     <p class="m-0">Desktop Installation</p>
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Wifi Installation", new { @class = "form-control" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Wifi Installation", new { @class = "form-control", @style = "width:20%;" })
                                                     <p class="m-0">Wifi Installation</p>
                                                 </div>
                                             </div>

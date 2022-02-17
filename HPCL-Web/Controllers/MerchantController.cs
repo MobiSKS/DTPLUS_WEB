@@ -26,6 +26,11 @@ namespace HPCL_Web.Controllers
         {
             char flag = 'N';
             MerchantModel merchantModel = new MerchantModel();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("MerchantID")))
+            {
+                merchantModel.SearchMerchantID = HttpContext.Session.GetString("MerchantID");
+            }
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 var MerchantTypeForms = new Dictionary<string, string>
@@ -674,8 +679,8 @@ namespace HPCL_Web.Controllers
 
                 using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
                 {
-                    string[] fromDateArr = merchantApprovalMdl.FromDate.Split("/");
-                    string[] toDateArr = merchantApprovalMdl.ToDate.Split("/");
+                    string[] fromDateArr = merchantApprovalMdl.FromDate.Split("-");
+                    string[] toDateArr = merchantApprovalMdl.ToDate.Split("-");
 
                     string fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
                     string toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];

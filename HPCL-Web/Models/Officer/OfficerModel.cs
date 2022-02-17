@@ -42,7 +42,7 @@ namespace HPCL_Web.Models.Officer
         [Required(ErrorMessage = "District is Required")]
         public int DistrictID { get; set; }
         [Required(ErrorMessage = "Officer Type is Required")]
-        public int OfficerTypeID { get; set; }
+        public string OfficerTypeID { get; set; }
         [Required(ErrorMessage = "Address1 is Required")]
         public string Address1 { get; set; }
         public string Address2 { get; set; }

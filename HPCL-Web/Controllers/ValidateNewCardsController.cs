@@ -64,7 +64,7 @@ namespace HPCL_Web.Controllers
 
                 if (!String.IsNullOrEmpty(validateNewCardsMdl.Date))
                 {
-                    string[] dateArr = validateNewCardsModel.Date.Split("/");
+                    string[] dateArr = validateNewCardsModel.Date.Split("-");
                     Date = dateArr[2] + "-" + dateArr[1] + "-" + dateArr[0];
                 }
 

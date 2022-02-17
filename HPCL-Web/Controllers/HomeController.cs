@@ -46,7 +46,7 @@ namespace HPCL_Web.Controllers
             {
                 HttpContext.Session.SetString("Token", access_token.Result);
             }
-            
+
             var loginBody = new UserInfoModel
             {
                 UserId = user.UserId,
@@ -78,6 +78,11 @@ namespace HPCL_Web.Controllers
                         else if (loginRes[0].Status == 1)
                         {
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
+                            HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
+                            if (loginRes[0].LoginType == "Merchant")
+                            {
+                                HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
+                            }
                         }
 
                         ModelState.Clear();
