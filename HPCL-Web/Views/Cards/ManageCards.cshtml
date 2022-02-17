@@ -11,7 +11,7 @@
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
 
         <form method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="ManageCards" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
-            
+
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active asd" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
 
@@ -30,13 +30,13 @@
                                         <a class="nav-link active" id="CustomerCardTab" data-toggle="tab" href="#CustomerCardsSection" role="tab">Customer Cards</a>
                                     </li>
                                     <li id="CardDetails" class="nav-item">
-                                        <a class="nav-link disabled" id="CardDetailsTab" data-toggle="tab" href="#CardDetailsSection" role="tab" >Card Details</a>
+                                        <a class="nav-link disabled" id="CardDetailsTab" data-toggle="tab" href="#CardDetailsSection" role="tab">Card Details</a>
                                     </li>
                                     <li id="Limits" class="nav-item">
-                                        <a class="nav-link disabled" id="LimitTab" data-toggle="tab" href="#LimitSection" role="tab" >Limits</a>
+                                        <a class="nav-link disabled" id="LimitTab" data-toggle="tab" href="#LimitSection" role="tab">Limits</a>
                                     </li>
                                     <li id="Services" class="nav-item">
-                                        <a class="nav-link disabled" id="ServicesTab" data-toggle="tab" href="#ServiceSection" role="tab" >Services</a>
+                                        <a class="nav-link disabled" id="ServicesTab" data-toggle="tab" href="#ServiceSection" role="tab">Services</a>
                                     </li>
                                 </ul>
                             </div>
@@ -56,7 +56,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id="GetCustomerIdValue" })
+                                                        @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "GetCustomerIdValue" })
                                                         @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -103,9 +103,9 @@
                                     <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap">
                                         <div class="px-2 mb-3">
                                             <button class="btn btn_primary py-2 px-4" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CardSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
-                                     </div>
+                                        </div>
                                         <div class="px-2 mb-3">
-                                            <button class="btn btn_primary py-2 px-4" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">VIEW GENERIC / ATTACHED VEHICLE</button>                                            
+                                            <button class="btn btn_primary py-2 px-4" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">VIEW GENERIC / ATTACHED VEHICLE</button>
                                         </div>
                                         <div class="px-2 mb-3">
                                             <button class="btn btn_primary py-2 px-4" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">DOWNLOAD GENERIC / ATTACHED VEHICLE</button>
@@ -316,11 +316,11 @@
                                                                 Fee Collect(CR)
                                                             </label>
                                                             <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                                <input type="radio" name="optradio"  class="mr-2">
+                                                                <input type="radio" name="optradio" class="mr-2">
                                                                 Fee Collect(Cheque)
                                                             </label>
                                                             <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                                <input type="radio" name="optradio"  class="mr-2">
+                                                                <input type="radio" name="optradio" class="mr-2">
                                                                 Fee Waiver
                                                             </label>
                                                         </div>
@@ -487,16 +487,30 @@
     </div>
 </div>
 
+@using Microsoft.AspNetCore.Http;
+
+
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
+
         let tableData = sessionStorage.getItem("tableData");
         let getCusId = sessionStorage.getItem("cusmId");
 
         console.log(tableData, "tbl");
 
-        if (tableData != null) {
+        let editOk = sessionStorage.getItem("editFlow");
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        console.log(editOk, "editOk");
+
+        if (editOk == "edit" && loginType != "Customer") {
+
+            $('#GetCustomerIdValue').html('');
+
             $('#GetCustomerIdValue').val(getCusId);
             $('#CardSearch').html(tableData);
              $.ajax({
@@ -504,40 +518,41 @@
                 type: "POST",
                 dataType: "JSON",
                  success: function (data) {
-                     console.log(data, "updated");
-                    $("#CardSearch td").parent().remove();
 
-                    for (var i = 0; i < data.updatedSearchList.length; i++) {
-
-                        var rows = "<tbody><tr>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].srNumber || '') + "</span></td>"
-                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].cardNumber || '') + "</span></a></td>"
-                            + "<td><span class='rowData cusId'>" + (data.updatedSearchList[i].customerID || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].userID || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].cardIssueType || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vechileNo || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vehicleType || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].issueDate || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].expiryDate || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].status || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].yearOfRegistration || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].manufacturer || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].ownershipType || '') + "</span></td>"
-                            + "<td><span class='rowMobNo'>" + (data.updatedSearchList[i].mobileNumber || '') + "</span></td>"
-                            + "<td><span class='rowData'>" + (data.updatedSearchList[i].vinNumber || '') + "</span></td>"
-                            + "<td class='statusId' style='display:none'>" + (data.updatedSearchList[i].limitTypeName || '') + "</td>"
-                            + "<td class='checkStatus' style='display:none'>" + (data.updatedSearchList[i].ccmsReloadSaleLimitValue || '') + "</td>"
-                            + "<td><a href='#aaa' class='editNumber'>Edit</a></td></tr></tbody>";
-
-                        $('#CardSearch').append(rows);
-
-                        
-                     }
-
-                      sessionStorage.removeItem('tableData');
-                      sessionStorage.removeItem('cusmId');
+                      OnSuccess(data);
 
                      document.getElementById('CardSearch').style.display = 'block'
+
+                     sessionStorage.removeItem('editFlow');
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+
+        if (editOk == "") {
+
+            sessionStorage.removeItem('tableData');
+            sessionStorage.removeItem('cusmId');
+
+        }
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("UpdatedGridList", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    OnSuccess(data);
+
+                    $("#GetCustomerIdValue").html('');
+                    $("#GetCustomerIdValue").val('@Context.Session.GetString("UserId")');
+                    $("#GetCustomerIdValue").attr("readonly", true);
+
+                    document.getElementById('CardSearch').style.display = 'inline-table';
 
                 },
                 error: function (ex) {
@@ -546,7 +561,6 @@
             });
         }
 
-       
 
     });
 
@@ -669,8 +683,15 @@
                 $('#CCMSReloadSaleLimitTypeValue').append(reloadSaleType);
 
                 $('#CCMSReloadSaleLimitValueId').val(res.limitDetailsList[0].ccmsReloadSaleLimitValue);
-                $('#CCMSReloadDefineSaleValue').append("<span>(Available Limit: " + res.limitDetailsList[0].ccmsReloadSale +")</span>");
-                $('#LimitExpiryDateValue').val(res.limitDetailsList[0].expiryDate);
+                $('#CCMSReloadDefineSaleValue').append("<span>(Available Limit: " + res.limitDetailsList[0].ccmsReloadSale + ")</span>");
+
+                var momentDate = new Date(res.limitDetailsList[0].expiryDate);
+
+                var abc = moment(momentDate).format('YYYY-MM-DD');
+
+                console.log(abc, "date");
+
+                $('#LimitExpiryDateValue').val(abc);
 
                 var creditTransType = $('<option value="' + res.limitDetailsList[0].allowCreditTranscation + '">' + res.limitDetailsList[0].allowCreditTranscation + '</option>');
                 $('#AllowCreditTranscationValue').append(creditTransType);
@@ -756,7 +777,8 @@
         background-color: cornflowerblue;
         color: black;
     }
-    .list-group-item{
-        border:none;
+
+    .list-group-item {
+        border: none;
     }
 </style>

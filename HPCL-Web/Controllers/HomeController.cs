@@ -78,6 +78,8 @@ namespace HPCL_Web.Controllers
                         else if (loginRes[0].Status == 1)
                         {
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
+                            HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
+                            HttpContext.Session.SetString("UserId", loginRes[0].UserId);
                         }
 
                         ModelState.Clear();

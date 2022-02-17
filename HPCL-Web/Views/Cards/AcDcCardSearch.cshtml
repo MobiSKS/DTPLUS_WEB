@@ -19,37 +19,37 @@
                             <div class="w-100">
                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
 
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-
-                                        </div>
-
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Id<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
-                                                </div>
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Id<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.CustomerId, new {@id= "CustomerDefaultVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Card Number</label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
-                                                </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Card Number</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Mobile Number</label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
-                                                </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Mobile Number</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+                                    </div>
 
                                 </div>
 
@@ -60,7 +60,7 @@
                             <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 mb-4">
                                 <div class="px-2">
                                     <button class="btn btn_primary py-2 px-4" type="submit" id="btnSave" name="submit" onclick="showGrid()" style="background-color:#084693;color:white;">SEARCH</button>
-                                 </div>
+                                </div>
                                 <div class="px-2">
                                     <a class="btn btn_primary py-2 px-4" href="#" id="btnCancel" name="cancel" onclick="resetFields()" style="background-color:#084693;color:white;">RESET</a>
                                 </div>
@@ -98,23 +98,77 @@
                                 </table>
                             </div>
                             <div class="clearfix"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+        </form>
     </div>
 </div>
 
 
+@using Microsoft.AspNetCore.Http;
+
+
 <script type="text/javascript">
+
+       $(document).ready(function () {
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("AcDcAllCardSearch", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    $("#CardSearch td").parent().remove();
+
+                    for (var i = 0; i < data.searchList.length; i++) {
+
+                        var rows = "<tbody><tr>"
+                            + "<td>" + (data.searchList[i].srNumber || '') + "</td>"
+                            + "<td class='crdNo'>" + (data.searchList[i].cardNumber || '') + "</td>"
+                            + "<td>" + (data.searchList[i].vechileNo || '') + "</td>"
+                            + "<td>" + (data.searchList[i].mobileNumber || '') + "</td>"
+                            + "<td class='statusId' style='display:none'>" + (data.searchList[i].cardStatus || '') + "</td>"
+                            + "<td class='checkStatus' style='display:none'>" + (data.searchList[i].status || '') + "</td>"
+                            + "<td class='changeTxt'></td>"
+                            + "</tr ></tbody>";
+
+                        $('#CardSearch').append(rows);
+
+                        if (data.searchList[i].status == "Active") {
+                            $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 w-50 updateStatus text-danger bg-white' type='submit' name='submit'>REACTIVATE CARD</button></td>");
+                        }
+                        if (data.searchList[i].status == "InActive") {
+                            $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 updateStatus text-dark' type='submit' name='submit'>DEACTIVATE CARD</button></td>");
+                        }
+                    }
+
+                    $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                    $("#CustomerDefaultVal").attr("readonly", true);
+
+                    document.getElementById('UpdateGrid').style.display = 'inline-table';
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
+
+
     function showGrid() {
         if ($("input:text").val() == "") {
             document.getElementById('CardSearch').style.display = 'none';
         }
-        if (($("input:text").val() != "")) {
-            document.getElementById('CardSearch').style.display = 'inline-table';
-        }
+        //if (($("input:text").val() != "")) {
+        //    document.getElementById('CardSearch').style.display = 'inline-table';
+        //}
     }
 
     function resetFields() {
@@ -153,6 +207,8 @@
                 $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 updateStatus text-dark' type='submit' name='submit'>DEACTIVATE CARD</button></td>");
             }
         }
+
+        document.getElementById('CardSearch').style.display = 'inline-table';
     }
 
     function OnFailure(data) {
@@ -188,7 +244,7 @@
                     type: "POST",
                     dataType: "JSON",
                     success: function (res) {
-                        
+
 
                         $("#CardSearch td").parent().remove();
 
@@ -213,7 +269,7 @@
                                 $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:black;'>DEACTIVATE CARD</button>");
                             }
                         }
-                       
+
                     },
                     error: function (ex) {
                         alert('Failed' + ex);

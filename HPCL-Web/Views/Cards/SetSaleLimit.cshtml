@@ -25,7 +25,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Id<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.CustomerId, new {@id="CustomerDefaultVal", @class = "form-control" })
                                                     @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -79,8 +79,8 @@
                                     </div>
 
                                 </fieldset>
-                                    
-                            </div>                 
+
+                            </div>
 
                             <div class="clearfix"></div>
 
@@ -91,9 +91,9 @@
 
                             <div id="UpdateGrid" style="display:none;" class="w-100">
 
-                                
 
-                                 <div class="table-responsive">
+
+                                <div class="table-responsive">
                                     <table id="CardSearch" class="table table-striped table-bordered text-nowrap" style="display:inline-table">
                                         <tr>
 
@@ -133,29 +133,77 @@
 
                                         </tr>
                                     </table>
-                            </div>
-
-                             <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-4">
-                                <div class="col-md-2 col-12 d-flex align-items-center justify-content-center">
-                                    <div class="pr-2 w-50">
-                                        <button class="btn btn_primary py-2 px-4" type="button" id="btnSave" name="submit" onclick="updateCards()" style="background-color:#084693;color:white;float:right;margin-bottom:10px;">UPDATE</button>
-                                     </div>
                                 </div>
-                            </div>
 
-                            
-                            
-                            <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-4">
+                                    <div class="col-md-2 col-12 d-flex align-items-center justify-content-center">
+                                        <div class="pr-2 w-50">
+                                            <button class="btn btn_primary py-2 px-4" type="button" id="btnSave" name="submit" onclick="updateCards()" style="background-color:#084693;color:white;float:right;margin-bottom:10px;">UPDATE</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="clearfix"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 </div>
 
+@using Microsoft.AspNetCore.Http;
 
 <script>
+
+    $(document).ready(function () {
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("SetSaleLimitGridView", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    $("#CardSearch td").parent().remove();
+
+                    for (var i = 0; i < data.searchCustList.length; i++) {
+
+                        var rows = "<tbody><tr>"
+                            + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                            + "<td><span class='getCard'>" + (data.searchCustList[i].cardNumber || '') + "</span></a></td>"
+                            + "<td>" + (data.searchCustList[i].vechileNo || '') + "</td>"
+                            + "<td>" + (data.searchCustList[i].mobileNumber || '') + "</td>"
+                            + "<td>" + (data.searchCustList[i].status || '') + "</td>"
+                            + "<td>" + (data.searchCustList[i].issueDate || '') + "</td>"
+                            + "<td>" + (data.searchCustList[i].expiryDate || '') + "</td>"
+
+                            + "<td><input class='form-control cgl cpl' name='" + (data.searchCustList[i].cashPurseLimit || '') + "' type='text' value='" + (data.searchCustList[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
+                            + "<td><input class='form-control cgl stl' name='" + (data.searchCustList[i].saleTxnLimit || '') + "' type='text' value='" + (data.searchCustList[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
+                            + "<td><input class='form-control cgl dsl' name='" + (data.searchCustList[i].dailySaleLimit || '') + "' type='text' value='" + (data.searchCustList[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
+                            + "<td><input class='form-control cgl msl' name='" + (data.searchCustList[i].monthlySaleLimit || '') + "' type='text' value='" + (data.searchCustList[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
+
+
+                        $('#CardSearch').append(rows);
+                    }
+
+                    $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                    $("#CustomerDefaultVal").attr("readonly", true);
+
+                    document.getElementById('UpdateGrid').style.display = 'inline-table';
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
 
     function openSearchGrid() {
         if ($("input:text").val() == "") {
@@ -200,6 +248,10 @@
         }
     }
 
+
+
+
+
     var cardNo;
     var cashPurse;
     var saleTxn;
@@ -218,7 +270,7 @@
             cardNo = currentRow.find('.getCard').text();
 
 
-            console.log("txt", textBoxValue);
+            //console.log("txt", textBoxValue);
         }
         if (!$(this).is(':checked')) {
             currentRow.find('input:text').attr("readonly", true);
@@ -235,21 +287,24 @@
 
         var updateArray = new Array();
 
+        $("#CardSearch input[type=checkbox]:checked").each(function () {
+            var row = $(this).closest("tr");
 
+            cardNo = row.find('.getCard').text();
+            cashPurse = row.find('.cpl').val();
+            saleTxn = row.find('.stl').val();
+            dailySale = row.find('.dsl').val();
+            monthlySale = row.find('.msl').val();
 
-        cashPurse = currentRow.find('.cpl').val();
-        saleTxn = currentRow.find('.stl').val();
-        dailySale = currentRow.find('.dsl').val();
-        monthlySale = currentRow.find('.msl').val();
-
-
-        updateArray.push({
-            cardNo: cardNo,
-            cashPurse: cashPurse,
-            saleTxn: saleTxn,
-            dailySale: dailySale,
-            monthlySale: monthlySale
+            updateArray.push({
+                cardNo: cardNo,
+                cashPurse: cashPurse,
+                saleTxn: saleTxn,
+                dailySale: dailySale,
+                monthlySale: monthlySale
+            });
         });
+
 
         console.log("ObjCardLimits", updateArray);
 
