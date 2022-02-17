@@ -111,34 +111,10 @@
                 dataType: "JSON",
                 success: function (data) {
 
-                    $("#CardSearch td").parent().remove();
-
-                    for (var i = 0; i < data.searchList.length; i++) {
-
-                        var rows = "<tbody><tr>"
-                            + "<td>" + (data.searchList[i].srNumber || '') + "</td>"
-                            + "<td class='crdNo'>" + (data.searchList[i].cardNumber || '') + "</td>"
-                            + "<td>" + (data.searchList[i].vechileNo || '') + "</td>"
-                            + "<td>" + (data.searchList[i].mobileNumber || '') + "</td>"
-                            + "<td class='statusId' style='display:none'>" + (data.searchList[i].cardStatus || '') + "</td>"
-                            + "<td class='checkStatus' style='display:none'>" + (data.searchList[i].status || '') + "</td>"
-                            + "<td class='changeTxt'></td>"
-                            + "</tr ></tbody>";
-
-                        $('#CardSearch').append(rows);
-
-                        if (data.searchList[i].status == "Active") {
-                            $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 w-50 updateStatus text-danger bg-white' type='submit' name='submit'>REACTIVATE CARD</button></td>");
-                        }
-                        if (data.searchList[i].status == "InActive") {
-                            $(".changeTxt").replaceWith("<td class='d-flex align-items-center justify-content-center'><button class='btn btn_primary px-2 py-1 updateStatus text-dark' type='submit' name='submit'>DEACTIVATE CARD</button></td>");
-                        }
-                    }
+                    OnSuccessAcDcSearch(data);
 
                     $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
                     $("#CustomerDefaultVal").attr("readonly", true);
-
-                    document.getElementById('UpdateGrid').style.display = 'inline-table';
 
                 },
                 error: function (ex) {
