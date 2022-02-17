@@ -113,14 +113,6 @@ else {
     document.getElementById("applicationDate_error").innerHTML = "";
 }
 
-if (document.applicationForm.CustomerSalesAreaID.value == "0") {
-    document.getElementById("salesArea_error").innerHTML = "Sales Area Selection is required";
-    document.applicationForm.CustomerSalesAreaID.focus();
-    return ret;
-}
-else {
-    document.getElementById("salesArea_error").innerHTML = "";
-}
 
 if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
     document.getElementById("zonalOffice_error").innerHTML = "Zonal Office Selection is required";
@@ -131,13 +123,22 @@ else {
     document.getElementById("zonalOffice_error").innerHTML = "";
 }
 
-if (document.applicationForm.regionalOffice.value == "0") {
+    if (document.applicationForm.CustomerRegionID.value == "0") {
     document.getElementById("regionalOffice_error").innerHTML = "Regional Office Selection is required";
-    document.applicationForm.regionalOffice.focus();
+        document.applicationForm.CustomerRegionID.focus();
     return ret;
 }
 else {
     document.getElementById("regionalOffice_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerSalesAreaID.value == "0") {
+        document.getElementById("salesArea_error").innerHTML = "Sales Area Selection is required";
+        document.applicationForm.CustomerSalesAreaID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("salesArea_error").innerHTML = "";
     }
 
     if (document.applicationForm.TypeOfCustomerID.value == "0") {
