@@ -163,7 +163,7 @@
                                             <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @*<input type="date" class="form-control">*@
-                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDate", @type = "date", @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control" })
                                                 <span class="error" id="FeePaymentDate_error"></span>
                                             </div>
                                         </div>
@@ -184,7 +184,7 @@
                                 </div>
                                 <div class="w-100">
                                     <div class=" table-responsive">
-                                        <table class="table table-bordered text-nowrap" id="NoOfCardsTbl">
+                                        <table class="table table-bordered text-nowrap" id="NoOfCardsTbl" style="display: none">
                                             <thead>
                                                 <tr>
                                                     <th>S No.</th>
@@ -254,6 +254,40 @@
     //        }
     //    });
     //});
+
+    var feePaymentDate = $("#FeePaymentDate").val();
+    var notFoundError = "@ViewBag.NotFoundError";
+
+    $(document).ready(function () {
+
+        if (notFoundError == "") {
+            if (feePaymentDate == "") {
+                $("#FeePaymentDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+                //setDates();
+            }
+            else {
+                $("#FeePaymentDate").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+                        
+        }
+    });
+
+    function setDates() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            d.getFullYear();
+
+        $("#FeePaymentDate").val(output);
+
+    };
 
 
     $("#btnSearch").click(function () {
@@ -481,8 +515,8 @@
 
 
 
-        document.getElementById('NoOfCardsTbl').style.display = 'table';
-
+        //document.getElementById('NoOfCardsTbl').style.display = 'table';
+        document.getElementById('NoOfCardsTbl').style.display = 'block';
 
         //$('#NoOfCards').attr("disabled", true);
         //$('#FeePaymentDate').attr("disabled", true);
@@ -585,7 +619,7 @@
             else {
                 document.getElementById("FeePaymentDate_error").innerHTML = "";
             }
-                                   
+
             if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
                 alert("Card Preference Not Selected");
                 return;

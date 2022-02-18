@@ -42,6 +42,7 @@ namespace HPCL_Web.Controllers
             char flag = 'N';
 
             CustomerModel custMdl = new CustomerModel();
+            //custMdl.CustomerDateOfApplication = DateTime.Now.;
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 //Fetching CustomerType
@@ -325,6 +326,26 @@ namespace HPCL_Web.Controllers
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
             }
 
+            string customerDateOfApplication = "";
+            string KeyOffDateOfAnniversary = "";
+            string KeyOfficialDOB = "";
+
+            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+            
+            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+
+            if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            {
+                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+            }
+
+            if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            {
+                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+            }
+
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -337,7 +358,7 @@ namespace HPCL_Web.Controllers
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
-                    {"DateOfApplication", cust.CustomerDateOfApplication},
+                    {"DateOfApplication", customerDateOfApplication},
                     {"SalesArea", cust.CustomerSalesAreaID.ToString()},
                     {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
                     {"IndividualOrgName", cust.IndividualOrgName},
@@ -376,9 +397,9 @@ namespace HPCL_Web.Controllers
                     {"KeyOfficialDesignation", cust.KeyOffDesignation},
                     {"KeyOfficialEmail", cust.KeyOffEmail},
                     {"KeyOfficialPhoneNo", (String.IsNullOrEmpty(cust.KeyOffPhoneCode)?"":cust.KeyOffPhoneCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffPhoneNumber)?"":cust.KeyOffPhoneNumber)},
-                    {"KeyOfficialDOA", (string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary)?"1900-01-01":cust.KeyOffDateOfAnniversary)},
+                    {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
-                    {"KeyOfficialDOB", (string.IsNullOrEmpty(cust.KeyOfficialDOB)?"1900-01-01":cust.KeyOfficialDOB)},
+                    {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
                     {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
                     {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
@@ -794,6 +815,7 @@ namespace HPCL_Web.Controllers
 
 
                                 ViewBag.Message = customerResponse.Message;
+                                ViewBag.NotFoundError = "Not Found";
                             }
                         }
                     }
@@ -1378,6 +1400,15 @@ namespace HPCL_Web.Controllers
                 //    { "ObjCardDetail", json }
                 //};
 
+                string feePaymentDate = "";
+
+                if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
+                {
+                    string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+                    feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                }
+                              
+
                 #region Create Request Info
 
                 CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
@@ -1389,7 +1420,7 @@ namespace HPCL_Web.Controllers
                 insertInfo.RBEId = customerCardInfo.RBEId;
                 insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
                 insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
-                insertInfo.FeePaymentDate = customerCardInfo.FeePaymentDate;
+                insertInfo.FeePaymentDate = feePaymentDate;
                 insertInfo.CardPreference = customerCardInfo.CardPreference;
                 insertInfo.RBEName = customerCardInfo.RBEName;
                 insertInfo.RBEName = customerCardInfo.RBEName;
