@@ -94,6 +94,7 @@
         public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
+        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
         #endregion
 
         #region Login
