@@ -50,7 +50,7 @@
         public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
         public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
         public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
-        public static string MobileAddOrEdit = "/dtpwebapi/api/dtplus/card/update_mobile_and_fastag_no_in_card";
+        public static string MobileAddOrEditUrl = "/dtpwebapi/api/dtplus/card/update_mobile_and_fastag_no_in_card";
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
@@ -94,6 +94,7 @@
         public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
+        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
         #endregion
 
         #region Login

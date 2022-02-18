@@ -115,19 +115,20 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
+
         [HttpPost]
-        public async Task<JsonResult> UpdateStatus(string mobileNumber, int Statusflag)
+        public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
         {
-            var updateServiceBody = new ViewCardDetails
+
+            var updateServiceBody = new UpdateMobile
             {
+
                 UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
-                MobileNo = mobileNumber,
-                Statusflag = Statusflag,
-                ModifiedBy = HttpContext.Session.GetString("UserName")
+                objCardLimits = limitArray,
+                ModifiedBy = HttpContext.Session.GetString("UserName"),
             };
-
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -135,7 +136,7 @@ namespace HPCL_Web.Controllers
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.UpdateCardStatusUrl, content))
+                using (var Response = await client.PostAsync(WebApiUrl.MobileAddOrEditUrl, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -144,7 +145,7 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
 
                         var updateRes = obj["Data"].Value<JArray>();
-                        List<ViewCardSearchResult> updateResponse = updateRes.ToObject<List<ViewCardSearchResult>>();
+                        List<UpdateMobileResponse> updateResponse = updateRes.ToObject<List<UpdateMobileResponse>>();
 
                         ModelState.Clear();
                         return Json(updateResponse[0].Reason);
@@ -158,6 +159,7 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
+
 
         //[HttpPost]
         //public async Task<JsonResult> Addmobilenumber(ViewCardDetails entity)
