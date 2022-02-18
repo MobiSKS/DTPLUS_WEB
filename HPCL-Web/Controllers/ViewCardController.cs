@@ -28,11 +28,12 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new ViewCardDetails
             {
-                UserId = Common.userid,
+                UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
                 Customerid = entity.Customerid
             };
+
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -117,7 +118,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
+        public async Task<JsonResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
 
             var updateServiceBody = new UpdateMobile
@@ -126,7 +127,7 @@ namespace HPCL_Web.Controllers
                 UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = Common.useragent,
                 UserIp = Common.userip,
-                objCardLimits = limitArray,
+                ObjUpdateMobileandFastagNoInCard = limitArray,
                 ModifiedBy = HttpContext.Session.GetString("UserName"),
             };
 
