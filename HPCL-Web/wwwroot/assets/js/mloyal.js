@@ -86,6 +86,15 @@ var ret = false;
 
 //console.log(ret);
 
+    if (document.applicationForm.FormNumber.value == "") {
+        document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+        document.applicationForm.FormNumber.focus();
+    return ret;
+}
+else {
+        document.getElementById("formNumber_error").innerHTML = "";
+}
+
 if (document.applicationForm.CustomerTypeID.value == "0") {
     document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
     document.applicationForm.CustomerTypeID.focus();
@@ -196,15 +205,29 @@ else {
 }
 
     
-//if (document.applicationForm.SalesArea.value == "") {
-//    document.getElementById("salesArea_error").innerHTML = "This information is required";
-//    document.applicationForm.salesArea.focus();
-//    return ret;
-//}
-//else {
-//    document.getElementById("salesArea_error").innerHTML = "";
-//}
 
+        var formNumber = document.getElementById("FormNumber").value;
+        if (formNumber == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        var fromNumberUsed = false;
+
+        
+
+    if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("formNumber_error").innerHTML = "";
+    }
+
+    
     var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;//$('#CustomerTbentityID').va();
 
     if (TypeofBusinessEntityId != 10) {
@@ -558,6 +581,22 @@ else {
 }
 
 
+    if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+    }
+
+    if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("comm_email_error").innerHTML = "";
+    }
+
 if (document.getElementById("sameAddressCheck").checked != true) {
 
     if (document.getElementById("PerOrRegAddress1").value == "") {
@@ -626,6 +665,8 @@ if (document.getElementById("sameAddressCheck").checked != true) {
         document.getElementById("perma_state_error").innerHTML = "";
     }
 
+    $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+
     if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
         document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
         document.getElementById("PermanentDistrictId").focus();
@@ -635,7 +676,7 @@ if (document.getElementById("sameAddressCheck").checked != true) {
         document.getElementById("perma_district_error").innerHTML = "";
     }
 
-
+    
     ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
     //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
     //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";

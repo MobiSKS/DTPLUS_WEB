@@ -82,7 +82,7 @@
         public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
-        public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        //public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
@@ -96,6 +96,9 @@
         public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
         public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
+        public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
+        public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
+        public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
         #endregion
 
         #region Login

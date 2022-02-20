@@ -417,6 +417,9 @@ namespace HPCL_Web.Models
         public int StatusCode { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public List<CardDetails> ObjCardDetail { get; set; }
+
+        public string CustomerTypeName { get; set; }
+        public string CustomerTypeId { get; set; }
     }
 
     public class CustomerResponseByReferenceNo
@@ -437,7 +440,9 @@ namespace HPCL_Web.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string FormNumber { get; set; }
+        public string CustomerTypeName { get; set; }
 
+        public string CustomerTypeId { get; set; }
     }
 
     public class CustomerRBE

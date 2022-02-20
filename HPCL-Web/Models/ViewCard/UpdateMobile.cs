@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Models.ViewCard
 {
-    public class UpdateMobile:BaseEntity
+    public class UpdateMobile : BaseEntity
     {
 
 
-        public ObjCardLimits[] objCardLimits { get; set; }
+        public ObjUpdateMobileandFastagNoInCard[] ObjUpdateMobileandFastagNoInCard { get; set; }
         public string ModifiedBy { get; set; }
     }
 
-    public class ObjCardLimits
+    public class ObjUpdateMobileandFastagNoInCard
     {
         public string CardNo { get; set; }
         public string MobileNo { get; set; }
