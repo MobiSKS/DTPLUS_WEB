@@ -6,7 +6,7 @@
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <h5>Manage Officers</h5>
-        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", name = "form1" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -22,19 +22,19 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                                    @*@Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })*@
                                                 </div>
                                                 <span class="error" id="firstName_error"></span>
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap" id="userNamediv">
-                                            <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12" id="userNameLabel">User Name <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                                                    @*@Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })*@
                                                 </div>
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="userName_error"></span>
+                                                <span class="error" id="userName_error"></span>
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -78,7 +78,7 @@
                                             <label class="font-weight-normal col-md-5 col-12">Officer Type <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control", onchange = "getLocation()" })
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="officerType_error"></span>
+                                                <span class="error" id="officerType_error"></span>
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2" id="commAddressForm">
                             <div class="border-1 rounded border-grey"></div>
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
                             <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
@@ -123,7 +123,7 @@
                                             <label class="font-weight-normal col-md-5 col-12">State <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important" id="state_error"></span>
+                                                <span class="error" id="state_error"></span>
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -183,7 +183,7 @@
                                                 <div class="custom_select">
                                                     <select id="district" class="form-control"></select>
                                                 </div>
-                                                <span class="error" style="font-size: 14px; color: #dc3545 !important " id="district_error"></span>
+                                                <span class="error" id="district_error"></span>
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -214,8 +214,8 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn" type="submit" id="btnAdd" name="submit" style="background-color:#084693;color:white;">Add</button>
-                                <a asp-action="Details" class="btn" type="button" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">Cancel</a>
+                                <button class="btn" type="submit" style="background-color:#084693;color:white;" onclick="CreateOfficer()">Add</button>
+                                <a asp-action="Details" class="btn" type="button" style="background-color:#084693;color:white;">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -240,62 +240,211 @@
         }
     });
 
-    $("#btnAdd").click(function () {
-        let flag = 'Y';
-        let firstName = $("#FirstName").val();
-        let userName = $("#UserName").val();
-        let address1 = $("#Address1").val();
-        let mobile = $("#Mobile").val();
-        let email = $("#Email").val();
+    //$("#btnAdd").click(function () {
+    //    let flag = 'Y';
+    //    let firstName = $("#FirstName").val();
+    //    let userName = $("#UserName").val();
+    //    let address1 = $("#Address1").val();
+    //    let mobile = $("#Mobile").val();
+    //    let email = $("#Email").val();
 
-        if ($("#OfficerTypeID").val() == 0) {
-            $("#officerType_error").html("Officer Type is required");
-            flag = 'N';
-        }
-        else {
-            $("#officerType_error").html("");
-        }
-        if ($("#State").val() == 0) {
-            $("#statediv").addClass("btmMargin");
-            $("#state_error").html("State is required");
-            flag = 'N';
-        }
-        else {
-            $("#state_error").html("");
-        }
-        if ($("#location").val() == 0) {
-            $("#location_error").html("Location is required");
-            flag = 'N';
-        }
-        else {
-            $("#location_error").html("");
-        }
-        if ($("#district").val() == 0) {
-            $("#districtdiv").addClass("btmMargin");
-            $("#district_error").html("State is required");
-            flag = 'N';
-        }
-        else {
-            $("#district_error").html("");
-        }
-        if ($.trim(firstName) == "" || $.trim(userName) == "" || $.trim(address1) == ""
-            || $.trim(mobile) == "" || $.trim(email) == "") {
-            flag = 'NS';
-        }
+    //    if ($("#OfficerTypeID").val() == 0) {
+    //        $("#officerType_error").html("Officer Type is required");
+    //        flag = 'N';
+    //    }
+    //    else {
+    //        $("#officerType_error").html("");
+    //    }
+    //    if ($("#State").val() == 0) {
+    //        $("#statediv").addClass("btmMargin");
+    //        $("#state_error").html("State is required");
+    //        flag = 'N';
+    //    }
+    //    else {
+    //        $("#state_error").html("");
+    //    }
+    //    if ($("#location").val() == 0) {
+    //        $("#location_error").html("Location is required");
+    //        flag = 'N';
+    //    }
+    //    else {
+    //        $("#location_error").html("");
+    //    }
+    //    if ($("#district").val() == 0) {
+    //        $("#districtdiv").addClass("btmMargin");
+    //        $("#district_error").html("State is required");
+    //        flag = 'N';
+    //    }
+    //    else {
+    //        $("#district_error").html("");
+    //    }
+    //    if ($.trim(firstName) == "" || $.trim(userName) == "" || $.trim(address1) == ""
+    //        || $.trim(mobile) == "" || $.trim(email) == "") {
+    //        flag = 'NS';
+    //    }
 
-        if (flag == 'N') {
+    //    if (flag == 'N') {
+    //        $("#form1").submit(function (e) {
+    //            e.preventDefault();
+    //        });
+    //    }
+    //    else {
+    //        $("#form1").unbind().submit();
+    //    }
+    //});
+
+    function CreateOfficer() {
+        var ret = false;
+
+        if (document.form1.FirstName.value == "") {
+            document.getElementById("firstName_error").innerHTML = "First Name is required";
+            document.form1.FirstName.focus();
             $("#form1").submit(function (e) {
                 e.preventDefault();
             });
+            return ret;
         }
         else {
+            document.getElementById("firstName_error").innerHTML = "";
+        }
+
+        if (document.form1.UserName.value == "") {
+            document.getElementById("userName_error").innerHTML = "User Name is required";
+            document.form1.UserName.focus();
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            return ret;
+        }
+        else {
+            document.getElementById("userName_error").innerHTML = "";
+        }
+
+        if (document.form1.OfficerTypeID.value == "") {
+            document.getElementById("officerType_error").innerHTML = "Officer Type is required";
+            document.form1.OfficerTypeID.focus();
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            return ret;
+        }
+        else {
+            document.getElementById("officerType_error").innerHTML = "";
+        }
+
+        if (document.form1.location.value == "") {
+            document.getElementById("location_error").innerHTML = "Location is required";
+            document.form1.location.focus();
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            return ret;
+        }
+        else {
+            document.getElementById("location_error").innerHTML = "";
+        }
+
+        if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
+
+            if (document.form1.Address1.value == "") {
+                document.getElementById("address1_error").innerHTML = "Address 1 is required";
+                document.form1.Address1.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else {
+                document.getElementById("address1_error").innerHTML = "";
+            }
+
+            if (document.form1.State.value == "") {
+                document.getElementById("state_error").innerHTML = "State is required";
+                document.form1.State.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else {
+                document.getElementById("state_error").innerHTML = "";
+            }
+
+            if (document.form1.district.value == "") {
+                document.getElementById("district_error").innerHTML = "District is required";
+                document.form1.district.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else {
+                document.getElementById("district_error").innerHTML = "";
+            }
+
+            if (document.form1.Mobile.value == "") {
+                document.getElementById("mobile_error").innerHTML = "Mobile is required";
+                document.form1.Mobile.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else if (!document.form1.Mobile.value.match(phoneno)) {
+                document.getElementById("mobile_error").innerHTML = "Mobile Number should have 10 Digits";
+                document.form1.Mobile.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else {
+                document.getElementById("mobile_error").innerHTML = "";
+            }
+
+            if (document.form1.Email.value == "") {
+                document.getElementById("email_error").innerHTML = "Email Id is required";
+                document.form1.Email.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else if (!document.form1.Email.value.match(email)) {
+                document.getElementById("email_error").innerHTML = "Invalid Email Address";
+                document.form1.Email.focus();
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                return ret;
+            }
+            else {
+                document.getElementById("email_error").innerHTML = "";
+                ret = true;
+            }
+        }
+        else {
+            ret = true;
+        }
+
+        if (ret == true) {
             $("#form1").unbind().submit();
         }
-    });
 
-    //$("#OfficerTypeID").change(function () {
+    };
+
     function getLocation() {
         var id = $('#OfficerTypeID :selected').val();
+        var name = $('#OfficerTypeID :selected').text();
+
+        if (name == "RBE" || name == "RSM") {
+            $("#userNameLabel").html("Emp. ID *");
+            $("#commAddressForm").hide();
+        }
+        else {
+            $("#userNameLabel").html("User Name *");
+            $("#commAddressForm").show();
+        }
 
         if (ofcrTypeID != "" && ofcrTypeID != "0") {
             id = ofcrTypeID;
