@@ -1184,6 +1184,18 @@ namespace HPCL_Web.Controllers
 
                                 customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
                                 customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+
+                                if (customerResponseByReferenceNo.Data != null)
+                                {
+                                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+                                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+                                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+
+                                    if(customerCardInfo.CustomerTypeId== "905" || customerCardInfo.CustomerTypeId =="909")
+                                    {
+                                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+                                    }
+                                }
                             }
                             else
                             {
@@ -1271,6 +1283,17 @@ namespace HPCL_Web.Controllers
 
                             customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
                             customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+                            if (customerResponseByReferenceNo.Data != null)
+                            {
+                                customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+                                customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+                                customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+
+                                if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+                                {
+                                    customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+                                }
+                            }
 
                             return Json(customerCardInfo);
                         }
@@ -1281,7 +1304,6 @@ namespace HPCL_Web.Controllers
                             var Response_Content = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                            var Message = "Failed to load Customer Details";
                             return Json("Failed to load Customer Details");
                         }
 
@@ -1432,12 +1454,16 @@ namespace HPCL_Web.Controllers
                 insertInfo.FeePaymentDate = feePaymentDate;
                 insertInfo.CardPreference = customerCardInfo.CardPreference;
                 insertInfo.RBEName = customerCardInfo.RBEName;
-                insertInfo.RBEName = customerCardInfo.RBEName;
                 insertInfo.Useragent = Common.useragent;
                 insertInfo.Userip = Common.userip;
                 insertInfo.UserId = HttpContext.Session.GetString("UserName");
                 insertInfo.Createdby = HttpContext.Session.GetString("UserName");
                 insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+
+                if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
+                {
+                    insertInfo.FeePaymentsCollectFeeWaiver = 0;
+                }
 
                 #endregion
 
@@ -2086,5 +2112,28 @@ namespace HPCL_Web.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            string apiUrl = "v3/rc-advanced";
+            var data = "";
+            var input = new
+            {
+                registrationNumber = RegistrationNumber,
+                consent = "Y",
+                version = "3.1"
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
+                if (response.IsSuccessStatusCode)
+                {
+                    data = await response.Content.ReadAsStringAsync();
+                }
+            }
+
+            return new JsonResult(data);
+        }
     }
 }
