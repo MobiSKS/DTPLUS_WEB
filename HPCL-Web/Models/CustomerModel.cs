@@ -361,7 +361,7 @@ namespace HPCL_Web.Models
     {
         public string CardIdentifier { get; set; }
         public string VechileNo { get; set; }
-        public int VehicleType { get; set; }
+        public string VehicleType { get; set; }
         public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
     }
@@ -417,9 +417,12 @@ namespace HPCL_Web.Models
         public int StatusCode { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public List<CardDetails> ObjCardDetail { get; set; }
-
+        public string NoOfVehiclesAllCards { get; set; }
         public string CustomerTypeName { get; set; }
         public string CustomerTypeId { get; set; }
+
+        public string PaymentType { get; set; }
+        public string PaymentReceivedDate { get; set; }
     }
 
     public class CustomerResponseByReferenceNo
@@ -443,6 +446,9 @@ namespace HPCL_Web.Models
         public string CustomerTypeName { get; set; }
 
         public string CustomerTypeId { get; set; }
+        public string PaymentType { get; set; }
+        public string PaymentReceivedDate { get; set; }
+        public string NoOfCards { get; set; }
     }
 
     public class CustomerRBE
