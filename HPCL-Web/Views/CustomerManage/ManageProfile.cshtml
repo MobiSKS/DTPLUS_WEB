@@ -62,43 +62,47 @@
                                     <button class="btn" type="submit" id="btnSearch" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
                                 </div>
                             </div>*@
+                            <div id="CustomerSearch" style="display:none;">
+                                <table class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayName("Customer ID")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Name On Card")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Customer Name")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Form Number")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Form Receipt Date")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Status")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Card Details")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Dispatch Details")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Actions")
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>   
+                            <div class="py-3">
+                                <label class="font-weight-normal col-md-5 col-12" id="lblCardDetails" style="display:none;"><b>Card Details</b> </label>
+                            </div>
 
-                        <table width="400px" id="CustomerSearch" class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="display:none;">
-                            <tr>
-                                <th>
-                                    @Html.DisplayName("Customer ID")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Name On Card")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Customer Name")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Form Number")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Form Receipt Date")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Status")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Card Details")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Dispatch Details")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Actions")
-                                </th>
 
-                            </tr>
-                        </table>
-                        <div>
-                            <label class="font-weight-normal col-md-5 col-12" id="lblCardDetails" style="display:none;"><b>Card Details</b> </label>
-                        </div>
-                        <table width="400px" id="CardSearch" class="table table-striped table-bordered table-responsive" style="display:none;">
+                        <table id="CardSearch" class="table table-striped table-bordered table-responsive" style="display:none;">
 
                             <tr>
                                 <th>
@@ -806,11 +810,11 @@
 
                 console.log("res", res);
                 $("#CustomerSearch").show();
-                $("#CustomerSearch td").parent().remove();
-                
+                //$("#CustomerSearch td").parent().remove();
+                var rows = "<tbody>"
                 for (var i = 0; i < res.lst.length; i++) {
                     var ApplicationDate = new Date(res.lst[i].DateOfApplication).toLocaleDateString("pt-PT");
-                    var rows = "<tbody><tr>"
+                    rows += "<tr>"
                         + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res.lst[i].customerID + "</span></a></td>"
                         + "<td width='400px'>" + res.lst[i].nameOnCard + "</td>"
                         + "<td width='400px'>" + res.lst[i].customerTypeName + "</td>"
@@ -820,14 +824,19 @@
                         + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this)'>View</a></td>"
                         + "<td width='400px'><a href='#aaa' class='editNumber'>View</a></td>"
                         + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'>search </a></td>"
-                    "</tr ></tbody > ";
-
-
-                    $('#CustomerSearch').append(rows);
-
-
-
+                            "</tr >";
                 }
+                rows += "</tbody>"
+                $('#CustomerSearch table').append(rows);
+
+                $('#CustomerSearch table').DataTable({
+				    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+				    "oLanguage": {
+					    "sLengthMenu": "Display _MENU_ Records",
+					    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+				    }					
+			    });
 
             },
             error: function (ex) {
