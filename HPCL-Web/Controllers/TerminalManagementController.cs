@@ -8,59 +8,59 @@ namespace HPCL_Web.Controllers
 {
     public class TerminalManagementController : Controller
     {
-        public IActionResult ManageTerminal()
+        public async Task<IActionResult> ManageTerminal()
         {
             return View();
         }
-        public IActionResult RegenerateIac()
+        public async Task<IActionResult> RegenerateIac()
         {
             return View();
         }
-        public IActionResult TerminalInstallationRequest()
+        public async Task<IActionResult> TerminalInstallationRequest()
         {
             return View();
         }
-        public IActionResult UnblockTerminal()
-        {
-            return View();
-        }
-
-        public IActionResult TerminalInstallationRequestClose()
+        public async Task<IActionResult> UnblockTerminal()
         {
             return View();
         }
 
-        public IActionResult ViewTerminalDeinstallationRequestStatus()
+        public async Task<IActionResult> TerminalInstallationRequestClose()
         {
             return View();
         }
 
-        public IActionResult ViewTerminalInstallationRequestStatus()
+        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus()
         {
             return View();
         }
 
-        public IActionResult ViewTerminalMerchantMappingStatus()
+        public async Task<IActionResult> ViewTerminalInstallationRequestStatus()
         {
             return View();
         }
 
-        public IActionResult ManageAutomationIntegrationStatus()
+        public async Task<IActionResult> ViewTerminalMerchantMappingStatus()
         {
             return View();
         }
 
-        public IActionResult ProblematicDeInstalledToDeInstalled()
+        public async Task<IActionResult> ManageAutomationIntegrationStatus()
         {
             return View();
         }
 
-        public IActionResult TerminalDeInstallationRequest()
+        public async Task<IActionResult> ProblematicDeInstalledToDeInstalled()
         {
             return View();
         }
 
-        public IActionResult TerminalDeInstallationRequestClose()
+        public async Task<IActionResult> TerminalDeInstallationRequest()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> TerminalDeInstallationRequestClose()
         {
             return View();
         }
