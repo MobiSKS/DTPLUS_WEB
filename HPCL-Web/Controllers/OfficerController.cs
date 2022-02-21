@@ -1,4 +1,5 @@
-﻿using HPCL_Web.Helper;
+﻿using ClosedXML.Excel;
+using HPCL_Web.Helper;
 using HPCL_Web.Models;
 using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Officer;
@@ -10,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -20,7 +22,7 @@ namespace HPCL_Web.Controllers
 {
     public class OfficerController : Controller
     {
-        public async Task<IActionResult> Details(string officerType, string location/*, int pg = 1*/)
+        public async Task<IActionResult> Details(string officerType, string location)
         {
             List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
 
@@ -64,17 +66,6 @@ namespace HPCL_Web.Controllers
             ViewBag.OfficerType = officerType;
             ViewBag.Location = location;
             ViewBag.AddUpdateMessage = TempData["Message"];
-
-            //const int pageSize = 5;
-            //if (pg < 1)
-            //    pg = 1;
-
-            //int resCount = ofcLstMdl.Count();
-            //var pager = new PagerModel(resCount, pg, pageSize);
-            //int recSkip = (pg - 1) * pageSize;
-
-            //var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
-            //this.ViewBag.Pager = pager;
 
             return View(ofcLstMdl);
         }
@@ -160,7 +151,6 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> Create(OfficerModel ofcrMdl)
         {
@@ -636,7 +626,6 @@ namespace HPCL_Web.Controllers
             //ModelState.Clear();
             return View(ofcrMdl);
         }
-
         public async Task<IActionResult> EditLocation(string OfficerID)
         {
             char flag = 'N';
@@ -1018,22 +1007,25 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> OfficerDetails()
         {
-            List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
+            OfficerDetailsModel ofcLstMdl = new OfficerDetailsModel();
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                var form = new Dictionary<string, string>
+                var OfficerStateForms = new Dictionary<string, string>
                 {
                     {"Useragent", Common.useragent},
                     {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Userid", Common.userid},
+                    {"ZonalId", ""},
+                    {"RegionalId", ""},
+                    {"Country", "0"}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
-                //Fetching Officer Type
-                using (var Response = await client.PostAsync(WebApiUrl.getOfficerDetails, content))
+                //Fetching State
+                using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -1041,8 +1033,39 @@ namespace HPCL_Web.Controllers
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<OfficerListModel> lst = jarr.ToObject<List<OfficerListModel>>();
-                        ofcLstMdl.AddRange(lst);
+                        List<OfficerStateModel> lst = jarr.ToObject<List<OfficerStateModel>>();
+                        ofcLstMdl.OfficerStates.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load states";
+                    }
+                }
+
+                var OfficerZonalDetails = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent Zonalcontent = new StringContent(JsonConvert.SerializeObject(OfficerZonalDetails), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.zonalOffice, Zonalcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
+                        ofcLstMdl.OfficerZones.AddRange(lst);
                     }
                     else
                     {
@@ -1059,18 +1082,133 @@ namespace HPCL_Web.Controllers
             ViewBag.Location = "";
             ViewBag.AddUpdateMessage = TempData["Message"];
 
-            //const int pageSize = 5;
-            //if (pg < 1)
-            //    pg = 1;
-
-            //int resCount = ofcLstMdl.Count();
-            //var pager = new PagerModel(resCount, pg, pageSize);
-            //int recSkip = (pg - 1) * pageSize;
-
-            //var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
-            //this.ViewBag.Pager = pager;
-
             return View(ofcLstMdl);
+        }
+
+        public async Task<IActionResult> GetOfficerDetailsTable(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
+        {
+
+            List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
+            return PartialView("~/Views/Officer/_OfficerDetailsTable.cshtml", lst);
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var form = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", Common.useragent},
+            //        {"Userip", Common.userip},
+            //        {"Userid", Common.userid},
+            //        {"ZonalId", "" },
+            //        {"RegionalId", "" },
+            //        {"ZO", ZonalOfcID == "0" ? "":ZonalOfcID },
+            //        {"RO", (string.IsNullOrEmpty(RegionalOfcID) || RegionalOfcID == "0")  ? "":RegionalOfcID },
+            //        {"StateId", StateID == "0" ? "":StateID },
+            //        {"DistrictId", (string.IsNullOrEmpty(DistrictID) || DistrictID == "0") ? "":DistrictID }
+            //    };
+
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
+
+            //    using (var Response = await client.PostAsync(WebApiUrl.getOfficerDetailByLocation, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<OfficerDetailsTable> lst = jarr.ToObject<List<OfficerDetailsTable>>();
+            //            return PartialView("~/Views/Officer/_OfficerDetailsTable.cshtml", lst);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Officer Details Table");
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Officer Details Table");
+            //        }
+            //    }
+            //}
+        }
+        public async Task<List<OfficerDetailsTable>> OfficerDetailsTableDataAsync(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var form = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid},
+                    {"ZonalId", "" },
+                    {"RegionalId", "" },
+                    {"ZO", ZonalOfcID == "0" ? "":ZonalOfcID },
+                    {"RO", (string.IsNullOrEmpty(RegionalOfcID) || RegionalOfcID == "0")  ? "":RegionalOfcID },
+                    {"StateId", StateID == "0" ? "":StateID },
+                    {"DistrictId", (string.IsNullOrEmpty(DistrictID) || DistrictID == "0") ? "":DistrictID }
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.getOfficerDetailByLocation, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerDetailsTable> lst = jarr.ToObject<List<OfficerDetailsTable>>();
+                        return lst;
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Officer Details Table");
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        List<OfficerDetailsTable> lst = new List<OfficerDetailsTable>();
+                        return lst;
+                    }
+                }
+            }
+        }
+        public async Task<IActionResult> DownloadExcel(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
+        {
+            List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
+
+            DataTable dt = new DataTable("Grid");
+            dt.Columns.AddRange(new DataColumn[9] { new DataColumn("S.No."),
+                                        new DataColumn("ZO"),
+                                        new DataColumn("RO"),
+                                        new DataColumn("STATE"),
+                                        new DataColumn("DISTRICT"),
+                                        new DataColumn("MARKETING OFFICER NAME"),
+                                        new DataColumn("MARKETING OFFICER EMAIL"),
+                                        new DataColumn("ZONAL OFFICER NAME"),
+                                        new DataColumn("ZONAL OFFICER EMAIL")
+            });
+
+            int i = 1;
+            foreach (var item in lst)
+            {
+                dt.Rows.Add(i, item.ZonalOfficeName, item.RegionalOfficeName, item.StateName, item.DistrictName, item.MarketingOfficerName, item.MarketingOfficerEmail, item.ZonalOfficerName, item.ZonalOfficerEmail);
+                i++;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "OfficerInformation.xlsx");
+                }
+            }
         }
         [HttpPost]
         public async Task<JsonResult> GetOfficerTypeDetails()
@@ -1103,7 +1241,7 @@ namespace HPCL_Web.Controllers
                         //    OfficerTypeName = "All",
                         //    OfficerTypeShortName = "All"
                         //});
-                        var SortedtList = lst.OrderBy(x => x.OfficerTypeID).ToList();
+                        var SortedtList = lst.OrderBy(x => x.OfficerTypeName).ToList();
                         return Json(SortedtList);
                     }
                     else
@@ -1179,7 +1317,7 @@ namespace HPCL_Web.Controllers
                                 RegionalOfficeID = 0,
                                 RegionalOfficeName = "Select Location"
                             });
-                            var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
+                            var SortedtList = lst.OrderBy(x => x.RegionalOfficeName).ToList();
                             return Json(SortedtList);
                         }
                         else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
@@ -1192,7 +1330,7 @@ namespace HPCL_Web.Controllers
                                 ZonalOfficeID = 0,
                                 ZonalOfficeName = "Select Location"
                             });
-                            var SortedtList = lst.OrderBy(x => x.ZonalOfficeID).ToList();
+                            var SortedtList = lst.OrderBy(x => x.ZonalOfficeName).ToList();
                             return Json(SortedtList);
                         }
                         else if (OfcrType.Contains("2"))
@@ -1205,7 +1343,7 @@ namespace HPCL_Web.Controllers
                                 HQID = 0,
                                 HQName = "Select Location"
                             });
-                            var SortedtList = lst.OrderBy(x => x.HQID).ToList();
+                            var SortedtList = lst.OrderBy(x => x.HQName).ToList();
                             return Json(SortedtList);
                         }
                         return Json("Error");
@@ -1249,13 +1387,13 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
                         List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-                        lst.Add(new OfficerDistrictModel
-                        {
-                            stateID = 0,
-                            districtID = 0,
-                            districtName = "Select District"
-                        });
-                        var SortedtList = lst.OrderBy(x => x.districtID).ToList();
+                        //lst.Add(new OfficerDistrictModel
+                        //{
+                        //    stateID = 0,
+                        //    districtID = 0,
+                        //    districtName = "Select District"
+                        //});
+                        var SortedtList = lst.OrderBy(x => x.districtName).ToList();
                         return Json(SortedtList);
                     }
                     else
@@ -1297,12 +1435,12 @@ namespace HPCL_Web.Controllers
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
                         List<RegionalOffice> lst = jarr.ToObject<List<RegionalOffice>>();
-                        lst.Add(new RegionalOffice
-                        {
-                            RegionalOfficeID = 0,
-                            RegionalOfficeName = "--Select--"
-                        });
-                        var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
+                        //lst.Add(new RegionalOffice
+                        //{
+                        //    RegionalOfficeID = 0,
+                        //    RegionalOfficeName = "--Select--"
+                        //});
+                        var SortedtList = lst.OrderBy(x => x.RegionalOfficeName).ToList();
                         return Json(SortedtList);
                     }
                     else
