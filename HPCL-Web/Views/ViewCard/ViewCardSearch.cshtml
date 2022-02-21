@@ -42,7 +42,7 @@
 
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="Card" style="display:none">Card Number<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12" id="Card" style="display:none">Card Number</label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @Id = "CardNo", style = "display:none" })
                                                         @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
@@ -51,7 +51,7 @@
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="Mob" style="display:none">Mobile Number<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12" id="Mob" style="display:none">Mobile Number</label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", @Id = "MobileNo", style = "display:none" })
                                                         @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
@@ -60,7 +60,7 @@
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="Vec" style="display:none">Vechile Number<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12" id="Vec" style="display:none">Vechile Number</label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.TextBoxFor(m => m.VechileNo, new { @class = "form-control", @Id = "VechileNo", style = "display:none" })
                                                         @Html.ValidationMessageFor(m => m.VechileNo, "", new { @class = "text-danger" })
@@ -79,12 +79,12 @@
                                         <button class="btn" type="submit" id="btnSave" name="submit" onclick="showGrid()" style="background-color:#084693;color:white;">SEARCH</button>
                                         <a class="btn" href="#" id="btnCancel" name="cancel" onclick="resetFields()" style="background-color:#084693;color:white;">RESET</a>
                                         <a class="btn" onclick="showTable()" type="submit" id="btnAdd" name="submit" style="background-color:#084693;color:white;">ADD/EDIT MOBILE</a>
-                                        <button class="btn" type="submit" id="btnEdit" name="submit" style="background-color:#084693;color:white;display:none">EDIT</button>
+                                        <a class="btn" type="submit" id="btnEdit"  value="Refresh Page" onClick="refresh" name="submit" style="background-color:#084693;color:white;display:none">EDIT</a>
                                         <button class="btn" type="submit" id="btnADD" name="submit" style="background-color:#084693;color:white;display:none">ADD</button>
 
-
-                                        <a class="btn" id="btnMapp" name="Mapp" style="background-color:#084693;color:white;display:none">MAPPING DETAILS</a>
+                                        <a class="btn" type="submit" id="btnMapp" name="submit" style="background-color:#084693;color:white;display:none">MAPPING DETAILS</a>
                                     </div>
+
 
 
 
@@ -209,8 +209,29 @@
                                             <th>
                                                 @Html.DisplayName("FastagNumber")
                                             </th>
+                                        </tr>
+                                    </table>
 
+                                    <div class="form-group d-flex align-items-center flex-wrap">
 
+                                    </div>
+                                    <table id="CardMapp" class="table table-bordered" style="display:none;">
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayName("Card Number")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Vehicle No")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Mobile Number")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("FastagNumber")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Date")
+                                            </th>
                                         </tr>
                                     </table>
                                 </div>
@@ -320,6 +341,7 @@
 
 
 
+
                 $.ajax({
                     url: "@Url.Action("ViewCardSearch", "ViewCard")",
                     type: "POST",
@@ -386,7 +408,7 @@
         console.log(customerid);
 
         $.ajax({
-            url: "@Url.Action("EditMobile","ViewCard")",
+            url: "@Url.Action("SearchCardMapping", "ViewCard")",
             type: "POST",
             dataType: "JSON",
             data: { customerId: customerid },
@@ -420,14 +442,14 @@
                         + "<td>" + (res.searchList[i].vechileNo || '') + "</td>"
                         + "<td class='mobileNo'><input class='form-control cgl cpl' name='" + (res.searchList[i].mobileNumber || '') + "' type='text' value='" + (res.searchList[i].mobileNumber || '') + "' readonly='readonly'></td>"
                         + "<td class=><input class='form-control cgl stl' name='" + (res.searchList[i].fastagNumber || '') + "' type='text' value='" + (res.searchList[i].fastagNumber || '') + "' readonly='readonly'></td>"
-                        + "<td><a href='#aa' class='approveDtls'>DELETE MAPPING</a></td>"
+                        + "<td><a href='#aaa' onclick='resetField()' class='DeleteNumber'>DELETE</a></td></tr></tbody>";
                     "</tbody></tr>"
                     $("#CardEdit").append(rows);
 
                     $('#btnAdd').remove()
 
-                }
 
+                }
 
             },
             error: function (ex) {
@@ -447,7 +469,6 @@
 
             mobileNumber = currentRow.find('.getMobileNo').text();
             FastagNumber = currentRow.find('.getFastagNumber').text();
-
 
             console.log("txt", textBoxValue);
         }
@@ -475,6 +496,7 @@
            mobileNo: mobileNo,
            fastagNo: fastagNo
        });
+
               $.ajax({
                     url: "@Url.Action("UpdateCards", "ViewCard")",
                     type: "POST",
@@ -491,15 +513,22 @@
 
    });
 
+     function resetField() {
+       $("input:text").each(function () {
+           $(this).val("");
+       });
+        document.getElementById('.getMobileNo').style.display = 'none'; 
+    }
+
 //FOR EDIT BUTTON
-     $("#btnEdit").on('click', function (e) {
+     @*$("#btnEdit").on('click', function (e) {
 
         var customerid = $("#Customerid").val();
 
         console.log(customerid);
 
         $.ajax({
-            url: "@Url.Action("EditMobile","ViewCard")",
+            url: "@Url.Action("SearchCardMapping", "ViewCard")",
             type: "POST",
             dataType: "JSON",
             data: { customerId: customerid },
@@ -533,16 +562,14 @@
                     "</tbody></tr>"
                     $("#Edit").append(rows);
 
-                    
-
                 }
-               
+
             },
             error: function (ex) {
                 alert('Failed' + ex);
             }
         });
-            $("#CardEdit").on('click', '.checkEnable', function (e) {
+            $("#Edit").on('click', '.checkEnable', function (e) {
 
                 currentRow = $(this).closest("tr");
 
@@ -561,20 +588,19 @@
                 }
             });
 
-    });
+     });*@
 
 
 //For ADD BUTTON
 
-
-        $("#btnADD").on('click', function (e) {
+     $("#btnADD").on('click', function (e) {
 
         var customerid = $("#Customerid").val();
 
         console.log(customerid);
 
         $.ajax({
-            url: "@Url.Action("EditMobile","ViewCard")",
+            url: "@Url.Action("SearchCardMapping", "ViewCard")",
             type: "POST",
             dataType: "JSON",
             data: { customerId: customerid },
@@ -635,7 +661,65 @@
                 }
             });
 
-    });
+     });
+
+
+
+    //For Map BUTTON
+
+     $("#btnMapp").on('click', function (e) {
+
+        var customerid = $("#Customerid").val();
+
+        console.log(customerid);
+
+        $.ajax({
+            url: "@Url.Action("SearchCardMapping", "ViewCard")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: customerid },
+            success: function (res) {
+
+                console.log(res, "res");
+                $("#Card").show();
+                $("#CardNo").show();
+                $("#Mob").show();
+                $("#MobileNo").show();
+                $("#Vec").show();
+                $("#VechileNo").show();
+                $('#CardMapp').show()
+                $('#btnSave').remove()
+                $('#btnEdit').show()
+                $('#btnADD').show()
+                $('#btnMapp').show()
+                $('#CardEdit').remove()
+                $('#Edit').remove()
+                $('#CardADD').remove()
+
+
+                $("#btnMapp td").parent().remove();
+
+
+                for (var i = 0; i < res.searchList.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td>" + (res.searchList[i].cardNumber || '') + "</td>"
+                        + "<td>" + (res.searchList[i].vechileNo || '') + "</td>"
+                        + "<td>" + (res.searchList[i].mobileNumber || '') + "</td>"
+                        + "<td>" + (res.searchList[i].fastagNumber || '') + "</td>"
+                        + "<td>" + (res.searchList[i].mappingDate || '') + "</td>"
+
+                    "</tbody></tr>"
+                    $("#CardMapp").append(rows);
+
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+        });
 
 </script>
 <script type="text/javascript">
