@@ -1,15 +1,4 @@
 ﻿@model IEnumerable<HPCL_Web.Models.Officer.OfficerListModel>
-@{
-    ViewData["Title"] = "Details";
-    PagerModel pager = new PagerModel();
-    int pageNo = 0;
-
-    if (ViewBag.pager != null)
-    {
-        pager = ViewBag.Pager;
-        pageNo = pager.CurrentPage;
-    }
-}
 
 <marquee width="100%" direction="left" height="30%">
     Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
@@ -38,7 +27,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-4" style="width:35%;">
-                                            <label class="font-weight-normal col-md-5 col-12">Location <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12">Location</label>
                                             <div class="col-md-7 col-12" style="margin-left:-20%;">
                                                 <div class="custom_select">
                                                     <select id="location" name="location" class="form-control"></select>
@@ -49,7 +38,7 @@
                                         <div class="col-xs-4" style="margin-left:-7%;">
                                             <button class="btn btn-block">Search</button>
                                         </div>
-                                        <div class="col-xs-4" style="margin-left: 20.5%;">
+                                        <div class="col-xs-4" style="margin-left: 17.5%;">
                                             <a class="btn btn-block" style="background-color:cornflowerblue;color:white;" asp-controller="Officer" asp-action="Create">Add Officer</a>
                                         </div>
                                     </div>
@@ -61,7 +50,7 @@
                 </div>
             </div>
         }
-        <table class="table table-striped">
+        <table class="table table-striped" id="OfficerDetailsTbl">
             <thead style="background-color:lightgray;">
                 <tr>
                     <th style="width:5%;display:none;">OfficerID</th>
@@ -76,7 +65,7 @@
                 </tr>
             </thead>
             <tbody>
-                @{ 
+                @{
                     int i = 0;
                 }
                 @foreach (var item in Model)
@@ -93,26 +82,16 @@
                         <td>@item.LocationName</td>
                         <td>
                             <a asp-action="EditOfficer" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editPage.png" style="width: 15%;" /></a>
-                            <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editLocation.png" style="width: 15%;" /></a>
+                            @if (item.OfficerTypeName != "HO")
+                            {
+                                <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID"><img src="~/assets/images/officerPage/editLocation.png" style="width: 15%;" /></a>
+                            }
                             <a asp-action="Delete" asp-route-OfficerID="@item.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="container">
-            @if (pager.TotalPages > 0)
-            {
-                <ul class="pagination justify-content-end">
-                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-                    {
-                        <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-controller="Officer" asp-action="Details" asp-route-pg="@pge">@pge</a>
-                        </li>
-                    }
-                </ul>
-            }
-        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -187,9 +166,8 @@
                 alert("Error Populating Location Data");
             }
         });
-        if (loc > 0) {
-            getLocationFunc();
-        }
+
+        getLocationFunc();
     });
 
     function getLocationFunc() {
@@ -199,9 +177,6 @@
             id = ofcType;
         }
 
-        //else if ($('#officerType :selected').val() >= 0) {
-        //    id =
-        //}
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetLocationDetails", "Officer")',
@@ -210,7 +185,6 @@
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    debugger;
                     if (id == "1" || id == "4" || id == "6") {
                         $("#location").html("");
                         $.each(data, function (i, data) { // bind the dropdown list using json result

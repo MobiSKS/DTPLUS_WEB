@@ -20,7 +20,7 @@ namespace HPCL_Web.Controllers
 {
     public class OfficerController : Controller
     {
-        public async Task<IActionResult> Details(string officerType, string location, int pg = 1)
+        public async Task<IActionResult> Details(string officerType, string location/*, int pg = 1*/)
         {
             List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
 
@@ -65,18 +65,18 @@ namespace HPCL_Web.Controllers
             ViewBag.Location = location;
             ViewBag.AddUpdateMessage = TempData["Message"];
 
-            const int pageSize = 5;
-            if (pg < 1)
-                pg = 1;
+            //const int pageSize = 5;
+            //if (pg < 1)
+            //    pg = 1;
 
-            int resCount = ofcLstMdl.Count();
-            var pager = new PagerModel(resCount, pg, pageSize);
-            int recSkip = (pg - 1) * pageSize;
+            //int resCount = ofcLstMdl.Count();
+            //var pager = new PagerModel(resCount, pg, pageSize);
+            //int recSkip = (pg - 1) * pageSize;
 
-            var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
-            this.ViewBag.Pager = pager;
+            //var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
+            //this.ViewBag.Pager = pager;
 
-            return View(data);
+            return View(ofcLstMdl);
         }
         public async Task<IActionResult> Create()
         {
@@ -172,21 +172,21 @@ namespace HPCL_Web.Controllers
                     {"Userip", Common.userip},
                     {"UserId", Common.userid},
                     {"FirstName", ofcrMdl.FirstName},
-                    {"LastName", ofcrMdl.LastName},
+                    {"LastName", string.IsNullOrEmpty(ofcrMdl.LastName) ? "":ofcrMdl.LastName},
                     {"UserName", ofcrMdl.UserName},
-                    {"OfficerType", ofcrMdl.OfficerTypeID.ToString()},
-                    {"LocationId", ofcrMdl.LocationID.ToString()},
+                    {"OfficerType", ofcrMdl.OfficerTypeID},
+                    {"LocationId", ofcrMdl.LocationID},
                     {"Address1", ofcrMdl.Address1},
-                    {"Address2", ofcrMdl.Address2},
-                    {"Address3", ofcrMdl.Address3},
+                    {"Address2", string.IsNullOrEmpty(ofcrMdl.Address2) ? "":ofcrMdl.Address2},
+                    {"Address3", string.IsNullOrEmpty(ofcrMdl.Address3) ? "":ofcrMdl.Address3},
                     {"StateId", ofcrMdl.State.ToString()},
-                    {"CityName", ofcrMdl.City},
-                    {"DistrictId", ofcrMdl.DistrictID.ToString()},
-                    {"Pin", ofcrMdl.Pin.ToString()},
-                    {"MobileNo", ofcrMdl.Mobile},
-                    {"PhoneNo", ofcrMdl.Phone},
-                    {"EmailId", ofcrMdl.Email},
-                    {"Fax", ofcrMdl.Fax},
+                    {"CityName", string.IsNullOrEmpty(ofcrMdl.City) ? "":ofcrMdl.City},
+                    {"DistrictId", string.IsNullOrEmpty(ofcrMdl.DistrictID) ? "0":ofcrMdl.DistrictID},
+                    {"Pin", string.IsNullOrEmpty(ofcrMdl.Pin) ? "":ofcrMdl.Pin},
+                    {"MobileNo", string.IsNullOrEmpty(ofcrMdl.Mobile) ? "":ofcrMdl.Mobile},
+                    {"PhoneNo", string.IsNullOrEmpty(ofcrMdl.Phone) ? "":ofcrMdl.Phone},
+                    {"EmailId", string.IsNullOrEmpty(ofcrMdl.Email) ? "":ofcrMdl.Email},
+                    {"Fax", string.IsNullOrEmpty(ofcrMdl.Fax) ? "":ofcrMdl.Fax},
                     {"Createdby", HttpContext.Session.GetString("UserName")}
                 };
 
@@ -1016,6 +1016,62 @@ namespace HPCL_Web.Controllers
 
             return RedirectToAction("EditLocation", "Officer", new { OfficerID = officerID });
         }
+        public async Task<IActionResult> OfficerDetails()
+        {
+            List<OfficerListModel> ofcLstMdl = new List<OfficerListModel>();
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var form = new Dictionary<string, string>
+                {
+                    {"Useragent", Common.useragent},
+                    {"Userip", Common.userip},
+                    {"Userid", Common.userid}
+                };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
+                //Fetching Officer Type
+                using (var Response = await client.PostAsync(WebApiUrl.getOfficerDetails, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<OfficerListModel> lst = jarr.ToObject<List<OfficerListModel>>();
+                        ofcLstMdl.AddRange(lst);
+                    }
+                    else
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        ViewBag.Message = "Failed to load officer types";
+                    }
+                }
+            }
+
+            ViewBag.OfficerType = "";
+            ViewBag.Location = "";
+            ViewBag.AddUpdateMessage = TempData["Message"];
+
+            //const int pageSize = 5;
+            //if (pg < 1)
+            //    pg = 1;
+
+            //int resCount = ofcLstMdl.Count();
+            //var pager = new PagerModel(resCount, pg, pageSize);
+            //int recSkip = (pg - 1) * pageSize;
+
+            //var data = ofcLstMdl.Skip(recSkip).Take(pager.PageSize).ToList();
+            //this.ViewBag.Pager = pager;
+
+            return View(ofcLstMdl);
+        }
         [HttpPost]
         public async Task<JsonResult> GetOfficerTypeDetails()
         {
@@ -1066,7 +1122,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetLocationDetails(string OfcrType)
         {
-            if (OfcrType == "All")
+            if (OfcrType == "All" || string.IsNullOrEmpty(OfcrType))
             {
                 OfcrType = "0";
             }
@@ -1118,6 +1174,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
+                            lst.Add(new OfficerRegionModel
+                            {
+                                RegionalOfficeID = 0,
+                                RegionalOfficeName = "Select Location"
+                            });
                             var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
                             return Json(SortedtList);
                         }
@@ -1126,6 +1187,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
+                            lst.Add(new OfficerZoneModel
+                            {
+                                ZonalOfficeID = 0,
+                                ZonalOfficeName = "Select Location"
+                            });
                             var SortedtList = lst.OrderBy(x => x.ZonalOfficeID).ToList();
                             return Json(SortedtList);
                         }
@@ -1134,6 +1200,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
+                            lst.Add(new OfficerHqModel
+                            {
+                                HQID = 0,
+                                HQName = "Select Location"
+                            });
                             var SortedtList = lst.OrderBy(x => x.HQID).ToList();
                             return Json(SortedtList);
                         }

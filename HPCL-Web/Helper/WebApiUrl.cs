@@ -30,6 +30,7 @@
         public static string getLocationMapping = "api/dtplus/officer/get_officer_location_mapping";
         public static string insertOfficerLocationMapping = "api/dtplus/officer/insert_officer_location_mapping";
         public static string deleteOfficerLocationMapping = "api/dtplus/officer/delete_officer_location_mapping";
+        public static string getOfficerDetailByLocation = "api/dtplus/officer/get_officer_detail_by_location";
 
         #endregion       
 
