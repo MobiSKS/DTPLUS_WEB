@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Models.Officer
 {
-    public class OfficerModel
-    {
+    public class OfficerModel    {
         
         public OfficerModel()
         {
