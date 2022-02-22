@@ -18,6 +18,7 @@
         public static string getDistrict = "api/dtplus/settings/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
+        public static string insertRbeOfficer =  "api/dtplus/officer/insert_rbe_officer";
         public static string getSalesArea = "api/dtplus/settings/get_sales_area";
         public static string updateOfficer = "api/dtplus/officer/update_officer";
         public static string getOfficerDetails = "api/dtplus/officer/get_officer_detail";

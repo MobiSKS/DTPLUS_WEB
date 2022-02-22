@@ -182,43 +182,86 @@ namespace HPCL_Web.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerForms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
+                if (ofcrMdl.OfficerTypeName == "RBE")
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    using (var Response = await client.PostAsync(WebApiUrl.insertRbeOfficer, content))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        string message = "";
-                        string status = "";
-
-                        if (obj["Status_Code"].ToString() == "200")
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            var jarr = obj["Data"].Value<JArray>();
-                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
-                            message = lst.First().Reason.ToString();
-                            status = lst.First().Status.ToString();
-                            if (status == "1")
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            string message = "";
+                            string status = "";
+
+                            if (obj["Status_Code"].ToString() == "200")
                             {
-                                TempData["Message"] = message;
-                                return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                                status = lst.First().Status.ToString();
+                                if (status == "1")
+                                {
+                                    TempData["Message"] = message;
+                                    return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                }
                             }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            ViewBag.Message = message;
                         }
                         else
                         {
-                            message = obj["Message"].ToString();
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            ViewBag.Message = "Failed to create Officer";
                         }
-
-                        ViewBag.Message = message;
                     }
-                    else
+                }
+                else
+                {
+                    using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        ViewBag.Message = "Failed to create Officer";
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            string message = "";
+                            string status = "";
+
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                                status = lst.First().Status.ToString();
+                                if (status == "1")
+                                {
+                                    TempData["Message"] = message;
+                                    return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                }
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            ViewBag.Message = message;
+                        }
+                        else
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            ViewBag.Message = "Failed to create Officer";
+                        }
                     }
                 }
 
@@ -1411,11 +1454,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
-                            lst.Add(new OfficerRegionModel
-                            {
-                                RegionalOfficeID = 0,
-                                RegionalOfficeName = "Select Location"
-                            });
+                            //lst.Add(new OfficerRegionModel
+                            //{
+                            //    RegionalOfficeID = 0,
+                            //    RegionalOfficeName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.RegionalOfficeName).ToList();
                             return Json(SortedtList);
                         }
@@ -1424,11 +1467,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
-                            lst.Add(new OfficerZoneModel
-                            {
-                                ZonalOfficeID = 0,
-                                ZonalOfficeName = "Select Location"
-                            });
+                            //lst.Add(new OfficerZoneModel
+                            //{
+                            //    ZonalOfficeID = 0,
+                            //    ZonalOfficeName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.ZonalOfficeName).ToList();
                             return Json(SortedtList);
                         }
@@ -1437,11 +1480,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
-                            lst.Add(new OfficerHqModel
-                            {
-                                HQID = 0,
-                                HQName = "Select Location"
-                            });
+                            //lst.Add(new OfficerHqModel
+                            //{
+                            //    HQID = 0,
+                            //    HQName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.HQName).ToList();
                             return Json(SortedtList);
                         }

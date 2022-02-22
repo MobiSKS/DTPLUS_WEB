@@ -18,10 +18,6 @@ namespace HPCL_Web.Controllers
 {
     public class MerchantController : Controller
     {
-        public IActionResult ViewPorfile()
-        {
-            return View();
-        }
         public async Task<IActionResult> CreateMerchant(string MerchantIDValue, string fromDate, string toDate, string category)
         {
             char flag = 'N';
