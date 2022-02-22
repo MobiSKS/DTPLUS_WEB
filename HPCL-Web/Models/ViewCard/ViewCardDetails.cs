@@ -42,6 +42,9 @@ namespace HPCL_Web.Models.ViewCard
         public string LimitType { get; set; }
         public string AvailableCCMSLimit { get; set; }
         public string Reason { get; set; }
+        public string MappingDate { get; set; }
+
+        public string FastagNumber { get; set; }
 
     }
 
