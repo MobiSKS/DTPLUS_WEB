@@ -423,6 +423,7 @@ namespace HPCL_Web.Models
 
         public string PaymentType { get; set; }
         public string PaymentReceivedDate { get; set; }
+        public string ReceivedAmount { get; set; }
     }
 
     public class CustomerResponseByReferenceNo
@@ -449,6 +450,9 @@ namespace HPCL_Web.Models
         public string PaymentType { get; set; }
         public string PaymentReceivedDate { get; set; }
         public string NoOfCards { get; set; }
+        public string ReceivedAmount { get; set; }
+        public string RBEId { get; set; }
+        public string RBEName { get; set; }
     }
 
     public class CustomerRBE
