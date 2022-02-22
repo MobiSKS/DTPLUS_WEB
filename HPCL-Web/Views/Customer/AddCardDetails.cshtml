@@ -35,8 +35,8 @@
                                                 <button class="btn btn_primary px-4 py-2" id="btnSearch">Search</button>
                                             </div>
                                             @*<div class="pl-2 w-50">
-                                        <button class="btn btn_primary px-4 py-2" type="button">Edit</button>
-                                    </div>*@
+                        <button class="btn btn_primary px-4 py-2" type="button">Edit</button>
+                    </div>*@
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +170,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12 mb-3">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12" id="lblReceivedAmount">Received Amount<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.ReceivedAmount, new { @id = "ReceivedAmount", @class = "form-control", @readonly = "readonly" })
+                                                <span class="error" id="FeePaymentNo_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12 mb-3">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            @*<label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>*@
+                                            <div class="col-md-7 col-12">
 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-3">
@@ -188,15 +206,15 @@
                                     <div class=" table-responsive">
                                         <table class="table table-bordered text-nowrap" id="NoOfCardsTbl" style="display: none">
                                             @*<thead>
-                                        <tr>
-                                            <th>S No.</th>
-                                            <th>Vehicle No./Card Identifier</th>
-                                            <th>Vehicle No.</th>
-                                            <th>Vehicle Type</th>
-                                            <th>Vehicle Make</th>
-                                            <th>Year of Reg.</th>
-                                        </tr>
-                                    </thead>*@
+                        <tr>
+                            <th>S No.</th>
+                            <th>Vehicle No./Card Identifier</th>
+                            <th>Vehicle No.</th>
+                            <th>Vehicle Type</th>
+                            <th>Vehicle Make</th>
+                            <th>Year of Reg.</th>
+                        </tr>
+                    </thead>*@
                                             <tbody id="cardDetails">
                                                 @if ((@Model.CustomerTypeId == "905") || (@Model.CustomerTypeId == "909"))
                                                 {
@@ -364,6 +382,18 @@
                             $('#NoOfVehiclesAllCards').hide();
                         }
                         console.log(data.paymentType);
+
+                        if (data.rbeId != "") {
+                            document.getElementById("RBEId").value = data.rbeId;
+                            document.getElementById("RBEName").value = data.rbeName;
+                            $("#RBEId").prop('readonly', true);
+                        }
+                        else {
+                            document.getElementById("RBEId").value = "";
+                            document.getElementById("RBEName").value = "";
+                            $("#RBEId").prop('readonly', false);
+                        }
+
                         if (data.paymentType != "") {
                             document.getElementById("FeePaymentNo").value = data.paymentType;
                             document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
@@ -384,9 +414,11 @@
                             document.getElementById("rbtnFeeWaiver").disabled = true;
 
                             $('#lblChequeNo').text("Payment Source");
-                            $('#lblChequeDate').text("Payment Source Date");
+                            $('#lblChequeDate').text("Payment Date");
                             document.getElementById("NoOfCards").value = data.noOfCards;
                             $("#NoOfCards").prop('readonly', true);
+                            document.getElementById("ReceivedAmount").value = data.receivedAmount;
+                            
                         }
                         else {
                             $("#rbtnOnline").prop('disabled', true);
@@ -399,6 +431,7 @@
                             $('#lblChequeDate').text("Approval Email Date");
                             document.getElementById("NoOfCards").value = "";
                             $("#NoOfCards").prop('readonly', false);
+                            document.getElementById("ReceivedAmount").value = "";
                         }
                     }
                     else {
@@ -636,7 +669,7 @@
 
                         var rows = "<tr>"
                                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
                                             + "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                                             + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
@@ -646,7 +679,7 @@
 
                         var rows = "<tr>"
                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td></tr>"
+                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td></tr>"
                         //+ "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                         //+ "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                         //+ "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
@@ -656,7 +689,7 @@
 
                         var rows = "<tr>"
                                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
                                             //+ "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                                             + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
@@ -719,154 +752,171 @@
         }
 
 
-        function SubmitValidations() {
-            debugger;
+    function SubmitValidations() {
+        debugger;
 
 
-            if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "Customre Ref No is required";
-                document.getElementById("CustomerReferenceNo").focus();
+        if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") {
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customre Ref No is required";
+            document.getElementById("CustomerReferenceNo").focus();
+            return false;
+        }
+        else {
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CustomerName").value == "0" || document.getElementById("CustomerName").value == "") {
+            document.getElementById("CustomerName_error").innerHTML = "Customer Name is required";
+            document.getElementById("CustomerName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("CustomerName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("FormNumber").value == "0" || document.getElementById("FormNumber").value == "") {
+            document.getElementById("FormNumber_error").innerHTML = "Form Number is required";
+            document.getElementById("FormNumber").focus();
+            return false;
+        }
+        else {
+            document.getElementById("FormNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value == "") {
+            document.getElementById("NoOfCards_error").innerHTML = "No of Cards is required";
+            document.getElementById("NoOfCards").focus();
+            return false;
+        }
+        else {
+            document.getElementById("NoOfCards_error").innerHTML = "";
+        }
+
+        var customerTypeId = document.getElementById("CustomerTypeId").value;
+        if (customerTypeId == "905" || customerTypeId == "909") {
+            if (document.getElementById("NoOfVehiclesAllCards").value == "0" || document.getElementById("NoOfVehiclesAllCards").value == "") {
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No Of Vehicles (For All Cards) is required";
+                document.getElementById("NoOfVehiclesAllCards").focus();
                 return false;
             }
             else {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
             }
+        }
 
-            if (document.getElementById("CustomerName").value == "0" || document.getElementById("CustomerName").value == "") {
-                document.getElementById("CustomerName_error").innerHTML = "Customer Name is required";
-                document.getElementById("CustomerName").focus();
-                return false;
-            }
-            else {
-                document.getElementById("CustomerName_error").innerHTML = "";
-            }
 
-            if (document.getElementById("FormNumber").value == "0" || document.getElementById("FormNumber").value == "") {
-                document.getElementById("FormNumber_error").innerHTML = "Form Number is required";
-                document.getElementById("FormNumber").focus();
-                return false;
-            }
-            else {
-                document.getElementById("FormNumber_error").innerHTML = "";
-            }
+        if (document.getElementById("RBEId").value == "0" || document.getElementById("RBEId").value == "") {
+            document.getElementById("RBEId_error").innerHTML = "RBE Id is required";
+            document.getElementById("RBEId").focus();
+            return false;
+        }
+        else {
+            document.getElementById("RBEId_error").innerHTML = "";
+        }
 
-            if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value == "") {
-                document.getElementById("NoOfCards_error").innerHTML = "No of Cards is required";
-                document.getElementById("NoOfCards").focus();
-                return false;
-            }
-            else {
-                document.getElementById("NoOfCards_error").innerHTML = "";
-            }
+        if (document.getElementById("RBEName").value == "0" || document.getElementById("RBEName").value == "") {
+            document.getElementById("RBEName_error").innerHTML = "RBE Name is required";
+            document.getElementById("RBEName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("RBEName_error").innerHTML = "";
+        }
 
-            var customerTypeId = document.getElementById("CustomerTypeId").value;
-            if (customerTypeId == "905" || customerTypeId == "909") {
-                if (document.getElementById("NoOfVehiclesAllCards").value == "0" || document.getElementById("NoOfVehiclesAllCards").value == "") {
-                    document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No Of Vehicles (For All Cards) is required";
-                    document.getElementById("NoOfVehiclesAllCards").focus();
+        if (document.getElementById("rbtnCard").checked) {
+
+            if (document.getElementById("rbtnFeeWaiver").checked) {
+                if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From is required";
+                    document.getElementById("FeePaymentNo").focus();
                     return false;
                 }
                 else {
-                    document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
+                    document.getElementById("FeePaymentNo_error").innerHTML = "";
+                }
+
+                if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date is required";
+                    document.getElementById("FeePaymentDate").focus();
+                    return false;
+                }
+                else {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "";
                 }
             }
-            
+        }
 
-            if (document.getElementById("RBEId").value == "0" || document.getElementById("RBEId").value == "") {
-                document.getElementById("RBEId_error").innerHTML = "RBE Id is required";
-                document.getElementById("RBEId").focus();
+        if (document.getElementById("rbtnCard").checked) {
+
+            if (document.getElementById("rbtnOnline").checked) {
+                if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source is required";
+                    document.getElementById("FeePaymentNo").focus();
+                    return false;
+                }
+                else {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "";
+                }
+
+                if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date is required";
+                    document.getElementById("FeePaymentDate").focus();
+                    return false;
+                }
+                else {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "";
+                }
+            }
+        }
+
+        if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
+            alert("Card Preference Not Selected");
+            return;
+        }
+
+        if (document.getElementById("rbtnCard").checked) {
+            if (!(document.querySelector('input[name="FeePaymentsCollectFeeWaiver"]:checked'))) {
+                alert("Fee Payment Details Not Selected");
                 return false;
             }
-            else {
-                document.getElementById("RBEId_error").innerHTML = "";
-            }
+        }
 
-            if (document.getElementById("RBEName").value == "0" || document.getElementById("RBEName").value == "") {
-                document.getElementById("RBEName_error").innerHTML = "RBE Name is required";
-                document.getElementById("RBEName").focus();
-                return false;
-            }
-            else {
-                document.getElementById("RBEName_error").innerHTML = "";
-            }
+        var selectedCardType = $("input[name='CardPreference']:checked").val();
+        document.getElementById("CardPreference").value = selectedCardType;
+        console.log(selectedCardType);
 
-            if (document.getElementById("rbtnCard").checked) {
+        var selectedFeePayment = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val();
+        document.getElementById("FeePaymentsCollectFeeWaiver").value = selectedFeePayment;
+        console.log(selectedFeePayment);
 
-                if (document.getElementById("rbtnFeeWaiver").checked) {
-                    if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From is required";
-                        document.getElementById("FeePaymentNo").focus();
-                        return false;
-                    }
-                    else {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "";
-                    }
+        var count = $('#NoOfCardsTbl tr').length;
 
-                    if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
-                        document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date is required";
-                        document.getElementById("FeePaymentDate").focus();
-                        return false;
-                    }
-                    else {
-                        document.getElementById("FeePaymentDate_error").innerHTML = "";
-                    }
+        //alert(count);
+
+        if (count == 1) {
+            alert("Vehicle Details Not Added");
+            return false;
+        }
+        var DuplicateFound = false;
+        console.log('Before Checking For Duplicate VehicleNo');
+        $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+            var value = $(this).val();
+            $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("VehicleNo_error").innerHTML = "Duplicate Vehicle Registration Number " + $(this).val() + " Found";
+                    console.log('Found Duplicates');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
                 }
-            }
+            });
+        });
 
-            if (document.getElementById("rbtnCard").checked) {
-
-                if (document.getElementById("rbtnOnline").checked) {
-                    if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source is required";
-                        document.getElementById("FeePaymentNo").focus();
-                        return false;
-                    }
-                    else {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "";
-                    }
-
-                    if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
-                        document.getElementById("FeePaymentDate_error").innerHTML = "Payment Source Date is required";
-                        document.getElementById("FeePaymentDate").focus();
-                        return false;
-                    }
-                    else {
-                        document.getElementById("FeePaymentDate_error").innerHTML = "";
-                    }
-                }
-            }
-
-            if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
-                alert("Card Preference Not Selected");
-                return;
-            }
-
-            if (document.getElementById("rbtnCard").checked) {
-                if (!(document.querySelector('input[name="FeePaymentsCollectFeeWaiver"]:checked'))) {
-                    alert("Fee Payment Details Not Selected");
-                    return;
-                }
-            }
-
-            var selectedCardType = $("input[name='CardPreference']:checked").val();
-            document.getElementById("CardPreference").value = selectedCardType;
-            console.log(selectedCardType);
-
-            var selectedFeePayment = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val();
-            document.getElementById("FeePaymentsCollectFeeWaiver").value = selectedFeePayment;
-            console.log(selectedFeePayment);
-
-            var count = $('#NoOfCardsTbl tr').length;
-
-            //alert(count);
-
-            if (count == 1) {
-                alert("Vehicle Details Not Added");
-                return;
-            }
-
-            return true;
-
+        if (DuplicateFound) {
+            return false;
+        }
+        
+        return true;
     }
 
 
@@ -898,7 +948,7 @@
             //alert(selected);
             if (selected == "1") {
                 $('#lblChequeNo').text("Payment Source");
-                $('#lblChequeDate').text("Payment Source Date");
+                $('#lblChequeDate').text("Payment Date");
             }
             else if (selected == "2") {
                 $('#lblChequeNo').text("Approval Email From");
@@ -919,7 +969,9 @@
                 $("#FeePaymentDate").val('');
                 $('#FeePaymentNo').hide();
                 $('#FeePaymentDate').hide();
+                $('#ReceivedAmount').hide();
                 $('#divFeePaymentDetails').hide();
+                $('#lblReceivedAmount').hide();
                 document.getElementById("rbtnFeeWaiver").checked = false;
                 document.getElementById("rbtnOnline").checked = false;
             }
@@ -930,8 +982,9 @@
                 $("#FeePaymentDate").val('');
                 $('#FeePaymentNo').show();
                 $('#FeePaymentDate').show();
+                $('#ReceivedAmount').show();
                 $('#divFeePaymentDetails').show();
-                
+                $('#lblReceivedAmount').show();
 
                 document.getElementById("rbtnFeeWaiver").checked = true;
                 //$("#rbtnCard").prop('disabled', false);
@@ -1008,5 +1061,21 @@
 
 
     }
+
+
+    //function CheckDuplicates() {
+    //    console.log('Before CheckDuplicates');
+    //    $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+    //        var value = $(this).val();
+    //        $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
+    //            if ($(this).val() == value) {
+    //                console.log('Found Duplicates');
+    //                console.log($(this).val());
+    //            }
+    //        });
+    //    });
+    //    return false;
+    //}
+    //});
 
 </script>

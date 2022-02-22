@@ -1190,8 +1190,14 @@ namespace HPCL_Web.Controllers
                                     customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
                                     customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
                                     customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-
-                                    if(customerCardInfo.CustomerTypeId== "905" || customerCardInfo.CustomerTypeId =="909")
+                                    customerCardInfo.ReceivedAmount= string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+                                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                                    if (customerCardInfo.RBEId == "0")
+                                        customerCardInfo.RBEId = "";
+                                    if (customerCardInfo.NoOfCards == "0")
+                                        customerCardInfo.NoOfCards = "";
+                                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                                     {
                                         customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
                                     }
@@ -1288,6 +1294,13 @@ namespace HPCL_Web.Controllers
                                 customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
                                 customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
                                 customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+                                customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+                                customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                                if (customerCardInfo.RBEId == "0")
+                                    customerCardInfo.RBEId = "";
+                                if (customerCardInfo.NoOfCards == "0")
+                                    customerCardInfo.NoOfCards = "";
+                                customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
 
                                 if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                                 {
@@ -1306,7 +1319,6 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
                             return Json("Failed to load Customer Details");
                         }
-
                     }
                     else
                     {
@@ -1323,7 +1335,6 @@ namespace HPCL_Web.Controllers
 
             }
         }
-
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerRBEName(string RBEId)
@@ -1438,7 +1449,9 @@ namespace HPCL_Web.Controllers
                     string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
                     feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
                 }
-                              
+
+                feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
+
 
                 #region Create Request Info
 
@@ -1504,6 +1517,7 @@ namespace HPCL_Web.Controllers
                                 //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
                                 customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
                                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                                ModelState.Clear();
                             }
                             else
                             {
@@ -2038,7 +2052,7 @@ namespace HPCL_Web.Controllers
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                
+
                 StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
                 using (var Response = await client.PostAsync(WebApiUrl.checkemailidDuplication, cusFormcontent))
                 {
@@ -2135,5 +2149,53 @@ namespace HPCL_Web.Controllers
 
             return new JsonResult(data);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPanNoDuplication(string PanNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //fetching Customer info
+                var CustomerPanInfo = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
+                        {"ZonalId", "0"},
+                        {"RegionalId", "0"},
+                        {"IncomeTaxPan", PanNo }
+                    };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+
+                StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.checkPanNoDuplication, cusPancontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+                        return Json(lst[0]);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Mobile Details");
+                    }
+                }
+            }
+        }
+
+
     }
 }
