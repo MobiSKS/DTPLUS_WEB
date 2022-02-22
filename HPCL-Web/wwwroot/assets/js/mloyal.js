@@ -313,6 +313,14 @@ else {
             return ret;
         }
 
+        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
         //solo Propritorship 4th Char Pan should be 'P'
         if (TypeofBusinessEntityId == 2) {
             var panno = document.applicationForm.CustomerIncomeTaxPan.value;
