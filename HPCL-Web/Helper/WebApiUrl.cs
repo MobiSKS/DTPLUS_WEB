@@ -18,6 +18,7 @@
         public static string getDistrict = "api/dtplus/settings/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
+        public static string insertRbeOfficer =  "api/dtplus/officer/insert_rbe_officer";
         public static string getSalesArea = "api/dtplus/settings/get_sales_area";
         public static string updateOfficer = "api/dtplus/officer/update_officer";
         public static string getOfficerDetails = "api/dtplus/officer/get_officer_detail";
@@ -100,6 +101,8 @@
         public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
         public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
         public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
+
+        public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
         public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
         #endregion
 

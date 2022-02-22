@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-using HPCL_Web.Helper;
+﻿using HPCL_Web.Helper;
 using HPCL_Web.Models;
 using HPCL_Web.Models.Common;
 using HPCL_Web.Models.Officer;
@@ -183,43 +182,86 @@ namespace HPCL_Web.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerForms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
+                if (ofcrMdl.OfficerTypeName == "RBE")
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    using (var Response = await client.PostAsync(WebApiUrl.insertRbeOfficer, content))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        string message = "";
-                        string status = "";
-
-                        if (obj["Status_Code"].ToString() == "200")
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            var jarr = obj["Data"].Value<JArray>();
-                            List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
-                            message = lst.First().Reason.ToString();
-                            status = lst.First().Status.ToString();
-                            if (status == "1")
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            string message = "";
+                            string status = "";
+
+                            if (obj["Status_Code"].ToString() == "200")
                             {
-                                TempData["Message"] = message;
-                                return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                                status = lst.First().Status.ToString();
+                                if (status == "1")
+                                {
+                                    TempData["Message"] = message;
+                                    return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                }
                             }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            ViewBag.Message = message;
                         }
                         else
                         {
-                            message = obj["Message"].ToString();
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            ViewBag.Message = "Failed to create Officer";
                         }
-
-                        ViewBag.Message = message;
                     }
-                    else
+                }
+                else
+                {
+                    using (var Response = await client.PostAsync(WebApiUrl.insertOfficer, content))
                     {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        ViewBag.Message = "Failed to create Officer";
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            string message = "";
+                            string status = "";
+
+                            if (obj["Status_Code"].ToString() == "200")
+                            {
+                                var jarr = obj["Data"].Value<JArray>();
+                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                message = lst.First().Reason.ToString();
+                                status = lst.First().Status.ToString();
+                                if (status == "1")
+                                {
+                                    TempData["Message"] = message;
+                                    return RedirectToAction("Details", "Officer", new { pg = 1 });
+                                }
+                            }
+                            else
+                            {
+                                message = obj["Message"].ToString();
+                            }
+
+                            ViewBag.Message = message;
+                        }
+                        else
+                        {
+                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                            var Message = obj["errorMessage"].ToString();
+                            ViewBag.Message = "Failed to create Officer";
+                        }
                     }
                 }
 
@@ -1177,39 +1219,139 @@ namespace HPCL_Web.Controllers
                 }
             }
         }
-        public async Task<IActionResult> DownloadExcel(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
-        {
-            List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
+        //public async Task<IActionResult> DownloadExcel(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
+        //{
+        //    List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
 
-            DataTable dt = new DataTable("Grid");
-            dt.Columns.AddRange(new DataColumn[9] { new DataColumn("S.No."),
-                                        new DataColumn("ZO"),
-                                        new DataColumn("RO"),
-                                        new DataColumn("STATE"),
-                                        new DataColumn("DISTRICT"),
-                                        new DataColumn("MARKETING OFFICER NAME"),
-                                        new DataColumn("MARKETING OFFICER EMAIL"),
-                                        new DataColumn("ZONAL OFFICER NAME"),
-                                        new DataColumn("ZONAL OFFICER EMAIL")
-            });
+        //    DataTable dt = new DataTable("Grid");
 
-            int i = 1;
-            foreach (var item in lst)
-            {
-                dt.Rows.Add(i, item.ZonalOfficeName, item.RegionalOfficeName, item.StateName, item.DistrictName, item.MarketingOfficerName, item.MarketingOfficerEmail, item.ZonalOfficerName, item.ZonalOfficerEmail);
-                i++;
-            }
+        //    dt.Columns.AddRange(new DataColumn[9] { new DataColumn("S.No."),
+        //                                new DataColumn("ZO"),
+        //                                new DataColumn("RO"),
+        //                                new DataColumn("STATE"),
+        //                                new DataColumn("DISTRICT"),
+        //                                new DataColumn("MARKETING OFFICER NAME"),
+        //                                new DataColumn("MARKETING OFFICER EMAIL"),
+        //                                new DataColumn("ZONAL OFFICER NAME"),
+        //                                new DataColumn("ZONAL OFFICER EMAIL")
+        //    });
 
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                wb.Worksheets.Add(dt);
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "OfficerInformation.xlsx");
-                }
-            }
-        }
+        //    int i = 1;
+        //    foreach (var item in lst)
+        //    {
+        //        dt.Rows.Add(i, item.ZonalOfficeName, item.RegionalOfficeName, item.StateName, item.DistrictName, item.MarketingOfficerName, item.MarketingOfficerEmail, item.ZonalOfficerName, item.ZonalOfficerEmail);
+        //        i++;
+        //    }
+
+        //    Microsoft.Office.Interop.Excel.Application excel;
+        //    Microsoft.Office.Interop.Excel.Workbook worKbooK;
+        //    Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
+        //    Microsoft.Office.Interop.Excel.Range celLrangE;
+
+        //    try
+        //    {
+        //        excel = new Microsoft.Office.Interop.Excel.Application();
+        //        excel.Visible = false;
+        //        excel.DisplayAlerts = false;
+        //        worKbooK = excel.Workbooks.Add(Type.Missing);
+
+
+        //        worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
+        //        worKsheeT.Name = "StudentRepoertCard";
+
+        //        worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[1, 8]].Merge();
+        //        worKsheeT.Cells[1, 1] = "Student Report Card";
+        //        worKsheeT.Cells.Font.Size = 15;
+
+
+        //        int rowcount = 2;
+
+        //        foreach (DataRow datarow in ExportToExcel().Rows)
+        //        {
+        //            rowcount += 1;
+        //            for (int i = 1; i <= ExportToExcel().Columns.Count; i++)
+        //            {
+
+        //                if (rowcount == 3)
+        //                {
+        //                    worKsheeT.Cells[2, i] = ExportToExcel().Columns[i - 1].ColumnName;
+        //                    worKsheeT.Cells.Font.Color = System.Drawing.Color.Black;
+
+        //                }
+
+        //                worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
+
+        //                if (rowcount > 3)
+        //                {
+        //                    if (i == ExportToExcel().Columns.Count)
+        //                    {
+        //                        if (rowcount % 2 == 0)
+        //                        {
+        //                            celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, ExportToExcel().Columns.Count]];
+        //                        }
+
+        //                    }
+        //                }
+
+        //            }
+
+        //        }
+
+        //        celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, ExportToExcel().Columns.Count]];
+        //        celLrangE.EntireColumn.AutoFit();
+        //        Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
+        //        border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+        //        border.Weight = 2d;
+
+        //        celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, ExportToExcel().Columns.Count]];
+
+        //        worKbooK.SaveAs(textBox1.Text); ;
+        //        worKbooK.Close();
+        //        excel.Quit();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+
+        //    }
+        //    finally
+        //    {
+        //        worKsheeT = null;
+        //        celLrangE = null;
+        //        worKbooK = null;
+        //    }
+
+        //    //DataTable dt = new DataTable("Grid");
+
+        //    //dt.Columns.AddRange(new DataColumn[9] { new DataColumn("S.No."),
+        //    //                            new DataColumn("ZO"),
+        //    //                            new DataColumn("RO"),
+        //    //                            new DataColumn("STATE"),
+        //    //                            new DataColumn("DISTRICT"),
+        //    //                            new DataColumn("MARKETING OFFICER NAME"),
+        //    //                            new DataColumn("MARKETING OFFICER EMAIL"),
+        //    //                            new DataColumn("ZONAL OFFICER NAME"),
+        //    //                            new DataColumn("ZONAL OFFICER EMAIL")
+        //    //});
+
+        //    //int i = 1;
+        //    //foreach (var item in lst)
+        //    //{
+        //    //    dt.Rows.Add(i, item.ZonalOfficeName, item.RegionalOfficeName, item.StateName, item.DistrictName, item.MarketingOfficerName, item.MarketingOfficerEmail, item.ZonalOfficerName, item.ZonalOfficerEmail);
+        //    //    i++;
+        //    //}
+
+        //    //using (XLWorkbook wb = new XLWorkbook())
+        //    //{
+        //    //    wb.Worksheets.Add(dt);
+        //    //    using (MemoryStream stream = new MemoryStream())
+        //    //    {
+        //    //        wb.SaveAs(stream);
+        //    //        return File(stream.ToArray(), "application/ms-excel", "OfficerInformation.xlsx");
+        //    //    }
+        //    //}
+        //}
         [HttpPost]
         public async Task<JsonResult> GetOfficerTypeDetails()
         {
@@ -1312,11 +1454,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerRegionModel> lst = jarr.ToObject<List<OfficerRegionModel>>();
-                            lst.Add(new OfficerRegionModel
-                            {
-                                RegionalOfficeID = 0,
-                                RegionalOfficeName = "Select Location"
-                            });
+                            //lst.Add(new OfficerRegionModel
+                            //{
+                            //    RegionalOfficeID = 0,
+                            //    RegionalOfficeName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.RegionalOfficeName).ToList();
                             return Json(SortedtList);
                         }
@@ -1325,11 +1467,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerZoneModel> lst = jarr.ToObject<List<OfficerZoneModel>>();
-                            lst.Add(new OfficerZoneModel
-                            {
-                                ZonalOfficeID = 0,
-                                ZonalOfficeName = "Select Location"
-                            });
+                            //lst.Add(new OfficerZoneModel
+                            //{
+                            //    ZonalOfficeID = 0,
+                            //    ZonalOfficeName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.ZonalOfficeName).ToList();
                             return Json(SortedtList);
                         }
@@ -1338,11 +1480,11 @@ namespace HPCL_Web.Controllers
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                             var jarr = obj["Data"].Value<JArray>();
                             List<OfficerHqModel> lst = jarr.ToObject<List<OfficerHqModel>>();
-                            lst.Add(new OfficerHqModel
-                            {
-                                HQID = 0,
-                                HQName = "Select Location"
-                            });
+                            //lst.Add(new OfficerHqModel
+                            //{
+                            //    HQID = 0,
+                            //    HQName = "Select Location"
+                            //});
                             var SortedtList = lst.OrderBy(x => x.HQName).ToList();
                             return Json(SortedtList);
                         }
