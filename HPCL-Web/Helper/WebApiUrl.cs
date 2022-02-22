@@ -100,6 +100,8 @@
         public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
         public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
         public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
+
+        public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
         #endregion
 
         #region Login

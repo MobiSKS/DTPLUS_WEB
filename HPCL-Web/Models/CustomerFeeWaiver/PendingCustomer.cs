@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Numerics;
 
 namespace HPCL_Web.Models.CustomerFeeWaiver
 {
@@ -41,7 +40,6 @@ namespace HPCL_Web.Models.CustomerFeeWaiver
         public int FeePaymentsCollectFeeWaiverId { get; set; }
         public string FeePaymentsCollectorFeeWaiver { get; set; }
         public string FeePaymentNo { get; set; }
-        //[DisplayFormat(DataFormatString = "{yyyy-MM-ddHH:mm:ss}")]
         public string FeePaymentDate { get; set; }
     }
 
@@ -66,5 +64,10 @@ namespace HPCL_Web.Models.CustomerFeeWaiver
     {
         public int Status { get; set; }
         public string Reason { get; set; }
+    }
+
+    public class BindPendingCustomer : BaseEntity
+    {
+        public BigInteger FormNumber { get; set; }
     }
 }
