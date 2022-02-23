@@ -31,6 +31,7 @@ namespace HPCL_Web.Controllers
                 Customerid = entity.Customerid
             };
 
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -67,7 +68,7 @@ namespace HPCL_Web.Controllers
         //   }
 
         [HttpPost]
-        public async Task<JsonResult> EditMobile(string Customerid)
+        public async Task<JsonResult> SearchCardMapping(string Customerid)
         {
             HttpContext.Session.SetString("Customerids", Customerid);
             var forms = new Dictionary<string, string>
@@ -84,7 +85,7 @@ namespace HPCL_Web.Controllers
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.ViewCardLimitsUrl, content))
+                using (var Response = await client.PostAsync(WebApiUrl.SearchCardMappingUrl, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -114,7 +115,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
+        public async Task<JsonResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
 
             var updateServiceBody = new UpdateMobile
@@ -157,6 +158,7 @@ namespace HPCL_Web.Controllers
             }
         }
 
+        
 
         //[HttpPost]
         //public async Task<JsonResult> Addmobilenumber(ViewCardDetails entity)
@@ -204,5 +206,7 @@ namespace HPCL_Web.Controllers
         //        }
         //    }
         //}
+
+
     }
 }

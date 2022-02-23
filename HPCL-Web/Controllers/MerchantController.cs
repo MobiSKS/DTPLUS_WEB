@@ -18,10 +18,6 @@ namespace HPCL_Web.Controllers
 {
     public class MerchantController : Controller
     {
-        public IActionResult ViewPorfile()
-        {
-            return View();
-        }
         public async Task<IActionResult> CreateMerchant(string MerchantIDValue, string fromDate, string toDate, string category)
         {
             char flag = 'N';
@@ -668,7 +664,7 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("CreateMerchant");
         }
-        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl, int pg = 1)
+        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl/*, int pg = 1*/)
         {
             MerchantApprovalModel merchantApprovalMdl = new MerchantApprovalModel();
             if (!String.IsNullOrEmpty(merchaApprovalMdl.FromDate))
@@ -720,19 +716,19 @@ namespace HPCL_Web.Controllers
                     }
                 }
 
-                const int pageSize = 5;
-                if (pg < 1)
-                    pg = 1;
+                //const int pageSize = 5;
+                //if (pg < 1)
+                //    pg = 1;
 
-                int resCount = merchantApprovalMdl.MerchantApprovalTableDetails.Count();
-                var pager = new PagerModel(resCount, pg, pageSize);
-                int recSkip = (pg - 1) * pageSize;
+                //int resCount = merchantApprovalMdl.MerchantApprovalTableDetails.Count();
+                //var pager = new PagerModel(resCount, pg, pageSize);
+                //int recSkip = (pg - 1) * pageSize;
 
-                var data = merchantApprovalMdl.MerchantApprovalTableDetails.Skip(recSkip).Take(pager.PageSize).ToList();
-                this.ViewBag.Pager = pager;
+                //var data = merchantApprovalMdl.MerchantApprovalTableDetails.Skip(recSkip).Take(pager.PageSize).ToList();
+                //this.ViewBag.Pager = pager;
 
-                merchantApprovalMdl.MerchantApprovalTableDetails.Clear();
-                merchantApprovalMdl.MerchantApprovalTableDetails.AddRange(data);
+                //merchantApprovalMdl.MerchantApprovalTableDetails.Clear();
+                //merchantApprovalMdl.MerchantApprovalTableDetails.AddRange(data);
             }
 
             if (merchaApprovalMdl.ShowTable == "Error")

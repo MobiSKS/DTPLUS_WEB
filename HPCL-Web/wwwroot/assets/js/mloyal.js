@@ -86,6 +86,15 @@ var ret = false;
 
 //console.log(ret);
 
+    if (document.applicationForm.FormNumber.value == "") {
+        document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+        document.applicationForm.FormNumber.focus();
+    return ret;
+}
+else {
+        document.getElementById("formNumber_error").innerHTML = "";
+}
+
 if (document.applicationForm.CustomerTypeID.value == "0") {
     document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
     document.applicationForm.CustomerTypeID.focus();
@@ -196,23 +205,52 @@ else {
 }
 
     
-//if (document.applicationForm.SalesArea.value == "") {
-//    document.getElementById("salesArea_error").innerHTML = "This information is required";
-//    document.applicationForm.salesArea.focus();
-//    return ret;
-//}
-//else {
-//    document.getElementById("salesArea_error").innerHTML = "";
-//}
 
-if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
-    document.applicationForm.CustomerIncomeTaxPan.focus();
-    return ret;
-}
-else {
-    document.getElementById("incomeTaxPan_error").innerHTML = "";
-}
+        var formNumber = document.getElementById("FormNumber").value;
+        if (formNumber == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        var fromNumberUsed = false;
+
+        
+
+    if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("formNumber_error").innerHTML = "";
+    }
+
+    
+    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;//$('#CustomerTbentityID').va();
+
+    if (TypeofBusinessEntityId != 10) {
+
+        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+    }
+    else {
+        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+            document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+    }
 
     if (document.applicationForm.TierOfCustomerID.value == "0") {
         document.getElementById("tierOfCustomer_error").innerHTML = "Select Tier Of Customer";
@@ -265,43 +303,97 @@ else {
 }*/
 
 
-if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
-    document.applicationForm.CustomerIncomeTaxPan.focus();
-    return ret;
-}
-else {
-    var result = false;        
+    //var TypeofBusinessEntityId  = $('#CustomerTbentityID').va();
 
-    $.ajax({
-        type: 'POST',  // http method
-        url: "PANValidation/Customer",
-        data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-            //debugger;
-            var jsonData = JSON.parse(data);
-            if (status == 'success' && jsonData['status-code']=='101') {
-                result = true;
+    if (TypeofBusinessEntityId != 10) {
 
-                console.log(jsonData);
-                document.getElementById("address-tab").click();
-                document.getElementById("address-tab").classList.remove("disable");
-                document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                localStorage.setItem("showregAddress", true)
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                document.applicationForm.CustomerIncomeTaxPan.focus();
-            }
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
         }
-    });
-    ret = result;
-}
+
+        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        //solo Propritorship 4th Char Pan should be 'P'
+        if (TypeofBusinessEntityId == 2) {
+            var panno = document.applicationForm.CustomerIncomeTaxPan.value;
+
+            let forthdigitPan = panno.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P') {
+                console.log('Inside');
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+                return ret;
+            }
+        }
+
+        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
+        }
+        else {
+            var result = false;
+
+            var panno = $('#CustomerIncomeTaxPan').val();
+            var OrgName = $('#IndividualOrgName').val();
+            var correctPANName = '';
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: "PANValidation/Customer",
+                data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['status-code'] == '101') {
+                        result = true;
+
+                        console.log(jsonData);
+                        document.getElementById("address-tab").click();
+                        document.getElementById("address-tab").classList.remove("disable");
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+                        if (OrgName == correctPANName) {
+                            localStorage.setItem("showregAddress", true)
+                        }
+                        else {
+                            result = false;
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                        }
+                    }
+                    else {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+                        document.applicationForm.CustomerIncomeTaxPan.focus();
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+                    document.applicationForm.CustomerIncomeTaxPan.focus();
+                }
+            });
+
+        }
+        ret = result;
+    }
+    else {
+        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+            document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
+        }
+        else {
+            ret = true;
+        }
+    }
 
 if (ret == false)
     return ret;
@@ -497,6 +589,22 @@ else {
 }
 
 
+    if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+    }
+
+    if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        return (false);
+    }
+    else {
+        document.getElementById("comm_email_error").innerHTML = "";
+    }
+
 if (document.getElementById("sameAddressCheck").checked != true) {
 
     if (document.getElementById("PerOrRegAddress1").value == "") {
@@ -565,6 +673,8 @@ if (document.getElementById("sameAddressCheck").checked != true) {
         document.getElementById("perma_state_error").innerHTML = "";
     }
 
+    $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+
     if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
         document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
         document.getElementById("PermanentDistrictId").focus();
@@ -574,7 +684,7 @@ if (document.getElementById("sameAddressCheck").checked != true) {
         document.getElementById("perma_district_error").innerHTML = "";
     }
 
-
+    
     ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
     //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
     //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";

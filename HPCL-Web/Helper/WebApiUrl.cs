@@ -18,6 +18,7 @@
         public static string getDistrict = "api/dtplus/settings/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
+        public static string insertRbeOfficer =  "api/dtplus/officer/insert_rbe_officer";
         public static string getSalesArea = "api/dtplus/settings/get_sales_area";
         public static string updateOfficer = "api/dtplus/officer/update_officer";
         public static string getOfficerDetails = "api/dtplus/officer/get_officer_detail";
@@ -30,6 +31,7 @@
         public static string getLocationMapping = "api/dtplus/officer/get_officer_location_mapping";
         public static string insertOfficerLocationMapping = "api/dtplus/officer/insert_officer_location_mapping";
         public static string deleteOfficerLocationMapping = "api/dtplus/officer/delete_officer_location_mapping";
+        public static string getOfficerDetailByLocation = "api/dtplus/officer/get_officer_detail_by_location";
 
         #endregion       
 
@@ -54,6 +56,7 @@
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
+        public static string SearchCardMappingUrl = "/dtpwebapi/api/dtplus/card/search_card_mapping_detail";
         #endregion
 
         #region Merchant
@@ -81,7 +84,7 @@
         public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
-        public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        //public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
         public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
@@ -92,8 +95,15 @@
 
         public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
         public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
-        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
+        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_unverfied_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
+        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
+        public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
+        public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
+        public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
+
+        public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
+        public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
         #endregion
 
         #region Login

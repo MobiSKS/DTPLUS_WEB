@@ -6,11 +6,11 @@ namespace HPCL_Web.Models.ViewModel.ViewCard
     {
 
 
-        public ObjCardLimits[] objCardLimits { get; set; }
+        public ObjUpdateMobileandFastagNoInCard[] ObjUpdateMobileandFastagNoInCard { get; set; }
         public string ModifiedBy { get; set; }
     }
 
-    public class ObjCardLimits
+    public class ObjUpdateMobileandFastagNoInCard
     {
         public string CardNo { get; set; }
         public string MobileNo { get; set; }

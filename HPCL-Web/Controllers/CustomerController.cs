@@ -37,6 +37,7 @@ namespace HPCL_Web.Controllers
             char flag = 'N';
 
             CustomerModel custMdl = new CustomerModel();
+            //custMdl.CustomerDateOfApplication = DateTime.Now.;
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 //Fetching CustomerType
@@ -320,6 +321,26 @@ namespace HPCL_Web.Controllers
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
             }
 
+            string customerDateOfApplication = "";
+            string KeyOffDateOfAnniversary = "";
+            string KeyOfficialDOB = "";
+
+            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+
+            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+
+            if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            {
+                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+            }
+
+            if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            {
+                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+            }
+
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -332,7 +353,7 @@ namespace HPCL_Web.Controllers
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
-                    {"DateOfApplication", cust.CustomerDateOfApplication},
+                    {"DateOfApplication", customerDateOfApplication},
                     {"SalesArea", cust.CustomerSalesAreaID.ToString()},
                     {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
                     {"IndividualOrgName", cust.IndividualOrgName},
@@ -359,7 +380,7 @@ namespace HPCL_Web.Controllers
                     {"PermanentCityName", cust.PerOrRegAddressCity},
                     {"PermanentPincode", cust.PerOrRegAddressPinCode},
                     {"PermanentStateId", cust.PerOrRegAddressStateID.ToString()},
-                    {"PermanentDistrictId", cust.PermanentDistrictId.ToString()},
+                    {"PermanentDistrictId", (cust.PermanentDistrictId==0?cust.CommunicationDistrictId.ToString():cust.PermanentDistrictId.ToString())},
                     {"PermanentPhoneNo", (String.IsNullOrEmpty(cust.PerOrRegAddressDialCode)?"":cust.PerOrRegAddressDialCode) + "-" + (String.IsNullOrEmpty(cust.PerOrRegAddressPhoneNumber)?"":cust.PerOrRegAddressPhoneNumber)},
                     {"PermanentFax", (String.IsNullOrEmpty(cust.PermanentFaxCode)?"":cust.PermanentFaxCode) + "-" + (String.IsNullOrEmpty(cust.PermanentFax)?"":cust.PermanentFax)},
                     {"KeyOfficialTitle", cust.KeyOffTitle},
@@ -371,9 +392,9 @@ namespace HPCL_Web.Controllers
                     {"KeyOfficialDesignation", cust.KeyOffDesignation},
                     {"KeyOfficialEmail", cust.KeyOffEmail},
                     {"KeyOfficialPhoneNo", (String.IsNullOrEmpty(cust.KeyOffPhoneCode)?"":cust.KeyOffPhoneCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffPhoneNumber)?"":cust.KeyOffPhoneNumber)},
-                    {"KeyOfficialDOA", (string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary)?"1900-01-01":cust.KeyOffDateOfAnniversary)},
+                    {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
-                    {"KeyOfficialDOB", (string.IsNullOrEmpty(cust.KeyOfficialDOB)?"1900-01-01":cust.KeyOfficialDOB)},
+                    {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
                     {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
                     {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
@@ -392,7 +413,8 @@ namespace HPCL_Web.Controllers
                     {"Createdby", HttpContext.Session.GetString("UserName")},
                     //{ "ObjCardDetail", json }
                      {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
-                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()}
+                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
+                     {"FormNumber", cust.FormNumber.ToString()}
 
                 };
                 //for (int i = 1; i <= cust.NoOfCards; i++)
@@ -431,7 +453,10 @@ namespace HPCL_Web.Controllers
                             }
                             else
                             {
-                                cust.Remarks = customerResponse.Data[0].Reason;
+                                if (customerResponse.Data != null)
+                                    cust.Remarks = customerResponse.Data[0].Reason;
+                                else
+                                    cust.Remarks = customerResponse.Message;
 
                                 /////////////
                                 //Fetching CustomerType
@@ -789,6 +814,7 @@ namespace HPCL_Web.Controllers
 
 
                                 ViewBag.Message = customerResponse.Message;
+                                ViewBag.NotFoundError = "Not Found";
                             }
                         }
                     }
@@ -1142,8 +1168,28 @@ namespace HPCL_Web.Controllers
                                 if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
                                     sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
 
-
                                 customerCardInfo.CustomerName = sb.ToString();
+
+                                customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+                                customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+
+                                if (customerResponseByReferenceNo.Data != null)
+                                {
+                                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+                                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+                                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+                                    customerCardInfo.ReceivedAmount= string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+                                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                                    if (customerCardInfo.RBEId == "0")
+                                        customerCardInfo.RBEId = "";
+                                    if (customerCardInfo.NoOfCards == "0")
+                                        customerCardInfo.NoOfCards = "";
+                                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+                                    {
+                                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+                                    }
+                                }
                             }
                             else
                             {
@@ -1229,6 +1275,27 @@ namespace HPCL_Web.Controllers
 
                             customerCardInfo.CustomerName = sb.ToString();
 
+                            customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+                            customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+                            if (customerResponseByReferenceNo.Data != null)
+                            {
+                                customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+                                customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+                                customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+                                customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+                                customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                                if (customerCardInfo.RBEId == "0")
+                                    customerCardInfo.RBEId = "";
+                                if (customerCardInfo.NoOfCards == "0")
+                                    customerCardInfo.NoOfCards = "";
+                                customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+
+                                if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+                                {
+                                    customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+                                }
+                            }
+
                             return Json(customerCardInfo);
                         }
                         else
@@ -1238,10 +1305,8 @@ namespace HPCL_Web.Controllers
                             var Response_Content = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                            var Message = "Failed to load Customer Details";
                             return Json("Failed to load Customer Details");
                         }
-
                     }
                     else
                     {
@@ -1258,7 +1323,6 @@ namespace HPCL_Web.Controllers
 
             }
         }
-
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerRBEName(string RBEId)
@@ -1366,6 +1430,17 @@ namespace HPCL_Web.Controllers
                 //    { "ObjCardDetail", json }
                 //};
 
+                string feePaymentDate = "";
+
+                if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
+                {
+                    string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+                    feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                }
+
+                feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
+
+
                 #region Create Request Info
 
                 CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
@@ -1377,7 +1452,7 @@ namespace HPCL_Web.Controllers
                 insertInfo.RBEId = customerCardInfo.RBEId;
                 insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
                 insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
-                insertInfo.FeePaymentDate = customerCardInfo.FeePaymentDate;
+                insertInfo.FeePaymentDate = feePaymentDate;
                 insertInfo.CardPreference = customerCardInfo.CardPreference;
                 insertInfo.RBEName = customerCardInfo.RBEName;
                 insertInfo.RBEName = customerCardInfo.RBEName;
@@ -1386,6 +1461,11 @@ namespace HPCL_Web.Controllers
                 insertInfo.UserId = HttpContext.Session.GetString("UserName");
                 insertInfo.Createdby = HttpContext.Session.GetString("UserName");
                 insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+
+                if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
+                {
+                    insertInfo.FeePaymentsCollectFeeWaiver = 0;
+                }
 
                 #endregion
 
@@ -1426,6 +1506,7 @@ namespace HPCL_Web.Controllers
                                 //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
                                 customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
                                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                                ModelState.Clear();
                             }
                             else
                             {
@@ -1794,6 +1875,211 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckformnumberDuplication(string FormNumber)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //fetching Customer info
+                var CustomerFormNumber = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
+                        {"FormNumber", FormNumber }
+                    };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.checkformnumberDuplication, cusFormcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+                        return Json(lst[0]);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Form Details");
+                    }
+                }
+
+
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckEmailDuplication(string Emailid)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //fetching Customer info
+                var CustomerFormNumber = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
+                        {"CommunicationEmailid", Emailid }
+                    };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+
+                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.checkemailidDuplication, cusFormcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+                        return Json(lst[0]);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Email Details");
+                    }
+                }
+
+
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //fetching Customer info
+                var CustomerFormNumber = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
+                        {"CommunicationMobileNo", MobileNo }
+                    };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+
+                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+                using (var Response = await client.PostAsync(WebApiUrl.checkmobileNoDuplication, cusFormcontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+                        return Json(lst[0]);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Mobile Details");
+                    }
+                }
+
+
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            string apiUrl = "v3/rc-advanced";
+            var data = "";
+            var input = new
+            {
+                registrationNumber = RegistrationNumber,
+                consent = "Y",
+                version = "3.1"
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
+                if (response.IsSuccessStatusCode)
+                {
+                    data = await response.Content.ReadAsStringAsync();
+                }
+            }
+
+            return new JsonResult(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPanNoDuplication(string PanNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                //fetching Customer info
+                var CustomerPanInfo = new Dictionary<string, string>
+                    {
+                        {"Useragent", Common.useragent},
+                        {"Userip", Common.userip},
+                        {"Userid", HttpContext.Session.GetString("UserName")},
+                        {"ZonalId", "0"},
+                        {"RegionalId", "0"},
+                        {"IncomeTaxPan", PanNo }
+                    };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+
+                StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.checkPanNoDuplication, cusPancontent))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+                        return Json(lst[0]);
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+                        var Message = obj["errorMessage"].ToString();
+                        return Json("Failed to load Mobile Details");
+                    }
+                }
+            }
+        }
+
 
     }
 }

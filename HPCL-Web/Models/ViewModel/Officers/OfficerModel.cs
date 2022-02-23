@@ -3,8 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCL_Web.Models.ViewModel.Officers
 {
-    public class OfficerModel
-    {
+    public class OfficerModel    {
         
         public OfficerModel()
         {
@@ -29,34 +28,35 @@ namespace HPCL_Web.Models.ViewModel.Officers
             OfficerDistrictMdl = new List<OfficerDistrictModel>();
         }
 
-        [Required(ErrorMessage = "First Name is Required")]
+        //[Required(ErrorMessage = "First Name is Required")]
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [Required]
+        //[Required]
         public string UserName { get; set; }
-        [Required(ErrorMessage = "Location is Required")]
-        public int LocationID { get; set; }
-        [Required(ErrorMessage = "District is Required")]
-        public int DistrictID { get; set; }
-        [Required(ErrorMessage = "Officer Type is Required")]
+        //[Required(ErrorMessage = "Location is Required")]
+        public string LocationID { get; set; }
+        //[Required(ErrorMessage = "District is Required")]
+        public string DistrictID { get; set; }
+        //[Required(ErrorMessage = "Officer Type is Required")]
         public string OfficerTypeID { get; set; }
-        [Required(ErrorMessage = "Address1 is Required")]
+        public string OfficerTypeName { get; set; }
+        //[Required(ErrorMessage = "Address1 is Required")]
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string Address3 { get; set; }
         public string City { get; set; }
-        [Required(ErrorMessage = "State is Required")]
-        public int State { get; set; }
-        public int StateId { get; set; }
-        [RegularExpression(@"^[1-9][0-9]{5}$", ErrorMessage = "Should be 6 Digits Only")]
-        public int? Pin { get; set; }
-        [Required(ErrorMessage = "Mobile is Required")]
-        [RegularExpression(@"^(?!(0))[0-9]{10}$", ErrorMessage = "Should not start with 0 and should be 10 Digits Only")]
+        //[Required(ErrorMessage = "State is Required")]
+        public string State { get; set; }
+        public string StateId { get; set; }
+        //[RegularExpression(@"^[1-9][0-9]{5}$", ErrorMessage = "Should be 6 Digits Only")]
+        public string Pin { get; set; }
+        //[Required(ErrorMessage = "Mobile is Required")]
+        //[RegularExpression(@"^(?!(0))[0-9]{10}$", ErrorMessage = "Should not start with 0 and should be 10 Digits Only")]
         public string Mobile { get; set; }
         public string MobileNo { get; set; }
         public string Phone { get; set; }
-        [Required(ErrorMessage = "Email is Required")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        //[Required(ErrorMessage = "Email is Required")]
+        //[EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         public string EmailId { get; set; }
         public string Fax { get; set; }

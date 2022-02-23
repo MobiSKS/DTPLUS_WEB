@@ -189,5 +189,10 @@ namespace HPCL_Web.Controllers
 
             return View(vGrid);
         }
+
+        public async Task<IActionResult> MappingCardToMerchant()
+        {
+            return View();
+        }
     }
 }
