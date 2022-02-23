@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using HPCL.Common.Models.CommonEntity;
+using System.Linq;
+using System.Threading.Tasks;
 using HPCL.Common.Models.ViewModel.Officers;
+using HPCL.Common.Models.CommonEntity;
 
 namespace HPCL.Common.Models
 {
@@ -360,7 +362,7 @@ namespace HPCL.Common.Models
     {
         public string CardIdentifier { get; set; }
         public string VechileNo { get; set; }
-        public int VehicleType { get; set; }
+        public string VehicleType { get; set; }
         public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
     }
@@ -416,6 +418,13 @@ namespace HPCL.Common.Models
         public int StatusCode { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public List<CardDetails> ObjCardDetail { get; set; }
+        public string NoOfVehiclesAllCards { get; set; }
+        public string CustomerTypeName { get; set; }
+        public string CustomerTypeId { get; set; }
+
+        public string PaymentType { get; set; }
+        public string PaymentReceivedDate { get; set; }
+        public string ReceivedAmount { get; set; }
     }
 
     public class CustomerResponseByReferenceNo
@@ -436,7 +445,15 @@ namespace HPCL.Common.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string FormNumber { get; set; }
+        public string CustomerTypeName { get; set; }
 
+        public string CustomerTypeId { get; set; }
+        public string PaymentType { get; set; }
+        public string PaymentReceivedDate { get; set; }
+        public string NoOfCards { get; set; }
+        public string ReceivedAmount { get; set; }
+        public string RBEId { get; set; }
+        public string RBEName { get; set; }
     }
 
     public class CustomerRBE
@@ -503,26 +520,7 @@ namespace HPCL.Common.Models
         public int SalesAreaID { get; set; }
         public string SalesAreaName { get; set; }
     }
-    //public class OfficerTypeModel
-    //{
-    //    public int OfficerTypeID { get; set; }
-    //    public string OfficerTypeName { get; set; }
-    //    public string OfficerTypeShortName { get; set; }
-
-    //}
-    //public class OfficerStateModel
-    //{
-    //    public int CountryID { get; set; }
-    //    public int StateID { get; set; }
-    //    public string StateName { get; set; }
-    //}
-    //public class OfficerDistrictModel
-    //{
-    //    public int stateID { get; set; }
-    //    public int districtID { get; set; }
-    //    public string districtName { get; set; }
-    //}
-
+   
     public class SearchCustomerResponseGrid
     {
         public string FormNumber { get; set; }
@@ -659,4 +657,12 @@ namespace HPCL.Common.Models
         public string AddressProofFront { get; set; }
         public string AddressProofBack { get; set; }
     }
+
+    //public class OfficerTypeModel
+    //{
+    //    public int OfficerTypeID { get; set; }
+    //    public string OfficerTypeName { get; set; }
+    //    public string OfficerTypeShortName { get; set; }
+
+    //}
 }

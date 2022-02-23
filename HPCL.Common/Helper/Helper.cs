@@ -37,7 +37,14 @@ namespace HPCL.Common.Helper
             _client.DefaultRequestHeaders.Add("x-karza-key", "3OSJINpsUYitlG9d");
             return _client;
         }
-
+        public HttpClient GetApiVehicleRegistrationUrlString()
+        {
+            var ApiUrl = "https://testapi.karza.in/";
+            _client = new HttpClient();
+            _client.BaseAddress = new Uri(ApiUrl);
+            _client.DefaultRequestHeaders.Add("x-karza-key", "3OSJINpsUYitlG9d");
+            return _client;
+        }
         public string GetAuthConnectionString()
         {
             return GetAPIBaseUrl().GetConnectionString(AuthConnectionKey);

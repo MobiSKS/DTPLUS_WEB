@@ -75,8 +75,7 @@ namespace HPCL_Web.Controllers
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
+                    {"Userid", HttpContext.Session.GetString("UserName")}                    
                 };
                 StringContent Zonecontent = new StringContent(JsonConvert.SerializeObject(ZonalOfficeForms), Encoding.UTF8, "application/json");
                 using (var Response = await client.PostAsync(WebApiUrl.getZonalOffice, Zonecontent))
@@ -1884,8 +1883,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerFormNumber = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"FormNumber", FormNumber }
                     };
@@ -1928,8 +1927,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerFormNumber = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CommunicationEmailid", Emailid }
                     };
@@ -1973,8 +1972,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerFormNumber = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CommunicationMobileNo", MobileNo }
                     };
@@ -2042,8 +2041,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerPanInfo = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"ZonalId", "0"},
                         {"RegionalId", "0"},

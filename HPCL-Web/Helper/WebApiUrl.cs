@@ -117,5 +117,9 @@
         public static string ViewRbeDataUrl = "/dtpwebapi/api/dtplus/officer/get_rbe_detail_by_user_name";
         public static string ApproveRejectRbeUserUrl = "/dtpwebapi/api/dtplus/officer/approve_reject_rbe";
         #endregion
+
+        #region DriverCard
+        public static string insertDriverCardRequest = "/dtpwebapi/api/dtplus/customer/insert_driver_card_request";
+        #endregion
     }
 }

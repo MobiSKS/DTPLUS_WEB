@@ -92,8 +92,14 @@
 
         public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
         public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
-        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_customer_detail_by_form_number";
+        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_unverfied_customer_detail_by_form_number";
         public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
+        public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
+        public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
+        public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
+
+        public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
+        public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
         #endregion
 
         #region Login
@@ -106,6 +112,10 @@
         public static string BindRbeDetailsUrl = "/dtpwebapi/api/dtplus/officer/bind_rbe_detail";
         public static string ViewRbeDataUrl = "/dtpwebapi/api/dtplus/officer/get_rbe_detail_by_user_name";
         public static string ApproveRejectRbeUserUrl = "/dtpwebapi/api/dtplus/officer/approve_reject_rbe";
+        #endregion
+
+        #region DriverCard
+        public static string insertDriverCardRequest = "/dtpwebapi/api/dtplus/customer/insert_driver_card_request";
         #endregion
     }
 }
