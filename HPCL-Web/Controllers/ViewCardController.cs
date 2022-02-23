@@ -85,7 +85,7 @@ namespace HPCL_Web.Controllers
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.SearchCardMappingUrl, content))
+                using (var Response = await client.PostAsync("", content)) //WebApiUrl.SearchCardMappingUrl, content))
                 {
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -115,7 +115,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
+        public async Task<JsonResult> UpdateCards()//ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
 
             var updateServiceBody = new UpdateMobile
@@ -124,7 +124,7 @@ namespace HPCL_Web.Controllers
                 UserId = HttpContext.Session.GetString("UserName"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                objCardLimits = limitArray,
+                //objCardLimits = limitArray,
                 ModifiedBy = HttpContext.Session.GetString("UserName"),
             };
 

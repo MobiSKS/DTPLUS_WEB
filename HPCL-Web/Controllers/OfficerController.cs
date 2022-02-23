@@ -1,5 +1,4 @@
 ﻿using HPCL.Common.Helper;
-using HPCL.Common.Models;
 using HPCL.Common.Models.Common;
 using HPCL.Common.Models.ViewModel.Officers;
 using Microsoft.AspNetCore.Http;
@@ -1054,9 +1053,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"ZonalId", ""},
                     {"RegionalId", ""},
                     {"Country", "0"}
@@ -1089,9 +1088,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerZonalDetails = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -1129,15 +1128,15 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> GetOfficerDetailsTable(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
         {
 
-            List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
+            List<OfficerDetailsTableModel> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
             return PartialView("~/Views/Officer/_OfficerDetailsTable.cshtml", lst);
             //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             //{
             //    var form = new Dictionary<string, string>
             //    {
-            //        {"Useragent", Common.useragent},
-            //        {"Userip", Common.userip},
-            //        {"Userid", Common.userid},
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", CommonBase.userid},
             //        {"ZonalId", "" },
             //        {"RegionalId", "" },
             //        {"ZO", ZonalOfcID == "0" ? "":ZonalOfcID },
@@ -1157,7 +1156,7 @@ namespace HPCL_Web.Controllers
 
             //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
             //            var jarr = obj["Data"].Value<JArray>();
-            //            List<OfficerDetailsTable> lst = jarr.ToObject<List<OfficerDetailsTable>>();
+            //            List<OfficerDetailsTableModel> lst = jarr.ToObject<List<OfficerDetailsTableModel>>();
             //            return PartialView("~/Views/Officer/_OfficerDetailsTable.cshtml", lst);
             //        }
             //        else
@@ -1173,15 +1172,15 @@ namespace HPCL_Web.Controllers
             //    }
             //}
         }
-        public async Task<List<OfficerDetailsTable>> OfficerDetailsTableDataAsync(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
+        public async Task<List<OfficerDetailsTableModel>> OfficerDetailsTableDataAsync(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 var form = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"ZonalId", "" },
                     {"RegionalId", "" },
                     {"ZO", ZonalOfcID == "0" ? "":ZonalOfcID },
@@ -1201,7 +1200,7 @@ namespace HPCL_Web.Controllers
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var jarr = obj["Data"].Value<JArray>();
-                        List<OfficerDetailsTable> lst = jarr.ToObject<List<OfficerDetailsTable>>();
+                        List<OfficerDetailsTableModel> lst = jarr.ToObject<List<OfficerDetailsTableModel>>();
                         return lst;
                     }
                     else
@@ -1212,7 +1211,7 @@ namespace HPCL_Web.Controllers
 
                         JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         var Message = obj["errorMessage"].ToString();
-                        List<OfficerDetailsTable> lst = new List<OfficerDetailsTable>();
+                        List<OfficerDetailsTableModel> lst = new List<OfficerDetailsTableModel>();
                         return lst;
                     }
                 }
@@ -1220,7 +1219,7 @@ namespace HPCL_Web.Controllers
         }
         //public async Task<IActionResult> DownloadExcel(string ZonalOfcID, string RegionalOfcID, string StateID, string DistrictID)
         //{
-        //    List<OfficerDetailsTable> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
+        //    List<OfficerDetailsTableModel> lst = await OfficerDetailsTableDataAsync(ZonalOfcID, RegionalOfcID, StateID, DistrictID);
 
         //    DataTable dt = new DataTable("Grid");
 
