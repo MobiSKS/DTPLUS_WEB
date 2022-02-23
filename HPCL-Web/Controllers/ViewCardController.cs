@@ -1,16 +1,13 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models.ViewCard;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.ViewCard;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -28,9 +25,9 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new ViewCardDetails
             {
-                UserId = Common.userid,
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
+                UserId = CommonBase.userid,
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
                 Customerid = entity.Customerid
             };
 
@@ -75,9 +72,9 @@ namespace HPCL_Web.Controllers
             HttpContext.Session.SetString("Customerids", Customerid);
             var forms = new Dictionary<string, string>
             {
-                {"useragent", Common.useragent},
-                {"userip", Common.userip},
-                {"userid", Common.userid},
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", CommonBase.userid},
                 {"customerId", HttpContext.Session.GetString("Customerids")}
             };
 
@@ -124,8 +121,8 @@ namespace HPCL_Web.Controllers
             {
 
                 UserId = HttpContext.Session.GetString("UserName"),
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
                 objCardLimits = limitArray,
                 ModifiedBy = HttpContext.Session.GetString("UserName"),
             };

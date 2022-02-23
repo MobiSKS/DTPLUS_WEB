@@ -1,8 +1,8 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models;
-using HPCL_Web.Models.Common;
-using HPCL_Web.Models.Officer;
-using HPCL_Web.Models.ValidateNewCards;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.Common;
+using HPCL.Common.Models.ViewModel.Officers;
+using HPCL.Common.Models.ViewModel.ValidateNewCards;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -27,9 +27,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -70,9 +70,9 @@ namespace HPCL_Web.Controllers
 
                 var ValidateNewCardListForm = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
+                        {"Userid", CommonBase.userid},
                         {"StateId", "" },
                         {"FormNumber", "" },
                         {"CustomerName", "" },
@@ -131,9 +131,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"CustomerReferenceNo", CustomerRefNo }
                 };
 
@@ -179,9 +179,9 @@ namespace HPCL_Web.Controllers
 
                 var forms = new ApproveCardDetailsModel
                 {
-                    UserId = Common.userid,
-                    UserAgent = Common.useragent,
-                    UserIp = Common.userip,
+                    UserId = CommonBase.userid,
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
                     CustomerReferenceNo = approveRejectModel.CustomerReferenceNo,
                     Comments = approveRejectModel.Comments,
                     Approvalstatus = approveRejectModel.Approvalstatus,

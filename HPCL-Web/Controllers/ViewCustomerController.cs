@@ -1,5 +1,5 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models.Customer;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.Customer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,9 +19,9 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new ViewCustomerSearch
             {
-                UserId = Common.userid,
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
+                UserId = CommonBase.userid,
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
                 CustomerID = "",
                 CustomerReferenceNo = 0,
                 FormNumber = 0,
@@ -64,9 +64,9 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new ViewCustomerSearch
             {
-                UserId = Common.userid,
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
+                UserId = CommonBase.userid,
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
                 CustomerID = "",
                 CustomerReferenceNo=0,
                 FormNumber=0,

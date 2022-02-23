@@ -1,4 +1,4 @@
-﻿@model HPCL_Web.Models.Security.BindGrid
+﻿@model HPCL.Common.Models.ViewModel.Security.BindGrid
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -282,30 +282,14 @@
 
 
         $.ajax({
-            url: "@Url.Action("UserCreationApprovalList", "Security")",
+            url: "@Url.Action("UserCreationApproval", "Security")",
             type: "POST",
             dataType: "JSON",
             success: function (res) {
 
                 console.log(res);
 
-                $("#ApprovalList td").parent().remove();
-
-                for (var i = 0; i < res.rbeDetailsAll.length; i++) {
-
-                    var rows = "<tbody><tr>"
-                        + "<td><span class='checkedRow'><input type='checkbox' name='IsChecked'></span></td>"
-                        + "<td>" + (res.rbeDetailsAll[i].firstName || '') + "</td>"
-                        + "<td><span class='usrName'>" + (res.rbeDetailsAll[i].userName || '') + "</span></td>"
-                        + "<td>" + (res.rbeDetailsAll[i].emailId || '') + "</td>"
-                        + "<td>" + (res.rbeDetailsAll[i].makerComment || '') + "</td>"
-                        + "<td>" + (res.rbeDetailsAll[i].requestOn || '') + "</td>"
-                        + "<td>" + (res.rbeDetailsAll[i].requestedby || '') + "</td>"
-                        + "<td><a href='#aa' class='viewDetails'>View</a></td>"
-                        + "</tr ></tbody > ";
-
-                    $('#ApprovalList').append(rows);
-                }
+                OnSuccessCreationApproval(res);
             },
             error: function (ex) {
                 alert('Failed' + ex);

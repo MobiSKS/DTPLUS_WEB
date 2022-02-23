@@ -1,27 +1,31 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Net;
-using HPCL_Web.Models.Officer;
-using HPCL_Web.Models.Customer;
 using System.Text.Json;
+using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.ViewModel.Officers;
+using HPCL.Common.Models.ViewModel.Customer;
+using HPCL.Service.Interfaces;
 
 namespace HPCL_Web.Controllers
 {
     public class CustomerController : Controller
     {
-        HelperAPI _api = new HelperAPI();
+        private readonly ICustomerService _customerService;
+        public CustomerController(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -29,15 +33,6 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> OnlineForm()
         {
             // return View();
-
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
-
 
             char flag = 'N';
 
@@ -47,8 +42,8 @@ namespace HPCL_Web.Controllers
                 //Fetching CustomerType
                 var CustType = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"CTFlag",  "1" }
                 };
@@ -77,8 +72,8 @@ namespace HPCL_Web.Controllers
                 //fetching Zonal Office
                 var ZonalOfficeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -134,8 +129,8 @@ namespace HPCL_Web.Controllers
                 //fetching Type of Business Entity
                 var TBEntityForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -160,8 +155,8 @@ namespace HPCL_Web.Controllers
                 //fetching State
                 var CustomerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"Country", "0"}
                 };
@@ -186,8 +181,8 @@ namespace HPCL_Web.Controllers
                 //Fetching Secret question
                 var CustomerSecretQueForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -211,8 +206,8 @@ namespace HPCL_Web.Controllers
                 //Fetching Type of Fleet
                 var CustomerTypeOfFleetForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -236,8 +231,8 @@ namespace HPCL_Web.Controllers
 
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -330,8 +325,8 @@ namespace HPCL_Web.Controllers
             {
                 var CustomerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"UserId", HttpContext.Session.GetString("UserName")},
                     {"CustomerType", cust.CustomerTypeID.ToString()},
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
@@ -427,7 +422,7 @@ namespace HPCL_Web.Controllers
                         {
                             var contentString = contentUrl.ReadAsStringAsync().Result;
                             customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(contentString);
-                            
+
                             if (customerResponse.Internel_Status_Code == 1000)
                             {
                                 cust.Remarks = "";
@@ -442,8 +437,8 @@ namespace HPCL_Web.Controllers
                                 //Fetching CustomerType
                                 var CustType = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     {"CTFlag",  "1" }
                                 };
@@ -472,8 +467,8 @@ namespace HPCL_Web.Controllers
                                 //Customer SubType
                                 var customerSubType = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     { "CustomerTypeId", cust.CustomerTypeID.ToString() }
                                 };
@@ -502,12 +497,12 @@ namespace HPCL_Web.Controllers
                                         ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                                     }
                                 }
-                                                               
+
                                 //fetching Zonal Office
                                 var ZonalOfficeForms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                                 };
@@ -533,8 +528,8 @@ namespace HPCL_Web.Controllers
                                 //Regional Office
                                 var customerRegionalOffice = new Dictionary<string, string>
                                     {
-                                        {"Useragent", Common.useragent},
-                                        {"Userip", Common.userip},
+                                        {"Useragent", CommonBase.useragent},
+                                        {"Userip", CommonBase.userip},
                                         {"Userid", HttpContext.Session.GetString("UserName")},
                                         {"ZonalId", cust.CustomerZonalOfficeID.ToString() }
 
@@ -566,12 +561,12 @@ namespace HPCL_Web.Controllers
                                         ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                                     }
                                 }
-                                                               
+
                                 //sales Area Dropdown
                                 var saleAreaReqData = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     {"RegionID", cust.CustomerRegionID.ToString() }
                                 };
@@ -600,8 +595,8 @@ namespace HPCL_Web.Controllers
                                 //fetching Type of Business Entity
                                 var TBEntityForms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                                 };
@@ -626,8 +621,8 @@ namespace HPCL_Web.Controllers
                                 //fetching State
                                 var CustomerStateForms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     {"Country", "0"}
                                 };
@@ -651,8 +646,8 @@ namespace HPCL_Web.Controllers
 
                                 var districtModel = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     {"StateID", cust.CommunicationStateID.ToString()}
                                 };
@@ -681,8 +676,8 @@ namespace HPCL_Web.Controllers
                                 //Fetching Secret question
                                 var CustomerSecretQueForms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                                 };
@@ -707,8 +702,8 @@ namespace HPCL_Web.Controllers
                                 //Fetching Type of Fleet
                                 var CustomerTypeOfFleetForms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                                 };
@@ -732,8 +727,8 @@ namespace HPCL_Web.Controllers
 
                                 var forms = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                                 };
@@ -765,8 +760,8 @@ namespace HPCL_Web.Controllers
                                 //District
                                 var permanentdistrictModel = new Dictionary<string, string>
                                 {
-                                    {"Useragent", Common.useragent},
-                                    {"Userip", Common.userip},
+                                    {"Useragent", CommonBase.useragent},
+                                    {"Userip", CommonBase.userip},
                                     {"Userid", HttpContext.Session.GetString("UserName")},
                                     {"StateID", cust.PerOrRegAddressStateID.ToString()}
                                 };
@@ -817,8 +812,8 @@ namespace HPCL_Web.Controllers
             {
                 var CustType = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
                 };
 
@@ -855,8 +850,8 @@ namespace HPCL_Web.Controllers
             CustomerModel custMdl = new CustomerModel();
             var customerType = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     { "CustomerTypeId", CustomerTypeID.ToString() }
             };
@@ -900,8 +895,8 @@ namespace HPCL_Web.Controllers
             CustomerModel custMdl = new CustomerModel();
             var customerZone = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalId", ZonalOfficeID.ToString() }
 
@@ -949,8 +944,8 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"StateID", Stateid.ToString()}
                 };
@@ -994,8 +989,8 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -1061,13 +1056,6 @@ namespace HPCL_Web.Controllers
         {
             // return View();
 
-            var access_token = _api.GetToken();
-
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token", access_token.Result);
-            }
-
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
             char flag = 'N';
@@ -1078,8 +1066,8 @@ namespace HPCL_Web.Controllers
                 //Fetching CustomerType
                 var CustType = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"CTFlag",  "1" }
                 };
@@ -1089,8 +1077,8 @@ namespace HPCL_Web.Controllers
                 //Fetching Type of Fleet
                 var CustomerTypeOfFleetForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
 
                 };
@@ -1123,8 +1111,8 @@ namespace HPCL_Web.Controllers
                     //fetching Customer info
                     var CustomerRefinfo = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CustomerReferenceNo", customerReferenceNo}
                     };
@@ -1191,8 +1179,8 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalID", "0" }
                 };
@@ -1206,8 +1194,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerRefinfo = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"CustomerReferenceNo", customerReferenceNo}
                     };
@@ -1279,8 +1267,8 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"ZonalID", "0" }
                 };
@@ -1294,8 +1282,8 @@ namespace HPCL_Web.Controllers
                 //fetching Customer info
                 var CustomerRefinfo = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
                         {"Userid", HttpContext.Session.GetString("UserName")},
                         {"RBEId", RBEId}
                     };
@@ -1393,8 +1381,8 @@ namespace HPCL_Web.Controllers
                 insertInfo.CardPreference = customerCardInfo.CardPreference;
                 insertInfo.RBEName = customerCardInfo.RBEName;
                 insertInfo.RBEName = customerCardInfo.RBEName;
-                insertInfo.Useragent = Common.useragent;
-                insertInfo.Userip = Common.userip;
+                insertInfo.Useragent = CommonBase.useragent;
+                insertInfo.Userip = CommonBase.userip;
                 insertInfo.UserId = HttpContext.Session.GetString("UserName");
                 insertInfo.Createdby = HttpContext.Session.GetString("UserName");
                 insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
@@ -1459,131 +1447,26 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> UploadDoc(string CustomerReferenceNo)
         {
-            UploadDoc modals = new UploadDoc();
-
-            var forms = new Dictionary<string, string>
-            {
-                {"useragent", Common.useragent},
-                {"userip", Common.userip},
-                {"userid", HttpContext.Session.GetString("UserName")},
-            };
-
-            if (!string.IsNullOrEmpty(CustomerReferenceNo))
-            {
-                modals.CustomerReferenceNo = CustomerReferenceNo;
-            }
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.GetProofTyleUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<ProofType> lst = jarr.ToObject<List<ProofType>>();
-                        modals.ProofTypesModal.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-            }
+            var modals = await _customerService.UploadDoc(CustomerReferenceNo);
             return View(modals);
         }
 
         [HttpPost]
         public async Task<JsonResult> UploadDoc(UploadDoc entity)
         {
-            var searchBody = new UploadDoc
-            {
-                UserId = HttpContext.Session.GetString("UserName"),
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
-                CustomerReferenceNo = entity.CustomerReferenceNo
-            };
+            var searchCustomer = _customerService.UploadDoc(entity);
 
-            HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
-
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.searchCustRefUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<UploadDocResponse> searchCustomer = jarr.ToObject<List<UploadDocResponse>>();
-                        ModelState.Clear();
-                        return Json(new { searchCustomer = searchCustomer });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(new { searchCustomer = searchCustomer });
         }
 
         [HttpPost]
         public async Task<JsonResult> SaveUploadDoc(UploadDoc entity)
         {
-            MultipartFormDataContent form = new MultipartFormDataContent();
+            var reason = await _customerService.SaveUploadDoc(entity);
 
-            form.Add(new StringContent(HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
-            form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
-            form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
-            form.Add(new StringContent(HttpContext.Session.GetString("UserName")), "CreatedBy");
-            form.Add(new StringContent(HttpContext.Session.GetString("UserName")), "userid");
-            form.Add(new StringContent(Common.useragent), "useragent");
-            form.Add(new StringContent(Common.userip), "userip");
-            form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
-            form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
-            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
-            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
-            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
-            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                using (var Response = await client.PostAsync(WebApiUrl.UploadKycUrl, form))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
-                        ModelState.Clear();
-                        return Json(insertKyc[0].Reason + "," + HttpContext.Session.GetString("CustomerReferenceNoVal"));
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(reason);
         }
 
         public async Task<IActionResult> ValidateNewCustomer()
@@ -1592,8 +1475,8 @@ namespace HPCL_Web.Controllers
 
             var OfficerType = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")}
                 };
 
@@ -1633,8 +1516,8 @@ namespace HPCL_Web.Controllers
         {
             var searchBody = new Dictionary<string, string>
             {
-                {"Useragent", Common.useragent},
-                {"Userip", Common.userip},
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
                 {"Userid", HttpContext.Session.GetString("UserName")},
                 {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
                 {"Createdon" , entity.CustomerDateOfApplication},
@@ -1686,8 +1569,8 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new Dictionary<string, string>
             {
-               {"Useragent", Common.useragent},
-                {"Userip", Common.userip},
+               {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
                 {"Userid", HttpContext.Session.GetString("UserName")},
                 {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
                 {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
@@ -1735,8 +1618,8 @@ namespace HPCL_Web.Controllers
 
             var customerBody = new Dictionary<string, string>
             {
-                {"Useragent", Common.useragent},
-                {"Userip", Common.userip},
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
                 {"Userid", HttpContext.Session.GetString("UserName")},
                 {"FormNumber" , FormNumber}
             };
@@ -1808,8 +1691,8 @@ namespace HPCL_Web.Controllers
         {
             var approvalBody = new Dictionary<string, string>
             {
-                {"Useragent", Common.useragent},
-                {"Userip", Common.userip},
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
                 {"Userid", HttpContext.Session.GetString("UserName")},
                 {"CustomerReferenceNo" , CustomerReferenceNo},
                 {"Comments" , Comments},
@@ -1865,8 +1748,8 @@ namespace HPCL_Web.Controllers
             CustomerModel custMdl = new CustomerModel();
             var customerRegion = new Dictionary<string, string>
              {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
                     {"Userid", HttpContext.Session.GetString("UserName")},
                     {"RegionID", RegionID.ToString() }
 

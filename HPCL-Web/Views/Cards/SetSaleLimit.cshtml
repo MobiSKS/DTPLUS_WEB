@@ -1,4 +1,4 @@
-﻿@model HPCL_Web.Models.Cards.SetCardLimit.GetCardLimit
+﻿@model HPCL.Common.Models.ViewModel.Cards.GetCardLimit
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -154,32 +154,12 @@
         if (loginType == "Customer") {
 
             $.ajax({
-                url: "@Url.Action("SetSaleLimitGridView", "Cards")",
+                url: "@Url.Action("SetSaleLimit", "Cards")",
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
 
-                    $("#CardSearch td").parent().remove();
-
-                    for (var i = 0; i < data.searchCustList.length; i++) {
-
-                        var rows = "<tbody><tr>"
-                            + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
-                            + "<td><span class='getCard'>" + (data.searchCustList[i].cardNumber || '') + "</span></a></td>"
-                            + "<td>" + (data.searchCustList[i].vechileNo || '') + "</td>"
-                            + "<td>" + (data.searchCustList[i].mobileNumber || '') + "</td>"
-                            + "<td>" + (data.searchCustList[i].status || '') + "</td>"
-                            + "<td>" + (data.searchCustList[i].issueDate || '') + "</td>"
-                            + "<td>" + (data.searchCustList[i].expiryDate || '') + "</td>"
-
-                            + "<td><input class='form-control cgl cpl' name='" + (data.searchCustList[i].cashPurseLimit || '') + "' type='text' value='" + (data.searchCustList[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
-                            + "<td><input class='form-control cgl stl' name='" + (data.searchCustList[i].saleTxnLimit || '') + "' type='text' value='" + (data.searchCustList[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
-                            + "<td><input class='form-control cgl dsl' name='" + (data.searchCustList[i].dailySaleLimit || '') + "' type='text' value='" + (data.searchCustList[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
-                            + "<td><input class='form-control cgl msl' name='" + (data.searchCustList[i].monthlySaleLimit || '') + "' type='text' value='" + (data.searchCustList[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
-
-
-                        $('#CardSearch').append(rows);
-                    }
+                    OnSuccessSetLimit(data);
 
                     $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
                     $("#CustomerDefaultVal").attr("readonly", true);

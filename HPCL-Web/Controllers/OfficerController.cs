@@ -1,10 +1,9 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models;
-using HPCL_Web.Models.Common;
-using HPCL_Web.Models.Officer;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.Common;
+using HPCL.Common.Models.ViewModel.Officers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -28,9 +27,9 @@ namespace HPCL_Web.Controllers
             {
                 var form = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerType", String.IsNullOrEmpty(officerType) ? "0" : officerType },
                     {"Location", String.IsNullOrEmpty(location) ? "0" : location }
                 };
@@ -86,9 +85,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -118,9 +117,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"Country", "0"}
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
@@ -168,9 +167,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"UserId", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"UserId", CommonBase.userid},
                     {"FirstName", ofcrMdl.FirstName},
                     {"LastName", ofcrMdl.LastName},
                     {"UserName", ofcrMdl.UserName},
@@ -235,9 +234,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -267,9 +266,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"Country", "0"}
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
@@ -308,9 +307,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerBindForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerID", OfficerID}
                 };
 
@@ -344,9 +343,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -376,9 +375,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"Country", "0"}
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
@@ -407,9 +406,9 @@ namespace HPCL_Web.Controllers
 
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -464,9 +463,9 @@ namespace HPCL_Web.Controllers
             {
                 var EditOfficerForm = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"UserId", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"UserId", CommonBase.userid},
                     {"FirstName", ofcrMdl.FirstName},
                     {"LastName", ofcrMdl.LastName},
                     {"Address1", ofcrMdl.Address1},
@@ -532,9 +531,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -565,9 +564,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"Country", "0"}
                 };
                 StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(OfficerStateForms), Encoding.UTF8, "application/json");
@@ -596,9 +595,9 @@ namespace HPCL_Web.Controllers
 
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -645,9 +644,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -663,7 +662,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
                         OfcrLocMdl.ZoneOffices.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                     }
                     else
                     {
@@ -677,9 +676,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerLocationForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerID", OfficerID}
                 };
 
@@ -696,7 +695,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
                         OfcrLocMdl.LocationMappings.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                         OfcrLocMdl.OfficerID = OfficerID;
                     }
                     else
@@ -732,9 +731,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerlocationForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerId", ofcrLocationMdl.OfficerID},
                     {"UserName", ofcrLocationMdl.UserName},
                     {"ZO", ofcrLocationMdl.ZoneOfcID},
@@ -782,9 +781,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -800,7 +799,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
                         OfcrLocMdl.ZoneOffices.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                     }
                     else
                     {
@@ -814,9 +813,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerLocationForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerID", ofcrLocationMdl.OfficerID}
                 };
 
@@ -833,7 +832,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
                         OfcrLocMdl.LocationMappings.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                         OfcrLocMdl.OfficerID = ofcrLocationMdl.OfficerID;
                     }
                     else
@@ -855,9 +854,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerDeleteForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"UserId", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"UserId", CommonBase.userid},
                     {"OfficerID", OfficerID},
                     {"ModifiedBy", "0"},
 
@@ -899,9 +898,9 @@ namespace HPCL_Web.Controllers
 
                 var DeleteLocationForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"UserId", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"UserId", CommonBase.userid},
                     {"UserName", userName},
                     {"ZO", zonalID},
                     {"RO", regionalID},
@@ -949,9 +948,9 @@ namespace HPCL_Web.Controllers
             {
                 var OfficerTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -967,7 +966,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<ZoneOffice> lst = jarr.ToObject<List<ZoneOffice>>();
                         OfcrLocMdl.ZoneOffices.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                     }
                     else
                     {
@@ -981,9 +980,9 @@ namespace HPCL_Web.Controllers
 
                 var OfficerLocationForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"OfficerID", officerID}
                 };
 
@@ -1000,7 +999,7 @@ namespace HPCL_Web.Controllers
                         var jarr = obj["Data"].Value<JArray>();
                         List<LocationMapping> lst = jarr.ToObject<List<LocationMapping>>();
                         OfcrLocMdl.LocationMappings.AddRange(lst);
-                        OfcrLocMdl.UserName = Common.userid;
+                        OfcrLocMdl.UserName = CommonBase.userid;
                         OfcrLocMdl.OfficerID = officerID;
                     }
                     else
@@ -1023,9 +1022,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -1098,9 +1097,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -1159,9 +1158,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"StateID", Stateid.ToString() }
                 };
 
@@ -1207,9 +1206,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"ZonalID", "0" }
                 };
 
@@ -1254,9 +1253,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"UserName", userName}
                 };
 

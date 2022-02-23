@@ -1,5 +1,3 @@
-using System;
-
 namespace HPCL_Web.Models
 {
     public class ErrorViewModel

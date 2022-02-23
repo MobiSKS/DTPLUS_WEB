@@ -1,17 +1,17 @@
-﻿using HPCL_Web.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using HPCL_Web.Helper;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
-using HPCL_Web.Models.Login;
+using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.ResponseModel.Login;
 
 namespace HPCL_Web.Controllers
 {
@@ -50,8 +50,8 @@ namespace HPCL_Web.Controllers
             var loginBody = new UserInfoModel
             {
                 UserId = user.UserId,
-                Useragent = Common.useragent,
-                Userip = Common.userip,
+                Useragent = CommonBase.useragent,
+                Userip = CommonBase.userip,
                 Password = user.Password
             };
 

@@ -1,0 +1,11 @@
+﻿namespace HPCL_Web.Models.CommonEntity
+{
+    public class BaseEntity
+    {
+        public string UserId { get; set; }
+        public string UserAgent { get; set; }
+        public string UserIp { get; set; }
+        public string ZonalId { get; set; }
+        public string RegionalId { get; set; }
+    }
+}

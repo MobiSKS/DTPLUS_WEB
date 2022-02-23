@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HPCL_Web.Models.Officer;
+using HPCL_Web.Models.CommonEntity;
+using HPCL_Web.Models.ViewModel.Officers;
 
 namespace HPCL_Web.Models
 {

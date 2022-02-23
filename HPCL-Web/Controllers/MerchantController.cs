@@ -1,7 +1,7 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models;
-using HPCL_Web.Models.Common;
-using HPCL_Web.Models.Merchant;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.Common;
+using HPCL.Common.Models.ViewModel.Merchant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -35,9 +35,9 @@ namespace HPCL_Web.Controllers
             {
                 var MerchantTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -67,9 +67,9 @@ namespace HPCL_Web.Controllers
 
                 var OutletCategoryForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                 };
 
                 StringContent OutletCategoryContent = new StringContent(JsonConvert.SerializeObject(OutletCategoryForms), Encoding.UTF8, "application/json");
@@ -97,9 +97,9 @@ namespace HPCL_Web.Controllers
 
                 var SBUForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                 };
 
                 StringContent SBUContent = new StringContent(JsonConvert.SerializeObject(SBUForms), Encoding.UTF8, "application/json");
@@ -127,9 +127,9 @@ namespace HPCL_Web.Controllers
 
                 var MerchantStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -161,9 +161,9 @@ namespace HPCL_Web.Controllers
 
                 var MerchantZoneForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -195,9 +195,9 @@ namespace HPCL_Web.Controllers
                 {
                     var MerchantFormDetails = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
+                        {"Userid", CommonBase.userid},
                         {"MerchantId", MerchantIDValue}
                     };
 
@@ -331,9 +331,9 @@ namespace HPCL_Web.Controllers
 
                 var MerchantTypeForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -362,9 +362,9 @@ namespace HPCL_Web.Controllers
 
                 var OutletCategoryForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                 };
 
                 StringContent OutletCategoryContent = new StringContent(JsonConvert.SerializeObject(OutletCategoryForms), Encoding.UTF8, "application/json");
@@ -391,9 +391,9 @@ namespace HPCL_Web.Controllers
 
                 var SBUForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                 };
 
                 StringContent SBUContent = new StringContent(JsonConvert.SerializeObject(SBUForms), Encoding.UTF8, "application/json");
@@ -420,9 +420,9 @@ namespace HPCL_Web.Controllers
 
                 var MerchantStateForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -453,9 +453,9 @@ namespace HPCL_Web.Controllers
 
                 var MerchantZoneForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid}
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid}
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
@@ -486,9 +486,9 @@ namespace HPCL_Web.Controllers
                 {
                     var MerchantUpdateForms = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
+                        {"Userid", CommonBase.userid},
                         {"MerchantId", "30" + merchantMdl.ERPCode},
                         {"RetailOutletName", merchantMdl.RetailOutletName},
                         {"MerchantTypeId", merchantMdl.MerchantType},
@@ -576,9 +576,9 @@ namespace HPCL_Web.Controllers
                 {
                     var MerchantCreateForms = new Dictionary<string, string>
                     {
-                        {"Useragent", Common.useragent},
-                        {"Userip", Common.userip},
-                        {"Userid", Common.userid},
+                        {"Useragent", CommonBase.useragent},
+                        {"Userip", CommonBase.userip},
+                        {"Userid", CommonBase.userid},
                         {"ErpCode", merchantMdl.ERPCode},
                         {"RetailOutletName", merchantMdl.RetailOutletName},
                         {"MerchantTypeId", merchantMdl.MerchantType},
@@ -687,9 +687,9 @@ namespace HPCL_Web.Controllers
 
                     var MerchantApprovalForms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"Category", merchantApprovalMdl.CategoryID },
                     {"FromDate", fromDate },
                     {"ToDate", toDate }
@@ -749,9 +749,9 @@ namespace HPCL_Web.Controllers
 
                 var forms = new ApprovalRejectionModel
                 {
-                    UserId = Common.userid,
-                    Useragent = Common.useragent,
-                    Userip = Common.userip,
+                    UserId = CommonBase.userid,
+                    Useragent = CommonBase.useragent,
+                    Userip = CommonBase.userip,
                     ObjApprovalRejectDetail = erpnmodel.ObjApprovalRejectDetail,
                     StatusId = erpnmodel.StatusId == "Approve" ? "4":"13",
                     ApprovedBy = "0"
@@ -810,9 +810,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"StateID", Stateid.ToString() }
                 };
 
@@ -858,9 +858,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"ZonalID", "0" }
                 };
 
@@ -905,9 +905,9 @@ namespace HPCL_Web.Controllers
             {
                 var forms = new Dictionary<string, string>
                 {
-                    {"Useragent", Common.useragent},
-                    {"Userip", Common.userip},
-                    {"Userid", Common.userid},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"Userid", CommonBase.userid},
                     {"RegionID", "0" }
                 };
 

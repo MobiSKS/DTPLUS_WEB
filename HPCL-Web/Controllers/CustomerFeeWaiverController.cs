@@ -1,19 +1,18 @@
-﻿using HPCL_Web.Helper;
-using HPCL_Web.Models.CustomerFeeWaiver;
-using Microsoft.AspNetCore.Http;
+﻿using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
+using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
     public class CustomerFeeWaiverController : Controller
     {
+        private readonly ICustomerFeeWaiverServices _customerFeeWaiverServices;
+        public CustomerFeeWaiverController(ICustomerFeeWaiverServices customerFeeWaiverServices)
+        {
+            _customerFeeWaiverServices = customerFeeWaiverServices;
+        }
+
         public async Task<IActionResult> FeeWaiver()
         {
             return View();
@@ -22,210 +21,37 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> FeeWaiver(PendingCustomer entity)
         {
-            var custDetails = new PendingCustomer
-            {
-                UserId = HttpContext.Session.GetString("UserName"),
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
-                FormNumber = entity.FormNumber
-            };
+            var pendingList = await _customerFeeWaiverServices.FeeWaiver(entity);
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(custDetails), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.bindPendingCustomerUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<PendingCustResponse> pendingList = jarr.ToObject<List<PendingCustResponse>>();
-                        ModelState.Clear();
-                        return Json(new { pendingList = pendingList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(new { pendingList = pendingList });
         }
-
-        //[HttpPost]
-        //public async Task<JsonResult> getAllPendingCustomer()
-        //{
-        //    var custDetails = new PendingCustomer
-        //    {
-        //        UserId = HttpContext.Session.GetString("UserName"),
-        //        UserAgent = Common.useragent,
-        //        UserIp = Common.userip
-        //    };
-
-        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(custDetails), Encoding.UTF8, "application/json");
-
-        //        using (var Response = await client.PostAsync(WebApiUrl.bindPendingCustomerUrl, content))
-        //        {
-        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-        //                var jarr = obj["Data"].Value<JArray>();
-        //                List<PendingCustResponse> allPendingList = jarr.ToObject<List<PendingCustResponse>>();
-        //                ModelState.Clear();
-        //                return Json(new { allPendingList = allPendingList });
-        //            }
-        //            else
-        //            {
-        //                ModelState.Clear();
-        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-        //                return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-        //            }
-        //        }
-        //    }
-        //}
 
         [HttpPost]
         public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo)
         {
-            var forms = new Dictionary<string, string>
-            {
-                {"useragent", Common.useragent},
-                {"userip", Common.userip},
-                {"userid", HttpContext.Session.GetString("UserName")},
-                {"CustomerReferenceNo", customerReferenceNo}
-            };
+            var tuple = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
+            var basicDetails = tuple.Item1;
+            var cardDetails = tuple.Item2;
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.getFeeWaiverDetailsUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JObject>();
-
-                        var basicJson = jarr["GetApproveFeeWaiverBasicDetail"].Value<JArray>();
-                        var cardJson = jarr["GetApproveFeeWaiverCardDetail"].Value<JArray>();
-
-                        List<GetApproveFeeWaiverBasicDetail> basicDetails = basicJson.ToObject<List<GetApproveFeeWaiverBasicDetail>>();
-                        List<GetApproveFeeWaiverCardDetail> cardDetails = cardJson.ToObject<List<GetApproveFeeWaiverCardDetail>>();
-
-                        ModelState.Clear();
-                        return Json(new { basicDetails = basicDetails, cardDetails = cardDetails });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(new { basicDetails = basicDetails, cardDetails = cardDetails });
         }
 
         [HttpPost]
         public async Task<JsonResult> ApproveCustomer(string CustomerReferenceNo, string comments)
         {
-            var forms = new ApproveRejectWaiver
-            {
-                UserAgent = Common.useragent,
-                UserIp= Common.userip,
-                UserId= HttpContext.Session.GetString("UserName"),
-                CustomerReferenceNo = CustomerReferenceNo,
-                Approvalstatus = 4,
-                Comments = comments,
-                ApprovedBy = HttpContext.Session.GetString("UserName")
-            };
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.approveRejectFeeWaiverUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-
-                        List<ApproveRejectResponse> responseMsg = jarr.ToObject<List<ApproveRejectResponse>>();
-
-                        ModelState.Clear();
-                        return Json(responseMsg[0].Reason);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            var reason = await _customerFeeWaiverServices.ApproveCustomer(CustomerReferenceNo, comments);
+            ModelState.Clear();
+            return Json(reason);
         }
 
         [HttpPost]
         public async Task<JsonResult> RejectCustomer(string CustomerReferenceNo, string comments)
         {
-            var forms = new ApproveRejectWaiver
-            {
-                UserAgent = Common.useragent,
-                UserIp= Common.userip,
-                UserId= HttpContext.Session.GetString("UserName"),
-                CustomerReferenceNo = CustomerReferenceNo,
-                Approvalstatus = 13,
-                Comments = comments,
-                ApprovedBy = HttpContext.Session.GetString("UserName")
-            };
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.approveRejectFeeWaiverUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<ApproveRejectResponse> responseMsg = jarr.ToObject<List<ApproveRejectResponse>>();
-
-                        ModelState.Clear();
-                        return Json(responseMsg[0].Reason);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            var reason = await _customerFeeWaiverServices.RejectCustomer(CustomerReferenceNo, comments);
+            ModelState.Clear();
+            return Json(reason);
         }
     }
 }
