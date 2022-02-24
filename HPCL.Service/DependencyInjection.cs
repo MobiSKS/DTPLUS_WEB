@@ -11,6 +11,8 @@ namespace HPCL.Service
             services.AddTransient<ICardServices, CardServices>();
             services.AddTransient<ICustomerFeeWaiverServices, CustomerFeeWaiverServices>();
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IDriverCardCustomerService, DriverCardCustomerService>();
+            services.AddTransient<IMyHpOTCCardCustomerService, MyHpOTCCardCustomerService>();
             return services;
         }
     }
