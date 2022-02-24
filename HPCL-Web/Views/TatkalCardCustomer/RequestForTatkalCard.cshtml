@@ -1,0 +1,122 @@
+﻿@model HPCL.Common.Models.ViewModel.TatkalCardCustomer.TatkalCustomerCardRequestInfo
+
+@{
+    ViewData["Title"] = "Tatkal Card Request";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-1 w-100">
+    <marquee width="100%" direction="left">
+        Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+    </marquee>
+</div>
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Tatkal Card Customer</a> </li>
+            <li class="breadcrumb-item font-weight-light">Add Tatkal Card Request</li>
+        </ul>
+        <form name="addRequestForTatkalCardForm" method="post" asp-action="RequestForTatkalCard" class="w-100">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add Tatkal Card Request</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Region Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionID", "RegionName"), new { @class = "form-control" })
+                                                <span class="error" id="CustomerRegionID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No of Tatkal Cards <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NoofCards, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="NoofCards_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" onclick="return CheckValidations();">Process Request</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    function ResetFields() {
+
+        $("#NoofCards").val("");
+        $("#CustomerRegionID").val(0);
+        document.getElementById("CustomerRegionID_error").innerHTML = "";
+        document.getElementById("NoofCards_error").innerHTML = "";
+    };
+
+
+    $("#CustomerRegionID").change(function () {
+        var id = this.value;
+        if (id != 0) {
+            document.getElementById("CustomerRegionID_error").innerHTML = "";
+        }
+    });
+
+    function CheckValidations() {
+        debugger;
+
+        var ret = false;
+
+        //console.log(ret);
+
+        if (document.getElementById('CustomerRegionID').value == "" || document.getElementById('CustomerRegionID').value == "0") {
+            document.getElementById("CustomerRegionID_error").innerHTML = "Region Name is required";
+            document.getElementById('CustomerRegionID').focus();
+            return ret;
+        }
+        else {
+            document.getElementById("CustomerRegionID_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") {
+            document.getElementById("NoofCards_error").innerHTML = "No of Tatkal Cards is required";
+            document.getElementById('NoofCards').focus();
+            return ret;
+        }
+        else {
+            document.getElementById("NoofCards_error").innerHTML = "";
+        }
+
+        return true;
+    }
+</script>

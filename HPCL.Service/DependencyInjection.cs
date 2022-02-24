@@ -13,6 +13,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IDriverCardCustomerService, DriverCardCustomerService>();
             services.AddTransient<IMyHpOTCCardCustomerService, MyHpOTCCardCustomerService>();
+            services.AddTransient<ITatkalCardCustomerService, TatkalCardCustomerService>();
             return services;
         }
     }
