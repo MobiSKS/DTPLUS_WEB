@@ -18,36 +18,19 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public TatkalCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public TatkalCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard()
         {
             TatkalCustomerCardRequestInfo custMdl = new TatkalCustomerCardRequestInfo();
 
-
-            //Fetching Customer Region
-            var CustomerRegion = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"ZoneID",  "0" }
-                };
-
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getLocationRegion);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<RegionModel> lst = jarr.ToObject<List<RegionModel>>();
-            custMdl.RegionMdl.AddRange(lst);
-
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
 
             return custMdl;
         }
@@ -80,24 +63,7 @@ namespace HPCL.Service.Services
                 else
                     tatkalCustomerCardRequestInfo.Remarks = customerResponse.Message;
 
-
-                var CustRegion = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"ZoneID",  "0" }
-                                };
-
-                StringContent contentCustomerRegion = new StringContent(JsonConvert.SerializeObject(CustRegion), Encoding.UTF8, "application/json");
-
-                var responseRegion = await _requestService.CommonRequestService(contentCustomerRegion, WebApiUrl.getLocationRegion);
-
-
-                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegion).ToString());
-                var jarr = obj["Data"].Value<JArray>();
-                List<RegionModel> lst = jarr.ToObject<List<RegionModel>>();
-                tatkalCustomerCardRequestInfo.RegionMdl.AddRange(lst);
+                tatkalCustomerCardRequestInfo.RegionMdl.AddRange(await _commonActionService.GetRegionList());
             }
 
             return tatkalCustomerCardRequestInfo;

@@ -16,5 +16,6 @@ namespace HPCL.Service.Interfaces
         Task<List<HqResponseModal>> GetHqList();
         Task<List<LocationMappingResponseModal>> GetLocationMappingList(int officerId);
         Task<string> ValidateUserName(string userName);
+        Task<List<RegionModel>> GetRegionList();
     }
 }
