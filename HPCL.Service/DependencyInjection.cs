@@ -10,6 +10,7 @@ namespace HPCL.Service
             services.AddTransient<IRequestService, RequestService>();
             services.AddTransient<ICardServices, CardServices>();
             services.AddTransient<ICustomerFeeWaiverServices, CustomerFeeWaiverServices>();
+            services.AddTransient<ICustomerService, CustomerService>();
             return services;
         }
     }
