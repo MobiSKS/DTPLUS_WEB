@@ -15,6 +15,9 @@ using HPCL.Common.Models;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Service.Interfaces;
+using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Customer;
 
 namespace HPCL_Web.Controllers
 {
@@ -32,1043 +35,286 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> OnlineForm()
         {
-            // return View();
-
-            char flag = 'N';
-
-            CustomerModel custMdl = new CustomerModel();
-            //custMdl.CustomerDateOfApplication = DateTime.Now.;
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //Fetching CustomerType
-                var CustType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"CTFlag",  "1" }
-                };
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerType, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-                        custMdl.CustomerTypeMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                //fetching Zonal Office
-                var ZonalOfficeForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}                    
-                };
-                StringContent Zonecontent = new StringContent(JsonConvert.SerializeObject(ZonalOfficeForms), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getZonalOffice, Zonecontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerZonalOfficeModel> lst = jarr.ToObject<List<CustomerZonalOfficeModel>>();
-                        custMdl.CustomerZonalOfficeMdl.AddRange(lst);
-
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                //sales Area Dropdown
-                //var saleAreaReqData = new Dictionary<string, string>
-                //{
-                //    {"Useragent", Common.useragent},
-                //    {"Userip", Common.userip},
-                //    {"Userid", HttpContext.Session.GetString("UserName")},
-                //    {"RegionID", "0" }
-                //};
-
-
-                //StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
-
-                //using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
-                //{
-                //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                //        custMdl.SalesAreaMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
-
-                //fetching Type of Business Entity
-                var TBEntityForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                };
-                StringContent TBEntitycontent = new StringContent(JsonConvert.SerializeObject(TBEntityForms), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getTbentityName, TBEntitycontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerTbentityModel> lst = jarr.ToObject<List<CustomerTbentityModel>>();
-                        custMdl.CustomerTbentityMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                //fetching State
-                var CustomerStateForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"Country", "0"}
-                };
-                StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(CustomerStateForms), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getState, Statecontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerStateModel> lst = jarr.ToObject<List<CustomerStateModel>>();
-                        custMdl.CustomerStateMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                //Fetching Secret question
-                var CustomerSecretQueForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                };
-                StringContent SecretQuecontent = new StringContent(JsonConvert.SerializeObject(CustomerSecretQueForms), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getSecretQuestion, SecretQuecontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerSecretQueModel> lst = jarr.ToObject<List<CustomerSecretQueModel>>();
-                        custMdl.CustomerSecretQueMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-                //Fetching Type of Fleet
-                var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                };
-                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getTypeOfFleet, TypeOfFleetcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerTypeOfFleetModel> lst = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
-                        custMdl.CustomerTypeOfFleetMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                };
-
-                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                //StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-                        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-                        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-                        custMdl.VehicleTypeMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-                //CardDetails cardDetails = new CardDetails()
-                //{
-                //    CardIdentifier = 1,
-                //    VechileNo = 2,
-                //    VehicleMake = 3,
-                //    VehicleType = 4,
-                //    YearOfRegistration = 5
-                //};
-                //custMdl.CardDetailsMdl.Add(cardDetails);
-
-                //CardDetails cardDetails1 = new CardDetails()
-                //{
-                //    CardIdentifier = 1,
-                //    VechileNo = 2,
-                //    VehicleMake = 3,
-                //    VehicleType = 4,
-                //    YearOfRegistration = 5
-                //};
-                //custMdl.CardDetailsMdl.Add(cardDetails1);
-
-
-                if (flag == 'Y')
-                {
-                    ModelState.Clear();
-                    ModelState.AddModelError(string.Empty, "Error Loading Customer Type");
-                    ViewBag.Login = "1";
-                    return View("Index");
-                }
-                else
-                {
-                    return View(custMdl);
-                }
-            }
+            var modals = await _customerService.OnlineForm();
+            return View(modals);
         }
 
         [HttpPost]
         public async Task<IActionResult> OnlineForm(CustomerModel cust)
         {
 
+            var modals = await _customerService.OnlineForm(cust);
 
-            if (cust.InterState)
+            if (cust.Internel_Status_Code == 1000)
             {
-                cust.AreaOfOperation = "Inter State";
-            }
-            if (cust.InterCity)
-            {
-                if (string.IsNullOrEmpty(cust.AreaOfOperation))
-                    cust.AreaOfOperation = "Inter City";
-                else
-                    cust.AreaOfOperation = cust.AreaOfOperation + ",Inter City";
-            }
-            if (cust.IntraCity)
-            {
-                if (string.IsNullOrEmpty(cust.AreaOfOperation))
-                    cust.AreaOfOperation = "Intra City";
-                else
-                    cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo });
             }
 
-            string customerDateOfApplication = "";
-            string KeyOffDateOfAnniversary = "";
-            string KeyOfficialDOB = "";
-
-            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
-
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
-
-            if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
-            {
-                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
-                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
-            }
-
-            if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
-            {
-                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
-                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
-            }
-
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var CustomerTypeForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"UserId", HttpContext.Session.GetString("UserName")},
-                    {"CustomerType", cust.CustomerTypeID.ToString()},
-                    {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
-                    {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
-                    {"RegionalOffice", cust.CustomerRegionID.ToString()},
-                    {"DateOfApplication", customerDateOfApplication},
-                    {"SalesArea", cust.CustomerSalesAreaID.ToString()},
-                    {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
-                    {"IndividualOrgName", cust.IndividualOrgName},
-                    {"NameOnCard", (String.IsNullOrEmpty(cust.CustomerNameOnCard)?"":cust.CustomerNameOnCard)},
-                    {"TypeOfBusinessEntity", cust.CustomerTbentityID.ToString()},
-                    {"ResidenceStatus", cust.CustomerResidenceStatus},
-                    {"IncomeTaxPan", cust.CustomerIncomeTaxPan},
-                    {"CommunicationAddress1", cust.CommunicationAddress1},
-                    {"CommunicationAddress2", cust.CommunicationAddress2},
-                    {"CommunicationAddress3", (String.IsNullOrEmpty(cust.CommunicationAddress3)?"":cust.CommunicationAddress3)},
-                    {"CommunicationLocation", (String.IsNullOrEmpty(cust.CommunicationLocation)?"":cust.CommunicationLocation)},
-                    {"CommunicationCityName", (String.IsNullOrEmpty(cust.CommunicationCity)?"":cust.CommunicationCity)},
-                    {"CommunicationPincode", cust.CommunicationPinCode},
-                    {"CommunicationStateId", cust.CommunicationStateID.ToString()},
-                    {"CommunicationDistrictId", cust.CommunicationDistrictId.ToString()},
-                    {"CommunicationPhoneNo", (String.IsNullOrEmpty(cust.CommunicationDialCode)?"":cust.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationPhoneNo)?"":cust.CommunicationPhoneNo)},
-                    {"CommunicationFax", (String.IsNullOrEmpty(cust.CommunicationFaxCode)?"":cust.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationFax)?"":cust.CommunicationFax)},
-                    {"CommunicationMobileNo", cust.CommunicationMobileNumber},
-                    {"CommunicationEmailid", cust.CommunicationEmail},
-                    {"PermanentAddress1", cust.PerOrRegAddress1},
-                    {"PermanentAddress2", cust.PerOrRegAddress2},
-                    {"PermanentAddress3", (String.IsNullOrEmpty(cust.PerOrRegAddress3)?"":cust.PerOrRegAddress3)},
-                    {"PermanentLocation", (String.IsNullOrEmpty(cust.PerOrRegAddressLocation)?"":cust.PerOrRegAddressLocation)},
-                    {"PermanentCityName", cust.PerOrRegAddressCity},
-                    {"PermanentPincode", cust.PerOrRegAddressPinCode},
-                    {"PermanentStateId", cust.PerOrRegAddressStateID.ToString()},
-                    {"PermanentDistrictId", (cust.PermanentDistrictId==0?cust.CommunicationDistrictId.ToString():cust.PermanentDistrictId.ToString())},
-                    {"PermanentPhoneNo", (String.IsNullOrEmpty(cust.PerOrRegAddressDialCode)?"":cust.PerOrRegAddressDialCode) + "-" + (String.IsNullOrEmpty(cust.PerOrRegAddressPhoneNumber)?"":cust.PerOrRegAddressPhoneNumber)},
-                    {"PermanentFax", (String.IsNullOrEmpty(cust.PermanentFaxCode)?"":cust.PermanentFaxCode) + "-" + (String.IsNullOrEmpty(cust.PermanentFax)?"":cust.PermanentFax)},
-                    {"KeyOfficialTitle", cust.KeyOffTitle},
-                    {"KeyOfficialIndividualInitials", cust.KeyOffIndividualInitials},
-                    {"KeyOfficialFirstName", (String.IsNullOrEmpty(cust.KeyOffFirstName)?"":cust.KeyOffFirstName)},
-                    {"KeyOfficialMiddleName", (String.IsNullOrEmpty(cust.KeyOffMiddleName)?"":cust.KeyOffMiddleName)},
-                    {"KeyOfficialLastName", (String.IsNullOrEmpty(cust.KeyOffLastName)?"":cust.KeyOffLastName)},
-                    {"KeyOfficialFax", (String.IsNullOrEmpty(cust.KeyOffFaxCode)?"":cust.KeyOffFaxCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffFax)?"":cust.KeyOffFax)},
-                    {"KeyOfficialDesignation", cust.KeyOffDesignation},
-                    {"KeyOfficialEmail", cust.KeyOffEmail},
-                    {"KeyOfficialPhoneNo", (String.IsNullOrEmpty(cust.KeyOffPhoneCode)?"":cust.KeyOffPhoneCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffPhoneNumber)?"":cust.KeyOffPhoneNumber)},
-                    {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
-                    {"KeyOfficialMobile", cust.KeyOffMobileNumber},
-                    {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
-                    {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
-                    {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
-                    {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
-                    {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
-                    {"KeyOfficialApproxMonthlySpendsonVechile1", cust.KeyOfficialApproxMonthlySpendsonVechile1.ToString()},
-                    {"KeyOfficialApproxMonthlySpendsonVechile2", cust.KeyOfficialApproxMonthlySpendsonVechile2.ToString()},
-                    {"AreaOfOperation", cust.AreaOfOperation},
-                    {"FleetSizeNoOfVechileOwnedHCV", cust.FleetSizeNoOfVechileOwnedHCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedLCV", cust.FleetSizeNoOfVechileOwnedLCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedMUVSUV", cust.FleetSizeNoOfVechileOwnedMUVSUV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedCarJeep", cust.FleetSizeNoOfVechileOwnedCarJeep.ToString()},
-                    {"NoOfCards", cust.NoOfCards.ToString()},
-                    {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
-                    //{"FeePaymentsChequeNo", cust.FeePaymentsChequeNo.ToString()},
-                    //{"FeePaymentsChequeDate", cust.FeePaymentsChequeDate},
-                    {"Createdby", HttpContext.Session.GetString("UserName")},
-                    //{ "ObjCardDetail", json }
-                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
-                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
-                     {"FormNumber", cust.FormNumber.ToString()}
-
-                };
-                //for (int i = 1; i <= cust.NoOfCards; i++)
-                //{
-                //    ObjCardDetails obj = new ObjCardDetails();
-                //    obj.CardIdentifier = Request.Form["CardIdentifier[" + i + "]"];
-                //    obj.VechileNo = Request.Form["CardIdentifier[" + i + "]"];
-                //    obj.VehicleType = Convert.ToInt32(Request.Form["VehicleType[" + i + "]"]);
-                //    obj.VehicleMake = Request.Form["VehicleMake[" + i + "]"];
-                //    obj.YearOfRegistration = Convert.ToInt32(Request.Form["YearOfRegistration[" + i + "]"]);
-                //    cust.ObjCardDetail.Add(obj);
-                //}
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerTypeForms), Encoding.UTF8, "application/json");
-
-                CustomerResponse customerResponse;
-
-                using (var Response = await client.PostAsync(WebApiUrl.insertCustomer, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        //var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        using (HttpContent contentUrl = Response.Content)
-                        {
-                            var contentString = contentUrl.ReadAsStringAsync().Result;
-                            customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(contentString);
-
-                            if (customerResponse.Internel_Status_Code == 1000)
-                            {
-                                cust.Remarks = "";
-                                ViewBag.Message = "Customer details saved Successfully";
-                                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
-                            }
-                            else
-                            {
-                                if (customerResponse.Data != null)
-                                    cust.Remarks = customerResponse.Data[0].Reason;
-                                else
-                                    cust.Remarks = customerResponse.Message;
-
-                                /////////////
-                                //Fetching CustomerType
-                                var CustType = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    {"CTFlag",  "1" }
-                                };
-
-                                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                                StringContent contentCustomerType = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
-
-                                using (var CustomerTypeResponse = await client.PostAsync(WebApiUrl.getCustomerType, contentCustomerType))
-                                {
-                                    if (CustomerTypeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = CustomerTypeResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-                                        cust.CustomerTypeMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //Customer SubType
-                                var customerSubType = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    { "CustomerTypeId", cust.CustomerTypeID.ToString() }
-                                };
-
-                                StringContent contentCustomerSubType = new StringContent(JsonConvert.SerializeObject(customerSubType), Encoding.UTF8, "application/json");
-
-                                using (var CustomerSubTypeResponse = await client.PostAsync(WebApiUrl.getCustomerSubType, contentCustomerSubType))
-                                {
-                                    if (CustomerSubTypeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = CustomerSubTypeResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-                                        lst.Add(new CustomerSubTypeModel
-                                        {
-                                            CustomerSubTypeID = 0,
-                                            CustomerSubTypeName = "Select Customer Subtype"
-                                        });
-                                        var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-                                        cust.CustomerSubTypeMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //fetching Zonal Office
-                                var ZonalOfficeForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                                };
-                                StringContent Zonecontent = new StringContent(JsonConvert.SerializeObject(ZonalOfficeForms), Encoding.UTF8, "application/json");
-                                using (var zonalOfficeResponse = await client.PostAsync(WebApiUrl.getZonalOffice, Zonecontent))
-                                {
-                                    if (zonalOfficeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = zonalOfficeResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerZonalOfficeModel> lst = jarr.ToObject<List<CustomerZonalOfficeModel>>();
-                                        cust.CustomerZonalOfficeMdl.AddRange(lst);
-
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //Regional Office
-                                var customerRegionalOffice = new Dictionary<string, string>
-                                    {
-                                        {"Useragent", CommonBase.useragent},
-                                        {"Userip", CommonBase.userip},
-                                        {"Userid", HttpContext.Session.GetString("UserName")},
-                                        {"ZonalId", cust.CustomerZonalOfficeID.ToString() }
-
-                                };
-
-                                StringContent customerRegionalOfficecontent = new StringContent(JsonConvert.SerializeObject(customerRegionalOffice), Encoding.UTF8, "application/json");
-                                using (var customerRegionalOfficeResponse = await client.PostAsync(WebApiUrl.getRegionalOffice, customerRegionalOfficecontent))
-                                {
-                                    if (customerRegionalOfficeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = customerRegionalOfficeResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
-
-                                        //lst.Add(new CustomerRegionModel
-                                        //{
-                                        //    RegionalOfficeID = 0,
-                                        //    RegionalOfficeName = "Select Region",
-
-                                        //});
-                                        //var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
-                                        //cust.CustomerRegionMdl.AddRange(SortedtList);
-                                        cust.CustomerRegionMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //sales Area Dropdown
-                                var saleAreaReqData = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    {"RegionID", cust.CustomerRegionID.ToString() }
-                                };
-
-
-                                StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
-
-                                using (var SalesAreaResponse = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
-                                {
-                                    if (SalesAreaResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = SalesAreaResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                                        cust.SalesAreaMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-
-                                //fetching Type of Business Entity
-                                var TBEntityForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                                };
-                                StringContent TBEntitycontent = new StringContent(JsonConvert.SerializeObject(TBEntityForms), Encoding.UTF8, "application/json");
-                                using (var TbentityNameResponse = await client.PostAsync(WebApiUrl.getTbentityName, TBEntitycontent))
-                                {
-                                    if (TbentityNameResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = TbentityNameResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerTbentityModel> lst = jarr.ToObject<List<CustomerTbentityModel>>();
-                                        cust.CustomerTbentityMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //fetching State
-                                var CustomerStateForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    {"Country", "0"}
-                                };
-                                StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(CustomerStateForms), Encoding.UTF8, "application/json");
-                                using (var StateResponse = await client.PostAsync(WebApiUrl.getState, Statecontent))
-                                {
-                                    if (StateResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = StateResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerStateModel> lst = jarr.ToObject<List<CustomerStateModel>>();
-                                        cust.CustomerStateMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                var districtModel = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    {"StateID", cust.CommunicationStateID.ToString()}
-                                };
-
-                                StringContent districtModelContent = new StringContent(JsonConvert.SerializeObject(districtModel), Encoding.UTF8, "application/json");
-
-                                using (var districtModelResponse = await client.PostAsync(WebApiUrl.getDistrict, districtModelContent))
-                                {
-                                    if (districtModelResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = districtModelResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                                        cust.CommunicationDistrictMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-
-                                //Fetching Secret question
-                                var CustomerSecretQueForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                                };
-                                StringContent SecretQuecontent = new StringContent(JsonConvert.SerializeObject(CustomerSecretQueForms), Encoding.UTF8, "application/json");
-                                using (var SecretQuestionResponse = await client.PostAsync(WebApiUrl.getSecretQuestion, SecretQuecontent))
-                                {
-                                    if (SecretQuestionResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = SecretQuestionResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerSecretQueModel> lst = jarr.ToObject<List<CustomerSecretQueModel>>();
-                                        cust.CustomerSecretQueMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //Fetching Type of Fleet
-                                var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                                };
-                                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-                                using (var TypeOfFleetResponse = await client.PostAsync(WebApiUrl.getTypeOfFleet, TypeOfFleetcontent))
-                                {
-                                    if (TypeOfFleetResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = TypeOfFleetResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<CustomerTypeOfFleetModel> lst = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
-                                        cust.CustomerTypeOfFleetMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                var forms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                                };
-
-                                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                                //StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                                using (var VehicleTpeResponse = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-                                {
-                                    if (VehicleTpeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = VehicleTpeResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-                                        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-                                        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-                                        cust.VehicleTypeMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-
-                                //District
-                                var permanentdistrictModel = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", HttpContext.Session.GetString("UserName")},
-                                    {"StateID", cust.PerOrRegAddressStateID.ToString()}
-                                };
-
-                                StringContent perDistrictModelContent = new StringContent(JsonConvert.SerializeObject(permanentdistrictModel), Encoding.UTF8, "application/json");
-
-                                using (var perDistrictModelResponse = await client.PostAsync(WebApiUrl.getDistrict, perDistrictModelContent))
-                                {
-                                    if (perDistrictModelResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                                    {
-                                        var ResponseContent = perDistrictModelResponse.Content.ReadAsStringAsync().Result;
-
-                                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                                        var jarr = obj["Data"].Value<JArray>();
-                                        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                                        cust.PerOrRegAddressDistrictMdl.AddRange(lst);
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                                    }
-                                }
-                                //////////////
-
-
-                                ViewBag.Message = customerResponse.Message;
-                                ViewBag.NotFoundError = "Not Found";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
-            }
-
-            return View(cust);
+            return View(modals);
         }
 
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerType()
         {
-            CustomerModel custMdl = new CustomerModel();
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var CustType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-                };
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            List<CustomerTypeModel> lstCustomerType = new List<CustomerTypeModel>();
+            lstCustomerType = await _customerService.GetCustomerType();
+            return Json(lstCustomerType);
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var CustType = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")}
+            //    };
 
-                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-                        custMdl.CustomerTypeMdl.AddRange(lst);
-                        return Json(lst);
-                    }
-                    else
-                    {
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                        // ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
 
-            }
+            //    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
+            //            return Json(lst);
+            //        }
+            //        else
+            //        {
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //            // ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+            //        }
+            //    }
+
+            //}
 
         }
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerSubType(int CustomerTypeID)
         {
-            CustomerModel custMdl = new CustomerModel();
-            var customerType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    { "CustomerTypeId", CustomerTypeID.ToString() }
-            };
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            List<CustomerSubTypeModel> lstCustomerSubType = new List<CustomerSubTypeModel>();
+            lstCustomerSubType = await _customerService.GetCustomerSubType(CustomerTypeID);
+            return Json(lstCustomerSubType);
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
+            //var customerType = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        { "CustomerTypeId", CustomerTypeID.ToString() }
+            //};
 
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerSubType, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-                        lst.Add(new CustomerSubTypeModel
-                        {
-                            CustomerSubTypeID = 0,
-                            CustomerSubTypeName = "--Select --"
-                        });
-                        var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-                        return Json(SortedtList);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading customer sub type Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
+
+            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerSubType, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
+            //            lst.Add(new CustomerSubTypeModel
+            //            {
+            //                CustomerSubTypeID = 0,
+            //                CustomerSubTypeName = "--Select --"
+            //            });
+            //            var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
+            //            return Json(SortedtList);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading customer sub type Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> GetRegionalDetails(int ZonalOfficeID)
         {
-            CustomerModel custMdl = new CustomerModel();
-            var customerZone = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"ZonalId", ZonalOfficeID.ToString() }
+            List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
+            lstCustomerRegion = await _customerService.GetRegionalDetails(ZonalOfficeID);
+            return Json(lstCustomerRegion);
 
-            };
+            //var customerZone = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"ZonalId", ZonalOfficeID.ToString() }
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
+            //};
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(customerZone), Encoding.UTF8, "application/json");
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getRegionalOffice, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
-                        lst.Add(new CustomerRegionModel
-                        {
-                            RegionalOfficeID = 0,
-                            RegionalOfficeName = "--Select Region--",
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerZone), Encoding.UTF8, "application/json");
 
-                        });
-                        var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
-                        return Json(SortedtList);
+            //    using (var Response = await client.PostAsync(WebApiUrl.getRegionalOffice, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
+            //            lst.Add(new CustomerRegionModel
+            //            {
+            //                RegionalOfficeID = 0,
+            //                RegionalOfficeName = "--Select Region--",
 
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Region Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //            });
+            //            var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
+            //            return Json(SortedtList);
+
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Region Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"StateID", Stateid.ToString()}
-                };
+            List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
+            lstDistrict = await _customerService.GetDistrictDetails(Stateid);
+            return Json(lstDistrict);
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var forms = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"StateID", Stateid.ToString()}
+            //    };
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getDistrict, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-                        lst.Add(new OfficerDistrictModel
-                        {
-                            stateID = 0,
-                            districtID = 0,
-                            districtName = "Select District"
-                        });
-                        var SortedtList = lst.OrderBy(x => x.districtID).ToList();
-                        return Json(SortedtList);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading District Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //    using (var Response = await client.PostAsync(WebApiUrl.getDistrict, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
+            //            lst.Add(new OfficerDistrictModel
+            //            {
+            //                stateID = 0,
+            //                districtID = 0,
+            //                districtName = "Select District"
+            //            });
+            //            var SortedtList = lst.OrderBy(x => x.districtID).ToList();
+            //            return Json(SortedtList);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading District Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> GetVehicleTypeDetails()
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
+            List<VehicleTypeModel> sortedtList = new List<VehicleTypeModel>();
+            sortedtList = await _customerService.GetVehicleTypeDetails();
+            return Json(new { SortedtList = sortedtList });
 
-                };
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var forms = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")}
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //    };
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
+            //    using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-                        return Json(new { SortedtList = SortedtList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Vehicle Type Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
+
+            //            var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
+            //            return Json(new { SortedtList = SortedtList });
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Vehicle Type Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> PANValidation(string PANNumber)
         {
-            string apiUrl = "v2/pan";
-            var data = "";
-            var input = new
-            {
-                consent = "Y",
-                pan = PANNumber
-            };
 
-            using (HttpClient client = new HelperAPI().GetApiPANUrlString())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
-                if (response.IsSuccessStatusCode)
-                {
-                    data = await response.Content.ReadAsStringAsync();
-                }
-            }
-
+            string data = await _customerService.PANValidation(PANNumber);
             return new JsonResult(data);
 
+            //string apiUrl = "v2/pan";
+            //var data = "";
+            //var input = new
+            //{
+            //    consent = "Y",
+            //    pan = PANNumber
+            //};
+
+            //using (HttpClient client = new HelperAPI().GetApiPANUrlString())
+            //{
+            //    HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        data = await response.Content.ReadAsStringAsync();
+            //    }
+            //}
+
+            //return new JsonResult(data);
         }
 
         public async Task<IActionResult> SuccessRedirect(int customerReferenceNo)
@@ -1079,449 +325,453 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
         {
-            // return View();
 
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
 
-            char flag = 'N';
-
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //Fetching CustomerType
-                var CustType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"CTFlag",  "1" }
-                };
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                //Fetching Type of Fleet
-                var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-
-                };
-                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-                        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-                        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-                        customerCardInfo.VehicleTypeMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
+            //char flag = 'N';
 
 
-                if (!string.IsNullOrEmpty(customerReferenceNo))
-                {
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    //Fetching CustomerType
+            //    var CustType = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"CTFlag",  "1" }
+            //    };
 
-                    //fetching Customer info
-                    var CustomerRefinfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"CustomerReferenceNo", customerReferenceNo}
-                    };
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                    CustomerResponseByReferenceNo customerResponseByReferenceNo;
-                    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-                    using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
-                    {
-                        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                        {
-                            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    //Fetching Type of Fleet
+            //    var CustomerTypeOfFleetForms = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")}
+
+            //    };
+            //    StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
+
+            //    using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
+
+            //            //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
+            //            //custMdl.VehicleTypeMdl.AddRange(SortedtList);
+            //            customerCardInfo.VehicleTypeMdl.AddRange(lst);
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+            //        }
+            //    }
 
 
-                            customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
-                            if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
-                            {
-                                customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-                                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+            //    if (!string.IsNullOrEmpty(customerReferenceNo))
+            //    {
 
-                                StringBuilder sb = new StringBuilder();
-                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-                                    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+            //        //fetching Customer info
+            //        var CustomerRefinfo = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"CustomerReferenceNo", customerReferenceNo}
+            //        };
 
-                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-                                    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
+            //        CustomerResponseByReferenceNo customerResponseByReferenceNo;
+            //        StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+            //        using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
+            //        {
+            //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //            {
+            //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-                                    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
 
-                                customerCardInfo.CustomerName = sb.ToString();
+            //                customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
+            //                if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
+            //                {
+            //                    customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+            //                    customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
 
-                                customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-                                customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+            //                    StringBuilder sb = new StringBuilder();
+            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+            //                        sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
 
-                                if (customerResponseByReferenceNo.Data != null)
-                                {
-                                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
-                                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
-                                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-                                    customerCardInfo.ReceivedAmount= string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
-                                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-                                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
-                                    if (customerCardInfo.RBEId == "0")
-                                        customerCardInfo.RBEId = "";
-                                    if (customerCardInfo.NoOfCards == "0")
-                                        customerCardInfo.NoOfCards = "";
-                                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
-                                    {
-                                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                ViewBag.Message = customerResponseByReferenceNo.Message;
-                            }
+            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
+            //                        sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
 
-                        }
-                        else
-                        {
-                            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                        }
-                    }
-                }
+            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
+            //                        sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
 
-                if (flag == 'Y')
-                {
-                    ModelState.Clear();
-                    ModelState.AddModelError(string.Empty, "Error Loading Customer Type");
-                    ViewBag.Login = "1";
-                    return View("Index");
-                }
-                else
-                {
-                    return View(customerCardInfo);
-                }
-            }
+            //                    customerCardInfo.CustomerName = sb.ToString();
+
+            //                    customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+            //                    customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+
+            //                    if (customerResponseByReferenceNo.Data != null)
+            //                    {
+            //                        customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+            //                        customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+            //                        customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+            //                        customerCardInfo.ReceivedAmount= string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+            //                        customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+            //                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+            //                        if (customerCardInfo.RBEId == "0")
+            //                            customerCardInfo.RBEId = "";
+            //                        if (customerCardInfo.NoOfCards == "0")
+            //                            customerCardInfo.NoOfCards = "";
+            //                        if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+            //                        {
+            //                            customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+            //                        }
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    ViewBag.Message = customerResponseByReferenceNo.Message;
+            //                }
+
+            //            }
+            //            else
+            //            {
+            //                ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+            //            }
+            //        }
+            //    }
+
+            //    if (flag == 'Y')
+            //    {
+            //        ModelState.Clear();
+            //        ModelState.AddModelError(string.Empty, "Error Loading Customer Type");
+            //        ViewBag.Login = "1";
+            //        return View("Index");
+            //    }
+            //    else
+            //    {
+            //        return View(customerCardInfo);
+            //    }
+            //}
+            return View(customerCardInfo);
         }
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerDetails(string customerReferenceNo)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"ZonalID", "0" }
-                };
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            customerCardInfo = await _customerService.GetCustomerDetails(customerReferenceNo);
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            return Json(customerCardInfo);
 
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var forms = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"ZonalID", "0" }
+            //    };
 
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                //fetching Customer info
-                var CustomerRefinfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"CustomerReferenceNo", customerReferenceNo}
-                    };
-
-                CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-
-                CustomerResponseByReferenceNo customerResponseByReferenceNo;
-                StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
-                        if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
-                        {
-                            customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-                            customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
-
-                            StringBuilder sb = new StringBuilder();
-                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-                                sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
-
-                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-                                sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
-
-                            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-                                sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
 
-                            customerCardInfo.CustomerName = sb.ToString();
 
-                            customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-                            customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
-                            if (customerResponseByReferenceNo.Data != null)
-                            {
-                                customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
-                                customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
-                                customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-                                customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
-                                customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-                                if (customerCardInfo.RBEId == "0")
-                                    customerCardInfo.RBEId = "";
-                                if (customerCardInfo.NoOfCards == "0")
-                                    customerCardInfo.NoOfCards = "";
-                                customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+            //    //fetching Customer info
+            //    var CustomerRefinfo = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"CustomerReferenceNo", customerReferenceNo}
+            //        };
 
-                                if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
-                                {
-                                    customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
-                                }
-                            }
+            //    CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
-                            return Json(customerCardInfo);
-                        }
-                        else
-                        {
-                            ModelState.Clear();
-                            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+            //    CustomerResponseByReferenceNo customerResponseByReferenceNo;
+            //    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                            return Json("Failed to load Customer Details");
-                        }
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+            //            customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
+            //            if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
+            //            {
+            //                customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+            //                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Customer Details");
-                    }
-                }
+            //                StringBuilder sb = new StringBuilder();
+            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+            //                    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+
+            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
+            //                    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
+
+            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
+            //                    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
 
 
-            }
+            //                customerCardInfo.CustomerName = sb.ToString();
+
+            //                customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+            //                customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+            //                if (customerResponseByReferenceNo.Data != null)
+            //                {
+            //                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+            //                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+            //                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+            //                    customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+            //                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+            //                    if (customerCardInfo.RBEId == "0")
+            //                        customerCardInfo.RBEId = "";
+            //                    if (customerCardInfo.NoOfCards == "0")
+            //                        customerCardInfo.NoOfCards = "";
+            //                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+
+            //                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+            //                    {
+            //                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+            //                    }
+            //                }
+
+            //                return Json(customerCardInfo);
+            //            }
+            //            else
+            //            {
+            //                ModelState.Clear();
+            //                ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //                var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //                return Json("Failed to load Customer Details");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Customer Details");
+            //        }
+            //    }
+
+
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> GetCustomerRBEName(string RBEId)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"ZonalID", "0" }
-                };
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo = await _customerService.GetCustomerRBEName(RBEId);
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            return Json(customerCardInfo);
 
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    var forms = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"ZonalID", "0" }
+            //    };
 
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                //fetching Customer info
-                var CustomerRefinfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"RBEId", RBEId}
-                    };
-
-                CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-
-                CustomerRBE customerRBE;
-                StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerRbeId, custRefcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        customerRBE = JsonConvert.DeserializeObject<CustomerRBE>(ResponseContent);
-                        if (customerRBE.Internel_Status_Code == 1000)
-                        {
-                            customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
-                            customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
-
-                            return Json(customerCardInfo);
-                        }
-                        else
-                        {
-                            ModelState.Clear();
-                            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-                            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                            var Message = "Failed to load Customer Details";
-                            return Json("Failed to load Customer Details");
-                        }
-
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Customer Details");
-                    }
-                }
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
 
-            }
+
+            //    //fetching Customer info
+            //    var CustomerRefinfo = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"RBEId", RBEId}
+            //        };
+
+            //    CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            //    CustomerRBE customerRBE;
+            //    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerRbeId, custRefcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            customerRBE = JsonConvert.DeserializeObject<CustomerRBE>(ResponseContent);
+            //            if (customerRBE.Internel_Status_Code == 1000)
+            //            {
+            //                customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
+            //                customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
+
+            //                return Json(customerCardInfo);
+            //            }
+            //            else
+            //            {
+            //                ModelState.Clear();
+            //                ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //                var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //                return Json("Failed to load Customer Details");
+            //            }
+
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Customer Details");
+            //        }
+            //    }
+            //}
+
         }
 
         [HttpPost]
         public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
         {
-            //var json = "";
-            //if (customerCardInfo.ObjCardDetail.Count > 0)
-            //{
-            //    int i = 0;
-            //    foreach (CardDetails CardDetails in customerCardInfo.ObjCardDetail)
-            //    {
-            //        CardDetails.VechileNo = "";
-            //    }
-            //    //json = JsonConvert.SerializeObject(customerCardInfo.ObjCardDetail);
-            //}
+            CustomerCardInfo cardInfo = new CustomerCardInfo();
+            cardInfo = await _customerService.AddCardDetails(customerCardInfo);
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            if (cardInfo.StatusCode == 1000)
             {
-                //var CustomerCardData = new Dictionary<string, string>
-                //{
-                //    {"Useragent", Common.useragent},
-                //    {"Userip", Common.userip},
-                //    {"UserId", Common.userid},
-                //    {"CustomerReferenceNo", customerCardInfo.CustomerReferenceNo},
-                //    {"NoOfCards", customerCardInfo.NoOfCards.ToString()},
-                //    {"RBEId", customerCardInfo.RBEId.ToString()},
-                //    {"FeePaymentsCollectFeeWaiver", customerCardInfo.FeePaymentsCollectFeeWaiver.ToString()},
-                //    {"FeePaymentNo", customerCardInfo.FeePaymentNo},
-                //    {"FeePaymentDate", customerCardInfo.FeePaymentDate},
-                //    {"CardPreference", customerCardInfo.CardPreference},
-                //    {"Createdby", Common.userid.ToString()},
-                //    { "ObjCardDetail", json }
-                //};
-
-                string feePaymentDate = "";
-
-                if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
-                {
-                    string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-                    feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
-                }
-
-                feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
-
-
-                #region Create Request Info
-
-                CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
-
-                insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
-                insertInfo.CustomerName = customerCardInfo.CustomerName;
-                insertInfo.FormNumber = customerCardInfo.FormNumber;
-                insertInfo.NoOfCards = customerCardInfo.NoOfCards;
-                insertInfo.RBEId = customerCardInfo.RBEId;
-                insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
-                insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
-                insertInfo.FeePaymentDate = feePaymentDate;
-                insertInfo.CardPreference = customerCardInfo.CardPreference;
-                insertInfo.RBEName = customerCardInfo.RBEName;
-                insertInfo.RBEName = customerCardInfo.RBEName;
-                insertInfo.Useragent = CommonBase.useragent;
-                insertInfo.Userip = CommonBase.userip;
-                insertInfo.UserId = HttpContext.Session.GetString("UserName");
-                insertInfo.Createdby = HttpContext.Session.GetString("UserName");
-                insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
-
-                if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
-                {
-                    insertInfo.FeePaymentsCollectFeeWaiver = 0;
-                }
-
-                #endregion
-
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                //string jsonString = JsonConvert.SerializeObject(CustomerCardData);
-
-
-
-
-
-                #region Commented
-
-                //// jsonString = jsonString.Replace("\\", "");
-
-                ////StringContent content = new StringContent(CustomerCardData, Encoding.UTF8, "application/json");
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
-
-                #endregion
-
-                CustomerInserCardResponse customerInserCardResponse;
-
-
-                using (var Response = await client.PostAsync(WebApiUrl.insertCustomerCard, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-
-                        using (HttpContent contentUrl = Response.Content)
-                        {
-                            var contentString = contentUrl.ReadAsStringAsync().Result;
-                            customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(contentString);
-                            if (customerInserCardResponse.Internel_Status_Code == 1000)
-                            {
-                                ViewBag.Message = "Customer card details saved Successfully";
-                                //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
-                                customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
-                                customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-                                ModelState.Clear();
-                            }
-                            else
-                            {
-                                ViewBag.Message = customerInserCardResponse.Message;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
-
+                ViewBag.Message = "Customer card details saved Successfully";
+                //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
+                customerCardInfo.Status = cardInfo.Status;
+                customerCardInfo.StatusCode = cardInfo.StatusCode;
+                ModelState.Clear();
+            }
+            else
+            {
+                ViewBag.Message = cardInfo.Message;
             }
 
-            return View(customerCardInfo);
+
+            return Json(customerCardInfo);
+
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+
+            //    string feePaymentDate = "";
+
+            //    if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
+            //    {
+            //        string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+            //        feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+            //    }
+
+            //    feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
+
+
+            //    #region Create Request Info
+
+            //    CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
+
+            //    insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
+            //    insertInfo.CustomerName = customerCardInfo.CustomerName;
+            //    insertInfo.FormNumber = customerCardInfo.FormNumber;
+            //    insertInfo.NoOfCards = customerCardInfo.NoOfCards;
+            //    insertInfo.RBEId = customerCardInfo.RBEId;
+            //    insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
+            //    insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
+            //    insertInfo.FeePaymentDate = feePaymentDate;
+            //    insertInfo.CardPreference = customerCardInfo.CardPreference;
+            //    insertInfo.RBEName = customerCardInfo.RBEName;
+            //    insertInfo.RBEName = customerCardInfo.RBEName;
+            //    insertInfo.Useragent = CommonBase.useragent;
+            //    insertInfo.Userip = CommonBase.userip;
+            //    insertInfo.UserId = HttpContext.Session.GetString("UserName");
+            //    insertInfo.Createdby = HttpContext.Session.GetString("UserName");
+            //    insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+
+            //    if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
+            //    {
+            //        insertInfo.FeePaymentsCollectFeeWaiver = 0;
+            //    }
+
+            //    #endregion
+
+
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+
+            //    //string jsonString = JsonConvert.SerializeObject(CustomerCardData);
+
+
+
+
+
+            //    #region Commented
+
+            //    //// jsonString = jsonString.Replace("\\", "");
+
+            //    ////StringContent content = new StringContent(CustomerCardData, Encoding.UTF8, "application/json");
+
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
+
+            //    #endregion
+
+            //    CustomerInserCardResponse customerInserCardResponse;
+
+
+            //    using (var Response = await client.PostAsync(WebApiUrl.insertCustomerCard, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+
+            //            using (HttpContent contentUrl = Response.Content)
+            //            {
+            //                var contentString = contentUrl.ReadAsStringAsync().Result;
+            //                customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(contentString);
+            //                if (customerInserCardResponse.Internel_Status_Code == 1000)
+            //                {
+            //                    ViewBag.Message = "Customer card details saved Successfully";
+            //                    //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
+            //                    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+            //                    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+            //                    ModelState.Clear();
+            //                }
+            //                else
+            //                {
+            //                    ViewBag.Message = customerInserCardResponse.Message;
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+            //        }
+            //    }
+
+            //}
+
+            //return View(customerCardInfo);
         }
 
 
@@ -1552,41 +802,43 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ValidateNewCustomer()
         {
             CustomerModel customerModel = new CustomerModel();
-
-            var OfficerType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")}
-                };
+            customerModel = await _customerService.ValidateNewCustomer();
 
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //var OfficerType = new Dictionary<string, string>
+            //    {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")}
+            //    };
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerType), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerType), Encoding.UTF8, "application/json");
 
-                        List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+            //    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        customerModel.OfficerTypeMdl.AddRange(lst);
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                    }
-                }
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
 
-            }
+            //            List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
+
+            //            customerModel.OfficerTypeMdl.AddRange(lst);
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
+            //        }
+            //    }
+
+            //}
 
             return View(customerModel);
         }
@@ -1594,279 +846,294 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ValidateNewCustomer(CustomerModel entity)
         {
-            var searchBody = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", HttpContext.Session.GetString("UserName")},
-                {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
-                {"Createdon" , entity.CustomerDateOfApplication},
-                {"FormNumber" , entity.FormNumber},
-                {"StateId" , null},
-                {"CustomerName" , null}
-            };
+            List<SearchCustomerResponseGrid> searchList = new List<SearchCustomerResponseGrid>();
+            searchList = await _customerService.ValidateNewCustomer(entity);
 
-            HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
+            return Json(new { searchList = searchList });
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //var searchBody = new Dictionary<string, string>
+            //{
+            //    {"Useragent", CommonBase.useragent},
+            //    {"Userip", CommonBase.userip},
+            //    {"Userid", HttpContext.Session.GetString("UserName")},
+            //    {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
+            //    {"Createdon" , entity.CustomerDateOfApplication},
+            //    {"FormNumber" , entity.FormNumber},
+            //    {"StateId" , null},
+            //    {"CustomerName" , null}
+            //};
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        var jsonSerializerOptions = new JsonSerializerOptions()
-                        {
-                            IgnoreNullValues = true
-                        };
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-                        ModelState.Clear();
-                        return Json(new { searchList = searchList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            var jsonSerializerOptions = new JsonSerializerOptions()
+            //            {
+            //                IgnoreNullValues = true
+            //            };
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+            //            ModelState.Clear();
+            //            return Json(new { searchList = searchList });
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
-            var str = HttpContext.Session.GetString("viewUpdatedCustGrid");
+            List<SearchCustomerResponseGrid> updatedSearchList = await _customerService.ReloadUpdatedGrid();
+            return Json(new { updatedSearchList = updatedSearchList });
 
-            CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
+            //var str = HttpContext.Session.GetString("viewUpdatedCustGrid");
 
-            var searchBody = new Dictionary<string, string>
-            {
-               {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", HttpContext.Session.GetString("UserName")},
-                {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
-                {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
-                {"FormNumber", vGrid.FormNumber},
-                {"StateId" , null},
-                {"CustomerName" , null}
-            };
+            //CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //var searchBody = new Dictionary<string, string>
+            //{
+            //   {"Useragent", CommonBase.useragent},
+            //    {"Userip", CommonBase.userip},
+            //    {"Userid", HttpContext.Session.GetString("UserName")},
+            //    {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
+            //    {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
+            //    {"FormNumber", vGrid.FormNumber},
+            //    {"StateId" , null},
+            //    {"CustomerName" , null}
+            //};
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
-                        var jsonSerializerOptions = new JsonSerializerOptions()
-                        {
-                            IgnoreNullValues = true
-                        };
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<SearchCustomerResponseGrid> updatedSearchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-                        ModelState.Clear();
-                        return Json(new { updatedSearchList = updatedSearchList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<SearchCustomerResponseGrid> updatedSearchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+            //            ModelState.Clear();
+            //            return Json(new { updatedSearchList = updatedSearchList });
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> ViewCustomerDetails(string FormNumber)
         {
+            JObject obj = await _customerService.ViewCustomerDetails(FormNumber);
+
+            var searchRes = obj["Data"].Value<JObject>();
+            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+
+            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
+
+            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+
+            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
+
+            CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+
+            FormNumber = string.Empty;
+
+
             HttpContext.Session.SetString("FormNumberSession", FormNumber);
 
-            var customerBody = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", HttpContext.Session.GetString("UserName")},
-                {"FormNumber" , FormNumber}
-            };
+            ModelState.Clear();
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+            //HttpContext.Session.SetString("FormNumberSession", FormNumber);
 
-                using (var Response = await client.PostAsync(WebApiUrl.getcustomerdetailsByFormNumber, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //var customerBody = new Dictionary<string, string>
+            //{
+            //    {"Useragent", CommonBase.useragent},
+            //    {"Userip", CommonBase.userip},
+            //    {"Userid", HttpContext.Session.GetString("UserName")},
+            //    {"FormNumber" , FormNumber}
+            //};
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        var searchRes = obj["Data"].Value<JObject>();
-                        var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
 
-                        var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
-                        //var ccmsRemainingResult = searchRes["CardReminingCCMSLimt"].Value<JArray>();
+            //    using (var Response = await client.PostAsync(WebApiUrl.getcustomerdetailsByFormNumber, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
 
-                        List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+            //            var searchRes = obj["Data"].Value<JObject>();
+            //            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
 
-                        //List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
-                        //List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
+            //            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
 
-                        //List<CardReminingLimt> cardRemaining = cardRemainingResult.ToObject<List<CardReminingLimt>>();
-                        //List<CardReminingCCMSLimt> ccmsRemaining = ccmsRemainingResult.ToObject<List<CardReminingCCMSLimt>>();
+            //            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
 
-                        CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+            //            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
 
-                        FormNumber = string.Empty;
 
-                        //foreach (var item in cardDetailsList)
-                        //{
-                        //    cusId = item.CustomerID;
-                        //}
+            //            CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
 
-                        HttpContext.Session.SetString("FormNumberSession", FormNumber);
+            //            FormNumber = string.Empty;
 
-                        ModelState.Clear();
-                        //return Json(new
-                        //{
-                        //    cardDetailsList = cardDetailsList
-                        //    //limitDetailsList = limitDetailsList,
-                        //    //servicesDetailsList = servicesDetailsList,
-                        //    //cardRemaining = cardRemaining,
-                        //    //ccmsRemaining = ccmsRemaining
-                        //});
-                        return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+
+            //            HttpContext.Session.SetString("FormNumberSession", FormNumber);
+
+            //            ModelState.Clear();
+
+            //            return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
         {
-            var approvalBody = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", HttpContext.Session.GetString("UserName")},
-                {"CustomerReferenceNo" , CustomerReferenceNo},
-                {"Comments" , Comments},
-                {"Approvalstatus" , Approvalstatus},
-                {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
-            };
+            UpdateKycResponse updateKycResponse = await _customerService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus);
+            return Json(updateKycResponse.Reason);
 
-            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
+            //var approvalBody = new Dictionary<string, string>
+            //{
+            //    {"Useragent", CommonBase.useragent},
+            //    {"Userip", CommonBase.userip},
+            //    {"Userid", HttpContext.Session.GetString("UserName")},
+            //    {"CustomerReferenceNo" , CustomerReferenceNo},
+            //    {"Comments" , Comments},
+            //    {"Approvalstatus" , Approvalstatus},
+            //    {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
+            //};
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            ////HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.approveOrrejectcustomer, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
 
-                        //var jsonSerializerOptions = new JsonSerializerOptions()
-                        //{
-                        //    IgnoreNullValues = true
-                        //};
-                        //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        //var jarr = obj["Data"].Value<JArray>();
-                        //List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-                        //ModelState.Clear();
-                        //return Json(new { searchList = searchList });
+            //    using (var Response = await client.PostAsync(WebApiUrl.approveOrrejectcustomer, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
-                        ModelState.Clear();
+            //            //var jsonSerializerOptions = new JsonSerializerOptions()
+            //            //{
+            //            //    IgnoreNullValues = true
+            //            //};
+            //            //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            //var jarr = obj["Data"].Value<JArray>();
+            //            //List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+            //            //ModelState.Clear();
+            //            //return Json(new { searchList = searchList });
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+            //            ModelState.Clear();
 
 
-                        return Json(insertKyc[0].Reason);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //            return Json(insertKyc[0].Reason);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> GetsalesAreaDetails(int RegionID)
         {
-            CustomerModel custMdl = new CustomerModel();
-            var customerRegion = new Dictionary<string, string>
-             {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", HttpContext.Session.GetString("UserName")},
-                    {"RegionID", RegionID.ToString() }
+            List<SalesAreaModel> lst = await _customerService.GetsalesAreaDetails(RegionID);
+            return Json(lst);
 
-            };
+            //var customerRegion = new Dictionary<string, string>
+            // {
+            //        {"Useragent", CommonBase.useragent},
+            //        {"Userip", CommonBase.userip},
+            //        {"Userid", HttpContext.Session.GetString("UserName")},
+            //        {"RegionID", RegionID.ToString() }
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
+            //};
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                        lst.Add(new SalesAreaModel
-                        {
-                            SalesAreaID = 0,
-                            SalesAreaName = "Select Sales Area",
+            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
 
-                        });
-                        var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
-                        return Json(SortedtList);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading sales Area Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            //    using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, content))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
+            //            lst.Add(new SalesAreaModel
+            //            {
+            //                SalesAreaID = 0,
+            //                SalesAreaName = "Select Sales Area",
+
+            //            });
+            //            var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
+            //            return Json(SortedtList);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading sales Area Details");
+            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+            //        }
+            //    }
+            //}
         }
 
         public async Task<IActionResult> SuccessUploadRedirect(int customerReferenceNo)
@@ -1878,205 +1145,220 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckformnumberDuplication(string FormNumber)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //fetching Customer info
-                var CustomerFormNumber = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"FormNumber", FormNumber }
-                    };
+            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckformnumberDuplication(FormNumber);
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            return Json(customerInserCardResponseData);
 
-                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.checkformnumberDuplication, cusFormcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    //fetching Customer info
+            //    var CustomerFormNumber = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"FormNumber", FormNumber }
+            //        };
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-                        return Json(lst[0]);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Form Details");
-                    }
-                }
+            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            //    using (var Response = await client.PostAsync(WebApiUrl.checkformnumberDuplication, cusFormcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            //            return Json(lst[0]);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
 
-            }
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Form Details");
+            //        }
+            //    }
+            //}
         }
 
         [HttpPost]
         public async Task<JsonResult> CheckEmailDuplication(string Emailid)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //fetching Customer info
-                var CustomerFormNumber = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"CommunicationEmailid", Emailid }
-                    };
+            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckEmailDuplication(Emailid);
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            return Json(customerInserCardResponseData);
 
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    //fetching Customer info
+            //    var CustomerFormNumber = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"CommunicationEmailid", Emailid }
+            //        };
 
-                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.checkemailidDuplication, cusFormcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-                        return Json(lst[0]);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Email Details");
-                    }
-                }
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
 
-            }
+            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            //    using (var Response = await client.PostAsync(WebApiUrl.checkemailidDuplication, cusFormcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            //            return Json(lst[0]);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Email Details");
+            //        }
+            //    }
+            //}
+
         }
 
         [HttpPost]
         public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //fetching Customer info
-                var CustomerFormNumber = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"CommunicationMobileNo", MobileNo }
-                    };
+            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckMobilNoDuplication(MobileNo);
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            return Json(customerInserCardResponseData);
 
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    //fetching Customer info
+            //    var CustomerFormNumber = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"CommunicationMobileNo", MobileNo }
+            //        };
 
-                StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-                using (var Response = await client.PostAsync(WebApiUrl.checkmobileNoDuplication, cusFormcontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-                        return Json(lst[0]);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Mobile Details");
-                    }
-                }
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
 
-            }
+            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            //    using (var Response = await client.PostAsync(WebApiUrl.checkmobileNoDuplication, cusFormcontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            //            return Json(lst[0]);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
+
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            var Message = obj["errorMessage"].ToString();
+            //            return Json("Failed to load Mobile Details");
+            //        }
+            //    }
+            //}
+
         }
 
         [HttpPost]
         public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
         {
-            string apiUrl = "v3/rc-advanced";
-            var data = "";
-            var input = new
-            {
-                registrationNumber = RegistrationNumber,
-                consent = "Y",
-                version = "3.1"
-            };
-
-            using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
-                if (response.IsSuccessStatusCode)
-                {
-                    data = await response.Content.ReadAsStringAsync();
-                }
-            }
-
+            var data = await _customerService.CheckVehicleRegistrationValid(RegistrationNumber);
             return new JsonResult(data);
+
+            //string apiUrl = "v3/rc-advanced";
+            //var data = "";
+            //var input = new
+            //{
+            //    registrationNumber = RegistrationNumber,
+            //    consent = "Y",
+            //    version = "3.1"
+            //};
+
+            //using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
+            //{
+            //    HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        data = await response.Content.ReadAsStringAsync();
+            //    }
+            //}
+
+            //return new JsonResult(data);
         }
 
         [HttpPost]
         public async Task<JsonResult> CheckPanNoDuplication(string PanNo)
         {
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                //fetching Customer info
-                var CustomerPanInfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", HttpContext.Session.GetString("UserName")},
-                        {"ZonalId", "0"},
-                        {"RegionalId", "0"},
-                        {"IncomeTaxPan", PanNo }
-                    };
+            CustomerInserCardResponseData customerInserCardResponseData = new CustomerInserCardResponseData();
+            customerInserCardResponseData = await _customerService.CheckPanNoDuplication(PanNo);
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+            return Json(customerInserCardResponseData);
+
+            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            //{
+            //    //fetching Customer info
+            //    var CustomerPanInfo = new Dictionary<string, string>
+            //        {
+            //            {"Useragent", CommonBase.useragent},
+            //            {"Userip", CommonBase.userip},
+            //            {"Userid", HttpContext.Session.GetString("UserName")},
+            //            {"ZonalId", "0"},
+            //            {"RegionalId", "0"},
+            //            {"IncomeTaxPan", PanNo }
+            //        };
+
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
 
-                StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
+            //    StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
 
-                using (var Response = await client.PostAsync(WebApiUrl.checkPanNoDuplication, cusPancontent))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            //    using (var Response = await client.PostAsync(WebApiUrl.checkPanNoDuplication, cusPancontent))
+            //    {
+            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+            //        {
+            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-                        return Json(lst[0]);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-                        var Response_Content = Response.Content.ReadAsStringAsync().Result;
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            //            var jarr = obj["Data"].Value<JArray>();
+            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            //            return Json(lst[0]);
+            //        }
+            //        else
+            //        {
+            //            ModelState.Clear();
+            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
+            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-                        var Message = obj["errorMessage"].ToString();
-                        return Json("Failed to load Mobile Details");
-                    }
-                }
-            }
+            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
+            //            return Json("Failed to load Mobile Details");
+            //        }
+            //    }
+            //}
         }
 
 

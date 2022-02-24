@@ -36,5 +36,47 @@ namespace HPCL.Service
                 }
             }
         }
+
+        public async Task<string> PANValidationService(StringContent content, string requestUrl)
+        {
+            using (HttpClient client = new HelperAPI().GetApiPANUrlString())
+            {
+                using (var Response = await client.PostAsync(requestUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = await Response.Content.ReadAsStringAsync();
+
+                        return ResponseContent;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    }
+                }
+            }
+        }
+
+        public async Task<string> VehicleRegistrationValidCheckService(StringContent content, string requestUrl)
+        {
+            using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
+            {
+                using (var Response = await client.PostAsync(requestUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = await Response.Content.ReadAsStringAsync();
+
+                        return ResponseContent;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    }
+                }
+            }
+        }
+
+
     }
 }

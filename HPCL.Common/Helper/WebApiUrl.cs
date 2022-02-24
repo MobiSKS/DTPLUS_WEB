@@ -119,5 +119,13 @@
         #region DriverCard
         public static string insertDriverCardRequest = "/dtpwebapi/api/dtplus/customer/insert_driver_card_request";
         #endregion
+
+        #region MyHpOTCCardCustomer
+        public static string insertOTCCardRequest = "/dtpwebapi/api/dtplus/customer/insert_otc_card_request";
+        #endregion
+
+        #region atkalCardCustomer
+        public static string insertTatkalCardRequest = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_request";
+        #endregion
     }
 }
