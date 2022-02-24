@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.Officers;
+﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ViewModel.Officers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,15 @@ namespace HPCL.Common.Models.ViewModel.Officers
     {
         public OfficerDetailsModel()
         {
-            OfficerZones = new List<OfficerZoneModel>();
-            OfficerZones.Add(new OfficerZoneModel { 
+            OfficerZones = new List<ZonalOfficeResponseModal>();
+            OfficerZones.Add(new ZonalOfficeResponseModal
+            { 
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "--ALL--"
             });
 
-            OfficerStates = new List<OfficerStateModel>();
-            OfficerStates.Add(new OfficerStateModel
+            OfficerStates = new List<StateResponseModal>();
+            OfficerStates.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -32,9 +34,9 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public string RegionalOfcIdVal { get; set; }
         public string StateIdVal { get; set; }
         public string DistrictIdVal { get; set; }
-        public virtual List<OfficerZoneModel> OfficerZones { get; set; }
-        public virtual List<OfficerRegionModel> OfficerRegions { get; set; }
-        public virtual List<OfficerStateModel> OfficerStates { get; set; }
-        public virtual List<OfficerDistrictModel> OfficerDistricts { get; set; }
+        public virtual List<ZonalOfficeResponseModal> OfficerZones { get; set; }
+        public virtual List<RegionalOfficeResponseModal> OfficerRegions { get; set; }
+        public virtual List<StateResponseModal> OfficerStates { get; set; }
+        public virtual List<DistrictResponseModal> OfficerDistricts { get; set; }
     }
 }

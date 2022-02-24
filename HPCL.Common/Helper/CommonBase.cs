@@ -11,6 +11,8 @@ namespace HPCL.Common.Helper
         public static string useragent = "web";
         public static string userip = GetLocalIPAddress();
         public static string userid = "1";
+        public static string zonalid = "";
+        public static string regionalid = "";
 
         public static string GetLocalIPAddress()
         {

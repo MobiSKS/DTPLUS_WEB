@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,25 +13,25 @@ namespace HPCL.Common.Models.ViewModel.Officers
 
         public OfficerModel()
         {
-            OfficerTypeMdl = new List<OfficerTypeModel>();
-            OfficerTypeMdl.Add(new OfficerTypeModel
+            OfficerTypeMdl = new List<OfficerTypeResponseModal>();
+            OfficerTypeMdl.Add(new OfficerTypeResponseModal
             {
                 OfficerTypeID = 0,
                 OfficerTypeName = "Select Type",
                 OfficerTypeShortName = "Select Type"
             });
 
-            OfficerZoneMdl = new List<OfficerZoneModel>();
-            OfficerRegionMdl = new List<OfficerRegionModel>();
-            OfficerHqMdl = new List<OfficerHqModel>();
-            OfficerStateMdl = new List<OfficerStateModel>();
-            OfficerStateMdl.Add(new OfficerStateModel
+            OfficerZoneMdl = new List<ZonalOfficeResponseModal>();
+            OfficerRegionMdl = new List<RegionalOfficeResponseModal>();
+            OfficerHqMdl = new List<HqResponseModal>();
+            OfficerStateMdl = new List<StateResponseModal>();
+            OfficerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
                 StateName = "Select State"
             });
-            OfficerDistrictMdl = new List<OfficerDistrictModel>();
+            OfficerDistrictMdl = new List<DistrictResponseModal>();
         }
 
         //[Required(ErrorMessage = "First Name is Required")]
@@ -64,13 +66,13 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public string Email { get; set; }
         public string EmailId { get; set; }
         public string Fax { get; set; }
-        public string OfficerID { get; set; }
-        public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
-        public virtual List<OfficerZoneModel> OfficerZoneMdl { get; set; }
-        public virtual List<OfficerRegionModel> OfficerRegionMdl { get; set; }
-        public virtual List<OfficerHqModel> OfficerHqMdl { get; set; }
-        public virtual List<OfficerStateModel> OfficerStateMdl { get; set; }
-        public virtual List<OfficerDistrictModel> OfficerDistrictMdl { get; set; }
+        public int OfficerID { get; set; }
+        public virtual List<OfficerTypeResponseModal> OfficerTypeMdl { get; set; }
+        public virtual List<ZonalOfficeResponseModal> OfficerZoneMdl { get; set; }
+        public virtual List<RegionalOfficeResponseModal> OfficerRegionMdl { get; set; }
+        public virtual List<HqResponseModal> OfficerHqMdl { get; set; }
+        public virtual List<StateResponseModal> OfficerStateMdl { get; set; }
+        public virtual List<DistrictResponseModal> OfficerDistrictMdl { get; set; }
     }
 
     public class OfficerTypeModel
