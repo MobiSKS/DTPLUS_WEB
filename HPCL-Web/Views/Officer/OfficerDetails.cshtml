@@ -1,4 +1,5 @@
 ﻿@model HPCL.Common.Models.ViewModel.Officers.OfficerDetailsModel
+@using HPCL.Common.Resources
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -15,7 +16,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.ZonalOfc <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(m => m.ZonalOfcID, new SelectList(Model.OfficerZones, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
@@ -25,7 +26,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 offset-md-1">
                                             <div class="custom_select">
                                                 <select name="regionalOffice" id="regionalOffice" class="form-control">
@@ -38,7 +39,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">State Name <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.StateName <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(m => m.StateID, new SelectList(Model.OfficerStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
@@ -48,7 +49,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">District Name <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.DistrictName <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 offset-md-1">
                                             <div class="custom_select">
                                                 <select name="district" id="district" class="form-control">
@@ -61,13 +62,13 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2 mb-3">
-                                    <button class="btn btn_primary" type="button" onclick="searchOfficerDetailsTbl()">Search</button>
+                                    <button class="btn btn_primary" type="button" onclick="searchOfficerDetailsTbl()">@Label.Search</button>
                                 </div>
                                 <div class="px-2 mb-3">
-                                    <button class="btn btn_primary" type="button" onclick="return showregAddress()">Reset</button>
+                                    <button class="btn btn_primary" type="button" onclick="return showregAddress()">@Label.Reset</button>
                                 </div>
                                 <div class="px-2 mb-3">
-                                    <button class="btn btn_primary" type="button" onclick="">Export to Excel</button>
+                                    <button class="btn btn_primary" type="button" onclick="">@Label.ExportToExcel</button>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +115,7 @@
 
         $.ajax({
             type: 'GET',  // http method
-            url: '@Url.Action("GetOfficerDetailsTable", "Officer")',
+            url: '@Url.Action("GetOfficerDetailsTable", "Common")',
             contentType: "application/json; charset=utf-8",
             data: { ZonalOfcID: zoID, RegionalOfcID : roID, StateID : state, DistrictID : district },
             dataType: "text",
@@ -145,7 +146,7 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Officer")',
+            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
             data: { ZonalOfcID: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
@@ -196,7 +197,7 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Officer")',
+            url: '@Url.Action("GetDistrictDetails", "Common")',
             data: { Stateid: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
@@ -267,7 +268,7 @@
         // Combine each row data with new line character
         csv_data = csv_data.join('\n');
 
-        // Call this function to download csv file 
+        // Call this function to download csv file
         downloadCSVFile(csv_data);
 
     }
@@ -307,7 +308,7 @@
 
         $.ajax({
             type: 'GET',  // http method
-            url: '@Url.Action("DownloadExcel", "Officer")',
+            url: '@Url.Action("DownloadExcel", "Common")',
             contentType: 'application/json; charset=utf-8',
             data: { ZonalOfcID: zoID, RegionalOfcID: roID, StateID: state, DistrictID: district },
             dataType: "text",

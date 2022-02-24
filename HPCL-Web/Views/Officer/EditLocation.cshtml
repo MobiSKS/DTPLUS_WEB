@@ -1,4 +1,5 @@
 ﻿@model HPCL.Common.Models.ViewModel.Officers.OfficerLocationModel
+@using HPCL.Common.Resources
 
 <marquee width="100%" direction="left" height="30%">
     Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
@@ -18,9 +19,9 @@
                                 <table style="border: 1px solid black;border-collapse: collapse;">
                                     <thead>
                                         <tr>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">Regions</th>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">User Name</th>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">Action</th>
+                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.Regions</th>
+                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.UserName</th>
+                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -31,7 +32,7 @@
                                                     <td style="border: 1px solid black;border-collapse: collapse;">@item.ROName</td>
                                                     <td style="border: 1px solid black;border-collapse: collapse;">@Model.UserName</td>
                                                     <td style="border: 1px solid black;border-collapse: collapse;">
-                                                        <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID ="@Model.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
+                                                        <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID="@Model.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
                                                     </td>
                                                 </tr>
                                             }
@@ -42,12 +43,12 @@
                         </div>
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                             <div class="border-1 rounded border-grey"></div>
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add Location</p>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">@Label.AddLocation</p>
                             <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                                 <div>
                                     <div class="py-2 pr-4 pl-0 pr-md-4">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Zone Office <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.ZoneOfc <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @Html.DropDownListFor(m => m.ZoneOfcID, new SelectList(Model.ZoneOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
@@ -56,7 +57,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     <select id="regionalOffice" class="form-control"></select>
@@ -65,13 +66,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Is New User</label>
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.IsNewUser</label>
                                             <div class="col-md-7 col-12">
                                                 @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control", @style = "width: 5%" })
                                             </div>
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.UserName <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
                                                 <span class="error" id="userName_error"></span>
@@ -88,8 +89,8 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;">Add Location</button>
-                                <button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">Reset</button>
+                                <button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;">@Label.AddLocation</button>
+                                <button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>
 
                             </div>
                         </div>
@@ -128,7 +129,7 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Officer")',
+            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
             data: { ZonalOfcID: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
