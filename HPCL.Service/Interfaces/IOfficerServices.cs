@@ -20,10 +20,5 @@ namespace HPCL.Service.Interfaces
         Task<string> DeleteLocation(string userName, int zonalID, int regionalID);
         Task<OfficerDetailsModel> OfficerDetails();
         Task<List<OfficerDetailsTableModel>> GetOfficerDetailsTable(string zonalOfcID, string regionalOfcID, string stateID, string districtID);
-        Task<string> GetOfficerTypeDetails();
-        Task<string> GetLocationDetails(string ofcrTypeId);
-        Task<string> GetDistrictDetails(string stateid);
-        Task<string> GetRegionalOfcDetails(string zonalOfcID);
-        Task<string> ValidateUserName(string userName);
     }
 }

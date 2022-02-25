@@ -1,6 +1,5 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
-using HPCL.Common.Models.Common;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Models.ViewModel.ValidateNewCards;

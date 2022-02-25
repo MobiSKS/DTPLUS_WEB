@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
     public interface IMerchantServices
     {
         Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category);
-        Task<string> CreateMerchant(MerchantGetDetailsModel merchantMdl);
+        Task<Tuple<string, string>> CreateMerchant(MerchantGetDetailsModel merchantMdl);
         Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl);
         Task<string> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal erpnmodel);
     }

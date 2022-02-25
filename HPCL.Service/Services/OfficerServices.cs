@@ -170,7 +170,7 @@ namespace HPCL.Service.Services
 
             StringContent officerGetDetailsContent = new StringContent(JsonConvert.SerializeObject(officerGetDetailsForms), Encoding.UTF8, "application/json");
 
-            var officerGetDetailsResponse = await _requestService.CommonRequestService(officerGetDetailsContent, WebApiUrl.GetStatusTypeUrl);
+            var officerGetDetailsResponse = await _requestService.CommonRequestService(officerGetDetailsContent, WebApiUrl.getOfficerDetails);
 
             JObject officerGetDetailsObj = JObject.Parse(JsonConvert.DeserializeObject(officerGetDetailsResponse).ToString());
             var officerGetDetailsJarr = officerGetDetailsObj["Data"].Value<JArray>();
@@ -185,6 +185,7 @@ namespace HPCL.Service.Services
             OfficerLocationModel ofcrLocMdl = new OfficerLocationModel();
             ofcrLocMdl.ZoneOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             ofcrLocMdl.LocationMappings.AddRange(await _commonActionService.GetLocationMappingList(officerID));
+            ofcrLocMdl.UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             return ofcrLocMdl;
         }
         public async Task<Tuple<string, OfficerLocationModel>> EditLocation(OfficerLocationModel ofcrLocationMdl)
@@ -208,6 +209,7 @@ namespace HPCL.Service.Services
 
             ofcrLocationMdl.ZoneOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             ofcrLocationMdl.LocationMappings.AddRange(await _commonActionService.GetLocationMappingList(ofcrLocationMdl.OfficerID));
+            ofcrLocationMdl.ZoneOfcID = 0;
 
             if (officerLocationMappingInsertObj["Status_Code"].ToString() == "200")
             {
@@ -238,7 +240,7 @@ namespace HPCL.Service.Services
 
             StringContent officerEditContent = new StringContent(JsonConvert.SerializeObject(officerEditForms), Encoding.UTF8, "application/json");
 
-            var officerEditResponse = await _requestService.CommonRequestService(officerEditContent, WebApiUrl.GetStatusTypeUrl);
+            var officerEditResponse = await _requestService.CommonRequestService(officerEditContent, WebApiUrl.bindOfficer);
 
             JObject officerEditObj = JObject.Parse(JsonConvert.DeserializeObject(officerEditResponse).ToString());
             var officerEditJarr = officerEditObj["Data"].Value<JArray>();
@@ -250,7 +252,7 @@ namespace HPCL.Service.Services
 
             ofcrEditMdl.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
             ofcrEditMdl.OfficerStateMdl.AddRange(await _commonActionService.GetStateList());
-            ofcrEditMdl.OfficerDistrictMdl.AddRange(await _commonActionService.GetDistrictList(""));
+            ofcrEditMdl.OfficerDistrictMdl.AddRange(await _commonActionService.GetDistrictList(ofcrEditMdl.StateId));
 
             return ofcrEditMdl;
         }
@@ -299,16 +301,6 @@ namespace HPCL.Service.Services
             }
         }
 
-        public Task<string> GetDistrictDetails(string stateid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetLocationDetails(string ofcrType)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<OfficerDetailsTableModel>> GetOfficerDetailsTable(string zonalOfcID, string regionalOfcID, string stateID, string districtID)
         {
             var officerDetailsTableDataForms = new GetOfficerDetailsRequestModal
@@ -318,15 +310,15 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
-                ZO = zonalOfcID,
-                RO = regionalOfcID,
-                StateId = stateID,
-                DistrictId = districtID
+                ZO = zonalOfcID == "0" ? "" : zonalOfcID,
+                RO = regionalOfcID == "0" || string.IsNullOrEmpty(regionalOfcID) ? "" : regionalOfcID,
+                StateId = stateID == "0" ? "" : stateID,
+                DistrictId = districtID == "0" || string.IsNullOrEmpty(districtID) ? "" : districtID
             };
 
             StringContent officerDetailsTableDataContent = new StringContent(JsonConvert.SerializeObject(officerDetailsTableDataForms), Encoding.UTF8, "application/json");
 
-            var officerDetailsTableDataResponse = await _requestService.CommonRequestService(officerDetailsTableDataContent, WebApiUrl.GetStatusTypeUrl);
+            var officerDetailsTableDataResponse = await _requestService.CommonRequestService(officerDetailsTableDataContent, WebApiUrl.getOfficerDetailByLocation);
 
             JObject officerDetailsTableDataObj = JObject.Parse(JsonConvert.DeserializeObject(officerDetailsTableDataResponse).ToString());
             var officerDetailsTableDataJarr = officerDetailsTableDataObj["Data"].Value<JArray>();
@@ -334,17 +326,6 @@ namespace HPCL.Service.Services
 
             return officerDetailsTableDataLst;
         }
-
-        public Task<string> GetOfficerTypeDetails()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetRegionalOfcDetails(string zonalOfcID)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<OfficerDetailsModel> OfficerDetails()
         {
             OfficerDetailsModel ofcLstMdl = new OfficerDetailsModel();
@@ -353,10 +334,6 @@ namespace HPCL.Service.Services
             ofcLstMdl.OfficerZones.AddRange(await _commonActionService.GetZonalOfficeList());
             
             return ofcLstMdl;
-        }
-        public Task<string> ValidateUserName(string userName)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<List<MerchantTypeResponseModal>> GetMerchantTypeList();
         Task<List<OutletCategoryResponseModal>> GetOutletCategoryList();
         Task<List<SbuTypeResponseModal>> GetSbuTypeList();
-        Task<List<SalesAreaResponseModal>> GettSalesAreaList(string regionId);
+        Task<List<SalesAreaResponseModal>> GetSalesAreaList(string regionId);
         Task<string> ValidateUserName(string userName);
         Task<List<RegionModel>> GetRegionList();
     }

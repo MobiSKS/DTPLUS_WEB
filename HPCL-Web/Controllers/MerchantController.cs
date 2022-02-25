@@ -21,12 +21,14 @@ namespace HPCL_Web.Controllers
     public class MerchantController : Controller
     {
         private readonly IMerchantServices _merchantServices;
+        private readonly ICommonActionService _commonActionService;
 
-        public MerchantController(IMerchantServices merchantServices)
+        public MerchantController(IMerchantServices merchantServices, ICommonActionService commonActionService)
         {
             _merchantServices = merchantServices;
+            _commonActionService = commonActionService;
         }
-        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string reason)
+        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category)
         {
             var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category);
             return View(modals);
@@ -34,8 +36,21 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
-            var reason = await _merchantServices.CreateMerchant(merchantMdl);
-            return RedirectToAction("CreateMerchant", "Merchant", new { reason = reason });
+            var tuple = await _merchantServices.CreateMerchant(merchantMdl);
+
+            if (tuple.Item1 == "0")
+            {
+                merchantMdl.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
+                merchantMdl.OutletCategories.AddRange(await _commonActionService.GetOutletCategoryList());
+                merchantMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+                merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
+                merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
+                merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            }
+
+            ViewBag.Reason = tuple.Item2;
+            ViewBag.Status = tuple.Item1;
+            return View(merchantMdl);
         }
         public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {

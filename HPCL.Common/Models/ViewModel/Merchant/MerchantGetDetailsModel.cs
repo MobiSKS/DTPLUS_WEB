@@ -60,6 +60,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 PreHighwayNumberName = "SH"
             });
         }
+        public string SearchMerchantId { get; set; }
         public string MerchantId { get; set; }
         public string ErpCode { get; set; }
         public string RetailOutletName { get; set; }
@@ -127,6 +128,10 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string Approvedon { get; set; }
         public string ApprovedBy { get; set; }
         public string Model_State { get; set; }
+        public string RetailDistrictIdVal { get; set; }
+        public string RegionalOfcIdVal { get; set; }
+        public string SalesAreaIdVal { get; set; }
+        public string CommDistrictIdVal { get; set; }
         public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
         public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }

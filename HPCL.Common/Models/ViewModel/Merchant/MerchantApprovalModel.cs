@@ -7,7 +7,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public MerchantApprovalModel()
         {
             Categories = new List<CategoriesModel>();
-            MerchantApprovalTableDetails = new List<MerchantApprovalModel>();
+            MerchantApprovalTableDetails = new List<MerchantApprovalTableModel>();
             Categories.Add(new CategoriesModel
             {
                 CategoryID = 1,
@@ -29,7 +29,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string ToDate { get; set; }
         public string ShowTable { get; set; }
         public virtual List<CategoriesModel> Categories { get; set; }
-        public virtual List<MerchantApprovalModel> MerchantApprovalTableDetails { get; set; }
+        public virtual List<MerchantApprovalTableModel> MerchantApprovalTableDetails { get; set; }
     }
     public class CategoriesModel
     {

@@ -61,7 +61,7 @@ namespace HPCL.Service.Services
 
             StringContent hqContent = new StringContent(JsonConvert.SerializeObject(hqForms), Encoding.UTF8, "application/json");
 
-            var hqResponse = await _requestService.CommonRequestService(hqContent, WebApiUrl.getZonalOffice);
+            var hqResponse = await _requestService.CommonRequestService(hqContent, WebApiUrl.getLocationHq);
 
             JObject hqObj = JObject.Parse(JsonConvert.DeserializeObject(hqResponse).ToString());
             var hqJarr = hqObj["Data"].Value<JArray>();
@@ -111,7 +111,7 @@ namespace HPCL.Service.Services
             return locationMappingLst;
         }
 
-        public async Task<List<SalesAreaResponseModal>> GettSalesAreaList(string regionId)
+        public async Task<List<SalesAreaResponseModal>> GetSalesAreaList(string regionId)
         {
             var salesAreaForms = new SalesAreaRequestModal
             {
@@ -207,14 +207,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                ZonalId = CommonBase.zonalid,
+                ZonalId = zonalOfcID == null ? "0" : zonalOfcID,
                 RegionalId = CommonBase.regionalid,
-                ZonalID = zonalOfcID
+                ZonalID = zonalOfcID == null ? "0" : zonalOfcID
             };
 
             StringContent regionalOfficeContent = new StringContent(JsonConvert.SerializeObject(regionalOfficeForms), Encoding.UTF8, "application/json");
 
-            var regionalOfficeResponse = await _requestService.CommonRequestService(regionalOfficeContent, WebApiUrl.getOfficerType);
+            var regionalOfficeResponse = await _requestService.CommonRequestService(regionalOfficeContent, WebApiUrl.regionalOffice);
 
             JObject regionalOfficeObj = JObject.Parse(JsonConvert.DeserializeObject(regionalOfficeResponse).ToString());
             var regionalOfficeJarr = regionalOfficeObj["Data"].Value<JArray>();

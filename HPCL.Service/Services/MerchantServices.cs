@@ -88,7 +88,7 @@ namespace HPCL.Service.Services
 
             return merchantMdl;
         }
-        public async Task<string> CreateMerchant(MerchantGetDetailsModel merchantMdl)
+        public async Task<Tuple<string,string>> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
             string url;
             var merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal();
@@ -101,7 +101,7 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    MerchantId = "30" + merchantMdl.ErpCode,
+                    ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
                     MerchantTypeId = merchantMdl.MerchantTypeId,
                     DealerName = merchantMdl.DealerName,
@@ -120,13 +120,13 @@ namespace HPCL.Service.Services
                     RetailOutletLocation = merchantMdl.RetailOutletLocation,
                     RetailOutletCity = merchantMdl.RetailOutletCity,
                     RetailOutletStateId = merchantMdl.RetailOutletStateId,
-                    RetailOutletDistrictId = merchantMdl.RetailOutletDistrictId,
+                    RetailOutletDistrictId = merchantMdl.RetailDistrictIdVal,
                     RetailOutletPinNumber = merchantMdl.RetailOutletPinNumber,
                     RetailOutletPhoneNumber = merchantMdl.RetailOutletPhoneNumber,
                     RetailOutletFax = merchantMdl.RetailOutletFax,
                     ZonalOfficeId = merchantMdl.ZonalOfficeId,
-                    RegionalOfficeId = merchantMdl.RegionalOfficeId,
-                    SalesAreaId = merchantMdl.SalesAreaId,
+                    RegionalOfficeId = merchantMdl.RegionalOfcIdVal,
+                    SalesAreaId = merchantMdl.SalesAreaIdVal,
                     ContactPersonNameFirstName = merchantMdl.ContactPersonNameFirstName,
                     ContactPersonNameMiddleName = merchantMdl.ContactPersonNameMiddleName,
                     ContactPersonNameLastName = merchantMdl.ContactPersonNameLastName,
@@ -139,7 +139,7 @@ namespace HPCL.Service.Services
                     CommunicationLocation = "",
                     CommunicationCity = merchantMdl.CommunicationCity,
                     CommunicationStateId = merchantMdl.CommunicationStateId,
-                    CommunicationDistrictId = merchantMdl.CommunicationDistrictId == null ? "0" : merchantMdl.CommunicationDistrictId,
+                    CommunicationDistrictId = merchantMdl.CommDistrictIdVal == null ? "0" : merchantMdl.CommDistrictIdVal,
                     CommunicationPinNumber = merchantMdl.CommunicationPinNumber,
                     CommunicationPhoneNumber = merchantMdl.CommunicationPhoneNumber,
                     CommunicationFax = merchantMdl.CommunicationFax,
@@ -154,7 +154,7 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    MerchantId = "30" + merchantMdl.ErpCode,
+                    ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
                     MerchantTypeId = merchantMdl.MerchantTypeId,
                     DealerName = merchantMdl.DealerName,
@@ -173,13 +173,13 @@ namespace HPCL.Service.Services
                     RetailOutletLocation = merchantMdl.RetailOutletLocation,
                     RetailOutletCity = merchantMdl.RetailOutletCity,
                     RetailOutletStateId = merchantMdl.RetailOutletStateId,
-                    RetailOutletDistrictId = merchantMdl.RetailOutletDistrictId,
+                    RetailOutletDistrictId = merchantMdl.RetailDistrictIdVal,
                     RetailOutletPinNumber = merchantMdl.RetailOutletPinNumber,
                     RetailOutletPhoneNumber = merchantMdl.RetailOutletPhoneNumber,
                     RetailOutletFax = merchantMdl.RetailOutletFax,
                     ZonalOfficeId = merchantMdl.ZonalOfficeId,
-                    RegionalOfficeId = merchantMdl.RegionalOfficeId,
-                    SalesAreaId = merchantMdl.SalesAreaId,
+                    RegionalOfficeId = merchantMdl.RegionalOfcIdVal,
+                    SalesAreaId = merchantMdl.SalesAreaIdVal,
                     ContactPersonNameFirstName = merchantMdl.ContactPersonNameFirstName,
                     ContactPersonNameMiddleName = merchantMdl.ContactPersonNameMiddleName,
                     ContactPersonNameLastName = merchantMdl.ContactPersonNameLastName,
@@ -192,10 +192,12 @@ namespace HPCL.Service.Services
                     CommunicationLocation = "",
                     CommunicationCity = merchantMdl.CommunicationCity,
                     CommunicationStateId = merchantMdl.CommunicationStateId,
-                    CommunicationDistrictId = merchantMdl.CommunicationDistrictId == null ? "0" : merchantMdl.CommunicationDistrictId,
+                    CommunicationDistrictId = merchantMdl.CommDistrictIdVal == null ? "0" : merchantMdl.CommDistrictIdVal,
                     CommunicationPinNumber = merchantMdl.CommunicationPinNumber,
                     CommunicationPhoneNumber = merchantMdl.CommunicationPhoneNumber,
                     CommunicationFax = merchantMdl.CommunicationFax,
+                    NoofLiveTerminals = merchantMdl.NoofLiveTerminals,
+                    TerminalTypeRequested = merchantMdl.TerminalTypeRequested,
                     CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
                 };
             }
@@ -208,21 +210,30 @@ namespace HPCL.Service.Services
             {
                 var merchantCreateUpdateJarr = merchantCreateUpdateObj["Data"].Value<JArray>();
                 List<SuccessResponse> merchantCreateUpdateLst = merchantCreateUpdateJarr.ToObject<List<SuccessResponse>>();
-                return merchantCreateUpdateLst.First().Reason.ToString();
+                return Tuple.Create(merchantCreateUpdateLst.First().Status.ToString(), merchantCreateUpdateLst.First().Reason.ToString());
             }
             else
             {
-                return merchantCreateUpdateObj["Message"].ToString();
+                return Tuple.Create("0",merchantCreateUpdateObj["Message"].ToString());
             }
         }
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
-            string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
-            string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
+            string fromDate = "", toDate = "";
 
-            string fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-            string toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+            if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
+            {
+                string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
+                string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+            }
+            else
+            {
+                return merchaApprovalMdl;
+            }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
             {
@@ -240,7 +251,7 @@ namespace HPCL.Service.Services
 
             JObject merchantApprovalObj = JObject.Parse(JsonConvert.DeserializeObject(merchantApprovalResponse).ToString());
             var merchantApprovalJarr = merchantApprovalObj["Data"].Value<JArray>();
-            List<MerchantApprovalModel> merchantApprovalLst = merchantApprovalJarr.ToObject<List<MerchantApprovalModel>>();
+            List<MerchantApprovalTableModel> merchantApprovalLst = merchantApprovalJarr.ToObject<List<MerchantApprovalTableModel>>();
             merchaApprovalMdl.MerchantApprovalTableDetails.AddRange(merchantApprovalLst);
             return merchaApprovalMdl;
         }
