@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.ViewModel.ViewCard;
+using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,199 +15,48 @@ namespace HPCL_Web.Controllers
 {
     public class ViewCardController : Controller
     {
+
+        private readonly IViewCardService _ViewService;
+
+        public ViewCardController(IViewCardService ViewServices)
+        {
+            _ViewService = ViewServices;
+        }
+
+
         public async Task<IActionResult> ViewCardSearch()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<JsonResult> ViewCardSearch(ViewCardDetails entity)
         {
+            var searchList = await _ViewService.ViewCardSearch(entity);
 
-
-            var searchBody = new ViewCardDetails
-            {
-                UserId = CommonBase.userid,
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                Customerid = entity.Customerid
-            };
-
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.ViewCardLimitsUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
-                        ModelState.Clear();
-                        return Json(new { searchList = searchList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
         }
-
-
-        //  public async Task<IActionResult> EditMobile(string Customerid)
-        // {
-        //     HttpContext.Session.SetString("Customerids", Customerid);
-        //     return View();
-        //   }
 
         [HttpPost]
         public async Task<JsonResult> SearchCardMapping(string Customerid)
         {
-            HttpContext.Session.SetString("Customerids", Customerid);
-            var forms = new Dictionary<string, string>
-            {
-                {"useragent", CommonBase.useragent},
-                {"userip", CommonBase.userip},
-                {"userid", CommonBase.userid},
-                {"customerId", HttpContext.Session.GetString("Customerids")}
-            };
+            var searchList = await _ViewService.SearchCardMapping(Customerid);
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync("", content)) //WebApiUrl.SearchCardMappingUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                        var jarr = obj["Data"].Value<JArray>();
-                        List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
-
-                        ModelState.Clear();
-
-                        return Json(new { searchList = searchList });
-                        //return Json(new
-                        //{
-                        //    redirectUrl = Url.Action("EditMobile", "ViewCard", new { searchList = searchList }),
-                        //    isRedirect = true
-                        //});
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards()//ObjUpdateMobileandFastagNoInCard[] limitArray)
+        public async Task<JsonResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
+            var reason = await _ViewService.UpdateCards(limitArray);
 
-            var updateServiceBody = new UpdateMobile
-            {
-
-                UserId = HttpContext.Session.GetString("UserName"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                //objCardLimits = limitArray,
-                ModifiedBy = HttpContext.Session.GetString("UserName"),
-            };
-
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-                StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
-
-                using (var Response = await client.PostAsync(WebApiUrl.MobileAddOrEditUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-
-                        var updateRes = obj["Data"].Value<JArray>();
-                        List<UpdateMobileResponse> updateResponse = updateRes.ToObject<List<UpdateMobileResponse>>();
-
-                        ModelState.Clear();
-                        return Json(updateResponse[0].Reason);
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
+            ModelState.Clear();
+            return Json(reason);
         }
-
-        
-
-        //[HttpPost]
-        //public async Task<JsonResult> Addmobilenumber(ViewCardDetails entity)
-        //{
-        //    var searchBody = new ViewCardDetails
-        //    {
-        //        UserId = Common.userid,
-        //        UserAgent = Common.useragent,
-        //        UserIp = Common.userip,
-        //        Customerid = entity.Customerid,
-        //        CardNo = entity.CardNo,
-        //        MobileNo = entity.MobileNo,
-        //        FastagNo = entity.FastagNo,
-        //        Statusflag = entity.Statusflag
-        //    };
-
-        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-        //        using (var Response = await client.PostAsync(WebApiUrl.MobileAddOrEdit, content))
-        //        {
-        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-        //                var jsonSerializerOptions = new JsonSerializerOptions()
-        //                {
-        //                    IgnoreNullValues = true
-        //                };
-        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-        //                var jarr = obj["Data"].Value<JArray>();
-        //                List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
-        //                ModelState.Clear();
-        //                return Json(new { searchList = searchList });
-        //            }
-        //            else
-        //            {
-        //                ModelState.Clear();
-        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-        //                return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-        //            }
-        //        }
-        //    }
-        //}
-
-
     }
+
 }
+
+

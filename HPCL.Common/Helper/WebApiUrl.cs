@@ -56,6 +56,8 @@
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
+        public static string CardControlUrl = "/dtpwebapi/api/dtplus/customer/get_control_card_number";
+        public static string SearchCardMappingUrl = "/dtpwebapi/api/dtplus/card/search_card_mapping_detail";
         #endregion
 
         #region Merchant

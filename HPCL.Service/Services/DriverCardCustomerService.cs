@@ -19,38 +19,21 @@ namespace HPCL.Service.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public DriverCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public DriverCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<RequestForDriverCardModel> RequestForDriverCard()
         {
             RequestForDriverCardModel custMdl = new RequestForDriverCardModel();
 
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
 
-            //Fetching Customer Region
-            var CustomerRegion = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"ZoneID",  "0" }
-                };
-
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getLocationRegion);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<RegionModel> lst = jarr.ToObject<List<RegionModel>>();
-            custMdl.RegionMdl.AddRange(lst);
-            
-            
             return custMdl;
         }
 
@@ -58,14 +41,14 @@ namespace HPCL.Service.Services
         {
 
             var driversRequestData = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"RegionalId", requestForDriverCardModel.CustomerRegionID.ToString()},
-                    {"NoofCards", requestForDriverCardModel.NoofCards.ToString()},
-                    {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-                };
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"RegionalId", requestForDriverCardModel.CustomerRegionID.ToString()},
+                {"NoofCards", requestForDriverCardModel.NoofCards.ToString()},
+                {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+            };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(driversRequestData), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDriverCardRequest);
@@ -83,24 +66,7 @@ namespace HPCL.Service.Services
                 else
                     requestForDriverCardModel.Remarks = customerResponse.Message;
 
-
-                var CustRegion = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"ZoneID",  "0" }
-                                };
-
-                StringContent contentCustomerRegion = new StringContent(JsonConvert.SerializeObject(CustRegion), Encoding.UTF8, "application/json");
-
-                var responseRegion = await _requestService.CommonRequestService(contentCustomerRegion, WebApiUrl.getLocationRegion);
-
-
-                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegion).ToString());
-                var jarr = obj["Data"].Value<JArray>();
-                List<RegionModel> lst = jarr.ToObject<List<RegionModel>>();
-                requestForDriverCardModel.RegionMdl.AddRange(lst);
+                requestForDriverCardModel.RegionMdl.AddRange(await _commonActionService.GetRegionList());
             }
 
             return requestForDriverCardModel;
