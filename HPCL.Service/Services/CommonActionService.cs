@@ -111,6 +111,51 @@ namespace HPCL.Service.Services
             return locationMappingLst;
         }
 
+        public async Task<List<SalesAreaResponseModal>> GettSalesAreaList(string regionId)
+        {
+            var salesAreaForms = new SalesAreaRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid,
+                RegionID = regionId
+            };
+
+            StringContent salesAreaContent = new StringContent(JsonConvert.SerializeObject(salesAreaForms), Encoding.UTF8, "application/json");
+
+            var salesAreaResponse = await _requestService.CommonRequestService(salesAreaContent, WebApiUrl.getSalesArea);
+
+            JObject salesAreaObj = JObject.Parse(JsonConvert.DeserializeObject(salesAreaResponse).ToString());
+            var salesAreaJarr = salesAreaObj["Data"].Value<JArray>();
+            List<SalesAreaResponseModal> salesAreaLst = salesAreaJarr.ToObject<List<SalesAreaResponseModal>>();
+
+            return salesAreaLst;
+        }
+
+        public async Task<List<MerchantTypeResponseModal>> GetMerchantTypeList()
+        {
+            var merchantTypeForms = new BaseEntity
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid
+            };
+
+            StringContent merchantTypeContent = new StringContent(JsonConvert.SerializeObject(merchantTypeForms), Encoding.UTF8, "application/json");
+
+            var merchantTypeResponse = await _requestService.CommonRequestService(merchantTypeContent, WebApiUrl.getMerchantType);
+
+            JObject merchantTypeObj = JObject.Parse(JsonConvert.DeserializeObject(merchantTypeResponse).ToString());
+            var merchantTypeJarr = merchantTypeObj["Data"].Value<JArray>();
+            List<MerchantTypeResponseModal> merchantTypeLst = merchantTypeJarr.ToObject<List<MerchantTypeResponseModal>>();
+
+            return merchantTypeLst;
+        }
+
         public async Task<List<OfficerTypeResponseModal>> GetOfficerTypeList()
         {
             var officerTypeForms = new BaseEntity
@@ -131,6 +176,28 @@ namespace HPCL.Service.Services
             List<OfficerTypeResponseModal> officerTypeLst = officerTypeJarr.ToObject<List<OfficerTypeResponseModal>>();
 
             return officerTypeLst;
+        }
+
+        public async Task<List<OutletCategoryResponseModal>> GetOutletCategoryList()
+        {
+            var outletCategoryForms = new BaseEntity
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid
+            };
+
+            StringContent outletCategoryContent = new StringContent(JsonConvert.SerializeObject(outletCategoryForms), Encoding.UTF8, "application/json");
+
+            var outletCategoryResponse = await _requestService.CommonRequestService(outletCategoryContent, WebApiUrl.getOutletCategory);
+
+            JObject outletCategoryObj = JObject.Parse(JsonConvert.DeserializeObject(outletCategoryResponse).ToString());
+            var outletCategoryJarr = outletCategoryObj["Data"].Value<JArray>();
+            List<OutletCategoryResponseModal> outletCategoryLst = outletCategoryJarr.ToObject<List<OutletCategoryResponseModal>>();
+
+            return outletCategoryLst;
         }
 
         public async Task<List<RegionalOfficeResponseModal>> GetRegionalOfficeList(string zonalOfcID)
@@ -154,6 +221,28 @@ namespace HPCL.Service.Services
             List<RegionalOfficeResponseModal> regionalOfficeLst = regionalOfficeJarr.ToObject<List<RegionalOfficeResponseModal>>();
 
             return regionalOfficeLst;
+        }
+
+        public async Task<List<SbuTypeResponseModal>> GetSbuTypeList()
+        {
+            var sbuTypeForms = new BaseEntity
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid
+            };
+
+            StringContent sbuTypeContent = new StringContent(JsonConvert.SerializeObject(sbuTypeForms), Encoding.UTF8, "application/json");
+
+            var sbuTypeResponse = await _requestService.CommonRequestService(sbuTypeContent, WebApiUrl.getSbu);
+
+            JObject sbuTypeObj = JObject.Parse(JsonConvert.DeserializeObject(sbuTypeResponse).ToString());
+            var sbuTypeJarr = sbuTypeObj["Data"].Value<JArray>();
+            List<SbuTypeResponseModal> sbuTypeLst = sbuTypeJarr.ToObject<List<SbuTypeResponseModal>>();
+
+            return sbuTypeLst;
         }
 
         public async Task<List<StateResponseModal>> GetStateList()

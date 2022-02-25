@@ -33,8 +33,8 @@ namespace HPCL.Service.Services
         public async Task<OfficerModel> Create()
         {
             OfficerModel ofcrMdl = new OfficerModel();
-            ofcrMdl.OfficerTypeMdl.AddRange((IEnumerable<OfficerTypeResponseModal>)_commonActionService.GetOfficerTypeList());
-            ofcrMdl.OfficerStateMdl.AddRange((IEnumerable<StateResponseModal>)_commonActionService.GetStateList());
+            ofcrMdl.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
+            ofcrMdl.OfficerStateMdl.AddRange(await _commonActionService.GetStateList());
             return ofcrMdl;
         }
 
@@ -183,8 +183,8 @@ namespace HPCL.Service.Services
         public async Task<OfficerLocationModel> EditLocation(int officerID)
         {
             OfficerLocationModel ofcrLocMdl = new OfficerLocationModel();
-            ofcrLocMdl.ZoneOffices.AddRange((IEnumerable<ZonalOfficeResponseModal>)_commonActionService.GetZonalOfficeList());
-            ofcrLocMdl.LocationMappings.AddRange((IEnumerable<LocationMappingResponseModal>)_commonActionService.GetLocationMappingList(officerID));
+            ofcrLocMdl.ZoneOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            ofcrLocMdl.LocationMappings.AddRange(await _commonActionService.GetLocationMappingList(officerID));
             return ofcrLocMdl;
         }
         public async Task<Tuple<string, OfficerLocationModel>> EditLocation(OfficerLocationModel ofcrLocationMdl)
@@ -206,8 +206,8 @@ namespace HPCL.Service.Services
             var officerLocationMappingInsertResponse = await _requestService.CommonRequestService(officerLocationMappingInsertContent, WebApiUrl.insertOfficerLocationMapping);
             JObject officerLocationMappingInsertObj = JObject.Parse(JsonConvert.DeserializeObject(officerLocationMappingInsertResponse).ToString());
 
-            ofcrLocationMdl.ZoneOffices.AddRange((IEnumerable<ZonalOfficeResponseModal>)_commonActionService.GetZonalOfficeList());
-            ofcrLocationMdl.LocationMappings.AddRange((IEnumerable<LocationMappingResponseModal>)_commonActionService.GetLocationMappingList(ofcrLocationMdl.OfficerID));
+            ofcrLocationMdl.ZoneOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            ofcrLocationMdl.LocationMappings.AddRange(await _commonActionService.GetLocationMappingList(ofcrLocationMdl.OfficerID));
 
             if (officerLocationMappingInsertObj["Status_Code"].ToString() == "200")
             {
@@ -248,9 +248,9 @@ namespace HPCL.Service.Services
             ofcrEditMdl.Mobile = ofcrEditMdl.MobileNo;
             ofcrEditMdl.Email = ofcrEditMdl.EmailId;
 
-            ofcrEditMdl.OfficerTypeMdl.AddRange((IEnumerable<OfficerTypeResponseModal>)_commonActionService.GetOfficerTypeList());
-            ofcrEditMdl.OfficerStateMdl.AddRange((IEnumerable<StateResponseModal>)_commonActionService.GetStateList());
-            ofcrEditMdl.OfficerDistrictMdl.AddRange((IEnumerable<DistrictResponseModal>)_commonActionService.GetDistrictList(""));
+            ofcrEditMdl.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
+            ofcrEditMdl.OfficerStateMdl.AddRange(await _commonActionService.GetStateList());
+            ofcrEditMdl.OfficerDistrictMdl.AddRange(await _commonActionService.GetDistrictList(""));
 
             return ofcrEditMdl;
         }
@@ -349,8 +349,8 @@ namespace HPCL.Service.Services
         {
             OfficerDetailsModel ofcLstMdl = new OfficerDetailsModel();
 
-            ofcLstMdl.OfficerStates.AddRange((IEnumerable<StateResponseModal>)_commonActionService.GetStateList());
-            ofcLstMdl.OfficerZones.AddRange((IEnumerable<ZonalOfficeResponseModal>)_commonActionService.GetZonalOfficeList());
+            ofcLstMdl.OfficerStates.AddRange(await _commonActionService.GetStateList());
+            ofcLstMdl.OfficerZones.AddRange(await _commonActionService.GetZonalOfficeList());
             
             return ofcLstMdl;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel.Merchant
 {
@@ -6,54 +7,54 @@ namespace HPCL.Common.Models.ViewModel.Merchant
     {
         public MerchantModel()
         {
-            MerchantTypes = new List<MerchantTypeModel>();
-            OutletCategories = new List<OutletCategoryModel>();
-            SBUTypes = new List<SBUTypeModel>();
-            RetailOutletStates = new List<RetailOutletStateModel>();
-            RetailOutletDistricts = new List<RetailOutletDistrictModel>();
-            CommStates = new List<CommStateModel>();
-            CommDistricts = new List<CommDistrictModel>();
-            ZonalOffices = new List<ZonalOfficeModel>();
-            SalesAreas = new List<MerchantSalesAreaModel>();
-            PreHighwayNumbers = new List<PreHighwayNumberModel>();
-            MerchantTypes.Add(new MerchantTypeModel
+            MerchantTypes = new List<MerchantTypeResponseModal>();
+            OutletCategories = new List<OutletCategoryResponseModal>();
+            SBUTypes = new List<SbuTypeResponseModal>();
+            RetailOutletStates = new List<StateResponseModal>();
+            RetailOutletDistricts = new List<DistrictResponseModal>();
+            CommStates = new List<StateResponseModal>();
+            CommDistricts = new List<DistrictResponseModal>();
+            ZonalOffices = new List<ZonalOfficeResponseModal>();
+            SalesAreas = new List<SalesAreaResponseModal>();
+            PreHighwayNumbers = new List<PreHighwayNumberResponseModal>();
+            MerchantTypes.Add(new MerchantTypeResponseModal
             {
                 MerchantTypeCode = 0,
                 MerchantTypeName = "--Select--"
             });
-            OutletCategories.Add(new OutletCategoryModel    
+            OutletCategories.Add(new OutletCategoryResponseModal
             {
                 OutletCategoryCode = 0,
                 OutletCategoryName = "--Select--"
             });
-            SBUTypes.Add(new SBUTypeModel
+            SBUTypes.Add(new SbuTypeResponseModal
             {
                 SBUId = 0,
                 SBUName = "--Select--"
             });
-            RetailOutletStates.Add(new RetailOutletStateModel
+            RetailOutletStates.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
                 StateName = "Select State"
             });
-            CommStates.Add(new CommStateModel
+            CommStates.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
                 StateName = "Select State"
             });
-            ZonalOffices.Add(new ZonalOfficeModel
+            ZonalOffices.Add(new ZonalOfficeResponseModal
             {
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "--Select--"
             });
-            PreHighwayNumbers.Add(new PreHighwayNumberModel
+            PreHighwayNumbers.Add(new PreHighwayNumberResponseModal
             {
                 PreHighwayNumberID = 1,
                 PreHighwayNumberName = "NH"
             });
-            PreHighwayNumbers.Add(new PreHighwayNumberModel
+            PreHighwayNumbers.Add(new PreHighwayNumberResponseModal
             { 
                 PreHighwayNumberID = 2,
                 PreHighwayNumberName = "SH"
@@ -114,75 +115,15 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string RegionalOfcID { get; set; }
         public string SalesAreaID { get; set; }
         public string Comm_DistictID { get; set; }
-        public virtual List<MerchantTypeModel> MerchantTypes { get; set; }
-        public virtual List<OutletCategoryModel> OutletCategories { get; set; }
-        public virtual List<SBUTypeModel> SBUTypes { get; set; }
-        public virtual List<RetailOutletStateModel> RetailOutletStates { get; set; }
-        public virtual List<RetailOutletDistrictModel> RetailOutletDistricts { get; set; }
-        public virtual List<CommStateModel> CommStates { get; set; }
-        public virtual List<CommDistrictModel> CommDistricts { get; set; }
-        public virtual List<ZonalOfficeModel> ZonalOffices { get; set; }
-        public virtual List<MerchantSalesAreaModel> SalesAreas { get; set; }
-        public virtual List<PreHighwayNumberModel> PreHighwayNumbers { get; set; }
-    }
-    public class MerchantTypeModel
-    {
-        public int MerchantTypeCode { get; set; }
-        public string MerchantTypeName { get; set; }
-    }
-    public class OutletCategoryModel
-    {
-        public int OutletCategoryCode { get; set; }
-        public string OutletCategoryName { get; set; }
-    }
-    public class SBUTypeModel
-    {
-        public int SBUId { get; set; }
-        public string SBUName { get; set; }
-    }
-    public class RetailOutletStateModel
-    {
-        public int CountryID { get; set; }
-        public int StateID { get; set; }
-        public string StateName { get; set; }
-    }
-    public class RetailOutletDistrictModel
-    {
-        public int stateID { get; set; }
-        public int districtID { get; set; }
-        public string districtName { get; set; }
-    }
-    public class CommStateModel
-    {
-        public int CountryID { get; set; }
-        public int StateID { get; set; }
-        public string StateName { get; set; }
-    }
-    public class CommDistrictModel
-    {
-        public int stateID { get; set; }
-        public int districtID { get; set; }
-        public string districtName { get; set; }
-    }
-    public class ZonalOfficeModel
-    {
-        public int ZonalOfficeID { get; set; }
-        public string ZonalOfficeName { get; set; }
-    }
-    public class RegionalOfficeModel
-    {
-        public int RegionalOfficeID { get; set; }
-        public string RegionalOfficeName { get; set; }
-    }
-    public class MerchantSalesAreaModel
-    {
-        public int RegionID { get; set; }
-        public int SalesAreaID { get; set; }
-        public string SalesAreaName { get; set; }
-    }
-    public class PreHighwayNumberModel
-    {
-        public int PreHighwayNumberID { get; set; }
-        public string PreHighwayNumberName { get; set; }
+        public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
+        public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public virtual List<StateResponseModal> RetailOutletStates { get; set; }
+        public virtual List<DistrictResponseModal> RetailOutletDistricts { get; set; }
+        public virtual List<StateResponseModal> CommStates { get; set; }
+        public virtual List<DistrictResponseModal> CommDistricts { get; set; }
+        public virtual List<ZonalOfficeResponseModal> ZonalOffices { get; set; }
+        public virtual List<SalesAreaResponseModal> SalesAreas { get; set; }
+        public virtual List<PreHighwayNumberResponseModal> PreHighwayNumbers { get; set; }
     }
 }
