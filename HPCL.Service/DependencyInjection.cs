@@ -18,7 +18,7 @@ namespace HPCL.Service
             services.AddTransient<ICommonActionService, CommonActionService>();
             services.AddTransient<IControlCardSearch, ControlCard>();
             services.AddTransient<IViewCardService, ViewCardService>();
-
+            services.AddTransient<ICustomerManageService, CustomerManageService>();
             return services;
         }
     }

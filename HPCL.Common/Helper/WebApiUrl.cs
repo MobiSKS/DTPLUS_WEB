@@ -104,6 +104,7 @@
 
         public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
         public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
+        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
         #endregion
 
         #region Login
