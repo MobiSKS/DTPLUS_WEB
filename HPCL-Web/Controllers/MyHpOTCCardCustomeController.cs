@@ -153,5 +153,22 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckMobilNoDuplication(MobileNo);
+
+            return Json(customerInserCardResponseData);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckEmailDuplication(string Emailid)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
+
+            return Json(customerInserCardResponseData);
+        }
+
+
     }
 }

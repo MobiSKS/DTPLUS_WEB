@@ -17,7 +17,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">My HP (OTC) Card Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">My HP (OTC) Card Customer Creation </li>
         </ul>
-        <form name="OTCCustomerCardCreationForm" method="post" asp-action="CustomerCardCreation" class="w-100">
+        <form name="OTCCustomerCardCreationForm" method="post" asp-action="CustomerCardCreation" class="w-100" autocomplete="off">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -105,7 +105,6 @@
                                         <label class="font-weight-normal col-md-4 col-12">Form Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @*<input class="form-control" id="" name="formnumber" type="text" value="">*@
                                                 @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="formNumber_error"></span>
                                             </div>
@@ -143,7 +142,6 @@
                                         <label class="font-weight-normal col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @*<input class="form-control" id="" name="cardname" type="text" value="">*@
                                                 @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off" })
                                                 <span class="error" id="nameOnCard_error"></span>
                                             </div>
@@ -155,7 +153,6 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @*<input class="form-control" id="" name="customername" type="text" value="">*@
                                                 @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
                                                 <span class="error" id="incomeTaxPan_error"></span>
                                             </div>
@@ -329,7 +326,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Vehicle Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control", maxlength = "16", onkeyup = "RemoveSpecialChar(this)" })
                                                 <span class="error" id="VehicleNo1_error"></span>
                                             </div>
 
@@ -368,7 +365,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Vehicle Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control", maxlength = "16", onkeyup = "RemoveSpecialChar(this)" })
                                                 <span class="error" id="VehicleNo2_error"></span>
                                             </div>
 
@@ -410,9 +407,9 @@
                                                 @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
                                                 @Html.RadioButtonFor(m => m.CopyofDriverLicense, "No", new { @id = "rbtnDriverLicenseNo" })
                                                 <label class="form-check-label" for="inlineRadio2">No</label>
-                                                <span class="error" id="CopyofDriverLicense_error"></span>
                                             </div>
                                         </div>
+                                        <span class="error" id="CopyofDriverLicense_error"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
@@ -428,9 +425,9 @@
                                                 @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
                                                 @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "No", new { @id = "rbtnVehicleRegistrationNo" })
                                                 <label class="form-check-label" for="inlineRadio2">No</label>
-                                                <span class="error" id="CopyofVehicleRegistrationCertificate_error"></span>
                                             </div>
                                         </div>
+                                        <span class="error" id="CopyofVehicleRegistrationCertificate_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -880,7 +877,7 @@
         localStorage.setItem("PANNOALREADYUSED", "1");
 
             $.ajax({
-                type: 'POST',  
+                type: 'POST',
                 url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
                 data: { PanNo: panNumber },  // data to submit
                 dataType: "json",
@@ -961,13 +958,13 @@
                 }
                 else {
                     document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                    document.getElementById("IncomeTaxPan").focus();
+                    //document.getElementById("IncomeTaxPan").focus();
                     localStorage.setItem("PANNOANDNAMEMATCHING", "0");
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                document.getElementById("IncomeTaxPan").focus();
+                //document.getElementById("IncomeTaxPan").focus();
                 localStorage.setItem("PANNOANDNAMEMATCHING", "0");
             }
         });
@@ -984,6 +981,15 @@
 
         if (document.getElementById("MerchantId").value == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID is required";
+            document.getElementById("MerchantId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("lblZone").innerHTML == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Click search button to load merchant details";
             document.getElementById("MerchantId").focus();
             return ret;
         }
@@ -1073,7 +1079,6 @@
             document.getElementById("comm_district_error").innerHTML = "";
         }
 
-        //console.log('Before CommunicationMobileNo');
         if (document.getElementById("CommunicationMobileNo").value == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
             document.getElementById("CommunicationMobileNo").focus();
@@ -1087,6 +1092,22 @@
             document.getElementById("comm_email_error").innerHTML = "Email is required";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            return (false);
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "";
@@ -1137,36 +1158,50 @@
 
         if (document.getElementById("CardNumber1").value != "") {
             if (document.getElementById("VehicleNo1").value == "") {
-                document.getElementById("VehicleNo1_error").innerHTML = "VehicleNo 1 is required";
+                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No 1 is required";
                 document.getElementById("VehicleNo1").focus();
                 return ret;
+            }
+            else {
+                document.getElementById("VehicleNo1_error").innerHTML = "";
             }
             if (document.getElementById("MobileNo1").value == "") {
                 document.getElementById("MobileNo1_error").innerHTML = "Mobile 1 is required";
                 document.getElementById("MobileNo1").focus();
                 return ret;
             }
+            else {
+                document.getElementById("MobileNo1_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("VehicleNo1_error").innerHTML = "";
             document.getElementById("MobileNo1_error").innerHTML = "";
+            document.getElementById("CardNumber1_error").innerHTML = "";
         }
 
         if (document.getElementById("CardNumber2").value != "") {
             if (document.getElementById("VehicleNo2").value == "") {
-                document.getElementById("VehicleNo2_error").innerHTML = "VehicleNo 2 is required";
+                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No 2 is required";
                 document.getElementById("VehicleNo2").focus();
                 return ret;
+            }
+            else {
+                document.getElementById("VehicleNo2_error").innerHTML = "";
             }
             if (document.getElementById("MobileNo2").value == "") {
                 document.getElementById("MobileNo2_error").innerHTML = "Mobile 2 is required";
                 document.getElementById("MobileNo2").focus();
                 return ret;
             }
+            else {
+                document.getElementById("MobileNo2_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("VehicleNo2_error").innerHTML = "";
             document.getElementById("MobileNo2_error").innerHTML = "";
+            document.getElementById("CardNumber2_error").innerHTML = "";
         }
 
         if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
@@ -1186,14 +1221,14 @@
         }
 
         if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
-            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Select Copy of Vehicle Registration Certificate";
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Select Vehicle Registration Certificate";
             return (false);
         }
         else {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
         }
-               
-        
+
+
         if (localStorage.getItem("PANNOALREADYUSED") == 0) {
             document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
             return (false);
@@ -1205,7 +1240,7 @@
 
         if (document.getElementById("IncomeTaxPan").value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
-            document.getElementById("IncomeTaxPan").focus();
+            //document.getElementById("IncomeTaxPan").focus();
             return ret;
         }
         else {
@@ -1271,6 +1306,142 @@
         //    return ret;
 
         return true;
+    }
+
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckMobilNoDuplication", "MyHpOTCCardCustomer")',
+                data: { MobileNo: communicationMobile },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') {
+
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            mobileNoUsed = true;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+                        }
+                        else {
+                            mobileNoUsed = false;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    }
+                }
+            });
+
+        //if (mobileNoUsed == true) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "communication Email is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckEmailDuplication", "MyHpOTCCardCustomer")',
+                data: { Emailid: communicationEmail },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            emailUsed = true;
+                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                            localStorage.setItem("EMAILIDALREADYUSED", "0");
+                        }
+                        else {
+                            emailUsed = false;
+                            document.getElementById("comm_email_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    }
+                }
+            });
+
+        //if (emailUsed == true) {
+        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    function RemoveSpecialChar(txtName) {
+        if (txtName.value != '' && txtName.value.match(/^[\w ]+$/) == null) {
+            txtName.value = txtName.value.replace(/[\W]/g, '');
+        }
     }
 
 </script>

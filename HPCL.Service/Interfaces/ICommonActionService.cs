@@ -28,5 +28,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber);
         Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
         Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo);
+        Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo);
+        Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid);
     }
 }
