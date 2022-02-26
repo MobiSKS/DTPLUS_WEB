@@ -1,0 +1,169 @@
+﻿@model HPCL.Common.Models.ViewModel.Cards.ControlCardRequest
+
+@using HPCL.Common.Resources
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Search</a> </li>
+            <li class="breadcrumb-item font-weight-light">Control Card Search</li>
+        </ul>
+        <form method="post" data-ajax="true" data-ajax-controller="ControlCard" data-ajax-action="ControlCardSearch" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Control Card Search</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-2 col-12">@Label.CustomerId <sup class="text-danger">*</sup></label>
+                                        <div class="col-sm-3 col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="px-0">
+                                                    <button class="btn btn_primary regrate_btn" type="submit" onclick="showGrid()" id="btnSave" name="submit">Regenerate IAC</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="px-3">
+                            <table id="OfficerTable" class="table table-bordered" style="display:none;">
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Zonal Office")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Regional Office")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Customer ID")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Customer Name")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Control Card No")
+                                    </th>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    function showGrid() {
+        if ($("input:text").val() == "") {
+            document.getElementById('OfficerTable').style.display = 'none';
+        }
+        if (($("input:text").val() != "")) {
+            document.getElementById('OfficerTable').style.display = 'inline-table';
+        }
+    }
+
+
+    function resetFields() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        $("#OfficerTable td").parent().remove();
+        document.getElementById('OfficerTable').style.display = 'none';
+    }
+
+    function OnSuccess(data) {
+
+
+        console.log(data);
+
+
+
+        $("#OfficerTable td").parent().remove();
+
+        for (var i = 0; i < data.searchList.length; i++) {
+
+            var rows = "<tbody><tr>"
+                + "<td>" + (data.searchList[i].zonalOfficeName || '') + "</td>"
+                + "<td>" + (data.searchList[i].regionalOfficeName || '') + "</td>"
+                + "<td>" + (data.searchList[i].customerID || '') + "</td>"
+                + "<td>" + (data.searchList[i].customerName || '') + "</td>"
+                + "<td>" + (data.searchList[i].controlCardNo || '') + "</td>"
+                + "</tr ></tbody > ";
+
+            $('#OfficerTable').append(rows);
+
+
+        }
+
+
+        let tableData = $('#OfficerTable').html();
+        sessionStorage.setItem("tableData", tableData);
+
+        let custmId = $('.cusId').html();
+        sessionStorage.setItem("cusmId", custmId);
+    }
+
+    function OnFailure(data) {
+        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+
+   $("#btnSave").on('click', function (e) {
+
+       var customerid = $("#Customerid").val();
+
+        $("#OfficerTable td").parent().remove();
+
+        console.log(customerid);
+
+        $.ajax({
+            url: "@Url.Action("ControlCardSearch", "ViewCard")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: customerId },
+            success: function (res) {
+                console.log(res, "res");
+                $("#OfficerTable").show();
+
+                for (var i = 0; i < res.searchList.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
+                        + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
+                        + "<td>" + (res.searchList[i].customerID || '') + "</td>"
+                        + "<td>" + (res.searchList[i].customerName || '') + "</td>"
+                        + "<td>" + (res.searchList[i].controlCardNo || '') + "</td>"
+                        + "</tr ></tbody > ";
+
+                    $("#OfficerTable").append(rows);
+
+
+                }
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+
+        });
+
+    });
+
+</script>

@@ -1,6 +1,6 @@
-﻿@model HPCL.Common.Models.ViewModel.Merchant.MerchantModel
+﻿@model HPCL.Common.Models.ViewModel.Merchant.MerchantGetDetailsModel
 @using Microsoft.AspNetCore.Http;
-
+@using HPCL.Common.Resources
 
 <marquee width="100%" direction="left" height="30%">
     Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
@@ -27,30 +27,30 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Merchant ID<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Merchant<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
-                                                @if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                                {
-                                                    <div class="col-8">
-                                                        @Html.TextBoxFor(m => m.SearchMerchantID, new { @class = "form-control" })
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="col-8">
-                                                        @Html.TextBoxFor(m => m.SearchMerchantID, new { @class = "form-control", @disabled = "disabled" })
-                                                    </div>
-                                                    @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
+                                                @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
+                                                    {*@
+                                                <div class="col-8">
+                                                    @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control" })
+                                                </div>
+                                                <div class="col-4">
+                                                    <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                                </div>
+                                                @*}
+                                                    else
                                                     {
-                                                        <div class="col-4">
-                                                            <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                                        <div class="col-8">
+                                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
                                                         </div>
-                                                    }
-                                                }
+                                                        @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
+                                                        {
+                                                            <div class="col-4">
+                                                                <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                                            </div>
+                                                        }
+                                                    }*@
                                             </div>
                                         </div>
                                     </div>
@@ -63,10 +63,10 @@
                                                 <div class="col-8">
                                                 </div>
                                                 <div class="col-12">
-                                                    @if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                                    {
-                                                        <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
-                                                    }
+                                                    @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
+                                                        {*@
+                                                    <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
+                                                    @*}*@
                                                 </div>
                                             </div>
                                         </div>
@@ -85,15 +85,15 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Merchant ID</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Merchant</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.RetailOutletName<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.RetailOutletName, new { @class = "form-control" })
                                             <span class="error" id="retailOutletName_error"></span>
@@ -102,16 +102,16 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Merchant Type<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.MerchantType<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.MerchantType, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control" })
+                                            @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control" })
                                             <span class="error" id="merchantType_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Dealer Name</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.DealerName</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.DealerName, new { @class = "form-control" })
                                             <span class="error" id="dealerName_error"></span>
@@ -120,28 +120,28 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Mapped Merchant Id<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.MappedMerchantId<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.MappedMerchantID, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.MappedMerchantId, new { @class = "form-control" })
                                             <span class="error" id="mappedMerchantId_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Dealer Mobile No.<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.DealerMobileNo<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.DealerMobileNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.DealerMobileNo, new { @class = "form-control" })
                                             <span class="error" id="dealerMobileNum_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Outlet Category<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.OutletCategory<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.OutletCategory, new SelectList(Model.OutletCategories, "OutletCategoryCode", "OutletCategoryName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.OutletCategoryId, new SelectList(Model.OutletCategories, "OutletCategoryCode", "OutletCategoryName"), new { @class = "form-control" })
                                             </div>
                                             <span class="error" id="outletCategory_error"></span>
                                         </div>
@@ -149,14 +149,14 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Highway No<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12" id="highwayLabel">@Label.HighwayNo<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.DropDownListFor(m => m.PreHighwayNumber, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.HighwayNo1, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.HighwayNumber, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.HighwayNo2, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <span class="error" id="highwayNum_error"></span>
@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Highway Name</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.HighwayName</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.HighwayName, new { @class = "form-control" })
                                             <span class="error" id="highwayName_error"></span>
@@ -187,9 +187,9 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">SBU Type<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.SBUType<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.SBUType, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                            @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
                                             <div class="error" id="sbuType_error"></div>
                                         </div>
                                     </div>
@@ -197,26 +197,26 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">
-                                            LPG-CNG Sale<sup class="text-danger">*</sup><br />(3 months average in KL)
+                                            @Label.LpgCngSale<sup class="text-danger">*</sup><br />(3 months average in KL)
                                         </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.LPG_CNGSale, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.LPGCNGSale, new { @class = "form-control" })
                                             <div class="error" id="lpgCngSale_error"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Pan Card Number<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.PanCard<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PANCardNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.PancardNumber, new { @class = "form-control" })
                                             <div class="error" id="panCardNum_error"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">GST Number</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.GstNumber</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.GSTNumber, new { @class = "form-control" })
                                             <div class="error" id="gstNum_error"></div>
@@ -232,43 +232,43 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 1<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address1<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Address1, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletAddress1, new { @class = "form-control" })
                                             <span class="error" id="retail_address1_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 2<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address2<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Address2, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletAddress2, new { @class = "form-control" })
                                             <span class="error" id="retail_address2_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 3</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address3</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Address3, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletAddress3, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Location</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Location</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Location, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletLocation, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.City<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_City, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletCity, new { @class = "form-control" })
                                             <span class="error" id="retail_city_error"></span>
                                         </div>
                                     </div>
@@ -282,10 +282,10 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">State<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.State<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.Retail_Outlet_State, new SelectList(Model.RetailOutletStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getRetailDistrict()" })
+                                                @Html.DropDownListFor(m => m.RetailOutletStateId, new SelectList(Model.RetailOutletStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getRetailDistrict()" })
                                             </div>
                                             <span class="error" id="retail_state_error"></span>
                                         </div>
@@ -293,10 +293,10 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">District<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.District<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="retailDistrict" id="retailDistrict" class="form-control"></select>
+                                                <select name="RetailOutletDistrictId" id="RetailOutletDistrictId" class="form-control"></select>
                                             </div>
                                             <span class="error" id="retail_district_error"></span>
                                         </div>
@@ -304,18 +304,18 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Pin<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Pin<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Pin, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletPinNumber, new { @class = "form-control" })
                                             <span class="error" id="retail_pincode_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Phone Office<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.PhoneOfc<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_PhoneOffice, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletPhoneNumber, new { @class = "form-control" })
                                             <span class="error" id="retail_officePhone_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -333,9 +333,9 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Fax</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Fax</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Retail_Outlet_Fax, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletFax, new { @class = "form-control" })
                                             <span class="error" id="retail_faxNumber_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -360,19 +360,19 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Zonal Office<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.ZonalOfc<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.ZonalOffice, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
                                             <span class="error" id="zonal_office_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Regional Office<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="regionalOfc" id="regionalOfc" class="form-control" onchange="getMerchantSalesArea()"></select>
+                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control" onchange="getMerchantSalesArea()"></select>
                                             </div>
                                             <span class="error" id="regionalOfc_error"></span>
                                         </div>
@@ -380,10 +380,10 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Sales Area<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.SalesArea<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="salesArea" id="salesArea" class="form-control"></select>
+                                                <select name="SalesAreaId" id="SalesAreaId" class="form-control"></select>
                                             </div>
                                             <span class="error" id="salesArea_error"></span>
                                         </div>
@@ -391,11 +391,11 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">ERP Code<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.ERPCode, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control" })
+                                            <span class="error" id="erpCode_error"></span>
                                         </div>
-                                        <span class="error" id="erpCode_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -407,17 +407,17 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Name<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Name<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.FName, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.ContactPersonNameFirstName, new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.MName, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.ContactPersonNameMiddleName, new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.LName, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.ContactPersonNameLastName, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <span class="error" id="contact_name_error"></span>
@@ -428,7 +428,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Mobile<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
                                         </div>
                                         <span class="error" id="mobile_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
@@ -437,7 +437,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Email<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control" })
                                         </div>
                                         <span class="error" id="email_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
@@ -446,7 +446,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Misc</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Misc, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.Mics, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
@@ -467,70 +467,70 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 1</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address1</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_Address1, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 2</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address2</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_Address2, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Address 3</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Address3</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_Address3, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">City</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.City</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_City, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">State</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.State</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.Comm_State, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getCommDistrict()" })
+                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getCommDistrict()" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">District</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.District</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="commDistrict" id="commDistrict" class="form-control"></select>
+                                                <select name="CommunicationDistrictId" id="CommunicationDistrictId" class="form-control"></select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Pin</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Pin</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_Pin, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationPinNumber, new { @class = "form-control" })
                                         </div>
                                         <span class="error" id="comm_pin_error" style="margin-top:-2.7%; margin-left:42%;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Phone Number</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.PhoneNumber</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_PhoneNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationPhoneNumber, new { @class = "form-control" })
                                             <span class="error" id="comm_phoneNum_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -548,9 +548,9 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Fax</label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.Fax</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Comm_Fax, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control" })
                                             <span class="error" id="comm_fax_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -586,10 +586,10 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">No. of Live Terminal(s)<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.NoOfLiveTerminals<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.NumOfLiveTerminals, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.NoofLiveTerminals, new { @class = "form-control" })
                                             </div>
                                         </div>
                                         <span class="error" id="numOfLiveTerminal_error" style="margin-left: 42%"></span>
@@ -604,7 +604,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-12 col-12" style="margin-top:2%;">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">Terminal Type Requested<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.TerminalTypeRequested<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -639,6 +639,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="summaryDetails" role="tabpanel" aria-labelledby="summaryDetails-tab">
+                    <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;">@Html.Raw(ViewBag.Reason)</div>
                     <div class="border-1 rounded border-grey w-100">
 
                         <div class="py-2 p-md-4">
@@ -900,19 +901,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
+                            @*<div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>*@
                             <div class="clearfix"></div>
-                            <div style="display:none;">@Html.TextBoxFor(m => m.Retail_DistictID)</div>
-                            <div style="display:none;">@Html.TextBoxFor(m => m.ZonalOfficeID)</div>
-                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcID)</div>
-                            <div style="display:none;">@Html.TextBoxFor(m => m.SalesAreaID)</div>
-                            <div style="display:none;">@Html.TextBoxFor(m => m.Comm_DistictID)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RetailDistrictIdVal)</div>
+                            \                                <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.SalesAreaIdVal)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.CommDistrictIdVal)</div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onClick="return showPrevMerchantTerminaldetails()" type="button">Previous</button>
+                                    <button class="btn btn_primary px-4 py-2" onClick="return showPrevMerchantTerminaldetails()" type="button" id="finalPrevious">Previous</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onClick="" type="submit">Confirm</button>
+                                    <button class="btn btn_primary px-4 py-2" onClick="" type="submit" id="confirm">Confirm</button>
                                 </div>
                             </div>
                         </div>
@@ -925,13 +925,15 @@
 </div>
 
 <script type="text/javascript">
-    var retailStateID = $("#Retail_Outlet_State").val();
-    var commStateID = $("#Comm_State").val();
-    var retailDistrictID = $("#Retail_DistictID").val();
-    var commDistrictID = $("#Comm_DistictID").val();
-    var zonalID = $("#ZonalOffice").val();
-    var regionalID = $("#RegionalOfcID").val();
-    var salesAreaID = $("#SalesAreaID").val();
+    var retailStateID = $("#RetailOutletStateId").val();
+    var commStateID = $("#CommunicationStateId").val();
+    var retailDistrictID = $("#RetailDistrictIdVal").val();
+    var commDistrictID = $("#CommDistrictIdVal").val();
+    var zonalID = $("#ZonalOfficeId").val();
+    var regionalID = $("#RegionalOfcIdVal").val();
+    var salesAreaID = $("#SalesAreaIdVal").val();
+    var reason = '@ViewBag.Reason';
+    var status = '@ViewBag.Status';
 
     console.log(retailStateID);
     console.log(commStateID);
@@ -942,13 +944,19 @@
     console.log(salesAreaID);
 
     $(document).ready(function () {
-        var message = "@ViewBag.Message";
-        var notFoundError = "@ViewBag.NotFoundError";
+        @*var message = "@ViewBag.Message";
+        var notFoundError = "@ViewBag.NotFoundError";*@
 
-        $("#MerchantID").prop("disabled", true);
-
-        if (notFoundError == "") {
-            if (message != "Success" && message != "") {
+        if (reason == "") {
+            $("#reason").hide();
+        }
+        else {
+            $("#reason").show();
+            if (status == "1") {
+                $("#finalPrevious").hide();
+                $("#confirm").hide();
+            }
+            else {
                 document.getElementById("viewProfile").classList.remove("active");
                 document.getElementById("viewProfile").classList.remove("show");
                 document.getElementById("viewProfile-tab").classList.remove("active");
@@ -964,73 +972,45 @@
                 getMerchantRegionalOfc();
                 getMerchantSalesArea();
 
-                $("#SummaryMerchantID").html($("#MerchantID").val());
+                $("#SummaryMerchantID").html($("#MerchantId").val());
                 $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
-                $("#SummaryMerchantType").html($("#MerchantType :selected").text());
+                $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
                 $("#SummaryDealerName").html($("#DealerName").val());
-                $("#SummaryDealerMobileNum").html($("#DealerMobileNumber").val());
-                $("#SummaryOutletCategory").html($("#OutletCategory :selected").text());
-                $("#SummaryHighwayNum").html($("#PreHighwayNumber :selected").text() + "-" + $("#HighwayNumber").val());
+                $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
+                $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
+                $("#SummaryHighwayNum").html($("#HighwayNo1 :selected").text() + "-" + $("#HighwayNo2").val());
                 $("#SummaryHighwayName").html($("#HighwayName").val());
-                $("#SummaryLPGCNGSale").html($("#LPG_CNGSale").val());
-                $("#SummaryPanCardNum").html($("#PANCardNumber").val());
+                $("#SummaryLPGCNGSale").html($("#LPGCNGSale").val());
+                $("#SummaryPanCardNum").html($("#PancardNumber").val());
                 $("#SummaryGSTNum").html($("#GSTNumber").val());
-                $("#SummarySBUType").html($("#SBUType :selected").text());
-                $("#SummaryERPCode").html($("#ERPCode").val());
-                $("#SummarySalesArea").html($("#salesArea :selected").text());
-                $("#SummaryRegionalZonalOfc").html($("#regionalOfc :selected").text());
-                $("#SummaryAddress").html($("#Comm_Address1").val() + " ," + $("#Comm_Address2").val() + " ," + $("#Comm_Address3").val());
-                $("#SummaryCity").html($("#Comm_City").val());
-                $("#SummaryDistrict").html($("#commDistrict :selected").text());
-                $("#SummaryPhoneOfc").html($("#Comm_PhoneNumber").val());
-                $("#SummaryFax").html($("#Comm_Fax").val());
-                $("#SummaryRetAddress").html($("#Retail_Outlet_Address1").val() + ", " + $("#Retail_Outlet_Address2").val() + ", " + $("#Retail_Outlet_Address3").val());
-                $("#SummaryRetLocation").html($("#Retail_Outlet_Location").val());
-                $("#SummaryRetCity").html($("#Retail_Outlet_City").val() + " (" + $("#Retail_Outlet_Pin").val() + ")");
-                $("#SummaryRetDistrictState").html($("#Retail_Outlet_State :selected").text() + ", " + $("#retailDistrict :selected").text());
-                $("#SummaryRetPhoneOfc").html($("#Retail_Outlet_PhoneOffice").val());
-                $("#SummaryRetFax").html($("#Retail_Outlet_Fax").val());
-                $("#SummaryName").html($("#FName").val() + " " + $("#MName").val() + " " + $("#LName").val());
-                $("#SummaryMobile").html($("#Mobile").val());
-                $("#SummaryEmail").html($("#Email").val());
-                $("#SummaryMisc").html($("#Misc").val());
+                $("#SummarySBUType").html($("#SBUTypeId :selected").text());
+                $("#SummaryERPCode").html($("#ErpCode").val());
+                $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
+                $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + " ," + $("#CommunicationAddress2").val() + " ," + $("#CommunicationAddress3").val());
+                $("#SummaryCity").html($("#CommunicationCity").val());
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text());
+                $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
+                $("#SummaryFax").html($("#CommunicationFax").val());
+                $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
+                $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
+                $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
+                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
+                $("#SummaryRetFax").html($("#RetailOutletFax").val());
+                $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
+                $("#SummaryMobile").html($("#MobileNo").val());
+                $("#SummaryEmail").html($("EmailId").val());
+                $("#SummaryMisc").html($("#Mics").val());
                 $("#SummaryDTPCautionLimit").html(0);
                 $("#SummaryHpPayCautionLimit").html(0);
-                $("#SummaryNumOfLiveTerminals").html($("#NumOfLiveTerminals").val());
+                $("#SummaryNumOfLiveTerminals").html($("#NoofLiveTerminals").val());
                 $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
-
-            }
-
-            if (message == "LoadData") {
-                document.getElementById("viewProfile").classList.remove("active");
-                document.getElementById("viewProfile").classList.remove("show");
-                document.getElementById("viewProfile-tab").classList.remove("active");
-                document.getElementById("viewProfile-tab").classList.add("disable");
-
-                document.getElementById("basicInfo").classList.add("active");
-                document.getElementById("basicInfo").classList.add("show");
-                document.getElementById("basicInfo-tab").classList.remove("disable");
-                document.getElementById("basicInfo-tab").classList.add("active");
-
-                document.getElementById("summaryDetails").classList.remove("show");
-                document.getElementById("summaryDetails").classList.remove("active");
-                document.getElementById("summaryDetails-tab").classList.remove("active");
-
-                document.getElementById("Error").innerHTML = "";
-
-                getRetailDistrict();
-                getCommDistrict();
-                getMerchantRegionalOfc();
-                getMerchantSalesArea();
-
-                $("#ZonalOffice").prop("disabled", true);
-                $("#regionalOfc").prop("disabled", true);
-                $("#ERPCode").prop("disabled", true);
+                $("#finalPrevious").show();
+                $("#confirm").show();
             }
         }
-        else {
-            alert("Details not found");
-        }
+        $("#MerchantId").prop("disabled", true);
     });
 
     function showAddMerchant() {
@@ -1039,120 +1019,122 @@
         document.getElementById("basicInfo-tab").click();
         document.getElementById("basicInfo-tab").classList.remove("disable");
         document.getElementById("viewProfile-tab").classList.add("disable");
-        return ret;
+        ret = false;
     };
 
     function showMerchantCommAddress() {
-        var ret = false;
+        var ret = "Y";
 
         if (document.applicationForm.RetailOutletName.value == "") {
             document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet is required";
             document.applicationForm.RetailOutletName.focus();
-            return ret;
+            ret = "N";
         }
         else {
             document.getElementById("retailOutletName_error").innerHTML = "";
         }
 
-        if (document.applicationForm.MerchantType.value == "0") {
+        if (document.applicationForm.MerchantTypeId.value == "0") {
             document.getElementById("merchantType_error").innerHTML = "Merchant Type is required";
-            document.applicationForm.MerchantType.focus();
-            return ret;
+            document.applicationForm.MerchantTypeId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("merchantType_error").innerHTML = "";
         }
 
-        if ($('#MerchantType :selected').text() == "Mobile Dispenser"){
-            if (document.applicationForm.MappedMerchantID.value == "") {
+        if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
+            if (document.applicationForm.MappedMerchantId.value == "") {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Mapped Merchant ID is required";
-                document.applicationForm.MappedMerchantID.focus();
-                return ret;
+                document.applicationForm.MappedMerchantId.focus();
+                ret = "N";
             }
-            else if (!document.applicationForm.MappedMerchantID.value.match(mappedMerchantID)) {
+            else if (!document.applicationForm.MappedMerchantId.value.match(mappedMerchantID)) {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Should start with 3 and 10 Digits Only";
-                document.applicationForm.MappedMerchantID.focus();
-                return ret;
+                document.applicationForm.MappedMerchantId.focus();
+                ret = "N";
             }
-            else if (!document.applicationForm.MappedMerchantID.value.match(number)) {
+            else if (!document.applicationForm.MappedMerchantId.value.match(number)) {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Numeric Only";
-                document.applicationForm.MappedMerchantID.focus();
-                return ret;
+                document.applicationForm.MappedMerchantId.focus();
+                ret = "N";
             }
             else {
                 document.getElementById("mappedMerchantId_error").innerHTML = "";
             }
         }
 
-        if (document.applicationForm.DealerMobileNumber.value == "") {
+        if (document.applicationForm.DealerMobileNo.value == "") {
             document.getElementById("dealerMobileNum_error").innerHTML = "Dealer Mobile Number is required";
-            document.applicationForm.DealerMobileNumber.focus();
-            return ret;
+            document.applicationForm.DealerMobileNo.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.DealerMobileNumber.value.match(phoneno)){
+        else if (!document.applicationForm.DealerMobileNo.value.match(phoneno)){
             document.getElementById("dealerMobileNum_error").innerHTML = "Mobile Number should have 10 Digits";
-            document.applicationForm.DealerMobileNumber.focus();
-            return ret;
+            document.applicationForm.DealerMobileNo.focus();
+            ret = "N";
         }
         else {
             document.getElementById("dealerMobileNum_error").innerHTML = "";
         }
 
-        if (document.applicationForm.OutletCategory.value == "0") {
+        if (document.applicationForm.OutletCategoryId.value == "0") {
             document.getElementById("outletCategory_error").innerHTML = "Outlet Category is required";
-            document.applicationForm.OutletCategory.focus();
-            return ret;
+            document.applicationForm.OutletCategoryId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("outletCategory_error").innerHTML = "";
         }
 
-        if (document.applicationForm.HighwayNumber.value == "") {
-            document.getElementById("highwayNum_error").innerHTML = "Highway Number is required";
-            document.applicationForm.HighwayNumber.focus();
-            return ret;
-        }
-        else if (!document.applicationForm.HighwayNumber.value.match(number)) {
-            document.getElementById("highwayNum_error").innerHTML = "Numeric Only";
-            document.applicationForm.HighwayNumber.focus();
-            return ret;
-        }
-        else {
-            document.getElementById("highwayNum_error").innerHTML = "";
+        if ($('#OutletCategoryId :selected').text() == "Highway") {
+            if (document.applicationForm.HighwayNo2.value == "") {
+                document.getElementById("highwayNum_error").innerHTML = "Highway Number is required";
+                document.applicationForm.HighwayNo2.focus();
+                ret = "N";
+            }
+            else if (!document.applicationForm.HighwayNo2.value.match(number)) {
+                document.getElementById("highwayNum_error").innerHTML = "Numeric Only";
+                document.applicationForm.HighwayNo2.focus();
+                ret = "N";
+            }
+            else {
+                document.getElementById("highwayNum_error").innerHTML = "";
+            }
         }
 
-        if (document.applicationForm.SBUType.value == "0") {
+        if (document.applicationForm.SBUTypeId.value == "0") {
             document.getElementById("sbuType_error").innerHTML = "SBU Type is required";
-            document.applicationForm.SBUType.focus();
-            return ret;
+            document.applicationForm.SBUTypeId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("sbuType_error").innerHTML = "";
         }
 
-        if (document.applicationForm.LPG_CNGSale.value == "") {
+        if (document.applicationForm.LPGCNGSale.value == "") {
             document.getElementById("lpgCngSale_error").innerHTML = "LPG CNG Sale is required";
-            document.applicationForm.LPG_CNGSale.focus();
-            return ret;
+            document.applicationForm.LPGCNGSale.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.LPG_CNGSale.value.match(lpgCngSale)) {
+        else if (!document.applicationForm.LPGCNGSale.value.match(lpgCngSale)) {
             document.getElementById("lpgCngSale_error").innerHTML = "LPG CNG Sale value is invalid - From 1 to 1,00,000 Only";
-            document.applicationForm.LPG_CNGSale.focus();
-            return ret;
+            document.applicationForm.LPGCNGSale.focus();
+            ret = "N";
         }
         else {
             document.getElementById("lpgCngSale_error").innerHTML = "";
         }
 
-        if (document.applicationForm.PANCardNumber.value == "") {
+        if (document.applicationForm.PancardNumber.value == "") {
             document.getElementById("panCardNum_error").innerHTML = "PAN Card is required";
-            document.applicationForm.PANCardNumber.focus();
-            return ret;
+            document.applicationForm.PancardNumber.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.PANCardNumber.value.match(pancard)) {
+        else if (!document.applicationForm.PancardNumber.value.match(pancard)) {
             document.getElementById("panCardNum_error").innerHTML = "PAN Card is Invalid";
-            document.applicationForm.PANCardNumber.focus();
-            return ret;
+            document.applicationForm.PancardNumber.focus();
+            ret = "N";
         }
         else {
             document.getElementById("panCardNum_error").innerHTML = "";
@@ -1161,240 +1143,246 @@
         if (!document.applicationForm.GSTNumber.value.match(gstNumber) && document.applicationForm.GSTNumber.value != "") {
             document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
             document.applicationForm.GSTNumber.focus();
-            return ret;
+            ret = "N";
         }
         else {
             document.getElementById("gstNum_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_Address1.value == "") {
+        if (document.applicationForm.RetailOutletAddress1.value == "") {
             document.getElementById("retail_address1_error").innerHTML = "Address 1 is required";
-            document.applicationForm.Retail_Outlet_Address1.focus();
-            return ret;
+            document.applicationForm.RetailOutletAddress1.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_address1_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_Address2.value == "") {
+        if (document.applicationForm.RetailOutletAddress2.value == "") {
             document.getElementById("retail_address2_error").innerHTML = "Address 2 is required";
-            document.applicationForm.Retail_Outlet_Address2.focus();
-            return ret;
+            document.applicationForm.RetailOutletAddress2.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_address2_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_City.value == "") {
+        if (document.applicationForm.RetailOutletCity.value == "") {
             document.getElementById("retail_city_error").innerHTML = "City is required";
-            document.applicationForm.Retail_Outlet_City.focus();
-            return ret;
+            document.applicationForm.RetailOutletCity.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_city_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_State.value == "0") {
+        if (document.applicationForm.RetailOutletStateId.value == "0") {
             document.getElementById("retail_state_error").innerHTML = "State is required";
-            document.applicationForm.Retail_Outlet_State.focus();
-            return ret;
+            document.applicationForm.RetailOutletStateId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_state_error").innerHTML = "";
         }
-        if (document.applicationForm.retailDistrict.value == "0") {
+        if (document.applicationForm.RetailOutletDistrictId.value == "0") {
             document.getElementById("retail_district_error").innerHTML = "District is required";
-            document.applicationForm.retailDistrict.focus();
-            return ret;
+            document.applicationForm.RetailOutletDistrictId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_district_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_Pin.value == "") {
+        if (document.applicationForm.RetailOutletPinNumber.value == "") {
             document.getElementById("retail_pincode_error").innerHTML = "Pin is required";
-            document.applicationForm.Retail_Outlet_Pin.focus();
-            return ret;
+            document.applicationForm.RetailOutletPinNumber.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Retail_Outlet_Pin.value.match(number)) {
+        else if (!document.applicationForm.RetailOutletPinNumber.value.match(number)) {
             document.getElementById("retail_pincode_error").innerHTML = "Numeric Only";
-            document.applicationForm.Retail_Outlet_Pin.focus();
-            return ret;
+            document.applicationForm.RetailOutletPinNumber.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Retail_Outlet_Pin.value.match(pincode)) {
+        else if (!document.applicationForm.RetailOutletPinNumber.value.match(pincode)) {
             document.getElementById("retail_pincode_error").innerHTML = "6 Digits Only";
-            document.applicationForm.Retail_Outlet_Pin.focus();
-            return ret;
+            document.applicationForm.RetailOutletPinNumber.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_pincode_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Retail_Outlet_PhoneOffice.value == "") {
+        if (document.applicationForm.RetailOutletPhoneNumber.value == "") {
             document.getElementById("retail_officePhone_error").innerHTML = "Phone Number is required";
-            document.applicationForm.Retail_Outlet_PhoneOffice.focus();
-            return ret;
+            document.applicationForm.RetailOutletPhoneNumber.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Retail_Outlet_PhoneOffice.value.match(number)) {
+        else if (!document.applicationForm.RetailOutletPhoneNumber.value.match(number)) {
             document.getElementById("retail_officePhone_error").innerHTML = "Numeric Only";
-            document.applicationForm.Retail_Outlet_PhoneOffice.focus();
-            return ret;
+            document.applicationForm.RetailOutletPhoneNumber.focus();
+            ret = "N";
         }
         else {
             document.getElementById("retail_officePhone_error").innerHTML = "";
         }
 
-        if (document.applicationForm.ZonalOffice.value == "0") {
+        if (document.applicationForm.ZonalOfficeId.value == "0") {
             document.getElementById("zonal_office_error").innerHTML = "Zonal Office is required";
-            document.applicationForm.ZonalOffice.focus();
-            return ret;
+            document.applicationForm.ZonalOfficeId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("zonal_office_error").innerHTML = "";
         }
 
-        if (document.applicationForm.regionalOfc.value == "0") {
+        if (document.applicationForm.RegionalOfficeId.value == "0") {
             document.getElementById("regionalOfc_error").innerHTML = "Regional Office is required";
-            document.applicationForm.regionalOfc.focus();
-            return ret;
+            document.applicationForm.RegionalOfficeId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("regionalOfc_error").innerHTML = "";
         }
 
-        if (document.applicationForm.salesArea.value == "0") {
+        if (document.applicationForm.SalesAreaId.value == "0") {
             document.getElementById("salesArea_error").innerHTML = "Sales Area is required";
-            document.applicationForm.salesArea.focus();
-            return ret;
+            document.applicationForm.SalesAreaId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("salesArea_error").innerHTML = "";
         }
 
-        if (document.applicationForm.ERPCode.value == "") {
+        if (document.applicationForm.ErpCode.value == "") {
             document.getElementById("erpCode_error").innerHTML = "ERP Code is required";
-            document.applicationForm.ERPCode.focus();
-            return ret;
+            document.applicationForm.ErpCode.focus();
+            ret = "N";
+        }
+        else if (!document.applicationForm.ErpCode.value.match(erpCodeCheck)) {
+            document.getElementById("erpCode_error").innerHTML = "Start with 1 and Only 8 Digits are allowed";
+            document.applicationForm.ErpCode.focus();
+            ret = "N";
         }
         else {
             document.getElementById("erpCode_error").innerHTML = "";
         }
 
-        if (document.applicationForm.FName.value == "") {
+        if (document.applicationForm.ContactPersonNameFirstName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "First Name is required";
-            document.applicationForm.FName.focus();
-            return ret;
+            document.applicationForm.ContactPersonNameFirstName.focus();
+            ret = "N";
         }
-        else {
-            document.getElementById("contact_name_error").innerHTML = "";
-        }
-
-        if (document.applicationForm.MName.value == "") {
+        else if (document.applicationForm.ContactPersonNameMiddleName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "Middle Name is required";
-            document.applicationForm.MName.focus();
-            return ret;
+            document.applicationForm.ContactPersonNameMiddleName.focus();
+            ret = "N";
         }
-        else {
-            document.getElementById("contact_name_error").innerHTML = "";
-        }
-
-        if (document.applicationForm.LName.value == "") {
+        else if (document.applicationForm.ContactPersonNameLastName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "Last Name is required";
-            document.applicationForm.LName.focus();
-            return ret;
+            document.applicationForm.ContactPersonNameLastName.focus();
+            ret = "N";
         }
         else {
             document.getElementById("contact_name_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Mobile.value == "") {
+        if (document.applicationForm.MobileNo.value == "") {
             document.getElementById("mobile_error").innerHTML = "Mobile Number is required";
-            document.applicationForm.Mobile.focus();
-            return ret;
+            document.applicationForm.MobileNo.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Mobile.value.match(phoneno)) {
+        else if (!document.applicationForm.MobileNo.value.match(phoneno)) {
             document.getElementById("mobile_error").innerHTML = "Mobile Number should have 10 Digits";
-            document.applicationForm.Mobile.focus();
-            return ret;
+            document.applicationForm.MobileNo.focus();
+            ret = "N";
         }
         else {
             document.getElementById("mobile_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Email.value == "") {
+        if (document.applicationForm.EmailId.value == "") {
             document.getElementById("email_error").innerHTML = "Email is required";
-            document.applicationForm.Email.focus();
-            return ret;
+            document.applicationForm.EmailId.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Email.value.match(email)) {
+        else if (!document.applicationForm.EmailId.value.match(email)) {
             document.getElementById("email_error").innerHTML = "Invalid Email Address";
-            document.applicationForm.Email.focus();
-            return ret;
+            document.applicationForm.EmailId.focus();
+            ret = "N";
         }
         else {
             document.getElementById("email_error").innerHTML = "";
-            ret = true;
         }
-        document.getElementById("address-tab").click();
-        document.getElementById("address-tab").classList.remove("disable");
-        localStorage.setItem("showMerchantCommAddress", true);
-        return ret;
+
+        if (ret == "N") {
+            return false;
+        }
+        else {
+            document.getElementById("address-tab").click();
+            document.getElementById("address-tab").classList.remove("disable");
+            localStorage.setItem("showMerchantCommAddress", true);
+            return true;
+        }
     }
 
     function showMerchantTerminalDetails() {
-        var ret = false;
+        var ret = "Y";
 
-        if (document.applicationForm.Comm_Pin.value != "" && !document.applicationForm.Comm_Pin.value.match(number)) {
+        if (document.applicationForm.CommunicationPinNumber.value != "" && !document.applicationForm.CommunicationPinNumber.value.match(number)) {
             document.getElementById("comm_pin_error").innerHTML = "Numeric Only";
-            document.applicationForm.Comm_Pin.focus();
-            return ret;
+            document.applicationForm.CommunicationPinNumber.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.Comm_Pin.value.match(pincode) && document.applicationForm.Comm_Pin.value != "") {
+        else if (!document.applicationForm.CommunicationPinNumber.value.match(pincode) && document.applicationForm.CommunicationPinNumber.value != "") {
             document.getElementById("comm_pin_error").innerHTML = "6 Digits Only";
-            document.applicationForm.Comm_Pin.focus();
-            return ret;
+            document.applicationForm.CommunicationPinNumber.focus();
+            ret = "N";
         }
         else {
             document.getElementById("comm_pin_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Comm_PhoneNumber.value != "" && !document.applicationForm.Comm_PhoneNumber.value.match(number)) {
+        if (document.applicationForm.CommunicationPhoneNumber.value != "" && !document.applicationForm.CommunicationPhoneNumber.value.match(number)) {
             document.getElementById("comm_phoneNum_error").innerHTML = "Numeric Only";
-            document.applicationForm.Comm_PhoneNumber.focus();
-            return ret;
+            document.applicationForm.CommunicationPhoneNumber.focus();
+            ret = "N";
         }
         else {
             document.getElementById("comm_phoneNum_error").innerHTML = "";
         }
 
-        if (document.applicationForm.Comm_Fax.value != "" && !document.applicationForm.Comm_Fax.value.match(number)) {
+        if (document.applicationForm.CommunicationFax.value != "" && !document.applicationForm.CommunicationFax.value.match(number)) {
             document.getElementById("comm_fax_error").innerHTML = "Numeric Only";
-            document.applicationForm.Comm_Fax.focus();
-            return ret;
+            document.applicationForm.CommunicationFax.focus();
+            ret = "N";
         }
         else {
             document.getElementById("comm_fax_error").innerHTML = "";
-            ret = true;
         }
 
-        document.getElementById("terminalDetails-tab").click();
-        document.getElementById("terminalDetails-tab").classList.remove("disable");
-        localStorage.setItem("showMerchantTerminalDetails", true);
-        return ret;
+        if (ret == "N") {
+            return false;
+        }
+        else {       
+            document.getElementById("terminalDetails-tab").click();
+            document.getElementById("terminalDetails-tab").classList.remove("disable");
+            localStorage.setItem("showMerchantTerminalDetails", true);
+            return true;
+        }
     }
 
     function showMerchantSummary() {
-        var ret = false;
+        var ret = "Y";
 
-        if (document.applicationForm.NumOfLiveTerminals.value == "0" || document.applicationForm.NumOfLiveTerminals.value == "") {
+        if (document.applicationForm.NoofLiveTerminals.value == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "Number of Live Terminal is required";
-            document.applicationForm.NumOfLiveTerminals.focus();
-            return ret;
+            document.applicationForm.NoofLiveTerminals.focus();
+            ret = "N";
         }
-        else if (!document.applicationForm.NumOfLiveTerminals.value.match(number)) {
+        else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "Numeric Only";
-            document.applicationForm.NumOfLiveTerminals.focus();
-            return ret;
+            document.applicationForm.NoofLiveTerminals.focus();
+            ret = "N";
         }
         else {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "";
@@ -1403,52 +1391,57 @@
         if (document.applicationForm.TerminalTypeRequested.value == "") {
             document.getElementById("terminalTypeReq_error").innerHTML = "Terminal Type is required";
             document.applicationForm.TerminalTypeRequested.focus();
-            return ret;
+            ret = "N";
         }
         else {
             document.getElementById("terminalTypeReq_error").innerHTML = "";
-            ret = true;
-            $("#SummaryMerchantID").html($("#MerchantID").val());
-            $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
-            $("#SummaryMerchantType").html($("#MerchantType :selected").text());
-            $("#SummaryDealerName").html($("#DealerName").val());
-            $("#SummaryDealerMobileNum").html($("#DealerMobileNumber").val());
-            $("#SummaryOutletCategory").html($("#OutletCategory :selected").text());
-            $("#SummaryHighwayNum").html($("#PreHighwayNumber :selected").text() + "-" + $("#HighwayNumber").val());
-            $("#SummaryHighwayName").html($("#HighwayName").val());
-            $("#SummaryLPGCNGSale").html($("#LPG_CNGSale").val());
-            $("#SummaryPanCardNum").html($("#PANCardNumber").val());
-            $("#SummaryGSTNum").html($("#GSTNumber").val());
-            $("#SummarySBUType").html($("#SBUType :selected").text());
-            $("#SummaryERPCode").html($("#ERPCode").val());
-            $("#SummarySalesArea").html($("#salesArea :selected").text());
-            $("#SummaryRegionalZonalOfc").html($("#regionalOfc :selected").text());
-            $("#SummaryAddress").html($("#Comm_Address1").val() + " ," + $("#Comm_Address2").val() + " ," + $("#Comm_Address3").val());
-            $("#SummaryCity").html($("#Comm_City").val());
-            $("#SummaryDistrict").html($("#commDistrict :selected").text());
-            $("#SummaryPhoneOfc").html($("#Comm_PhoneNumber").val());
-            $("#SummaryFax").html($("#Comm_Fax").val());
-            $("#SummaryRetAddress").html($("#Retail_Outlet_Address1").val() + ", " + $("#Retail_Outlet_Address2").val() + ", " + $("#Retail_Outlet_Address3").val());
-            $("#SummaryRetLocation").html($("#Retail_Outlet_Location").val());
-            $("#SummaryRetCity").html($("#Retail_Outlet_City").val() + " (" + $("#Retail_Outlet_Pin").val() + ")");
-            $("#SummaryRetDistrictState").html($("#Retail_Outlet_State :selected").text() + ", " + $("#retailDistrict :selected").text());
-            $("#SummaryRetPhoneOfc").html($("#Retail_Outlet_PhoneOffice").val());
-            $("#SummaryRetFax").html($("#Retail_Outlet_Fax").val());
-            $("#SummaryName").html($("#FName").val() + " " + $("#MName").val() + " " + $("#LName").val());
-            $("#SummaryMobile").html($("#Mobile").val());
-            $("#SummaryEmail").html($("#Email").val());
-            $("#SummaryMisc").html($("#Misc").val());
-            $("#SummaryDTPCautionLimit").html(0);
-            $("#SummaryHpPayCautionLimit").html(0);
-            $("#SummaryNumOfLiveTerminals").html($("#NumOfLiveTerminals").val());
-            $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
         }
 
-        document.getElementById("summaryDetails-tab").click();
-        document.getElementById("summaryDetails-tab").classList.remove("disable");
-        localStorage.setItem("showMerchantSummary", true);
+        if (ret == "N") {
+            return false;
+        }
+        else {
+            $("#SummaryMerchantID").html($("#MerchantId").val());
+            $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
+            $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
+            $("#SummaryDealerName").html($("#DealerName").val());
+            $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
+            $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
+            $("#SummaryHighwayNum").html($("#HighwayNo1 :selected").text() + "-" + $("#HighwayNumber").val());
+            $("#SummaryHighwayName").html($("#HighwayName").val());
+            $("#SummaryLPGCNGSale").html($("#LPGCNGSale").val());
+            $("#SummaryPanCardNum").html($("#PancardNumber").val());
+            $("#SummaryGSTNum").html($("#GSTNumber").val());
+            $("#SummarySBUType").html($("#SBUTypeId :selected").text());
+            $("#SummaryERPCode").html($("#ErpCode").val());
+            $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
+            $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text());
+            $("#SummaryAddress").html($("#CommunicationAddress1").val() + " ," + $("#CommunicationAddress2").val() + " ," + $("#CommunicationAddress3").val());
+            $("#SummaryCity").html($("#CommunicationCity").val());
+            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text());
+            $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
+            $("#SummaryFax").html($("#CommunicationFax").val());
+            $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
+            $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
+            $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
+            $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+            $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
+            $("#SummaryRetFax").html($("#RetailOutletFax").val());
+            $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
+            $("#SummaryMobile").html($("#MobileNo").val());
+            $("#SummaryEmail").html($("EmailId").val());
+            $("#SummaryMisc").html($("#Mics").val());
+            $("#SummaryDTPCautionLimit").html(0);
+            $("#SummaryHpPayCautionLimit").html(0);
+            $("#SummaryNumOfLiveTerminals").html($("#NoofLiveTerminals").val());
+            $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
 
-        return ret;
+            document.getElementById("summaryDetails-tab").click();
+            document.getElementById("summaryDetails-tab").classList.remove("disable");
+            localStorage.setItem("showMerchantSummary", true);
+
+            return true;
+        }
     }
 
     function showPrevMerchantTerminaldetails() {
@@ -1465,14 +1458,14 @@
 
     function getRetailDistrict() {
         //var id = this.value;
-        var id = $('#Retail_Outlet_State :selected').val();
+        var id = $('#RetailOutletStateId :selected').val();
 
         //console.log("RetailDistrict");
         //console.log(id);
         //console.log("retailStateID");
         //console.log(retailStateID);
 
-        if (retailStateID != "0") {
+        if (retailStateID != "0" && retailStateID != null && retailStateID != "") {
             id = retailStateID;
         }
 
@@ -1481,36 +1474,40 @@
         //}
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Merchant")',
+            url: '@Url.Action("GetDistrictDetails", "Common")',
             data: { Stateid: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    $("#retailDistrict").html("");
+                    $("#RetailOutletDistrictId").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (retailStateID != "") {
-                            if (data.districtID == retailDistrictID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.districtID,
-                                        text: data.districtName
-                                    }).html(data.districtName).appendTo("#retailDistrict");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.districtID,
-                                        text: data.districtName
-                                    }).html(data.districtName).appendTo("#retailDistrict");
-                            }
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select District"
+                                }).html("Select District").appendTo("#RetailOutletDistrictId");
+
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                        }
+                        else if (data.districtID == retailDistrictID) {
+                            $('<option selected = "selected">',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
                         }
                         else {
                             $('<option>',
                                 {
                                     value: data.districtID,
                                     text: data.districtName
-                                }).html(data.districtName).appendTo("#retailDistrict");
+                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
                         }
                     });
                 }
@@ -1526,13 +1523,13 @@
 
     function getCommDistrict() {
         //var id = this.value;
-        var id = $('#Comm_State :selected').val();
+        var id = $('#CommunicationStateId :selected').val();
         //console.log("CommDistrict");
         //console.log(id);
         //console.log("CommState");
         //console.log(commStateID);
 
-        if (commStateID != "0") {
+        if (commStateID != "0" && commStateID != null && commStateID != "") {
             id = commStateID;
         }
 
@@ -1542,28 +1539,40 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Merchant")',
+            url: '@Url.Action("GetDistrictDetails", "Common")',
             data: { Stateid: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    $("#commDistrict").html("");
+                    $("#CommunicationDistrictId").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (commStateID != "") {
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select District"
+                                }).html("Select District").appendTo("#CommunicationDistrictId");
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                        }
+                        else if (commStateID != "") {
                             if (data.districtID == commDistrictID) {
                                 $('<option selected = "selected">',
                                     {
                                         value: data.districtID,
                                         text: data.districtName
-                                    }).html(data.districtName).appendTo("#commDistrict");
+                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
                             }
                             else {
                                 $('<option>',
                                     {
                                         value: data.districtID,
                                         text: data.districtName
-                                    }).html(data.districtName).appendTo("#commDistrict");
+                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
                             }
                         }
                         else {
@@ -1571,7 +1580,7 @@
                                 {
                                     value: data.districtID,
                                     text: data.districtName
-                                }).html(data.districtName).appendTo("#commDistrict");
+                                }).html(data.districtName).appendTo("#CommunicationDistrictId");
                         }
                     });
                 }
@@ -1586,9 +1595,9 @@
     };
 
     function getMerchantRegionalOfc() {
-        var id = $('#ZonalOffice :selected').val();
+        var id = $('#ZonalOfficeId :selected').val();
 
-        if (zonalID != "0") {
+        if (zonalID != "0" && zonalID != null && zonalID != "") {
             id = zonalID;
         }
         //if (id != 0) {
@@ -1597,37 +1606,41 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Merchant")',
+            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
             data: { ZonalOfcID: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    $("#district").html("");
+                    $("#RegionalOfficeId").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (zonalID != "") {
-                            if (data.regionalOfficeID == regionalID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#regionalOfc");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#regionalOfc");
-                            }
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select Regional Office"
+                                }).html("Select Regional Office").appendTo("#RegionalOfficeId");
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+                        else if (data.regionalOfficeID == regionalID) {
+                            $('<option selected = "selected">',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
                         }
                         else {
                             $('<option>',
                                 {
                                     value: data.regionalOfficeID,
                                     text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#regionalOfc");
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
                         }
+
                     });
                 }
                 else {
@@ -1641,48 +1654,50 @@
     };
 
     function getMerchantSalesArea() {
-        var id = $('#regionalOfc :selected').val();
-
-        if (regionalID != "0") {
+        var id = $('#RegionalOfficeId :selected').val();
+        if (regionalID != "0" && regionalID != null && regionalID != "") {
             id = regionalID;
         }
-
         //if (id != 0) {
         //    $("#state_error").html("");
         //}
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetSalesAreaDetails", "Merchant")',
-            data: { RegionalID: id },  // data to submit
+            url: '@Url.Action("GetSalesAreaList", "Common")',
+            data: { regionalOfcId: id },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
+                debugger;
                 var v = data;
                 if (status == 'success') {
-                    $("#district").html("");
+                    $("#salesArea").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (regionalID != "") {
-                            if (data.salesAreaID == salesAreaID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.salesAreaID,
-                                        text: data.salesAreaName
-                                    }).html(data.salesAreaName).appendTo("#salesArea");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.salesAreaID,
-                                        text: data.salesAreaName
-                                    }).html(data.salesAreaName).appendTo("#salesArea");
-                            }
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select Sales Area"
+                                }).html("Select Sales Area").appendTo("#SalesAreaId");
+                            $('<option>',
+                                {
+                                    value: data.salesAreaID,
+                                    text: data.salesAreaName
+                                }).html(data.salesAreaName).appendTo("#SalesAreaId");
+                        }
+                        else if (data.salesAreaID == salesAreaID) {
+                            $('<option selected = "selected">',
+                                {
+                                    value: data.salesAreaID,
+                                    text: data.salesAreaName
+                                }).html(data.salesAreaName).appendTo("#SalesAreaId");
                         }
                         else {
                             $('<option>',
                                 {
                                     value: data.salesAreaID,
                                     text: data.salesAreaName
-                                }).html(data.salesAreaName).appendTo("#salesArea");
+                                }).html(data.salesAreaName).appendTo("#SalesAreaId");
                         }
                     });
                 }
@@ -1696,25 +1711,25 @@
         });
     };
 
-    $("#retailDistrict").change(function () {
+    $("#RetailOutletDistrictId").change(function () {
         var id = this.value;
-        $("#Retail_DistictID").val(id);
+        $("#RetailDistrictIdVal").val(id);
     });
-    $("#regionalOfc").change(function () {
+    $("#RegionalOfficeId").change(function () {
         var id = this.value;
-        $("#RegionalOfcID").val(id);
+        $("#RegionalOfcIdVal").val(id);
     });
-    $("#commDistrict").change(function () {
+    $("#CommunicationDistrictId").change(function () {
         var id = this.value;
-        $("#Comm_DistictID").val(id);
+        $("#CommDistrictIdVal").val(id);
     });
-    $("#salesArea").change(function () {
+    $("#SalesAreaId").change(function () {
         var id = this.value;
-        $("#SalesAreaID").val(id);
+        $("#SalesAreaIdVal").val(id);
     });
 
-    $("#MerchantType").change(function () {
-        var MerchantTypeVal = $('#MerchantType :selected').text();
+    $("#MerchantTypeId").change(function () {
+        var MerchantTypeVal = $('#MerchantTypeId :selected').text();
 
         if (MerchantTypeVal != "Mobile Dispenser") {
             $("#MappedMerchantID").html("");
@@ -1722,6 +1737,20 @@
         }
         else {
             $("#MappedMerchantID").removeAttr("disabled");
+        }
+    });
+
+    $("#OutletCategoryId").change(function () {
+        var outletCategory = $('#OutletCategoryId :selected').text();
+        if (outletCategory != "Highway") {
+            $("#highwayLabel").hide();
+            $("#HighwayNo1").hide();
+            $("#HighwayNo2").hide();
+        }
+        else {
+            $("#highwayLabel").show();
+            $("#HighwayNo1").show();
+            $("#HighwayNo2").show();
         }
     });
 </script>

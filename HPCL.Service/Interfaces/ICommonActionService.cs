@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ViewModel.Merchant;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
 using System.Collections.Generic;
@@ -17,6 +18,10 @@ namespace HPCL.Service.Interfaces
         Task<List<RegionalOfficeResponseModal>> GetRegionalOfficeList(string zonalOfcID);
         Task<List<HqResponseModal>> GetHqList();
         Task<List<LocationMappingResponseModal>> GetLocationMappingList(int officerId);
+        Task<List<MerchantTypeResponseModal>> GetMerchantTypeList();
+        Task<List<OutletCategoryResponseModal>> GetOutletCategoryList();
+        Task<List<SbuTypeResponseModal>> GetSbuTypeList();
+        Task<List<SalesAreaResponseModal>> GetSalesAreaList(string regionId);
         Task<string> ValidateUserName(string userName);
         Task<List<RegionModel>> GetRegionList();
         Task<List<CustomerStateModel>> GetCustStateList();

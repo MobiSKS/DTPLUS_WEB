@@ -56,6 +56,8 @@
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
+        public static string CardControlUrl = "/dtpwebapi/api/dtplus/customer/get_control_card_number";
+        public static string SearchCardMappingUrl = "/dtpwebapi/api/dtplus/card/search_card_mapping_detail";
         #endregion
 
         #region Merchant
@@ -102,6 +104,7 @@
 
         public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
         public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
+        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
         #endregion
 
         #region Login

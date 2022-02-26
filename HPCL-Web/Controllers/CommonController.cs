@@ -27,7 +27,7 @@ namespace HPCL_Web.Controllers
             var sortedtList = await _commonActionService.GetOfficerTypeList();
 
             ModelState.Clear();
-            return Json(new { sortedtList = sortedtList });
+            return Json(sortedtList);
         }
 
         [HttpPost]
@@ -35,24 +35,24 @@ namespace HPCL_Web.Controllers
         {
             if (OfcrType.Contains("1") || OfcrType.Contains("4") || OfcrType.Contains("6"))
             {
-                var sortedtList = await _commonActionService.GetRegionalOfficeList("");
+                var sortedtList = await _commonActionService.GetRegionalOfficeList("0");
 
                 ModelState.Clear();
-                return Json(new { sortedtList = sortedtList });
+                return Json(sortedtList);
             }
             else if (OfcrType.Contains("3") || OfcrType.Contains("5"))
             {
                 var sortedtList = await _commonActionService.GetZonalOfficeList();
 
                 ModelState.Clear();
-                return Json(new { sortedtList = sortedtList });
+                return Json(sortedtList);
             }
             else
             {
                 var sortedtList = await _commonActionService.GetHqList();
 
                 ModelState.Clear();
-                return Json(new { sortedtList = sortedtList });
+                return Json(sortedtList);
             }
         }
 
@@ -62,7 +62,7 @@ namespace HPCL_Web.Controllers
             var sortedtList = await _commonActionService.GetDistrictList(stateId);
 
             ModelState.Clear();
-            return Json(new { sortedtList = sortedtList });
+            return Json(sortedtList);
         }
 
         [HttpPost]
@@ -71,16 +71,22 @@ namespace HPCL_Web.Controllers
             var sortedtList = await _commonActionService.GetRegionalOfficeList(zonalOfcId);
 
             ModelState.Clear();
-            return Json(new { sortedtList = sortedtList });
+            return Json(sortedtList);
         }
+        public async Task<JsonResult> GetSalesAreaList(string regionalOfcId)
+        {
+            var sortedtList = await _commonActionService.GetSalesAreaList(regionalOfcId);
 
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
         [HttpPost]
         public async Task<JsonResult> ValidateUserName(string userName)
         {
-            var sortedtList = await _commonActionService.ValidateUserName(userName);
+            var check = await _commonActionService.ValidateUserName(userName);
 
             ModelState.Clear();
-            return Json(new { sortedtList = sortedtList });
+            return Json(check);
         }
     }
 }

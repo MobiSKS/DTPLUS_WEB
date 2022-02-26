@@ -804,23 +804,23 @@
         $.ajax({
             url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
             type: "POST",
+            contentType: "application/json; charset=utf-8",
             dataType: "JSON",
             success: function (res)
             {
-
                 console.log("res", res);
                 $("#CustomerSearch").show();
                 //$("#CustomerSearch td").parent().remove();
                 var rows = "<tbody>"
-                for (var i = 0; i < res.lst.length; i++) {
-                    var ApplicationDate = new Date(res.lst[i].DateOfApplication).toLocaleDateString("pt-PT");
+                for (var i = 0; i < res.length; i++) {
+                    var ApplicationDate = new Date(res[i].DateOfApplication).toLocaleDateString("pt-PT");
                     rows += "<tr>"
-                        + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res.lst[i].customerID + "</span></a></td>"
-                        + "<td width='400px'>" + res.lst[i].nameOnCard + "</td>"
-                        + "<td width='400px'>" + res.lst[i].customerTypeName + "</td>"
-                        + "<td width='400px'>" + res.lst[i].formNumber + "</td>"
+                        + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
+                        + "<td width='400px'>" + res[i].nameOnCard + "</td>"
+                        + "<td width='400px'>" + res[i].customerTypeName + "</td>"
+                        + "<td width='400px'>" + res[i].formNumber + "</td>"
                         + "<td width='400px'>" + ApplicationDate + "</td>"
-                        + "<td width='400px'>" + res.lst[i].customerStatusName + "</td>"
+                        + "<td width='400px'>" + res[i].customerStatusName + "</td>"
                         + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this)'>View</a></td>"
                         + "<td width='400px'><a href='#aaa' class='editNumber'>View</a></td>"
                         + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'>search </a></td>"
@@ -828,7 +828,6 @@
                 }
                 rows += "</tbody>"
                 $('#CustomerSearch table').append(rows);
-
                 $('#CustomerSearch table').DataTable({
 				    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
                     "autoWidth": false,
@@ -846,34 +845,31 @@
     });
 
 
-    function GetCardSearch(data)
+    function GetCardSearch(o)
     {
-        var CustomerId = data.closest('tr').childNodes[0].innerText;
+        var Id = o.closest('tr').childNodes[0].innerText;
         $.ajax({
             url: "@Url.Action("CardDetails", "CustomerManage")",
             type: "POST",
             dataType: "JSON",
-            data: { CustomerId: CustomerId },
+            data: { CustomerId: Id },
             success: function (data)
             {
-
                 console.log("data", data);
-
-                if (data.searchList.length > 0) {
+                if (data.length > 0) {
 
                     $("#lblCardDetails").show();
                     $("#CardSearch").show();
                     $("#CardSearch td").parent().remove();
-                    for (var i = 0; i < data.searchList.length; i++) {
-
-                        var issueDate = new Date(data.searchList[i].issueDate).toLocaleDateString("pt-PT");
-                        var expiryDate = new Date(data.searchList[i].expiryDate).toLocaleDateString("pt-PT");
+                    for (var i = 0; i < data.length; i++) {
+                        var issueDate = new Date(data[i].issueDate).toLocaleDateString("pt-PT");
+                        var expiryDate = new Date(data[i].expiryDate).toLocaleDateString("pt-PT");
                         var rows = "<tbody><tr>"
-                            + "<td width='400px'><span class='rowData'>" + data.searchList[i].cardNumber + "</span></td>"
-                            + "<td width='400px'><span class='rowData'>" + data.searchList[i].vechileNo + "</span></td>"
+                            + "<td width='400px'><span class='rowData'>" + data[i].cardNumber + "</span></td>"
+                            + "<td width='400px'><span class='rowData'>" + data[i].vechileNo + "</span></td>"
                             + "<td width='400px'><span class='rowData'>" + issueDate + "</span></td>"
                             + "<td width='400px'><span class='rowData'>" + expiryDate + "</span></td>"
-                            + "<td width='400px'><span class='rowData'>" + data.searchList[i].status + "</span></td>"
+                            + "<td width='400px'><span class='rowData'>" + data[i].status + "</span></td>"
                         "</tr></tbody>";
 
 
@@ -1048,109 +1044,109 @@
             success: function (res)
             {
 
-                if (res.lst.length > 0) {
-                    for (var i = 0; i < res.lst.length; i++) {
-                        if (res.lst[i].customerID == CustomerId) {
-                            GetComDistrict(res.lst[i].communicationStateId, res.lst[i].communicationDistrictId);
-                            GetPerDistrict(res.lst[i].permanentStateId, res.lst[i].permanentDistrictId);
-                            GetSubType(res.lst[i].customerTypeId, res.lst[i].customerSubtypeId);
+                if (res.length > 0) {
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i].customerID == CustomerId) {
+                            GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
+                            GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
+                            GetSubType(res[i].customerTypeId, res[i].customerSubtypeId);
                            
-                            $('#customet-id').val(res.lst[i].customerID);
-                            $('#customertype-name').val(res.lst[i].customerTypeName);
-                            $('#sales-area').val(res.lst[i].salesArea);
-                            $('#form-number').val(res.lst[i].formNumber);
-                           // $('#application-date').val(res.lst[i].dateOfApplication);
-                            var dApplication = new Date(res.lst[i].dateOfApplication);
+                            $('#customet-id').val(res[i].customerID);
+                            $('#customertype-name').val(res[i].customerTypeName);
+                            $('#sales-area').val(res[i].salesArea);
+                            $('#form-number').val(res[i].formNumber);
+                           // $('#application-date').val(res[i].dateOfApplication);
+                            var dApplication = new Date(res[i].dateOfApplication);
                             document.getElementById('application-date').valueAsDate = new Date(dApplication.getFullYear(), dApplication.getMonth(), dApplication.getDate(), 12);
-                            var son = new Date(res.lst[i].approvedon);
+                            var son = new Date(res[i].approvedon);
                             document.getElementById('signed-on').valueAsDate = new Date(son.getFullYear(), son.getMonth(), son.getDate(), 12);
-                            $('#individual-org-name').val(res.lst[i].individualOrgName);
-                            $('#name-on-card').val(res.lst[i].nameOnCard);
-                            $('#type-business-entity').val(res.lst[i].typeOfBusinessEntityName);
-                            $('#income-tax-pan').val(res.lst[i].incomeTaxPan);
-                            $('#CustomerZonalOfficeID').val(res.lst[i].zonalOfficeID);
-                            GetRegionId(res.lst[i].zonalOfficeID, res.lst[i].regionalOfficeID);
-                            $('#CustomerRegionalOfficeID').val(res.lst[i].regionalOfficeID);
-                            $('#CustomerTypeID').val(res.lst[i].customerTypeId);
-                            $('#residenceStatus').val(res.lst[i].residenceStatus);
-                            $('#table-entity-id').val(res.lst[i].typeOfBusinessEntityId);
-                            $('#customerSubType').val(res.lst[i].customerSubtype);
-                            $('#KeyOfficialIndividualInitials').val(res.lst[i].keyOfficialIndividualInitials);
-                            $('#KeyOffNameofIndividual').val(res.lst[i].KeyOfficialNameofIndividual);
-                            $('#KeyOffFirstName').val(res.lst[i].keyOfficialFirstName);
-                            $('#KeyOffLastName').val(res.lst[i].keyOfficialLastName);
-                            $('#KeyOffMiddleName').val(res.lst[i].keyOfficialMiddleName);
-                            $('#KeyOffDesignation').val(res.lst[i].keyOfficialDesignation);
-                            var dob = new Date(res.lst[i].keyOfficialDOB);
+                            $('#individual-org-name').val(res[i].individualOrgName);
+                            $('#name-on-card').val(res[i].nameOnCard);
+                            $('#type-business-entity').val(res[i].typeOfBusinessEntityName);
+                            $('#income-tax-pan').val(res[i].incomeTaxPan);
+                            $('#CustomerZonalOfficeID').val(res[i].zonalOfficeID);
+                            GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
+                            $('#CustomerRegionalOfficeID').val(res[i].regionalOfficeID);
+                            $('#CustomerTypeID').val(res[i].customerTypeId);
+                            $('#residenceStatus').val(res[i].residenceStatus);
+                            $('#table-entity-id').val(res[i].typeOfBusinessEntityId);
+                            $('#customerSubType').val(res[i].customerSubtype);
+                            $('#KeyOfficialIndividualInitials').val(res[i].keyOfficialIndividualInitials);
+                            $('#KeyOffNameofIndividual').val(res[i].KeyOfficialNameofIndividual);
+                            $('#KeyOffFirstName').val(res[i].keyOfficialFirstName);
+                            $('#KeyOffLastName').val(res[i].keyOfficialLastName);
+                            $('#KeyOffMiddleName').val(res[i].keyOfficialMiddleName);
+                            $('#KeyOffDesignation').val(res[i].keyOfficialDesignation);
+                            var dob = new Date(res[i].keyOfficialDOB);
                             document.getElementById('officialDOB').valueAsDate = new Date(dob.getFullYear(), dob.getMonth(), dob.getDate(), 12);
                             var keyOfficialTitleId = 0;
-                            if (res.lst[i].keyOfficialTitle != "") {
-                                if (res.lst[i].keyOfficialTitle == "Mr" || res.lst[i].keyOfficialTitle == "Mr.")
+                            if (res[i].keyOfficialTitle != "") {
+                                if (res[i].keyOfficialTitle == "Mr" || res[i].keyOfficialTitle == "Mr.")
                                     keyOfficialTitleId = 1;
-                                else if (res.lst[i].keyOfficialTitle == "Mrs" || res.lst[i].keyOfficialTitle == "Mrs.")
+                                else if (res[i].keyOfficialTitle == "Mrs" || res[i].keyOfficialTitle == "Mrs.")
                                     keyOfficialTitleId = 2;
-                                else if (res.lst[i].keyOfficialTitle == "Ms" || res.lst[i].keyOfficialTitle == "Ms.")
+                                else if (res[i].keyOfficialTitle == "Ms" || res[i].keyOfficialTitle == "Ms.")
                                     keyOfficialTitleId = 3;
                                 else
                                     keyOfficialTitleId = 1;
                             }
                             $('#KeyOffTitle').val(keyOfficialTitleId);
-                            //$('#KeyOffDialCode').val(res.lst[i].residenceStatus);
-                            //$('#KeyOffPhoneNo').val(res.lst[i].typeOfBusinessEntityId);
-                            $('#KeyOffMobileNumber').val(res.lst[i].keyOfficialMobile);
-                            //$('#KeyOffFaxCode').val(res.lst[i].customerTypeId);
-                            $('#KeyOffFax').val(res.lst[i].keyOfficialFax);
-                            $('#KeyOffEmail').val(res.lst[i].keyOfficialEmail);
-                            var doa = new Date(res.lst[i].keyOfficialDOA);
+                            //$('#KeyOffDialCode').val(res[i].residenceStatus);
+                            //$('#KeyOffPhoneNo').val(res[i].typeOfBusinessEntityId);
+                            $('#KeyOffMobileNumber').val(res[i].keyOfficialMobile);
+                            //$('#KeyOffFaxCode').val(res[i].customerTypeId);
+                            $('#KeyOffFax').val(res[i].keyOfficialFax);
+                            $('#KeyOffEmail').val(res[i].keyOfficialEmail);
+                            var doa = new Date(res[i].keyOfficialDOA);
                             document.getElementById('KeyOffDateOfAnniversary').valueAsDate = new Date(doa.getFullYear(), doa.getMonth(), doa.getDate(), 12);
-                            $('#FleetSizeNoOfVechileOwnedHCV').val(res.lst[i].fleetSizeNoOfVechileOwnedHCV);
-                            $('#FleetSizeNoOfVechileOwnedLCV').val(res.lst[i].fleetSizeNoOfVechileOwnedLCV);
-                            $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res.lst[i].fleetSizeNoOfVechileOwnedMUVSUV);
-                            $('#FleetSizeNoOfVechileOwnedCarJeep').val(res.lst[i].fleetSizeNoOfVechileOwnedCarJeep);
-                            $('#CustomerTypeOfFleetID').val(res.lst[i].eyOfficialTypkeOfFleetId);
-                            $('#KeyOfficialCardAppliedFor').val(res.lst[i].keyOfficialCardAppliedFor);
-                            $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.lst[i].keyOfficialApproxMonthlySpendsonVechile2);
-                            $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.lst[i].keyOfficialApproxMonthlySpendsonVechile1);
-                            $('#CommunicationAddress1').val(res.lst[i].communicationAddress1);
-                            $('#CommunicationAddress2').val(res.lst[i].communicationAddress2);
-                            $('#CommunicationAddress3').val(res.lst[i].communicationAddress3);
-                            $('#CommunicationLocation').val(res.lst[i].communicationLocation);
-                            $('#CommunicationCity').val(res.lst[i].communicationCityName);
-                            $('#CommunicationPinCode').val(res.lst[i].communicationPincode);
-                            $('#CommunicationStateID').val(res.lst[i].communicationStateId);
-                            $('#CommunicationPhoneNo').val(res.lst[i].communicationPhoneNo);
-                            $('#CommunicationMobileNumber').val(res.lst[i].communicationMobileNo);
-                            $('#CommunicationFax').val(res.lst[i].communicationFax);
-                            $('#CommunicationEmail').val(res.lst[i].communicationEmailid);
-                            $('#PerOrRegAddress1').val(res.lst[i].permanentAddress1);
-                            $('#PerOrRegAddress2').val(res.lst[i].permanentAddress2);
-                            $('#PerOrRegAddress3').val(res.lst[i].permanentAddress3);
-                            $('#PerOrRegAddressLocation').val(res.lst[i].permanentLocation);
-                            $('#PerOrRegAddressCity').val(res.lst[i].permanentCityName);
-                            $('#PerOrRegAddressPinCode').val(res.lst[i].permanentPincode);
-                            $('#PerOrRegAddressStateID').val(res.lst[i].permanentStateId);
-                            $('#PerOrRegAddressPhoneNumber').val(res.lst[i].permanentPhoneNo);
-                            $('#PermanentFax').val(res.lst[i].permanentFax);
+                            $('#FleetSizeNoOfVechileOwnedHCV').val(res[i].fleetSizeNoOfVechileOwnedHCV);
+                            $('#FleetSizeNoOfVechileOwnedLCV').val(res[i].fleetSizeNoOfVechileOwnedLCV);
+                            $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res[i].fleetSizeNoOfVechileOwnedMUVSUV);
+                            $('#FleetSizeNoOfVechileOwnedCarJeep').val(res[i].fleetSizeNoOfVechileOwnedCarJeep);
+                            $('#CustomerTypeOfFleetID').val(res[i].eyOfficialTypkeOfFleetId);
+                            $('#KeyOfficialCardAppliedFor').val(res[i].keyOfficialCardAppliedFor);
+                            $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res[i].keyOfficialApproxMonthlySpendsonVechile2);
+                            $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res[i].keyOfficialApproxMonthlySpendsonVechile1);
+                            $('#CommunicationAddress1').val(res[i].communicationAddress1);
+                            $('#CommunicationAddress2').val(res[i].communicationAddress2);
+                            $('#CommunicationAddress3').val(res[i].communicationAddress3);
+                            $('#CommunicationLocation').val(res[i].communicationLocation);
+                            $('#CommunicationCity').val(res[i].communicationCityName);
+                            $('#CommunicationPinCode').val(res[i].communicationPincode);
+                            $('#CommunicationStateID').val(res[i].communicationStateId);
+                            $('#CommunicationPhoneNo').val(res[i].communicationPhoneNo);
+                            $('#CommunicationMobileNumber').val(res[i].communicationMobileNo);
+                            $('#CommunicationFax').val(res[i].communicationFax);
+                            $('#CommunicationEmail').val(res[i].communicationEmailid);
+                            $('#PerOrRegAddress1').val(res[i].permanentAddress1);
+                            $('#PerOrRegAddress2').val(res[i].permanentAddress2);
+                            $('#PerOrRegAddress3').val(res[i].permanentAddress3);
+                            $('#PerOrRegAddressLocation').val(res[i].permanentLocation);
+                            $('#PerOrRegAddressCity').val(res[i].permanentCityName);
+                            $('#PerOrRegAddressPinCode').val(res[i].permanentPincode);
+                            $('#PerOrRegAddressStateID').val(res[i].permanentStateId);
+                            $('#PerOrRegAddressPhoneNumber').val(res[i].permanentPhoneNo);
+                            $('#PermanentFax').val(res[i].permanentFax);
                             var individualOrgNameTitleId = 0;
-                            if (res.lst[i].individualOrgNameTitle != "") {
-                                if (res.lst[i].individualOrgNameTitle == "Mr" || res.lst[i].individualOrgNameTitle == "Mr.")
+                            if (res[i].individualOrgNameTitle != "") {
+                                if (res[i].individualOrgNameTitle == "Mr" || res[i].individualOrgNameTitle == "Mr.")
                                     individualOrgNameTitleId = 1;
-                                else if (res.lst[i].individualOrgNameTitle == "Mrs" || res.lst[i].individualOrgNameTitle == "Mrs.")
+                                else if (res[i].individualOrgNameTitle == "Mrs" || res[i].individualOrgNameTitle == "Mrs.")
                                     individualOrgNameTitleId = 2;
-                                else if (res.lst[i].individualOrgNameTitle == "Ms" || res.lst[i].individualOrgNameTitle == "Ms.")
+                                else if (res[i].individualOrgNameTitle == "Ms" || res[i].individualOrgNameTitle == "Ms.")
                                     individualOrgNameTitleId = 3;
                                 else
                                     individualOrgNameTitleId = 1;
                             }
                             $('#IndividualOrgNameTitle').val(individualOrgNameTitleId);
-                            $('#CustomerResidenceStatus').val(res.lst[i].residenceStatus);
-                            $('#CustomerTypeOfFleetID').val(res.lst[i].keyOfficialTypeOfFleetId);
-                            if (res.lst[i].AreaOfOperation != "") {
-                                if (res.lst[i].AreaOfOperation != "interstate")
+                            $('#CustomerResidenceStatus').val(res[i].residenceStatus);
+                            $('#CustomerTypeOfFleetID').val(res[i].keyOfficialTypeOfFleetId);
+                            if (res[i].AreaOfOperation != "") {
+                                if (res[i].AreaOfOperation != "interstate")
                                     $('#interstate').checked = true;
-                                if (res.lst[i].AreaOfOperation != "intercity")
+                                if (res[i].AreaOfOperation != "intercity")
                                     $('#intercity').checked = true;
-                                if (res.lst[i].AreaOfOperation != "intracity")
+                                if (res[i].AreaOfOperation != "intracity")
                                     $('#intracity').checked = true;
                             }
                             

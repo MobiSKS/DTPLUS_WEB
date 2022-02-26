@@ -1,6 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
-using HPCL.Common.Models.Common;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Models.ViewModel.ValidateNewCards;
 using Microsoft.AspNetCore.Http;
@@ -205,7 +205,7 @@ namespace HPCL_Web.Controllers
                             if (obj["Status_Code"].ToString() == "200")
                             {
                                 var jarr = obj["Data"].Value<JArray>();
-                                List<ApiResponseModel> lst = jarr.ToObject<List<ApiResponseModel>>();
+                                List<SuccessResponse> lst = jarr.ToObject<List<SuccessResponse>>();
                                 message = lst.First().Reason.ToString();
                             }
                             else

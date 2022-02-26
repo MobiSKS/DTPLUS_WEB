@@ -28,7 +28,7 @@
 
         #region "Merchant"
 
-        public const string MerhantID = "Merchant ID";
+        public const string Merchant = "Merchant ID";
         public const string RetailOutletName = "Retail Outlet Name";
         public const string MerchantType = "Merchant Type";
         public const string DealerName = "Dealer Name";

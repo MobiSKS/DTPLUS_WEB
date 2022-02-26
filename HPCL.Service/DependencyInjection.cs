@@ -16,6 +16,10 @@ namespace HPCL.Service
             services.AddTransient<ITatkalCardCustomerService, TatkalCardCustomerService>();
             services.AddTransient<IOfficerServices, OfficerServices>();
             services.AddTransient<ICommonActionService, CommonActionService>();
+            services.AddTransient<IControlCardSearch, ControlCard>();
+            services.AddTransient<IViewCardService, ViewCardService>();
+            services.AddTransient<ICustomerManageService, CustomerManageService>();
+            services.AddTransient<IMerchantServices, MerchantServices>();
 
             return services;
         }

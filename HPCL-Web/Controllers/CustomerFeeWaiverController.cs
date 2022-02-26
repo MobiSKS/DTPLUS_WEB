@@ -7,111 +7,111 @@ namespace HPCL_Web.Controllers
 {
     public class CustomerFeeWaiverController : Controller
     {
-        private readonly ICustomerFeeWaiverServices _customerFeeWaiverServices;
-        public CustomerFeeWaiverController(ICustomerFeeWaiverServices customerFeeWaiverServices)
-        {
-            _customerFeeWaiverServices = customerFeeWaiverServices;
-        }
+        //private readonly ICustomerFeeWaiverServices _customerFeeWaiverServices;
+        //public CustomerFeeWaiverController(ICustomerFeeWaiverServices customerFeeWaiverServices)
+        //{
+        //    _customerFeeWaiverServices = customerFeeWaiverServices;
+        //}
 
-        public async Task<IActionResult> FeeWaiver()
-        {
-            return View();
-        }
+        //public async Task<IActionResult> FeeWaiver()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> FeeWaiver(PendingCustomer entity)
-        {
-            var pendingList = await _customerFeeWaiverServices.FeeWaiver(entity);
+        //[HttpPost]
+        //public async Task<JsonResult> FeeWaiver(PendingCustomer entity)
+        //{
+        //    var pendingList = await _customerFeeWaiverServices.FeeWaiver(entity);
 
-            ModelState.Clear();
-            return Json(new { pendingList = pendingList });
-        }
+        //    ModelState.Clear();
+        //    return Json(new { pendingList = pendingList });
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo)
-        {
-            var tuple = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
-            var basicDetails = tuple.Item1;
-            var cardDetails = tuple.Item2;
+        //[HttpPost]
+        //public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo)
+        //{
+        //    var tuple = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
+        //    var basicDetails = tuple.Item1;
+        //    var cardDetails = tuple.Item2;
 
-            ModelState.Clear();
-            return Json(new { basicDetails = basicDetails, cardDetails = cardDetails });
-        }
+        //    ModelState.Clear();
+        //    return Json(new { basicDetails = basicDetails, cardDetails = cardDetails });
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> ApproveCustomer(string CustomerReferenceNo, string comments)
-        {
-            var reason = await _customerFeeWaiverServices.ApproveCustomer(CustomerReferenceNo, comments);
-            ModelState.Clear();
-            return Json(reason);
-        }
+        //[HttpPost]
+        //public async Task<JsonResult> ApproveCustomer(string CustomerReferenceNo, string comments)
+        //{
+        //    var reason = await _customerFeeWaiverServices.ApproveCustomer(CustomerReferenceNo, comments);
+        //    ModelState.Clear();
+        //    return Json(reason);
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> RejectCustomer(string CustomerReferenceNo, string comments)
-        {
-            var reason = await _customerFeeWaiverServices.RejectCustomer(CustomerReferenceNo, comments);
-            ModelState.Clear();
-            return Json(reason);
-        }
-
-
-        public async Task<IActionResult> ViewCustomer(string formNumber)
-        {
-            HttpContext.Session.SetString("formNumber", formNumber);
-
-            return PartialView();
-        }
+        //[HttpPost]
+        //public async Task<JsonResult> RejectCustomer(string CustomerReferenceNo, string comments)
+        //{
+        //    var reason = await _customerFeeWaiverServices.RejectCustomer(CustomerReferenceNo, comments);
+        //    ModelState.Clear();
+        //    return Json(reason);
+        //}
 
 
-        [HttpPost]
-        public async Task<JsonResult> ViewCustomerDetails(string formNumber)
-        {
-            //var bigNumber = BigInteger.Parse(formNumber);
+        //public async Task<IActionResult> ViewCustomer(string formNumber)
+        //{
+        //    HttpContext.Session.SetString("formNumber", formNumber);
 
-            var customerBody = new BindPendingCustomer
-            {
-                UserAgent = Common.useragent,
-                UserIp = Common.userip,
-                UserId = HttpContext.Session.GetString("UserName"),
-                FormNumber = BigInteger.Parse(formNumber)
-            };
+        //    return PartialView();
+        //}
 
-            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+        //[HttpPost]
+        //public async Task<JsonResult> ViewCustomerDetails(string formNumber)
+        //{
+        //    //var bigNumber = BigInteger.Parse(formNumber);
 
-                using (var Response = await client.PostAsync(WebApiUrl.getPendingCustUrl, content))
-                {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+        //    var customerBody = new BindPendingCustomer
+        //    {
+        //        UserAgent = Common.useragent,
+        //        UserIp = Common.userip,
+        //        UserId = HttpContext.Session.GetString("UserName"),
+        //        FormNumber = BigInteger.Parse(formNumber)
+        //    };
 
-                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+        //    {
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                        var searchRes = obj["Data"].Value<JObject>();
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
 
-                        var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
-                        var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
+        //        using (var Response = await client.PostAsync(WebApiUrl.getPendingCustUrl, content))
+        //        {
+        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+        //            {
+        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-                        List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
 
-                        List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+        //                var searchRes = obj["Data"].Value<JObject>();
 
-                        CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == formNumber).FirstOrDefault();
+        //                var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+        //                var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
 
-                        ModelState.Clear();
-                        return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-                    }
-                    else
-                    {
-                        ModelState.Clear();
-                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-                    }
-                }
-            }
-        }
+        //                List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+
+        //                List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
+        //                CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == formNumber).FirstOrDefault();
+
+        //                ModelState.Clear();
+        //                return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
+        //            }
+        //            else
+        //            {
+        //                ModelState.Clear();
+        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+        //                return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

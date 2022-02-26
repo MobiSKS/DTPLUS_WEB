@@ -89,9 +89,10 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;">@Label.AddLocation</button>
-                                <button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>
-
+                                @*<button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;" onclick="addLocation()">@Label.AddLocation</button>*@
+                                <button class="btn btn_primary" type="submit" onclick="addLocationOfficer()">@Label.AddLocation</button>
+                                <button class="btn btn_primary" type="submit">@Label.Reset</button>
+                                @*<button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>*@
                             </div>
                         </div>
                     </div>
@@ -103,11 +104,10 @@
 </div>
 <script type="text/javascript">
     var message = "@ViewBag.Message";
+    var zonalId = $("#ZoneOfcID").val();
 
     $(document).ready(function () {
-        if (message != "") {
-            alert(message);
-        }
+        getRegionalOfc();
     });
 
     $("#IsNewUser").change(function () {
@@ -120,12 +120,56 @@
         }
     });
 
+    function addLocationOfficer() {
+        var ret = "Y";
+
+        if (document.form1.ZoneOfcID.value == "" || document.form1.ZoneOfcID.value == "0") {
+            document.getElementById("zonalOffice_error").innerHTML = "Zonal Office is required";
+            document.form1.ZoneOfcID.focus();
+            ret = "N";
+        }
+        else {
+            document.getElementById("zonalOffice_error").innerHTML = "";
+        }
+
+        if (document.form1.regionalOffice.value == "" || document.form1.regionalOffice.value == "0") {
+            document.getElementById("regionalOffice_error").innerHTML = "Regional Office is required";
+            document.form1.regionalOffice.focus();
+            ret = "N";
+        }
+        else {
+            document.getElementById("regionalOffice_error").innerHTML = "";
+        }
+
+        if (document.form1.UserName.value == "") {
+            document.getElementById("userName_error").innerHTML = "User Name is required";
+            document.form1.UserName.focus();
+            ret = "N";
+        }
+        else {
+            document.getElementById("userName_error").innerHTML = "";
+        }
+        alert(ret);
+        if (ret == "Y") {
+            $("#form1").unbind().submit();
+        }
+        else {
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+    };
+
     function getRegionalOfc() {
         var id = $('#ZoneOfcID :selected').val();
 
         //if (id != 0) {
         //    $("#state_error").html("");
         //}
+
+        if (zonalId != 0 && zonalId != "" && zonalId != null) {
+            id = zonalId;
+        }
 
         $.ajax({
             type: 'POST',  // http method
@@ -137,11 +181,25 @@
                 if (status == 'success') {
                     $("#district").html("");
                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                        $('<option>',
-                            {
-                                value: data.regionalOfficeID,
-                                text: data.regionalOfficeName
-                            }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--Select--"
+                                }).html("--Select--").appendTo("#regionalOffice");
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                        }
+                        else {
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                        }
                     });
                 }
                 else {
