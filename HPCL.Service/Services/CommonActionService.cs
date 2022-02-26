@@ -2,6 +2,8 @@
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -244,6 +246,104 @@ namespace HPCL.Service.Services
             List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
                         
             return customerRegionLst;
+        }
+
+        public async Task<List<CustomerStateModel>> GetCustStateList()
+        {
+            var CustomerStateRequest = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"Country", "0"}
+            };
+
+
+            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(CustomerStateRequest), Encoding.UTF8, "application/json");
+            var responseState = await _requestService.CommonRequestService(Statecontent, WebApiUrl.getState);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerStateModel> stateLst = jarr.ToObject<List<CustomerStateModel>>();
+
+            var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
+
+            return sortedtList;
+
+        }
+
+        public async Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber)
+        {
+            var CustomerFormNumber = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"FormNumber", FormNumber }
+            };
+
+
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkformnumberDuplication);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
+
+        public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
+        {
+
+            var requestBody = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"StateID", Stateid.ToString()}
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDistrict);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<OfficerDistrictModel> lstOfficerDistrictModel = jarr.ToObject<List<OfficerDistrictModel>>();
+
+            var SortedtList = lstOfficerDistrictModel.OrderBy(x => x.districtName).ToList();
+            SortedtList.Insert(0, new OfficerDistrictModel
+            {
+                stateID = 0,
+                districtID = 0,
+                districtName = "Select District"
+            });
+
+            return SortedtList;
+        }
+
+        public async Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo)
+        {
+            var CustomerPanInfo = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"ZonalId", "0"},
+                {"RegionalId", "0"},
+                {"IncomeTaxPan", PanNo }
+            };
+
+
+            StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
+
+            var responseCustomer = await _requestService.CommonRequestService(cusPancontent, WebApiUrl.checkPanNoDuplication);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomer).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
         }
 
     }

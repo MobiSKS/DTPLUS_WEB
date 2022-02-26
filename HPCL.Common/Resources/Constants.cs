@@ -6,6 +6,7 @@
 
         public const string DataArray = "DataArray";
         public const string DataObject = "DataObject";
+        public const string SuccessInternelStatusCode = "1000";
 
         #endregion
     }

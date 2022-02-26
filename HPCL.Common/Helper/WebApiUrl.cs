@@ -122,6 +122,9 @@
 
         #region MyHpOTCCardCustomer
         public static string insertOTCCardRequest = "/dtpwebapi/api/dtplus/customer/insert_otc_card_request";
+        public static string searchMerchantForCardCreation = "/dtpwebapi/api/dtplus/merchant/search_merchant_for_card_creation";
+        public static string getAvailityOtcCard = "/dtpwebapi/api/dtplus/merchant/get_availity_otc_card";
+        public static string insertOtcCustomer = "/dtpwebapi/api/dtplus/merchant/insert_otc_customer";
         #endregion
 
         #region atkalCardCustomer

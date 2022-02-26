@@ -1,5 +1,7 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Officers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +19,9 @@ namespace HPCL.Service.Interfaces
         Task<List<LocationMappingResponseModal>> GetLocationMappingList(int officerId);
         Task<string> ValidateUserName(string userName);
         Task<List<RegionModel>> GetRegionList();
+        Task<List<CustomerStateModel>> GetCustStateList();
+        Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber);
+        Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
+        Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo);
     }
 }
