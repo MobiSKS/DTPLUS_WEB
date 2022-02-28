@@ -146,24 +146,6 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<string> PANValidation(string PANNumber)
-        {
-            string apiUrl = "v2/pan";
-
-            var input = new
-            {
-                consent = "Y",
-                pan = PANNumber
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.PANValidationService(content, apiUrl);
-
-            return response;
-
-        }
-
         public async Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel)
         {
             //var driversRequestData = new Dictionary<string, string>

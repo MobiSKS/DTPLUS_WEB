@@ -477,6 +477,23 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
+        public async Task<string> PANValidation(string PANNumber)
+        {
+            string apiUrl = "v2/pan";
+
+            var input = new
+            {
+                consent = "Y",
+                pan = PANNumber
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.PANValidationService(content, apiUrl);
+
+            return response;
+
+        }
 
     }
 }

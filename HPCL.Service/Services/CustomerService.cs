@@ -1070,34 +1070,7 @@ namespace HPCL.Service.Services
             //}
 
         }
-        public async Task<string> PANValidation(string PANNumber)
-        {
-            string apiUrl = "v2/pan";
-            //var data = "";
-            var input = new
-            {
-                consent = "Y",
-                pan = PANNumber
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.PANValidationService(content, apiUrl);
-
-            return response;
-
-            //using (HttpClient client = new HelperAPI().GetApiPANUrlString())
-            //{
-            //    HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        data = await response.Content.ReadAsStringAsync();
-            //    }
-            //}
-
-            //return new JsonResult(data);
-        }
-
+        
         public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();

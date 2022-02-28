@@ -144,7 +144,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> PANValidation(string PANNumber)
         {
-            string data = await _myHpOTCCardCustomerService.PANValidation(PANNumber);
+            string data = await _commonActionService.PANValidation(PANNumber);
             return new JsonResult(data);
         }
 
