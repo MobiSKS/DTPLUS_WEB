@@ -41,8 +41,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
 
-        public string CreatedBy { get; set; }
-
         public virtual List<ProofType> ProofTypesModal { get; set; }
     }
 
@@ -54,13 +52,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string LastName { get; set; }
         public string FormNumber { get; set; }
     }
-
-    public class ProofType
-    {
-        public int ProofTypeId { get; set; }
-        public string ProofTypeName { get; set; }
-    }
-
+    
     public class UpdateKycResponse
     {
         public int Status { get; set; }
