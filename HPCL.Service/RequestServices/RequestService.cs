@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System;
 using HPCL.Common.Helper;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace HPCL.Service
 {
     public class RequestService : IRequestService
     {
+        HelperAPI _api = new HelperAPI();
         private readonly IHttpContextAccessor HttpContextAccessor;
         public RequestService(IHttpContextAccessor HttpContextAccessors)
         {
@@ -17,6 +20,7 @@ namespace HPCL.Service
         }
         public async Task<string> CommonRequestService(StringContent content, string requestUrl)
         {
+            Start:
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContextAccessor.HttpContext.Session.GetString("Token"));
@@ -26,7 +30,17 @@ namespace HPCL.Service
                     if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         var ResponseContent = await Response.Content.ReadAsStringAsync();
-
+                        JObject respObj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        string respMessage = respObj["Message"].ToString();
+                        if (respMessage == "Token Expired")
+                        {
+                            var access_token = _api.GetToken();
+                            if (access_token.Result != null)
+                            {
+                                HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                                goto Start;
+                            }
+                        }
                         return ResponseContent;
                     }
                     else
