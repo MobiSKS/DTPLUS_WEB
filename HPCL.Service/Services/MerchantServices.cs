@@ -72,7 +72,7 @@ namespace HPCL.Service.Services
 
                 StringContent merchantDetailsContent = new StringContent(JsonConvert.SerializeObject(merchantDetailsForms), Encoding.UTF8, "application/json");
 
-                var merchantDetailsResponse = await _requestService.CommonRequestService(merchantDetailsContent, WebApiUrl.GetStatusTypeUrl);
+                var merchantDetailsResponse = await _requestService.CommonRequestService(merchantDetailsContent, WebApiUrl.getMerchantByMerchantID);
 
                 JObject merchantDetailsObj = JObject.Parse(JsonConvert.DeserializeObject(merchantDetailsResponse).ToString());
                 var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();

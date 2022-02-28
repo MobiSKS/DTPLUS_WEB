@@ -36,6 +36,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
+            if (!string.IsNullOrEmpty(merchantMdl.SearchMerchantId))
+            {
+                return RedirectToAction("CreateMerchant", new { MerchantIDValue = merchantMdl.SearchMerchantId });
+            }
             var tuple = await _merchantServices.CreateMerchant(merchantMdl);
 
             if (tuple.Item1 == "0")
