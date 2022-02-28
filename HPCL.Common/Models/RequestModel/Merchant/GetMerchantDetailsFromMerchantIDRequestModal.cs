@@ -8,5 +8,6 @@ namespace HPCL.Common.Models.RequestModel.Merchant
     public class GetMerchantDetailsFromMerchantIDRequestModal : BaseEntity
     {
         public string MerchantId { get; set; }
+        public string ERPCode { get; set; }
     }
 }

@@ -28,11 +28,16 @@ namespace HPCL_Web.Controllers
             _merchantServices = merchantServices;
             _commonActionService = commonActionService;
         }
-        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category)
+        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode)
         {
-            var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category);
+            var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode);
+            if (!string.IsNullOrEmpty(ERPCode))
+                ViewBag.RejectedStatus = "true";
+            else
+                ViewBag.RejectedStatus = "";
             return View(modals);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
@@ -66,6 +71,16 @@ namespace HPCL_Web.Controllers
         {
             var reason = await _merchantServices.ActionOnMerchantID(approvalRejectionMdl);
             return Json(reason);
+        }
+        public async Task<IActionResult> RejectedMerchant(MerchantApprovalModel merchaApprovalMdl)
+        {
+            var modals = await _merchantServices.RejectedMerchant(merchaApprovalMdl);
+            return View(modals);
+        }
+        public async Task<IActionResult> MerchantSummary(string ERPCode, string fromDate, string toDate)
+        {
+            var modals = await _merchantServices.MerchantSummary(ERPCode, fromDate, toDate);
+            return View(modals);
         }
     }
 }

@@ -18,5 +18,8 @@
         public string MerchantTypeId { get; set; }
         public string MerchantTypeName { get; set; }
         public string RetailOutletName { get; set; }
+        public string RejectedDate { get; set; }
+        public string CreatedDate { get; set; }
+        public string RetailOutletCity { get; set; }
     }
 }
