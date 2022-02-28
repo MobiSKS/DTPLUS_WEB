@@ -12,16 +12,15 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
     {
         public RequestForDriverCardModel()
         {
-            RegionMdl = new List<RegionModel>();
-            RegionMdl.Add(new RegionModel
+            RegionMdl = new List<CustomerRegionModel>();
+            RegionMdl.Add(new CustomerRegionModel
             {
-                RegionID = 0,
-                RegionName = "Select Region"
-
+                RegionalOfficeID = 0,
+                RegionalOfficeName = "Select Region"
             });
 
         }
-        public virtual List<RegionModel> RegionMdl { get; set; }
+        public virtual List<CustomerRegionModel> RegionMdl { get; set; }
 
         [Required(ErrorMessage = "No of Driver Cards is Required")]
         public string NoofCards { get; set; }

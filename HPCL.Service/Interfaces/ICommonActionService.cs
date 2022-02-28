@@ -31,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo);
         Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid);
         Task<string> PANValidation(string PANNumber);
+        Task<List<CustomerRegionModel>> GetregionalOfficeList();
     }
 }

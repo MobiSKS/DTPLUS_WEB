@@ -34,7 +34,7 @@ namespace HPCL.Service.Services
         {
             RequestForOTCCardModel custMdl = new RequestForOTCCardModel();
 
-            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;
         }
@@ -67,7 +67,7 @@ namespace HPCL.Service.Services
                 else
                     requestForOTCCardModel.Remarks = customerResponse.Message;
 
-                requestForOTCCardModel.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+                requestForOTCCardModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
             }
 
             return requestForOTCCardModel;

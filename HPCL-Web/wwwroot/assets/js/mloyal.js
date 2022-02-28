@@ -89,11 +89,19 @@ var ret = false;
     if (document.applicationForm.FormNumber.value == "") {
         document.getElementById("formNumber_error").innerHTML = "Form Number is required";
         document.applicationForm.FormNumber.focus();
-    return ret;
-}
-else {
-        document.getElementById("formNumber_error").innerHTML = "";
-}
+        return ret;
+    }
+    else {
+        console.log(document.applicationForm.FormNumber.value.length);
+        if (document.applicationForm.FormNumber.value.length < 10) {
+            document.getElementById("formNumber_error").innerHTML = "Form Number length must be 10 digit";
+            document.applicationForm.FormNumber.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+    }
 
 if (document.applicationForm.CustomerTypeID.value == "0") {
     document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";

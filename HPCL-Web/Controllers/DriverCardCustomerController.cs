@@ -24,13 +24,24 @@ namespace HPCL_Web.Controllers
     {
 
         private readonly IDriverCardCustomerService _driverCardCustomerService;
-        public DriverCardCustomerController(IDriverCardCustomerService driverCardCustomerService)
+        private readonly ICommonActionService _commonActionService;
+        public DriverCardCustomerController(IDriverCardCustomerService driverCardCustomerService, ICommonActionService commonActionService)
         {
             _driverCardCustomerService = driverCardCustomerService;
+            _commonActionService = commonActionService;
         }
         public async Task<IActionResult> CreateDriverCardCustomer()
         {
-            return View();
+            DriverCardCustomerModel custMdl = new DriverCardCustomerModel();
+            custMdl = await _driverCardCustomerService.CreateDriverCardCustomer();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDriverCardCustomer(DriverCardCustomerModel driverCardCustomerModel)
+        {
+            return View(driverCardCustomerModel);
         }
 
         public async Task<IActionResult> RequestForDriverCard()

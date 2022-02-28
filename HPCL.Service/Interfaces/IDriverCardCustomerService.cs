@@ -10,5 +10,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<RequestForDriverCardModel> RequestForDriverCard();
         Task<RequestForDriverCardModel> RequestForDriverCard(RequestForDriverCardModel requestForDriverCardModel);
+        Task<DriverCardCustomerModel> CreateDriverCardCustomer();
     }
 }

@@ -494,6 +494,26 @@ namespace HPCL.Service.Services
             return response;
 
         }
+        public async Task<List<CustomerRegionModel>> GetregionalOfficeList()
+        {
+            var CustomerRegion = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                {"ZonalID",  "0" }
+            };
+
+            StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
+
+            var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.getRegionalOffice);
+
+            JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
+            var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
+            List<CustomerRegionModel> customerregionalOfficeLst = customerRegionJarr.ToObject<List<CustomerRegionModel>>();
+
+            return customerregionalOfficeLst;
+        }
 
     }
 }

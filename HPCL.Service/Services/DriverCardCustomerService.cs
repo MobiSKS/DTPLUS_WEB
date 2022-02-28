@@ -32,7 +32,7 @@ namespace HPCL.Service.Services
         {
             RequestForDriverCardModel custMdl = new RequestForDriverCardModel();
 
-            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;
         }
@@ -66,10 +66,19 @@ namespace HPCL.Service.Services
                 else
                     requestForDriverCardModel.Remarks = customerResponse.Message;
 
-                requestForDriverCardModel.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+                requestForDriverCardModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
             }
 
             return requestForDriverCardModel;
+        }
+
+        public async Task<DriverCardCustomerModel> CreateDriverCardCustomer()
+        {
+            DriverCardCustomerModel custMdl = new DriverCardCustomerModel();
+
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+
+            return custMdl;
         }
 
 
