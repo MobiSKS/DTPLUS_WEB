@@ -21,7 +21,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerRegionModel>> GetRegionalDetails(int ZonalOfficeID);
         Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
         Task<List<VehicleTypeModel>> GetVehicleTypeDetails();
-        Task<string> PANValidation(string PANNumber);
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerRBEName(string RBEId);

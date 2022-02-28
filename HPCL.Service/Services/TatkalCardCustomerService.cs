@@ -29,8 +29,8 @@ namespace HPCL.Service.Services
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard()
         {
             TatkalCustomerCardRequestInfo custMdl = new TatkalCustomerCardRequestInfo();
-
-            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+            custMdl.Remarks = "";
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;
         }
@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
                 else
                     tatkalCustomerCardRequestInfo.Remarks = customerResponse.Message;
 
-                tatkalCustomerCardRequestInfo.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+                tatkalCustomerCardRequestInfo.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
             }
 
             return tatkalCustomerCardRequestInfo;

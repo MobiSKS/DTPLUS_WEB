@@ -33,8 +33,8 @@ namespace HPCL.Service.Services
         public async Task<RequestForOTCCardModel> RequestForOTCCard()
         {
             RequestForOTCCardModel custMdl = new RequestForOTCCardModel();
-
-            custMdl.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+            custMdl.Remarks = "";
+            custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;
         }
@@ -67,7 +67,7 @@ namespace HPCL.Service.Services
                 else
                     requestForOTCCardModel.Remarks = customerResponse.Message;
 
-                requestForOTCCardModel.RegionMdl.AddRange(await _commonActionService.GetRegionList());
+                requestForOTCCardModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
             }
 
             return requestForOTCCardModel;
@@ -144,24 +144,6 @@ namespace HPCL.Service.Services
                        
 
             return searchList;
-        }
-
-        public async Task<string> PANValidation(string PANNumber)
-        {
-            string apiUrl = "v2/pan";
-
-            var input = new
-            {
-                consent = "Y",
-                pan = PANNumber
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.PANValidationService(content, apiUrl);
-
-            return response;
-
         }
 
         public async Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel)

@@ -17,7 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID);
 
         Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId);
-        Task<string> PANValidation(string PANNumber);
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel);
 
     }

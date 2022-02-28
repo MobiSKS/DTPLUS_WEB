@@ -22,6 +22,9 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Request for My HP (OTC) Card</p>
+                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -29,7 +32,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Region Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionID", "RegionName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
                                                 <span class="error" id="CustomerRegionID_error"></span>
                                             </div>
                                         </div>
@@ -114,7 +117,14 @@
             return ret;
         }
         else {
-            document.getElementById("NoofCards_error").innerHTML = "";
+            if (Number(document.getElementById('NoofCards').value) < 10 || Number(document.getElementById('NoofCards').value) > 500) {
+                document.getElementById("NoofCards_error").innerHTML = "My HP (OTC) Card - Min 10, max 500";
+                document.getElementById('NoofCards').focus();
+                return ret;
+            }
+            else {
+                document.getElementById("NoofCards_error").innerHTML = "";
+            }
         }
 
         return true;

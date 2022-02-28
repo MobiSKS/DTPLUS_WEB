@@ -13,16 +13,16 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
     {
         public RequestForOTCCardModel()
         {
-            RegionMdl = new List<RegionModel>();
-            RegionMdl.Add(new RegionModel
+            RegionMdl = new List<CustomerRegionModel>();
+            RegionMdl.Add(new CustomerRegionModel
             {
-                RegionID = 0,
-                RegionName = "Select Region"
+                RegionalOfficeID = 0,
+                RegionalOfficeName = "Select Region"
 
             });
 
         }
-        public virtual List<RegionModel> RegionMdl { get; set; }
+        public virtual List<CustomerRegionModel> RegionMdl { get; set; }
 
         [Required(ErrorMessage = "No of My HP (OTC) Cards is Required")]
         public string NoofCards { get; set; }

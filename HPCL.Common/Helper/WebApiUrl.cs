@@ -73,6 +73,9 @@
         public static string getMerchantByMerchantID = "api/dtplus/merchant/get_merchant_by_merchant_Id";
         public static string getMerchantApprovalList = "api/dtplus/merchant/get_merchant_approval_list";
         public static string approveRejectMerchant = "api/dtplus/merchant/approve_reject_merchant";
+        public static string getRejectedMerchant = "api/dtplus/merchant/get_rejected_merchant";
+        public static string getMerchantbyERPCode = "api/dtplus/merchant/get_merchant_by_erp_code";
+
         #endregion
 
         #region customer

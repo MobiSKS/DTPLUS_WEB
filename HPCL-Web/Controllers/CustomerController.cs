@@ -24,9 +24,11 @@ namespace HPCL_Web.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
-        public CustomerController(ICustomerService customerService)
+        private readonly ICommonActionService _commonActionService;
+        public CustomerController(ICustomerService customerService, ICommonActionService commonActionService)
         {
             _customerService = customerService;
+            _commonActionService = commonActionService;
         }
 
         public IActionResult Index()
@@ -293,28 +295,8 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> PANValidation(string PANNumber)
         {
-
-            string data = await _customerService.PANValidation(PANNumber);
+            string data = await _commonActionService.PANValidation(PANNumber);
             return new JsonResult(data);
-
-            //string apiUrl = "v2/pan";
-            //var data = "";
-            //var input = new
-            //{
-            //    consent = "Y",
-            //    pan = PANNumber
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiPANUrlString())
-            //{
-            //    HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        data = await response.Content.ReadAsStringAsync();
-            //    }
-            //}
-
-            //return new JsonResult(data);
         }
 
         public async Task<IActionResult> SuccessRedirect(int customerReferenceNo)
