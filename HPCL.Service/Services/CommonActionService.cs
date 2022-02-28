@@ -74,11 +74,13 @@ namespace HPCL.Service.Services
 
         public async Task<List<LimitTypeModal>> GetLimitType()
         {
-            var forms = new Dictionary<string, string>
+            var forms = new BaseEntity()
             {
-                {"useragent", CommonBase.useragent},
-                {"userip", CommonBase.userip},
-                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid
             };
 
 
@@ -333,7 +335,7 @@ namespace HPCL.Service.Services
             JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
             var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
             List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
-                        
+
             return customerRegionLst;
         }
 
@@ -478,5 +480,58 @@ namespace HPCL.Service.Services
             return lst[0];
         }
 
+        public async Task<List<StatusResponseModal>> GetStatusType(string status)
+        {
+            var statusType = new StatusRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                EntityTypeId = 3
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
+
+            List<StatusResponseModal> lsts = new List<StatusResponseModal>();
+            lsts.Add(new StatusResponseModal { StatusId = -1, StatusName = "All" });
+
+            if (status == "ManageCard")
+            {
+                foreach (var item in lst)
+                {
+                    if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7)
+                    {
+                        lsts.Add(item);
+                    }
+                }
+            }
+            else if (status == "SaleLimit")
+            {
+                foreach (var item in lst)
+                {
+                    if (item.StatusId == 4 || item.StatusId == 1)
+                    {
+                        lsts.Add(item);
+                    }
+                }
+            }
+            else if (status == "AllCardLimit")
+            {
+                foreach (var item in lst)
+                {
+                    if (item.StatusId == 4)
+                    {
+                        lsts.Add(item);
+                    }
+                }
+            }
+            return lsts;
+        }
     }
 }

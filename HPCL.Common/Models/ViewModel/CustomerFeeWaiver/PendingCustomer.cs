@@ -1,5 +1,6 @@
 ﻿
 using HPCL.Common.Models.CommonEntity;
+using System.Numerics;
 
 namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
 {
@@ -30,5 +31,10 @@ namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
         public string Comments { get; set; }
         public int Approvalstatus { get; set; }
         public string ApprovedBy { get; set; }
+    }
+
+    public class BindPendingCustomer : BaseEntity
+    {
+        public BigInteger FormNumber { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerFeeWaiver;
 using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
 using HPCL.Service.Interfaces;
@@ -8,7 +9,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -113,6 +116,38 @@ namespace HPCL.Service.Services
 
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
+        }
+
+        public void ViewCustomer(string formNumber)
+        {
+            _httpContextAccessor.HttpContext.Session.SetString("formNumber", formNumber);
+        }
+
+        public async Task<Tuple<List<CustomerFullDetails>, List<UploadDocResponseBody>>> ViewCustomerDetails(string formNumber)
+        {
+            var customerBody = new BindPendingCustomer
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                FormNumber = BigInteger.Parse(formNumber)
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getPendingCustUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var searchRes = obj["Data"].Value<JObject>();
+
+            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
+
+            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+
+            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
+            return Tuple.Create(customerList, UploadDocList);
         }
     }
 }

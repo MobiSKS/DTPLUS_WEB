@@ -16,8 +16,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> ManageCards()
         {
-            var modals = await _cardService.ManageCards();
-            return View(modals);
+            return View();
         }
 
         [HttpPost]
@@ -105,9 +104,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> SetSaleLimit()
         {
-            var modals = await _cardService.SetSaleLimit();
-
-            return View(modals);
+            return View();
         }
 
         [HttpPost]
@@ -131,10 +128,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> SetCcmsLimitForAllCards()
         {
-            var modals = await _cardService.SetCcmsLimitForAllCards();
-
-            ModelState.Clear();
-            return View(modals);
+            return View();
         }
 
         [HttpPost]
@@ -193,6 +187,44 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> MappingCardToMerchant()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCardList()
+        {
+            var cardList = await _cardService.GetCardList();
+            return Json(new { cardList = cardList });
+        }
+
+        public async Task<IActionResult> ManageMapping()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ManageMapping(GetCustomerDetailsMapMerchant entity)
+        {
+            var tuple = await _cardService.ManageMapping(entity);
+
+            var custDetails = tuple.Item1;
+            var cardDetails = tuple.Item2;
+
+            return Json(new { custDetails  = custDetails, cardDetails  = cardDetails });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity)
+        {
+            var merchantList = await _cardService.GetMerchantForMapping(entity);
+            return Json(new { merchantList = merchantList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveCustomerMappingMerchant(string objCardMerchantMaps, string customerId, string status)
+        {
+            var reason = await _cardService.SaveCustomerMappingMerchant(objCardMerchantMaps, customerId, status);
+            ModelState.Clear();
+            return Json(reason);
         }
     }
 }
