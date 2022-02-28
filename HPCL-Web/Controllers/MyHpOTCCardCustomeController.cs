@@ -48,6 +48,7 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> RequestForOTCCard()
         {
             RequestForOTCCardModel custMdl = new RequestForOTCCardModel();
+            custMdl.Remarks = "";
             custMdl = await _myHpOTCCardCustomerService.RequestForOTCCard();
 
             return View(custMdl);

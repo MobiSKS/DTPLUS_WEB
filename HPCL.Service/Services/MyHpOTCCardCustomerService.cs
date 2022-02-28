@@ -33,7 +33,7 @@ namespace HPCL.Service.Services
         public async Task<RequestForOTCCardModel> RequestForOTCCard()
         {
             RequestForOTCCardModel custMdl = new RequestForOTCCardModel();
-
+            custMdl.Remarks = "";
             custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;

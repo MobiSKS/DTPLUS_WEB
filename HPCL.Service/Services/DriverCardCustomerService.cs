@@ -31,7 +31,7 @@ namespace HPCL.Service.Services
         public async Task<RequestForDriverCardModel> RequestForDriverCard()
         {
             RequestForDriverCardModel custMdl = new RequestForDriverCardModel();
-
+            custMdl.Remarks = "";
             custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;

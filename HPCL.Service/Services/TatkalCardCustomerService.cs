@@ -29,7 +29,7 @@ namespace HPCL.Service.Services
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard()
         {
             TatkalCustomerCardRequestInfo custMdl = new TatkalCustomerCardRequestInfo();
-
+            custMdl.Remarks = "";
             custMdl.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custMdl;
