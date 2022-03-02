@@ -131,6 +131,9 @@
         public static string searchMerchantForCardCreation = "/dtpwebapi/api/dtplus/merchant/search_merchant_for_card_creation";
         public static string getAvailityOtcCard = "/dtpwebapi/api/dtplus/merchant/get_availity_otc_card";
         public static string insertOtcCustomer = "/dtpwebapi/api/dtplus/merchant/insert_otc_customer";
+        public static string verifyMerchantByMerchantidAndRegionalid = "/dtpwebapi/api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
+        public static string getAllUnAllocatedCardsForOtcCard = "/dtpwebapi/api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
+        public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
         #endregion
 
         #region atkalCardCustomer
