@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HPCL.Common.Models.ViewModel;
+using HPCL.Service.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,14 @@ namespace HPCL_Web.Controllers
 {
     public class TerminalManagementController : Controller
     {
+
+        private readonly ITerminalManagement _TerminalService;
+
+        public TerminalManagementController(ITerminalManagement ViewServices)
+        {
+            _TerminalService = ViewServices;
+        }
+
         public async Task<IActionResult> ManageTerminal()
         {
             return View();
@@ -19,6 +29,32 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> TerminalInstallationRequest()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> TerminalInstallationRequest(TerminalManagement entity)
+        {
+            var Tuple = await _TerminalService.TerminalInstallationRequest(entity);
+
+            var objMerchantList = Tuple.Item1;
+            var searchList = Tuple.Item2;
+
+
+            ModelState.Clear();
+            return Json(new
+            {
+                objMerchantList = objMerchantList,
+                searchList = searchList,
+
+            });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddJustification(TerminalManagement entity)
+        {
+            var reason = await _TerminalService.AddJustification(entity);
+
+            ModelState.Clear();
+            return Json(reason);
         }
         public async Task<IActionResult> UnblockTerminal()
         {

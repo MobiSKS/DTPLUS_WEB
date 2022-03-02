@@ -20,6 +20,7 @@ namespace HPCL.Service
             services.AddTransient<IViewCardService, ViewCardService>();
             services.AddTransient<ICustomerManageService, CustomerManageService>();
             services.AddTransient<IMerchantServices, MerchantServices>();
+            services.AddTransient<ITerminalManagement, TerminalManagementService>();
 
             return services;
         }
