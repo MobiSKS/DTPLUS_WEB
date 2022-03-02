@@ -203,11 +203,6 @@ namespace HPCL_Web.Controllers
             CommonResponseData commonResponseData = new CommonResponseData();
             commonResponseData = await _myHpOTCCardCustomerService.SaveOTCCardsAllocation(linkCardsToMerchantModel);
 
-            //if (commonResponseData.Internel_Status_Code == 1000)
-            //{
-            //    return RedirectToAction("SuccessOTCCardsAllocation");
-            //}
-
             return Json(new { commonResponseData = commonResponseData });
         }
 
