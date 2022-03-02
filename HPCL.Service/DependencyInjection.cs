@@ -21,7 +21,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerManageService, CustomerManageService>();
             services.AddTransient<IMerchantServices, MerchantServices>();
             services.AddTransient<ITerminalManagement, TerminalManagementService>();
-
+            services.AddTransient<ISecurityService, SecurityService>();
             return services;
         }
     }
