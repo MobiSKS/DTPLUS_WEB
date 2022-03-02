@@ -26,38 +26,38 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<CustomerCards> ManageCards()
-        {
-            CustomerCards modals = new CustomerCards();
+        //public async Task<CustomerCards> ManageCards()
+        //{
+        //    CustomerCards modals = new CustomerCards();
 
-            var statusType = new StatusType
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                EntityTypeId = 3
-            };
+        //    var statusType = new StatusType
+        //    {
+        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+        //        UserAgent = CommonBase.useragent,
+        //        UserIp = CommonBase.userip,
+        //        EntityTypeId = 3
+        //    };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
+        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
+        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+        //    var jarr = obj["Data"].Value<JArray>();
+        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
 
-            List<StatusModal> lsts = new List<StatusModal>();
-            lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-            foreach (var item in lst)
-            {
-                if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7)
-                {
-                    lsts.Add(item);
-                }
-            }
-            modals.StatusModals.AddRange(lsts);
-            return modals;
-        }
+        //    List<StatusModal> lsts = new List<StatusModal>();
+        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
+        //    foreach (var item in lst)
+        //    {
+        //        if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7)
+        //        {
+        //            lsts.Add(item);
+        //        }
+        //    }
+        //    modals.StatusModals.AddRange(lsts);
+        //    return modals;
+        //}
 
         public async Task<List<SearchGridResponse>> ManageCards(CustomerCards entity, string editFlag)
         {
@@ -231,7 +231,9 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CardNo = "",
+                    MobileNo = ""
                 };
             }
 
@@ -287,37 +289,37 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<GetCardLimit> SetSaleLimit()
-        {
-            GetCardLimit modals = new GetCardLimit();
+        //public async Task<GetCardLimit> SetSaleLimit()
+        //{
+        //    GetCardLimit modals = new GetCardLimit();
 
-            var statusType = new StatusType
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                EntityTypeId = 3
-            };
+        //    var statusType = new StatusType
+        //    {
+        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+        //        UserAgent = CommonBase.useragent,
+        //        UserIp = CommonBase.userip,
+        //        EntityTypeId = 3
+        //    };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
+        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+        //    var jarr = obj["Data"].Value<JArray>();
+        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
 
-            List<StatusModal> lsts = new List<StatusModal>();
-            lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-            foreach (var item in lst)
-            {
-                if (item.StatusId == 4 || item.StatusId == 1)
-                {
-                    lsts.Add(item);
-                }
-            }
-            modals.CardStatusList.AddRange(lsts);
-            return modals;
-        }
+        //    List<StatusModal> lsts = new List<StatusModal>();
+        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
+        //    foreach (var item in lst)
+        //    {
+        //        if (item.StatusId == 4 || item.StatusId == 1)
+        //        {
+        //            lsts.Add(item);
+        //        }
+        //    }
+        //    modals.CardStatusList.AddRange(lsts);
+        //    return modals;
+        //}
 
         public async Task<List<GetCardLimitResponse>> SetSaleLimit(GetCardLimit entity)
         {
@@ -378,53 +380,53 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
-        public async Task<GetCcmsLimitAll> SetCcmsLimitForAllCards()
-        {
-            GetCcmsLimitAll modals = new GetCcmsLimitAll();
+        //public async Task<GetCcmsLimitAll> SetCcmsLimitForAllCards()
+        //{
+        //    GetCcmsLimitAll modals = new GetCcmsLimitAll();
 
-            var statusType = new StatusType
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                EntityTypeId = 3
-            };
+        //    var statusType = new StatusType
+        //    {
+        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+        //        UserAgent = CommonBase.useragent,
+        //        UserIp = CommonBase.userip,
+        //        EntityTypeId = 3
+        //    };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
+        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+        //    var jarr = obj["Data"].Value<JArray>();
+        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
 
-            List<StatusModal> lsts = new List<StatusModal>();
-            lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-            foreach (var item in lst)
-            {
-                if (item.StatusId == 4)
-                {
-                    lsts.Add(item);
-                }
-            }
-            modals.CardStatusList.AddRange(lsts);
+        //    List<StatusModal> lsts = new List<StatusModal>();
+        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
+        //    foreach (var item in lst)
+        //    {
+        //        if (item.StatusId == 4)
+        //        {
+        //            lsts.Add(item);
+        //        }
+        //    }
+        //    modals.CardStatusList.AddRange(lsts);
 
-            var forms = new Dictionary<string, string>
-                {
-                    {"useragent", CommonBase.useragent},
-                    {"userip", CommonBase.userip},
-                    {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                };
+        //    var forms = new Dictionary<string, string>
+        //        {
+        //            {"useragent", CommonBase.useragent},
+        //            {"userip", CommonBase.userip},
+        //            {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+        //        };
 
-            StringContent contents = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-            var responseContent = await _requestService.CommonRequestService(contents, WebApiUrl.GetLimitTypeUrl);
+        //    StringContent contents = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+        //    var responseContent = await _requestService.CommonRequestService(contents, WebApiUrl.GetLimitTypeUrl);
 
-            JObject objj = JObject.Parse(JsonConvert.DeserializeObject(responseContent).ToString());
-            var jar = objj["Data"].Value<JArray>();
-            List<LimitTypeModal> limitType = jar.ToObject<List<LimitTypeModal>>();
+        //    JObject objj = JObject.Parse(JsonConvert.DeserializeObject(responseContent).ToString());
+        //    var jar = objj["Data"].Value<JArray>();
+        //    List<LimitTypeModal> limitType = jar.ToObject<List<LimitTypeModal>>();
 
-            modals.LimitTypeModals.AddRange(limitType);
-            return modals;
-        }
+        //    modals.LimitTypeModals.AddRange(limitType);
+        //    return modals;
+        //}
 
         public async Task<List<SearchCcmsLimitAllResponse>> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)
         {
@@ -559,6 +561,98 @@ namespace HPCL.Service.Services
             JArray obj = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<ViewGird> vGrid = obj.ToObject<List<ViewGird>>();
             return vGrid;
+        }
+
+        public async Task<List<CardListResponse>> GetCardList()
+        {
+            var forms = new GetCardList
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCardListUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CardListResponse> cardList = jarr.ToObject<List<CardListResponse>>();
+            return cardList;
+        }
+
+        public async Task<Tuple<List<GetCustomerDetails>, List<GetCustomerCardDetails>>> ManageMapping(GetCustomerDetailsMapMerchant entity)
+        {
+            var reqBody = new GetCustomerDetailsMapMerchant
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = entity.CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCustMapDetailsUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JObject>();
+
+            var jarrCustDetails = jarr["GetCustomerDetails"].Value<JArray>();
+            var jarrCardDetails = jarr["GetCustomerCardDetails"].Value<JArray>();
+
+            List<GetCustomerDetails> custDetails = jarrCustDetails.ToObject<List<GetCustomerDetails>>();
+            List<GetCustomerCardDetails> cardDetails = jarrCardDetails.ToObject<List<GetCustomerCardDetails>>();
+
+            return Tuple.Create(custDetails, cardDetails);
+        }
+
+        public async Task<List<MerchantMapResponse>> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity)
+        {
+            var merchantDetails = new GetCustomerDetailsMapMerchant
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                MerchantID=entity.MerchantID,
+                StateID =entity.StateID,
+                DistrictID = entity.DistrictID,
+                City=entity.City,
+                HighwayName = entity.HighwayName,
+                HighwayNo1 = "",
+                HighwayNo2 = entity.HighwayNo2
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(merchantDetails), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetMerchantForMapUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<MerchantMapResponse> merchantList = jarr.ToObject<List<MerchantMapResponse>>();
+            return merchantList;
+        }
+
+        public async Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string customerId, string status)
+        {
+            ObjCardMerchantMap[] arrs = JsonConvert.DeserializeObject<ObjCardMerchantMap[]>(objCardMerchantMaps);
+
+            var reqBody = new SaveCustomerCardMerchantMappingReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = customerId,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjCardMerchantMap = arrs,
+                Status = status
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SaveCustomerMerchantMapUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> searchCcmsCard = jarr.ToObject<List<SuccessResponse>>();
+            return searchCcmsCard[0].Reason;
         }
     }
 }

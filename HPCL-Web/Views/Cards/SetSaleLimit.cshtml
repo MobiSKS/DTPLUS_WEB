@@ -49,7 +49,11 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12 mb-0 offset-md-1">Card Status</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.Statusflag, new SelectList(Model.CardStatusList, "StatusId", "StatusName"), new { @class = "form-control" })
+                                                    @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
+
+                                                    <select name="Statusflag" id="" class="form-control statusVal">
+                                                    </select>
+                                                    
                                                     @Html.ValidationMessageFor(m => m.Statusflag, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -148,6 +152,25 @@
 <script>
 
     $(document).ready(function () {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetStatusType", "Common")',
+            data: { status: "SaleLimit" },
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.statusTypeList, function (i, option) {
+                    $("<option/>").val(option.statusId).text(option.statusName).appendTo(".statusVal");
+                });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Status Type");
+            }
+        });
+
 
         var loginType = '@Context.Session.GetString("LoginType")';
 

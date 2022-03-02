@@ -54,6 +54,7 @@
         #region "Button Text"
 
         public const string Search = "SEARCH";
+        public const string Login = "Login";
         public const string Reset = "RESET";
         public const string UpdateMobile = "UPDATE MOBILE";
         public const string Back = "BACK";

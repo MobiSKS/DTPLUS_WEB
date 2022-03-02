@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.ResponseModel.Login;
+using System.IO;
 
 namespace HPCL_Web.Controllers
 {
@@ -37,9 +38,31 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<JsonResult> Index(UserInfoModel user)
+        [Route("get-captcha-image")]
+        public IActionResult GetCaptchaImage()
         {
+            int width = 100;
+            int height = 36;
+            var captchaCode = Captcha.GenerateCaptchaCode();
+            var result = Captcha.GenerateCaptchaImage(width, height, captchaCode);
+            HttpContext.Session.SetString("CaptchaCode", result.CaptchaCode);
+            Stream s = new MemoryStream(result.CaptchaByteData);
+            return new FileStreamResult(s, "image/png");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(UserInfoModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                // Validate Captcha Code
+                if (!Captcha.ValidateCaptchaCode(user.CaptchaCode, HttpContext))
+                {
+                    ViewBag.CaptchaCodeStatus = "Error";
+                    return View(user);
+                }
+            }
+
             var access_token = _api.GetToken();
 
             if (access_token.Result != null)
@@ -74,6 +97,8 @@ namespace HPCL_Web.Controllers
                         if (loginRes[0].Status == 0)
                         {
                             HttpContext.Session.Remove("Token");
+                            ViewBag.Message = loginRes[0].Reason;
+                            return View(user);
                         }
                         else if (loginRes[0].Status == 1)
                         {
@@ -84,6 +109,7 @@ namespace HPCL_Web.Controllers
                                 HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
                             }
                             HttpContext.Session.SetString("UserId", loginRes[0].UserId);
+                            return RedirectToAction("Profile");
                         }
 
                         ModelState.Clear();

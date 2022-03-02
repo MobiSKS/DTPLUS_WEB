@@ -13,5 +13,8 @@ namespace HPCL.Common.Models
         public string Password { get; set; }
         public string Useragent { get; set; }
         public string Userip { get; set; }
+        [Required]
+        [StringLength(4)]
+        public string CaptchaCode { get; set; }
     }
 }

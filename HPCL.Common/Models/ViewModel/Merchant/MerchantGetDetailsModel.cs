@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Merchant
 {
@@ -60,6 +61,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 PreHighwayNumberName = "SH"
             });
         }
+        [StringLength(10)]
         public string SearchMerchantId { get; set; }
         public string MerchantId { get; set; }
         public string ErpCode { get; set; }
