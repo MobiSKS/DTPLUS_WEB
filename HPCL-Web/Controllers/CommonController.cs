@@ -88,5 +88,19 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(check);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetStatusType(string status)
+        {
+            var statusTypeList = await _commonActionService.GetStatusType(status);
+            return Json(new{ statusTypeList = statusTypeList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetStateList()
+        {
+            var stateLst = await _commonActionService.GetStateList();
+            return Json(new { stateLst = stateLst });
+        }
     }
 }
