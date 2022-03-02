@@ -33,5 +33,6 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetStatusType(string status);
         Task<string> PANValidation(string PANNumber);
         Task<List<CustomerRegionModel>> GetregionalOfficeList();
+        Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason();
     }
 }

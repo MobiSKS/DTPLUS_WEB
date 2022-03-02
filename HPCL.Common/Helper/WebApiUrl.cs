@@ -77,6 +77,10 @@
         public static string approveRejectMerchant = "api/dtplus/merchant/approve_reject_merchant";
         public static string getRejectedMerchant = "api/dtplus/merchant/get_rejected_merchant";
         public static string getMerchantbyERPCode = "api/dtplus/merchant/get_merchant_by_erp_code";
+        public static string searchforterminalinstallationrequestclose = "api/dtplus/merchant/search_for_terminal_installation_request_close";
+        public static string getreasonlist = "api/dtplus/merchant/get_reason_list";
+        public static string updateterminalinstallationrequestclose = "api/dtplus/merchant/update_terminal_installation_request_close";
+        public static string viewterminalinstallationrequeststatus = "api/dtplus/merchant/view_terminal_installation_request_status";
 
         #endregion
 

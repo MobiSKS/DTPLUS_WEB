@@ -570,5 +570,27 @@ namespace HPCL.Service.Services
             }
             return lsts;
         }
+
+
+        public async Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getreasonlist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TerminalManagementCloseReasonModel> ReasonType = jarr.ToObject<List<TerminalManagementCloseReasonModel>>();
+            var sortedtList = ReasonType.OrderBy(x => x.ReasonId).ToList();
+            return sortedtList;
+        }
+
     }
 }
