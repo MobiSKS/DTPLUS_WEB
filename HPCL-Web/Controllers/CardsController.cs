@@ -1,10 +1,12 @@
-﻿using HPCL.Common.Models.ViewModel.Cards;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.Cards;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class CardsController : Controller
     {
         private readonly ICardServices _cardService;

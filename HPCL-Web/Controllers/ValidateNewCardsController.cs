@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class ValidateNewCardsController : Controller
     {
         public async Task<IActionResult> Details(ValidateNewCardsModel validateNewCardsMdl, int pg = 1)

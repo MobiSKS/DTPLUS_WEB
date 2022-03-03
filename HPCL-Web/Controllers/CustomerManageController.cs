@@ -18,6 +18,7 @@ using HPCL_Web.Models;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class CustomerManageController : Controller
     {
         private readonly ICustomerManageService _customerManageService;

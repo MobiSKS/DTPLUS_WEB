@@ -82,6 +82,9 @@
         public static string getreasonlist = "api/dtplus/merchant/get_reason_list";
         public static string updateterminalinstallationrequestclose = "api/dtplus/merchant/update_terminal_installation_request_close";
         public static string viewterminalinstallationrequeststatus = "api/dtplus/merchant/view_terminal_installation_request_status";
+        public static string getterminaldeinstallationrequest = "api/dtplus/merchant/get_terminal_de_installation_request";
+        public static string updateterminaldeinstalrequest = "api/dtplus/merchant/update_terminal_de_instal_request";
+
 
         #endregion
 

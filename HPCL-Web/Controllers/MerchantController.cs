@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class MerchantController : Controller
     {
         private readonly IMerchantServices _merchantServices;

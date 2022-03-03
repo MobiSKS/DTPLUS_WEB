@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class ViewCustomerController : Controller
     {
         public async Task<IActionResult> ViewCustomerSearch()

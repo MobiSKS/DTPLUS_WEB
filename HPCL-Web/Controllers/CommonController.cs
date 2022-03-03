@@ -1,9 +1,11 @@
-﻿using HPCL.Service.Interfaces;
+﻿using HPCL.Common.Helper;
+using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class CommonController : Controller
     {
         private readonly ICommonActionService _commonActionService;

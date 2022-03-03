@@ -21,6 +21,7 @@ using HPCL.Common.Models.ViewModel.Customer;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

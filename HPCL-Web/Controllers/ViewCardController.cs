@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class ViewCardController : Controller
     {
 

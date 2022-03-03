@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.RequestModel.TerminalManagement;
+using HPCL.Common.Helper;
 using HPCL.Common.Models.ViewModel;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -6,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ViewModel.Terminal;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class TerminalManagementController : Controller
     {
 
@@ -101,9 +104,16 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> TerminalDeInstallationRequest()
+        public async Task<IActionResult> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.TerminalDeInstallationRequest(terminalReq);
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
+        {
+            var result = await _TerminalService.SubmitDeinstallRequest(TerminalDeinstallationRequestUpdate);
+            return Json(result);
         }
 
         public async Task<IActionResult> TerminalDeInstallationRequestClose()
