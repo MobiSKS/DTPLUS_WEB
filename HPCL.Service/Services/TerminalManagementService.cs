@@ -3,6 +3,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.TerminalManagement;
 using HPCL.Common.Models.ResponseModel.TerminalManagementResponse;
 using HPCL.Common.Models.ViewModel;
+using HPCL.Common.Models.ViewModel.Terminal;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -205,6 +206,69 @@ namespace HPCL.Service.Services
             terminalReq.TerminalManagementRequestDetails.AddRange(TerminalInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
+        }
+        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
+        {
+
+           
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            
+            var TerminalManagementRequest = new TerminalDeinstallationRequestViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantId = terminalReq.MerchantId!=null? terminalReq.MerchantId:"",
+                TerminalId = terminalReq.TerminalId != null ? terminalReq.TerminalId : "",
+                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
+                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+            };
+            StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
+
+            var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getterminaldeinstallationrequest);
+
+            JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
+            var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JObject>();
+            var merchantDetails = TerminalReqObjJarr["ObjMerchantDeinstallationDetail"].Value<JArray>();
+            var terminalDetails = TerminalReqObjJarr["ObjTerminalDeinstallationDetail"].Value<JArray>();
+            List<MerchantDeinstallationDetail> MerchantDeInstallReqList =
+                merchantDetails.ToObject<List<MerchantDeinstallationDetail>>();
+            List<TerminalDeinstallationDetail> TerminalDeInstallReqList =
+               terminalDetails.ToObject<List<TerminalDeinstallationDetail>>();
+            terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
+            terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
+            //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            return terminalReq;
+        }
+        
+        public async Task<string> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel deInstallationRequest)
+        {
+            var deInstallationRequestForms = new TerminalDeinstallationRequestUpdateModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Comments = deInstallationRequest.Comments,
+                DeinstallationType=deInstallationRequest.DeinstallationType,
+                MerchantId=deInstallationRequest.MerchantId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjUpdateTerminalDeInstalRequest = deInstallationRequest.ObjUpdateTerminalDeInstalRequest 
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(deInstallationRequestForms), Encoding.UTF8, "application/json");
+            var deInstallResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.updateterminaldeinstalrequest);
+            JObject deInstallResponseObj = JObject.Parse(JsonConvert.DeserializeObject(deInstallResponse).ToString());
+
+            if (deInstallResponseObj["Status_Code"].ToString() == "200")
+            {
+                var deInstallResponseJarr = deInstallResponseObj["Data"].Value<JArray>();
+                List<SuccessResponse> deInstallResponseList = deInstallResponseJarr.ToObject<List<SuccessResponse>>();
+                return deInstallResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return deInstallResponseObj["Message"].ToString();
+            }
         }
     }
 }
