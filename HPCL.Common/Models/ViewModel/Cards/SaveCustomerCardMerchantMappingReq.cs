@@ -4,9 +4,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class SaveCustomerCardMerchantMappingReq : BaseEntity
     {
-        public string CustomerID { get; set; }
         public string Status { get; set; }
-        public string CreatedBy { get; set; }
         public ObjCardMerchantMap[] ObjCardMerchantMap { get; set; }
     }
 
@@ -14,5 +12,6 @@ namespace HPCL.Common.Models.ViewModel.Cards
     {
         public string CardNo { get; set; }
         public string MerchantId { get; set; }
+        public string CustomerID { get; set; }
     }
 }

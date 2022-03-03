@@ -8,5 +8,6 @@
         public string ZonalId { get; set; }
         public string RegionalId { get; set; }
         public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
     }
 }

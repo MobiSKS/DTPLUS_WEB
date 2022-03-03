@@ -12,6 +12,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 
 namespace HPCL.Service.Services
@@ -78,6 +82,22 @@ namespace HPCL.Service.Services
             MyHPOTCCardCustomerModel custModel = new MyHPOTCCardCustomerModel();
 
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custModel.LoggedInAs = "";
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
+            {
+                custModel.MerchantId = _httpContextAccessor.HttpContext.Session.GetString("MerchantID");
+                custModel.LoggedInAs = "MERCHANT";
+
+                MerchantDetailsResponseOTCCardCustomer merchantDetailsResponseOTCCardCustomer = await GetMerchantDetailsByMerchantId(custModel.MerchantId);
+                if (merchantDetailsResponseOTCCardCustomer.Internel_Status_Code == 1000)
+                {
+                    custModel.Zone = merchantDetailsResponseOTCCardCustomer.ZonalOfficeName;
+                    custModel.OutletName = merchantDetailsResponseOTCCardCustomer.RetailOutletName;
+                    custModel.SalesArea = merchantDetailsResponseOTCCardCustomer.SalesAreaName;
+                    custModel.RegionalOffice = merchantDetailsResponseOTCCardCustomer.RegionalOfficeName;
+                }
+            }
 
             return custModel;
         }
@@ -107,7 +127,7 @@ namespace HPCL.Service.Services
                 merchantDetails.RetailOutletName = merchant.Data[0].RetailOutletName;
                 merchantDetails.SalesAreaName = merchant.Data[0].SalesAreaName;
                 merchantDetails.ZonalOfficeName = merchant.Data[0].ZonalOfficeName;
-                merchantDetails.RegionalOfficeId= merchant.Data[0].RegionalOfficeId;
+                merchantDetails.RegionalOfficeId = merchant.Data[0].RegionalOfficeId;
                 merchantDetails.Internel_Status_Code = merchant.Internel_Status_Code;
                 merchantDetails.Status_Code = merchant.Status_Code;
             }
@@ -116,16 +136,17 @@ namespace HPCL.Service.Services
 
         }
 
-        public async Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId)
+        public async Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID)
         {
             List<CardDetails> lstCardDetails = new List<CardDetails>();
 
-            var requestinfo = new Dictionary<string, string>
+            GetAvailableOTCCardByRegionalIdRequestModel requestinfo = new GetAvailableOTCCardByRegionalIdRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"RegionalId", RegionalId}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionalOfficeId = RegionalId,
+                MerchantId = MerchantID
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
@@ -141,23 +162,13 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
-                       
+
 
             return searchList;
         }
 
         public async Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel)
         {
-            //var driversRequestData = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-            //        {"RegionalId", requestForOTCCardModel.CustomerRegionID.ToString()},
-            //        {"NoofCards", requestForOTCCardModel.NoofCards.ToString()},
-            //        {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-            //    };
-
             customerModel.UserAgent = CommonBase.useragent;
             customerModel.UserIp = CommonBase.userip;
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
@@ -211,6 +222,105 @@ namespace HPCL.Service.Services
             }
 
             return customerModel;
+        }
+
+        public async Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            VerifyMerchantRequestModel requestinfo = new VerifyMerchantRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionalOfficeId = RegionalId,
+                MerchantId = MerchantID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.verifyMerchantByMerchantidAndRegionalid);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+
+            return responseData;
+        }
+
+        public async Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId)
+        {
+            OTCUnAllocatedCardsResponse responseData = new OTCUnAllocatedCardsResponse();
+
+            GetAllUnAllocatedOTCCardsRequestModel requestinfo = new GetAllUnAllocatedOTCCardsRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionalOfficeId = RegionalId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAllUnAllocatedCardsForOtcCard);
+
+            OTCUnAllocatedCard otcUnAllocatedCard = JsonConvert.DeserializeObject<OTCUnAllocatedCard>(response);
+
+            //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            //var jarr = obj["Data"].Value<JArray>();
+            //List<OTCUnAllocatedCardsResponse> searchList = jarr.ToObject<List<OTCUnAllocatedCardsResponse>>();
+            //responseData = searchList[0];
+
+            responseData = otcUnAllocatedCard.Data;
+
+            return responseData;
+        }
+        public async Task<MIDAllocationOfCardsModel> OTCCardsAllocation()
+        {
+            MIDAllocationOfCardsModel custModel = new MIDAllocationOfCardsModel();
+            custModel.Remarks = "";
+            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            return custModel;
+        }
+
+        public async Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            var requestBody = new AllocateCardsToMerchantRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                NoOfCardsAllocated = linkCardsToMerchantModel.NoOfCardsAllocated,
+                MerchantId = linkCardsToMerchantModel.MerchantId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ObjAllocatedCardsToMerchant = linkCardsToMerchantModel.ObjAllocatedCardsToMerchant
+            };
+
+            StringContent Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(Content, WebApiUrl.allocatedOtcCardToMerchant);
+            JObject linkedObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (linkedObj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = linkedObj["Data"].Value<JArray>();
+                //List<SuccessResponse> responseLst = Jarr.ToObject<List<SuccessResponse>>();
+                //return responseLst.First().Reason.ToString();
+                List<CommonResponseData> responseLst = Jarr.ToObject<List<CommonResponseData>>();
+                responseData = responseLst[0];
+                responseData.Internel_Status_Code = Convert.ToInt32(linkedObj["Internel_Status_Code"].ToString());
+            }
+            else
+            {
+                //return linkedObj["Message"].ToString();
+                responseData.Internel_Status_Code = Convert.ToInt32(linkedObj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(linkedObj["Status_Code"].ToString());
+            }
+
+            return responseData;
         }
 
 

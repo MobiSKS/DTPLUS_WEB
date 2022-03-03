@@ -64,6 +64,7 @@
         public static string SaveCustomerMerchantMapUrl = "/dtpwebapi/api/dtplus/customer/add_customer_card_merchant_mapping";
         public static string TerminalInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/search_for_terminal_installation_request";
         public static string InsertInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request";
+        public static string MappingAllowedCardsToMerchantUrl = "/dtpwebapi/api/dtplus/customer/get_mapping_user_cards_to_merchants";
         #endregion
 
         #region Merchant
@@ -77,6 +78,10 @@
         public static string approveRejectMerchant = "api/dtplus/merchant/approve_reject_merchant";
         public static string getRejectedMerchant = "api/dtplus/merchant/get_rejected_merchant";
         public static string getMerchantbyERPCode = "api/dtplus/merchant/get_merchant_by_erp_code";
+        public static string searchforterminalinstallationrequestclose = "api/dtplus/merchant/search_for_terminal_installation_request_close";
+        public static string getreasonlist = "api/dtplus/merchant/get_reason_list";
+        public static string updateterminalinstallationrequestclose = "api/dtplus/merchant/update_terminal_installation_request_close";
+        public static string viewterminalinstallationrequeststatus = "api/dtplus/merchant/view_terminal_installation_request_status";
 
         #endregion
 
@@ -137,6 +142,9 @@
         public static string searchMerchantForCardCreation = "/dtpwebapi/api/dtplus/merchant/search_merchant_for_card_creation";
         public static string getAvailityOtcCard = "/dtpwebapi/api/dtplus/merchant/get_availity_otc_card";
         public static string insertOtcCustomer = "/dtpwebapi/api/dtplus/merchant/insert_otc_customer";
+        public static string verifyMerchantByMerchantidAndRegionalid = "/dtpwebapi/api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
+        public static string getAllUnAllocatedCardsForOtcCard = "/dtpwebapi/api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
+        public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
         #endregion
 
         #region atkalCardCustomer

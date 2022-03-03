@@ -26,39 +26,6 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        //public async Task<CustomerCards> ManageCards()
-        //{
-        //    CustomerCards modals = new CustomerCards();
-
-        //    var statusType = new StatusType
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = CommonBase.userip,
-        //        EntityTypeId = 3
-        //    };
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
-
-        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
-
-        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-        //    var jarr = obj["Data"].Value<JArray>();
-        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
-
-        //    List<StatusModal> lsts = new List<StatusModal>();
-        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-        //    foreach (var item in lst)
-        //    {
-        //        if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7)
-        //        {
-        //            lsts.Add(item);
-        //        }
-        //    }
-        //    modals.StatusModals.AddRange(lsts);
-        //    return modals;
-        //}
-
         public async Task<List<SearchGridResponse>> ManageCards(CustomerCards entity, string editFlag)
         {
             var searchBody = new CustomerCards();
@@ -289,38 +256,6 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        //public async Task<GetCardLimit> SetSaleLimit()
-        //{
-        //    GetCardLimit modals = new GetCardLimit();
-
-        //    var statusType = new StatusType
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = CommonBase.userip,
-        //        EntityTypeId = 3
-        //    };
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
-        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
-
-        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-        //    var jarr = obj["Data"].Value<JArray>();
-        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
-
-        //    List<StatusModal> lsts = new List<StatusModal>();
-        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-        //    foreach (var item in lst)
-        //    {
-        //        if (item.StatusId == 4 || item.StatusId == 1)
-        //        {
-        //            lsts.Add(item);
-        //        }
-        //    }
-        //    modals.CardStatusList.AddRange(lsts);
-        //    return modals;
-        //}
-
         public async Task<List<GetCardLimitResponse>> SetSaleLimit(GetCardLimit entity)
         {
             var searchBody = new GetCardLimit();
@@ -379,54 +314,6 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse[0].Reason;
         }
-
-        //public async Task<GetCcmsLimitAll> SetCcmsLimitForAllCards()
-        //{
-        //    GetCcmsLimitAll modals = new GetCcmsLimitAll();
-
-        //    var statusType = new StatusType
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = CommonBase.userip,
-        //        EntityTypeId = 3
-        //    };
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
-        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
-
-        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-        //    var jarr = obj["Data"].Value<JArray>();
-        //    List<StatusModal> lst = jarr.ToObject<List<StatusModal>>();
-
-        //    List<StatusModal> lsts = new List<StatusModal>();
-        //    lsts.Add(new StatusModal { StatusId = -1, StatusName = "All" });
-        //    foreach (var item in lst)
-        //    {
-        //        if (item.StatusId == 4)
-        //        {
-        //            lsts.Add(item);
-        //        }
-        //    }
-        //    modals.CardStatusList.AddRange(lsts);
-
-        //    var forms = new Dictionary<string, string>
-        //        {
-        //            {"useragent", CommonBase.useragent},
-        //            {"userip", CommonBase.userip},
-        //            {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-        //        };
-
-        //    StringContent contents = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-        //    var responseContent = await _requestService.CommonRequestService(contents, WebApiUrl.GetLimitTypeUrl);
-
-        //    JObject objj = JObject.Parse(JsonConvert.DeserializeObject(responseContent).ToString());
-        //    var jar = objj["Data"].Value<JArray>();
-        //    List<LimitTypeModal> limitType = jar.ToObject<List<LimitTypeModal>>();
-
-        //    modals.LimitTypeModals.AddRange(limitType);
-        //    return modals;
-        //}
 
         public async Task<List<SearchCcmsLimitAllResponse>> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)
         {
@@ -632,7 +519,7 @@ namespace HPCL.Service.Services
             return merchantList;
         }
 
-        public async Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string customerId, string status)
+        public async Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status)
         {
             ObjCardMerchantMap[] arrs = JsonConvert.DeserializeObject<ObjCardMerchantMap[]>(objCardMerchantMaps);
 
@@ -641,7 +528,6 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = customerId,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjCardMerchantMap = arrs,
                 Status = status
@@ -653,6 +539,25 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> searchCcmsCard = jarr.ToObject<List<SuccessResponse>>();
             return searchCcmsCard[0].Reason;
+        }
+
+        public async Task<List<SearchAllowedMerchantResponse>> SearchAllowedMerchant(SearchAllowedMerchant entity)
+        {
+            var reqBody = new SearchAllowedMerchant
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CardNumber = entity.CardNumber,
+                MerchantId = entity.MerchantId,
+                CustomerId = entity.CustomerId
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.MappingAllowedCardsToMerchantUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SearchAllowedMerchantResponse> searchList = jarr.ToObject<List<SearchAllowedMerchantResponse>>();
+            return searchList;
         }
     }
 }
