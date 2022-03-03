@@ -84,10 +84,19 @@ namespace HPCL.Service.Services
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
             custModel.LoggedInAs = "";
 
-            if (_httpContextAccessor.HttpContext.Session.GetString("UserName").ToUpper() == "MERCHANT")
+            if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
             {
                 custModel.MerchantId = _httpContextAccessor.HttpContext.Session.GetString("MerchantID");
                 custModel.LoggedInAs = "MERCHANT";
+
+                MerchantDetailsResponseOTCCardCustomer merchantDetailsResponseOTCCardCustomer = await GetMerchantDetailsByMerchantId(custModel.MerchantId);
+                if (merchantDetailsResponseOTCCardCustomer.Internel_Status_Code == 1000)
+                {
+                    custModel.Zone = merchantDetailsResponseOTCCardCustomer.ZonalOfficeName;
+                    custModel.OutletName = merchantDetailsResponseOTCCardCustomer.RetailOutletName;
+                    custModel.SalesArea = merchantDetailsResponseOTCCardCustomer.SalesAreaName;
+                    custModel.RegionalOffice = merchantDetailsResponseOTCCardCustomer.RegionalOfficeName;
+                }
             }
 
             return custModel;
