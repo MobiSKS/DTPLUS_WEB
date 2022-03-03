@@ -440,17 +440,17 @@ namespace HPCL.Service.Services
 
         public async Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo)
         {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
+            //Request info
+            var requestInfo = new MobilNoDuplicationCheckRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationMobileNo", MobileNo }
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CommunicationMobileNo = MobileNo
             };
 
 
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkmobileNoDuplication);
 
@@ -461,17 +461,17 @@ namespace HPCL.Service.Services
         }
         public async Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid)
         {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
+            //Request info
+            var requestInfo = new EmailDuplicationCheckRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationEmailid", Emailid }
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CommunicationEmailid = Emailid
             };
 
 
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkemailidDuplication);
 
@@ -592,6 +592,26 @@ namespace HPCL.Service.Services
             var sortedtList = ReasonType.OrderBy(x => x.ReasonId).ToList();
             return sortedtList;
         }
+
+        public async Task<string> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            string apiUrl = "v3/rc-advanced";
+
+            var input = new VehicleRegistrationValidateRequestModel()
+            {
+                registrationNumber = RegistrationNumber,
+                consent = "Y",
+                version = "3.1"
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.VehicleRegistrationValidCheckService(content, apiUrl);
+
+            return response;
+        }
+
+
 
     }
 }

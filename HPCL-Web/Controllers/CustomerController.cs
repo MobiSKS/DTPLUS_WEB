@@ -1173,49 +1173,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckEmailDuplication(string Emailid)
         {
-            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckEmailDuplication(Emailid);
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerFormNumber = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"CommunicationEmailid", Emailid }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-
-            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkemailidDuplication, cusFormcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Email Details");
-            //        }
-            //    }
-            //}
-
         }
 
         [HttpPost]
@@ -1269,78 +1229,17 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
         {
-            var data = await _customerService.CheckVehicleRegistrationValid(RegistrationNumber);
+            var data = await _commonActionService.CheckVehicleRegistrationValid(RegistrationNumber);
             return new JsonResult(data);
-
-            //string apiUrl = "v3/rc-advanced";
-            //var data = "";
-            //var input = new
-            //{
-            //    registrationNumber = RegistrationNumber,
-            //    consent = "Y",
-            //    version = "3.1"
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiVehicleRegistrationUrlString())
-            //{
-            //    HttpResponseMessage response = await client.PostAsJsonAsync(apiUrl, input);
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        data = await response.Content.ReadAsStringAsync();
-            //    }
-            //}
-
-            //return new JsonResult(data);
         }
 
         [HttpPost]
         public async Task<JsonResult> CheckPanNoDuplication(string PanNo)
         {
             CustomerInserCardResponseData customerInserCardResponseData = new CustomerInserCardResponseData();
-            customerInserCardResponseData = await _customerService.CheckPanNoDuplication(PanNo);
+            customerInserCardResponseData = await _commonActionService.CheckPanNoDuplication(PanNo);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerPanInfo = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"ZonalId", "0"},
-            //            {"RegionalId", "0"},
-            //            {"IncomeTaxPan", PanNo }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-
-            //    StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkPanNoDuplication, cusPancontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            return Json("Failed to load Mobile Details");
-            //        }
-            //    }
-            //}
         }
 
 

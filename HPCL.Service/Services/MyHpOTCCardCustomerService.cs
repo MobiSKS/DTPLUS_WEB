@@ -96,6 +96,8 @@ namespace HPCL.Service.Services
                     custModel.OutletName = merchantDetailsResponseOTCCardCustomer.RetailOutletName;
                     custModel.SalesArea = merchantDetailsResponseOTCCardCustomer.SalesAreaName;
                     custModel.RegionalOffice = merchantDetailsResponseOTCCardCustomer.RegionalOfficeName;
+                    custModel.RegionalOfficeId = merchantDetailsResponseOTCCardCustomer.RegionalOfficeId;
+                    custModel.Internel_Status_Code = merchantDetailsResponseOTCCardCustomer.Internel_Status_Code;
                 }
             }
 

@@ -32,9 +32,7 @@ namespace HPCL.Service.Interfaces
         Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus);
         Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID);
         Task<CustomerInserCardResponseData> CheckformnumberDuplication(string FormNumber);
-        Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid);
         Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo);
-        Task<string> CheckVehicleRegistrationValid(string RegistrationNumber);
-        Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo);
+
     }
 }

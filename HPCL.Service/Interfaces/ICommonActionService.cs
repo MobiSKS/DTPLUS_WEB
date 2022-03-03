@@ -34,5 +34,6 @@ namespace HPCL.Service.Interfaces
         Task<string> PANValidation(string PANNumber);
         Task<List<CustomerRegionModel>> GetregionalOfficeList();
         Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason();
+        Task<string> CheckVehicleRegistrationValid(string RegistrationNumber);
     }
 }

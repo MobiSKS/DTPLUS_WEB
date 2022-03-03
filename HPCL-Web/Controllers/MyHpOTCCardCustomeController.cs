@@ -6,9 +6,12 @@ using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -209,6 +212,13 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> SuccessOTCCardsAllocation()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            var data = await _commonActionService.CheckVehicleRegistrationValid(RegistrationNumber);
+            return new JsonResult(data);
         }
 
     }
