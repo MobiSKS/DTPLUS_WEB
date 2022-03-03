@@ -64,6 +64,7 @@
         public static string SaveCustomerMerchantMapUrl = "/dtpwebapi/api/dtplus/customer/add_customer_card_merchant_mapping";
         public static string TerminalInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/search_for_terminal_installation_request";
         public static string InsertInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request";
+        public static string MappingAllowedCardsToMerchantUrl = "/dtpwebapi/api/dtplus/customer/get_mapping_user_cards_to_merchants";
         #endregion
 
         #region Merchant

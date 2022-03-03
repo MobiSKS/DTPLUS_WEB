@@ -13,7 +13,7 @@ namespace HPCL_Web.Controllers
             _securityService = securityService;
         }
 
-        public async Task<IActionResult> UserCreationApproval()
+        public IActionResult UserCreationApproval()
         {
             return View();
         }
@@ -30,7 +30,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewRbeDetails(string userName)
         {
-            var viewRbeDetailsList = _securityService.ViewRbeDetails(userName);
+            var viewRbeDetailsList = await _securityService.ViewRbeDetails(userName);
 
             ModelState.Clear();
             return Json(new { viewRbeDetailsList = viewRbeDetailsList });
