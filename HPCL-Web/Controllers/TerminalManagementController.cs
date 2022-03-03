@@ -116,9 +116,17 @@ namespace HPCL_Web.Controllers
             return Json(result);
         }
 
-        public async Task<IActionResult> TerminalDeInstallationRequestClose()
+        public async Task<IActionResult> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.TerminalDeInstallationRequestClose(terminalReq);
+            return View(modals);
         }
+        [HttpPost]
+        public async Task<IActionResult> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)
+        {
+            var result = await _TerminalService.SubmitDeinstallationRequestClose(TerminalDeinstallationClose);
+            return Json(result);
+        }
+        
     }
 }

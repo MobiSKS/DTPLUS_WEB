@@ -19,5 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq);
         Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq);
         Task<string> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate);
+        Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq);
+        Task<string> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose);
     }
 }
