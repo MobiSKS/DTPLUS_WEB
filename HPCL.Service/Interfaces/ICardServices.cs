@@ -27,6 +27,7 @@ namespace HPCL.Service.Interfaces
         Task<List<CardListResponse>> GetCardList();
         Task<Tuple<List<GetCustomerDetails>, List<GetCustomerCardDetails>>> ManageMapping(GetCustomerDetailsMapMerchant entity);
         Task<List<MerchantMapResponse>> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity);
-        Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string customerId, string status);
+        Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status);
+        Task<List<SearchAllowedMerchantResponse>> SearchAllowedMerchant(SearchAllowedMerchant entity);
     }
 }

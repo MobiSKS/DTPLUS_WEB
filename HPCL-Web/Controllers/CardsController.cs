@@ -14,7 +14,7 @@ namespace HPCL_Web.Controllers
             _cardService = cardServices;
         }
 
-        public async Task<IActionResult> ManageCards()
+        public IActionResult ManageCards()
         {
             return View();
         }
@@ -70,7 +70,7 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> AcDcCardSearch()
+        public IActionResult AcDcCardSearch()
         {
             return View();
         }
@@ -102,7 +102,7 @@ namespace HPCL_Web.Controllers
             return Json(new { searchList = searchList });
         }
 
-        public async Task<IActionResult> SetSaleLimit()
+        public IActionResult SetSaleLimit()
         {
             return View();
         }
@@ -126,7 +126,7 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> SetCcmsLimitForAllCards()
+        public IActionResult SetCcmsLimitForAllCards()
         {
             return View();
         }
@@ -150,7 +150,7 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> SetCcmsForIndCards()
+        public IActionResult SetCcmsForIndCards()
         {
             return View();
         }
@@ -184,9 +184,16 @@ namespace HPCL_Web.Controllers
             return View(vGrid);
         }
 
-        public async Task<IActionResult> MappingCardToMerchant()
+        public IActionResult MappingCardToMerchant()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> MappingCardToMerchant(SearchAllowedMerchant entity)
+        {
+            var searchList = await _cardService.SearchAllowedMerchant(entity);
+            return Json(new { searchList = searchList });
         }
 
         [HttpPost]
@@ -196,7 +203,7 @@ namespace HPCL_Web.Controllers
             return Json(new { cardList = cardList });
         }
 
-        public async Task<IActionResult> ManageMapping()
+        public IActionResult ManageMapping()
         {
             return View();
         }
@@ -220,9 +227,17 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> SaveCustomerMappingMerchant(string objCardMerchantMaps, string customerId, string status)
+        public async Task<JsonResult> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status)
         {
-            var reason = await _cardService.SaveCustomerMappingMerchant(objCardMerchantMaps, customerId, status);
+            var reason = await _cardService.SaveCustomerMappingMerchant(objCardMerchantMaps, status);
+            ModelState.Clear();
+            return Json(reason);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteCustomerMappingMerchant(string objCardMerchantMaps, string status)
+        {
+            var reason = await _cardService.SaveCustomerMappingMerchant(objCardMerchantMaps, status);
             ModelState.Clear();
             return Json(reason);
         }

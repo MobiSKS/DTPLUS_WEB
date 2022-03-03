@@ -467,24 +467,27 @@
         console.log(cardArray, "cardArray");
         console.log(merchantArray, "merchantArray");
 
+        var customerId = $("#CustomerDefaultVal").val();
+
         for (var i = 0; i < cardArray.length; i++) {
 
             for (var j = 0; j < merchantArray.length; j++) {
 
                 cardMerchantMap.push({
                     cardNo: cardArray[i].cardNo,
-                    merchantId: merchantArray[j].merchantId
+                    merchantId: merchantArray[j].merchantId,
+                    customerId: customerId
                 });
             }
         }
 
-        var customerId = $("#CustomerDefaultVal").val();
+      
         var status = $('input[name="status"]:checked').val();
 
          $.ajax({
                 type: 'POST',  // http method
              url: '@Url.Action("SaveCustomerMappingMerchant", "Cards")',
-             data: { objCardMerchantMaps: JSON.stringify(cardMerchantMap), customerId: customerId, status: status },
+             data: { objCardMerchantMaps: JSON.stringify(cardMerchantMap), status: status },
                 dataType: "json",
              success: function (data) {
                  alert(data);

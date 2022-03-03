@@ -1,5 +1,7 @@
-﻿
+﻿@model HPCL.Common.Models.ViewModel.Cards.SearchAllowedMerchant
 @using Microsoft.AspNetCore.Http;
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -7,7 +9,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Cards</a> </li>
             <li class="breadcrumb-item font-weight-light">Mapping User Cards to Merchants</li>
         </ul>
-        <form>
+        <form method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="MappingCardToMerchant" data-ajax-method="POST" data-ajax-success="OnSuccessGetDetails" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -19,10 +21,19 @@
                                         <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-
-
-                                                <select name="zonalOffice" id="" class="form-control cardListCls">
-                                                </select>
+                                                @{
+                                                    if (Context.Session.GetString("LoginType") == "Customer")
+                                                    {
+                                                        <select name="CardNumber" id="cardNumberVal" class="form-control cardListCls">
+                                                            <option value="-1">--Select Card--</option>
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="text" name="CardNumber" class="form-control" />
+                                                    }
+                                                }
+                                                @Html.ValidationMessageFor(m => m.CardNumber, "", new {@id= "cardNumberValErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -32,7 +43,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="MerchantID" type="text" value="">
+                                                @Html.TextBoxFor(m => m.MerchantId, new {@id="merchantIdVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.MerchantId, "", new {@id= "merchantIdValErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +56,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerId, new {@id="customerIdVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id= "customerIdValErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -53,7 +66,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
+                                    <button class="btn btn_primary" id="searchFire" type="button" onclick="checkSearchVal()">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <a class="btn btn_primary" href="@Url.Action("ManageMapping")">Manage Card Mapping</a>
@@ -67,338 +80,30 @@
                     </div>
                 </div>
 
-                @*<div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Details</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-3 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <div class="font-weight-bold text-center col-12">
-                                            Customer ID
-                                        </div>
-                                        <div class="text-center col-12">
-                                            2000000001
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <div class="font-weight-bold text-center col-12">
-                                            ZO
-                                        </div>
-                                        <div class="text-center col-12">
-                                            WEST ZONE
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <div class="font-weight-bold text-center col-12">
-                                            RO
-                                        </div>
-                                        <div class="text-center col-12">
-                                            MUMBAI RRO
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <div class="font-weight-bold text-center col-12">
-                                            Customer Name
-                                        </div>
-                                        <div class="text-center col-12">
-                                            VERIFONE INDIA SALES PVT LTD
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
+                <div id="fetchDetails" style="display:none;">
 
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Select Card Criteria for Mapping</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-12 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <div class="col-12">
-                                            <div class="form-check form-check-inline pr-3">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                                <label class="form-check-label" for="inlineRadio1">Individual Card</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                                <label class="form-check-label" for="inlineRadio2">All Cards</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                    <table id="getDetails" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>Select</th>
+                                <th><input type="checkbox" name="allListCheck" class="checkAll" /></th>
                                 <th>Card Number</th>
-                                <th>Vehicle Number</th>
-                                <th>Last Transaction Date</th>
+                                <th>Customer ID</th>
+                                <th>Merchant ID</th>
+                                <th>Merchant Name</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>Jan 7 2022 2:00PM</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>Jan 8 2022 5:00PM</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7000090000000253</td>
-                                <td>MH09999</td>
-                                <td>NA</td>
-                            </tr>
-                        </tbody>
                     </table>
-                </div>
-                <div class="clearfix"></div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Merchant Search</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="MerchantID" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">State <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">Delhi</option>
-                                                    <option value="9">Mumbai</option>
-                                                    <option value="7">Uttar Pradesh</option>
-                                                    <option value="9">Haryana</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">Delhi</option>
-                                                    <option value="9">Noida</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">City <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="city" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Highway <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="city" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Highway No <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">Delhi</option>
-                                                    <option value="9">Noida</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+
+                    <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" onclick="blockMap()">DELETE MAPPING</button>
+                        </div>
                     </div>
-                </div>*@
+
+                </div>
 
             </div>
         </form>
@@ -408,6 +113,56 @@
 
 
 <script type="text/javascript">
+
+    function checkSearchVal() {
+
+        var mapMerchantID = /^(?=(3))[0-9]{10}$/;
+        var mapCustomerID = /^(?=(2))[0-9]{10}$/;
+
+        //var $inputs = $('input[name=CardNumber],input[name=MerchantId],input[name=CustomerId]');
+
+        //$inputs.on('input', function () {
+        //    $inputs.not(this).prop('required', !$(this).val().length);
+        //});
+
+        //if ($('#cardNumberVal').val() == "") {
+        //    $('#cardNumberValErr').text("Card Number should not be empty");
+        //    return false;
+        //}
+
+        //if ($('#merchantIdVal').val() == "") {
+        //    $('#merchantIdValErr').text("Merchant ID should not be empty");
+        //    return false;
+        //}
+
+        if (!$('#merchantIdVal').val() == "") {
+            if (!$('#merchantIdVal').val().match(/^(?=(3))[0-9]{10}$/)) {
+                $('#merchantIdValErr').text("Should start with 3 and 10 Digits Only");
+                return false;
+            }
+        }
+
+        //if ($('#customerIdVal').val() == "") {
+        //    $('#customerIdValErr').text("Customer ID should not be empty");
+        //    return false;
+        //}
+
+        if (!$('#customerIdVal').val() == "") {
+            if (!$('#customerIdVal').val().match(/^(?=(2))[0-9]{10}$/)) {
+                $('#customerIdValErr').text("Should start with 2 and 10 Digits Only");
+                return false;
+            }
+        }
+
+        $('#cardNumberValErr').text("");
+        $('#merchantIdValErr').text("");
+        $('#customerIdValErr').text("");
+
+        if ($("#searchFire").valid()) {
+            $("#searchFire").submit();
+        }
+    }
+
 
     $(document).ready(function () {
 
@@ -424,12 +179,73 @@
                  });
              },
              error: function (jqXhr, textStatus, errorMessage) {
-                 alert("Error Populating Customer Region");
+                 alert("Error Populating Cards");
              }
          });
     });
 
-    function OnSuccessCustomerMapMerchant(data) {
+    function OnSuccessGetDetails(data) {
         console.log(data);
+
+        $("#getDetails td").parent().remove();
+
+        for (var i = 0; i < data.searchList.length; i++) {
+
+            var rows = "<tbody><tr>"
+                + "<td><input type='checkbox' class='rowSelect' name='rowCheck'></td>"
+                + "<td><span class='cardNoVal'>" + (data.searchList[i].cardNo || '') + "</span></td>"
+                + "<td><span class='merchantVal'>" + (data.searchList[i].merchantID || '') + "</span></td>"
+                + "<td><span class='customerVal'>" + (data.searchList[i].customerID || '') + "</span></td>"
+                + "<td>" + (data.searchList[i].merchantName || '') + "</td>"
+                + "<td>" + (data.searchList[i].status || '') + "</td>"
+                + "</tr ></tbody>";
+
+            $('#getDetails').append(rows);
+        }
+
+        document.getElementById("fetchDetails").style.display = "block";
     }
+
+    $(".checkAll").click(function () {
+        if (this.checked) {
+            $(".rowSelect").prop("checked", true);
+        } else {
+            $(".rowSelect").prop("checked", false);
+        }
+    });
+
+    function blockMap() {
+
+        var merchantArray = [];
+
+        $("#getDetails input[type=checkbox]:checked").each(function () {
+            var row = $(this).closest("tr");
+            var cardNo = row.find('.cardNoVal').text();
+            var merchantId = row.find('.merchantVal').text();
+            var customerId = row.find('.customerVal').text();
+
+            merchantArray.push({
+                cardNo: cardNo,
+                merchantId: merchantId,
+                customerId: customerId
+            });
+        });
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("DeleteCustomerMappingMerchant", "Cards")',
+            data: { objCardMerchantMaps: JSON.stringify(merchantArray), status: "Block" },
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+            },
+            error: function (data) {
+                alert(data);
+            }
+        });
+
+    }
+
+
 </script>
