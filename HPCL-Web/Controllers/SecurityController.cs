@@ -1,10 +1,12 @@
-﻿using HPCL.Common.Models.ViewModel.Security;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class SecurityController : Controller
     {
         private readonly ISecurityService _securityService;

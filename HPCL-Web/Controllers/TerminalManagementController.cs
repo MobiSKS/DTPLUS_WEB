@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class TerminalManagementController : Controller
     {
 

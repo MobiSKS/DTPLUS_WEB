@@ -1,3 +1,4 @@
+using HPCL.Common.Helper;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
 using HPCL.Service.Interfaces;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class CustomerFeeWaiverController : Controller
     {
         private readonly ICustomerFeeWaiverServices _customerFeeWaiverServices;

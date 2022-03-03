@@ -1,10 +1,12 @@
-﻿using HPCL.Common.Models.ViewModel.Locations;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.Locations;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class LocationsController : Controller
     {
         private readonly ILocationServices _locationServices;

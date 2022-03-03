@@ -20,6 +20,7 @@ using HPCL.Service.Interfaces;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class DriverCardCustomerController : Controller
     {
 
