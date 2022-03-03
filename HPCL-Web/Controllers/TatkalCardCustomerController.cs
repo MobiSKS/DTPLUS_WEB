@@ -17,7 +17,10 @@ namespace HPCL_Web.Controllers
         {
             _tatkalCardCustomerService = tatkalCardCustomerService;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> RequestForTatkalCard()
         {
             TatkalCustomerCardRequestInfo custMdl = new TatkalCustomerCardRequestInfo();

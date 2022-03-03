@@ -21,7 +21,10 @@ namespace HPCL_Web.Controllers
         {
             _TerminalService = ViewServices;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> ManageTerminal()
         {
             return View();

@@ -25,6 +25,10 @@ namespace HPCL_Web.Controllers
             _myHpOTCCardCustomerService = myHpOTCCardCustomerService;
             _commonActionService = commonActionService;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> CustomerCardCreation()
         {
             MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();

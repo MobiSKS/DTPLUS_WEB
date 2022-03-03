@@ -14,7 +14,10 @@ namespace HPCL_Web.Controllers
         {
             _locationServices = locationServices;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> HeadOfficeDetails()
         {
             return View();
