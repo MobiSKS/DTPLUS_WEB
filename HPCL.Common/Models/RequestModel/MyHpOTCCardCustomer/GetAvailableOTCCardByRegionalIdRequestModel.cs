@@ -8,5 +8,6 @@ namespace HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer
     public class GetAvailableOTCCardByRegionalIdRequestModel : BaseEntity
     {
         public string MerchantId { get; set; }
+        public string RegionalOfficeId { get; set; }        
     }
 }

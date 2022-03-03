@@ -82,6 +82,13 @@ namespace HPCL.Service.Services
             MyHPOTCCardCustomerModel custModel = new MyHPOTCCardCustomerModel();
 
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custModel.LoggedInAs = "";
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("UserName").ToUpper() == "MERCHANT")
+            {
+                custModel.MerchantId = _httpContextAccessor.HttpContext.Session.GetString("MerchantID");
+                custModel.LoggedInAs = "MERCHANT";
+            }
 
             return custModel;
         }
@@ -129,7 +136,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                RegionalId = RegionalId,
+                RegionalOfficeId = RegionalId,
                 MerchantId = MerchantID
             };
 
