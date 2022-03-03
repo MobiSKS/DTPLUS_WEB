@@ -150,6 +150,7 @@
         public static string verifyMerchantByMerchantidAndRegionalid = "/dtpwebapi/api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
         public static string getAllUnAllocatedCardsForOtcCard = "/dtpwebapi/api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
         public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
+        public static string ViewOTCCardRequest = "/dtpwebapi/api/dtplus/merchant/view_requested_otc_card";
         #endregion
 
         #region atkalCardCustomer
