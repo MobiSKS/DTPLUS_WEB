@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.Customer;
+﻿using HPCL.Common.Models;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.Officers;
@@ -119,9 +120,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetAvailableOTCCardByRegionalId(string RegionalId)
+        public async Task<JsonResult> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID)
         {
-            List<CardDetails> lstCardDetails = await _myHpOTCCardCustomerService.GetAvailableOTCCardByRegionalId(RegionalId);
+            List<CardDetails> lstCardDetails = await _myHpOTCCardCustomerService.GetAvailableOTCCardByRegionalId(RegionalId, MerchantID);
 
             if (lstCardDetails != null)
             {
@@ -170,6 +171,45 @@ namespace HPCL_Web.Controllers
             return Json(customerInserCardResponseData);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
+        {
+            CommonResponseData commonResponseData = new CommonResponseData();
+            commonResponseData = await _myHpOTCCardCustomerService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
+
+            return Json(commonResponseData);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAllUnAllocatedCardsForOtcCard(string RegionalId)
+        {
+            OTCUnAllocatedCardsResponse otcUnAllocatedCardsResponse = new OTCUnAllocatedCardsResponse();
+            otcUnAllocatedCardsResponse = await _myHpOTCCardCustomerService.GetAllUnAllocatedCardsForOtcCard(RegionalId);
+
+            return Json(new { NoOfUnAllocatedCard = otcUnAllocatedCardsResponse.ObjNoOfUnAllocatedCard, UnAllocatedCard = otcUnAllocatedCardsResponse.ObjUnAllocatedCard });
+        }
+
+        public async Task<IActionResult> OTCCardsAllocation()
+        {
+            MIDAllocationOfCardsModel custMdl = new MIDAllocationOfCardsModel();
+            custMdl = await _myHpOTCCardCustomerService.OTCCardsAllocation();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel)
+        {
+            CommonResponseData commonResponseData = new CommonResponseData();
+            commonResponseData = await _myHpOTCCardCustomerService.SaveOTCCardsAllocation(linkCardsToMerchantModel);
+
+            return Json(new { commonResponseData = commonResponseData });
+        }
+
+        public async Task<IActionResult> SuccessOTCCardsAllocation()
+        {
+            return View();
+        }
 
     }
 }

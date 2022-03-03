@@ -92,6 +92,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public int RegionalOfficeId { get; set; }
         public int Internel_Status_Code { get; set; }
         public string Remarks { get; set; }
+        public string LoggedInAs { get; set; }
     }
 
     [Serializable()]

@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel;
+﻿using HPCL.Common.Models.RequestModel.TerminalManagement;
+using HPCL.Common.Models.ViewModel;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -61,19 +62,28 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> TerminalInstallationRequestClose()
+        public async Task<IActionResult> TerminalInstallationRequestClose(TerminalManagementRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.TerminalInstallationRequestClose(terminalReq);
+            return View(modals);
         }
+        [HttpPost]
+        public async Task<IActionResult> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel TerminalManagementRequestModel)
+        {
+            var result = await _TerminalService.SubmitTerminalRequestClose(TerminalManagementRequestModel);
+            return Json(result);
+        }
+
 
         public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus()
         {
             return View();
         }
 
-        public async Task<IActionResult> ViewTerminalInstallationRequestStatus()
+        public async Task<IActionResult> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.ViewTerminalInstallationRequestStatus(terminalReq);
+            return View(modals);
         }
 
         public async Task<IActionResult> ViewTerminalMerchantMappingStatus()

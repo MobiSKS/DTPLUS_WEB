@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HPCL.Service.Interfaces
 {
@@ -16,8 +18,12 @@ namespace HPCL.Service.Interfaces
 
         Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID);
 
-        Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId);
+        Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID);
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel);
+        Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID);
+        Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId);
+        Task<MIDAllocationOfCardsModel> OTCCardsAllocation();
+        Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
 
     }
 }

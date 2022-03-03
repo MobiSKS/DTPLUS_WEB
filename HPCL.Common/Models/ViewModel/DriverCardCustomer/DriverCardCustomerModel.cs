@@ -88,6 +88,20 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
 
         [Required(ErrorMessage = "Document Type is Required")]
         public string DocumentType { get; set; }
+
+        public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
+
+        [Required(ErrorMessage = "Beneficiary Name is Required")]
+        public string BeneficiaryName { get; set; }
+
+        [Required(ErrorMessage = "Relation With Beneficiary is Required")]
+        public string RelationWithBeneficiary { get; set; }
+
+        [Required(ErrorMessage = "Beneficiary Mobile is Required")]
+        public string BeneficiaryMobile { get; set; }
+
+
     }
 
 

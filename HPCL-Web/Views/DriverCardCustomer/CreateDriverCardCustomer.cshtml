@@ -1,4 +1,4 @@
-﻿
+﻿@model HPCL.Common.Models.ViewModel.DriverCardCustomer.DriverCardCustomerModel
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Driver Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">Create Driver Card Customer </li>
         </ul>
-        <form>
+        <form name="DriverCardCustomerCreationForm" method="post" asp-action="CreateDriverCardCustomer" class="w-100" autocomplete="off">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -18,7 +18,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="MerchantID" type="text" value="">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="MerchantId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -26,10 +27,10 @@
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button">Search</button>
+                                            <button class="btn btn_primary" type="button" id="btnSearch">Search</button>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button">Reset</button>
+                                            <button class="btn btn_primary" type="button" id="btnReset">Reset</button>
                                         </div>
                                     </div>
                                 </div>
@@ -45,7 +46,7 @@
                                             Retail Outlet Name
                                         </div>
                                         <div class="col-md-7 col-12">
-                                            DTPLUS Test One for Testing
+                                            <label class="font-weight-normal col-md-4 col-12" id="lblOutletName"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +56,7 @@
                                             Zonal Office
                                         </div>
                                         <div class="col-md-7 col-12 col-12">
-                                            North Zone
+                                            <label class="font-weight-normal col-md-4 col-12" id="lblZone"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +66,7 @@
                                             Regional Office
                                         </div>
                                         <div class="col-md-7 col-12 col-12 px-0">
-                                            Chandigarh Pro
+                                            <label class="font-weight-normal col-md-4 col-12" id="lblRegionalOffice"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -85,18 +86,23 @@
                                         <label class="font-weight-normal col-md-4 col-12">Form Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="formnumber" type="text" value="">
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="formNumber_error"></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customername" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", @readonly = "readonly" })
+                                                <span class="error" id="CardNumber_error"></span>
                                             </div>
+                                        </div>
+                                        <div class="col-md-2 px-0">
+                                            <button class="btn btn_primary" type="button" id="btnCard1" style="height:30px;" data-toggle="modal" data-target="#myModalCard1" onclick="LoadCard1Deatils()">ADD</button>
                                         </div>
                                     </div>
                                 </div>
@@ -104,10 +110,24 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Driver Name <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Driver Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="cardname" type="text" value="">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.DriverTitle, new[]{
+                                                           new SelectListItem(){ Text = "Title", Value = "0" },
+                                                           new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                           new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                           new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                           }, null, new { @class = "form-control" })
+                                                    </div>
+                                                    <span class="error" id="salutaion_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.DriverName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    <span class="error" id="customername_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +148,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="city" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="communicationCityName_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -138,7 +159,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Pin Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="pincode" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="communicationPincode_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -150,11 +172,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">NORTH ZONE</option>
-                                                    <option value="9">WEST ZONE</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                <span class="error" id="comm_states_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +183,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="email" type="email" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="comm_email_error"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -173,10 +193,15 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="officeph" type="text" value="">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -186,7 +211,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="mobile" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <div class="error" id="comm_mobileNumber_error"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +224,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Driving License <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="text" value="">
+                                                @Html.TextBoxFor(m => m.DrivingLicence, new { @class = "form-control", maxlength = "50", autocomplete = "off" })
+                                                <div class="error" id="DrivingLicence_error"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -208,7 +235,9 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <textarea class="form-control" id="Textarea2" rows="3"></textarea>
+                                                @*<textarea class="form-control" id="Textarea2" rows="3"></textarea>*@
+                                                @Html.TextBoxFor(m => m.CommunicationAddress, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="comm_address1_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -230,11 +259,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Document Type <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">License</option>
-                                                    <option value="9">PAN</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.DocumentType, new SelectList(Model.DocumentTypeMdl, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })
+                                                <span class="error" id="DocumentType_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -244,7 +270,10 @@
                                         <label class="font-weight-normal col-md-5 col-12">Address Proof <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                                @*<input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                                <span class="error" id="DocumentType_error"></span>*@
+                                                @Html.TextBoxFor(m => m.AddressProof, new { @id = "AddressProof", @class = "form-control", Type = "file" })
+                                                @Html.ValidationMessageFor(m => m.AddressProof, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +285,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">File Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="filename" type="text" value="">
+                                                @*<input class="form-control" id="" name="filename" type="text" value="">*@
+                                                @Html.TextBoxFor(m => m.FileName, new { @class = "form-control", autocomplete = "off" })
                                             </div>
                                         </div>
                                     </div>
@@ -277,11 +307,13 @@
                                         <label class="font-weight-normal col-md-2 col-12">If DTP Customer <sup class="text-danger">*</sup></label>
                                         <div class="col-md-10 col-12">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">*@
+                                                @Html.RadioButtonFor(m => m.IfDTPCustomer, "Yes", new { @id = "rbtnDTPCustomerYes" })
                                                 <label class="form-check-label" for="inlineRadio1">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
+                                                @Html.RadioButtonFor(m => m.IfDTPCustomer, "No", new { @id = "rbtnDTPCustomerNo" })
                                                 <label class="form-check-label" for="inlineRadio2">No</label>
                                             </div>
                                         </div>
@@ -294,7 +326,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="custonerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="CustomerId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -304,7 +337,8 @@
                                         <label class="font-weight-normal col-md-5 col-12">Customer Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customername" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="CustomerName_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +350,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="custonerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                <span class="error" id="incomeTaxPan_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -337,7 +372,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Beneficiary Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="baneficieryname" type="text" value="">
+                                                @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="BeneficiaryName_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -347,7 +383,8 @@
                                         <label class="font-weight-normal col-md-5 col-12">Relation with Beneficiary <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="relationBene" type="text" value="">
+                                                @Html.TextBoxFor(m => m.RelationWithBeneficiary, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="RelationWithBeneficiary_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -359,7 +396,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Beneficiary Mobile <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="custonerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.BeneficiaryMobile, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="BeneficiaryMobile_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -375,7 +413,7 @@
                     <div class="px-2">
                         <button class="btn btn_primary" type="button">Submit</button>
                     </div>
-                    <div class="px-2">
+                    <div class="px-2">  
                         <button class="btn btn_primary" type="button">Reset</button>
                     </div>
                 </div>

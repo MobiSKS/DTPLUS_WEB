@@ -2,6 +2,7 @@
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
@@ -498,15 +499,15 @@ namespace HPCL.Service.Services
         }
         public async Task<List<CustomerRegionModel>> GetregionalOfficeList()
         {
-            var CustomerRegion = new Dictionary<string, string>
+            CustomerRegionRequestModel customerRegion = new CustomerRegionRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"ZonalID",  "0" }
+                UserAgent=CommonBase.useragent,
+                UserIp= CommonBase.userip,
+                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZonalId = "0"
             };
 
-            StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
+            StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
 
             var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.getRegionalOffice);
 
@@ -570,5 +571,27 @@ namespace HPCL.Service.Services
             }
             return lsts;
         }
+
+
+        public async Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getreasonlist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TerminalManagementCloseReasonModel> ReasonType = jarr.ToObject<List<TerminalManagementCloseReasonModel>>();
+            var sortedtList = ReasonType.OrderBy(x => x.ReasonId).ToList();
+            return sortedtList;
+        }
+
     }
 }
