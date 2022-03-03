@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 
 namespace HPCL.Service.Interfaces
 {
@@ -24,6 +25,8 @@ namespace HPCL.Service.Interfaces
         Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId);
         Task<MIDAllocationOfCardsModel> OTCCardsAllocation();
         Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
+        Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity);
+        Task<MIDAllocationOfCardsModel> ViewOTCCards();
 
     }
 }
