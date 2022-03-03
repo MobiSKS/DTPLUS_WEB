@@ -83,7 +83,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
 
-        public string CardNumber1  { get; set; }
+        public string CardNumber1 { get; set; }
         public string CardNumber2 { get; set; }
         public string VehicleNo1 { get; set; }
         public string VehicleNo2 { get; set; }
@@ -93,6 +93,10 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public int Internel_Status_Code { get; set; }
         public string Remarks { get; set; }
         public string LoggedInAs { get; set; }
+        public string Zone { get; set; }
+        public string RegionalOffice { get; set; }
+        public string SalesArea { get; set; }
+        public string OutletName { get; set; }
     }
 
     [Serializable()]
