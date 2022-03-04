@@ -1,0 +1,275 @@
+﻿@model HPCL.Common.Models.ViewModel.TatkalCardCustomer.TatkalViewRequestModel
+@{
+    ViewData["Title"] = "Request Tatkal Card";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+<div class="mt-3 w-100">
+    <marquee width="100%" direction="left">
+        Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+    </marquee>
+</div>
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Tatkal Cards Customer</a> </li>
+            <li class="breadcrumb-item">View Tatkal Cards</li>
+        </ul>
+        <form method="post" data-ajax="true" data-ajax-controller="TatkalCardCustomer" data-ajax-action="ViewAllocatedMapCard" data-ajax-method="POST" data-ajax-failure="OnFailure">
+
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Tatkal Cards</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                <span class="error" id="zonal_office_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                <span class="error" id="CustomerRegionID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" onclick="showGrid()" type="submit">Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div>
+                            <div class="px-3">
+                                <table id="TatkalView" class="table table-bordered" style="display:none;">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayName("SR")
+                                            </th>
+
+                                            <th>
+                                                @Html.DisplayName("ZO")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("RO")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Card Number")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Requested By")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Card Process Date")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Mapping Status")
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    //debugger;
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    var zonalID = $("#ZonalOfficeId").val();
+    var regionalID = $("#RegionalOfcIdVal").val();
+
+      var fromdate = $("#FromDate").val();
+    var todate = $("#ToDate").val();
+    var notFoundError = "";
+    @*"@ViewBag.NotFoundError";*@
+
+    $(document).ready(function () {
+
+        //if (notFoundError == "") {
+            if (fromdate == "") {
+                $("#FromDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+            }
+            else {
+                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+
+            if (todate == "") {
+                $("#ToDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+                setDates();
+            }
+            else {
+                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+            getMerchantRegionalOfc();
+        //}
+        //else {
+        //    alert("Details not found");
+        //}
+    });
+    //$("#btnReset").click(function () {
+    //    //debugger;
+    //    setDates();
+
+    //});
+    function setDates() {
+        //debugger;
+
+        var fromd = new Date();
+        var fromMonth = fromd.getMonth();
+        var fromday = fromd.getDate();
+        var fromdate = (fromday < 10 ? '0' : '') + fromday + '-' +
+            (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
+            fromd.getFullYear();
+
+        var d = new Date();
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            d.getFullYear();
+
+
+        $("#FromDate").val(fromdate);
+        $("#ToDate").val(output);
+        $("#ZonalOfficeId").val(0);
+        getMerchantRegionalOfc();
+    };
+
+
+    function showGrid() {
+        if ($("input:text").val() == "") {
+            document.getElementById('TatkalView').style.display = 'none';
+        }
+        if (($("input:text").val() != "")) {
+            document.getElementById('TatkalView').style.display = 'inline-table';
+        }
+    }
+
+    function ResetFields() {
+        $("input:text").each(function () {
+            $(this).val("");
+        });
+        setDates();
+        $("#CustomerRegionID").val(0);
+        document.getElementById("CustomerRegionID_error").innerHTML = "";
+
+        //$("#ViewCustomerCard  td").parent().remove();
+        document.getElementById('TatkalView ').style.display = 'none';
+    };
+
+    $("#btnSearch").click(function () {
+        var RegionID = document.getElementById("CustomerRegionID").value;
+        console.log(RegionID);
+        if (RegionID == '' || RegionID == "0") {
+            //alert('Enter Vehicle No');
+            document.getElementById("CustomerRegionID_error").innerHTML = "Select Region Name";
+            return;
+        }
+        else {
+            document.getElementById("CustomerRegionID_error").innerHTML = "";
+        }
+
+        var result = false;
+
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "GetAllTatkalCustomerCard/TatkalCardCustomer",
+            data: { RegionalId: RegionID },  // data to submit
+            dataType: "json",
+            success: function (res) {
+                console.log(res, "res");
+                $("#TatkalView").show();
+
+                for (var i = 0; i < res.searchList.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td>" + (res.searchList[i].sr || '') + "</td>"
+                        + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
+                        + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
+
+                        + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
+                        + "<td>" + (res.searchList[i].requestedBy || '') + "</td>"
+                        + "<td>" + (res.searchList[i].cardProcessDate || '') + "</td>"
+                        + "<td>" + (res.searchList[i].mapped || '') + "</td>"
+                        + "</tr ></tbody > ";
+
+                    $("#TatkalView").append(rows);
+
+
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+
+            }
+        });
+
+    });
+
+</script>

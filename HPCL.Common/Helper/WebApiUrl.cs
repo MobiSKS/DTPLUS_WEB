@@ -149,6 +149,7 @@
         public static string getAvailityDriverCard = "/dtpwebapi/api/dtplus/merchant/get_availity_driver_card";
         public static string insertDriverCardCustomer = "/dtpwebapi/api/dtplus/merchant/insert_driver_card_customer";
         public static string getcustomerNameByCustomerId = "/dtpwebapi/api/dtplus/customer/get_customer_name_by_customer_id";
+        public static string ViewRequestDriverCard = "/dtpwebapi/api/dtplus/merchant/view_requested_driver_card";
         #endregion
 
         #region MyHpOTCCardCustomer

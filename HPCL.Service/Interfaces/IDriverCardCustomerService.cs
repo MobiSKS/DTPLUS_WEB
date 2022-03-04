@@ -23,5 +23,8 @@ namespace HPCL.Service.Interfaces
         Task<DriverCardCustomerModel> CreateDriverCardCustomer(DriverCardCustomerModel customerModel);
         Task<GetCustomerNameByIdResponse> GetCustomerNameByCustomerId(string CustomerID);
 
+        Task<List<ViewDriverCardResponse>> GetAllViewDriverCard(RequestForViewDriverCard entity);
+        Task<RequestForDriverCardModel> ViewRequestDriverCard();
+
     }
 }
