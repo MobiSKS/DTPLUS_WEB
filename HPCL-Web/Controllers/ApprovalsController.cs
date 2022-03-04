@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.Approvals;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -32,6 +33,16 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _approvalServices.GetTerminalsForApproval(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
             return PartialView("~/Views/Approvals/_TerminalsForApprovalTable.cshtml", modals);
+        }
+        public async Task<IActionResult> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
+        {
+            var reason = await _approvalServices.TerminalDeInstallRequestApprovalRejection(approvalRejectionMdl);
+            return Json(reason);
+        }
+        public async Task<IActionResult> TerminalDeInstallationRequestAuthorization()
+        {
+            var modals = await _approvalServices.TerminalDeInstallationRequestAuthorization();
+            return View(modals);
         }
     }
 }

@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HPCL.Common.Models.RequestModel
+{
+    public class TerminalDeInstallationRequestAuthorizationWithRemark
+    {
+        public TerminalDeInstallationRequestAuthorizationWithRemark()
+        {
+            TerminalDeInstallationRequestAuthorizationTbl = new List<GetTerminalDeInstallationRequestAuthorizationReponseModal>();
+        }
+        public string Remark { get; set; }
+        public virtual List<GetTerminalDeInstallationRequestAuthorizationReponseModal> TerminalDeInstallationRequestAuthorizationTbl { get; set; }
+    }
+}

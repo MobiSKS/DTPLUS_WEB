@@ -161,5 +161,10 @@
         #region TatkalCardCustomer
         public static string insertTatkalCardRequest = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_request";
         #endregion
+
+        #region "Terminal"
+        public static string getTerminalDeInstallationRequestApproval = "api/dtplus/merchant/get_terminal_de_installation_request_approval";
+        public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
+        #endregion
     }
 }

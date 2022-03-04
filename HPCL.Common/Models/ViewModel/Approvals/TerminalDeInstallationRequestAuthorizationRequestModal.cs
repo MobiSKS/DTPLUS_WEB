@@ -1,14 +1,13 @@
 ﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
-using HPCL.Common.Models.ViewModel.Officers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.Approvals
 {
-    public class TerminalDeInstallationRequestApprovalRequestModal
+    public class TerminalDeInstallationRequestAuthorizationRequestModal
     {
-        public TerminalDeInstallationRequestApprovalRequestModal()
+        public TerminalDeInstallationRequestAuthorizationRequestModal()
         {
             ZoneMdl = new List<ZonalOfficeResponseModal>();
             RegionMdl = new List<RegionalOfficeResponseModal>();
