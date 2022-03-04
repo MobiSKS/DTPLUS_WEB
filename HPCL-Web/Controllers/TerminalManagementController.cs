@@ -154,5 +154,10 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        public IActionResult Approval()
+        {
+            return View();
+        }
     }
 }

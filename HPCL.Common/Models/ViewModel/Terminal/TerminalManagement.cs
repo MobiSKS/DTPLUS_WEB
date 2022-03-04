@@ -7,7 +7,7 @@ namespace HPCL.Common.Models.ViewModel.Terminal
     {
         [Required(ErrorMessage = "Merchant Id is Required")]
         [StringLength(10)]
-        [RegularExpression(@"^(?=(3))[0-9]{10}$", ErrorMessage = "Merchant ID should start with 3")]
+        [RegularExpression(@"^(?=(3))[0-9]{10}$", ErrorMessage = "start with 3 and contains 10 digits")]
         public string MerchantId { get; set; }
         public string ZonalOfficeId { get; set; }
         public string RegionalOfficeId { get; set; }

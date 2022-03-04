@@ -111,5 +111,11 @@ namespace HPCL_Web.Controllers
 
             return Json(new { zonalOfficeLst = zonalOfficeLst });
         }
+
+        public async Task<JsonResult> ProofType()
+        {
+            var proofTypeList = await _commonActionService.ProofType();
+            return Json(new { proofTypeList = proofTypeList });
+        }
     }
 }
