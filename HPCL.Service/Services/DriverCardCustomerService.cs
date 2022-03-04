@@ -16,6 +16,8 @@ using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.RequestModel.DriverCardCustomer;
+using HPCL.Common.Models.ResponseModel.DriverCardCustomer;
 
 namespace HPCL.Service.Services
 {
@@ -216,8 +218,48 @@ namespace HPCL.Service.Services
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
-            
-            StringContent content = new StringContent(JsonConvert.SerializeObject(customerModel), Encoding.UTF8, "application/json");
+
+            MultipartFormDataContent form = new MultipartFormDataContent();
+
+            int DTPCustomerStatus = customerModel.IfDTPCustomer.ToUpper() == "YES" ? 1 : 0;
+
+            form.Add(new StringContent(customerModel.CardNo), "CardNo");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
+            form.Add(new StringContent(customerModel.IndividualOrgName), "IndividualOrgName");
+            form.Add(new StringContent(customerModel.IndividualOrgNameTitle), "IndividualOrgNameTitle");
+            form.Add(new StringContent(customerModel.IncomeTaxPan), "IncomeTaxPan");
+            form.Add(new StringContent(customerModel.CommunicationAddress1), "CommunicationAddress1");
+            form.Add(new StringContent(customerModel.CommunicationCityName), "CommunicationCityName");
+            form.Add(new StringContent(customerModel.CommunicationPincode), "CommunicationPincode");
+            form.Add(new StringContent(customerModel.CommunicationStateId.ToString()), "CommunicationStateId");
+            form.Add(new StringContent(customerModel.CommunicationPhoneNo), "CommunicationPhoneNo");
+            form.Add(new StringContent(customerModel.CommunicationMobileNo), "CommunicationMobileNo");
+            form.Add(new StringContent(customerModel.CommunicationEmailid), "CommunicationEmailid");
+            form.Add(new StringContent(customerModel.FormNumber), "FormNumber");
+            form.Add(new StringContent(customerModel.MerchantId), "MerchantId");
+            form.Add(new StringContent(customerModel.AddressProofType), "AddressProofType");
+            form.Add(new StringContent(customerModel.AddressProofDocumentNo), "AddressProofDocumentNo");
+            form.Add(new StringContent(customerModel.DrivingLicence), "DrivingLicence");
+            form.Add(new StringContent(DTPCustomerStatus.ToString()), "DTPCustomerStatus");
+            form.Add(new StringContent(customerModel.ExistingCustomerId), "ExistingCustomerId");
+            form.Add(new StringContent(customerModel.BeneficiaryName), "BeneficiaryName");
+            form.Add(new StringContent(customerModel.RelationWithBeneficiary), "RelationwithBeneficiary");
+            form.Add(new StringContent(customerModel.BeneficiaryMobile), "BeneficiaryMobile");
+            form.Add(new StreamContent(customerModel.AddressProof.OpenReadStream()), "AddressProof", customerModel.AddressProof.FileName);
+            form.Add(new StringContent(customerModel.UserId), "Userid");
+            form.Add(new StringContent(customerModel.UserAgent), "Useragent");
+            form.Add(new StringContent(customerModel.UserIp), "Userip");
+
+            //form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
+            //form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
+            //form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
+            //form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
+            //form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
+            //form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
+            //form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
+            //form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDriverCardCustomer);
 
             var settings = new JsonSerializerSettings
@@ -243,6 +285,34 @@ namespace HPCL.Service.Services
             }
 
             return customerModel;
+        }
+
+        public async Task<GetCustomerNameByIdResponse> GetCustomerNameByCustomerId(string CustomerID)
+        {
+            GetCustomerNameByIdResponse customerInfo = new GetCustomerNameByIdResponse();
+
+            var customerReqinfo = new GetCustomerNameModel()
+            {
+                UserAgent= CommonBase.useragent,
+                UserIp= CommonBase.userip,
+                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerReqinfo), Encoding.UTF8, "application/json");
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.getcustomerNameByCustomerId);
+
+            customerInfo = JsonConvert.DeserializeObject<GetCustomerNameByIdResponse>(responseCustomer);
+
+            customerInfo.CustomerName = "";
+            if (customerInfo.Internel_Status_Code == 1000 && customerInfo.Data != null && customerInfo.Data.Count > 0)
+            {
+                customerInfo.CustomerName = customerInfo.Data[0].CustomerName;
+            }
+
+            return customerInfo;
+
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models;
+using HPCL.Common.Models.ResponseModel.DriverCardCustomer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.DriverCardCustomer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
@@ -20,6 +21,7 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> SaveDriverCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
         Task<List<CardDetails>> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID);
         Task<DriverCardCustomerModel> CreateDriverCardCustomer(DriverCardCustomerModel customerModel);
+        Task<GetCustomerNameByIdResponse> GetCustomerNameByCustomerId(string CustomerID);
 
     }
 }

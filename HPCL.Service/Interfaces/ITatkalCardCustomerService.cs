@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
+﻿using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard();
         Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard(TatkalCustomerCardRequestInfo tatkalCustomerCardRequestInfo);
+        Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel custModel);
     }
 }

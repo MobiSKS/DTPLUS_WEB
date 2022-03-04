@@ -40,5 +40,7 @@ namespace HPCL.Service.Interfaces
         Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID);
         Task<List<ProofType>> GetAddressProofList();
         Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID);
+        Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown();
+        Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown();
     }
 }

@@ -503,9 +503,9 @@ namespace HPCL.Service.Services
         {
             CustomerRegionRequestModel customerRegion = new CustomerRegionRequestModel()
             {
-                UserAgent=CommonBase.useragent,
-                UserIp= CommonBase.userip,
-                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ZonalId = "0"
             };
 
@@ -662,7 +662,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<ProofType> SortedtList = jarr.ToObject<List<ProofType>>();
-            
+
             return SortedtList;
         }
 
@@ -691,6 +691,45 @@ namespace HPCL.Service.Services
             return responseData;
         }
 
+        public async Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getZonalOffice);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerZonalOfficeModel> SortedtList = jarr.ToObject<List<CustomerZonalOfficeModel>>();
+
+            return SortedtList;
+        }
+
+        public async Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+            StringContent SecretQuecontent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(SecretQuecontent, WebApiUrl.getSecretQuestion);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerSecretQueModel> SortedtList = jarr.ToObject<List<CustomerSecretQueModel>>();
+
+            return SortedtList;
+        }
 
     }
 }

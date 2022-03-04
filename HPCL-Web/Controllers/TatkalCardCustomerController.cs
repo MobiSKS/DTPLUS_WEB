@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,13 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> CreateTatkalCustomer()
+        {
+            TatkalCardCustomerModel custMdl = new TatkalCardCustomerModel();
+            custMdl = await _tatkalCardCustomerService.CreateTatkalCustomer(custMdl);
+
+            return View(custMdl);
+        }
 
     }
 }

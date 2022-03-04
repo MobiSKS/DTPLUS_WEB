@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -68,5 +69,16 @@ namespace HPCL.Service.Services
 
             return tatkalCustomerCardRequestInfo;
         }
+
+        public async Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel custModel)
+        {
+            custModel.Remarks = "";
+            custModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+
+            return custModel;
+        }
+
     }
 }
