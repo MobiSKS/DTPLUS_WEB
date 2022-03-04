@@ -104,5 +104,12 @@ namespace HPCL_Web.Controllers
             var stateLst = await _commonActionService.GetStateList();
             return Json(new { stateLst = stateLst });
         }
+
+        public async Task<JsonResult> GetzonalOfficeList()
+        {
+            var zonalOfficeLst = await _commonActionService.GetZonalOfficeList();
+
+            return Json(new { zonalOfficeLst = zonalOfficeLst });
+        }
     }
 }

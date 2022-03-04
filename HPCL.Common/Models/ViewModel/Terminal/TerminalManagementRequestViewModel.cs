@@ -1,8 +1,7 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
-using System;
+using HPCL.Common.Models.ViewModel.Terminal;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HPCL.Common.Models.ViewModel
 {
