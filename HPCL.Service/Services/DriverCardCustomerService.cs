@@ -232,7 +232,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.CommunicationCityName), "CommunicationCityName");
             form.Add(new StringContent(customerModel.CommunicationPincode), "CommunicationPincode");
             form.Add(new StringContent(customerModel.CommunicationStateId.ToString()), "CommunicationStateId");
-            form.Add(new StringContent(customerModel.CommunicationPhoneNo), "CommunicationPhoneNo");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.CommunicationPhoneNo) ? "" : customerModel.CommunicationPhoneNo), "CommunicationPhoneNo");
             form.Add(new StringContent(customerModel.CommunicationMobileNo), "CommunicationMobileNo");
             form.Add(new StringContent(customerModel.CommunicationEmailid), "CommunicationEmailid");
             form.Add(new StringContent(customerModel.FormNumber), "FormNumber");
@@ -241,7 +241,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.AddressProofDocumentNo), "AddressProofDocumentNo");
             form.Add(new StringContent(customerModel.DrivingLicence), "DrivingLicence");
             form.Add(new StringContent(DTPCustomerStatus.ToString()), "DTPCustomerStatus");
-            form.Add(new StringContent(customerModel.ExistingCustomerId), "ExistingCustomerId");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.ExistingCustomerId) ? "" : customerModel.ExistingCustomerId), "ExistingCustomerId");
             form.Add(new StringContent(customerModel.BeneficiaryName), "BeneficiaryName");
             form.Add(new StringContent(customerModel.RelationWithBeneficiary), "RelationwithBeneficiary");
             form.Add(new StringContent(customerModel.BeneficiaryMobile), "BeneficiaryMobile");
@@ -249,15 +249,6 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.UserId), "Userid");
             form.Add(new StringContent(customerModel.UserAgent), "Useragent");
             form.Add(new StringContent(customerModel.UserIp), "Userip");
-
-            //form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
-            //form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
-            //form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
-            //form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
-            //form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
-            //form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
-            //form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
-            //form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDriverCardCustomer);
