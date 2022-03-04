@@ -90,7 +90,8 @@
         public static string getterminaldeinstallationrequestclose = "api/dtplus/merchant/get_terminal_de_installation_request_close";
         public static string terminaldeinstalupdaterequestclose = "api/dtplus/merchant/terminal_de_instal_update_request_close";
         public static string viewterminaldeinstallationrequeststatus = "api/dtplus/merchant/view_terminal_de_installation_request_status";
-
+        public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/get_problematic_de_installed_to_deinstalled";
+        public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/insert_problematic_de_installed_to_deinstalled";
 
         #endregion
 
