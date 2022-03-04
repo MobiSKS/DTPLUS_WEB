@@ -14,12 +14,14 @@ namespace HPCL.Common.Models.ViewModel.Terminal
         public string RegionalOfficeName { get; set; }
 
         public string Status { get; set; }
-        public string Remark { get; set; }
+        public string Remarks { get; set; }
+        public string StatusName { get; set; }
         public string RequestedBy { get; set; }
         public string RequestedDate { get; set; }
 
         public string AuthorizedBy { get; set; }
-
+        public string ModifiedDate { get; set; }
+        public string ModifiedBy { get; set; }
         public string AuthorizedDate { get; set; }
     }
 }
