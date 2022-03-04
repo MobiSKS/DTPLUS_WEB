@@ -1,0 +1,358 @@
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalApprovalReq
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Approval")" class="text_primary">Approvals</a> </li>
+            <li class="breadcrumb-item font-weight-light">Terminal Installation Request Approval</li>
+        </ul>
+        <form method="POST" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequestApproval" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Terminal Installation Request Approval</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalFetchId" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalFetchId" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="fromDateId" name="fromdate" type="date" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="toDateId" name="todate" type="date" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Select Category <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <select name="Category" id="" class="form-control">
+                                                    <option value="New Terminals">New Terminals</option>
+                                                    <option value="Updated Terminals">Updated Terminals</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit">Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div id="approvalRejectSection" style="display:none;">
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                                <table id="approvalTerminalList" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="allCheck" class="checkAll" /></th>
+                                            <th>Terminal ID</th>
+                                            <th>Merchant ID</th>
+                                            <th>Terminal Type Requested</th>
+                                            <th>Merchant Status</th>
+                                            <th>Last Month's Spends</th>
+                                            <th>No. Of Transactions Of Last Month</th>
+                                            <th>Request Type</th>
+                                            <th>Requested By</th>
+                                            <th>Requested Date</th>
+                                            <th>Justification</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+
+                            <div class="col-md-6 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">Remark: <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        <textarea rows="4" cols="50" id="remarkVal" name="remarkVal"></textarea>
+                                        <span class="text-danger field-validation-error" data-valmsg-for="remarkVal"
+                                              data-valmsg-replace="true"><span id="remarkErr"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="approveClick()">APPROVE</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="rejectClick()">REJECT</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function resetClick() {
+        //$("input:date").each(function () {
+        //    $(this).val("");
+        //});
+        location.reload();
+        $("#approvalTerminalList td").parent().remove();
+        document.getElementById('approvalRejectSection').style.display = 'none';
+    }
+
+    $(document).ready(function () {
+
+        $("#fromDateId").datepicker("setDate", new Date());
+        $("#toDateId").datepicker("setDate", new Date());
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetzonalOfficeList", "Common")',
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.zonalOfficeLst, function (i, option) {
+                    $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
+                });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Zonal Office");
+            }
+        });
+});
+
+$(".zonalFetchId").change(function () {
+    var id = this.value;
+
+    if (id != 0) {
+        $("#state_error").html("");
+    }
+
+    $.ajax({
+        type: 'POST',  // http method
+        url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+        data: { zonalOfcId: id },  // data to submit
+        dataType: "json",
+        success: function (data, status, xhr) {
+            var v = data;
+            if (status == 'success') {
+                $(".regionalFetchId").html("");
+                $.each(data, function (i, data) { // bind the dropdown list using json result
+                    $('<option>',
+                        {
+                            value: data.regionalOfficeID,
+                            text: data.regionalOfficeName
+                        }).html(data.districtName).appendTo(".regionalFetchId");
+                });
+            }
+            else {
+                console.log(v);
+            }
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+            alert("Error Populating Regional Office");
+        }
+    });
+});
+
+
+function OnSuccess(data) {
+    console.log(data);
+
+    $("#approvalTerminalList td").parent().remove();
+
+    for (var i = 0; i < data.approvalList.length; i++) {
+
+        var rows = "<tbody><tr>"
+            + "<td><input type='checkbox' class='terminalRow' name='terminalCheck'></td>"
+            + "<td><span class='terminalVal'>" + (data.approvalList[i].terminalId || '') + "</span></td>"
+            + "<td><a href='#a' class='merchantVal'>" + (data.approvalList[i].merchantId || '') + "</a></td>"
+            + "<td>" + (data.approvalList[i].terminalType || '') + "</td>"
+            + "<td>" + (data.approvalList[i].merchantStatus || '') + "</td>"
+            + "<td>" + (data.approvalList[i].lastMonthSpend) + "</td>"
+            + "<td>" + (data.approvalList[i].noOfTransactionsOfLastMonth) + "</td>"
+            + "<td>" + (data.approvalList[i].requestType || '') + "</td>"
+            + "<td>" + (data.approvalList[i].requestedBy || '') + "</td>"
+            + "<td>" + (data.approvalList[i].requestedDate || '') + "</td>"
+            + "<td>" + (data.approvalList[i].justification || '') + "</td>"
+            + "</tr ></tbody>";
+
+        $('#approvalTerminalList').append(rows);
+    }
+
+    document.getElementById("approvalRejectSection").style.display = "block";
+};
+
+    $(".checkAll").click(function () {
+        if (this.checked) {
+            $(".terminalRow").prop("checked", true);
+        } else {
+            $(".terminalRow").prop("checked", false);
+        }
+    });
+
+
+    function approveClick() {
+
+        var remark = $("#remarkVal").val();
+
+        if ($('#remarkVal').val() == "") {
+            $('#remarkErr').text("Remark should not be empty");
+            return false;
+        }
+        $('#remarkErr').text("");
+
+
+        var ObjMerchantTerminalInsertInput = [];
+        var TerminalID;
+
+        $("#approvalTerminalList input[type=checkbox]:checked").each(function () {
+            var row = $(this).closest("tr");
+
+            TerminalID = row.find('.terminalVal').text();
+            var MerchantId = row.find('.merchantVal').text();
+
+            ObjMerchantTerminalInsertInput.push({
+                TerminalID: TerminalID,
+                MerchantId: MerchantId
+            });
+        });
+
+
+        if (TerminalID == undefined) {
+            alert("Please select at least one row");
+            return false;
+        }
+
+
+        if (confirm('Are you sure! You want to approve the selected record')) {
+
+        $.ajax({
+            url: "@Url.Action("TerminalInstallationRequestApprovalClick", "TerminalManagement")",
+            type: "POST",
+            dataType: "JSON",
+            data: { ObjMerchantTerminalInsertInput: JSON.stringify(ObjMerchantTerminalInsertInput), remark: remark },
+            success: function (res) {
+
+                alert(res);
+                $("#remarkVal").val("");
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+        } else {
+            console.log('cancel')
+        }
+
+    };
+
+
+    function rejectClick() {
+
+        var remark = $("#remarkVal").val();
+
+        if ($('#remarkVal').val() == "") {
+            $('#remarkErr').text("Remark should not be empty");
+            return false;
+        }
+        $('#remarkErr').text("");
+
+
+        var ObjMerchantTerminalInsertInput = [];
+        var TerminalID;
+
+        $("#approvalTerminalList input[type=checkbox]:checked").each(function () {
+            var row = $(this).closest("tr");
+
+            TerminalID = row.find('.terminalVal').text();
+            var MerchantId = row.find('.merchantVal').text();
+
+            ObjMerchantTerminalInsertInput.push({
+                TerminalID: TerminalID,
+                MerchantId: MerchantId
+            });
+        });
+
+        if (TerminalID == undefined) {
+            alert("Please select at least one row");
+            return false;
+        }
+
+        if (confirm('Are you sure! You want to reject the selected record')) {
+
+            $.ajax({
+                url: "@Url.Action("TerminalInstallationRequestRejectClick", "TerminalManagement")",
+                type: "POST",
+                dataType: "JSON",
+                data: { ObjMerchantTerminalInsertInput: JSON.stringify(ObjMerchantTerminalInsertInput), remark: remark },
+                success: function (res) {
+
+                    alert(res);
+
+                    $("#remarkVal").val("");
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        } else {
+            console.log('cancel')
+        }
+
+    };
+
+</script>

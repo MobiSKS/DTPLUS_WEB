@@ -65,6 +65,9 @@
         public static string TerminalInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/search_for_terminal_installation_request";
         public static string InsertInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request";
         public static string MappingAllowedCardsToMerchantUrl = "/dtpwebapi/api/dtplus/customer/get_mapping_user_cards_to_merchants";
+
+        public static string GetTerminalInstallReqAppUrl = "/dtpwebapi/api/dtplus/merchant/get_terminal_installation_request_approval";
+        public static string ApproveRejectTerminalUrl= "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request_approval";
         #endregion
 
         #region Merchant
@@ -87,7 +90,8 @@
         public static string getterminaldeinstallationrequestclose = "api/dtplus/merchant/get_terminal_de_installation_request_close";
         public static string terminaldeinstalupdaterequestclose = "api/dtplus/merchant/terminal_de_instal_update_request_close";
         public static string viewterminaldeinstallationrequeststatus = "api/dtplus/merchant/view_terminal_de_installation_request_status";
-
+        public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/get_problematic_de_installed_to_deinstalled";
+        public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/insert_problematic_de_installed_to_deinstalled";
 
         #endregion
 
@@ -145,6 +149,8 @@
         public static string allocatedDriverCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_driver_card_to_merchant";
         public static string getAvailityDriverCard = "/dtpwebapi/api/dtplus/merchant/get_availity_driver_card";
         public static string insertDriverCardCustomer = "/dtpwebapi/api/dtplus/merchant/insert_driver_card_customer";
+        public static string getcustomerNameByCustomerId = "/dtpwebapi/api/dtplus/customer/get_customer_name_by_customer_id";
+        public static string ViewRequestDriverCard = "/dtpwebapi/api/dtplus/merchant/view_requested_driver_card";
         #endregion
 
         #region MyHpOTCCardCustomer

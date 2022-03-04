@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.TerminalManagement
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalManagement
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -8,7 +8,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Terminal Management</a> </li>
             <li class="breadcrumb-item font-weight-light">Terminal Installation Request</li>
         </ul>
-        <form method="GET" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <form method="POST" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -20,12 +20,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">All</option>
-                                                    <option value="7">North Zona</option>
-                                                    <option value="9">North West Zona</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(),"--Select--", new {@class = "form-control zonalFetchId"})
                                             </div>
                                         </div>
                                     </div>
@@ -35,12 +30,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="RegionalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">All</option>
-                                                    <option value="7">North Zona</option>
-                                                    <option value="9">North West Zona</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(),"--Select--", new { @class = "form-control regionalFetchId" })
                                             </div>
                                         </div>
                                     </div>
@@ -52,7 +42,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.MerchantId, new {@id="merchantIdVal", @class = "form-control" })
                                                 @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger" })
 
                                             </div>
@@ -113,7 +103,7 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                @Html.DisplayName("SNo.")
+                                                @Html.DisplayName("Sr No")
                                             </th>
 
                                             <th>
@@ -138,14 +128,14 @@
                                     <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Add Justification</legend>
                                     <div class="px-4 p-2 col-12">
                                         <div class="col-sm-10 col-12">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Terminal Issurence Type<sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Terminal Issurence Type</label>
                                             <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                                <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                    <input type="radio" name="optradio" class="mr-2">
+                                                <label class="mb-0 mr-4 d-flex align-items-center justify-content-start" for="terminalIssurenceType">
+                                                    <input type="radio" name="terminalIssurenceType" class="mr-2" id="addOn" value="Add-On" disabled="disabled">
                                                     Add-On
                                                 </label>
-                                                <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                    <input type="radio" name="optradio" class="mr-2">
+                                                <label class="mb-0 mr-4 d-flex align-items-center justify-content-start" for="terminalIssurenceType">
+                                                    <input type="radio" name="terminalIssurenceType" class="mr-2" value="Re-Installation" id="reInstall" disabled="disabled">
                                                     Re-Installation
                                                 </label>
                                             </div>
@@ -155,15 +145,24 @@
                                             <label class="font-weight-normal col-md-5 col-12 mb-0">Terminal Type Request<sup class="text-danger">*</sup></label>
                                             <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
                                                 <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                    <input type="radio" name="optradio" class="mr-2">
+                                                    @*<input type="radio" name="terminalTypeRequest" class="mr-2">*@
+
+                                                    @Html.RadioButton("terminalTypeRequest", "GPRS-Installation")
+
                                                     GPRS-Installation
                                                 </label>
                                                 <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                    <input type="radio" name="optradio" class="mr-2">
+                                                    @*<input type="radio" name="terminalTypeRequest" class="mr-2">*@
+
+                                                    @Html.RadioButton("terminalTypeRequest", "Desktop-Installation")
+
                                                     Desktop-Installation
                                                 </label>
                                                 <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                    <input type="radio" name="optradio" class="mr-2">
+                                                    @*<input type="radio" name="terminalTypeRequest" class="mr-2">*@
+
+                                                    @Html.RadioButton("terminalTypeRequest", "Wifi-Installation")
+
                                                     Wifi-Installation
                                                 </label>
                                             </div>
@@ -171,12 +170,12 @@
                                         <div class="col-sm-10 col-12">
                                             <label class="font-weight-normal col-md-5 col-12 mb-0">Justification<sup class="text-danger">*</sup></label>
                                             <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                                <textarea rows="4" cols="50"></textarea>
+                                                <textarea rows="4" cols="50" id="justificationId"></textarea>
                                             </div>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn" type="submit" id="btnAdd" name="submit" style="background-color:#084693;color:white;">ADD</button>
-                                            <button class="btn" type="submit" id="btnSave" name="submit" onclick="showGrid()" style="background-color:#084693;color:white;">RESET</button>
+                                            <button class="btn" type="button" onclick="addJustificationClick()" id="btnAdd" name="submit" style="background-color:#084693;color:white;">ADD</button>
+                                            <button class="btn" type="submit" id="btnSave" name="submit" onclick="resetPress()" style="background-color:#084693;color:white;">RESET</button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -194,6 +193,66 @@
 </div>
 <script type="text/javascript">
 
+    function resetPress() {
+        $("#justificationId").val("");
+    }
+
+      $(document).ready(function () {
+
+         $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetzonalOfficeList", "Common")',
+                dataType: "json",
+             success: function (data, status, xhr) {
+
+                 console.log(data);
+
+                 $.each(data.zonalOfficeLst, function (i, option) {
+                     $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
+                 });
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                 alert("Error Populating Zonal Office");
+             }
+         });
+    });
+
+    $(".zonalFetchId").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#state_error").html("");
+            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".regionalFetchId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.districtName).appendTo(".regionalFetchId");
+                        });
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+    });
+
+
+
     function showGrid() {
         if ($("input:text").val() == "") {
             document.getElementById('myTable').style.display = 'none';
@@ -203,84 +262,81 @@
         }
     }
 
-    $("#btnSave").on('click', function (e) {
+    function OnSuccess(res) {
 
         var MerchantId = $("#MerchantId").val();
 
         console.log(MerchantId);
+
+        console.log(res);
+        $('#RetailOutletName').val(res.objMerchantList[0].retailOutletName)
+        $('#RetailOutletAddress').val(res.objMerchantList[0].retailOutletAddress)
+        $('#RetailOutletCity').val(res.objMerchantList[0].retailOutletCity)
+        $('#StateName').val(res.objMerchantList[0].stateName)
+        $('#DistrictName').val(res.objMerchantList[0].districtName)
+
+        if ((res.objMerchantList[0].terminalIssuanceType) == "Add-On") {
+            $("#addOn").prop("checked", true);
+        }
+
+        if ((res.objMerchantList[0].terminalIssuanceType) == "Re-Installation") {
+            $("#reInstall").prop("checked", true);
+        }
+
+        $("#myTable td").parent().remove();
+        for (var i = 0; i < res.searchList.length; i++) {
+
+            var rows = "<tbody><tr>"
+                + "<td>" + (res.searchList[i].srNumber || '') + "</td>"
+                + "<td>" + (res.searchList[i].terminalId || '') + "</td>"
+                + "<td>" + res.searchList[i].lastMonthSpends + "</td>"
+                + "<td>" + (res.searchList[i].status || '') + "</td>"
+                + "</tr ></tbody > ";
+
+            $("#myTable").append(rows);
+        }
+
 
         $("#myTable").show();
         $("#label").show();
         $("#Just").show();
 
+    };
+
+
+    function addJustificationClick() {
+
+        var TerminalIssuanceType = $('input[name="terminalIssurenceType"]:checked').val();
+        var TerminalTypeRequested = $('input[name="terminalTypeRequest"]:checked').val();
+
+        var Justification = $("#justificationId").val();
+        var MerchantId = $("#merchantIdVal").val();
+
+        console.log(TerminalIssuanceType + " " + TerminalTypeRequested + " " + Justification + " " + MerchantId);
+
+        var objInsertTerminal = [];
+
+        objInsertTerminal.push({
+            MerchantId: MerchantId,
+            TerminalIssuanceType: TerminalIssuanceType,
+            TerminalTypeRequested: TerminalTypeRequested,
+            Justification: Justification
+        });
 
         $.ajax({
-            url: "@Url.Action("TerminalInstallationRequest", "TerminalManagement")",
+            url: "@Url.Action("AddJustification", "TerminalManagement")",
             type: "POST",
             dataType: "JSON",
-            data: { MerchantId: MerchantId },
+            data: { objInsertTerminal: JSON.stringify(objInsertTerminal) },
             success: function (res) {
-                for (var i = 0; i < res.objMerchantList.length; i++) {
-                    $('#RetailOutletName').val(res.objMerchantList[i].retailOutletName)
-                    $('#RetailOutletAddress').val(res.objMerchantList[i].retailOutletAddress)
-                    $('#RetailOutletCity').val(res.objMerchantList[i].retailOutletCity)
-                    $('#StateName').val(res.objMerchantList[i].stateName)
-                    $('#DistrictName').val(res.objMerchantList[i].districtName)
-
-                }
-
-                $("#myTable td").parent().remove();
-                for (var i = 0; i < res.searchList.length; i++) {
-
-                    var rows = "<tbody><tr>"
-                        + "<td>" + (res.searchList[i].srNumber || '') + "</td>"
-                        + "<td>" + (res.searchList[i].terminalId || '') + "</td>"
-                        + "<td>" + (res.searchList[i].lastMonthSpends || '') + "</td>"
-                        + "<td>" + (res.searchList[i].status || '') + "</td>"
-                        + "</tr ></tbody > ";
-
-                    $("#myTable").append(rows);
-                }
-
-
+                alert(res);
             },
             error: function (ex) {
                 alert('Failed' + ex);
             }
 
         });
-
-    });
-
-    $("#btnAdd").on('click', function (e) {
-
-        var MerchantId = $("#MerchantId").val();
-
-        console.log(MerchantId);
-
-
-        $.ajax({
-            url: "@Url.Action("TerminalInstallationRequest", "TerminalManagement")",
-            type: "POST",
-            dataType: "JSON",
-            data: { MerchantId: MerchantId },
-            success: function (res) {
-
-
-
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-
-        });
-
-    });
-
-
-
-
-
+    }
 </script>
 
 

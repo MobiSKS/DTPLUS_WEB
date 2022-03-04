@@ -1,31 +1,16 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
-namespace HPCL.Common.Models.ViewModel
+namespace HPCL.Common.Models.ViewModel.Terminal
 {
-   public class TerminalManagement:BaseEntity
+    public class TerminalManagement : BaseEntity
     {
+        [Required(ErrorMessage = "Merchant Id is Required")]
+        [StringLength(10)]
+        [RegularExpression(@"^(?=(3))[0-9]{10}$", ErrorMessage = "start with 3 and contains 10 digits")]
         public string MerchantId { get; set; }
-
-        public string RetailOutletName { get; set; }
-
-        public string DistrictName { get; set; }
-
-        public string ZonalOfficerId { get; set; }
-
-        public string ReginalOfficerId { get; set; }
-
-        public int StatusFlag { get; set; }
-
-        public string TerminalTypeRequested { get; set; }
-
-        public string TerminalIssuanceType { get; set; }
-
-        public string CreatedBy { get; set; }
-
-        public string Justification { get; set; }
-        public int Flag { get; set; }
+        public string ZonalOfficeId { get; set; }
+        public string RegionalOfficeId { get; set; }
     }
 }
+ 

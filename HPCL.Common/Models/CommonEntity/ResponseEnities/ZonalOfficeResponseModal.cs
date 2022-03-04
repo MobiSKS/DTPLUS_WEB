@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HPCL.Common.Models.CommonEntity.ResponseEnities
+﻿namespace HPCL.Common.Models.CommonEntity.ResponseEnities
 {
     public class ZonalOfficeResponseModal
     {

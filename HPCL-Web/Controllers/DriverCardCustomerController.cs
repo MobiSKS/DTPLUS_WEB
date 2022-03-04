@@ -20,6 +20,7 @@ using HPCL.Service.Interfaces;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Resources;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ResponseModel.DriverCardCustomer;
 
 namespace HPCL_Web.Controllers
 {
@@ -195,6 +196,32 @@ namespace HPCL_Web.Controllers
             CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
 
             return Json(customerInserCardResponseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerNameByCustomerId(string CustomerID)
+        {
+
+            GetCustomerNameByIdResponse customerInfo = new GetCustomerNameByIdResponse();
+            customerInfo = await _driverCardCustomerService.GetCustomerNameByCustomerId(CustomerID);
+
+            return Json(customerInfo);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAllViewDriverCard(RequestForViewDriverCard entity)
+        {
+            var searchList = await _driverCardCustomerService.GetAllViewDriverCard(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> ViewRequestDriverCard()
+        {
+            RequestForDriverCardModel custMdl = new RequestForDriverCardModel();
+            custMdl = await _driverCardCustomerService.ViewRequestDriverCard();
+
+            return View(custMdl);
         }
 
     }

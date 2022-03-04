@@ -70,7 +70,9 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof Of Identity<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })
+                                                            @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
+
+                                                            @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
                                                             @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -136,7 +138,9 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @Html.DropDownListFor(m => m.AddressProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })
+                                                            @*@Html.DropDownListFor(m => m.AddressProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
+                                                            @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+
                                                             @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -225,6 +229,23 @@
     };
 
     $(document).ready(function () {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("ProofType", "Common")',
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.proofTypeList, function (i, option) {
+                    $("<option/>").val(option.proofTypeId).text(option.proofTypeName).appendTo(".proofType");
+                });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Proof Type");
+            }
+        });
 
         $("#IdProofFront").change(function () {
             $("#idPfrontImg").html("");
@@ -322,7 +343,9 @@
     };
 
     function OnSuccessUploadDoc(res) {
-        debugger;
+
+        console.log(res);
+
         $("#resSearch div").parent().remove();
 
         $("#resSearch").append('<div class="form-group">'
@@ -330,8 +353,8 @@
                   +  '<div class="d-flex align-items-center justify-content-start flex-wrap">'
                        + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
                        + '<div class="col-md-7 col-12">'
-                         +'<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                              +' <input type="text" class="form-control" readonly value="' + res.searchCustomer[0].title + '&nbsp;' + res.searchCustomer[0].firstName + '&nbsp;' + res.searchCustomer[0].middleName + '&nbsp;' + res.searchCustomer[0].lastName +' ">'
+            + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
+            + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result[0].title + '&nbsp;' + res.searchCustomer.result[0].firstName + '&nbsp;' + res.searchCustomer.result[0].middleName + '&nbsp;' + res.searchCustomer.result[0].lastName + ' ">'
                           +'</div>'
                          +'</div>'
                     +'</div>'
@@ -343,7 +366,7 @@
                     +'    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
                      +'   <div class="col-md-7 col-12">'
                         +'    <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                             +'   <input type="text" class="form-control" readonly value="' + res.searchCustomer[0].formNumber + '" >'
+            + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result[0].formNumber + '" >'
                           +'  </div>'
                        +' </div>'
                 +' </div>'

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Service.Services
 {
-   public class TerminalManagementService :ITerminalManagement
+    public class TerminalManagementService : ITerminalManagement
     {
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
                     MerchantId = entity.MerchantId,
                 };
             }
-            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
             {
                 searchBody = new TerminalManagement
                 {
@@ -68,26 +68,26 @@ namespace HPCL.Service.Services
 
             List<ObjMerchantDetail> objMerchantList = ObjMerchant.ToObject<List<ObjMerchantDetail>>();
             List<ObjTerminalDetail> searchList = ObjTerminal.ToObject<List<ObjTerminalDetail>>();
-            return Tuple.Create(objMerchantList,searchList);
+            return Tuple.Create(objMerchantList, searchList);
         }
 
-        public async Task<string> AddJustification(TerminalManagement entity)
+        public async Task<string> AddJustification(string objInsertTerminal)
         {
-            var updateServiceBody = new TerminalManagement
+            List<AddJustification> arrs = JsonConvert.DeserializeObject<List<AddJustification>>(objInsertTerminal);
+
+            var reqBody = new AddJustification
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                TerminalTypeRequested= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                TerminalIssuanceType= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                Flag = Convert.ToInt32(flag),
+                MerchantId = arrs[0].MerchantId,
+                TerminalIssuanceType = arrs[0].TerminalIssuanceType,
+                TerminalTypeRequested = arrs[0].TerminalTypeRequested,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                Justification= _httpContextAccessor.HttpContext.Session.GetString("UserId")
-
+                Justification = arrs[0].Justification
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.InsertInstallationRequestUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
@@ -96,6 +96,7 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse[0].Reason;
         }
+
         public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(TerminalManagementRequestViewModel terminalReq)
         {
             //TerminalManagementRequestViewModel TerminalManagementResponseData = new TerminalManagementRequestViewModel();
@@ -167,7 +168,7 @@ namespace HPCL.Service.Services
         }
         public async Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
         {
-          
+
             string fromDate = "", toDate = "";
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
@@ -210,15 +211,15 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
 
-           
+
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            
+
             var TerminalManagementRequest = new TerminalDeinstallationRequestViewModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MerchantId = terminalReq.MerchantId!=null? terminalReq.MerchantId:"",
+                MerchantId = terminalReq.MerchantId!=null ? terminalReq.MerchantId : "",
                 TerminalId = terminalReq.TerminalId != null ? terminalReq.TerminalId : "",
                 ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
                 RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
@@ -240,7 +241,7 @@ namespace HPCL.Service.Services
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
-        
+
         public async Task<string> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel deInstallationRequest)
         {
             var deInstallationRequestForms = new TerminalDeinstallationRequestUpdateModel
@@ -252,7 +253,7 @@ namespace HPCL.Service.Services
                 DeinstallationType=deInstallationRequest.DeinstallationType,
                 MerchantId=deInstallationRequest.MerchantId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                ObjUpdateTerminalDeInstalRequest = deInstallationRequest.ObjUpdateTerminalDeInstalRequest 
+                ObjUpdateTerminalDeInstalRequest = deInstallationRequest.ObjUpdateTerminalDeInstalRequest
             };
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(deInstallationRequestForms), Encoding.UTF8, "application/json");
@@ -383,6 +384,148 @@ namespace HPCL.Service.Services
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
+        }
+
+        public async Task<List<TerminalApprovalReqResponse>> GetTerminalInstallationReqApproval(TerminalApprovalReq entity)
+        {
+            var reqBody = new TerminalApprovalReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate,
+                Category = entity.Category,
+                ZonalOfficeId = entity.ZonalOfficeId,
+                RegionalOfficeId = entity.RegionalOfficeId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetTerminalInstallReqAppUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<TerminalApprovalReqResponse> approvalList = updateRes.ToObject<List<TerminalApprovalReqResponse>>();
+            return approvalList;
+        }
+
+        public async Task<string> DoApprovalTerminal(string ObjMerchantTerminalInsertInput, string remark)
+        {
+            ObjMerchantTerminalInsertInput[] arrs = JsonConvert.DeserializeObject<ObjMerchantTerminalInsertInput[]>(ObjMerchantTerminalInsertInput);
+
+            var forms = new TerminalApprovalReject
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp= CommonBase.userip,
+                UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                Remark = remark,
+                Action = "Approve",
+                ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjMerchantTerminalInsertInput = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ApproveRejectTerminalUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg[0].Reason;
+        }
+
+        public async Task<string> DoRejectTerminal(string ObjMerchantTerminalInsertInput, string remark)
+        {
+            ObjMerchantTerminalInsertInput[] arrs = JsonConvert.DeserializeObject<ObjMerchantTerminalInsertInput[]>(ObjMerchantTerminalInsertInput);
+
+            var forms = new TerminalApprovalReject
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp= CommonBase.userip,
+                UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                Remark = remark,
+                Action = "Reject",
+                ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjMerchantTerminalInsertInput = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ApproveRejectTerminalUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg[0].Reason;
+        }
+        public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(TerminalDeinstallationRequestViewModel terminalReq)
+        {
+            string fromDate = "", toDate = "";
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            {
+                string[] fromDateArr = terminalReq.FromDate.Split("-");
+                string[] toDateArr = terminalReq.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+            }
+            else
+            {
+                return terminalReq;
+            }
+            var deInstallForms = new TerminalManagementRequestViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                MerchantId = terminalReq.MerchantId,
+                TerminalId = terminalReq.TerminalId,
+                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
+                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+            };
+            StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(deInstallForms), Encoding.UTF8, "application/json");
+
+            var deInstallResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getproblematicdeinstalledtodeinstalled);
+
+            JObject deInstallReqObj = JObject.Parse(JsonConvert.DeserializeObject(deInstallResponse).ToString());
+            var deInstallObjJarr = deInstallReqObj["Data"].Value<JArray>();
+            List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = deInstallObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
+            terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
+            terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            return terminalReq;
+        }
+
+        public async Task<string> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel deInstall)
+        {
+            var deInstallForms = new TerminalDeinstallationCloseModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Remark = deInstall.Remark,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjMerchantTerminalMapInput = deInstall.ObjMerchantTerminalMapInput
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(deInstallForms), Encoding.UTF8, "application/json");
+            var deInstallResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.insertproblematicdeinstalledtodeinstalled);
+            JObject deInstallResponseObj = JObject.Parse(JsonConvert.DeserializeObject(deInstallResponse).ToString());
+
+            if (deInstallResponseObj["Status_Code"].ToString() == "200")
+            {
+                var deInstallResponseJarr = deInstallResponseObj["Data"].Value<JArray>();
+                List<SuccessResponse> deInstalleResponseList = deInstallResponseJarr.ToObject<List<SuccessResponse>>();
+                return deInstalleResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return deInstallResponseObj["Message"].ToString();
+            }
         }
     }
 }
