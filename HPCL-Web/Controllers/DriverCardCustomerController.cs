@@ -207,5 +207,22 @@ namespace HPCL_Web.Controllers
             return Json(customerInfo);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetAllViewDriverCard(RequestForViewDriverCard entity)
+        {
+            var searchList = await _driverCardCustomerService.GetAllViewDriverCard(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> ViewRequestDriverCard()
+        {
+            RequestForDriverCardModel custMdl = new RequestForDriverCardModel();
+            custMdl = await _driverCardCustomerService.ViewRequestDriverCard();
+
+            return View(custMdl);
+        }
+
     }
 }
