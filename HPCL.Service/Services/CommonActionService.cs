@@ -662,13 +662,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<ProofType> SortedtList = jarr.ToObject<List<ProofType>>();
-
-            SortedtList.Insert(0, new ProofType
-            {
-                ProofTypeId = 0,
-                ProofTypeName = "Select Proof Type Name"
-            });
-
+            
             return SortedtList;
         }
 
