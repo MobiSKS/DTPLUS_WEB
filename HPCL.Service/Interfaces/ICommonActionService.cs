@@ -42,5 +42,6 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID);
         Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown();
         Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown();
+        Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID);
     }
 }

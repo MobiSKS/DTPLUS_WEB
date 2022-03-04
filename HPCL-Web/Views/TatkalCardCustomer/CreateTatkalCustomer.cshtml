@@ -23,6 +23,9 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Create Tatkal Customer</p>
+                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
                         <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
                             <p class="text-dark px-0 py-2 mb-3 font-weight-bold" style="border-bottom:1px solid #ccc;">Application Details</p>
                             <div class="d-flex align-items-center flex-wrap">
@@ -31,7 +34,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.ZonalOffice, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
                                             </div>
                                             <span class="error" id="zonalOffice_error"></span>
                                         </div>
@@ -42,8 +45,9 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.RegionalOffice, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
                                             </div>
+                                            <span class="error" id="regionalOffice_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +58,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Form Number<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="formnum" type="text" value="">
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="formNumber_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +69,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Application Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="appdate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.DateOfApplication, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                                <span class="error" id="applicationDate_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +82,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Signed On<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="signdate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.SignedOn, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                                <span class="error" id="SignedOn_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -101,6 +108,7 @@
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(m => m.KeyOfficialSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
                                             </div>
+                                            <span class="error" id="KeyOfficialSecretQuestion_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -111,6 +119,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
                                             </div>
+                                            <span class="error" id="KeyOfficialSecretAnswer_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -128,10 +137,24 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Individual/Org.Name <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="orgname" type="text" value="">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                           new SelectListItem(){ Text = "Title", Value = "0" },
+                                                           new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                           new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                           new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                           }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                    <span class="error" id="salutaion_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    <span class="error" id="customername_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -141,7 +164,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="nameoncard" type="text" value="">
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                                <span class="error" id="nameOnCard_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -153,17 +177,23 @@
                                         <label class="font-weight-normal col-md-4 col-12">Mobile No <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="mobileno" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <div class="error" id="comm_mobileNumber_error"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="mobile" type="text" value="">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -175,7 +205,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="email" type="email" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="comm_email_error"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -185,7 +216,9 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <textarea class="form-control" id="Textarea1" rows="2"></textarea>
+                                                @*<textarea class="form-control" id="Textarea1" rows="2"></textarea>*@
+                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="comm_address1_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -197,7 +230,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="income" type="text" value="">
+                                                @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                <span class="error" id="incomeTaxPan_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -211,10 +245,10 @@
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3 mb-0">
                     <div class="px-2">
-                        <button class="btn btn_primary" type="button">Submit</button>
+                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Submit</button>
                     </div>
                     <div class="px-2">
-                        <button class="btn btn_primary" type="button">Reset</button>
+                        <button class="btn btn_primary" type="button" id="btnFooterReset">Reset</button>
                     </div>
                 </div>
             </div>
@@ -222,3 +256,527 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var custDateOfApplication = $("#DateOfApplication").val();
+    var OfficialDOB = $("#SignedOn").val();
+    var notFoundError = "@ViewBag.NotFoundError";
+
+    $(document).ready(function () {
+
+        localStorage.setItem("PANNOALREADYUSED", "1");
+
+        if (notFoundError == "") {
+            if (custDateOfApplication == "") {
+                $("#DateOfApplication").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+                setDates();
+            }
+            else {
+                $("#DateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+
+            if (OfficialDOB == "") {
+                $("#SignedOn").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+                //setDates();
+            }
+            else {
+                $("#SignedOn").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+
+
+        }
+    });
+
+    function setDates() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            d.getFullYear();
+
+        $("#DateOfApplication").val(output);
+        $("#SignedOn").val(output);
+
+    };
+
+    // on Zone selection Change
+    $("#ZonalOffice").change(function () {
+        var id = this.value;
+            if (id != 0) {
+                $("#regionalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalDetailsDropDown", "TatkalCardCustomer")',
+                data: { ZonalOfficeID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#RegionalOffice").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOffice");
+                        });
+
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Region");
+                }
+            });
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+       $("#FormNumber").on("blur", function () {
+        //debugger;
+        var formNumber = document.getElementById("FormNumber").value;
+        if (formNumber == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        var formNumberUsed = false;
+        localStorage.setItem("FORMNOALREADYUSED", "1");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckformnumberDuplication", "TatkalCardCustomer")',
+            data: { FormNumber: formNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+
+                if (status == 'success') {
+
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    if (data.status == "0") {
+                        formNumberUsed = true;
+                        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+                        localStorage.setItem("FORMNOALREADYUSED", "0");
+                    }
+                    else {
+                        formNumberUsed = false;
+                        document.getElementById("formNumber_error").innerHTML = "";
+                    }
+                }
+                else {
+                    //console.log(v);
+                    formNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
+
+        //console.log(fromNumberUsed);
+        if (formNumberUsed == true) {
+            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+            //return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+       });
+
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "TatkalCardCustomer")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+
+                if (status == 'success') {
+
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+                    }
+                    else {
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                    }
+                }
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                }
+            }
+        });
+
+        //if (mobileNoUsed == true) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "communication Email is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckEmailDuplication", "TatkalCardCustomer")',
+                data: { Emailid: communicationEmail },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            emailUsed = true;
+                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                            localStorage.setItem("EMAILIDALREADYUSED", "0");
+                        }
+                        else {
+                            emailUsed = false;
+                            document.getElementById("comm_email_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    }
+                }
+            });
+
+        //if (emailUsed == true) {
+        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    function ValidateMandatoryFields() {
+        debugger;
+
+        var ret = false;
+
+        if (document.getElementById("ZonalOffice").value == "" || document.getElementById("ZonalOffice").value == "0") {
+            document.getElementById("zonalOffice_error").innerHTML = "Zonal Office is required";
+            document.getElementById("ZonalOffice").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("zonalOffice_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RegionalOffice").value == "" || document.getElementById("RegionalOffice").value == "0") {
+            document.getElementById("regionalOffice_error").innerHTML = "Regional Office is required";
+            document.getElementById("RegionalOffice").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("regionalOffice_error").innerHTML = "";
+        }
+                      
+        if (document.getElementById("FormNumber").value == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+            //document.getElementById("FormNumber").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("DateOfApplication").value == "") {
+            document.getElementById("applicationDate_error").innerHTML = "Application Date is required";
+            document.getElementById("DateOfApplication").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("applicationDate_error").innerHTML = "";
+        }
+
+        if (document.getElementById("SignedOn").value == "") {
+            document.getElementById("SignedOn_error").innerHTML = "Signed On is required";
+            document.getElementById("SignedOn").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("SignedOn_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationStateId").value == "0") {
+            document.getElementById("comm_states_error").innerHTML = "State is required";
+            document.getElementById("CommunicationStateId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOfficialSecretQuestion").value == "0") {
+            document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "Secret Question is required";
+            document.getElementById("KeyOfficialSecretQuestion").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOfficialSecretAnswer").value == "") {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Secret Answer is required";
+            document.getElementById("KeyOfficialSecretAnswer").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgNameTitle").value == "0") {
+            document.getElementById("salutaion_error").innerHTML = "Title is required";
+            document.getElementById("IndividualOrgNameTitle").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgName").value == "") {
+            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+            document.getElementById("IndividualOrgName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value == "") {
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card is required";
+            document.getElementById("NameOnCard").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is required";
+            document.getElementById("CommunicationMobileNo").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationEmailid").value == "") {
+            document.getElementById("comm_email_error").innerHTML = "Email is required";
+            document.getElementById("CommunicationEmailid").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress1").value == "") {
+            document.getElementById("comm_address1_error").innerHTML = "Address is required";
+            document.getElementById("CommunicationAddress1").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IncomeTaxPan").value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            //document.getElementById("IncomeTaxPan").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+              
+               
+        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+                             
+
+        if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("IncomeTaxPan").value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            //document.getElementById("IncomeTaxPan").focus();
+            return ret;
+        }
+        else {
+            var result = false;
+
+            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                return (false);
+            }
+            else {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+
+        }
+
+        //if (ret == false)
+        //    return ret;
+
+        return true;
+    }
+
+    $("#btnFooterReset").click(function () {
+        debugger;
+
+        document.getElementById("ZonalOffice").value = "0"
+        document.getElementById("zonalOffice_error").innerHTML = "";
+        document.getElementById("RegionalOffice").value = "0"
+        document.getElementById("regionalOffice_error").innerHTML = "";
+        document.getElementById("FormNumber").value = "";
+        document.getElementById("formNumber_error").innerHTML = "";
+        document.getElementById("applicationDate_error").innerHTML = "";
+        document.getElementById("SignedOn_error").innerHTML = "";
+        document.getElementById("CommunicationStateId").value = "0";
+        document.getElementById("comm_states_error").innerHTML = "";
+        document.getElementById("KeyOfficialSecretQuestion").value = "0"
+        document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "";
+        document.getElementById("KeyOfficialSecretAnswer").value = ""
+        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        document.getElementById("IndividualOrgNameTitle").value = "0"
+        document.getElementById("salutaion_error").innerHTML = "";
+        document.getElementById("IndividualOrgName").value = "";
+        document.getElementById("customername_error").innerHTML = "";
+        document.getElementById("NameOnCard").value = "";
+        document.getElementById("nameOnCard_error").innerHTML = "";
+        document.getElementById("CommunicationMobileNo").value = "";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        document.getElementById("CommunicationEmailid").value = "";
+        document.getElementById("comm_email_error").innerHTML = "";
+        document.getElementById("CommunicationAddress1").value = "";
+        document.getElementById("comm_address1_error").innerHTML = "";
+        document.getElementById("IncomeTaxPan").value = "";
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+        setDates();
+
+    });
+
+</script>

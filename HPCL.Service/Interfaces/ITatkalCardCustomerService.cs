@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace HPCL.Service.Interfaces
     {
         Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard();
         Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard(TatkalCustomerCardRequestInfo tatkalCustomerCardRequestInfo);
-        Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel custModel);
+        Task<TatkalCardCustomerModel> CreateTatkalCustomer();
+        Task<List<CustomerRegionModel>> GetRegionalDetailsDropDown(int ZonalOfficeID);
+        Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel customerModel);
     }
 }

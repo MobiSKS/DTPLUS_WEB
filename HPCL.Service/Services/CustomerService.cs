@@ -798,62 +798,7 @@ namespace HPCL.Service.Services
 
 
         }
-
-        public async Task<List<CustomerRegionModel>> GetRegionalDetails(int ZonalOfficeID)
-        {
-            var customerZone = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"ZonalId", ZonalOfficeID.ToString() }
-
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(customerZone), Encoding.UTF8, "application/json");
-
-            var responseRegionalOffice = await _requestService.CommonRequestService(content, WebApiUrl.getRegionalOffice);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerRegionModel> lstCustomerRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
-            lstCustomerRegionModel.Add(new CustomerRegionModel
-            {
-                RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Regional Office",
-
-            });
-            var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();
-            return SortedtList;
-
-            //using (var Response = await client.PostAsync(WebApiUrl.getRegionalOffice, content))
-            //{
-            //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //    {
-            //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-            //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //        var jarr = obj["Data"].Value<JArray>();
-            //        List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
-            //        lst.Add(new CustomerRegionModel
-            //        {
-            //            RegionalOfficeID = 0,
-            //            RegionalOfficeName = "--Select Region--",
-
-            //        });
-            //        var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
-            //        return Json(SortedtList);
-
-            //    }
-            //    else
-            //    {
-            //        ModelState.Clear();
-            //        ModelState.AddModelError(string.Empty, "Error Loading Region Details");
-            //        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //    }
-            //}
-
-        }
-
+        
         public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
         {
 

@@ -731,5 +731,32 @@ namespace HPCL.Service.Services
             return SortedtList;
         }
 
+        public async Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID)
+        {
+            CustomerRegionRequestModel customerZone = new CustomerRegionRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZonalId = ZonalOfficeID.ToString()
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerZone), Encoding.UTF8, "application/json");
+
+            var responseRegionalOffice = await _requestService.CommonRequestService(content, WebApiUrl.getRegionalOffice);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerRegionModel> lstCustomerRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
+            lstCustomerRegionModel.Add(new CustomerRegionModel
+            {
+                RegionalOfficeID = 0,
+                RegionalOfficeName = "Select Regional Office",
+
+            });
+            var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();
+            return SortedtList;
+        }
+
     }
 }

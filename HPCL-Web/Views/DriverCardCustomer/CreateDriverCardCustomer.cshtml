@@ -681,7 +681,7 @@
 
        });
 
-           $("#FormNumber").on("blur", function () {
+    $("#FormNumber").on("blur", function () {
         //debugger;
         var formNumber = document.getElementById("FormNumber").value;
         if (formNumber == "") {
@@ -695,46 +695,46 @@
         var formNumberUsed = false;
         localStorage.setItem("FORMNOALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckformnumberDuplication", "DriverCardCustomer")',
-                data: { FormNumber: formNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckformnumberDuplication", "DriverCardCustomer")',
+            data: { FormNumber: formNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        if (data.status == "0") {
-                            formNumberUsed = true;
-                            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
-                            localStorage.setItem("FORMNOALREADYUSED", "0");
-                        }
-                        else {
-                            formNumberUsed = false;
-                            document.getElementById("formNumber_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    if (data.status == "0") {
+                        formNumberUsed = true;
+                        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+                        localStorage.setItem("FORMNOALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        formNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        formNumberUsed = false;
+                        document.getElementById("formNumber_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    formNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
 
         //console.log(fromNumberUsed);
-            if (formNumberUsed == true) {
+        if (formNumberUsed == true) {
             document.getElementById("formNumber_error").innerHTML = "Form No is already used";
             //return (false);
         }
@@ -742,7 +742,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
         }
 
-           });
+    });
 
     function LoadCard1Deatils() {
         debugger;
