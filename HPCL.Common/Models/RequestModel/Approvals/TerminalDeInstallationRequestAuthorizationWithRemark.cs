@@ -1,8 +1,10 @@
-﻿using System;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Approvals;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HPCL.Common.Models.RequestModel
+namespace HPCL.Common.Models.RequestModel.Approvals
 {
     public class TerminalDeInstallationRequestAuthorizationWithRemark
     {
