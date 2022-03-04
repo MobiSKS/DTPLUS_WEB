@@ -420,7 +420,7 @@ namespace HPCL.Service.Services
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 Remark = remark,
-                Action = "4",
+                Action = "Approve",
                 ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjMerchantTerminalInsertInput = arrs
             };
@@ -445,7 +445,7 @@ namespace HPCL.Service.Services
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 Remark = remark,
-                Action = "13",
+                Action = "Reject",
                 ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjMerchantTerminalInsertInput = arrs
             };
