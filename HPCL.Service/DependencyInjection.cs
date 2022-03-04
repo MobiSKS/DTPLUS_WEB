@@ -23,6 +23,7 @@ namespace HPCL.Service
             services.AddTransient<ITerminalManagement, TerminalManagementService>();
             services.AddTransient<ILocationServices, LocationServices>();
             services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<IApprovalService, ApprovalService>();
 
             return services;
         }
