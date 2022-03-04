@@ -19,7 +19,10 @@ namespace HPCL_Web.Controllers
         {
             _TerminalService = ViewServices;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> ManageTerminal()
         {
             return View();
@@ -76,10 +79,12 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus()
+        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.ViewTerminalDeinstallationRequestStatus(terminalReq);
+            return View(modals);
         }
+
 
         public async Task<IActionResult> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
         {
@@ -102,40 +107,29 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> TerminalDeInstallationRequest()
+        public async Task<IActionResult> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.TerminalDeInstallationRequest(terminalReq);
+            return View(modals);
         }
-
-        public async Task<IActionResult> TerminalDeInstallationRequestClose()
-        {
-            return View();
-        }
-
-        public IActionResult TerminalInstallationRequestApproval()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public async Task<JsonResult> TerminalInstallationRequestApproval(TerminalApprovalReq entity)
+        public async Task<IActionResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
         {
-            var approvalList = await _TerminalService.GetTerminalInstallationReqApproval(entity);
-            return Json(new { approvalList = approvalList });
+            var result = await _TerminalService.SubmitDeinstallRequest(TerminalDeinstallationRequestUpdate);
+            return Json(result);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> TerminalInstallationRequestApprovalClick(string ObjMerchantTerminalInsertInput, string remark)
+        public async Task<IActionResult> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            var reason = await _TerminalService.DoApprovalTerminal(ObjMerchantTerminalInsertInput, remark);
-            return Json(reason);
+            var modals = await _TerminalService.TerminalDeInstallationRequestClose(terminalReq);
+            return View(modals);
         }
-
         [HttpPost]
-        public async Task<JsonResult> TerminalInstallationRequestRejectClick(string ObjMerchantTerminalInsertInput, string remark)
+        public async Task<IActionResult> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)
         {
-            var reason = await _TerminalService.DoRejectTerminal(ObjMerchantTerminalInsertInput, remark);
-            return Json(reason);
+            var result = await _TerminalService.SubmitDeinstallationRequestClose(TerminalDeinstallationClose);
+            return Json(result);
         }
+        
     }
 }

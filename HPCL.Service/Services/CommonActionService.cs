@@ -1,9 +1,11 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -440,17 +442,17 @@ namespace HPCL.Service.Services
 
         public async Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo)
         {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
+            //Request info
+            var requestInfo = new MobilNoDuplicationCheckRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationMobileNo", MobileNo }
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CommunicationMobileNo = MobileNo
             };
 
 
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkmobileNoDuplication);
 
@@ -461,17 +463,17 @@ namespace HPCL.Service.Services
         }
         public async Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid)
         {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
+            //Request info
+            var requestInfo = new EmailDuplicationCheckRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationEmailid", Emailid }
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CommunicationEmailid = Emailid
             };
 
 
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkemailidDuplication);
 
@@ -592,6 +594,103 @@ namespace HPCL.Service.Services
             var sortedtList = ReasonType.OrderBy(x => x.ReasonId).ToList();
             return sortedtList;
         }
+
+        public async Task<string> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            string apiUrl = "v3/rc-advanced";
+
+            var input = new VehicleRegistrationValidateRequestModel()
+            {
+                registrationNumber = RegistrationNumber,
+                consent = "Y",
+                version = "3.1"
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.VehicleRegistrationValidCheckService(content, apiUrl);
+
+            return response;
+        }
+
+        public async Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID)
+        {
+            MerchantDetailsResponseOTCCardCustomer merchantDetails = new MerchantDetailsResponseOTCCardCustomer();
+
+            var requestinfo = new Dictionary<string, string>
+            {
+                {"Useragent", CommonBase.useragent},
+                {"Userip", CommonBase.userip},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"MerchantId", MerchantID}
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchMerchantForCardCreation);
+
+            MerchantResponseOTCCardCustomer merchant = JsonConvert.DeserializeObject<MerchantResponseOTCCardCustomer>(response);
+
+
+            if (merchant.Internel_Status_Code == 1000)
+            {
+                merchantDetails.RegionalOfficeName = merchant.Data[0].RegionalOfficeName;
+                merchantDetails.RetailOutletName = merchant.Data[0].RetailOutletName;
+                merchantDetails.SalesAreaName = merchant.Data[0].SalesAreaName;
+                merchantDetails.ZonalOfficeName = merchant.Data[0].ZonalOfficeName;
+                merchantDetails.RegionalOfficeId = merchant.Data[0].RegionalOfficeId;
+                merchantDetails.Internel_Status_Code = merchant.Internel_Status_Code;
+                merchantDetails.Status_Code = merchant.Status_Code;
+            }
+
+            return merchantDetails;
+
+        }
+        public async Task<List<ProofType>> GetAddressProofList()
+        {
+            var forms = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetProofTyleUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<ProofType> SortedtList = jarr.ToObject<List<ProofType>>();
+            
+            return SortedtList;
+        }
+
+        public async Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            VerifyMerchantRequestModel requestinfo = new VerifyMerchantRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionalOfficeId = RegionalId,
+                MerchantId = MerchantID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.verifyMerchantByMerchantidAndRegionalid);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+
+            return responseData;
+        }
+
 
     }
 }

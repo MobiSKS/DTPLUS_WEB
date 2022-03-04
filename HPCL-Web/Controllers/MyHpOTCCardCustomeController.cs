@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Helper;
+
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
@@ -7,10 +8,14 @@ using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 
 namespace HPCL_Web.Controllers
 {
@@ -25,6 +30,10 @@ namespace HPCL_Web.Controllers
             _myHpOTCCardCustomerService = myHpOTCCardCustomerService;
             _commonActionService = commonActionService;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> CustomerCardCreation()
         {
             MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
@@ -37,7 +46,7 @@ namespace HPCL_Web.Controllers
         {
             //MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
             customerModel = await _myHpOTCCardCustomerService.CustomerCardCreation(customerModel);
-            
+
             if (customerModel.Internel_Status_Code == 1000)
             {
                 customerModel.Remarks = "";
@@ -74,6 +83,11 @@ namespace HPCL_Web.Controllers
         }
 
 
+
+
+
+
+
         public async Task<IActionResult> SuccessRedirectForOTCCard()
         {
             return View();
@@ -85,7 +99,7 @@ namespace HPCL_Web.Controllers
         {
 
             MerchantDetailsResponseOTCCardCustomer merchantDetailsResponse = new MerchantDetailsResponseOTCCardCustomer();
-            merchantDetailsResponse = await _myHpOTCCardCustomerService.GetMerchantDetailsByMerchantId(MerchantID);
+            merchantDetailsResponse = await _commonActionService.GetMerchantDetailsByMerchantId(MerchantID);
 
             if (merchantDetailsResponse.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
             {
@@ -177,7 +191,7 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
         {
             CommonResponseData commonResponseData = new CommonResponseData();
-            commonResponseData = await _myHpOTCCardCustomerService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
+            commonResponseData = await _commonActionService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
 
             return Json(commonResponseData);
         }
@@ -198,6 +212,23 @@ namespace HPCL_Web.Controllers
 
             return View(custMdl);
         }
+        [HttpPost]
+        [HttpPost]
+        public async Task<JsonResult> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
+        {
+            var searchList = await _myHpOTCCardCustomerService.GetAllViewCardsForOtcCard(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> ViewOTCCards()
+        {
+            MIDAllocationOfCardsModel custMdl = new MIDAllocationOfCardsModel();
+            custMdl = await _myHpOTCCardCustomerService.OTCCardsAllocation();
+
+            return View(custMdl);
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel)
@@ -211,6 +242,13 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> SuccessOTCCardsAllocation()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            var data = await _commonActionService.CheckVehicleRegistrationValid(RegistrationNumber);
+            return new JsonResult(data);
         }
 
     }

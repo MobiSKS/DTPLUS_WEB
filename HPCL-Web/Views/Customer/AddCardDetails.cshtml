@@ -34,9 +34,9 @@
                                             <div class="col-12 col-md-auto">
                                                 <button class="btn btn_primary px-4 py-2" id="btnSearch">Search</button>
                                             </div>
-                                            @*<div class="pl-2 w-50">
-                        <button class="btn btn_primary px-4 py-2" type="button">Edit</button>
-                    </div>*@
+                                            <div class="col-12 col-md-auto">
+                                                <button class="btn btn_primary px-4 py-2" type="button" id="btnHeaderReset">Reset</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">No of Cards <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="NoOfCards_error"></span>
 
                                             </div>
@@ -78,7 +78,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12" id="lblNoOfVehicles" style="display:none;">No Of Vehicles (For All Cards) <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.NoOfVehiclesAllCards, new { @id = "NoOfVehiclesAllCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", @style = "display:none" })
+                                                @Html.TextBoxFor(m => m.NoOfVehiclesAllCards, new { @id = "NoOfVehiclesAllCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", @style = "display:none", autocomplete = "off" })
                                                 <span class="error" id="NoOfVehiclesAllCards_error"></span>
                                             </div>
                                         </div>
@@ -208,7 +208,7 @@
                                             @*<thead>
                         <tr>
                             <th>S No.</th>
-                            <th>Vehicle No./Card Identifier</th>
+                            <th>Card Identifier</th>
                             <th>Vehicle No.</th>
                             <th>Vehicle Type</th>
                             <th>Vehicle Make</th>
@@ -634,16 +634,25 @@
                     </tr>
                 </thead> *@
 
+                //<option value="901">Fleet</option>
+                //<option value="906">Credit</option>
+
+                //<option value="905">Attached</option>
+                //<option value="909">Generic</option>
+
+                //<option value="902">Corporate</option>
+                //<option value="917">Non Fleet</option>
+
                 document.getElementById("NoOfCardsTbl").deleteTHead();
 
                 if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No./Card Identifier</th><th>Vehicle No.</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th></tr></thead>');
+                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th>Vehicle No.</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th></tr></thead>');
                 }
                 else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No./Card Identifier</th></tr></thead>');
+                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th></tr></thead>');
                 }
                 else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No./Card Identifier</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th></tr></thead>');
+                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th></tr></thead>');
                 }
 
 
@@ -669,8 +678,8 @@
 
                         var rows = "<tr>"
                                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                                            + "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                            + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                            + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                                             + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td></tr>";
@@ -679,7 +688,7 @@
 
                         var rows = "<tr>"
                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td></tr>"
+                            + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td></tr>"
                         //+ "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                         //+ "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                         //+ "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
@@ -689,8 +698,8 @@
 
                         var rows = "<tr>"
                                             + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='24' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                                            //+ "<td><span class='rowData'><input type='text' maxlength='16' onkeyup='javascript: RemoveSpecialChar(this)' class='form - control' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                                            //+ "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                            + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' style='text-transform:uppercase' class='form - control' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
                                             + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                             + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td></tr>";
@@ -1015,7 +1024,7 @@
         debugger;
         var vehicleNo = o.value;
         console.log(vehicleNo);
-        
+
         if (vehicleNo == '') {
             //alert('Enter Vehicle No');
             document.getElementById("VehicleNo_error").innerHTML = "Enter Vehicle No";
@@ -1024,7 +1033,7 @@
         else {
             document.getElementById("VehicleNo_error").innerHTML = "";
         }
-               
+
         var result = false;
 
         $.ajax({
@@ -1047,7 +1056,7 @@
             },
             error: function (jqXhr, textStatus, errorMessage) {
                 document.getElementById("VehicleNo_error").innerHTML = "Invalid Vehicle Registration Number";
-                
+
             }
         });
 
@@ -1077,5 +1086,77 @@
     //    return false;
     //}
     //});
+
+    $("#btnHeaderReset").click(function () {
+        debugger;
+        document.getElementById("CustomerReferenceNo").value = "";
+        $("#CustomerReferenceNo").prop('readonly', false);
+        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        document.getElementById("CustomerName").value = "";
+        document.getElementById("FormNumber").value = "";
+        $('#lblNoOfVehicles').hide();
+        $('#NoOfVehiclesAllCards').hide();
+        document.getElementById("RBEId").value = "";
+        document.getElementById("RBEName").value = "";
+        $("#RBEId").prop('readonly', false);
+        document.getElementById("rbtnCardless").checked = false;
+        document.getElementById("rbtnCardless").disabled = false;
+
+        document.getElementById("rbtnCard").checked = false;
+        document.getElementById("rbtnCard").disabled = false;
+
+        document.getElementById("rbtnOnline").checked = false;
+        document.getElementById("rbtnOnline").disabled = false;
+
+        document.getElementById("rbtnFeeWaiver").checked = false;
+        document.getElementById("rbtnFeeWaiver").disabled = false;
+
+        document.getElementById("FeePaymentNo").value = "";
+        document.getElementById("FeePaymentDate").value = "";
+
+        $("#rbtnCard").prop('disabled', false);
+        $("#FeePaymentNo").prop('readonly', false);
+        $("#FeePaymentDate").prop('readonly', false);
+        document.getElementById("NoOfCards").value = "";
+        $("#NoOfCards").prop('readonly', false);
+        document.getElementById("ReceivedAmount").value = "";
+
+        $('#NoOfCardsTbl > tr').remove();
+        document.getElementById('NoOfCardsTbl').style.display = 'none';
+
+
+        $('#NoOfCards').attr("readonly", false);
+        $('#FeePaymentDate').attr("readonly", false);
+        $('#FeePaymentNo').attr("readonly", false);
+
+    });
+
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace Character
+    specialKeys.push(9); //Tab Character
+    specialKeys.push(46); //Delete Character
+    specialKeys.push(36); //Home Character
+    specialKeys.push(35); //End Character
+    specialKeys.push(37); //Left Character
+    specialKeys.push(39); //Right Character
+    //function IsAlphaNumeric(e) {
+    //    var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+    //    var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode));
+    //    document.getElementById("error").style.display = ret ? "none" : "inline";
+    //    return ret;
+    //}
+
+    function IsAlphaNumeric(e) {
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 8 || // Backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+
+        if (!ok) {
+            e.preventDefault();
+        }
+    }
 
 </script>

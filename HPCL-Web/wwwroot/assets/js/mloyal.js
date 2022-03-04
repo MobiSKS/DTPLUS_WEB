@@ -26,7 +26,7 @@ $('.drawermenu').drawermenu({
 });
 
 
-if ($(window).outerWidth() < 991) {
+/*if ($(window).outerWidth() < 991) {
     $('#sidebar').slideReveal({
         trigger: $("#trigger"),
         push: false,
@@ -34,16 +34,16 @@ if ($(window).outerWidth() < 991) {
         width: 225,
         overlay: false
     });
-}
+}*/
 
 //if ($(window).outerWidth() < 991) {
-$('#sidebar_inner').slideReveal({
+/*$('#sidebar_inner').slideReveal({
     trigger: $("#trigger_inner"),
     push: false,
     top: 0,
     width: 225,
     overlay: false
-});
+});*/
 //}
 
 })

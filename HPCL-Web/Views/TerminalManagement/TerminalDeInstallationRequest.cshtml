@@ -1,12 +1,17 @@
-﻿
-
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
+<div class="mt-3 w-100">
+    <marquee width="100%" direction="left">
+        Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+    </marquee>
+</div>
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="#" class="text_primary">Terminal Management</a> </li>
-            <li class="breadcrumb-item font-weight-light">Terminal DeInstallation Request</li>
+            <li class="breadcrumb-item">Terminal DeInstallation Request</li>
         </ul>
-        <form>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -18,11 +23,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">North Zona</option>
-                                                    <option value="9">North West Zona</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                <span class="error" id="zonal_office_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -32,11 +34,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">North Zona</option>
-                                                    <option value="9">North West Zona</option>
-                                                </select>
+                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control"></select>
+                                                <span class="error" id="regionalOfc_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -45,21 +44,18 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="fromdate" type="text" value="">
-                                            </div>
+                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control" })
+                                            <span class="error" id="Merchant_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Terminal ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Terminal ID</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="todate" type="text" value="">
-                                            </div>
+                                            @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control"})
                                         </div>
                                     </div>
                                 </div>
@@ -70,11 +66,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">DeInstallation Type <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="DeInstallation" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="7">All Terminal</option>
-                                                    <option value="9">Indivisual Terminal</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.DeinstallationTypeID, new SelectList(Model.DeinstallationTypes, "DeinstallationTypeID", "DeinstallationType"), new { @class = "form-control", onchange = "changeterminalId()" })
+                                                <span class="error" id="type_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -83,10 +76,10 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
+                                    <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +87,317 @@
                     </div>
                 </div>
             </div>
-        </form>
+        }
         <div class="clearfix"></div>
+        <div id="show_Table">
+            @if (Model.ObjMerchantDeinstallationDetail.Count() > 0)
+            {
+                <div class="border-1 rounded border-grey w-100">
+                    <div class="py-2 p-md-4">
+                        <div class="row">
+                            <div class="col-12 float-left">
+                                <div class="col-6 float-left">
+
+                                    <div class="col-lg-12 col-md-12 col-12">
+                                        <div class=" d-flex align-items-start flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
+                                            <div class="col-md-7 col-12" id="SummaryMerchantID">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().MerchantName</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
+                                            <div class="col-md-7 col-12" id="SummaryRetailOutletName">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().RetailOutletName</label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Address :</label>
+                                            <div class="col-md-7 col-12" id="SummaryMerchantType">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().Address</label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">City :</label>
+                                            <div class="col-md-7 col-12" id="SummaryDealerName">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().City</label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">State :</label>
+                                            <div class="col-md-7 col-12" id="SummaryDealerMobileNum">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().State</label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">District :</label>
+                                            <div class="col-md-7 col-12" id="SummaryOutletCategory">
+                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().District</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+            }
+            @if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
+            {
+
+
+                string DeinstallationTypeID = Model.DeinstallationTypeID, disabled = "";
+                if (DeinstallationTypeID == "1")
+                    disabled = "disabled";
+
+                <div class="table-responsive">
+                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+                        <thead style="background-color:lightgray;">
+                            <tr>
+                                <th style="width:5%;"><input type="checkbox" id="checkAll" @disabled /></th>
+                                <th style="width:10%;">Zonal Office</th>
+                                <th style="width:10%;">Regional Office</th>
+                                <th style="width:10%;">Terminal ID</th>
+                                <th style="width:10%;">Created Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            @{
+                                int i = 0;
+
+                            }
+                            @foreach (var item in Model.ObjTerminalDeinstallationDetail)
+                            {
+                                i = i + 1;
+
+                                <tr>
+                                    <td><input type="checkbox" id="check_@i" @disabled /></td>
+                                    <td>@item.ZonalOfficeName</td>
+                                    <td>@item.RegionalOfficeName</td>
+                                    <td>@item.TerminalId</td>
+                                    <td>@item.CreatedTime</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="clearfix"></div>
+
+
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    <textarea rows="4" id="txtComments" cols="50"></textarea>
+                                    <span class="error" id="comment_error"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" onclick="submitTerminaldeinstallationRequest();">Deinstall</button>
+                    </div>
+
+                </div>
+
+            }
+            else
+            {
+                <div class="col-12 text-center alert-danger p-2">
+                    No Records found!
+                </div>
+            }
+        </div>
+        <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
     </div>
 </div>
+<script type="text/javascript">
+    //debugger;
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    var zonalID = $("#ZonalOfficeId").val();
+    var regionalID = $("#RegionalOfcIdVal").val();
+
+
+    $(document).ready(function () {
+        getMerchantRegionalOfc();
+        //debugger;
+        var merchantID = $("#MerchantId").val();
+        if (merchantID == "") {
+            $("#show_Table").html("");
+        }
+
+    });
+
+    $("#btnSearch").on("click", (function (e) {
+        //debugger;
+        var deInstallationType = $("#DeinstallationTypeID :selected").val();
+        var merchantID = $("#MerchantId").val();
+        var flag = "Y";
+        if (merchantID == "") {
+            $("#Merchant_error").html("Enter Merchant ID");
+            flag = "N";
+        }
+        else
+            $("#Merchant_error").html("");
+        if (deInstallationType == "0") {
+            $("#type_error").html("Select Deinstallation Type");
+            flag = "N";
+        }
+        else
+            $("#type_error").html("");
+        if (flag == "N")
+            e.preventDefault();
+
+    })
+    );
+    $("#btnReset").click(function () {
+       //debugger;
+        resetData();
+
+    });
+    function resetData() {
+        //debugger;
+
+        $("#ZonalOfficeId").val(0);
+        getMerchantRegionalOfc();
+        $("#DeinstallationTypeID").val(0);
+        $("#MerchantId").val("");
+        $("#TerminalId").val("");
+        $("#show_Table").html("");
+    };
+    $("#RegionalOfficeId").change(function () {
+        var id = this.value;
+        $("#RegionalOfcIdVal").val(id);
+    });
+    function changeterminalId() {
+        var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
+        if (deInstallationTypeID == "1") {
+            $("#TerminalId").val("");
+            $("#TerminalId").prop("readonly", true);
+        }
+        else
+            $("#TerminalId").prop("readonly", false);
+    }
+    
+    
+    function getMerchantRegionalOfc() {
+        var id = $('#ZonalOfficeId :selected').val();
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+            data: { ZonalOfcID: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#RegionalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--All--"
+                                }).html("--All--").appendTo("#RegionalOfficeId");
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+                        else if (data.regionalOfficeID == regionalID) {
+                            $('<option selected = "selected">',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+                        else {
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Regional Office Data");
+            }
+        });
+    };
+
+     function submitTerminaldeinstallationRequest() {
+        //alert("inside submit");
+         terminalDetail = [];
+         var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
+         var deInstallationType = $("#DeinstallationTypeID :selected").text();
+         if (deInstallationTypeID == "1") {
+             $("#TerminalRequestDetails tbody tr").each(function () {
+                 var row = $(this);
+                 var terminalId = row[0].cells[3].textContent;
+                 terminalDetail.push({ TerminalId: terminalId });
+             });
+         }
+         if (deInstallationTypeID == "2") {
+             $("#TerminalRequestDetails tbody tr").each(function () {
+                 var row = $(this);
+                 if (row.find('input[type="checkbox"]').is(":checked")) {
+                     var terminalId = row[0].cells[3].textContent;
+                     terminalDetail.push({ TerminalId: terminalId });
+                 }
+             });
+         }
+        var flag = "Y";
+        //debugger;
+         var comments = $('#txtComments').val();
+         var merchantID = $("#MerchantId").val();
+         if (terminalDetail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+         if (comments == "") {
+             flag = "N";
+             $("#comment_error").html("Please add comments");
+        }
+         if (terminalDetail.length > 0 && flag == "Y") {
+            $("#comment_error").html("");
+            var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(terminationReqmodel),
+                success: function (data) {
+                    alert(data);
+
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+            });
+        }
+
+
+    };
+
+</script>

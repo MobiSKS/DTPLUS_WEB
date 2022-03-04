@@ -29,6 +29,14 @@ namespace HPCL_Web.Controllers
             _merchantServices = merchantServices;
             _commonActionService = commonActionService;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Profile()
+        {
+            return View();
+        }
         public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode)
         {
             var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode);

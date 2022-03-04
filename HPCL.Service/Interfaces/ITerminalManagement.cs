@@ -19,5 +19,10 @@ namespace HPCL.Service.Interfaces
         Task<List<TerminalApprovalReqResponse>> GetTerminalInstallationReqApproval(TerminalApprovalReq entity);
         Task<string> DoApprovalTerminal(string ObjMerchantTerminalInsertInput, string remark);
         Task<string> DoRejectTerminal(string ObjMerchantTerminalInsertInput, string remark);
+        Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq);
+        Task<string> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate);
+        Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq);
+        Task<string> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose);
+        Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq);
     }
 }

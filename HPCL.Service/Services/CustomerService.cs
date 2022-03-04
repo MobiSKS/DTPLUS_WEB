@@ -1619,27 +1619,6 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
-        public async Task<CustomerInserCardResponseData> CheckEmailDuplication(string Emailid)
-        {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationEmailid", Emailid }
-            };
-
-
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-
-            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkemailidDuplication);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            return lst[0];
-        }
         public async Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo)
         {
             //fetching Customer info
@@ -1661,49 +1640,7 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
-
-        public async Task<string> CheckVehicleRegistrationValid(string RegistrationNumber)
-        {
-            string apiUrl = "v3/rc-advanced";
-
-            var input = new
-            {
-                registrationNumber = RegistrationNumber,
-                consent = "Y",
-                version = "3.1"
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.VehicleRegistrationValidCheckService(content, apiUrl);
-
-            return response;
-        }
-
-        public async Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo)
-        {
-
-            //fetching Customer info
-            var CustomerPanInfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                        {"ZonalId", "0"},
-                        {"RegionalId", "0"},
-                        {"IncomeTaxPan", PanNo }
-                    };
-
-
-            StringContent cusPancontent = new StringContent(JsonConvert.SerializeObject(CustomerPanInfo), Encoding.UTF8, "application/json");
-
-            var responseCustomer = await _requestService.CommonRequestService(cusPancontent, WebApiUrl.checkPanNoDuplication);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomer).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            return lst[0];
-        }
-
+               
+       
     }
 }
