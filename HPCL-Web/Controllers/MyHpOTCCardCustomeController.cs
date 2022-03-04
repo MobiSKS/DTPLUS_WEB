@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Helper;
+
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
@@ -14,6 +15,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 
 namespace HPCL_Web.Controllers
 {
@@ -28,6 +30,10 @@ namespace HPCL_Web.Controllers
             _myHpOTCCardCustomerService = myHpOTCCardCustomerService;
             _commonActionService = commonActionService;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> CustomerCardCreation()
         {
             MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
@@ -40,7 +46,7 @@ namespace HPCL_Web.Controllers
         {
             //MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
             customerModel = await _myHpOTCCardCustomerService.CustomerCardCreation(customerModel);
-            
+
             if (customerModel.Internel_Status_Code == 1000)
             {
                 customerModel.Remarks = "";
@@ -75,6 +81,11 @@ namespace HPCL_Web.Controllers
 
             return View(requestForOTCCardModel);
         }
+
+
+
+
+
 
 
         public async Task<IActionResult> SuccessRedirectForOTCCard()
@@ -195,6 +206,23 @@ namespace HPCL_Web.Controllers
         }
 
         public async Task<IActionResult> OTCCardsAllocation()
+        {
+            MIDAllocationOfCardsModel custMdl = new MIDAllocationOfCardsModel();
+            custMdl = await _myHpOTCCardCustomerService.OTCCardsAllocation();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        [HttpPost]
+        public async Task<JsonResult> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
+        {
+            var searchList = await _myHpOTCCardCustomerService.GetAllViewCardsForOtcCard(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> ViewOTCCards()
         {
             MIDAllocationOfCardsModel custMdl = new MIDAllocationOfCardsModel();
             custMdl = await _myHpOTCCardCustomerService.OTCCardsAllocation();

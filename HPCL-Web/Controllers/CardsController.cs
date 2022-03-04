@@ -15,7 +15,10 @@ namespace HPCL_Web.Controllers
         {
             _cardService = cardServices;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public IActionResult ManageCards()
         {
             return View();

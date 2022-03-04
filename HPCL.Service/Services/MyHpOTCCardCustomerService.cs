@@ -228,6 +228,50 @@ namespace HPCL.Service.Services
             return custModel;
         }
 
+
+        public async Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
+        {
+            var searchBody = new GetAllUnAllocatedOTCCardsRequestModel();
+            if (entity.RegionalId != null)
+            {
+                searchBody = new GetAllUnAllocatedOTCCardsRequestModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = entity.RegionalId,
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetAllUnAllocatedOTCCardsRequestModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewOTCCardRequest);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<ViewOTCCardResponse> searchList = jarr.ToObject<List<ViewOTCCardResponse>>();
+            return searchList;
+        }
+
+
+        public async Task<MIDAllocationOfCardsModel> ViewOTCCards()
+        {
+            MIDAllocationOfCardsModel custModel = new MIDAllocationOfCardsModel();
+            custModel.Remarks = "";
+            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            return custModel;
+        }
+
         public async Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel)
         {
             CommonResponseData responseData = new CommonResponseData();

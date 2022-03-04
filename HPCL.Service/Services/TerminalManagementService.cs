@@ -270,5 +270,76 @@ namespace HPCL.Service.Services
                 return deInstallResponseObj["Message"].ToString();
             }
         }
+
+        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
+        {
+            string fromDate = "", toDate = "";
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            {
+                string[] fromDateArr = terminalReq.FromDate.Split("-");
+                string[] toDateArr = terminalReq.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+            }
+            else
+            {
+                return terminalReq;
+            }
+            var TerminalManagementRequest = new TerminalManagementRequestViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                MerchantId = terminalReq.MerchantId,
+                TerminalId = terminalReq.TerminalId,
+                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
+                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+            };
+            StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
+
+            var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getterminaldeinstallationrequestclose);
+
+            JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
+            var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
+            List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
+            terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
+            terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            return terminalReq;
+        }
+
+
+        public async Task<string> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)
+        {
+            var deInstallationCloseForms = new TerminalDeinstallationCloseModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Status = TerminalDeinstallationClose.Status,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                Comments= TerminalDeinstallationClose.Comments,
+                ObjMerchantTerminalMapInput = TerminalDeinstallationClose.ObjMerchantTerminalMapInput
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(deInstallationCloseForms), Encoding.UTF8, "application/json");
+            var deInstallCloseResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.terminaldeinstalupdaterequestclose);
+            JObject closeResponseObj = JObject.Parse(JsonConvert.DeserializeObject(deInstallCloseResponse).ToString());
+
+            if (closeResponseObj["Status_Code"].ToString() == "200")
+            {
+                var closeResponseJarr = closeResponseObj["Data"].Value<JArray>();
+                List<SuccessResponse> closeResponseList = closeResponseJarr.ToObject<List<SuccessResponse>>();
+                return closeResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return closeResponseObj["Message"].ToString();
+            }
+        }
     }
 }

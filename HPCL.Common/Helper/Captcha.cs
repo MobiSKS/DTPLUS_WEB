@@ -92,7 +92,7 @@ namespace HPCL.Common.Helper
                     {
                         fontBrush.Color = GetRandomDeepColor();
 
-                        int shiftPx = fontSize / 6;
+                        int shiftPx = fontSize / 7;
 
                         float x = i * fontSize + rand.Next(-shiftPx, shiftPx) + rand.Next(-shiftPx, shiftPx);
                         int maxY = height - fontSize;

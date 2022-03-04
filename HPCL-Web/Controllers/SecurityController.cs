@@ -14,7 +14,10 @@ namespace HPCL_Web.Controllers
         {
             _securityService = securityService;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public IActionResult UserCreationApproval()
         {
             return View();

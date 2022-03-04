@@ -25,6 +25,7 @@ namespace HPCL.Common.Models.ViewModel.Terminal
             });
              ObjMerchantDeinstallationDetail = new List<MerchantDeinstallationDetail>();
             ObjTerminalDeinstallationDetail= new List<TerminalDeinstallationDetail>();
+            TerminalDeinstallationRequestDetails = new List<TerminalDeinstallationRequestDetailsViewModel>();
             DeinstallationTypes = new List<DeinstallationTypeModel>();
             DeinstallationTypes.Add(new DeinstallationTypeModel
             {
@@ -59,6 +60,7 @@ namespace HPCL.Common.Models.ViewModel.Terminal
         public virtual List<MerchantDeinstallationDetail> ObjMerchantDeinstallationDetail { get; set; }
         public virtual List<TerminalDeinstallationDetail> ObjTerminalDeinstallationDetail { get; set; }
         public virtual List<DeinstallationTypeModel> DeinstallationTypes { get; set; }
+        public virtual List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeinstallationRequestDetails { get; set; }
     }
     public class MerchantDeinstallationDetail
     {

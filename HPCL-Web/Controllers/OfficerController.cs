@@ -26,6 +26,10 @@ namespace HPCL_Web.Controllers
         {
             _officerService = officerServices;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> Details(string officerType, string location, string reason)
         {
             var modals = await _officerService.Details(officerType, location);

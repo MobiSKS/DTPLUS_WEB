@@ -34,6 +34,10 @@ namespace HPCL_Web.Controllers
             _driverCardCustomerService = driverCardCustomerService;
             _commonActionService = commonActionService;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> CreateDriverCardCustomer()
         {
             DriverCardCustomerModel custMdl = new DriverCardCustomerModel();
