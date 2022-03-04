@@ -130,6 +130,29 @@ namespace HPCL_Web.Controllers
             var result = await _TerminalService.SubmitDeinstallationRequestClose(TerminalDeinstallationClose);
             return Json(result);
         }
-        
+        [HttpPost]
+        public async Task<JsonResult> TerminalInstallationRequestApproval(TerminalApprovalReq entity)
+        {
+            var approvalList = await _TerminalService.GetTerminalInstallationReqApproval(entity);
+            return Json(new { approvalList = approvalList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> TerminalInstallationRequestApprovalClick(string ObjMerchantTerminalInsertInput, string remark)
+        {
+            var reason = await _TerminalService.DoApprovalTerminal(ObjMerchantTerminalInsertInput, remark);
+            return Json(reason);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> TerminalInstallationRequestRejectClick(string ObjMerchantTerminalInsertInput, string remark)
+        {
+            var reason = await _TerminalService.DoRejectTerminal(ObjMerchantTerminalInsertInput, remark);
+            return Json(reason);
+        }
+        public IActionResult TerminalInstallationRequestApproval()
+        {
+            return View();
+        }
     }
 }
