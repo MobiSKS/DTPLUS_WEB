@@ -99,7 +99,7 @@ namespace HPCL_Web.Controllers
         {
 
             MerchantDetailsResponseOTCCardCustomer merchantDetailsResponse = new MerchantDetailsResponseOTCCardCustomer();
-            merchantDetailsResponse = await _myHpOTCCardCustomerService.GetMerchantDetailsByMerchantId(MerchantID);
+            merchantDetailsResponse = await _commonActionService.GetMerchantDetailsByMerchantId(MerchantID);
 
             if (merchantDetailsResponse.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
             {
@@ -191,7 +191,7 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
         {
             CommonResponseData commonResponseData = new CommonResponseData();
-            commonResponseData = await _myHpOTCCardCustomerService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
+            commonResponseData = await _commonActionService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
 
             return Json(commonResponseData);
         }

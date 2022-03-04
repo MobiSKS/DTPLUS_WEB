@@ -81,10 +81,12 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus()
+        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+            var modals = await _TerminalService.ViewTerminalDeinstallationRequestStatus(terminalReq);
+            return View(modals);
         }
+
 
         public async Task<IActionResult> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
         {

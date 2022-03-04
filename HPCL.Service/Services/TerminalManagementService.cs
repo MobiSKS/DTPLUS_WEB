@@ -341,5 +341,48 @@ namespace HPCL.Service.Services
                 return closeResponseObj["Message"].ToString();
             }
         }
+
+        public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
+        {
+
+            string fromDate = "", toDate = "";
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            {
+                string[] fromDateArr = terminalReq.FromDate.Split("-");
+                string[] toDateArr = terminalReq.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+            }
+            else
+            {
+
+                return terminalReq;
+            }
+            var TerminalManagementRequest = new TerminalManagementRequestViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                MerchantId = terminalReq.MerchantId,
+                TerminalId = terminalReq.TerminalId,
+                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
+                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+            };
+            StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
+
+            var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.viewterminaldeinstallationrequeststatus);
+
+            JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
+            var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
+            List<TerminalDeinstallationRequestDetailsViewModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
+            terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalInstallReqList);
+            terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            return terminalReq;
+        }
     }
 }

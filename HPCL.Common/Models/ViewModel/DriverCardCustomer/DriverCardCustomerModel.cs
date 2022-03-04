@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using HPCL.Common.Models.CommonEntity;
+using Microsoft.AspNetCore.Http;
 
 namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
 {
@@ -29,16 +30,16 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         }
 
         [Required(ErrorMessage = "Driver Title is Required")]
-        public string DriverTitle { get; set; }
+        public string IndividualOrgNameTitle { get; set; }
 
         [Required(ErrorMessage = "Driver Name is Required")]
-        public string DriverName { get; set; }
+        public string IndividualOrgName { get; set; }
 
         [Required(ErrorMessage = "Income Tax Pan is Required")]
         public string IncomeTaxPan { get; set; }
 
         [Required(ErrorMessage = "Communication Address is Required")]
-        public string CommunicationAddress { get; set; }
+        public string CommunicationAddress1 { get; set; }
 
         [Required(ErrorMessage = "Communication City is Required")]
         public string CommunicationCityName { get; set; }
@@ -50,13 +51,10 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public int CommunicationStateId { get; set; }
 
         [Required(ErrorMessage = "Address Proof is required")]
-        public int AddressProof { get; set; }
+        public IFormFile AddressProof { get; set; }
         public string CommunicationDialCode { get; set; }
         public string CommunicationPhonePart2 { get; set; }
         public string CommunicationPhoneNo { get; set; }
-        public string CommunicationFaxCode { get; set; }
-        public string CommunicationFaxPart2 { get; set; }
-        public string CommunicationFax { get; set; }
 
         [Required(ErrorMessage = "Communication Mobile No is Required")]
         public string CommunicationMobileNo { get; set; }
@@ -71,13 +69,13 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public string IfDTPCustomer { get; set; }
 
         [Required(ErrorMessage = "Card Number is Required")]
-        public string CardNumber { get; set; }
+        public string CardNo { get; set; }
 
         [Required(ErrorMessage = "Driving Licence is Required")]
         public string DrivingLicence { get; set; }
 
         [Required(ErrorMessage = "File Name is Required")]
-        public string FileName { get; set; }
+        public string AddressProofDocumentNo { get; set; }
 
         public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
         public virtual List<ProofType> DocumentTypeMdl { get; set; }
@@ -87,9 +85,9 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public string Remarks { get; set; }
 
         [Required(ErrorMessage = "Document Type is Required")]
-        public string DocumentType { get; set; }
+        public string AddressProofType { get; set; }
 
-        public string CustomerId { get; set; }
+        public string ExistingCustomerId { get; set; }
         public string CustomerName { get; set; }
 
         [Required(ErrorMessage = "Beneficiary Name is Required")]
@@ -100,7 +98,10 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
 
         [Required(ErrorMessage = "Beneficiary Mobile is Required")]
         public string BeneficiaryMobile { get; set; }
-
+        public string LoggedInAs { get; set; }
+        public string OutletName { get; set; }
+        public string Zone { get; set; }
+        public string RegionalOffice { get; set; }
 
     }
 

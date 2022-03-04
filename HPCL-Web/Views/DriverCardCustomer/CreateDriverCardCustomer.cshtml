@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Driver Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">Create Driver Card Customer </li>
         </ul>
-        <form name="DriverCardCustomerCreationForm" method="post" asp-action="CreateDriverCardCustomer" class="w-100" autocomplete="off">
+        <form name="DriverCardCustomerCreationForm" method="post" asp-action="CreateDriverCardCustomer" class="w-100" autocomplete="off" enctype="multipart/form-data">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -15,7 +15,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
@@ -39,34 +39,36 @@
                             <div class="d-flex align-items-center justify-content-center mt-0">
 
                             </div>
-                            <div class="d-flex align-items-center flex-wrap pt-3">
-                                <div class="col-lg-4 col-12 px-0">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="font-weight-bold col-md-5 col-12">
-                                            Retail Outlet Name
-                                        </div>
-                                        <div class="col-md-7 col-12">
-                                            <label class="font-weight-normal col-md-4 col-12" id="lblOutletName"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-12 px-0">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="font-weight-bold col-md-5 col-12 px-0">
-                                            Zonal Office
-                                        </div>
-                                        <div class="col-md-7 col-12 col-12">
-                                            <label class="font-weight-normal col-md-4 col-12" id="lblZone"></label>
+                            <div id="dvHeaderDetails" style="@(Model.LoggedInAs=="MERCHANT" ? "display:block":"display:none")">
+                                <div class="d-flex align-items-center flex-wrap pt-3">
+                                    <div class="col-lg-4 col-12 px-0">
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <div class="font-weight-bold col-md-5 col-12">
+                                                Retail Outlet Name
+                                            </div>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.OutletName, new { @class = "form-control", @readonly = "readonly" })
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-12 px-0">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="font-weight-bold col-md-5 col-12 px-0">
-                                            Regional Office
+                                    <div class="col-lg-4 col-12 px-0">
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <div class="font-weight-bold col-md-5 col-12 px-0">
+                                                Zonal Office
+                                            </div>
+                                            <div class="col-md-7 col-12 col-12">
+                                                @Html.TextBoxFor(m => m.Zone, new { @class = "form-control", @readonly = "readonly" })
+                                            </div>
                                         </div>
-                                        <div class="col-md-7 col-12 col-12 px-0">
-                                            <label class="font-weight-normal col-md-4 col-12" id="lblRegionalOffice"></label>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-0">
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <div class="font-weight-bold col-md-5 col-12 px-0">
+                                                Regional Office
+                                            </div>
+                                            <div class="col-md-7 col-12 col-12 px-0">
+                                                @Html.TextBoxFor(m => m.RegionalOffice, new { @class = "form-control", @readonly = "readonly" })
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -75,169 +77,220 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
-
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Form Number <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="formNumber_error"></span>
+                <div id="dvOtherDetails" style="@(Model.LoggedInAs=="MERCHANT" ? "display:block":"display:none")">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Form Number <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="formNumber_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-6 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @readonly = "readonly" })
+                                                    <span class="error" id="CardNo_error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 px-0">
+                                                <button class="btn btn_primary" type="button" id="btnCard1" style="height:30px;" data-toggle="modal" data-target="#myModalCard1" onclick="LoadCard1Deatils()">ADD</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", @readonly = "readonly" })
-                                                <span class="error" id="CardNumber_error"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 px-0">
-                                            <button class="btn btn_primary" type="button" id="btnCard1" style="height:30px;" data-toggle="modal" data-target="#myModalCard1" onclick="LoadCard1Deatils()">ADD</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Driver Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.DriverTitle, new[]{
-                                                           new SelectListItem(){ Text = "Title", Value = "0" },
-                                                           new SelectListItem(){ Text = "Mr", Value = "Mr"},
-                                                           new SelectListItem(){ Text = "Ms", Value = "Ms"},
-                                                           new SelectListItem(){ Text = "M/s", Value = "M/s"},
-                                                           }, null, new { @class = "form-control" })
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Driver Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="custom_select">
+                                                            @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                               new SelectListItem(){ Text = "Title", Value = "0" },
+                                                               new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                               new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                               new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                               }, null, new { @class = "form-control px-0" })
+                                                        </div>
+                                                        <span class="error" id="salutaion_error"></span>
                                                     </div>
-                                                    <span class="error" id="salutaion_error"></span>
-                                                </div>
-                                                <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.DriverName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                                    <span class="error" id="customername_error"></span>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                        <span class="error" id="customername_error"></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
-                </div>
 
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="communicationCityName_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Pin Code <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="communicationPincode_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
-                                                <span class="error" id="comm_states_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                                <div class="error" id="comm_email_error"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="communicationCityName_error"></span>
                                                 </div>
-                                                <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Pin Code <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="communicationPincode_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <div class="error" id="comm_mobileNumber_error"></div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                    <span class="error" id="comm_states_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    <div class="error" id="comm_email_error"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <div class="error" id="comm_mobileNumber_error"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Driving License <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.DrivingLicence, new { @class = "form-control", maxlength = "30", autocomplete = "off" })
+                                                    <div class="error" id="DrivingLicence_error"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @*<textarea class="form-control" id="Textarea2" rows="3"></textarea>*@
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="comm_address1_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Driving License <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.DrivingLicence, new { @class = "form-control", maxlength = "50", autocomplete = "off" })
-                                                <div class="error" id="DrivingLicence_error"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0 pt-1">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Address Proof Upload</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Document Type <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.AddressProofType, new SelectList(Model.DocumentTypeMdl, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })
+                                                    <span class="error" id="AddressProofType_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-5 col-12">Address Proof <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @*<input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                                    <span class="error" id="DocumentType_error"></span>*@
+                                                    @Html.TextBoxFor(m => m.AddressProof, new { @id = "AddressProof", @class = "form-control", Type = "file" })
+                                                    <span class="error" id="AddressProof_error"></span>
+                                                    @*@Html.ValidationMessageFor(m => m.AddressProof, "", new { @class = "text-danger" })*@
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @*<textarea class="form-control" id="Textarea2" rows="3"></textarea>*@
-                                                @Html.TextBoxFor(m => m.CommunicationAddress, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="comm_address1_error"></span>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">File Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="AddressProofDocumentNo_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -245,180 +298,930 @@
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0 pt-1">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Address Proof Upload</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Document Type <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.DocumentType, new SelectList(Model.DocumentTypeMdl, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })
-                                                <span class="error" id="DocumentType_error"></span>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">DTPlus Customer Details</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-12 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-2 col-12">If DTP Customer <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-10 col-12">
+                                                <div class="form-check form-check-inline">
+                                                    @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">*@
+                                                    @Html.RadioButtonFor(m => m.IfDTPCustomer, "Yes", new { @id = "rbtnDTPCustomerYes" })
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
+                                                    @Html.RadioButtonFor(m => m.IfDTPCustomer, "No", new { @id = "rbtnDTPCustomerNo" })
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Address Proof <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @*<input type="file" class="form-control-file" id="exampleFormControlFile1">
-                                                <span class="error" id="DocumentType_error"></span>*@
-                                                @Html.TextBoxFor(m => m.AddressProof, new { @id = "AddressProof", @class = "form-control", Type = "file" })
-                                                @Html.ValidationMessageFor(m => m.AddressProof, "", new { @class = "text-danger" })
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.ExistingCustomerId, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="CustomerId_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-5 col-12">Customer Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                    <span class="error" id="CustomerName_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">File Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @*<input class="form-control" id="" name="filename" type="text" value="">*@
-                                                @Html.TextBoxFor(m => m.FileName, new { @class = "form-control", autocomplete = "off" })
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                    <span class="error" id="incomeTaxPan_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">DTPlus Customer Details</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-12 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-2 col-12">If DTP Customer <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-10 col-12">
-                                            <div class="form-check form-check-inline">
-                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">*@
-                                                @Html.RadioButtonFor(m => m.IfDTPCustomer, "Yes", new { @id = "rbtnDTPCustomerYes" })
-                                                <label class="form-check-label" for="inlineRadio1">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
-                                                @Html.RadioButtonFor(m => m.IfDTPCustomer, "No", new { @id = "rbtnDTPCustomerNo" })
-                                                <label class="form-check-label" for="inlineRadio2">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="CustomerId_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Customer Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="CustomerName_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
-                                                <span class="error" id="incomeTaxPan_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="clearfix"></div>
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Beneficiary Details</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Beneficiary Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="BeneficiaryName_error"></span>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Beneficiary Details</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Beneficiary Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="BeneficiaryName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-5 col-12">Relation with Beneficiary <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.RelationWithBeneficiary, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="RelationWithBeneficiary_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Relation with Beneficiary <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.RelationWithBeneficiary, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="RelationWithBeneficiary_error"></span>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Beneficiary Mobile <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.BeneficiaryMobile, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="BeneficiaryMobile_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Beneficiary Mobile <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.BeneficiaryMobile, new { @class = "form-control", autocomplete = "off" })
-                                                <span class="error" id="BeneficiaryMobile_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="clearfix"></div>
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3 mb-0">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Submit</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" id="btnFooterReset">Reset</button>
+                        </div>
                     </div>
                 </div>
-                <div class="clearfix"></div>
-                <div class="d-flex align-items-center justify-content-center mt-3 mb-0">
-                    <div class="px-2">
-                        <button class="btn btn_primary" type="button">Submit</button>
+                <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId, new { id = "RegionalOfficeId" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.LoggedInAs, new { id = "LoggedInAs" })</div>
+            </div>
+
+            <!-- Modal : Card1 -->
+            <div class="modal fade" id="myModalCard1" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content" style='overflow:scroll; height:400px;'>
+                        <div class="modal-body">
+                            <table class="table table-bordered text-nowrap" id="CardsTable1">
+                                @*style="display: none"*@
+                                <thead>
+                                    <tr>
+                                        <th>Sl No.</th>
+                                        <th>CardNo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cardDetails">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    <div class="px-2">  
-                        <button class="btn btn_primary" type="button">Reset</button>
-                    </div>
+
                 </div>
             </div>
+            <!-- Modal : Card1 -->
+
         </form>
         <div class="clearfix"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (document.getElementById("LoggedInAs").value == "MERCHANT") {
+            $('#MerchantId').attr('readonly', 'true');
+        }
+
+        if (!document.getElementById("rbtnDTPCustomerYes").checked && !document.getElementById("rbtnDTPCustomerNo").checked) {
+            document.getElementById("rbtnDTPCustomerYes").checked = true;
+            document.getElementById("ExistingCustomerId").readOnly = false;
+        }
+        else if (document.getElementById("rbtnDTPCustomerYes").checked)
+        {
+            document.getElementById("ExistingCustomerId").readOnly = false;
+        }
+        else if (document.getElementById("rbtnDTPCustomerNo").checked) {
+            $('#ExistingCustomerId').attr('readonly', 'true');
+            document.getElementById("ExistingCustomerId").value = "";
+            document.getElementById("CustomerName").value = "";
+        }
+
+
+        $('input[name="IfDTPCustomer"]:radio').change(function () {
+
+            var selected = $("input[name='IfDTPCustomer']:checked").val()
+            //alert(selected);
+            if (selected == "Yes") {
+                document.getElementById("ExistingCustomerId").readOnly = false;
+            }
+            else if (selected == "No") {
+                document.getElementById("ExistingCustomerId").readOnly = true;
+                document.getElementById("ExistingCustomerId").value = "";
+                document.getElementById("CustomerName").value = "";
+            }
+
+        });
+
+
+    });
+
+    
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $("#btnReset").click(function () {
+        document.getElementById("Zone").value = "";
+        document.getElementById("RegionalOffice").value = "";
+        document.getElementById("OutletName").value = "";
+        document.getElementById("RegionalOfficeId").value = "";
+        dvOtherDetails.style.display = "none";
+        dvHeaderDetails.style.display = "none";
+        if (document.getElementById("LoggedInAs").value == "MERCHANT") {
+            $("#MerchantId").prop('readonly', true);
+        }
+        else {
+            $("#MerchantId").prop('readonly', false);
+        }
+    });
+
+    $("#btnFooterReset").click(function () {
+
+        document.getElementById("MerchantId_error").innerHTML = "";
+
+        document.getElementById("FormNumber").value = "";
+        document.getElementById("formNumber_error").innerHTML = "";
+
+        document.getElementById("CardNo").value = "";
+        document.getElementById("CardNo_error").innerHTML = "";
+
+
+        document.getElementById("IndividualOrgNameTitle").value = "0";
+        document.getElementById("salutaion_error").innerHTML = "";
+
+        document.getElementById("IndividualOrgName").value = "";
+        document.getElementById("customername_error").innerHTML = "";
+
+        document.getElementById("CommunicationCityName").value = "";
+        document.getElementById("communicationCityName_error").innerHTML = "";
+
+        document.getElementById("CommunicationPincode").value = "";
+        document.getElementById("communicationPincode_error").innerHTML = "";
+
+        document.getElementById("CommunicationStateId").value = "0";
+        document.getElementById("comm_states_error").innerHTML = "";
+
+        document.getElementById("CommunicationEmailid").value = "";
+        document.getElementById("comm_email_error").innerHTML = "";
+
+        document.getElementById("CommunicationMobileNo").value = "";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+        document.getElementById("comm_email_error").innerHTML = "";
+
+        document.getElementById("DrivingLicence").value = "";
+        document.getElementById("DrivingLicence_error").innerHTML = "";
+
+        document.getElementById("CommunicationAddress1").value = "";
+        document.getElementById("comm_address1_error").innerHTML = "";
+
+        document.getElementById("AddressProofType").value = "0"
+        document.getElementById("AddressProofType_error").innerHTML = "";
+
+
+        document.getElementById("AddressProof").value = ""
+        document.getElementById("AddressProof_error").innerHTML = "";
+
+        document.getElementById("AddressProofDocumentNo").value = "";
+        document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
+
+        document.getElementById("ExistingCustomerId").value = "";
+        document.getElementById("CustomerId_error").innerHTML = "";
+
+        document.getElementById("IncomeTaxPan").value = "";
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+
+        document.getElementById("BeneficiaryName").value = "";
+        document.getElementById("BeneficiaryName_error").innerHTML = "";
+
+        document.getElementById("RelationWithBeneficiary").value = "";
+        document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
+
+        document.getElementById("BeneficiaryMobile").value = "";
+        document.getElementById("BeneficiaryMobile_error").innerHTML = "";
+
+        localStorage.setItem("FORMNOALREADYUSED", "1");
+        document.getElementById("formNumber_error").innerHTML = "";
+
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+        document.getElementById("IncomeTaxPan").value = "";
+
+    });
+        
+
+       $("#btnSearch").click(function () {
+        //debugger;
+        var merchantId = document.getElementById("MerchantId").value;
+        if (merchantId == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+             //$("#merchantId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        //var found = false;
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetMerchantDetailsByMerchantId", "DriverCardCustomer")',
+                data: { MerchantID: merchantId },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') {
+                        document.getElementById("Zone").value = data.zonalOfficeName;
+                        document.getElementById("RegionalOffice").value = data.regionalOfficeName;
+                        document.getElementById("OutletName").value = data.retailOutletName;
+                        document.getElementById("RegionalOfficeId").value = data.regionalOfficeId;
+                        $("#MerchantId").prop('readonly', true);
+                        dvOtherDetails.style.display = "block";
+                        dvHeaderDetails.style.display = "block";
+                        //found = true;
+
+                        if (data == "Failed to load Merchant Details") {
+                            document.getElementById("Zone").value = "";
+                            document.getElementById("RegionalOffice").value = "";
+                            document.getElementById("OutletName").value = "";
+                            document.getElementById("RegionalOfficeId").value = "";
+                            $("#MerchantId").prop('readonly', false);
+                            dvOtherDetails.style.display = "none";
+                            dvHeaderDetails.style.display = "none";
+                        }
+                    }
+                    else {
+                        $("#MerchantId_error").html("");
+                        document.getElementById("Zone").value = "";
+                        document.getElementById("RegionalOffice").value = "";
+                        document.getElementById("OutletName").value = "";
+                        $("#MerchantId").prop('readonly', false);
+                        document.getElementById("RegionalOfficeId").value = "";
+                        dvOtherDetails.style.display = "none";
+                        dvHeaderDetails.style.display = "none";
+                        //found = false;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("Zone").value = "";
+                    document.getElementById("RegionalOffice").value = "";
+                    document.getElementById("OutletName").value = "";
+                    $("#MerchantId").prop('readonly', false);
+                    document.getElementById("RegionalOfficeId").value = "";
+                    dvOtherDetails.style.display = "none";
+                    dvHeaderDetails.style.display = "none";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("Zone").value = "";
+                        document.getElementById("RegionalOffice").value = "";
+                        document.getElementById("OutletName").value = "";
+                        $("#MerchantId").prop('readonly', false);
+                        document.getElementById("RegionalOfficeId").value = "";
+                        dvOtherDetails.style.display = "none";
+                        dvHeaderDetails.style.display = "none";
+                    }
+                }
+            });
+
+
+       });
+
+           $("#FormNumber").on("blur", function () {
+        //debugger;
+        var formNumber = document.getElementById("FormNumber").value;
+        if (formNumber == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        var formNumberUsed = false;
+        localStorage.setItem("FORMNOALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckformnumberDuplication", "DriverCardCustomer")',
+                data: { FormNumber: formNumber },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        if (data.status == "0") {
+                            formNumberUsed = true;
+                            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+                            localStorage.setItem("FORMNOALREADYUSED", "0");
+                        }
+                        else {
+                            formNumberUsed = false;
+                            document.getElementById("formNumber_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        formNumberUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //document.getElementById("RBEName").value = "";
+                },
+                statusCode: {
+                    1024: function () {
+                        //document.getElementById("RBEName").value = "";
+                    }
+                }
+            });
+
+        //console.log(fromNumberUsed);
+            if (formNumberUsed == true) {
+            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+            //return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+           });
+
+    function LoadCard1Deatils() {
+        debugger;
+
+        if (document.getElementById("MerchantId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            //$("#MerchantId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RegionalOfficeId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+
+        var regionalOfficeId = document.getElementById("RegionalOfficeId").value;
+        var merchantId = document.getElementById("MerchantId").value;
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetAvailableDriverCardByRegionalId", "DriverCardCustomer")',
+            data: { RegionalId: regionalOfficeId, MerchantID : merchantId},
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                console.log(data);
+                $("#CardsTable1 td").parent().remove();
+                //console.log('Praveen');
+
+                //document.getElementById("NoOfCardsTbl").deleteTHead();
+                //console.log(data.lstCardDetails);
+
+                for (var i = 0; i < data.lstCardDetails.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
+                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCard1Details(this)' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+                    //+ "<td><span class='rowData CustReferenceNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></td>"
+                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+
+
+                    $('#CardsTable1').append(rows);
+
+                    //console.log(rows);
+                }
+
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating card Data");
+            }
+
+
+        });
+
+
+    }
+    function GetCard1Details(o) {
+        debugger;
+        var cardNo = o.innerText;
+
+        console.log(cardNo);
+
+        $('#CardNo').val(cardNo);
+        $('#myModalCard1').modal('hide');
+    }
+
+       $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckMobilNoDuplication", "DriverCardCustomer")',
+                data: { MobileNo: communicationMobile },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') {
+
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            mobileNoUsed = true;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+                        }
+                        else {
+                            mobileNoUsed = false;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    }
+                }
+            });
+
+        //if (mobileNoUsed == true) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+       });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "communication Email is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckEmailDuplication", "DriverCardCustomer")',
+                data: { Emailid: communicationEmail },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            emailUsed = true;
+                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                            localStorage.setItem("EMAILIDALREADYUSED", "0");
+                        }
+                        else {
+                            emailUsed = false;
+                            document.getElementById("comm_email_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    }
+                }
+            });
+
+        //if (emailUsed == true) {
+        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    function ValidateMandatoryFields() {
+        debugger;
+
+        var ret = false;
+
+
+        if (document.getElementById("MerchantId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant ID is required";
+            document.getElementById("MerchantId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("Zone").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Click search button to load merchant details";
+            document.getElementById("MerchantId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("FormNumber").value == "") {
+            document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+            //document.getElementById("FormNumber").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CardNo").value == "") {
+            document.getElementById("CardNo_error").innerHTML = "Card Number is required";
+            document.getElementById("CardNo").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("CardNo_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgNameTitle").value == "0") {
+            document.getElementById("salutaion_error").innerHTML = "Title is required";
+            document.getElementById("IndividualOrgNameTitle").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgName").value == "") {
+            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+            document.getElementById("IndividualOrgName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        
+        if (document.getElementById("CommunicationCityName").value == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City is required";
+            document.getElementById("CommunicationCityName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPincode").value == "") {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            document.getElementById("CommunicationPincode").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("communicationPincode_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("CommunicationStateId").value == "0") {
+            document.getElementById("comm_states_error").innerHTML = "State is required";
+            document.getElementById("CommunicationStateId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+       
+        if (document.getElementById("CommunicationEmailid").value == "") {
+            document.getElementById("comm_email_error").innerHTML = "Email is required";
+            document.getElementById("CommunicationEmailid").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
+            document.getElementById("CommunicationMobileNo").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (document.getElementById("DrivingLicence").value == "") {
+            document.getElementById("DrivingLicence_error").innerHTML = "Driving Licence is required";
+            document.getElementById("DrivingLicence").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("DrivingLicence_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress1").value == "") {
+            document.getElementById("comm_address1_error").innerHTML = "Address is required";
+            document.getElementById("CommunicationAddress1").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+               
+        if (document.getElementById("AddressProofType").value == "0") {
+            document.getElementById("AddressProofType_error").innerHTML = "Document Type is required";
+            document.getElementById("AddressProofType").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("AddressProofType_error").innerHTML = "";
+        }
+
+        if (document.getElementById("AddressProof").value == "") {
+            document.getElementById("AddressProof_error").innerHTML = "Address Proof is required";
+            document.getElementById("AddressProof").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("AddressProof_error").innerHTML = "";
+        }
+
+        if (document.getElementById("AddressProofDocumentNo").value == "") {
+            document.getElementById("AddressProofDocumentNo_error").innerHTML = "File Name is required";
+            document.getElementById("AddressProofDocumentNo").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
+        }
+
+        var selected = $("input[name='IfDTPCustomer']:checked").val()
+        console.log(selected);
+        if (selected == "Yes") {
+            if (document.getElementById("ExistingCustomerId").value == "") {
+                document.getElementById("CustomerId_error").innerHTML = "Existing CustomerId is required";
+                document.getElementById("ExistingCustomerId").focus();
+                return ret;
+            }
+            else {
+                document.getElementById("CustomerId_error").innerHTML = "";
+            }
+        }
+
+        if (document.getElementById("IncomeTaxPan").value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            //document.getElementById("IncomeTaxPan").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        //if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
+        //    if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
+        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
+        //        document.getElementById("VehicleNo2").focus();
+        //        return ret;
+        //    }
+        //    else {
+        //        document.getElementById("VehicleNo2_error").innerHTML = "";
+        //    }
+        //}
+        //else {
+        //    document.getElementById("VehicleNo2_error").innerHTML = "";
+        //}
+
+        if (document.getElementById("BeneficiaryName").value == "") {
+            document.getElementById("BeneficiaryName_error").innerHTML = "Beneficiary Name is required";
+            document.getElementById("BeneficiaryName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("BeneficiaryName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RelationWithBeneficiary").value == "") {
+            document.getElementById("RelationWithBeneficiary_error").innerHTML = "Relation With Beneficiary is required";
+            document.getElementById("RelationWithBeneficiary").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
+        }
+
+        if (document.getElementById("BeneficiaryMobile").value == "") {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile is required";
+            document.getElementById("BeneficiaryMobile").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("IncomeTaxPan").value == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            //document.getElementById("IncomeTaxPan").focus();
+            return ret;
+        }
+        else {
+            var result = false;
+
+            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                return (false);
+            }
+            else {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+
+        }
+
+       //if (ret == false)
+        //    return ret;
+
+        return true;
+    }
+
+</script>

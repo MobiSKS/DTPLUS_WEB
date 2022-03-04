@@ -5,6 +5,8 @@ using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models;
 
 namespace HPCL.Service.Interfaces
 {
@@ -35,5 +37,8 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerRegionModel>> GetregionalOfficeList();
         Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason();
         Task<string> CheckVehicleRegistrationValid(string RegistrationNumber);
+        Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID);
+        Task<List<ProofType>> GetAddressProofList();
+        Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID);
     }
 }

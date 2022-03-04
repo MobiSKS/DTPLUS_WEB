@@ -16,12 +16,9 @@ namespace HPCL.Service.Interfaces
         Task<RequestForOTCCardModel> RequestForOTCCard(RequestForOTCCardModel requestForDriverCardModel);
 
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation();
-
-        Task<MerchantDetailsResponseOTCCardCustomer> GetMerchantDetailsByMerchantId(string MerchantID);
-
+               
         Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID);
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel);
-        Task<CommonResponseData> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID);
         Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId);
         Task<MIDAllocationOfCardsModel> OTCCardsAllocation();
         Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
