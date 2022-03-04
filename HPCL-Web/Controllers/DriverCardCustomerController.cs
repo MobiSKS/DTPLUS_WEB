@@ -17,6 +17,9 @@ using System.Net;
 using HPCL.Common.Models.ResponseModel.Customer;
 using System.Text.Json;
 using HPCL.Service.Interfaces;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Resources;
+using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 
 namespace HPCL_Web.Controllers
 {
@@ -40,9 +43,18 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDriverCardCustomer(DriverCardCustomerModel driverCardCustomerModel)
+        public async Task<IActionResult> CreateDriverCardCustomer(DriverCardCustomerModel customerModel)
         {
-            return View(driverCardCustomerModel);
+            customerModel = await _driverCardCustomerService.CreateDriverCardCustomer(customerModel);
+
+            if (customerModel.Internel_Status_Code == 1000)
+            {
+                customerModel.Remarks = "";
+                ViewBag.Message = "Driver Card customer saved successfully";
+                return RedirectToAction("SuccessRedirectForDriverCardCustomer");
+            }
+
+            return View(customerModel);
         }
 
         public async Task<IActionResult> RequestForDriverCard()
@@ -74,5 +86,112 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantDetailsByMerchantId(string MerchantID)
+        {
+
+            MerchantDetailsResponseOTCCardCustomer merchantDetailsResponse = new MerchantDetailsResponseOTCCardCustomer();
+            merchantDetailsResponse = await _commonActionService.GetMerchantDetailsByMerchantId(MerchantID);
+
+            if (merchantDetailsResponse.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
+            {
+                return Json(merchantDetailsResponse);
+            }
+            else
+            {
+                return Json("Failed to load Merchant Details");
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckformnumberDuplication(string FormNumber)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckformNumberDuplication(FormNumber);
+
+            if (customerInserCardResponseData != null)
+            {
+                return Json(customerInserCardResponseData);
+            }
+            else
+            {
+                return Json("Failed to load Form Details");
+            }
+        }
+
+        public async Task<IActionResult> DriverCardAllocation()
+        {
+            DriverCardAllocationToMerchantModel custMdl = new DriverCardAllocationToMerchantModel();
+            custMdl = await _driverCardCustomerService.DriverCardAllocation();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAllUnAllocatedDriverCards(string RegionalId)
+        {
+            OTCUnAllocatedCardsResponse otcUnAllocatedCardsResponse = new OTCUnAllocatedCardsResponse();
+            otcUnAllocatedCardsResponse = await _driverCardCustomerService.GetAllUnAllocatedDriverCards(RegionalId);
+
+            return Json(new { NoOfUnAllocatedCard = otcUnAllocatedCardsResponse.ObjNoOfUnAllocatedCard, UnAllocatedCard = otcUnAllocatedCardsResponse.ObjUnAllocatedCard });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> VerifyMerchantByMerchantidAndRegionalid(string RegionalId, string MerchantID)
+        {
+            CommonResponseData commonResponseData = new CommonResponseData();
+            commonResponseData = await _commonActionService.VerifyMerchantByMerchantidAndRegionalid(RegionalId, MerchantID);
+
+            return Json(commonResponseData);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDriverCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel)
+        {
+            CommonResponseData commonResponseData = new CommonResponseData();
+            commonResponseData = await _driverCardCustomerService.SaveDriverCardsAllocation(linkCardsToMerchantModel);
+
+            return Json(new { commonResponseData = commonResponseData });
+        }
+        public async Task<IActionResult> SuccessDriverCardsAllocation()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID)
+        {
+            List<CardDetails> lstCardDetails = await _driverCardCustomerService.GetAvailableDriverCardByRegionalId(RegionalId, MerchantID);
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
+        }
+
+        public async Task<IActionResult> SuccessRedirectForDriverCardCustomer()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckMobilNoDuplication(MobileNo);
+
+            return Json(customerInserCardResponseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CheckEmailDuplication(string Emailid)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
+
+            return Json(customerInserCardResponseData);
+        }
+
     }
 }

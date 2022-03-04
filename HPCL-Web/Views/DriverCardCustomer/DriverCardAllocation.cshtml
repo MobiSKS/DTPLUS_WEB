@@ -1,0 +1,381 @@
+﻿@model HPCL.Common.Models.ViewModel.DriverCardCustomer.DriverCardAllocationToMerchantModel
+
+@{
+    ViewData["Title"] = "Cards Allocation to Merchant via Web";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<div class="mt-1 w-100">
+        <marquee width="100%" direction="left">
+            Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+        </marquee>
+    </div>*@
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Driver Card Customer</a> </li>
+            <li class="breadcrumb-item font-weight-light">Cards Allocation to Merchant via Web</li>
+        </ul>
+        <form name="addRequestForOTCCardForm" method="post" asp-action="RequestForOTCCard" class="w-100">
+
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Cards Allocation to Merchant via Web</p>
+                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Region Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                <span class="error" id="CustomerRegionID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No of Unallocated Cards </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NoOfUnallocatedCards, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                @*<span class="error" id="NoofCards_error"></span>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnUnallocatedCards">Get Unallocated Cards</button>
+                                </div>
+                                @*<div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
+                                    </div>*@
+
+                            </div>
+                            <div id="dvDetails" class="mt-3" style="display:none;">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">No of Cards Allocated</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.NoofAllocatedCards, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="NoofAllocatedCards_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "50", autocomplete = "off" })
+                                                    <span class="error" id="MerchantID_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-start flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Card Number(s)<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <div class="col-md-12 col-12">
+                                                        <label class="font-weight-normal">Select Un-Allocated Card(s)</label>
+                                                        <label class="d-flex align-items-center mt-2">
+                                                            <input type="checkbox" id="checkAll" name="checkAll" value="checkAll">
+                                                            <span class="ml-1">Select All</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="col-lg-12 col-12">
+                                                    <div id="dvCards" style='overflow-x: hidden; overflow-y: scroll; width: 250px; height: 250px '></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+                                    <div class="px-2">
+                                        @*<button class="btn btn_primary" type="submit" onclick="return CheckValidations();">Save</button>*@
+                                        <button class="btn btn_primary" type="button" id="btnSave">Save</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" id="btnReset">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+            function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode != 46 && charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+
+            $("#btnUnallocatedCards").click(function () {
+                debugger;
+
+                var RegionID = document.getElementById("CustomerRegionID").value;
+                console.log(RegionID);
+                if (RegionID == '' || RegionID=="0") {
+                    //alert('Enter Vehicle No');
+                    document.getElementById("CustomerRegionID_error").innerHTML = "Select Region Name";
+                    return;
+                }
+                else {
+                    document.getElementById("CustomerRegionID_error").innerHTML = "";
+                }
+
+                var result = false;
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: "GetAllUnAllocatedDriverCards/DriverCardCustomer",
+                    data: { RegionalId: RegionID },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        //debugger;
+                        console.log(data);
+                        //var jsonData = JSON.parse(data);
+                        //console.log('Ravi');
+                        console.log(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards);
+                        document.getElementById("NoOfUnallocatedCards").value = data.noOfUnAllocatedCard[0].noOfUnAllocatedCards;
+                        if (Number(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards)>0)
+                            dvDetails.style.display = 'block';
+                        else
+                            dvDetails.style.display = 'none';
+                        //if (status == 'success' && jsonData['statusCode'] == '101') {
+                        //    result = true;
+                        //    document.getElementById("VehicleNo_error").innerHTML = "";
+                        //    console.log(jsonData);
+                        //    console.log(document.getElementById("VehicleNo_error").innerHTML);
+                        //}
+                        //else {
+                        //    document.getElementById("VehicleNo_error").innerHTML = "Invalid Vehicle Registration Number";
+                        //}
+
+                        var table = $('<table></table>');
+                        $(data.unAllocatedCard).each(function (index, item) {
+                            var i = parseInt(index) + 1;
+                            table.append($('<tr></tr>')
+                                .append($('<td class="py-1 d-flex align-items-center"></td>')
+                                    .append($('<input>').attr({
+                                        'id': 'chk' + item.cardNo,
+                                        'type': 'checkbox',
+                                        'name': 'card',
+                                        'value': item.cardNo
+                                    }))
+                                    .append($("<label class='mb-0 ml-1'>").attr(
+                                        {
+                                            'for': 'chk' + item.cardNo
+                                        })
+                                        .text(item.cardNo))
+                                ));
+                        });
+                        $('#dvCards').append(table);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+
+                    }
+                });
+
+            });
+
+            $("#MerchantID").on("blur", function () {
+                //debugger;
+
+                var regionalId = document.getElementById("CustomerRegionID").value;
+                if (regionalId == "" || regionalId == "0") {
+                    document.getElementById("CustomerRegionID_error").innerHTML = "Region Name is required";
+                    document.getElementById("MerchantID").value = "";
+                    //$("#MerchantID").focus;
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerRegionID_error").innerHTML = "";
+                }
+
+                var merchantId = document.getElementById("MerchantID").value;
+                if (merchantId == "") {
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
+                     //$("#MerchantID").focus;
+                    return (false);
+                }
+                else {
+                    document.getElementById("MerchantID_error").innerHTML = "";
+                }
+
+                localStorage.setItem("MERCHANTAVAILABLE", "0");
+
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("VerifyMerchantByMerchantidAndRegionalid", "DriverCardCustomer")',
+                        data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            console.log(data);
+                            console.log(status);
+
+                            if (status == 'success') {
+
+                                if (data.status == 0) {
+                                    localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                    document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                                    document.getElementById("MerchantID").value = "";
+                                }
+                                else if (data.status == 1) {
+                                    localStorage.setItem("MERCHANTAVAILABLE", "1");
+                                    document.getElementById("MerchantID_error").innerHTML = "";
+                                }
+                                else {
+                                    localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                    document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                                    document.getElementById("MerchantID").value = "";
+                                }
+
+                                //if (data == "Failed to load Customer Details")
+                                //    document.getElementById("MerchantID").value = "";
+                            }
+                            else {
+                                localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                                document.getElementById("MerchantID").value = "";
+
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            localStorage.setItem("MERCHANTAVAILABLE", "0");
+                            document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                            document.getElementById("MerchantID").value = "";
+                        },
+                        statusCode: {
+                            1024: function () {
+                                localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                                document.getElementById("MerchantID").value = "";
+                            }
+                        }
+                    });
+
+
+            });
+
+            $("#CustomerRegionID").change(function () {
+                var id = this.value;
+                if (id != 0) {
+                    $("#CustomerRegionID_error").html("");
+                }
+
+            });
+
+            $("#checkAll").change(function () {
+                //alert(checkAll.checked);
+                //if (!$('input:checkbox').is('checked')) {
+                if (checkAll.checked)
+                {
+                    $('input:checkbox').attr('checked', checkAll.checked);
+                } else {
+                $('input:checkbox').attr('checked', checkAll.checked);
+                }
+            });
+
+            $("#btnSave").click(function () {
+                debugger;
+                if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0")
+                {
+                    alert("Enter No of Cards Allocated");
+                    return;
+                }
+                var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
+                var merchantId = document.getElementById("MerchantID").value;
+                if (merchantId == "") {
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
+                    //$("#MerchantID").focus;
+                    return (false);
+                }
+                else {
+                    document.getElementById("MerchantID_error").innerHTML = "";
+                }
+
+               var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
+                var selectedCards = 0;
+                ObjOTCCardModel = [];
+
+               $("input:checkbox[name=card]:checked").each(function () {
+                    //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+                   selectedCards = selectedCards + 1;
+                   ObjOTCCardModel.push({ CardNo: $(this).val() });
+               });
+                //alert(selectedCards);
+
+                if (NoofCardsAllocated != selectedCards) {
+                    alert("No of Cards Allocated and No of cards selected is not matching");
+                    return;
+                }
+
+                if (ObjOTCCardModel.length > 0) {
+                    var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
+                    console.log(model);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("SaveDriverCardsAllocation", "DriverCardCustomer")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(model),
+                            success: function (data) {
+                                //alert(data.message);
+                                console.log(data);
+                                console.log(data.commonResponseData.internel_Status_Code);
+                                if (data.commonResponseData.internel_Status_Code == 1000) {
+                                     window.location.href = '@Html.Raw(@Url.Action("SuccessDriverCardsAllocation", "DriverCardCustomer"))';
+                                }
+                            },
+                            error: function (ex) {
+                                alert('Error.' + ex);
+                            }
+                        });
+                }
+
+
+            });
+
+            $("#btnReset").click(function () {
+                dvDetails.style.display = 'none';
+                document.getElementById("MerchantID").value = "";
+                document.getElementById("NoOfUnallocatedCards").value = "";
+                $('#CustomerRegionID').val('0');
+            });
+
+</script>
