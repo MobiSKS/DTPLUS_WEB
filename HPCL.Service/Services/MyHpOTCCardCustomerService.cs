@@ -310,6 +310,11 @@ namespace HPCL.Service.Services
             return responseData;
         }
 
-
+        public async Task<GetCardAllocationActivation> GetCardAllocationActivation()
+        {
+            GetCardAllocationActivation getCardAllocationActivation = new GetCardAllocationActivation();
+            getCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return getCardAllocationActivation;
+        }
     }
 }
