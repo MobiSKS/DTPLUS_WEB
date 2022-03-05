@@ -7,10 +7,11 @@
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Terminal Management</a> </li>
-            <li class="breadcrumb-item">Terminal DeInstallation Request</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "TerminalManagement")" class="text_primary">Terminal Management</a> </li>
+            <li class="breadcrumb-item font-weight-light">Terminal DeInstallation Request</li>
         </ul>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -55,7 +56,15 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Terminal ID</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control" })
+                                            @{
+                                                string DeinstallationTypeID = Model.DeinstallationTypeID;
+
+
+                                                if (DeinstallationTypeID == "1")
+                                                    @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", @readonly = "readonly" })
+                                                    else
+                                                        @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control" })
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -90,51 +99,54 @@
             </div>
         }
         <div class="clearfix"></div>
-        <div id="show_Table">
-            @if (Model.ObjMerchantDeinstallationDetail.Count() > 0)
+        <div id="show_Table" class="toBeHiddenOnSuccess">
+            @if (Model.ObjMerchantDeinstallationDetail.Count() > 0 && Model.ObjTerminalDeinstallationDetail.Count() > 0)
             {
-                <div class="border-1 rounded border-grey w-100">
-                    <div class="py-2 p-md-4">
-                        <div class="row">
-                            <div class="col-12 float-left">
-                                <div class="col-6 float-left">
+                @if (Model.ObjMerchantDeinstallationDetail.Count() > 0)
+                {
+                    <div class="border-1 rounded border-grey w-100">
+                        <div class="py-2 p-md-4">
+                            <div class="row">
+                                <div class="col-12 float-left">
+                                    <div class="col-6 float-left">
 
-                                    <div class="col-lg-12 col-md-12 col-12">
-                                        <div class=" d-flex align-items-start flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
-                                            <div class="col-md-7 col-12" id="SummaryMerchantID">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().MerchantName</label>
+                                        <div class="col-lg-12 col-md-12 col-12">
+                                            <div class=" d-flex align-items-start flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
+                                                <div class="col-md-7 col-12" id="SummaryMerchantID">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().MerchantName</label>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
-                                            <div class="col-md-7 col-12" id="SummaryRetailOutletName">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().RetailOutletName</label>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
+                                                <div class="col-md-7 col-12" id="SummaryRetailOutletName">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().RetailOutletName</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">Address :</label>
-                                            <div class="col-md-7 col-12" id="SummaryMerchantType">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().Address</label>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Address :</label>
+                                                <div class="col-md-7 col-12" id="SummaryMerchantType">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().Address</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">City :</label>
-                                            <div class="col-md-7 col-12" id="SummaryDealerName">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().City</label>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">City :</label>
+                                                <div class="col-md-7 col-12" id="SummaryDealerName">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().City</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">State :</label>
-                                            <div class="col-md-7 col-12" id="SummaryDealerMobileNum">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().State</label>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">State :</label>
+                                                <div class="col-md-7 col-12" id="SummaryDealerMobileNum">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().State</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">District :</label>
-                                            <div class="col-md-7 col-12" id="SummaryOutletCategory">
-                                                <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().District</label>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">District :</label>
+                                                <div class="col-md-7 col-12" id="SummaryOutletCategory">
+                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().District</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -142,77 +154,77 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="clearfix"></div>
+                    <div class="clearfix"></div>
 
-            }
-            @if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
-            {
+                }
+                @if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
+                {
 
 
-                string DeinstallationTypeID = Model.DeinstallationTypeID, disabled = "";
-                if (DeinstallationTypeID == "1")
-                    disabled = "disabled";
+                    string DeinstallationTypeID = Model.DeinstallationTypeID, disabled = "";
+                    if (DeinstallationTypeID == "1")
+                        disabled = "disabled";
 
-                <div class="table-responsive">
-                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
-                        <thead style="background-color:lightgray;">
-                            <tr>
-                                <th style="width:5%;"><input type="checkbox" id="checkAll" @disabled /></th>
-                                <th style="width:10%;">Zonal Office</th>
-                                <th style="width:10%;">Regional Office</th>
-                                <th style="width:10%;">Terminal ID</th>
-                                <th style="width:10%;">Created Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="searchTableBody">
-                            @{
-                                int i = 0;
-
-                            }
-                            @foreach (var item in Model.ObjTerminalDeinstallationDetail)
-                            {
-                                i = i + 1;
-
+                    <div class="table-responsive">
+                        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+                            <thead style="background-color:lightgray;">
                                 <tr>
-                                    <td><input type="checkbox" id="check_@i" @disabled /></td>
-                                    <td>@item.ZonalOfficeName</td>
-                                    <td>@item.RegionalOfficeName</td>
-                                    <td>@item.TerminalId</td>
-                                    <td>@item.CreatedTime</td>
+                                    <th style="width:5%;"><input type="checkbox" id="checkAll" @disabled /></th>
+                                    <th style="width:10%;">Zonal Office</th>
+                                    <th style="width:10%;">Regional Office</th>
+                                    <th style="width:10%;">Terminal ID</th>
+                                    <th style="width:10%;">Created Date</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody id="searchTableBody">
+                                @{
+                                    int i = 0;
 
-                <div class="clearfix"></div>
+                                }
+                                @foreach (var item in Model.ObjTerminalDeinstallationDetail)
+                                {
+                                    i = i + 1;
+
+                                    <tr>
+                                        <td><input type="checkbox" id="check_@i" @disabled /></td>
+                                        <td>@item.ZonalOfficeName</td>
+                                        <td>@item.RegionalOfficeName</td>
+                                        <td>@item.TerminalId</td>
+                                        <td>@item.CreatedTime</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="clearfix"></div>
 
 
-                <div class="d-flex align-items-center flex-wrap">
-                    <div class="col-lg-6 col-12">
-                        <div class="d-flex align-items-center flex-wrap mb-3">
-                            <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
-                            <div class="col-md-7 col-12">
-                                <div class="custom_select">
-                                    <textarea rows="4" id="txtComments" cols="50"></textarea>
-                                    <span class="error" id="comment_error"></span>
+                    <div class="d-flex align-items-center flex-wrap">
+                        <div class="col-lg-6 col-12">
+                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        <textarea rows="4" id="txtComments" cols="50"></textarea>
+                                        <span class="error" id="comment_error"></span>
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" id="btnDeinstall" onclick="submitTerminaldeinstallationRequest();">Deinstall</button>
+                        </div>
+
                     </div>
 
-                </div>
-                <div class="clearfix"></div>
-                <div class="d-flex align-items-center justify-content-center mt-0">
-                    <div class="px-2">
-                        <button class="btn btn_primary" type="button" onclick="submitTerminaldeinstallationRequest();">Deinstall</button>
-                    </div>
-
-                </div>
-
+                }
             }
             else
             {
@@ -221,7 +233,6 @@
                 </div>
             }
         </div>
-        
     </div>
 </div>
 <script type="text/javascript">
@@ -242,7 +253,7 @@
         }
 
     });
-
+ 
     $("#btnSearch").on("click", (function (e) {
         //debugger;
         var deInstallationType = $("#DeinstallationTypeID :selected").val();
@@ -288,7 +299,7 @@
         $("#show_Table").html("");
         $("#Merchant_error").html("");
         $("#type_error").html("");
-       
+        $("#TerminalId").prop("readonly", false);
     };
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
@@ -368,6 +379,7 @@
 
      function submitTerminaldeinstallationRequest() {
         //alert("inside submit");
+         var confirmstring = "Do you want to Deinstall the selected Terminal.";
          terminalDetail = [];
          var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
          var deInstallationType = $("#DeinstallationTypeID :selected").text();
@@ -377,6 +389,7 @@
                  var terminalId = row[0].cells[3].textContent;
                  terminalDetail.push({ TerminalId: terminalId });
              });
+             confirmstring = "You have selected all Terminals for Deinstallation, Merchant will be hot listed";
          }
          if (deInstallationTypeID == "2") {
              $("#TerminalRequestDetails tbody tr").each(function () {
@@ -386,6 +399,7 @@
                      terminalDetail.push({ TerminalId: terminalId });
                  }
              });
+             confirmstring = "Do you want to Deinstall the selected Terminal.";
          }
         var flag = "Y";
         //debugger;
@@ -400,22 +414,25 @@
              $("#comment_error").html("Please add comments");
         }
          if (terminalDetail.length > 0 && flag == "Y") {
-            $("#comment_error").html("");
-            var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                data: JSON.stringify(terminationReqmodel),
-                success: function (data) {
-                    alert(data);
+             if (confirm(confirmstring)) {
+                 $("#comment_error").html("");
+                 var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
+                 $.ajax({
+                     type: 'POST',
+                     url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
+                     contentType: "application/json; charset=utf-8",
+                     dataType: 'json',
+                     data: JSON.stringify(terminationReqmodel),
+                     success: function (data) {
+                         $("#reason").html(data);
+                         $(".toBeHiddenOnSuccess").hide();
 
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
-                }
-            });
+                     },
+                     error: function (ex) {
+                         alert('Error.' + ex);
+                     }
+                 });
+             }
         }
 
 

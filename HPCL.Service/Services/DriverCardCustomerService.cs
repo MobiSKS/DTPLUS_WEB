@@ -250,8 +250,8 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.UserAgent), "Useragent");
             form.Add(new StringContent(customerModel.UserIp), "Userip");
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDriverCardCustomer);
+            //StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertDriverCardCustomer);
 
             var settings = new JsonSerializerSettings
             {
