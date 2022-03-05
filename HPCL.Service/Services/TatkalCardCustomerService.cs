@@ -93,6 +93,7 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     RegionalId = entity.RegionalId,
+                    StatusFlag = entity.StatusFlag
 
                 };
             }
@@ -103,7 +104,8 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    StatusFlag = -1
                 };
             }
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -120,6 +122,22 @@ namespace HPCL.Service.Services
         {
             TatkalViewRequestModel custModel = new TatkalViewRequestModel();
             custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(custModel.FromDate) && !string.IsNullOrEmpty(custModel.FromDate))
+            {
+                string[] fromDateArr = custModel.FromDate.Split("-");
+                string[] toDateArr = custModel.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+            }
+            else
+            {
+
+                return custModel;
+            }
 
             return custModel;
 
