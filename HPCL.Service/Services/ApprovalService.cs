@@ -98,11 +98,11 @@ namespace HPCL.Service.Services
             terminalDeInstallationRequestAuthorizationRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalDeInstallationRequestAuthorizationRequestModal;
         }
-        public async Task<TerminalDeInstallationRequestApprovalWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
         {
-            TerminalDeInstallationRequestApprovalWithRemark getTerminalDeInstallationRequestApprovalReponseModals = new TerminalDeInstallationRequestApprovalWithRemark();
+            TerminalDeInstallationRequestAuthorizationWithRemark getTerminalDeInstallationRequestAuthorizationReponseModals = new TerminalDeInstallationRequestAuthorizationWithRemark();
 
-            var terminalDetailsForDeInstallationApprovalForms = new GetTerminalDeInstallationRequestApprovalRequestModal
+            var terminalDetailsForDeInstallationApprovalForms = new GetTerminalDeInstallationRequestAuthorizationRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
@@ -121,9 +121,9 @@ namespace HPCL.Service.Services
 
             JObject terminalDetailsForDeInstallationApprovalObj = JObject.Parse(JsonConvert.DeserializeObject(terminalDetailsForDeInstallationApprovalResponse).ToString());
             var terminalDetailsForDeInstallationApprovalJarr = terminalDetailsForDeInstallationApprovalObj["Data"].Value<JArray>();
-            List<GetTerminalDeInstallationRequestApprovalReponseModal> getTerminalDeInstallationRequestApprovalReponselst = terminalDetailsForDeInstallationApprovalJarr.ToObject<List<GetTerminalDeInstallationRequestApprovalReponseModal>>();
-            getTerminalDeInstallationRequestApprovalReponseModals.TerminalDeInstallationRequestApprovalTbl.AddRange(getTerminalDeInstallationRequestApprovalReponselst);
-            return getTerminalDeInstallationRequestApprovalReponseModals;
+            List<GetTerminalDeInstallationRequestAuthorizationReponseModal> getTerminalDeInstallationRequestApprovalReponselst = terminalDetailsForDeInstallationApprovalJarr.ToObject<List<GetTerminalDeInstallationRequestAuthorizationReponseModal>>();
+            getTerminalDeInstallationRequestAuthorizationReponseModals.TerminalDeInstallationRequestAuthorizationTbl.AddRange(getTerminalDeInstallationRequestApprovalReponselst);
+            return getTerminalDeInstallationRequestAuthorizationReponseModals;
         }
     }
 }
