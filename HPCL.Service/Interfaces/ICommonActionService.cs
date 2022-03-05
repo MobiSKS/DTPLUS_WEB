@@ -43,5 +43,6 @@ namespace HPCL.Service.Interfaces
         Task<List<ProofType>> ProofType();
         Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown();
         Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown();
+        Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID);
     }
 }

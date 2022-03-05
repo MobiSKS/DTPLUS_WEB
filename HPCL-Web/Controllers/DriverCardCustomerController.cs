@@ -43,7 +43,7 @@ namespace HPCL_Web.Controllers
         {
             DriverCardCustomerModel custMdl = new DriverCardCustomerModel();
             custMdl = await _driverCardCustomerService.CreateDriverCardCustomer();
-
+            custMdl.Remarks = "";
             return View(custMdl);
         }
 

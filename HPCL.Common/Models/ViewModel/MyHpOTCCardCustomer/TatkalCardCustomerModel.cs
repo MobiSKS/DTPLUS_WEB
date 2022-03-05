@@ -53,15 +53,6 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         [Required(ErrorMessage = "Communication Address is Required")]
         public string CommunicationAddress1 { get; set; }
 
-        [Required(ErrorMessage = "Communication City is Required")]
-        public string CommunicationCityName { get; set; }
-
-        [Required(ErrorMessage = "Communication PIN is Required")]
-        public string CommunicationPincode { get; set; }
-
-        [Required(ErrorMessage = "Region is Required")]
-        public int CustomerRegionID { get; set; }
-
         [Required(ErrorMessage = "Address Proof is required")]
         public string CommunicationDialCode { get; set; }
         public string CommunicationPhonePart2 { get; set; }
@@ -75,46 +66,17 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         [Required(ErrorMessage = "Communication Form Number is Required")]
         public string FormNumber { get; set; }
-        public string MerchantId { get; set; }
-
-        public string IfDTPCustomer { get; set; }
-
-        [Required(ErrorMessage = "Card Number is Required")]
-        public string CardNo { get; set; }
-
-        [Required(ErrorMessage = "Driving Licence is Required")]
-        public string DrivingLicence { get; set; }
-
-        [Required(ErrorMessage = "File Name is Required")]
-        public string AddressProofDocumentNo { get; set; }
 
         public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
         public virtual List<CustomerRegionModel> CustomerRegionMdl { get; set; }
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }
 
         [Required(ErrorMessage = "Zonal Office is Required")]
-        public int CustomerZonalOfficeID { get; set; }
+        public int ZonalOffice { get; set; }
 
         public int Internel_Status_Code { get; set; }
         public string Remarks { get; set; }
-
-        [Required(ErrorMessage = "Document Type is Required")]
-        public string AddressProofType { get; set; }
-
-        public string ExistingCustomerId { get; set; }
-        public string CustomerName { get; set; }
-
-        [Required(ErrorMessage = "Beneficiary Name is Required")]
-        public string BeneficiaryName { get; set; }
-
-        [Required(ErrorMessage = "Relation With Beneficiary is Required")]
-        public string RelationWithBeneficiary { get; set; }
-
-        [Required(ErrorMessage = "Beneficiary Mobile is Required")]
-        public string BeneficiaryMobile { get; set; }
-        public string LoggedInAs { get; set; }
-        public string OutletName { get; set; }
-        public string Zone { get; set; }
+               
         public string RegionalOffice { get; set; }
 
         [Required(ErrorMessage = "Communication State is Required")]
@@ -124,6 +86,10 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         public string KeyOfficialSecretQuestion { get; set; }
         public string KeyOfficialSecretAnswer { get; set; }
+
+        public string DateOfApplication { get; set; }
+        public string SignedOn { get; set; }
+        public string NameOnCard { get; set; }
 
     }
 
