@@ -224,5 +224,19 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
 
+        public async Task<IActionResult> ViewDriverCardsMerchatMapping()
+        {
+            ViewDriverCardMerchatMappingModel custMdl = new ViewDriverCardMerchatMappingModel();
+            custMdl = await _driverCardCustomerService.ViewDriverCardsMerchatMapping();
+
+            return View(custMdl);
+        }
+
+        public async Task<IActionResult> GetViewOTCCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var modals = await _driverCardCustomerService.ViewDriverCardMerchantAllocation(MerchantId, CardNo);
+            return PartialView("~/Views/DriverCardCustomer/_DriverCardMerchantAllocationTable.cshtml", modals);
+        }
+
     }
 }
