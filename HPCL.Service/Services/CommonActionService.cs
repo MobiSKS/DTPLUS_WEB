@@ -632,7 +632,7 @@ namespace HPCL.Service.Services
             MerchantResponseOTCCardCustomer merchant = JsonConvert.DeserializeObject<MerchantResponseOTCCardCustomer>(response);
 
 
-            if (merchant.Internel_Status_Code == 1000)
+            if (merchant.Internel_Status_Code == 1000 && merchant.Data != null && merchant.Data.Count > 0)
             {
                 merchantDetails.RegionalOfficeName = merchant.Data[0].RegionalOfficeName;
                 merchantDetails.RetailOutletName = merchant.Data[0].RetailOutletName;
