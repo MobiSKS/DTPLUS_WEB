@@ -166,6 +166,7 @@
 
         #region TatkalCardCustomer
         public static string insertTatkalCardRequest = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_request";
+        public static string insertTatkalCardCustomer = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_customer";
         #endregion
 
         #region "Terminal"

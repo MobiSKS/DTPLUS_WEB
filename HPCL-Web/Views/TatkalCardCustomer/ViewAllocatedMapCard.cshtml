@@ -72,10 +72,24 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-6 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-4 col-12  mb-0">Status</label>
+                                    <div class="col-md-7 col-12">
+                                        @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
+
+                                        <select name="StatusFlag" id="" class="form-control statusVal">
+                                        </select>
+
+                                        @Html.ValidationMessageFor(m => m.StatusFlag, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" onclick="showGrid()" type="submit">Search</button>
+                                    <button class="btn btn_primary" id="btnSearch"  type="submit">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
@@ -83,8 +97,10 @@
                             </div>
                         </div>
                         <div class="clearfix"></div>
+
                         <div>
                             <div class="px-3">
+
                                 <table id="TatkalView" class="table table-bordered" style="display:none;">
                                     <thead>
                                         <tr>
@@ -114,6 +130,9 @@
                                         </tr>
                                     </thead>
                                 </table>
+                            </div>
+                            <div class="col-12 text-center alert-danger p-2" id="NoRecord" style="display:none">
+                                No Records found!
                             </div>
                         </div>
                     </div>
@@ -209,16 +228,45 @@
     }
 
     function ResetFields() {
+        $("#NoRecord").attr("style", "display:none");
         $("input:text").each(function () {
             $(this).val("");
         });
-        setDates();
+        $("#TatkalView td").parent().remove();
+        document.getElementById('TatkalView').style.display = 'none';
+
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
+        setDates();
 
-        //$("#ViewCustomerCard  td").parent().remove();
-        document.getElementById('TatkalView ').style.display = 'none';
+       
+
+
+
     };
+
+     $(document).ready(function () {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetStatusType", "Common")',
+            data: { status: "ViewAllocatedMapCard" },
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.statusTypeList, function (i, option) {
+                    $("<option/>").val(option.statusId).text(option.statusName).appendTo(".statusVal");
+                });
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Status Type");
+            }
+        });
+
+
+    });
 
     $("#btnSearch").click(function () {
         var RegionID = document.getElementById("CustomerRegionID").value;
@@ -243,23 +291,31 @@
             dataType: "json",
             success: function (res) {
                 console.log(res, "res");
-                $("#TatkalView").show();
+               
 
-                for (var i = 0; i < res.searchList.length; i++) {
+                if (res.searchList.length > 0) {
+                    $("#TatkalView").show();
 
-                    var rows = "<tbody><tr>"
-                        + "<td>" + (res.searchList[i].sr || '') + "</td>"
-                        + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
 
-                        + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
-                        + "<td>" + (res.searchList[i].requestedBy || '') + "</td>"
-                        + "<td>" + (res.searchList[i].cardProcessDate || '') + "</td>"
-                        + "<td>" + (res.searchList[i].mapped || '') + "</td>"
-                        + "</tr ></tbody > ";
+                    for (var i = 0; i < res.searchList.length; i++) {
 
-                    $("#TatkalView").append(rows);
+                        var rows = "<tbody><tr>"
+                            + "<td>" + (res.searchList[i].sr || '') + "</td>"
+                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
 
+                            + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
+                            + "<td>" + (res.searchList[i].requestedBy || '') + "</td>"
+                            + "<td>" + (res.searchList[i].cardProcessDate || '') + "</td>"
+                            + "<td>" + (res.searchList[i].mapped || '') + "</td>"
+                            + "</tr ></tbody > ";
+
+                        $("#TatkalView").append(rows);
+
+
+                    }
+                } else {
+                    $("#NoRecord").attr("style", "display:block");
 
                 }
 

@@ -41,7 +41,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" onclick="showGrid()" id="btnSearch" type="submit">Search</button>
+                                    <button class="btn btn_primary"  id="btnSearch" type="submit">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
@@ -81,6 +81,9 @@
                                     </thead>
                                 </table>
                             </div>
+                            <div class="col-12 text-center alert-danger p-2" id="NoRecord" style="display:none">
+                                No Records found!
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,6 +94,8 @@
 </div>
 <script type="text/javascript">
     function ResetFields() {
+
+        $("#NoRecord").attr("style", "display:none");
         $("input:text").each(function () {
             $(this).val("");
         });
@@ -143,21 +148,28 @@
             dataType: "json",
             success: function (res) {
                 console.log(res, "res");
-                $("#ViewOTC").show();
+                
+                if (res.searchList.length > 0) {
+                    $("#ViewOTC").show();
 
-                for (var i = 0; i < res.searchList.length; i++) {
+                    for (var i = 0; i < res.searchList.length; i++) {
 
-                    var rows = "<tbody><tr>"
-                        + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].customerId || '') + "</td>"
-                        + "<td>" + (res.searchList[i].customerName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
-                        + "</tr ></tbody > ";
+                        var rows = "<tbody><tr>"
+                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].customerId || '') + "</td>"
+                            + "<td>" + (res.searchList[i].customerName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
+                            + "<td>" + (res.searchList[i].createdDate || '') + "</td>"
+                            + "<td>" + (res.searchList[i].createBy || '') + "</td>"
+                            + "</tr ></tbody > ";
 
-                    $("#ViewOTC").append(rows);
+                        $("#ViewOTC").append(rows);
 
 
+                    }
+                } else {
+                    $("#NoRecord").attr("style", "display:block");
                 }
 
             },

@@ -17,7 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerModel> OnlineForm(CustomerModel cust);
         Task<List<CustomerTypeModel>> GetCustomerType();
         Task<List<CustomerSubTypeModel>> GetCustomerSubType(int CustomerTypeID);
-        Task<List<CustomerRegionModel>> GetRegionalDetails(int ZonalOfficeID);
         Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
         Task<List<VehicleTypeModel>> GetVehicleTypeDetails();
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);

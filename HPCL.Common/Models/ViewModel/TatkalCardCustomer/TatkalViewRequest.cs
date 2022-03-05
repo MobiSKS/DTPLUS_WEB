@@ -9,5 +9,6 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
     {
 
         public string RegionalOfficeId { get; set; }
+        public int StatusFlag { get; set; }
     }
 }

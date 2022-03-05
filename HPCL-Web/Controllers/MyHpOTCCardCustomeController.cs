@@ -251,5 +251,11 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
+        public async Task<IActionResult> GetCardAllocationActivation()
+        {
+            var modals = await _myHpOTCCardCustomerService.GetCardAllocationActivation();
+            return View(modals);
+        }
+
     }
 }

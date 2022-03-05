@@ -11,6 +11,9 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Create Driver Card Customer</p>
+                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -632,7 +635,7 @@
                         $("#MerchantId").prop('readonly', true);
                         dvOtherDetails.style.display = "block";
                         dvHeaderDetails.style.display = "block";
-                        //found = true;
+                        document.getElementById("MerchantId_error").innerHTML = "";
 
                         if (data == "Failed to load Merchant Details") {
                             document.getElementById("Zone").value = "";
@@ -642,6 +645,7 @@
                             $("#MerchantId").prop('readonly', false);
                             dvOtherDetails.style.display = "none";
                             dvHeaderDetails.style.display = "none";
+                            document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
                         }
                     }
                     else {
@@ -653,7 +657,7 @@
                         document.getElementById("RegionalOfficeId").value = "";
                         dvOtherDetails.style.display = "none";
                         dvHeaderDetails.style.display = "none";
-                        //found = false;
+                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -664,6 +668,7 @@
                     document.getElementById("RegionalOfficeId").value = "";
                     dvOtherDetails.style.display = "none";
                     dvHeaderDetails.style.display = "none";
+                    document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
                 },
                 statusCode: {
                     1024: function () {
@@ -674,6 +679,7 @@
                         document.getElementById("RegionalOfficeId").value = "";
                         dvOtherDetails.style.display = "none";
                         dvHeaderDetails.style.display = "none";
+                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
                     }
                 }
             });
@@ -681,7 +687,7 @@
 
        });
 
-           $("#FormNumber").on("blur", function () {
+    $("#FormNumber").on("blur", function () {
         //debugger;
         var formNumber = document.getElementById("FormNumber").value;
         if (formNumber == "") {
@@ -695,46 +701,46 @@
         var formNumberUsed = false;
         localStorage.setItem("FORMNOALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckformnumberDuplication", "DriverCardCustomer")',
-                data: { FormNumber: formNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckformnumberDuplication", "DriverCardCustomer")',
+            data: { FormNumber: formNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        if (data.status == "0") {
-                            formNumberUsed = true;
-                            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
-                            localStorage.setItem("FORMNOALREADYUSED", "0");
-                        }
-                        else {
-                            formNumberUsed = false;
-                            document.getElementById("formNumber_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    if (data.status == "0") {
+                        formNumberUsed = true;
+                        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+                        localStorage.setItem("FORMNOALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        formNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        formNumberUsed = false;
+                        document.getElementById("formNumber_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    formNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
 
         //console.log(fromNumberUsed);
-            if (formNumberUsed == true) {
+        if (formNumberUsed == true) {
             document.getElementById("formNumber_error").innerHTML = "Form No is already used";
             //return (false);
         }
@@ -742,7 +748,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
         }
 
-           });
+    });
 
     function LoadCard1Deatils() {
         debugger;
