@@ -146,51 +146,8 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetRegionalDetails(int ZonalOfficeID)
         {
             List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
-            lstCustomerRegion = await _customerService.GetRegionalDetails(ZonalOfficeID);
+            lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(ZonalOfficeID);
             return Json(lstCustomerRegion);
-
-            //var customerZone = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"ZonalId", ZonalOfficeID.ToString() }
-
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerZone), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getRegionalOffice, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
-            //            lst.Add(new CustomerRegionModel
-            //            {
-            //                RegionalOfficeID = 0,
-            //                RegionalOfficeName = "--Select Region--",
-
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
-            //            return Json(SortedtList);
-
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Region Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
