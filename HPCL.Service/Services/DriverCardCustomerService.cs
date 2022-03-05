@@ -347,7 +347,35 @@ namespace HPCL.Service.Services
 
             return custModel;
         }
+        public async Task<ViewDriverCardMerchatMappingModel> ViewDriverCardsMerchatMapping()
+        {
+            ViewDriverCardMerchatMappingModel custModel = new ViewDriverCardMerchatMappingModel();
+            custModel.Remarks = "";
+            
+            return custModel;
+        }
 
+        public async Task<DriverCardMerchantAllocationResponse> ViewDriverCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var searchBody = new GetOTCCardMerchantAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                MerchantId = MerchantId,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewDriverCardMerchantAllocation);
+
+            DriverCardMerchantAllocationResponse driverCardMerchantAllocationResponse = new DriverCardMerchantAllocationResponse();
+
+            driverCardMerchantAllocationResponse = JsonConvert.DeserializeObject<DriverCardMerchantAllocationResponse>(ResponseContent);
+
+            return driverCardMerchantAllocationResponse;
+        }
 
     }
 }

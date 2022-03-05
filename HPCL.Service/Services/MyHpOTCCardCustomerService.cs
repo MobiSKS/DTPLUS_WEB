@@ -316,5 +316,36 @@ namespace HPCL.Service.Services
             getCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return getCardAllocationActivation;
         }
+
+        public async Task<ViewOTCCardsMerchatMappingModel> ViewOTCCardsMerchatMapping()
+        {
+            ViewOTCCardsMerchatMappingModel custModel = new ViewOTCCardsMerchatMappingModel();
+            custModel.Remarks = "";
+            
+            return custModel;
+        }
+
+        public async Task<OTCCardMerchantAllocationResponse> ViewOTCCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var searchBody = new GetOTCCardMerchantAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                MerchantId = MerchantId,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewOtcCardMerchantAllocation);
+
+            OTCCardMerchantAllocationResponse otcCardMerchantAllocationResponse = new OTCCardMerchantAllocationResponse();
+
+            otcCardMerchantAllocationResponse = JsonConvert.DeserializeObject<OTCCardMerchantAllocationResponse>(ResponseContent);
+
+            return otcCardMerchantAllocationResponse;
+        }
+
     }
 }

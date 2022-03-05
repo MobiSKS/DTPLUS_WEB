@@ -26,6 +26,8 @@ namespace HPCL.Service.Interfaces
         Task<MIDAllocationOfCardsModel> ViewOTCCards();
 
         Task<GetCardAllocationActivation> GetCardAllocationActivation();
+        Task<ViewOTCCardsMerchatMappingModel> ViewOTCCardsMerchatMapping();
+        Task<OTCCardMerchantAllocationResponse> ViewOTCCardMerchantAllocation(string MerchantId, string CardNo);
 
     }
 }

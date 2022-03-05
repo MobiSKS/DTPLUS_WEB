@@ -257,5 +257,19 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
 
+        public async Task<IActionResult> ViewOTCCardsMerchatMapping()
+        {
+            ViewOTCCardsMerchatMappingModel custMdl = new ViewOTCCardsMerchatMappingModel();
+            custMdl = await _myHpOTCCardCustomerService.ViewOTCCardsMerchatMapping();
+
+            return View(custMdl);
+        }
+
+        public async Task<IActionResult> GetViewOTCCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var modals = await _myHpOTCCardCustomerService.ViewOTCCardMerchantAllocation(MerchantId, CardNo);
+            return PartialView("~/Views/MyHpOTCCardCustomer/_OTCCardMerchantAllocationTable.cshtml", modals);
+        }
+
     }
 }
