@@ -94,6 +94,7 @@
                                     <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
                                 </div>
                             </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -150,13 +151,13 @@
                 </div>
             }
         </div>
-        <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+       
     </div>
 </div>
 
 <script type="text/javascript">
     //debugger;
-   
+
     var zonalID = $("#ZonalOfficeId").val();
     var regionalID = $("#RegionalOfcIdVal").val();
 
@@ -191,12 +192,12 @@
                 $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
             }
             getMerchantRegionalOfc();
-       
+
     });
     $("#btnReset").click(function () {
-       
+
         setDates();
-  
+
     });
     function setDates() {
 
@@ -218,12 +219,14 @@
         $("#FromDate").val(fromdate);
         $("#ToDate").val(output);
         $("#ZonalOfficeId").val(0);
+        $("#RegionalOfcIdVal").val("");
         getMerchantRegionalOfc();
         $("#MerchantId").val("");
         $("#TerminalId").val("");
         $("#show_Table").html("");
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
+       
     };
     $("#btnSearch").on("click", (function (e) {
 
@@ -251,9 +254,9 @@
         var id = this.value;
         $("#RegionalOfcIdVal").val(id);
     });
-    function getMerchantRegionalOfc() {
-        var id = $('#ZonalOfficeId :selected').val();
-
+   function getMerchantRegionalOfc() {
+       var id = $('#ZonalOfficeId :selected').val();
+       var regionalID = $("#RegionalOfcIdVal").val();
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
@@ -270,11 +273,20 @@
                                     value: 0,
                                     text: "--All--"
                                 }).html("--All--").appendTo("#RegionalOfficeId");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            if (data.regionalOfficeID == regionalID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
                         }
                         else if (data.regionalOfficeID == regionalID) {
                             $('<option selected = "selected">',
@@ -303,5 +315,4 @@
     };
 
 
-    
 </script>

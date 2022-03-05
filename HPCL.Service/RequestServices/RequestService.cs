@@ -91,6 +91,37 @@ namespace HPCL.Service
             }
         }
 
+        public async Task<string> FormDataRequestService(MultipartFormDataContent content, string requestUrl)
+        {
+        Start:
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContextAccessor.HttpContext.Session.GetString("Token"));
 
+                using (var Response = await client.PostAsync(requestUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = await Response.Content.ReadAsStringAsync();
+                        JObject respObj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        string respMessage = respObj["Message"].ToString();
+                        //if (respMessage != "Success")
+                        //{
+                        //    var access_token = _api.GetToken();
+                        //    if (access_token.Result != null)
+                        //    {
+                        //        HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                        //        goto Start;
+                        //    }
+                        //}
+                        return ResponseContent;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    }
+                }
+            }
+        }
     }
 }

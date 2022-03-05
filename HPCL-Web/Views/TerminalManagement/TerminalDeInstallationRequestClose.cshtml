@@ -98,6 +98,7 @@
                                     <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
                                 </div>
                             </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -202,7 +203,7 @@
             </div>
         }
     </div>
-        <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+       
     </div>
 </div>
 <script type="text/javascript">
@@ -214,7 +215,7 @@
 
       var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
-   
+
 
     $(document).ready(function () {
 
@@ -241,7 +242,7 @@
                 $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
             }
             getMerchantRegionalOfc();
-        
+
     });
     $("#btnReset").click(function () {
         setDates();
@@ -289,12 +290,14 @@
         $("#FromDate").val(fromdate);
         $("#ToDate").val(output);
         $("#ZonalOfficeId").val(0);
+        $("#RegionalOfcIdVal").val("");
         getMerchantRegionalOfc();
         $("#MerchantId").val("");
         $("#TerminalId").val("");
         $("#show_Table").html("");
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
+       
     };
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
@@ -302,7 +305,7 @@
     });
     function getMerchantRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
-
+        var regionalID = $("#RegionalOfcIdVal").val();
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
@@ -319,11 +322,20 @@
                                     value: 0,
                                     text: "--All--"
                                 }).html("--All--").appendTo("#RegionalOfficeId");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            if (data.regionalOfficeID == regionalID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
                         }
                         else if (data.regionalOfficeID == regionalID) {
                             $('<option selected = "selected">',
@@ -351,11 +363,11 @@
         });
     };
     $(".rbDeinstall").change(function () {
-        
+
         if ($("#deinstall").is(":checked")) {
             $("#Reason").attr("style", "display:none");
             $("#txtComments").attr("style", "display:block");
-            
+
         }
         if ($("#pblminstall").is(":checked")) {
             $("#Reason").attr("style", "display:block");
@@ -384,7 +396,7 @@
         var comments = "";
         var ReasonId = $('#Reason :selected').val();
         var Status = $("input[name='Status']:checked").val();
-        if ($("#deinstall").is(":checked")) 
+        if ($("#deinstall").is(":checked"))
             comments = $('#txtComments').val();
         else if ($("#pblminstall").is(":checked"))
             comments = $('#Reason :selected').val();
@@ -403,7 +415,7 @@
             return;
         }
 
-        
+
         if (merchantDetail.length > 0 && flag == "Y") {
             $("#reason_error").html("");
             var terminationReqmodel = { Status: Status, Comments: comments, ObjMerchantTerminalMapInput: merchantDetail };

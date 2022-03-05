@@ -65,6 +65,21 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> GetAllTatkalCustomerCard(TatkalViewRequest entity)
+        {
+            var searchList = await _tatkalCardCustomerService.GetAllTatkalCustomerCard(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> ViewAllocatedMapCard()
+        {
+            TatkalViewRequestModel custMdl = new TatkalViewRequestModel();
+            custMdl = await _tatkalCardCustomerService.ViewAllocatedMapCard();
+            return View(custMdl);
+        }
+        [HttpPost]
         public async Task<JsonResult> GetRegionalDetailsDropDown(int ZonalOfficeID)
         {
             List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();

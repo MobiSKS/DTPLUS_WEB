@@ -104,5 +104,9 @@
         public const string ZonalOfficerEmail = "Zonal Officer Email";
 
         #endregion
+
+        #region "Terminal"
+        public const string TerminalID = "Terminal ID";
+        #endregion
     }
 }

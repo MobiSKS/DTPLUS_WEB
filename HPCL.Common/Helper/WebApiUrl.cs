@@ -90,7 +90,8 @@
         public static string getterminaldeinstallationrequestclose = "api/dtplus/merchant/get_terminal_de_installation_request_close";
         public static string terminaldeinstalupdaterequestclose = "api/dtplus/merchant/terminal_de_instal_update_request_close";
         public static string viewterminaldeinstallationrequeststatus = "api/dtplus/merchant/view_terminal_de_installation_request_status";
-
+        public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/get_problematic_de_installed_to_deinstalled";
+        public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/insert_problematic_de_installed_to_deinstalled";
 
         #endregion
 
@@ -149,6 +150,7 @@
         public static string getAvailityDriverCard = "/dtpwebapi/api/dtplus/merchant/get_availity_driver_card";
         public static string insertDriverCardCustomer = "/dtpwebapi/api/dtplus/merchant/insert_driver_card_customer";
         public static string getcustomerNameByCustomerId = "/dtpwebapi/api/dtplus/customer/get_customer_name_by_customer_id";
+        public static string ViewRequestDriverCard = "/dtpwebapi/api/dtplus/merchant/view_requested_driver_card";
         #endregion
 
         #region MyHpOTCCardCustomer
@@ -165,6 +167,11 @@
         #region TatkalCardCustomer
         public static string insertTatkalCardRequest = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_request";
         public static string insertTatkalCardCustomer = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_customer";
+        #endregion
+
+        #region "Terminal"
+        public static string getTerminalDeInstallationRequestApproval = "api/dtplus/merchant/get_terminal_de_installation_request_approval";
+        public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
         #endregion
     }
 }

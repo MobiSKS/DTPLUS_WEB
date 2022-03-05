@@ -691,6 +691,7 @@ namespace HPCL.Service.Services
             return responseData;
         }
 
+     
         public async Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown()
         {
             var requestData = new BaseEntity()
@@ -731,6 +732,24 @@ namespace HPCL.Service.Services
             return SortedtList;
         }
 
+        public async Task<List<ProofType>> ProofType()
+        {
+            var forms = new BaseEntity
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetProofTyleUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<ProofType> proofTypeList = jarr.ToObject<List<ProofType>>();
+            return proofTypeList;
+        }
         public async Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID)
         {
             CustomerRegionRequestModel customerZone = new CustomerRegionRequestModel()

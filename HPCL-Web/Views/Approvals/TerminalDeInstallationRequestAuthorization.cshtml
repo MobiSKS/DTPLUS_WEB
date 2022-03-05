@@ -1,0 +1,199 @@
+﻿@model HPCL.Common.Models.ViewModel.Approvals.TerminalDeInstallationRequestAuthorizationRequestModal
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Approvals")" class="text_primary">Approvals</a> </li>
+            <li class="breadcrumb-item font-weight-light"> Terminal Deinstallation Request Approval</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <form class="toBeHiddenOnSuccess">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold"> Terminal Deinstallation Request Approval</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.ZonalOfc <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZoneMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getTerminalRegionalOfc()" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.RegionalOfficeId, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @type = "date" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control", @type = "date" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">@Label.Merchant</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">@Label.TerminalID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.TerminalID, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId)</div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="searchTerminalDeInstallApprovalDetailsTbl()">Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="terminalDeInstallApprovalDetailsTbl">
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".toBeHiddenOnSuccess").show();
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(today);
+        $("#ToDate").val(today);
+    });
+    function getTerminalRegionalOfc() {
+        var id = $('#ZonalOfficeId :selected').val();
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+            data: { ZonalOfcID: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#RegionalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "-All-"
+                                }).html("--All--").appendTo("#RegionalOfficeId");
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+                        else {
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                        }
+
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error");
+            }
+        });
+    };
+
+    $("#RegionalOfficeId").change(function () {
+        var id = this.value;
+        $("#RegionalOfficeId").val(id);
+    });
+
+    function searchTerminalDeInstallApprovalDetailsTbl() {
+        var zoID = $("#ZonalOfficeId").val();
+        var roID = $("#RegionalOfficeId").val();
+        var fromDate = $("#FromDate").val();
+        var toDate = $("#ToDate").val();
+        var merchantID = $("#MerchantID").val();
+        var terminalID = $("#TerminalID").val();
+
+        $.ajax({
+            type: 'GET',  // http method
+            url: '@Url.Action("GetTerminalsForApproval", "Approvals")',
+            contentType: "application/json; charset=utf-8",
+            data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, merchantId: merchantID, terminalId: terminalID},
+            dataType: "text",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#terminalDeInstallApprovalDetailsTbl").html(data);
+                    $('html, body').animate({
+                        scrollTop: $("#terminalDeInstallApprovalDetailsTbl").offset().top
+                    }, 2000);
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error");
+            }
+        });
+    }
+
+</script>

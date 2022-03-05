@@ -102,9 +102,17 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ProblematicDeInstalledToDeInstalled()
+        public async Task<IActionResult> ProblematicDeInstalledToDeInstalled(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            return View();
+
+            var modals = await _TerminalService.ProblematicDeInstalledToDeInstalled(terminalReq);
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel deInstall)
+        {
+            var result = await _TerminalService.SubmitProblematicDeinstalltoDeinstall(deInstall);
+            return Json(result);
         }
 
         public async Task<IActionResult> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
@@ -151,6 +159,11 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
         public IActionResult TerminalInstallationRequestApproval()
+        {
+            return View();
+        }
+
+        public IActionResult Approval()
         {
             return View();
         }

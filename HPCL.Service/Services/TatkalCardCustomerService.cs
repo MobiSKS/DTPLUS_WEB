@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.TatkalCardCustomer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
@@ -80,6 +81,48 @@ namespace HPCL.Service.Services
             custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
             return custModel;
+        }
+        public async Task<List<TatkalCardCustomerViewResponse>> GetAllTatkalCustomerCard(TatkalViewRequest entity)
+        {
+            var searchBody = new TatkalViewRequest();
+            if (entity.RegionalId != null)
+            {
+                searchBody = new TatkalViewRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = entity.RegionalId,
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new TatkalViewRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewRequestDriverCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TatkalCardCustomerViewResponse> searchList = jarr.ToObject<List<TatkalCardCustomerViewResponse>>();
+            return searchList;
+        }
+
+
+        public async Task<TatkalViewRequestModel> ViewAllocatedMapCard()
+        {
+            TatkalViewRequestModel custModel = new TatkalViewRequestModel();
+            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            return custModel;
+
         }
 
         public async Task<List<CustomerRegionModel>> GetRegionalDetailsDropDown(int ZonalOfficeID)

@@ -306,5 +306,48 @@ namespace HPCL.Service.Services
 
         }
 
+        public async Task<List<ViewDriverCardResponse>> GetAllViewDriverCard(RequestForViewDriverCard entity)
+        {
+            var searchBody = new RequestForViewDriverCard();
+            if (entity.RegionalId != null)
+            {
+                searchBody = new RequestForViewDriverCard
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = entity.RegionalId,
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new RequestForViewDriverCard
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewRequestDriverCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<ViewDriverCardResponse> searchList = jarr.ToObject<List<ViewDriverCardResponse>>();
+            return searchList;
+        }
+
+        public async Task<RequestForDriverCardModel> ViewRequestDriverCard()
+        {
+            RequestForDriverCardModel custModel = new RequestForDriverCardModel();
+            custModel.Remarks = "";
+            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            return custModel;
+        }
+
+
     }
 }

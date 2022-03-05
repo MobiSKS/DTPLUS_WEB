@@ -94,6 +94,7 @@
                                     <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
                                 </div>
                             </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -266,11 +267,11 @@
     $("#btnReset").click(function () {
         //debugger;
         setDates();
-        
+
     });
     function setDates() {
         //debugger;
-        
+
         var fromd = new Date();
         var fromMonth = fromd.getMonth();
         var fromday = fromd.getDate();
@@ -284,25 +285,27 @@
         var output = (day < 10 ? '0' : '') + day + '-' +
             (month < 10 ? '0' : '') + month + '-' +
             d.getFullYear();
-        
-        
+
+
         $("#FromDate").val(fromdate);
         $("#ToDate").val(output);
         $("#ZonalOfficeId").val(0);
+        $("#RegionalOfcIdVal").val("");
         getMerchantRegionalOfc();
         $("#MerchantId").val("");
         $("#TerminalId").val("");
         $("#show_Table").html("");
      $("#fromDate_error").html("");
         $("#toDate_error").html("");
+       
     };
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
         $("#RegionalOfcIdVal").val(id);
     });
-    function getMerchantRegionalOfc() {
-        var id = $('#ZonalOfficeId :selected').val();
-
+   function getMerchantRegionalOfc() {
+       var id = $('#ZonalOfficeId :selected').val();
+       var regionalID = $("#RegionalOfcIdVal").val();
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
@@ -319,11 +322,20 @@
                                     value: 0,
                                     text: "--All--"
                                 }).html("--All--").appendTo("#RegionalOfficeId");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            if (data.regionalOfficeID == regionalID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
                         }
                         else if (data.regionalOfficeID == regionalID) {
                             $('<option selected = "selected">',
@@ -391,14 +403,14 @@
                 success: function (data) {
                     setDates();
                     alert(data);
-                   
+
                 },
                 error: function (ex) {
                     alert('Error.' + ex);
                 }
             });
         }
-        
+
 
     };
 </script>

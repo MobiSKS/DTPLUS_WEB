@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.ViewModel.Officers;
@@ -17,7 +11,6 @@ using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
-using HPCL.Common.Models.ViewModel.Customer;
 
 namespace HPCL_Web.Controllers
 {
@@ -715,10 +708,9 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public async Task<IActionResult> UploadDoc(string CustomerReferenceNo)
+        public IActionResult UploadDoc()
         {
-            var modals = await _customerService.UploadDoc(CustomerReferenceNo);
-            return View(modals);
+            return View();
         }
 
         [HttpPost]

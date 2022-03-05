@@ -31,28 +31,6 @@ namespace HPCL.Service.Services
             _commonActionService = commonActionService;
         }
 
-        public async Task<UploadDoc> UploadDoc(string CustomerReferenceNo)
-        {
-            UploadDoc modals = new UploadDoc();
-
-            var forms = new Dictionary<string, string>
-            {
-                {"useragent", CommonBase.useragent},
-                {"userip", CommonBase.userip},
-                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetProofTyleUrl);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ProofType> lst = jarr.ToObject<List<ProofType>>();
-            modals.ProofTypesModal.AddRange(lst);
-            return modals;
-        }
-
         public async Task<List<UploadDocResponse>> UploadDoc(UploadDoc entity)
         {
             var searchBody = new UploadDoc
@@ -79,24 +57,23 @@ namespace HPCL.Service.Services
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
-            form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")),"CustomerReferenceNo");
+            form.Add(new StringContent(entity.IdProofType.ToString()),"IdProofType");
+            form.Add(new StringContent(entity.IdProofDocumentNo),"IdProofDocumentNo");
+            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront",entity.IdProofFront.FileName);
+            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack",entity.IdProofBack.FileName);
+            form.Add(new StringContent(entity.AddressProofType.ToString()),"AddressProofType");
             form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "userid");
-            form.Add(new StringContent(CommonBase.useragent), "useragent");
-            form.Add(new StringContent(CommonBase.userip), "userip");
-            form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
-            form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
-            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
-            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
-            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
-            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
+            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront",entity.AddressProofFront.FileName);
+            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack",entity.AddressProofBack.FileName);
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")),"CreatedBy");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")),"Userid");
+            form.Add(new StringContent(CommonBase.useragent),"Useragent");
+            form.Add(new StringContent(CommonBase.userip),"Userip");
+            
 
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.UploadKycUrl);
+  
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.UploadKycUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
