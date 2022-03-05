@@ -25,5 +25,7 @@ namespace HPCL.Service.Interfaces
         Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity);
         Task<MIDAllocationOfCardsModel> ViewOTCCards();
 
+        Task<GetCardAllocationActivation> GetCardAllocationActivation();
+
     }
 }

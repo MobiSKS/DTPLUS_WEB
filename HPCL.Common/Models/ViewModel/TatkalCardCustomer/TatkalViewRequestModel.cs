@@ -44,6 +44,8 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
         public string RegionalOfcIdVal { get; set; }
         public string CloseRequestStatus { get; set; }
         public int CustomerRegionID { get; set; }
+
+        public int StatusFlag { get; set; }
         public string Reason { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
