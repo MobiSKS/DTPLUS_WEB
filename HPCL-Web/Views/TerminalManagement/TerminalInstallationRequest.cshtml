@@ -20,7 +20,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(),"--Select--", new {@class = "form-control zonalFetchId"})
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalFetchId" })
                                             </div>
                                         </div>
                                     </div>
@@ -30,7 +30,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(),"--Select--", new { @class = "form-control regionalFetchId" })
+                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalFetchId" })
                                             </div>
                                         </div>
                                     </div>
@@ -42,7 +42,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MerchantId, new {@id="merchantIdVal", @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "merchantIdVal", @class = "form-control" })
                                                 @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger" })
 
                                             </div>
@@ -55,6 +55,16 @@
                                     <button class="btn" type="submit" id="btnSave" name="submit" @*onclick="showGrid()"*@ style="background-color:#084693;color:white;">SEARCH</button>
                                 </div>
                             </div>
+
+                            <div class="clearfix"></div>
+
+                            <div style="display:none;" id="noRecord">
+                                <div class="alert alert-warning" role="alert">
+                                    No Record Found
+                                </div>
+                            </div>
+
+
                             <div class="col-lg-7 col-md-12 col-12 pr-0 pl-md-3 pl-0 pb-4">
                                 <fieldset class="border-1 rounded border-grey h-100" id="label" style="display:none;">
                                     <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2" id="label">Merchant Details</legend>
@@ -264,6 +274,15 @@
 
     function OnSuccess(res) {
 
+        if (res.objMerchantList.length == 0 && res.searchList.length == 0) {
+            $("#myTable").hide();
+            $("#label").hide();
+            $("#Just").hide();
+            document.getElementById("noRecord").style.display = "block";
+            return false;
+        }
+
+
         var MerchantId = $("#MerchantId").val();
 
         console.log(MerchantId);
@@ -296,11 +315,13 @@
             $("#myTable").append(rows);
         }
 
-
-        $("#myTable").show();
-        $("#label").show();
-        $("#Just").show();
-
+  
+        if (res.objMerchantList.length > 0 && res.searchList.length > 0) {
+            document.getElementById("noRecord").style.display = "none";
+            $("#myTable").show();
+            $("#label").show();
+            $("#Just").show();
+        }
     };
 
 
