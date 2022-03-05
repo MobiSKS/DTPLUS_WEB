@@ -1,0 +1,124 @@
+﻿@model HPCL.Common.Models.RequestModel.Approvals.TerminalDeInstallationRequestAuthorizationWithRemark
+@using HPCL.Common.Resources
+
+<div class="d-flex align-items-center flex-wrap mb-3">
+    <label class="font-weight-normal col-md-4 col-12">Remark <sup class="text-danger">*</sup></label>
+    <div class="col-md-7 col-12">
+        <div class="custom_select">
+            @Html.TextAreaFor(m => m.Remark, new { @class = "form-control" })
+            <span class="error" id="remark_error"></span>
+        </div>
+    </div>
+</div>
+<table id="terminalDeInstallApprovalTable" class="table table-striped table-bordered table-responsive mt-3" style="width:100%;">
+    <thead>
+        <tr>
+            <th>
+                <div class="form-check">
+                    <input class="form-check-input position-static" type="checkbox" id="checkAll" value="option1" aria-label="...">
+                </div>
+            </th>
+            <th>Merchant ID</th>
+            <th>Terminal ID</th>
+            <th>Retail Outlet Name</th>
+            <th>Spends of Last Quarter</th>
+            <th>No. Of Transactions of Last Quarter</th>
+            <th>Zonal Office</th>
+            <th>Remark</th>
+            <th>Regional Office</th>
+            <th>Requested By</th>
+            <th>Requested Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TerminalDeInstallationRequestAuthorizationTbl)
+        {
+        <tr>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                </div>
+            </td>
+            <td class="merchantId">@item.MerchantId</td>
+            <td class="terminalId">@item.TerminalId</td>
+            <td>@item.RetailOutletName</td>
+            <td>@item.SpendsOfLastQuater</td>
+            <td>@item.NoOfTransactionsOfLastQuater</td>
+            <td>@item.ZonalOfficeName</td>
+            <td>@item.RegionalOfficeName</td>
+            <td>@item.StatusName</td>
+            <td>@item.ApprovalRemark</td>
+            <td>@item.RequestedBy</td>
+            <td>@item.RequestedDate</td>
+            <td>@item.ApprovedBy</td>
+            <td>@item.ApprovedDate</td>
+        </tr>
+        }
+    </tbody>
+</table>
+<div class="clearfix"></div>
+<div class="d-flex align-items-center justify-content-center mt-0">
+    <div class="px-2">
+        <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForFinal('Approve')">Approve</button>
+    </div>
+    <div class="px-2">
+        <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForFinal('Reject')">Reject</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    var flag = "Y";
+    function terminalDeInstallationForFinal(action) {
+        var remark = $("#Remark").val();
+        if (remark == "") {
+            $("#remark_error").html("Please fill Remarks!");
+        }
+        else {
+        $("#remark_error").html("");
+        ObjApprovalRejectDetail = [];
+        $("#terminalDeInstallApprovalTable tr").each(function () {
+            if ($(this).find('input[type="checkbox"]').is(":checked")) {
+                let merchant = $(this).find(".merchantId").html();
+                let terminal = $(this).find(".terminalId").html();
+                if (merchant != undefined && terminal != undefined) {
+                    ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
+                }
+                else {
+                    flag = "N";
+                }
+            }
+        });
+        if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
+            var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationInsertInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("TerminalDeInstallRequestApprovalRejection", "Approvals")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(modal),
+                success: function (data) {
+                    console.log(data);
+                    $("#reason").html(data);
+                    $(".toBeHiddenOnSuccessAuth").hide();
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+                });
+            }
+        }
+    };
+</script>

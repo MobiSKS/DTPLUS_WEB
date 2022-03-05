@@ -64,11 +64,13 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         [StringLength(10)]
         public string SearchMerchantId { get; set; }
         public string MerchantId { get; set; }
+        [StringLength(8)]
         public string ErpCode { get; set; }
         public string RetailOutletName { get; set; }
         public string MerchantTypeId { get; set; }
         public string MerchantTypeName { get; set; }
         public string DealerName { get; set; }
+        [StringLength(10)]
         public string MappedMerchantId { get; set; }
         public string DealerMobileNo { get; set; }
         public string OutletCategoryId { get; set; }

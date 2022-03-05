@@ -171,6 +171,8 @@
         #region "Terminal"
         public static string getTerminalDeInstallationRequestApproval = "api/dtplus/merchant/get_terminal_de_installation_request_approval";
         public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
+        public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
+        public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
         #endregion
     }
 }

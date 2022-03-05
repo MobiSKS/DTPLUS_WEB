@@ -8,7 +8,7 @@
             <li class="breadcrumb-item font-weight-light"> Terminal Deinstallation Request Approval</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        <form class="toBeHiddenOnSuccess">
+        <form class="toBeHiddenOnSuccessAuth">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -84,7 +84,7 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId)</div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" @*onclick="searchTerminalDeInstallApprovalDetailsTbl()"*@>Search</button>
+                                    <button class="btn btn_primary" type="button" onclick="searchTerminalDeInstallAuthDetailsTbl()">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button">Reset</button>
@@ -96,7 +96,7 @@
                 </div>
             </div>
         </form>
-        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="terminalDeInstallApprovalDetailsTbl">
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccessAuth" id="terminalDeInstallAuthorizationDetailsTbl">
 
         </div>
         <div class="clearfix"></div>
@@ -105,7 +105,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".toBeHiddenOnSuccess").show();
+        $(".toBeHiddenOnSuccessAuth").show();
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -164,7 +164,7 @@
         $("#RegionalOfficeId").val(id);
     });
 
-    @*function searchTerminalDeInstallApprovalDetailsTbl() {
+    function searchTerminalDeInstallAuthDetailsTbl() {
         var zoID = $("#ZonalOfficeId").val();
         var roID = $("#RegionalOfficeId").val();
         var fromDate = $("#FromDate").val();
@@ -174,16 +174,16 @@
 
         $.ajax({
             type: 'GET',  // http method
-            url: '@Url.Action("GetTerminalsForApproval", "Approvals")',
+            url: '@Url.Action("GetTerminalsForAuthorization", "Approvals")',
             contentType: "application/json; charset=utf-8",
             data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, merchantId: merchantID, terminalId: terminalID},
             dataType: "text",
             success: function (data, status, xhr) {
                 var v = data;
                 if (status == 'success') {
-                    $("#terminalDeInstallApprovalDetailsTbl").html(data);
+                    $("#terminalDeInstallAuthorizationDetailsTbl").html(data);
                     $('html, body').animate({
-                        scrollTop: $("#terminalDeInstallApprovalDetailsTbl").offset().top
+                        scrollTop: $("#terminalDeInstallAuthorizationDetailsTbl").offset().top
                     }, 2000);
                 }
                 else {
@@ -194,6 +194,6 @@
                 alert("Error");
             }
         });
-    }*@
+    }
 
 </script>
