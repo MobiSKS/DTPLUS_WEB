@@ -32,6 +32,7 @@ namespace HPCL.Common.Models.ResponseModel.DriverCardCustomer
         public string AllocationDate { get; set; }
         public string MappingDate { get; set; }
         public string Status { get; set; }
+        public string RetailOutletName { get; set; }
     }
     public class DriverCardMerchantTotalCardDetail
     {
