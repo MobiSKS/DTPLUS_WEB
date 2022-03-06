@@ -119,6 +119,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string CommunicationPinNumber { get; set; }
         public string CommunicationPhoneNumber { get; set; }
         public string CommunicationFax { get; set; }
+        [StringLength(1)]
         public string NoofLiveTerminals { get; set; }
         public string TerminalTypeRequested { get; set; }
         public string MerchantStatusId { get; set; }
@@ -136,6 +137,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string RegionalOfcIdVal { get; set; }
         public string SalesAreaIdVal { get; set; }
         public string CommDistrictIdVal { get; set; }
+        public string Message { get; set; }
         public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
         public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }

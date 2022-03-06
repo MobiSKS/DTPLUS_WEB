@@ -40,6 +40,12 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode)
         {
             var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode);
+            
+            if (!string.IsNullOrEmpty(modals.Message))
+            {
+                return View(modals);
+            }
+
             if (!string.IsNullOrEmpty(ERPCode))
                 ViewBag.RejectedStatus = "true";
             else

@@ -75,9 +75,18 @@ namespace HPCL.Service.Services
                 var merchantDetailsResponse = await _requestService.CommonRequestService(merchantDetailsContent, WebApiUrl.getMerchantByMerchantID);
 
                 JObject merchantDetailsObj = JObject.Parse(JsonConvert.DeserializeObject(merchantDetailsResponse).ToString());
-                var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
-                List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
-                merchantMdl = merchantDetailsLst.First();
+                if (merchantDetailsObj["Status_Code"].ToString() == "200" && merchantDetailsObj["Internel_Status_Code"].ToString() == "1001")
+                {
+                    merchantMdl.Message = merchantDetailsObj["Message"].ToString();
+                }
+                else
+                {
+                    merchantMdl.Message = "";
+                    var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
+                    List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
+                    merchantMdl = merchantDetailsLst.First();
+                }
+
             }
 
             if (!string.IsNullOrEmpty(ERPCode))
