@@ -1,11 +1,12 @@
-﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 {
-    public class GetCardAllocationActivation
+    public class GetCardAllocationActivation:BaseEntity
     {
         public GetCardAllocationActivation()
         {

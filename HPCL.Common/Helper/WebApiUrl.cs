@@ -152,6 +152,7 @@
         public static string getcustomerNameByCustomerId = "/dtpwebapi/api/dtplus/customer/get_customer_name_by_customer_id";
         public static string ViewRequestDriverCard = "/dtpwebapi/api/dtplus/merchant/view_requested_driver_card";
         public static string viewDriverCardMerchantAllocation = "/dtpwebapi/api/dtplus/merchant/view_driver_card_merchant_allocation";
+        public static string getdrivercardallocationactivation = "api/dtplus/customer/get_driver_card_allocation_activation";
         #endregion
 
         #region MyHpOTCCardCustomer
@@ -164,6 +165,7 @@
         public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
         public static string ViewOTCCardRequest = "/dtpwebapi/api/dtplus/merchant/view_requested_otc_card";
         public static string viewOtcCardMerchantAllocation = "/dtpwebapi/api/dtplus/merchant/view_otc_card_merchant_allocation";
+        public static string getotccardallocationactivation = "api/dtplus/customer/get_otc_card_allocation_activation";
         #endregion
 
         #region TatkalCardCustomer
