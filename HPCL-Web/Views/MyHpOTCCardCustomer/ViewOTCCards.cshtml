@@ -13,7 +13,10 @@
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "MyHpOTCCardCustomer")" class="text_primary">My HP (OTC) Card Profile</a> </li>
+
+
             <li class="breadcrumb-item font-weight-light">Request for My HP (OTC) Card</li>
         </ul>
         <form method="post" data-ajax="true" data-ajax-controller="MyOTCCardCustomer" data-ajax-action="ViewOTCCards" data-ajax-method="POST" data-ajax-failure="OnFailure">
@@ -41,7 +44,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary"  id="btnSearch" type="submit">Search</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
@@ -106,15 +109,6 @@
         document.getElementById("CustomerRegionID_error").innerHTML = "";
     };
 
-    function showGrid() {
-        if ($("input:text").val() == "") {
-            document.getElementById('ViewOTC').style.display = 'none';
-        }
-        if (($("input:text").val() != "")) {
-            document.getElementById('ViewOTC').style.display = 'inline-table';
-        }
-    }
-
 
 
     $("#CustomerRegionID").change(function () {
@@ -148,10 +142,10 @@
             dataType: "json",
             success: function (res) {
                 console.log(res, "res");
-                
+                $("#NoRecord").attr("style", "display:none");
+
                 if (res.searchList.length > 0) {
                     $("#ViewOTC").show();
-
                     for (var i = 0; i < res.searchList.length; i++) {
 
                         var rows = "<tbody><tr>"
@@ -161,7 +155,7 @@
                             + "<td>" + (res.searchList[i].customerName || '') + "</td>"
                             + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
                             + "<td>" + (res.searchList[i].createdDate || '') + "</td>"
-                            + "<td>" + (res.searchList[i].createBy || '') + "</td>"
+                            + "<td>" + (res.searchList[i].createdBy || '') + "</td>"
                             + "</tr ></tbody > ";
 
                         $("#ViewOTC").append(rows);
