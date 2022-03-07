@@ -164,6 +164,7 @@
         public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
         public static string ViewOTCCardRequest = "/dtpwebapi/api/dtplus/merchant/view_requested_otc_card";
         public static string viewOtcCardMerchantAllocation = "/dtpwebapi/api/dtplus/merchant/view_otc_card_merchant_allocation";
+        public static string getotccardallocationactivation = "api/dtplus/customer/get_otc_card_allocation_activation";
         #endregion
 
         #region TatkalCardCustomer
