@@ -170,22 +170,35 @@ namespace HPCL.Service.Services
 
 
         }
-        public async Task<List<CustomerProfileResponse>> BindCustomerDetails(String CustomerId)
+        public async Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                var CustType = new Dictionary<string, string>
+                var searchBody = new CustomerProfileModel();
+                if (CustomerId != null)
                 {
-                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"CustomerID", CustomerId},
-                    {"NameOnCard","" }
-                };
+                    searchBody = new CustomerProfileModel
+                    {
+                        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                        UserAgent = CommonBase.useragent,
+                        UserIp = CommonBase.userip,
+                        CustomerId ="",
 
+                    };
+                }
+                else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+                {
+                    searchBody = new CustomerProfileModel
+                    {
+                        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                        UserAgent = CommonBase.useragent,
+                        UserIp = CommonBase.userip,
+                        CustomerId =" "
+                    };
+                }
                 //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
                 var contentString = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerDetails);
 
