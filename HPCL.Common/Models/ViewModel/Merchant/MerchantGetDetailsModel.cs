@@ -138,6 +138,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string SalesAreaIdVal { get; set; }
         public string CommDistrictIdVal { get; set; }
         public string Message { get; set; }
+        public string Action { get; set; }
         public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
         public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }

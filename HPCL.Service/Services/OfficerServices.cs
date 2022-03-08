@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
                 PhoneNo = string.IsNullOrEmpty(ofcrMdl.Phone) ? "" : ofcrMdl.Phone,
                 EmailId = string.IsNullOrEmpty(ofcrMdl.Email) ? "" : ofcrMdl.Email,
                 Fax = string.IsNullOrEmpty(ofcrMdl.Fax) ? "" : ofcrMdl.Fax,
-                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerInsertContent = new StringContent(JsonConvert.SerializeObject(officerInsertForms), Encoding.UTF8, "application/json");
@@ -101,7 +101,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 OfficerID = officerID,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerDeleteContent = new StringContent(JsonConvert.SerializeObject(officerDeleteForms), Encoding.UTF8, "application/json");
@@ -132,7 +132,7 @@ namespace HPCL.Service.Services
                 UserName = userName,
                 ZO = zonalID,
                 RO = regionalID,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerDeleteLocationContent = new StringContent(JsonConvert.SerializeObject(officerDeleteLocationForms), Encoding.UTF8, "application/json");
@@ -199,7 +199,7 @@ namespace HPCL.Service.Services
                 UserName = ofcrLocationMdl.UserName,
                 ZO = ofcrLocationMdl.ZoneOfcID,
                 RO = ofcrLocationMdl.RegionalOfcID,
-                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerLocationMappingInsertContent = new StringContent(JsonConvert.SerializeObject(officerLocationMappingInsertForms), Encoding.UTF8, "application/json");
@@ -279,7 +279,7 @@ namespace HPCL.Service.Services
                 PhoneNo = ofcrEditUpdateMdl.Phone,
                 EmailId = ofcrEditUpdateMdl.Email,
                 Fax = ofcrEditUpdateMdl.Fax,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 OfficerId = ofcrEditUpdateMdl.OfficerID
             };
 

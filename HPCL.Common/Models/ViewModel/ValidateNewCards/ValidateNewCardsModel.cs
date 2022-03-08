@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.Officers;
+﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ViewModel.Officers;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel.ValidateNewCards
@@ -9,8 +10,8 @@ namespace HPCL.Common.Models.ViewModel.ValidateNewCards
         {
             NewCardsLists = new List<NewCardsList>();
             VehicleNumberCardIdentifierLists = new List<VehicleNumberCardIdentifierList>();
-            OfficerTypeMdl = new List<OfficerTypeModel>();
-            OfficerTypeMdl.Add(new OfficerTypeModel
+            OfficerTypeMdl = new List<OfficerTypeResponseModal>();
+            OfficerTypeMdl.Add(new OfficerTypeResponseModal
             {
                 OfficerTypeID = 0,
                 OfficerTypeName = "--Select--",
@@ -21,10 +22,9 @@ namespace HPCL.Common.Models.ViewModel.ValidateNewCards
         public string Date { get; set; }
         public string CreatedBy { get; set; }
         public string Comments { get; set; }
-        //public virtual List<VehicleDetailsModel> VehicleDetailsMdl { get; set; }
         public virtual List<NewCardsList> NewCardsLists { get; set; }
         public virtual List<VehicleNumberCardIdentifierList> VehicleNumberCardIdentifierLists { get; set; }
-        public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
+        public virtual List<OfficerTypeResponseModal> OfficerTypeMdl { get; set; }
     }
 
     public class NewCardsList

@@ -92,6 +92,9 @@
         public static string viewterminaldeinstallationrequeststatus = "api/dtplus/merchant/view_terminal_de_installation_request_status";
         public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/get_problematic_de_installed_to_deinstalled";
         public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/insert_problematic_de_installed_to_deinstalled";
+        public static string searchMerchant = "api/dtplus/merchant/search_merchant";
+        public static string searchTerminal = "api/dtplus/merchant/search_terminal";
+        public static string getMerchantStatusList = "api/dtplus/merchant/get_merchant_status";
 
         #endregion
 

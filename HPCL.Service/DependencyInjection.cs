@@ -24,6 +24,7 @@ namespace HPCL.Service
             services.AddTransient<ILocationServices, LocationServices>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IApprovalService, ApprovalService>();
+            services.AddTransient<IValidateNewCardsService, ValidateNewCardsServices>();
 
             return services;
         }

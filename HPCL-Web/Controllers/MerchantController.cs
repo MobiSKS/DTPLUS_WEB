@@ -37,10 +37,9 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode)
+        public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode, string actionFlow)
         {
-            var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode);
-            
+            var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode, actionFlow);
             if (!string.IsNullOrEmpty(modals.Message))
             {
                 return View(modals);
@@ -96,6 +95,17 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _merchantServices.MerchantSummary(ERPCode, fromDate, toDate);
             return View(modals);
+        }
+
+        public async Task<IActionResult> SearchMerchant()
+        {
+            var modals = await _merchantServices.SearchMerchant();
+            return View(modals);
+        }
+        public async Task<IActionResult> SearchMerchantDetails(string merchantId, string erpCode, string retailOutletName, string city, string highwayNo, string status)
+        {
+            var modals = await _merchantServices.SearchMerchantDetails(merchantId, erpCode, retailOutletName, city, highwayNo, status);
+            return PartialView("~/Views/Merchant/_SearchResultForMerchantTable.cshtml", modals);
         }
     }
 }
