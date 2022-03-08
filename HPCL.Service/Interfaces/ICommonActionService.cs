@@ -44,5 +44,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown();
         Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown();
         Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID);
+        Task<List<TerminalStatusResponseModal>> GetMerchantStatus();
     }
 }

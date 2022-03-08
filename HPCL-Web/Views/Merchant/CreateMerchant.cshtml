@@ -709,10 +709,10 @@
                                                 </div>
                                             </div>
                                             @*<div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
-                                                    <div class="col-md-7 col-12" id="SummaryMerchantID">
-                                                    </div>
-                                                </div>*@
+                            <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
+                            <div class="col-md-7 col-12" id="SummaryMerchantID">
+                            </div>
+                        </div>*@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">SBU Type :</label>
                                                 <div class="col-md-7 col-12" id="SummarySBUType">
@@ -912,12 +912,14 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.SalesAreaIdVal)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.CommDistrictIdVal)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.Action)</div>
+
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
                                     <button class="btn btn_primary px-4 py-2" onClick="return showPrevMerchantTerminaldetails()" type="button" id="finalPrevious">Previous</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onclick="clicked(event)"  type="submit" id="confirm">Confirm</button>
+                                    <button class="btn btn_primary px-4 py-2" onclick="clicked(event)" type="submit" id="confirm">Confirm</button>
                                 </div>
                             </div>
                         </div>
@@ -937,6 +939,7 @@
     var zonalID = $("#ZonalOfficeId").val();
     var regionalID = $("#RegionalOfcIdVal").val();
     var salesAreaID = $("#SalesAreaIdVal").val();
+    var action = $("#Action").val();
     var reason = '@ViewBag.Reason';
     var status = '@ViewBag.Status';
     var rejectedStatus = '@ViewBag.RejectedStatus';
@@ -1025,6 +1028,78 @@
                 $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
                 $("#finalPrevious").show();
                 $("#confirm").show();
+            }
+        }
+
+        if (action != "") {
+            if (action == "View") {
+                document.getElementById("viewProfile").classList.remove("active");
+                document.getElementById("viewProfile").classList.remove("show");
+                document.getElementById("viewProfile-tab").classList.remove("active");
+                document.getElementById("viewProfile-tab").classList.add("disable");
+
+                document.getElementById("summaryDetails").classList.add("active");
+                document.getElementById("summaryDetails").classList.add("show");
+                document.getElementById("summaryDetails-tab").classList.remove("disable");
+                document.getElementById("summaryDetails-tab").classList.add("active");
+
+                getRetailDistrict();
+                getCommDistrict();
+                getMerchantRegionalOfc();
+                getMerchantSalesArea();
+
+                $("#SummaryMerchantID").html($("#MerchantId").val());
+                $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
+                $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
+                $("#SummaryDealerName").html($("#DealerName").val());
+                $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
+                $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
+                $("#SummaryHighwayNum").html($("#HighwayNo1 :selected").text() + "-" + $("#HighwayNo2").val());
+                $("#SummaryHighwayName").html($("#HighwayName").val());
+                $("#SummaryLPGCNGSale").html($("#LPGCNGSale").val());
+                $("#SummaryPanCardNum").html($("#PancardNumber").val());
+                $("#SummaryGSTNum").html($("#GSTNumber").val());
+                $("#SummarySBUType").html($("#SBUTypeId :selected").text());
+                $("#SummaryERPCode").html($("#ErpCode").val());
+                $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
+                $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + " ," + $("#CommunicationAddress2").val() + " ," + $("#CommunicationAddress3").val());
+                $("#SummaryCity").html($("#CommunicationCity").val());
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text());
+                $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
+                $("#SummaryFax").html($("#CommunicationFax").val());
+                $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
+                $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
+                $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
+                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
+                $("#SummaryRetFax").html($("#RetailOutletFax").val());
+                $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
+                $("#SummaryMobile").html($("#MobileNo").val());
+                $("#SummaryEmail").html($("EmailId").val());
+                $("#SummaryMisc").html($("#Mics").val());
+                $("#SummaryDTPCautionLimit").html(0);
+                $("#SummaryHpPayCautionLimit").html(0);
+                $("#SummaryNumOfLiveTerminals").html($("#NoofLiveTerminals").val());
+                $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
+                $("#finalPrevious").hide();
+                $("#confirm").hide();
+            }
+            if (action == "Edit") {
+                document.getElementById("viewProfile").classList.remove("active");
+                document.getElementById("viewProfile").classList.remove("show");
+                document.getElementById("viewProfile-tab").classList.remove("active");
+                document.getElementById("viewProfile-tab").classList.add("disable");
+
+                document.getElementById("basicInfo").classList.add("active");
+                document.getElementById("basicInfo").classList.add("show");
+                document.getElementById("basicInfo-tab").classList.remove("disable");
+                document.getElementById("basicInfo-tab").classList.add("active");
+
+                getRetailDistrict();
+                getCommDistrict();
+                getMerchantRegionalOfc();
+                getMerchantSalesArea();
             }
         }
         $("#MerchantId").prop("disabled", true);
@@ -1505,12 +1580,20 @@
                                     value: 0,
                                     text: "Select District"
                                 }).html("Select District").appendTo("#RetailOutletDistrictId");
-
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                            if (data.districtID == retailDistrictID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                            }
                         }
                         else if (data.districtID == retailDistrictID) {
                             $('<option selected = "selected">',
@@ -1570,11 +1653,20 @@
                                     value: 0,
                                     text: "Select District"
                                 }).html("Select District").appendTo("#CommunicationDistrictId");
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            if (data.districtID == commDistrictID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            }
                         }
                         else if (commStateID != "") {
                             if (data.districtID == commDistrictID) {
@@ -1637,11 +1729,20 @@
                                     value: 0,
                                     text: "Select Regional Office"
                                 }).html("Select Regional Office").appendTo("#RegionalOfficeId");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            if (data.regionalOfficeID == regionalID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
                         }
                         else if (data.regionalOfficeID == regionalID) {
                             $('<option selected = "selected">',
@@ -1696,11 +1797,20 @@
                                     value: 0,
                                     text: "Select Sales Area"
                                 }).html("Select Sales Area").appendTo("#SalesAreaId");
-                            $('<option>',
-                                {
-                                    value: data.salesAreaID,
-                                    text: data.salesAreaName
-                                }).html(data.salesAreaName).appendTo("#SalesAreaId");
+                            if (data.salesAreaID == salesAreaID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.salesAreaID,
+                                        text: data.salesAreaName
+                                    }).html(data.salesAreaName).appendTo("#SalesAreaId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.salesAreaID,
+                                        text: data.salesAreaName
+                                    }).html(data.salesAreaName).appendTo("#SalesAreaId");
+                            }
                         }
                         else if (data.salesAreaID == salesAreaID) {
                             $('<option selected = "selected">',

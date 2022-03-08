@@ -167,5 +167,19 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        #region Search Terminal
+        public async Task<IActionResult> SearchTerminal()
+        {
+            var modals = await _TerminalService.SearchTerminal();
+            return View(modals);
+        }
+
+        public async Task<IActionResult> SearchTerminalDetails(string terminalId, string merchantId, string terminalType, string issueDate)
+        {
+            var modals = await _TerminalService.SearchTerminalDetails(terminalId, merchantId, terminalType, issueDate);
+            return PartialView("~/Views/TerminalManagement/_SearchResultForTerminalTable.cshtml", modals);
+        }
+        #endregion
     }
 }
