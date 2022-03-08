@@ -28,5 +28,8 @@ namespace HPCL.Service.Interfaces
         Task<ViewDriverCardMerchatMappingModel> ViewDriverCardsMerchatMapping();
         Task<DriverCardMerchantAllocationResponse> ViewDriverCardMerchantAllocation(string MerchantId, string CardNo);
 
+        Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId);
+        Task<DriverCardAllocationanadActivationViewModel> DriverCardAllocationandActivation();
+
     }
 }

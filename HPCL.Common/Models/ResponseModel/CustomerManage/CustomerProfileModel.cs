@@ -2,6 +2,7 @@
 using HPCL.Common.Models.ViewModel.Customer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -210,6 +211,8 @@ namespace HPCL_Web.Models
         public string CustomerFormNumber { get; set; }
         public string CustomerApplicationDate { get; set; }
         public string CustomerRegionalOfficeID { get; set; }
+
+        [Required(ErrorMessage = "CustomerId is Required")]
         public string CustomerId { get; set; }
         public string NameonCard { get; set; }
 

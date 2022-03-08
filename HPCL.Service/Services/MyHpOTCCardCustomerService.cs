@@ -347,5 +347,38 @@ namespace HPCL.Service.Services
             return otcCardMerchantAllocationResponse;
         }
 
+        public async Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation()
+        {
+            GetCardAllocationActivation GetCardAllocationActivation = new GetCardAllocationActivation();
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return GetCardAllocationActivation;
+        }
+        public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        {
+            MyCardAllocationandActivationModel getMyCardAllocationandActivation = new MyCardAllocationandActivationModel();
+
+            var cardAllocationforms = new GetCardAllocationActivation
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
+                RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
+                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");
+
+            var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getotccardallocationactivation);
+
+            JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
+            List<MyCardAllocationandActivationDetails> getMyCardAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<MyCardAllocationandActivationDetails>>();
+            getMyCardAllocationandActivation.MyCardAllocationandActivationDetails.AddRange(getMyCardAllocationandActivationDetails);
+            return getMyCardAllocationandActivation;
+        }
+
     }
 }

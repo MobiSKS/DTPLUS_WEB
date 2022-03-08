@@ -377,5 +377,40 @@ namespace HPCL.Service.Services
             return driverCardMerchantAllocationResponse;
         }
 
+
+        public async Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        {
+            DriverCardAllocationanadActivationViewModel getDrtiverAllocationandActivation = new DriverCardAllocationanadActivationViewModel();
+
+            var cardAllocationforms = new DriverCardAllocationanadActivationViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
+                RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
+                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");
+
+            var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getdrivercardallocationactivation);
+
+            JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
+            List<DriverCardAllocationandActivationDetails> getDriverAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<DriverCardAllocationandActivationDetails>>();
+            getDrtiverAllocationandActivation.DriverCardAllocationandActivationDetails.AddRange(getDriverAllocationandActivationDetails);
+            return getDrtiverAllocationandActivation;
+
+        }
+        public async Task<DriverCardAllocationanadActivationViewModel> DriverCardAllocationandActivation()
+        {
+            DriverCardAllocationanadActivationViewModel GetCardAllocationActivation = new DriverCardAllocationanadActivationViewModel();
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return GetCardAllocationActivation;
+        }
+
     }
 }

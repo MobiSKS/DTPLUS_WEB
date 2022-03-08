@@ -270,6 +270,16 @@ namespace HPCL_Web.Controllers
             var modals = await _myHpOTCCardCustomerService.ViewOTCCardMerchantAllocation(MerchantId, CardNo);
             return PartialView("~/Views/MyHpOTCCardCustomer/_OTCCardMerchantAllocationTable.cshtml", modals);
         }
+        public async Task<IActionResult> SearchCardActivationandAllocation(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId)
+        {
+            var modals = await _myHpOTCCardCustomerService.SearchCardActivationandAllocation(zonalOfcID, regionalOfcID, fromDate, toDate, customerId);
+            return PartialView("~/Views/MyHpOTCCardCustomer/_MyCardActivationandAllocationTable.cshtml", modals);
+        }
+        public async Task<IActionResult> MyHPOTCCardAllocationandActivation()
+        {
+            var modals = await _myHpOTCCardCustomerService.MyHPOTCCardAllocationandActivation();
+            return View(modals);
+        }
 
     }
 }
