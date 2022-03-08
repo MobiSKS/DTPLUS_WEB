@@ -64,7 +64,8 @@
         public const string AddOfficer = "ADD OFFICER";
         public const string AddLocation = "ADD LOCATION";
         public const string ExportToExcel = "Export To Excel";
-
+        public const string ProcessRequest = "PROCESS REQUEST";
+        public const string Submit = "SUBMIT";
         #endregion
 
         #region "Common Fields"

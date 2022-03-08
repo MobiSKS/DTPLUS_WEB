@@ -249,5 +249,35 @@ namespace HPCL_Web.Controllers
             var modals = await _driverCardCustomerService.DriverCardAllocationandActivation();
             return View(modals);
         }
+
+        public async Task<IActionResult> DealerDriverCardRequests()
+        {
+            DealerWiseDriverCardRequestModel custMdl = new DealerWiseDriverCardRequestModel();
+            custMdl = await _driverCardCustomerService.DealerDriverCardRequests();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
+        {
+            DealerWiseDriverCardRequestModel custMdl = new DealerWiseDriverCardRequestModel();
+            custMdl = await _driverCardCustomerService.DealerDriverCardRequests(dealerWiseDriverCardRequestModel);
+
+            if (custMdl.Internel_Status_Code == 1000)
+            {
+                custMdl.Remarks = "";
+                ViewBag.Message = "Dealer wise Driver card request saved successfully";
+                return RedirectToAction("SuccessRedirectDealerDriverCardRequest");
+            }
+
+            return View(custMdl);
+        }
+
+        public async Task<IActionResult> SuccessRedirectDealerDriverCardRequest()
+        {
+            return View();
+        }
+
     }
 }

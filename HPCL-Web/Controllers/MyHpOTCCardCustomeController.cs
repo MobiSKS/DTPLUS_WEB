@@ -82,12 +82,6 @@ namespace HPCL_Web.Controllers
             return View(requestForOTCCardModel);
         }
 
-
-
-
-
-
-
         public async Task<IActionResult> SuccessRedirectForOTCCard()
         {
             return View();
@@ -279,6 +273,33 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _myHpOTCCardCustomerService.MyHPOTCCardAllocationandActivation();
             return View(modals);
+        }
+
+        public async Task<IActionResult> DealerOTCCardRequests()
+        {
+            var modals = await _myHpOTCCardCustomerService.DealerOTCCardRequests();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel)
+        {
+
+            DealerWiseMyHPOTCCardRequestModel request = await _myHpOTCCardCustomerService.DealerOTCCardRequests(dealerWiseMyHPOTCCardRequestModel);
+
+            if (request.Internel_Status_Code == 1000)
+            {
+                dealerWiseMyHPOTCCardRequestModel.Remarks = "";
+                ViewBag.Message = "OTC Card add request saved successfully";
+                return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+            }
+
+            return View(dealerWiseMyHPOTCCardRequestModel);
+        }
+
+        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest()
+        {
+            return View();
         }
 
     }

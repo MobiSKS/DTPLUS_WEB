@@ -380,5 +380,39 @@ namespace HPCL.Service.Services
             return getMyCardAllocationandActivation;
         }
 
+        public async Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests()
+        {
+            DealerWiseMyHPOTCCardRequestModel custModel = new DealerWiseMyHPOTCCardRequestModel();
+            custModel.Remarks = "";
+
+            return custModel;
+        }
+
+        public async Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel)
+        {
+            dealerWiseMyHPOTCCardRequestModel.UserIp = CommonBase.userip;
+            dealerWiseMyHPOTCCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseMyHPOTCCardRequestModel.UserAgent = CommonBase.useragent;
+            dealerWiseMyHPOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseMyHPOTCCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseOtcCardRequest);
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            dealerWiseMyHPOTCCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return dealerWiseMyHPOTCCardRequestModel;
+        }
+
     }
 }

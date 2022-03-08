@@ -97,38 +97,38 @@
 
         #region customer
 
-        public static string getCustomerType = "/dtpwebapi/api/dtplus/customer/get_customer_type";
-        public static string getZonalOffice = "/dtpwebapi/api/dtplus/zonaloffice/get_zonal_office";
-        public static string getRegionalOffice = "/dtpwebapi/api/dtplus/regionaloffice/get_regional_office";
-        public static string getCustomerSubType = "/dtpwebapi/api/dtplus/customer/get_customer_sub_type";
-        public static string getTbentityName = "/dtpwebapi/api/dtplus/customer/get_tbentity_name";
-        public static string getTypeOfFleet = "/dtpwebapi/api/dtplus/customer/get_type_of_fleet";
-        public static string getSecretQuestion = "/dtpwebapi/api/dtplus/customer/get_secret_question";
-        public static string insertCustomer = "/dtpwebapi/api/dtplus/customer/insert_customer";
-        public static string getVehicleTpe = "/dtpwebapi/api/dtplus/customer/get_vehicle_type";
-        public static string uplaodCustomerKyc = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
-        public static string getCustomerByReferenceno = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
-        public static string getCustomerRbeId = "/dtpwebapi/api/dtplus/customer/get_rbe_id";
-        public static string searchCustRefUrl = "/dtpwebapi/api/dtplus/customer/get_name_and_form_number_by_reference_no";
-        public static string GetProofTyleUrl = "/dtpwebapi/api/dtplus/settings/get_proof_type";
-        public static string UploadKycUrl = "/dtpwebapi/api/dtplus/customer/upload_customer_kyc";
-        public static string insertCustomerCard = "/dtpwebapi/api/dtplus/card/add_card";
+        public static string getCustomerType = "api/dtplus/customer/get_customer_type";
+        public static string getZonalOffice = "api/dtplus/zonaloffice/get_zonal_office";
+        public static string getRegionalOffice = "api/dtplus/regionaloffice/get_regional_office";
+        public static string getCustomerSubType = "api/dtplus/customer/get_customer_sub_type";
+        public static string getTbentityName = "api/dtplus/customer/get_tbentity_name";
+        public static string getTypeOfFleet = "api/dtplus/customer/get_type_of_fleet";
+        public static string getSecretQuestion = "api/dtplus/customer/get_secret_question";
+        public static string insertCustomer = "api/dtplus/customer/insert_customer";
+        public static string getVehicleTpe = "api/dtplus/customer/get_vehicle_type";
+        public static string uplaodCustomerKyc = "api/dtplus/customer/upload_customer_kyc";
+        public static string getCustomerByReferenceno = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        public static string getCustomerRbeId = "api/dtplus/customer/get_rbe_id";
+        public static string searchCustRefUrl = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
+        public static string GetProofTyleUrl = "api/dtplus/settings/get_proof_type";
+        public static string UploadKycUrl = "api/dtplus/customer/upload_customer_kyc";
+        public static string insertCustomerCard = "api/dtplus/card/add_card";
 
-        public static string bindPendingCustomerUrl = "/dtpwebapi/api/dtplus/customer/bind_pending_customer";
-        public static string getFeeWaiverDetailsUrl = "/dtpwebapi/api/dtplus/customer/get_approve_fee_waiver_detail";
-        public static string approveRejectFeeWaiverUrl = "/dtpwebapi/api/dtplus/customer/approve_reject_fee_waiver";
+        public static string bindPendingCustomerUrl = "api/dtplus/customer/bind_pending_customer";
+        public static string getFeeWaiverDetailsUrl = "api/dtplus/customer/get_approve_fee_waiver_detail";
+        public static string approveRejectFeeWaiverUrl = "api/dtplus/customer/approve_reject_fee_waiver";
 
-        public static string Viewonlineformstatus = "/dtpwebapi/api/dtplus/customer/view_online_form_status";
-        public static string getCustomerPendingForApproval = "/dtpwebapi/api/dtplus/customer/bind_unverfied_customer";
-        public static string getcustomerdetailsByFormNumber = "/dtpwebapi/api/dtplus/customer/get_unverfied_customer_detail_by_form_number";
-        public static string approveOrrejectcustomer = "/dtpwebapi/api/dtplus/customer/approve_reject_customer";
-        public static string checkformnumberDuplication = "/dtpwebapi/api/dtplus/customer/check_form_number";
-        public static string checkemailidDuplication = "/dtpwebapi/api/dtplus/customer/check_email_id";
-        public static string checkmobileNoDuplication = "/dtpwebapi/api/dtplus/customer/check_mobile_number";
+        public static string Viewonlineformstatus = "api/dtplus/customer/view_online_form_status";
+        public static string getCustomerPendingForApproval = "api/dtplus/customer/bind_unverfied_customer";
+        public static string getcustomerdetailsByFormNumber = "api/dtplus/customer/get_unverfied_customer_detail_by_form_number";
+        public static string approveOrrejectcustomer = "api/dtplus/customer/approve_reject_customer";
+        public static string checkformnumberDuplication = "api/dtplus/customer/check_form_number";
+        public static string checkemailidDuplication = "api/dtplus/customer/check_email_id";
+        public static string checkmobileNoDuplication = "api/dtplus/customer/check_mobile_number";
 
-        public static string getPendingCustUrl = "/dtpwebapi/api/dtplus/customer/get_pending_customer_detail_by_form_number";
-        public static string checkPanNoDuplication = "/dtpwebapi/api/dtplus/customer/check_pan_card";
-        public static string getCustomerDetails = "/dtpwebapi/api/dtplus/customer/get_customer_detail";
+        public static string getPendingCustUrl = "api/dtplus/customer/get_pending_customer_detail_by_form_number";
+        public static string checkPanNoDuplication = "api/dtplus/customer/check_pan_card";
+        public static string getCustomerDetails = "api/dtplus/customer/get_customer_detail";
         #endregion
 
         #region Login
@@ -144,33 +144,35 @@
         #endregion
 
         #region DriverCard
-        public static string insertDriverCardRequest = "/dtpwebapi/api/dtplus/customer/insert_driver_card_request";
-        public static string getAllUnAllocatedCardsForDriverCard = "/dtpwebapi/api/dtplus/merchant/get_all_un_allocated_cards_for_driver_card";
-        public static string allocatedDriverCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_driver_card_to_merchant";
-        public static string getAvailityDriverCard = "/dtpwebapi/api/dtplus/merchant/get_availity_driver_card";
-        public static string insertDriverCardCustomer = "/dtpwebapi/api/dtplus/merchant/insert_driver_card_customer";
-        public static string getcustomerNameByCustomerId = "/dtpwebapi/api/dtplus/customer/get_customer_name_by_customer_id";
-        public static string ViewRequestDriverCard = "/dtpwebapi/api/dtplus/merchant/view_requested_driver_card";
-        public static string viewDriverCardMerchantAllocation = "/dtpwebapi/api/dtplus/merchant/view_driver_card_merchant_allocation";
+        public static string insertDriverCardRequest = "api/dtplus/customer/insert_driver_card_request";
+        public static string getAllUnAllocatedCardsForDriverCard = "api/dtplus/merchant/get_all_un_allocated_cards_for_driver_card";
+        public static string allocatedDriverCardToMerchant = "api/dtplus/merchant/allocated_driver_card_to_merchant";
+        public static string getAvailityDriverCard = "api/dtplus/merchant/get_availity_driver_card";
+        public static string insertDriverCardCustomer = "api/dtplus/merchant/insert_driver_card_customer";
+        public static string getcustomerNameByCustomerId = "api/dtplus/customer/get_customer_name_by_customer_id";
+        public static string ViewRequestDriverCard = "api/dtplus/merchant/view_requested_driver_card";
+        public static string viewDriverCardMerchantAllocation = "api/dtplus/merchant/view_driver_card_merchant_allocation";
         public static string getdrivercardallocationactivation = "api/dtplus/customer/get_driver_card_allocation_activation";
+        public static string insertDealerWiseDriverCardRequest = "api/dtplus/merchant/insert_dealer_wise_driver_card_request";
         #endregion
 
         #region MyHpOTCCardCustomer
-        public static string insertOTCCardRequest = "/dtpwebapi/api/dtplus/customer/insert_otc_card_request";
-        public static string searchMerchantForCardCreation = "/dtpwebapi/api/dtplus/merchant/search_merchant_for_card_creation";
-        public static string getAvailityOtcCard = "/dtpwebapi/api/dtplus/merchant/get_availity_otc_card";
-        public static string insertOtcCustomer = "/dtpwebapi/api/dtplus/merchant/insert_otc_customer";
-        public static string verifyMerchantByMerchantidAndRegionalid = "/dtpwebapi/api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
-        public static string getAllUnAllocatedCardsForOtcCard = "/dtpwebapi/api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
-        public static string allocatedOtcCardToMerchant = "/dtpwebapi/api/dtplus/merchant/allocated_otc_card_to_merchant";
-        public static string ViewOTCCardRequest = "/dtpwebapi/api/dtplus/merchant/view_requested_otc_card";
-        public static string viewOtcCardMerchantAllocation = "/dtpwebapi/api/dtplus/merchant/view_otc_card_merchant_allocation";
+        public static string insertOTCCardRequest = "api/dtplus/customer/insert_otc_card_request";
+        public static string searchMerchantForCardCreation = "api/dtplus/merchant/search_merchant_for_card_creation";
+        public static string getAvailityOtcCard = "api/dtplus/merchant/get_availity_otc_card";
+        public static string insertOtcCustomer = "api/dtplus/merchant/insert_otc_customer";
+        public static string verifyMerchantByMerchantidAndRegionalid = "api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
+        public static string getAllUnAllocatedCardsForOtcCard = "api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
+        public static string allocatedOtcCardToMerchant = "api/dtplus/merchant/allocated_otc_card_to_merchant";
+        public static string ViewOTCCardRequest = "api/dtplus/merchant/view_requested_otc_card";
+        public static string viewOtcCardMerchantAllocation = "api/dtplus/merchant/view_otc_card_merchant_allocation";
         public static string getotccardallocationactivation = "api/dtplus/customer/get_otc_card_allocation_activation";
+        public static string insertDealerWiseOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_otc_card_request";
         #endregion
 
         #region TatkalCardCustomer
-        public static string insertTatkalCardRequest = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_request";
-        public static string insertTatkalCardCustomer = "/dtpwebapi/api/dtplus/customer/insert_tatkal_card_customer";
+        public static string insertTatkalCardRequest = "api/dtplus/customer/insert_tatkal_card_request";
+        public static string insertTatkalCardCustomer = "api/dtplus/customer/insert_tatkal_card_customer";
         #endregion
 
         #region "Terminal"

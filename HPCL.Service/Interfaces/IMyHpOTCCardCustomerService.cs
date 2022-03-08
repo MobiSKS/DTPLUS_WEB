@@ -30,5 +30,7 @@ namespace HPCL.Service.Interfaces
         Task<OTCCardMerchantAllocationResponse> ViewOTCCardMerchantAllocation(string MerchantId, string CardNo);
         Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId);
         Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation();
+        Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests();
+        Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel);
     }
 }
