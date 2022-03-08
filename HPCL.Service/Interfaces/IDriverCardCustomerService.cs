@@ -30,6 +30,8 @@ namespace HPCL.Service.Interfaces
 
         Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId);
         Task<DriverCardAllocationanadActivationViewModel> DriverCardAllocationandActivation();
+        Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests();
+        Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel);
 
     }
 }

@@ -411,6 +411,39 @@ namespace HPCL.Service.Services
             GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return GetCardAllocationActivation;
         }
+        public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests()
+        {
+            DealerWiseDriverCardRequestModel custModel = new DealerWiseDriverCardRequestModel();
+            custModel.Remarks = "";
+
+            return custModel;
+        }
+        public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
+        {
+            dealerWiseDriverCardRequestModel.UserIp = CommonBase.userip;
+            dealerWiseDriverCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseDriverCardRequestModel.UserAgent = CommonBase.useragent;
+            dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseDriverCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseDriverCardRequest);
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            dealerWiseDriverCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            dealerWiseDriverCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    dealerWiseDriverCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    dealerWiseDriverCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return dealerWiseDriverCardRequestModel;
+        }
+
 
     }
 }
