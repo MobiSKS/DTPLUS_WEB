@@ -48,8 +48,17 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OfficerModel ofcrMdl)
         {
-            var reason = await _officerService.Create(ofcrMdl);
-            return RedirectToAction("Details", "Officer", new { reason = reason });
+            var Tuple = await _officerService.Create(ofcrMdl);
+            if (Tuple.Item2 == "1")
+            {
+                return RedirectToAction("Details", "Officer", new { reason = Tuple.Item1 });
+            }
+            else
+            {
+                ViewBag.Message = Tuple.Item1;
+                ofcrMdl.Error = Tuple.Item1;
+                return View(ofcrMdl);
+            }
         }
         public async Task<IActionResult> EditOfficer(int officerID)
         {

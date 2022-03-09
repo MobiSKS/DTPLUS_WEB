@@ -67,6 +67,7 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public string EmailId { get; set; }
         public string Fax { get; set; }
         public int OfficerID { get; set; }
+        public string Error { get; set; }
         public virtual List<OfficerTypeResponseModal> OfficerTypeMdl { get; set; }
         public virtual List<ZonalOfficeResponseModal> OfficerZoneMdl { get; set; }
         public virtual List<RegionalOfficeResponseModal> OfficerRegionMdl { get; set; }

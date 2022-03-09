@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<List<OfficerListModel>> Details(string officerType, string location);
         Task<OfficerModel> Create();
-        Task<string> Create(OfficerModel ofcrMdl);
+        Task<Tuple<string, string>> Create(OfficerModel ofcrMdl);
         Task<OfficerModel> EditOfficer(int officerID);
         Task<string> EditOfficer(OfficerModel ofcrMdl);
         Task<OfficerLocationModel> EditLocation(int officerID);
