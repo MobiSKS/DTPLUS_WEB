@@ -70,9 +70,11 @@ namespace HPCL_Web.Controllers
                 merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
                 merchantMdl.Error = tuple.Item2;
+                merchantMdl.Success = "";
             }
             else
             {
+                merchantMdl.Error = "";
                 merchantMdl.Success = tuple.Item2;
             }
 
