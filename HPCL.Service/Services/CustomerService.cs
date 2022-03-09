@@ -14,7 +14,7 @@ using System;
 using System.Linq;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
-
+using HPCL.Common.Models.RequestModel.Customer;
 
 namespace HPCL.Service.Services
 {
@@ -57,20 +57,20 @@ namespace HPCL.Service.Services
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")),"CustomerReferenceNo");
-            form.Add(new StringContent(entity.IdProofType.ToString()),"IdProofType");
-            form.Add(new StringContent(entity.IdProofDocumentNo),"IdProofDocumentNo");
-            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront",entity.IdProofFront.FileName);
-            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack",entity.IdProofBack.FileName);
-            form.Add(new StringContent(entity.AddressProofType.ToString()),"AddressProofType");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
+            form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
+            form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
+            form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
+            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
+            form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
             form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
-            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront",entity.AddressProofFront.FileName);
-            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack",entity.AddressProofBack.FileName);
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")),"CreatedBy");
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")),"Userid");
-            form.Add(new StringContent(CommonBase.useragent),"Useragent");
-            form.Add(new StringContent(CommonBase.userip),"Userip");
-            
+            form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
+            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "Userid");
+            form.Add(new StringContent(CommonBase.useragent), "Useragent");
+            form.Add(new StringContent(CommonBase.userip), "Userip");
+
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.UploadKycUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
@@ -127,7 +127,7 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
 
-           
+
             custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
 
@@ -507,11 +507,11 @@ namespace HPCL.Service.Services
                 //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                 //    }
                 //}
-                                
+
 
                 cust.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
 
-                
+
                 var districtModel = new Dictionary<string, string>
                                 {
                                     {"Useragent", CommonBase.useragent},
@@ -549,9 +549,9 @@ namespace HPCL.Service.Services
                 //}
 
 
-               
+
                 cust.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
-                                
+
 
                 //Fetching Type of Fleet
                 var CustomerTypeOfFleetForms = new Dictionary<string, string>
@@ -773,7 +773,7 @@ namespace HPCL.Service.Services
 
 
         }
-        
+
         public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
         {
 
@@ -872,7 +872,7 @@ namespace HPCL.Service.Services
             //}
 
         }
-        
+
         public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
@@ -1442,7 +1442,70 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
-               
-       
+
+        public async Task<CustomerBalanceInfoModel> BalanceInfo()
+        {
+            CustomerBalanceInfoModel custMdl = new CustomerBalanceInfoModel();
+            custMdl.Remarks = "";
+            return custMdl;
+        }
+
+        public async Task<GetCustomerBalanceResponse> GetCustomerBalanceInfo(string CustomerID)
+        {
+            GetCustomerBalanceResponse customerBalanceResponse = new GetCustomerBalanceResponse();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerBalanceInfo);
+
+            customerBalanceResponse = JsonConvert.DeserializeObject<GetCustomerBalanceResponse>(response);
+
+            return customerBalanceResponse;
+        }
+        public async Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID)
+        {
+            GetCustomerCardWiseBalanceResponse customerBalanceResponse = new GetCustomerCardWiseBalanceResponse();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerCardWiseBalances);
+
+            customerBalanceResponse = JsonConvert.DeserializeObject<GetCustomerCardWiseBalanceResponse>(response);
+
+            return customerBalanceResponse;
+        }
+        public async Task<JObject> GetCustomerDetailsByCustomerID(string CustomerID)
+        {
+            var request = new GetCustomerByCustomerIdRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerByCustomerId);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+
+            return obj;
+        }
+
     }
 }

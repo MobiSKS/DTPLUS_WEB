@@ -1192,6 +1192,44 @@ namespace HPCL_Web.Controllers
             return Json(customerInserCardResponseData);
         }
 
+        public async Task<IActionResult> BalanceInfo()
+        {
+            CustomerBalanceInfoModel customerBalanceInfo = new CustomerBalanceInfoModel();
+            customerBalanceInfo = await _customerService.BalanceInfo();
+            return View(customerBalanceInfo);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerBalanceInfo(string CustomerID)
+        {
+
+            GetCustomerBalanceResponse customerBalanceResponse = new GetCustomerBalanceResponse();
+            customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(CustomerID);
+
+            return Json(new { customerBalanceResponse = customerBalanceResponse.Data });
+        }
+        public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
+        {
+            var modals = await _customerService.GetCustomerCardWiseBalance(CustomerID);
+            return PartialView("~/Views/Customer/_CustomerCardWiseBalancesTbl.cshtml", modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerDetailsByCustomerID(string CustomerID)
+        {
+            JObject obj = await _customerService.GetCustomerDetailsByCustomerID(CustomerID);
+
+            var searchRes = obj["Data"].Value<JObject>();
+            var custResult = searchRes["GetCustomerDetails"].Value<JArray>();
+
+            List<GetCustomerDetailsResponse> customerList = custResult.ToObject<List<GetCustomerDetailsResponse>>();
+
+            GetCustomerDetailsResponse Customer = customerList.Where(t => t.CustomerID == CustomerID).FirstOrDefault();
+
+            ModelState.Clear();
+
+            return Json(new { customer = Customer });
+        }
 
     }
 }
