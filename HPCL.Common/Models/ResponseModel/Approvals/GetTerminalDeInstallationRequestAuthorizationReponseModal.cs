@@ -16,5 +16,8 @@ namespace HPCL.Common.Models.ResponseModel.Approvals
         public string RegionalOfficeName { get; set; }
         public string RequestedBy { get; set; }
         public string RequestedDate { get; set; }
+        public string StatusName { get; set; }
+        public string ApprovedBy { get; set; }
+        public string ApprovedDate { get; set; }
     }
 }

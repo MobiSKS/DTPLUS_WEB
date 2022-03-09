@@ -97,12 +97,12 @@ namespace HPCL.Service.Services
             TerminalDeInstallationRequestAuthorizationRequestModal terminalDeInstallationRequestAuthorizationRequestModal = new TerminalDeInstallationRequestAuthorizationRequestModal();
             terminalDeInstallationRequestAuthorizationRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalDeInstallationRequestAuthorizationRequestModal;
-        }
+        } 
         public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
         {
             TerminalDeInstallationRequestAuthorizationWithRemark getTerminalDeInstallationRequestAuthorizationReponseModals = new TerminalDeInstallationRequestAuthorizationWithRemark();
 
-            var terminalDetailsForDeInstallationApprovalForms = new GetTerminalDeInstallationRequestAuthorizationRequestModal
+            var terminalDetailsForDeInstallationAuthorizationForms = new GetTerminalDeInstallationRequestAuthorizationRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
@@ -115,15 +115,44 @@ namespace HPCL.Service.Services
                 TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId
             };
 
-            StringContent terminalDetailsForDeInstallationApprovalContent = new StringContent(JsonConvert.SerializeObject(terminalDetailsForDeInstallationApprovalForms), Encoding.UTF8, "application/json");
+            StringContent terminalDetailsForDeInstallationAuthorizationContent = new StringContent(JsonConvert.SerializeObject(terminalDetailsForDeInstallationAuthorizationForms), Encoding.UTF8, "application/json");
 
-            var terminalDetailsForDeInstallationApprovalResponse = await _requestService.CommonRequestService(terminalDetailsForDeInstallationApprovalContent, WebApiUrl.getTerminalDeInstallationRequestApproval);
+            var terminalDetailsForDeInstallationAuthorizationResponse = await _requestService.CommonRequestService(terminalDetailsForDeInstallationAuthorizationContent, WebApiUrl.getTerminalDeInstallationRequestAuthorization);
 
-            JObject terminalDetailsForDeInstallationApprovalObj = JObject.Parse(JsonConvert.DeserializeObject(terminalDetailsForDeInstallationApprovalResponse).ToString());
-            var terminalDetailsForDeInstallationApprovalJarr = terminalDetailsForDeInstallationApprovalObj["Data"].Value<JArray>();
-            List<GetTerminalDeInstallationRequestAuthorizationReponseModal> getTerminalDeInstallationRequestApprovalReponselst = terminalDetailsForDeInstallationApprovalJarr.ToObject<List<GetTerminalDeInstallationRequestAuthorizationReponseModal>>();
-            getTerminalDeInstallationRequestAuthorizationReponseModals.TerminalDeInstallationRequestAuthorizationTbl.AddRange(getTerminalDeInstallationRequestApprovalReponselst);
+            JObject terminalDetailsForDeInstallationAuthorizationObj = JObject.Parse(JsonConvert.DeserializeObject(terminalDetailsForDeInstallationAuthorizationResponse).ToString());
+            var terminalDetailsForDeInstallationAuthorizationJarr = terminalDetailsForDeInstallationAuthorizationObj["Data"].Value<JArray>();
+            List<GetTerminalDeInstallationRequestAuthorizationReponseModal> terminalDetailsForDeInstallationAuthorizationReponselst = terminalDetailsForDeInstallationAuthorizationJarr.ToObject<List<GetTerminalDeInstallationRequestAuthorizationReponseModal>>();
+            getTerminalDeInstallationRequestAuthorizationReponseModals.TerminalDeInstallationRequestAuthorizationTbl.AddRange(terminalDetailsForDeInstallationAuthorizationReponselst);
             return getTerminalDeInstallationRequestAuthorizationReponseModals;
+        }
+
+        public async Task<string> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit approvalRejectionMdl)
+        {
+            var approvalRejectionTerminalReqForms = new TerminalDeInstallationAuthorizationSubmit
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Action = approvalRejectionMdl.Action,
+                Remark = approvalRejectionMdl.Remark,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ObjTerminalDeInstallationInsertInput = approvalRejectionMdl.ObjTerminalDeInstallationInsertInput
+            };
+
+            StringContent approvalRejectionTerminalReqContent = new StringContent(JsonConvert.SerializeObject(approvalRejectionTerminalReqForms), Encoding.UTF8, "application/json");
+            var approvalRejectionTerminalReqResponse = await _requestService.CommonRequestService(approvalRejectionTerminalReqContent, WebApiUrl.updateTerminalDeInstallationRequestAuthorization);
+            JObject approvalRejectionTerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(approvalRejectionTerminalReqResponse).ToString());
+
+            if (approvalRejectionTerminalReqObj["Status_Code"].ToString() == "200")
+            {
+                var approvalRejectionTerminalReqJarr = approvalRejectionTerminalReqObj["Data"].Value<JArray>();
+                List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
+                return approvalRejectionTerminalReqLst.First().Reason.ToString();
+            }
+            else
+            {
+                return approvalRejectionTerminalReqObj["Message"].ToString();
+            }
         }
     }
 }

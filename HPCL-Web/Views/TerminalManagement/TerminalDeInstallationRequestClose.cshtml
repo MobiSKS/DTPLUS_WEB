@@ -9,10 +9,11 @@
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Terminal Management</a> </li>
-            <li class="breadcrumb-item">Terminal DeInstallation Request Close</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "TerminalManagement")" class="text_primary">Terminal Management</a> </li>
+            <li class="breadcrumb-item font-weight-light">Terminal DeInstallation Request Close</li>
         </ul>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -106,104 +107,104 @@
             </div>
             <div class="clearfix"></div>
         }
-       
-    <div id="show_Table">
-        @if (Model.TerminalDeinstallationRequestDetails.Count() > 0)
-        {
-            <div class="d-flex align-items-center flex-wrap">
-                <div class="col-lg-6 col-12">
-                    <div class="d-flex align-items-center flex-wrap mb-3">
-                        <label class="font-weight-normal col-md-4 col-12">Status</label>
-                        <div class="col-md-7 col-12">
-                            <div class="custom_select">
-                                <input type="radio" id="deinstall" name="Status" value="De-Installed" class="rbDeinstall" checked>
-                                De-Installed
-                                <input type="radio" id="pblminstall" name="Status" value="Problematic De-Install" class="rbDeinstall">
-                                Problematic De-Install
+
+        <div id="show_Table" class="toBeHiddenOnSuccess">
+            @if (Model.TerminalDeinstallationRequestDetails.Count() > 0)
+            {
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-4 col-12">Status</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    <input type="radio" id="deinstall" name="Status" value="De-Installed" class="rbDeinstall" checked>
+                                    De-Installed
+                                    <input type="radio" id="pblminstall" name="Status" value="Problematic De-Install" class="rbDeinstall">
+                                    Problematic De-Install
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control", style = "display:none" })
+                                    <textarea rows="4" id="txtComments" cols="50"></textarea>
+                                    <span class="error" id="reason_error"></span>
+                                </div>
 
-            </div>
-            <div class="d-flex align-items-center flex-wrap">
-                <div class="col-lg-6 col-12">
-                    <div class="d-flex align-items-center flex-wrap mb-3">
-                        <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
-                        <div class="col-md-7 col-12">
-                            <div class="custom_select">
-                                @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control", style = "display:none" })
-                                <textarea rows="4" id="txtComments" cols="50"></textarea>
-                                <span class="error" id="reason_error"></span>
                             </div>
-
                         </div>
                     </div>
+
                 </div>
-
-            </div>
-            <div class="table-responsive">
-                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
-                    <thead style="background-color:lightgray;">
-                        <tr>
-                            <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
-                            <th style="width:5%;">Merchant ID</th>
-                            <th style="width:10%;">Terminal ID</th>
-                            <th style="width:10%;">Retail Outlet Name</th>
-                            <th style="width:10%;">Zonal Office</th>
-                            <th style="width:10%;">Regional Office</th>
-                            <th style="width:20%;">Status</th>
-                            <th style="width:10%;">Requested By</th>
-                            <th style="width:10%;">Requested Date</th>
-                            <th style="width:10%;">Authorized By</th>
-                            <th style="width:10%;">Authorization Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="searchTableBody">
-                        @{
-                            int i = 0;
-                        }
-                        @foreach (var item in Model.TerminalDeinstallationRequestDetails)
-                        {
-                            i = i + 1;
-
+                <div class="table-responsive">
+                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+                        <thead style="background-color:lightgray;">
                             <tr>
-                                <td><input type="checkbox" id="check_@i" /></td>
-                                <td>@item.MerchantID</td>
-                                <td>@item.TerminalID</td>
-                                <td>@item.RetailOutletName</td>
-                                <td>@item.ZonalOfficeName</td>
-                                <td>@item.RegionalOfficeName</td>
-                                <td>@item.Status</td>
-                                <td>@item.RequestedBy</td>
-                                <td>@item.RequestedDate</td>
-                                <td>@item.AuthorizedBy</td>
-                                <td>@item.AuthorizedDate</td>
-
+                                <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                                <th style="width:5%;">Merchant ID</th>
+                                <th style="width:10%;">Terminal ID</th>
+                                <th style="width:10%;">Retail Outlet Name</th>
+                                <th style="width:10%;">Zonal Office</th>
+                                <th style="width:10%;">Regional Office</th>
+                                <th style="width:20%;">Status</th>
+                                <th style="width:10%;">Requested By</th>
+                                <th style="width:10%;">Requested Date</th>
+                                <th style="width:10%;">Authorized By</th>
+                                <th style="width:10%;">Authorization Date</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var item in Model.TerminalDeinstallationRequestDetails)
+                            {
+                                i = i + 1;
 
-            <div class="clearfix"></div>
+                                <tr>
+                                    <td><input type="checkbox" id="check_@i" /></td>
+                                    <td>@item.MerchantID</td>
+                                    <td>@item.TerminalID</td>
+                                    <td>@item.RetailOutletName</td>
+                                    <td>@item.ZonalOfficeName</td>
+                                    <td>@item.RegionalOfficeName</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.RequestedBy</td>
+                                    <td>@item.RequestedDate</td>
+                                    <td>@item.AuthorizedBy</td>
+                                    <td>@item.AuthorizedDate</td>
 
-            <div class="clearfix"></div>
-            <div class="d-flex align-items-center justify-content-center mt-0">
-                <div class="px-2">
-                    <button class="btn btn_primary" type="button" onclick="submitDeinstallationRequestClose();">Submit</button>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
 
-            </div>
-        }
-        else
-        {
-            <div class="col-12 text-center alert-danger p-2">
-                No Records found!
-            </div>
-        }
-    </div>
-       
+                <div class="clearfix"></div>
+
+                <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" onclick="submitDeinstallationRequestClose();">Submit</button>
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="col-12 text-center alert-danger p-2">
+                    No Records found!
+                </div>
+            }
+        </div>
+
     </div>
 </div>
 <script type="text/javascript">
@@ -417,23 +418,26 @@
 
 
         if (merchantDetail.length > 0 && flag == "Y") {
-            $("#reason_error").html("");
-            var terminationReqmodel = { Status: Status, Comments: comments, ObjMerchantTerminalMapInput: merchantDetail };
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("SubmitDeinstallationRequestClose", "TerminalManagement")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                data: JSON.stringify(terminationReqmodel),
-                success: function (data) {
-                    setDates();
-                    alert(data);
+            if (confirm('Are you sure! You want to close this request')) {
+                $("#reason_error").html("");
+                var terminationReqmodel = { Status: Status, Comments: comments, ObjMerchantTerminalMapInput: merchantDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitDeinstallationRequestClose", "TerminalManagement")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(terminationReqmodel),
+                    success: function (data) {
+                        setDates();
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
 
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
-                }
-            });
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
         }
 
 

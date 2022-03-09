@@ -44,5 +44,15 @@ namespace HPCL_Web.Controllers
             var modals = await _approvalServices.TerminalDeInstallationRequestAuthorization();
             return View(modals);
         }
+        public async Task<IActionResult> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        {
+            var modals = await _approvalServices.GetTerminalsForAuthorization(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
+            return PartialView("~/Views/Approvals/_TerminalsForAuthorizationTable.cshtml", modals);
+        }
+        public async Task<IActionResult> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit AuthorizeRejectionMdl)
+        {
+            var reason = await _approvalServices.TerminalDeInstallRequestApprovalRejectionAuth(AuthorizeRejectionMdl);
+            return Json(reason);
+        }
     }
 }

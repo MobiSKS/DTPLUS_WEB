@@ -777,5 +777,24 @@ namespace HPCL.Service.Services
             return SortedtList;
         }
 
+        public async Task<List<TerminalStatusResponseModal>> GetMerchantStatus()
+        {
+            var forms = new BaseEntity
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getMerchantStatusList);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TerminalStatusResponseModal> merchantStatusList = jarr.ToObject<List<TerminalStatusResponseModal>>();
+            return merchantStatusList;
+        }
+
     }
 }

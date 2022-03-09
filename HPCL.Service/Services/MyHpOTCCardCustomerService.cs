@@ -310,6 +310,109 @@ namespace HPCL.Service.Services
             return responseData;
         }
 
+        public async Task<GetCardAllocationActivation> GetCardAllocationActivation()
+        {
+            GetCardAllocationActivation getCardAllocationActivation = new GetCardAllocationActivation();
+            getCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return getCardAllocationActivation;
+        }
+
+        public async Task<ViewOTCCardsMerchatMappingModel> ViewOTCCardsMerchatMapping()
+        {
+            ViewOTCCardsMerchatMappingModel custModel = new ViewOTCCardsMerchatMappingModel();
+            custModel.Remarks = "";
+            
+            return custModel;
+        }
+
+        public async Task<OTCCardMerchantAllocationResponse> ViewOTCCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var searchBody = new GetOTCCardMerchantAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                MerchantId = MerchantId,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewOtcCardMerchantAllocation);
+
+            OTCCardMerchantAllocationResponse otcCardMerchantAllocationResponse = new OTCCardMerchantAllocationResponse();
+
+            otcCardMerchantAllocationResponse = JsonConvert.DeserializeObject<OTCCardMerchantAllocationResponse>(ResponseContent);
+
+            return otcCardMerchantAllocationResponse;
+        }
+
+        public async Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation()
+        {
+            GetCardAllocationActivation GetCardAllocationActivation = new GetCardAllocationActivation();
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return GetCardAllocationActivation;
+        }
+        public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        {
+            MyCardAllocationandActivationModel getMyCardAllocationandActivation = new MyCardAllocationandActivationModel();
+
+            var cardAllocationforms = new GetCardAllocationActivation
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
+                RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
+                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");
+
+            var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getotccardallocationactivation);
+
+            JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
+            List<MyCardAllocationandActivationDetails> getMyCardAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<MyCardAllocationandActivationDetails>>();
+            getMyCardAllocationandActivation.MyCardAllocationandActivationDetails.AddRange(getMyCardAllocationandActivationDetails);
+            return getMyCardAllocationandActivation;
+        }
+
+        public async Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests()
+        {
+            DealerWiseMyHPOTCCardRequestModel custModel = new DealerWiseMyHPOTCCardRequestModel();
+            custModel.Remarks = "";
+
+            return custModel;
+        }
+
+        public async Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel)
+        {
+            dealerWiseMyHPOTCCardRequestModel.UserIp = CommonBase.userip;
+            dealerWiseMyHPOTCCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseMyHPOTCCardRequestModel.UserAgent = CommonBase.useragent;
+            dealerWiseMyHPOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseMyHPOTCCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseOtcCardRequest);
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            dealerWiseMyHPOTCCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return dealerWiseMyHPOTCCardRequestModel;
+        }
 
     }
 }

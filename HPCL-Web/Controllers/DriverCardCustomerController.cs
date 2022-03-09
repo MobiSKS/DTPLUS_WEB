@@ -224,5 +224,60 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
 
+        public async Task<IActionResult> ViewDriverCardsMerchatMapping()
+        {
+            ViewDriverCardMerchatMappingModel custMdl = new ViewDriverCardMerchatMappingModel();
+            custMdl = await _driverCardCustomerService.ViewDriverCardsMerchatMapping();
+
+            return View(custMdl);
+        }
+
+        public async Task<IActionResult> GetViewOTCCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var modals = await _driverCardCustomerService.ViewDriverCardMerchantAllocation(MerchantId, CardNo);
+            return PartialView("~/Views/DriverCardCustomer/_DriverCardMerchantAllocationTable.cshtml", modals);
+        }
+        public async Task<IActionResult> GetDriverCardActivationAllocationDetails(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId)
+        {
+            var modals = await _driverCardCustomerService.GetDriverCardActivationAllocationDetails(zonalOfcID, regionalOfcID, fromDate, toDate, customerId);
+            return PartialView("~/Views/DriverCardCustomer/_DriverCardActivAllocationTbl.cshtml", modals);
+            
+
+        }
+        public async Task<IActionResult> DriverCardAllocationandActivation()
+        {
+            var modals = await _driverCardCustomerService.DriverCardAllocationandActivation();
+            return View(modals);
+        }
+
+        public async Task<IActionResult> DealerDriverCardRequests()
+        {
+            DealerWiseDriverCardRequestModel custMdl = new DealerWiseDriverCardRequestModel();
+            custMdl = await _driverCardCustomerService.DealerDriverCardRequests();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
+        {
+            DealerWiseDriverCardRequestModel custMdl = new DealerWiseDriverCardRequestModel();
+            custMdl = await _driverCardCustomerService.DealerDriverCardRequests(dealerWiseDriverCardRequestModel);
+
+            if (custMdl.Internel_Status_Code == 1000)
+            {
+                custMdl.Remarks = "";
+                ViewBag.Message = "Dealer wise Driver card request saved successfully";
+                return RedirectToAction("SuccessRedirectDealerDriverCardRequest");
+            }
+
+            return View(custMdl);
+        }
+
+        public async Task<IActionResult> SuccessRedirectDealerDriverCardRequest()
+        {
+            return View();
+        }
+
     }
 }

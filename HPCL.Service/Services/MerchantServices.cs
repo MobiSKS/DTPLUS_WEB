@@ -36,7 +36,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 StatusId = approvalRejectionMdl.StatusId == "Approve" ? "4" : "13",
-                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjApprovalRejectDetail = approvalRejectionMdl.ObjApprovalRejectDetail
             };
 
@@ -56,7 +56,7 @@ namespace HPCL.Service.Services
             }
         }
 
-        public async Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category,string ERPCode)
+        public async Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category,string ERPCode, string actionFlow)
         {
             MerchantGetDetailsModel merchantMdl = new MerchantGetDetailsModel();
 
@@ -75,9 +75,18 @@ namespace HPCL.Service.Services
                 var merchantDetailsResponse = await _requestService.CommonRequestService(merchantDetailsContent, WebApiUrl.getMerchantByMerchantID);
 
                 JObject merchantDetailsObj = JObject.Parse(JsonConvert.DeserializeObject(merchantDetailsResponse).ToString());
-                var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
-                List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
-                merchantMdl = merchantDetailsLst.First();
+                if (merchantDetailsObj["Status_Code"].ToString() == "200" && merchantDetailsObj["Internel_Status_Code"].ToString() == "1001")
+                {
+                    merchantMdl.Message = merchantDetailsObj["Message"].ToString();
+                }
+                else
+                {
+                    merchantMdl.Message = "";
+                    var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
+                    List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
+                    merchantMdl = merchantDetailsLst.First();
+                }
+
             }
 
             if (!string.IsNullOrEmpty(ERPCode))
@@ -106,6 +115,12 @@ namespace HPCL.Service.Services
             merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
             merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
             merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+
+            merchantMdl.RegionalOfcIdVal = merchantMdl.RegionalOfficeId;
+            merchantMdl.RetailDistrictIdVal = merchantMdl.RetailOutletDistrictId;
+            merchantMdl.SalesAreaIdVal = merchantMdl.SalesAreaId;
+
+            merchantMdl.Action = actionFlow;
 
             return merchantMdl;
         }
@@ -164,7 +179,7 @@ namespace HPCL.Service.Services
                     CommunicationPinNumber = merchantMdl.CommunicationPinNumber,
                     CommunicationPhoneNumber = merchantMdl.CommunicationPhoneNumber,
                     CommunicationFax = merchantMdl.CommunicationFax,
-                    ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                    ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                 };
             }
             else
@@ -219,7 +234,7 @@ namespace HPCL.Service.Services
                     CommunicationFax = merchantMdl.CommunicationFax,
                     NoofLiveTerminals = merchantMdl.NoofLiveTerminals,
                     TerminalTypeRequested = merchantMdl.TerminalTypeRequested,
-                    CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                    CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                 };
             }
 
@@ -328,7 +343,7 @@ namespace HPCL.Service.Services
                     {
                         {"Useragent", CommonBase.useragent},
                         { "Userip", CommonBase.userip},
-                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                         { "ErpCode", ERPCode}
                     };
             MerchantGetDetailsModel merchantDetailsModel = new MerchantGetDetailsModel();
@@ -394,6 +409,40 @@ namespace HPCL.Service.Services
 
             return merchantModel;
 
+        }
+        #endregion
+
+        #region Search Merchant
+        public async Task<SearchMerchantModel> SearchMerchant()
+        {
+            SearchMerchantModel searchMerchantModel = new SearchMerchantModel();
+            searchMerchantModel.TerminalStatusResponseModals.AddRange(await _commonActionService.GetMerchantStatus());
+            return searchMerchantModel;
+        }
+
+        public async Task<List<SearchDetailsTableModel>> SearchMerchantDetails(string merchantId, string erpCode, string retailOutletName, string city, string highwayNo, string status)
+        {            
+            var searchDetailsTableForms = new SearchMerchantModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
+                ErpCode = string.IsNullOrEmpty(erpCode) ? "" : erpCode,
+                RetailOutletName = string.IsNullOrEmpty(retailOutletName) ? "" : retailOutletName,
+                RetailOutletCity = string.IsNullOrEmpty(city) ? "" : city,
+                HighwayNo = string.IsNullOrEmpty(highwayNo) ? "" : highwayNo,
+                MerchantStatus = string.IsNullOrEmpty(status) || status == "0" ? "" : status
+            };
+
+            StringContent searchDetailsTableContent = new StringContent(JsonConvert.SerializeObject(searchDetailsTableForms), Encoding.UTF8, "application/json");
+
+            var searchDetailsTableResponse = await _requestService.CommonRequestService(searchDetailsTableContent, WebApiUrl.searchMerchant);
+
+            JObject searchDetailsTableObj = JObject.Parse(JsonConvert.DeserializeObject(searchDetailsTableResponse).ToString());
+            var searchDetailsTableJarr = searchDetailsTableObj["Data"].Value<JArray>();
+            List<SearchDetailsTableModel> searchDetailsTableModels = searchDetailsTableJarr.ToObject<List<SearchDetailsTableModel>>();
+            return searchDetailsTableModels;
         }
 
         #endregion

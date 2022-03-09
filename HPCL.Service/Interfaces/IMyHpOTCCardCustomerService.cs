@@ -25,5 +25,12 @@ namespace HPCL.Service.Interfaces
         Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity);
         Task<MIDAllocationOfCardsModel> ViewOTCCards();
 
+        Task<GetCardAllocationActivation> GetCardAllocationActivation();
+        Task<ViewOTCCardsMerchatMappingModel> ViewOTCCardsMerchatMapping();
+        Task<OTCCardMerchantAllocationResponse> ViewOTCCardMerchantAllocation(string MerchantId, string CardNo);
+        Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId);
+        Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation();
+        Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests();
+        Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel);
     }
 }

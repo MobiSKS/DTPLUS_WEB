@@ -250,8 +250,8 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.UserAgent), "Useragent");
             form.Add(new StringContent(customerModel.UserIp), "Userip");
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDriverCardCustomer);
+            //StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertDriverCardCustomer);
 
             var settings = new JsonSerializerSettings
             {
@@ -346,6 +346,102 @@ namespace HPCL.Service.Services
             custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             return custModel;
+        }
+        public async Task<ViewDriverCardMerchatMappingModel> ViewDriverCardsMerchatMapping()
+        {
+            ViewDriverCardMerchatMappingModel custModel = new ViewDriverCardMerchatMappingModel();
+            custModel.Remarks = "";
+            
+            return custModel;
+        }
+
+        public async Task<DriverCardMerchantAllocationResponse> ViewDriverCardMerchantAllocation(string MerchantId, string CardNo)
+        {
+            var searchBody = new GetOTCCardMerchantAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                MerchantId = MerchantId,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewDriverCardMerchantAllocation);
+
+            DriverCardMerchantAllocationResponse driverCardMerchantAllocationResponse = new DriverCardMerchantAllocationResponse();
+
+            driverCardMerchantAllocationResponse = JsonConvert.DeserializeObject<DriverCardMerchantAllocationResponse>(ResponseContent);
+
+            return driverCardMerchantAllocationResponse;
+        }
+
+
+        public async Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        {
+            DriverCardAllocationanadActivationViewModel getDrtiverAllocationandActivation = new DriverCardAllocationanadActivationViewModel();
+
+            var cardAllocationforms = new DriverCardAllocationanadActivationViewModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
+                RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
+                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");
+
+            var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getdrivercardallocationactivation);
+
+            JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
+            List<DriverCardAllocationandActivationDetails> getDriverAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<DriverCardAllocationandActivationDetails>>();
+            getDrtiverAllocationandActivation.DriverCardAllocationandActivationDetails.AddRange(getDriverAllocationandActivationDetails);
+            return getDrtiverAllocationandActivation;
+
+        }
+        public async Task<DriverCardAllocationanadActivationViewModel> DriverCardAllocationandActivation()
+        {
+            DriverCardAllocationanadActivationViewModel GetCardAllocationActivation = new DriverCardAllocationanadActivationViewModel();
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            return GetCardAllocationActivation;
+        }
+        public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests()
+        {
+            DealerWiseDriverCardRequestModel custModel = new DealerWiseDriverCardRequestModel();
+            custModel.Remarks = "";
+
+            return custModel;
+        }
+        public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
+        {
+            dealerWiseDriverCardRequestModel.UserIp = CommonBase.userip;
+            dealerWiseDriverCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseDriverCardRequestModel.UserAgent = CommonBase.useragent;
+            dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseDriverCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseDriverCardRequest);
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            dealerWiseDriverCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            dealerWiseDriverCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    dealerWiseDriverCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    dealerWiseDriverCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return dealerWiseDriverCardRequestModel;
         }
 
 

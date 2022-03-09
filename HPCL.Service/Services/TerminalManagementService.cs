@@ -531,5 +531,34 @@ namespace HPCL.Service.Services
                 return deInstallResponseObj["Message"].ToString();
             }
         }
+
+        public async Task<SearchTerminalModel> SearchTerminal()
+        {
+            SearchTerminalModel searchTerminalModel = new SearchTerminalModel();
+            return searchTerminalModel;
+        }
+
+        public async Task<List<SearchTerminalDetailsResponseModal>> SearchTerminalDetails(string terminalId, string merchantId, string terminalType, string issueDate)
+        {
+            var searchDetailsTableForms = new SearchTerminalModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
+                TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId,
+                TerminalType = string.IsNullOrEmpty(terminalType) || terminalType == "0" ? "" : terminalType,
+                IssueDate = string.IsNullOrEmpty(issueDate) ? "" : issueDate
+            };
+
+            StringContent searchDetailsTableContent = new StringContent(JsonConvert.SerializeObject(searchDetailsTableForms), Encoding.UTF8, "application/json");
+
+            var searchDetailsTableResponse = await _requestService.CommonRequestService(searchDetailsTableContent, WebApiUrl.searchTerminal);
+
+            JObject searchDetailsTableObj = JObject.Parse(JsonConvert.DeserializeObject(searchDetailsTableResponse).ToString());
+            var searchDetailsTableJarr = searchDetailsTableObj["Data"].Value<JArray>();
+            List<SearchTerminalDetailsResponseModal> searchDetailsTableModels = searchDetailsTableJarr.ToObject<List<SearchTerminalDetailsResponseModal>>();
+            return searchDetailsTableModels;
+        }
     }
 }
