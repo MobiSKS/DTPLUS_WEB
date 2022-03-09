@@ -9,25 +9,25 @@ namespace HPCL.Service.Interfaces
 {
     public interface ICardServices
     {
-        Task<List<SearchGridResponse>> ManageCards(CustomerCards entity, string editFlag);
-        Task<Tuple<List<SearchCardResult>, List<LimitResponse>, List<ServicesResponse>>> ViewCardDetails(string CardId);
+        Task<SearchManageCards> ManageCards(CustomerCards entity, string editFlag);
+        Task<SearchDetailsByCardId> ViewCardDetails(string CardId);
         Task<string> UpdateService(string serviceId, bool flag);
         Task<UpdateMobileModal> CardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue);
         Task<string> CardlessMapping(UpdateMobileModal entity);
-        Task<List<SearchCardsResponse>> AcDcCardSearch(SearchCards entity);
+        Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity);
         Task<string> UpdateStatus(string cardNo, int Statusflag);
-        Task<List<SearchCardsResponse>> RefreshGrid();
-        Task<List<GetCardLimitResponse>> SetSaleLimit(GetCardLimit entity);
+        Task<SearchCardsResponse> RefreshGrid();
+        Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity);
         Task<string> UpdateCards(ObjCardLimits[] limitArray);
-        Task<List<SearchCcmsLimitAllResponse>> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity);
+        Task<SearchCcmsLimitAllResponse> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity);
         Task<string> UpdateCcmsLimitAllCards(GetCcmsLimitAll entity);
-        Task<Tuple<List<SearchIndividualCardsResponse>, List<CCMSBalanceDetail>>> SetCcmsForIndCards(SetIndividualLimit entity);
+        Task<IndividualCardResponse> SetCcmsForIndCards(SetIndividualLimit entity);
         Task<string> UpdateCcmsIndividualCard(string objCCMSLimits, string viewGirds);
         Task<List<ViewGird>> ViewUpdatedGrid();
         Task<List<CardListResponse>> GetCardList();
-        Task<Tuple<List<GetCustomerDetails>, List<GetCustomerCardDetails>>> ManageMapping(GetCustomerDetailsMapMerchant entity);
-        Task<List<MerchantMapResponse>> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity);
+        Task<CustomerSearchDetails> ManageMapping(GetCustomerDetailsMapMerchant entity);
+        Task<FetchMerchant> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity);
         Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status);
-        Task<List<SearchAllowedMerchantResponse>> SearchAllowedMerchant(SearchAllowedMerchant entity);
+        Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity);
     }
 }

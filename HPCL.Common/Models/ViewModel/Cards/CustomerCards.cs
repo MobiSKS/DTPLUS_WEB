@@ -8,15 +8,14 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class CustomerCards : BaseEntity
     {
-        public CustomerCards()
-        {
-            StatusModals = new List<StatusModal>();
-            LimitTypeModals = new List<LimitTypeModal>();
-        }
-
         [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }
+        [StringLength(14)]
         public string CardNo { get; set; }
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNumber { get; set; }
         public string VehicleNumber { get; set; }
         public int StatusFlag { get; set; }

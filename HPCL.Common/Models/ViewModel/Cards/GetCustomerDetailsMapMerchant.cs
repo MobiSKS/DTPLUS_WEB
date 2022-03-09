@@ -1,11 +1,14 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Resources;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class GetCustomerDetailsMapMerchant : BaseEntity
     {
-        [Required(ErrorMessage = "Customer Id is required")]
+        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerID { get; set; }
         public string MerchantID { get; set; }
         public string StateID { get; set; }
@@ -14,12 +17,5 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string HighwayName { get; set; }
         public string HighwayNo1 { get; set; }
         public string HighwayNo2 { get; set; }
-    }
-
-    public class CustomerStateModel
-    {
-        public int CountryID { get; set; }
-        public int StateID { get; set; }
-        public string StateName { get; set; }
     }
 }

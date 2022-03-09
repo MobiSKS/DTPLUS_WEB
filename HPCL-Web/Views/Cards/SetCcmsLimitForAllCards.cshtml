@@ -41,7 +41,7 @@
 
                                                         <select name="StatusFlag" id="" class="form-control statusVal">
                                                         </select>
-                                                        
+
                                                         @Html.ValidationMessageFor(m => m.StatusFlag, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -58,6 +58,14 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div>
+                                            <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                            </div>
+                                        </div>
+
+
                                     </fieldset>
                                 </form>
                             </div>
@@ -210,17 +218,28 @@
         //}
     };
 
-    function OnSuccessSetCcmsLimitAll(data) {
+    function OnSuccessSetCcmsLimitAll(res) {
 
-        console.log(data);
+        console.log(res);
 
-        $("#searchResponse").html('');
+        if (res.searchList.success == true) {
 
-        var search = "<span>Actual CCMS Balance : " + data.searchCcmsCard[0].actualCCMSBalance + " Unallocated CCMS Balance : " + data.searchCcmsCard[0].unallocatedCCMSBalance + "</span>";
+            document.getElementById("noRecord").style.display = "none";
 
-        $("#searchResponse").append(search);
+            $("#searchResponse").html('');
 
-        document.getElementById("setAllLimit").style.display = "block";
+            var search = "<span>Actual CCMS Balance : " + res.searchCcmsCard.data[0].actualCCMSBalance + " Unallocated CCMS Balance : " + res.searchCcmsCard.data[0].unallocatedCCMSBalance + "</span>";
+
+            $("#searchResponse").append(search);
+
+            document.getElementById("setAllLimit").style.display = "block";
+
+        } else {
+            document.getElementById("setAllLimit").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
     }
 
     function OnFailure(data) {
@@ -228,7 +247,9 @@
     }
 
     function OnSuccessUpdateCcmsLimitAllCards(data) {
-        alert(data);
+        $("#noRecord").html("");
+        $("#noRecord").append("<span>" + data + "</span>");
+        document.getElementById("noRecord").style.display = "block";
     }
     function OnFailure(data) {
         alert(data);

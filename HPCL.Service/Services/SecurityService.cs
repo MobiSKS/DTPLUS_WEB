@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
@@ -23,7 +24,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<List<BindGridResponse>> UserCreationApproval(BindGrid entity)
+        public async Task<BindGridResponse> UserCreationApproval(BindGrid entity)
         {
             var bindDetails = new BindGrid();
 
@@ -57,12 +58,11 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.BindRbeDetailsUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<BindGridResponse> rbeDetails = jarr.ToObject<List<BindGridResponse>>();
+            BindGridResponse rbeDetails = obj.ToObject<BindGridResponse>();
             return rbeDetails;
         }
 
-        public async Task<List<ViewRbeDetailsResponse>> ViewRbeDetails(string userName)
+        public async Task<ViewRbeDetailsResponse> ViewRbeDetails(string userName)
         {
             var bindDetails = new ViewRbeDetails
             {
@@ -78,7 +78,7 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<ViewRbeDetailsResponse> viewRbeDetailsList = jarr.ToObject<List<ViewRbeDetailsResponse>>();
+            ViewRbeDetailsResponse viewRbeDetailsList = obj.ToObject<ViewRbeDetailsResponse>();
             return viewRbeDetailsList;
         }
 
@@ -102,7 +102,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
 
-            List<ApproveRejectRbeUserResponse> responseMsg = jarr.ToObject<List<ApproveRejectRbeUserResponse>>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
         }
 
@@ -126,7 +126,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
 
-            List<ApproveRejectRbeUserResponse> responseMsg = jarr.ToObject<List<ApproveRejectRbeUserResponse>>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
         }
     }

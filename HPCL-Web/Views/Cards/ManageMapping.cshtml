@@ -45,7 +45,11 @@
                         </div>
                         <div class="clearfix"></div>
 
+                        <div>
+                            <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
 
+                            </div>
+                        </div>
 
                         <div id="custResult" style="display:none;">
 
@@ -361,54 +365,76 @@
             });
     });
 
-    function OnSuccessGetDetails(data) {
+    function OnSuccessGetDetails(res) {
 
-        console.log(data);
+        console.log(res);
 
-        $("#custIdVal").append("<span>" + data.custDetails[0].customerID + "</span>");
-        $("#zoneIdVal").append("<span>" + data.custDetails[0].zonalOfficeName + "</span>");
-        $("#regionIdVal").append("<span>" + data.custDetails[0].regionalOfficeName + "</span>");
-        $("#custNameIdVal").append("<span>" + data.custDetails[0].customerName + "</span>");
+        if (res.searchList.success == true) {
 
-        $("#UserMappingTable td").parent().remove();
+            document.getElementById("noRecord").style.display = "none";
 
-        for (var i = 0; i < data.cardDetails.length; i++) {
+            var custDetails = res.searchList.data.getCustomerDetails;
+            var custCardDetails = res.searchList.data.getCustomerCardDetails;
 
-            var rows = "<tbody><tr>"
-                + "<td><input type='checkbox' class='customerRow' name='customerCheck'></td>"
-                + "<td><span class='cardNoVal'>" + (data.cardDetails[i].cardNo || '') + "</span></td>"
-                + "<td>" + (data.cardDetails[i].cardIdentifier || '') + "</td>"
-                + "<td>" + (data.cardDetails[i].lastTransactionDate || '') + "</td>"
-                + "</tr ></tbody>";
+            $("#custIdVal").append("<span>" + custDetails[0].customerID + "</span>");
+            $("#zoneIdVal").append("<span>" + custDetails[0].zonalOfficeName + "</span>");
+            $("#regionIdVal").append("<span>" + custDetails[0].regionalOfficeName + "</span>");
+            $("#custNameIdVal").append("<span>" + custDetails[0].customerName + "</span>");
 
-            $('#UserMappingTable').append(rows);
+            $("#UserMappingTable td").parent().remove();
+
+            for (var i = 0; i < custCardDetails.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><input type='checkbox' class='customerRow' name='customerCheck'></td>"
+                    + "<td><span class='cardNoVal'>" + (custCardDetails[i].cardNo || '') + "</span></td>"
+                    + "<td>" + (custCardDetails[i].cardIdentifier || '') + "</td>"
+                    + "<td>" + (custCardDetails[i].lastTransactionDate || '') + "</td>"
+                    + "</tr ></tbody>";
+
+                $('#UserMappingTable').append(rows);
+            }
+
+            document.getElementById("searchCustomerId").style.display = "none";
+            document.getElementById("custResult").style.display = "block";
+            document.getElementById("reqMerchant").style.display = "block";
+        } else {
+            document.getElementById("custResult").style.display = "none";
+            document.getElementById("reqMerchant").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
-
-        document.getElementById("searchCustomerId").style.display = "none";
-        document.getElementById("custResult").style.display = "block";
-        document.getElementById("reqMerchant").style.display = "block";
     }
 
-    function OnSuccessSearch(data) {
+    function OnSuccessSearch(res) {
 
-        console.log(data);
+        console.log(res);
 
-        $("#mapMerchantTbl td").parent().remove();
+        if (res.searchList.success == true) {
 
-        for (var i = 0; i < data.merchantList.length; i++) {
+            document.getElementById("noRecord").style.display = "none";
 
-            var rows = "<tbody><tr>"
-                + "<td><input type='checkbox' class='merchantRow' name='merchantCheck'></td>"
-                + "<td><span class='merchantIdVal'>" + (data.merchantList[i].merchantId || '') + "</span></td>"
-                + "<td>" + (data.merchantList[i].merchantName || '') + "</td>"
-                + "<td>" + (data.merchantList[i].retailOutletName || '') + "</td>"
-                + "<td>" + (data.merchantList[i].address || '') + "</td>"
-                + "</tr ></tbody>";
+            $("#mapMerchantTbl td").parent().remove();
 
-            $('#mapMerchantTbl').append(rows);
+            for (var i = 0; i < res.merchantList.data.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><input type='checkbox' class='merchantRow' name='merchantCheck'></td>"
+                    + "<td><span class='merchantIdVal'>" + (res.merchantList.data[i].merchantId || '') + "</span></td>"
+                    + "<td>" + (res.merchantList.data[i].merchantName || '') + "</td>"
+                    + "<td>" + (res.merchantList.data[i].retailOutletName || '') + "</td>"
+                    + "<td>" + (res.merchantList.data[i].address || '') + "</td>"
+                    + "</tr ></tbody>";
+
+                $('#mapMerchantTbl').append(rows);
+            }
+            document.getElementById("searchMerchantId").style.display = "block";
+        } else {
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
-
-        document.getElementById("searchMerchantId").style.display = "block";
     }
 
     $(".checkAll").click(function () {
@@ -489,8 +515,10 @@
              url: '@Url.Action("SaveCustomerMappingMerchant", "Cards")',
              data: { objCardMerchantMaps: JSON.stringify(cardMerchantMap), status: status },
                 dataType: "json",
-             success: function (data) {
-                 alert(data);
+             success: function (res) {
+                 $("#noRecord").html("");
+                 $("#noRecord").append("<span>" + res + "</span>");
+                 document.getElementById("noRecord").style.display = "block";
              },
              error: function (data) {
                  alert(data);

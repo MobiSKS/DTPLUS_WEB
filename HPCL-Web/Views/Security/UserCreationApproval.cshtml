@@ -23,7 +23,7 @@
 
                                 <div>
 
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3" >
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">First Name</label>
@@ -31,7 +31,7 @@
                                                     @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
                                                     @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">User Name</label>
                                                 <div class="col-md-7 col-12">
@@ -40,8 +40,8 @@
                                                 </div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-center flex-wrap mt-3  w-100">
-                                                 <label class="font-weight-normal col-md-5 col-12 d-sm-block d-none">&nbsp;</label>
-                                                 <div class="col-md-7 col-12  d-flex align-items-center flex-wrap px-0">
+                                                <label class="font-weight-normal col-md-5 col-12 d-sm-block d-none">&nbsp;</label>
+                                                <div class="col-md-7 col-12  d-flex align-items-center flex-wrap px-0">
                                                     <div class="mb-3 col-sm-6 col-12 mb-sm-0 mb-2">
                                                         <button class="btn btn_primary py-2 px-4" type="submit" id="btnSave" name="submit">SEARCH</button>
                                                     </div>
@@ -55,8 +55,14 @@
 
                                     <div class="clearfix"></div>
 
+                                    <div>
+                                        <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                        </div>
+                                    </div>
+
                                     <div class="table-responsive">
-                                        <table id="ApprovalList" class="table table-striped table-bordered text-nowrap" >
+                                        <table id="ApprovalList" class="table table-striped table-bordered text-nowrap">
                                             <tr>
 
                                                 <th>
@@ -280,7 +286,6 @@
             $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
         });
 
-
         $.ajax({
             url: "@Url.Action("UserCreationApproval", "Security")",
             type: "POST",
@@ -299,26 +304,36 @@
     });
 
 
-    function OnSuccessCreationApproval(data) {
+    function OnSuccessCreationApproval(res) {
 
-        console.log(data);
+        console.log(res);
 
-        $("#ApprovalList td").parent().remove();
+        if (res.rbeDetails.success == true) {
 
-        for (var i = 0; i < data.rbeDetails.length; i++) {
+            document.getElementById("noRecord").style.display = "none";
 
-            var rows = "<tbody><tr>"
-                + "<td><span class='checkedRow'><input type='checkbox' name='IsChecked'></span></td>"
-                + "<td>" + (data.rbeDetails[i].firstName || '') + "</td>"
-                + "<td><span class='usrName'>" + (data.rbeDetails[i].userName || '') + "</span></td>"
-                + "<td>" + (data.rbeDetails[i].emailId || '') + "</td>"
-                + "<td>" + (data.rbeDetails[i].makerComment || '') + "</td>"
-                + "<td>" + (data.rbeDetails[i].requestOn || '') + "</td>"
-                + "<td>" + (data.rbeDetails[i].requestedby || '') + "</td>"
-                + "<td><a href='#aa' class='viewDetails'>View</a></td>"
-                + "</tr ></tbody > ";
+            $("#ApprovalList td").parent().remove();
 
-            $('#ApprovalList').append(rows);
+            for (var i = 0; i < data.rbeDetails.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><span class='checkedRow'><input type='checkbox' name='IsChecked'></span></td>"
+                    + "<td>" + (res.rbeDetails.data[i].firstName || '') + "</td>"
+                    + "<td><span class='usrName'>" + (res.rbeDetails.data[i].userName || '') + "</span></td>"
+                    + "<td>" + (res.rbeDetails.data[i].emailId || '') + "</td>"
+                    + "<td>" + (res.rbeDetails.data[i].makerComment || '') + "</td>"
+                    + "<td>" + (res.rbeDetails.data[i].requestOn || '') + "</td>"
+                    + "<td>" + (res.rbeDetails.data[i].requestedby || '') + "</td>"
+                    + "<td><a href='#aa' class='viewDetails'>View</a></td>"
+                    + "</tr ></tbody > ";
+
+                $('#ApprovalList').append(rows);
+            }
+        } else {
+            document.getElementById("ApprovalList").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.rbeDetails.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
     }
 
@@ -339,19 +354,29 @@
              data: { userName: userName },
              success: function (res) {
                  console.log(res);
-                 $("#userNameId").append("<span>User Name: " + (res.viewRbeDetailsList[0].name || '') + "</span>")
-                 $("#roleLoc").append("<tbody><tr><td>" + (res.viewRbeDetailsList[0].roleName || '') + "</td><td>" + (res.viewRbeDetailsList[0].location || '') +"</td></tr></tbody > ")
-                 $('#IdProofVal').val(res.viewRbeDetailsList[0].idProofTypeName);
-                 $('#IdPDocVal').val(res.viewRbeDetailsList[0].idProofDocumentNo);
-                 $("#IdDocFront").attr("src", res.viewRbeDetailsList[0].idProofFront);
-                 $("#IdDocBack").attr("src", res.viewRbeDetailsList[0].idProofBack);
-                 $('#AddressProofVal').val(res.viewRbeDetailsList[0].addressProofTypeName);
-                 $('#AddDocVal').val(res.viewRbeDetailsList[0].addressProofDocumentNo);
-                 $("#AddDocFront").attr("src", res.viewRbeDetailsList[0].addressProofFront);
-                 $("#AddDocBack").attr("src", res.viewRbeDetailsList[0].addressProofBack);
-                 $("#RbePhotoId").attr("src", res.viewRbeDetailsList[0].rbePhoto);
 
-                 document.getElementById("viewRbeAllDetails").style.display = "block";
+                 if (res.viewRbeDetailsList.success == true) {
+                     document.getElementById("noRecord").style.display = "none";
+
+                     $("#userNameId").append("<span>User Name: " + (res.viewRbeDetailsList.data[0].name || '') + "</span>")
+                     $("#roleLoc").append("<tbody><tr><td>" + (res.viewRbeDetailsList.data[0].roleName || '') + "</td><td>" + (res.viewRbeDetailsList.data[0].location || '') + "</td></tr></tbody > ")
+                     $('#IdProofVal').val(res.viewRbeDetailsList.data[0].idProofTypeName);
+                     $('#IdPDocVal').val(res.viewRbeDetailsList.data[0].idProofDocumentNo);
+                     $("#IdDocFront").attr("src", res.viewRbeDetailsList.data[0].idProofFront);
+                     $("#IdDocBack").attr("src", res.viewRbeDetailsList.data[0].idProofBack);
+                     $('#AddressProofVal').val(res.viewRbeDetailsList.data[0].addressProofTypeName);
+                     $('#AddDocVal').val(res.viewRbeDetailsList.data[0].addressProofDocumentNo);
+                     $("#AddDocFront").attr("src", res.viewRbeDetailsList.data[0].addressProofFront);
+                     $("#AddDocBack").attr("src", res.viewRbeDetailsList.data[0].addressProofBack);
+                     $("#RbePhotoId").attr("src", res.viewRbeDetailsList.data[0].rbePhoto);
+
+                     document.getElementById("viewRbeAllDetails").style.display = "block";
+                 } else {
+                     document.getElementById("viewRbeAllDetails").style.display = "none";
+                     $("#noRecord").html("");
+                     $("#noRecord").append("<span>" + res.viewRbeDetailsList.message + "</span>");
+                     document.getElementById("noRecord").style.display = "block";
+                 }
              },
             error: function (ex) {
                 alert('Failed' + ex);
@@ -402,7 +427,9 @@
                 success: function (res) {
 
                     document.getElementById("viewRbeAllDetails").style.display = "none";
-                    alert(res);
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
 
                 },
                 error: function (ex) {
@@ -441,7 +468,9 @@
                 success: function (res) {
 
                     document.getElementById("viewRbeAllDetails").style.display = "none";
-                    alert(res);
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
 
                 },
                 error: function (ex) {
