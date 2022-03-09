@@ -58,9 +58,9 @@
 
                             <div class="clearfix"></div>
 
-                            <div style="display:none;" id="noRecord">
-                                <div class="alert alert-warning" role="alert">
-                                    No Record Found
+                            <div>
+                                <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+                                   
                                 </div>
                             </div>
 
@@ -272,56 +272,71 @@
         }
     }
 
-    function OnSuccess(res) {
+    function OnSuccess(res, status, xhr) {
 
-        if (res.objMerchantList.length == 0 && res.searchList.length == 0) {
-            $("#myTable").hide();
-            $("#label").hide();
-            $("#Just").hide();
-            document.getElementById("noRecord").style.display = "block";
-            return false;
-        }
+        console.log("response",res);
 
+        console.log(status,"status");
 
         var MerchantId = $("#MerchantId").val();
 
         console.log(MerchantId);
 
+        var objMerchantLst = res.searchList.data.objMerchantDetail;
+        var objTerminalLst = res.searchList.data.objTerminalDetail;
+
         console.log(res);
-        $('#RetailOutletName').val(res.objMerchantList[0].retailOutletName)
-        $('#RetailOutletAddress').val(res.objMerchantList[0].retailOutletAddress)
-        $('#RetailOutletCity').val(res.objMerchantList[0].retailOutletCity)
-        $('#StateName').val(res.objMerchantList[0].stateName)
-        $('#DistrictName').val(res.objMerchantList[0].districtName)
 
-        if ((res.objMerchantList[0].terminalIssuanceType) == "Add-On") {
-            $("#addOn").prop("checked", true);
-        }
+        if (res.searchList.success == true) {
 
-        if ((res.objMerchantList[0].terminalIssuanceType) == "Re-Installation") {
-            $("#reInstall").prop("checked", true);
-        }
-
-        $("#myTable td").parent().remove();
-        for (var i = 0; i < res.searchList.length; i++) {
-
-            var rows = "<tbody><tr>"
-                + "<td>" + (res.searchList[i].srNumber || '') + "</td>"
-                + "<td>" + (res.searchList[i].terminalId || '') + "</td>"
-                + "<td>" + res.searchList[i].lastMonthSpends + "</td>"
-                + "<td>" + (res.searchList[i].status || '') + "</td>"
-                + "</tr ></tbody > ";
-
-            $("#myTable").append(rows);
-        }
-
-  
-        if (res.objMerchantList.length > 0 && res.searchList.length > 0) {
             document.getElementById("noRecord").style.display = "none";
+
+            $('#RetailOutletName').val(objMerchantLst[0].retailOutletName)
+            $('#RetailOutletAddress').val(objMerchantLst[0].retailOutletAddress)
+            $('#RetailOutletCity').val(objMerchantLst[0].retailOutletCity)
+            $('#StateName').val(objMerchantLst[0].stateName)
+            $('#DistrictName').val(objMerchantLst[0].districtName)
+
+            if ((objMerchantLst[0].terminalIssuanceType) == "Add-On") {
+                $("#addOn").prop("checked", true);
+            }
+
+            if ((objMerchantLst[0].terminalIssuanceType) == "Re-Installation") {
+                $("#reInstall").prop("checked", true);
+            }
+
+            $("#myTable td").parent().remove();
+            for (var i = 0; i < objTerminalLst.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td>" + (objTerminalLst[i].srNumber || '') + "</td>"
+                    + "<td>" + (objTerminalLst[i].terminalId || '') + "</td>"
+                    + "<td>" + objTerminalLst[i].lastMonthSpends + "</td>"
+                    + "<td>" + (objTerminalLst[i].status || '') + "</td>"
+                    + "</tr ></tbody > ";
+
+                $("#myTable").append(rows);
+            }
+
             $("#myTable").show();
             $("#label").show();
             $("#Just").show();
         }
+        else {
+            $("#myTable").hide();
+            $("#label").hide();
+            $("#Just").hide();
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+
+        //if (res.objMerchantList.length > 0 && res.searchList.length > 0) {
+        //    document.getElementById("noRecord").style.display = "none";
+        //    $("#myTable").show();
+        //    $("#label").show();
+        //    $("#Just").show();
+        //}
     };
 
 
@@ -350,7 +365,9 @@
             dataType: "JSON",
             data: { objInsertTerminal: JSON.stringify(objInsertTerminal) },
             success: function (res) {
-                alert(res);
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res + "</span>");
+                document.getElementById("noRecord").style.display = "block";
             },
             error: function (ex) {
                 alert('Failed' + ex);

@@ -1,6 +1,14 @@
-﻿namespace HPCL.Common.Models.ResponseModel.Security
+﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System.Collections.Generic;
+
+namespace HPCL.Common.Models.ResponseModel.Security
 {
-    public class BindGridResponse
+    public class BindGridResponse : ResponseMsg
+    {
+        public List<BindGridResponseData> data { get; set; }
+    }
+
+    public class BindGridResponseData
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

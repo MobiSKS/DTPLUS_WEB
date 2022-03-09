@@ -34,12 +34,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo)
         {
-            var tuple = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
-            var basicDetails = tuple.Item1;
-            var cardDetails = tuple.Item2;
+            var searchList = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
 
             ModelState.Clear();
-            return Json(new { basicDetails = basicDetails, cardDetails = cardDetails });
+            return Json(new { searchList = searchList });
         }
 
         [HttpPost]

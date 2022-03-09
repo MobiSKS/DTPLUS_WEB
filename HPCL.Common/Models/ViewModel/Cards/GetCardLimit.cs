@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Resources;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,14 +7,15 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class GetCardLimit : BaseEntity
     {
-        public GetCardLimit()
-        {
-            CardStatusList = new List<StatusModal>();
-        }
-
-        [Required(ErrorMessage = "Customer Id is required")]
+        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }
+        [StringLength(14)]
         public string CardNo { get; set; }
+        [StringLength(10)]
+        [Required(ErrorMessage = FieldValidation.MobNoNotEmpty)]
+        [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
         public int Statusflag { get; set; }
 

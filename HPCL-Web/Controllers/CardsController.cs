@@ -36,18 +36,12 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewCardDetails(string CardId)
         {
-            var Tuple = await _cardService.ViewCardDetails(CardId);
-
-            var cardDetailsList = Tuple.Item1;
-            var limitDetailsList = Tuple.Item2;
-            var servicesDetailsList = Tuple.Item3;
+            var searchList = await _cardService.ViewCardDetails(CardId);
 
             ModelState.Clear();
             return Json(new
             {
-                cardDetailsList = cardDetailsList,
-                limitDetailsList = limitDetailsList,
-                servicesDetailsList = servicesDetailsList
+                searchList = searchList
             });
         }
 
@@ -163,13 +157,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SetCcmsForIndCards(SetIndividualLimit entity)
         {
-            var tuple = await _cardService.SetCcmsForIndCards(entity);
-
-            var searchList = tuple.Item1;
-            var amounts = tuple.Item2;
+            var searchList = await _cardService.SetCcmsForIndCards(entity);
 
             ModelState.Clear();
-            return Json(new { searchList = searchList, amounts = amounts });
+            return Json(new { searchList = searchList });
         }
 
 
@@ -216,12 +207,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ManageMapping(GetCustomerDetailsMapMerchant entity)
         {
-            var tuple = await _cardService.ManageMapping(entity);
+            var searchList = await _cardService.ManageMapping(entity);
 
-            var custDetails = tuple.Item1;
-            var cardDetails = tuple.Item2;
-
-            return Json(new { custDetails  = custDetails, cardDetails  = cardDetails });
+            return Json(new { searchList = searchList });
         }
 
         [HttpPost]

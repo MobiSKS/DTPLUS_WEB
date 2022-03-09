@@ -71,8 +71,6 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(CommonBase.useragent),"Useragent");
             form.Add(new StringContent(CommonBase.userip),"Userip");
             
-
-  
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.UploadKycUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());

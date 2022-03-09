@@ -7,8 +7,8 @@ namespace HPCL.Service.Interfaces
 {
     public interface ISecurityService
     {
-        Task<List<BindGridResponse>> UserCreationApproval(BindGrid entity);
-        Task<List<ViewRbeDetailsResponse>> ViewRbeDetails(string userName);
+        Task<BindGridResponse> UserCreationApproval(BindGrid entity);
+        Task<ViewRbeDetailsResponse> ViewRbeDetails(string userName);
         Task<string> ApproveRbeUser(string userName, string comments);
         Task<string> RejectRbeUser(string userName, string comments);
 

@@ -26,7 +26,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<List<SearchGridResponse>> ManageCards(CustomerCards entity, string editFlag)
+        public async Task<SearchManageCards> ManageCards(CustomerCards entity, string editFlag)
         {
             var searchBody = new CustomerCards();
 
@@ -78,12 +78,11 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
+            SearchManageCards searchList = obj.ToObject<SearchManageCards>();
             return searchList;
         }
 
-        public async Task<Tuple<List<SearchCardResult>, List<LimitResponse>, List<ServicesResponse>>> ViewCardDetails(string CardId)
+        public async Task<SearchDetailsByCardId> ViewCardDetails(string CardId)
         {
             _httpContextAccessor.HttpContext.Session.SetString("CardIdSession", CardId);
 
@@ -100,21 +99,16 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            var searchRes = obj["Data"].Value<JObject>();
-            var cardResult = searchRes["GetCardsDetailsModelOutput"].Value<JArray>();
-            var limitResult = searchRes["GetCardLimtModel"].Value<JArray>();
-            var serviceResult = searchRes["CardServices"].Value<JArray>();
-            List<SearchCardResult> cardDetailsList = cardResult.ToObject<List<SearchCardResult>>();
-            List<LimitResponse> limitDetailsList = limitResult.ToObject<List<LimitResponse>>();
-            List<ServicesResponse> servicesDetailsList = serviceResult.ToObject<List<ServicesResponse>>();
+            SearchDetailsByCardId searchRes = obj.ToObject<SearchDetailsByCardId>();
+
             string cusId = string.Empty;
-            foreach (var item in cardDetailsList)
+            foreach (var item in searchRes.Data.GetCardsDetailsModelOutput)
             {
                 cusId = item.CustomerID;
             }
             _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
 
-            return Tuple.Create(cardDetailsList, limitDetailsList, servicesDetailsList);
+            return searchRes;
         }
 
         public async Task<string> UpdateService(string serviceId, bool flag)
@@ -175,7 +169,7 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
-        public async Task<List<SearchCardsResponse>> AcDcCardSearch(SearchCards entity)
+        public async Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity)
         {
             var searchBody = new SearchCards();
 
@@ -190,6 +184,7 @@ namespace HPCL.Service.Services
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
                 };
+                _httpContextAccessor.HttpContext.Session.SetString("AcDccustId", entity.CustomerId);
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
             {
@@ -208,8 +203,8 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAllCardStatusUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SearchCardsResponse> searchList = jarr.ToObject<List<SearchCardsResponse>>();
+           
+            SearchCardsResponse searchList = obj.ToObject<SearchCardsResponse>();
             return searchList;
         }
 
@@ -235,14 +230,14 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
-        public async Task<List<SearchCardsResponse>> RefreshGrid()
+        public async Task<SearchCardsResponse> RefreshGrid()
         {
             var searchBody = new SearchCards
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = _httpContextAccessor.HttpContext.Session.GetString("AcDcCustomerId"),
+                CustomerId = _httpContextAccessor.HttpContext.Session.GetString("AcDccustId"),
                 CardNo = "",
                 MobileNo = ""
             };
@@ -251,12 +246,12 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAllCardStatusUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SearchCardsResponse> searchList = jarr.ToObject<List<SearchCardsResponse>>();
+
+            SearchCardsResponse searchList = obj.ToObject<SearchCardsResponse>();
             return searchList;
         }
 
-        public async Task<List<GetCardLimitResponse>> SetSaleLimit(GetCardLimit entity)
+        public async Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity)
         {
             var searchBody = new GetCardLimit();
 
@@ -289,8 +284,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCardLimitUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<GetCardLimitResponse> searchList = jarr.ToObject<List<GetCardLimitResponse>>();
+            GetCardLimitResponse searchList = obj.ToObject<GetCardLimitResponse>();
             return searchList;
         }
 
@@ -315,7 +309,7 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
-        public async Task<List<SearchCcmsLimitAllResponse>> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)
+        public async Task<SearchCcmsLimitAllResponse> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)
         {
             var reqBody = new GetCcmsLimitAll();
 
@@ -346,8 +340,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCcmsAllCardLimitUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SearchCcmsLimitAllResponse> searchCcmsCard = jarr.ToObject<List<SearchCcmsLimitAllResponse>>();
+            SearchCcmsLimitAllResponse searchCcmsCard = obj.ToObject<SearchCcmsLimitAllResponse>();
             return searchCcmsCard;
         }
 
@@ -373,7 +366,7 @@ namespace HPCL.Service.Services
             return searchCcmsCard[0].Reason;
         }
 
-        public async Task<Tuple<List<SearchIndividualCardsResponse>, List<CCMSBalanceDetail>>> SetCcmsForIndCards(SetIndividualLimit entity)
+        public async Task<IndividualCardResponse> SetCcmsForIndCards(SetIndividualLimit entity)
         {
             var searchBody = new SetIndividualLimit();
 
@@ -405,15 +398,9 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCcmsIndividualCardLimitUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JObject>();
+            IndividualCardResponse searchList = obj.ToObject<IndividualCardResponse>();
 
-            var gridResponse = jarr["CCMSBasicDetail"].Value<JArray>();
-            var balanceAmuntResponse = jarr["CCMSBalanceDetail"].Value<JArray>();
-
-            List<SearchIndividualCardsResponse> searchList = gridResponse.ToObject<List<SearchIndividualCardsResponse>>();
-            List<CCMSBalanceDetail> amounts = balanceAmuntResponse.ToObject<List<CCMSBalanceDetail>>();
-
-            return Tuple.Create(searchList, amounts);
+            return searchList;
         }
 
         public async Task<string> UpdateCcmsIndividualCard(string objCCMSLimits, string viewGirds)
@@ -469,7 +456,7 @@ namespace HPCL.Service.Services
             return cardList;
         }
 
-        public async Task<Tuple<List<GetCustomerDetails>, List<GetCustomerCardDetails>>> ManageMapping(GetCustomerDetailsMapMerchant entity)
+        public async Task<CustomerSearchDetails> ManageMapping(GetCustomerDetailsMapMerchant entity)
         {
             var reqBody = new GetCustomerDetailsMapMerchant
             {
@@ -483,18 +470,13 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCustMapDetailsUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JObject>();
 
-            var jarrCustDetails = jarr["GetCustomerDetails"].Value<JArray>();
-            var jarrCardDetails = jarr["GetCustomerCardDetails"].Value<JArray>();
+            CustomerSearchDetails searchlist = obj.ToObject<CustomerSearchDetails>();
 
-            List<GetCustomerDetails> custDetails = jarrCustDetails.ToObject<List<GetCustomerDetails>>();
-            List<GetCustomerCardDetails> cardDetails = jarrCardDetails.ToObject<List<GetCustomerCardDetails>>();
-
-            return Tuple.Create(custDetails, cardDetails);
+            return searchlist;
         }
 
-        public async Task<List<MerchantMapResponse>> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity)
+        public async Task<FetchMerchant> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity)
         {
             var merchantDetails = new GetCustomerDetailsMapMerchant
             {
@@ -514,8 +496,8 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetMerchantForMapUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<MerchantMapResponse> merchantList = jarr.ToObject<List<MerchantMapResponse>>();
+
+            FetchMerchant merchantList = obj.ToObject<FetchMerchant>();
             return merchantList;
         }
 
@@ -541,7 +523,7 @@ namespace HPCL.Service.Services
             return searchCcmsCard[0].Reason;
         }
 
-        public async Task<List<SearchAllowedMerchantResponse>> SearchAllowedMerchant(SearchAllowedMerchant entity)
+        public async Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity)
         {
             var reqBody = new SearchAllowedMerchant
             {
@@ -555,8 +537,8 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.MappingAllowedCardsToMerchantUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SearchAllowedMerchantResponse> searchList = jarr.ToObject<List<SearchAllowedMerchantResponse>>();
+
+            SearchAllowedMerchantResponse searchList = obj.ToObject<SearchAllowedMerchantResponse>();
             return searchList;
         }
     }

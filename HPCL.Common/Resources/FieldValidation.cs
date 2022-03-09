@@ -31,13 +31,22 @@
         public const string ValidMobileNumber = @"^[0-9]{10}$";
         public const string ValidMobileNumberErrMsg = "Enter a Valid Mobile Number";
 
+        public const string ValidCustomerId = @"^(?=(2))[0-9]{10}$";
+        public const string ValidCustomerIdErrMsg = "start with 2 and contains 10 digits";
+
+        public const string ValidMerchantId = @"^(?=(3))[0-9]{10}$";
+        public const string ValidMerchantIdErrMsg = "start with 3 and contains 10 digits";
+
+        public const string ValidAmount = @"^[1-9][0-9]*";
+        public const string ValidAmountErrMsg = "Only digit allowed";
         #endregion
 
         #region "Not Empty Validation"
 
         public const string CustomerNotEmpty = "Customer ID should not be Empty";
         public const string MobNoNotEmpty = "Mobile Number should not be Empty";
-
+        public const string MerchantNotEmpty = "Merchant ID should not be Empty";
+        public const string AmountNotEmpty = "Amount should not be Empty";
         #endregion
     }
 }

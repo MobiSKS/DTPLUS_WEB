@@ -81,6 +81,11 @@
 
                             <div class="clearfix"></div>
 
+                            <div>
+                                <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                </div>
+                            </div>
 
                             <div id="UpdateGrid" style="display:none;">
 
@@ -218,58 +223,68 @@
 
         console.log("res", res);
 
-        $("#limitSection").html("");
-        var amountAppend = "<span>Available CCMS Balance : " + res.amounts[0].actualCCMSBalance + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unallocated CCMS Balance : " + res.amounts[0].unallocatedCCMSBalance + ": </span>"
+        if (res.searchList.success == true) {
 
-        $("#limitSection").append(amountAppend);
+            document.getElementById("noRecord").style.display = "block";
 
-        $.ajax({
+            var ccmsDetails = res.searchList.data.ccmsBasicDetail;
+            var ccmsBalanceDetails = res.searchList.data.ccmsBalanceDetail;
+
+            $("#limitSection").html("");
+            var amountAppend = "<span>Available CCMS Balance : " + ccmsDetails[0].actualCCMSBalance + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unallocated CCMS Balance : " + ccmsDetails[0].unallocatedCCMSBalance + ": </span>"
+
+            $("#limitSection").append(amountAppend);
+
+            $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("GetLimitType", "Common")',
                 dataType: "json",
-             success: function (data, status, xhr) {
+                success: function (data, status, xhr) {
 
-                 console.log(data, "data");
-                 $("#CardSearch td").parent().remove();
+                    console.log(data, "data");
+                    $("#CardSearch td").parent().remove();
 
-                 for (var i = 0; i < res.searchList.length; i++) {
+                    for (var i = 0; i < ccmsBalanceDetails.length; i++) {
 
-                     var rows = "<tbody><tr>"
-                         + "<td>" + (res.searchList[i].srNumber || '') +"</td>"
-                         + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
-                         + "<td><span class='cdn'>" + (res.searchList[i].cardNumber || '') +"</span></td>"
-                         + "<td><span class='vn'>" + (res.searchList[i].vechileNo || '') +"</span></td>"
-                         + "<td><span class='isd'>" + (res.searchList[i].issueDate || '') +"</span></td>"
-                         + "<td><span class='expd'>" + (res.searchList[i].expiryDate || '') +"</span></td>"
-                         + "<td><span class='sts'>" + (res.searchList[i].status || '') +"</span></td>"
+                        var rows = "<tbody><tr>"
+                            + "<td>" + (ccmsBalanceDetails[i].srNumber || '') + "</td>"
+                            + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                            + "<td><span class='cdn'>" + (ccmsBalanceDetails[i].cardNumber || '') + "</span></td>"
+                            + "<td><span class='vn'>" + (ccmsBalanceDetails[i].vechileNo || '') + "</span></td>"
+                            + "<td><span class='isd'>" + (ccmsBalanceDetails[i].issueDate || '') + "</span></td>"
+                            + "<td><span class='expd'>" + (ccmsBalanceDetails[i].expiryDate || '') + "</span></td>"
+                            + "<td><span class='sts'>" + (ccmsBalanceDetails[i].status || '') + "</span></td>"
 
-                         + "<td><input class='form-control mobn' name='" + (res.searchList[i].mobileNumber || '') + "' type='text' value='" + (res.searchList[i].mobileNumber || '') +"' readonly='readonly'></td>"
-                         + "<td><select readonly='readonly' class='form-control vls'><option value='" + (res.searchList[i].ccmsLimitOption || '') + "'>" + (res.searchList[i].description || '')+"</option></select></td>"
-                         + "<td><input class='form-control amt' name='" + (res.searchList[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (res.searchList[i].ccmsReloadSaleLimitValue || '') +"' readonly='readonly'></td>"
-                         + "</tr></tbody>";
+                            + "<td><input class='form-control mobn' name='" + (ccmsBalanceDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsBalanceDetails[i].mobileNumber || '') + "' readonly='readonly'></td>"
+                            + "<td><select readonly='readonly' class='form-control vls'><option value='" + (ccmsBalanceDetails[i].ccmsLimitOption || '') + "'>" + (ccmsBalanceDetails[i].description || '') + "</option></select></td>"
+                            + "<td><input class='form-control amt' name='" + (ccmsBalanceDetails[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (ccmsBalanceDetails[i].ccmsReloadSaleLimitValue || '') + "' readonly='readonly'></td>"
+                            + "</tr></tbody>";
 
-                     $('#CardSearch').append(rows);
+                        $('#CardSearch').append(rows);
+                    }
 
-                 }
+                    $.each(data.sortedtList, function (i, option) {
+                        $("<option/>").val(option.limitId).text(option.description).appendTo(".vls");
+                    });
 
-
-                 $.each(data.sortedtList, function (i, option) {
-                     $("<option/>").val(option.limitId).text(option.description).appendTo(".vls");
-                 });
-
-
-                 $(".vls option").each(function () {
-                     $(this).siblings('[value="' + this.value + '"]').remove();
-                 });
+                    $(".vls option").each(function () {
+                        $(this).siblings('[value="' + this.value + '"]').remove();
+                    });
 
 
-             },
-             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Customer Region");
-             }
-        });
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Region");
+                }
+            });
 
-        document.getElementById('UpdateGrid').style.display = 'block';
+            document.getElementById('UpdateGrid').style.display = 'block';
+        } else {
+            document.getElementById("UpdateGrid").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
     }
 
 

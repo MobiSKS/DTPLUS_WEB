@@ -80,6 +80,13 @@
                     </div>
                 </div>
 
+                
+                <div>
+                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                    </div>
+                </div>
+
                 <div id="fetchDetails" style="display:none;">
 
                     <table id="getDetails" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
@@ -184,26 +191,36 @@
          });
     });
 
-    function OnSuccessGetDetails(data) {
-        console.log(data);
+    function OnSuccessGetDetails(res) {
+        console.log(res);
 
-        $("#getDetails td").parent().remove();
+        if (res.searchList.success == true) {
 
-        for (var i = 0; i < data.searchList.length; i++) {
+            document.getElementById("noRecord").style.display = "none";
 
-            var rows = "<tbody><tr>"
-                + "<td><input type='checkbox' class='rowSelect' name='rowCheck'></td>"
-                + "<td><span class='cardNoVal'>" + (data.searchList[i].cardNo || '') + "</span></td>"
-                + "<td><span class='merchantVal'>" + (data.searchList[i].merchantID || '') + "</span></td>"
-                + "<td><span class='customerVal'>" + (data.searchList[i].customerID || '') + "</span></td>"
-                + "<td>" + (data.searchList[i].merchantName || '') + "</td>"
-                + "<td>" + (data.searchList[i].status || '') + "</td>"
-                + "</tr ></tbody>";
+            $("#getDetails td").parent().remove();
 
-            $('#getDetails').append(rows);
+            for (var i = 0; i < res.searchList.data.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><input type='checkbox' class='rowSelect' name='rowCheck'></td>"
+                    + "<td><span class='cardNoVal'>" + (res.searchList.data[i].cardNo || '') + "</span></td>"
+                    + "<td><span class='merchantVal'>" + (res.searchList.data[i].merchantID || '') + "</span></td>"
+                    + "<td><span class='customerVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
+                    + "<td>" + (res.searchList.data[i].merchantName || '') + "</td>"
+                    + "<td>" + (res.searchList.data[i].status || '') + "</td>"
+                    + "</tr ></tbody>";
+
+                $('#getDetails').append(rows);
+            }
+
+            document.getElementById("fetchDetails").style.display = "block";
+        } else {
+            document.getElementById("fetchDetails").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
-
-        document.getElementById("fetchDetails").style.display = "block";
     }
 
     $(".checkAll").click(function () {
@@ -238,7 +255,9 @@
             data: { objCardMerchantMaps: JSON.stringify(merchantArray), status: "Block" },
             dataType: "json",
             success: function (data) {
-                alert(data);
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + data + "</span>");
+                document.getElementById("noRecord").style.display = "block";
             },
             error: function (data) {
                 alert(data);
