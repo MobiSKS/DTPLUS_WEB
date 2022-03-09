@@ -26,8 +26,8 @@
         public static string bindOfficer = "api/dtplus/officer/bind_officer";
         public static string zonalOffice = "api/dtplus/zonaloffice/get_zonal_office";
         public static string regionalOffice = "api/dtplus/regionaloffice/get_regional_office";
-        public static string createHeadOffice = "/dtpwebapi/api/dtplus/hq/insert_hq";
-        public static string updateHeadOffice = "/dtpwebapi/api/dtplus/hq/update_hq";
+        public static string createHeadOffice = "api/dtplus/hq/insert_hq";
+        public static string updateHeadOffice = "api/dtplus/hq/update_hq";
         public static string getLocationMapping = "api/dtplus/officer/get_officer_location_mapping";
         public static string insertOfficerLocationMapping = "api/dtplus/officer/insert_officer_location_mapping";
         public static string deleteOfficerLocationMapping = "api/dtplus/officer/delete_officer_location_mapping";
@@ -37,37 +37,37 @@
 
         #region Cards
 
-        public static string GetStatusTypeUrl = "/dtpwebapi/api/dtplus/settings/get_entity_status_type";
-        public static string SearchCardUrl = "/dtpwebapi/api/dtplus/card/search_manage_card";
-        public static string GetCardDetailsUrl = "/dtpwebapi/api/dtplus/card/get_card_limit_features";
-        public static string UpdateMobileUrl = "/dtpwebapi/api/dtplus/card/update_mobile_in_card";
-        public static string UpdateServiceUrl = "/dtpwebapi/api/dtplus/card/update_service_on_card";
-        public static string GetAllCardStatusUrl = "/dtpwebapi/api/dtplus/card/get_all_card_with_status";
-        public static string UpdateCardStatusUrl = "/dtpwebapi/api/dtplus/card/update_card_status";
-        public static string GetLimitTypeUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit_master";
-        public static string GetCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_card_limit";
-        public static string UpdateCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_card_limits";
-        public static string SearchCcmsAllCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit_for_all_cards";
-        public static string UpdateCcmsAllCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limit_for_all_cards";
-        public static string SearchCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/get_ccms_limit";
-        public static string UpdateCcmsIndividualCardLimitUrl = "/dtpwebapi/api/dtplus/card/update_ccms_limits";
-        public static string ViewCardLimitsUrl = "/dtpwebapi/api/dtplus/card/view_card_limits";
-        public static string MobileAddOrEditUrl = "/dtpwebapi/api/dtplus/card/update_mobile_and_fastag_no_in_card";
+        public static string GetStatusTypeUrl = "api/dtplus/settings/get_entity_status_type";
+        public static string SearchCardUrl = "api/dtplus/card/search_manage_card";
+        public static string GetCardDetailsUrl = "api/dtplus/card/get_card_limit_features";
+        public static string UpdateMobileUrl = "api/dtplus/card/update_mobile_in_card";
+        public static string UpdateServiceUrl = "api/dtplus/card/update_service_on_card";
+        public static string GetAllCardStatusUrl = "api/dtplus/card/get_all_card_with_status";
+        public static string UpdateCardStatusUrl = "api/dtplus/card/update_card_status";
+        public static string GetLimitTypeUrl = "api/dtplus/card/get_ccms_limit_master";
+        public static string GetCardLimitUrl = "api/dtplus/card/get_card_limit";
+        public static string UpdateCardLimitUrl = "api/dtplus/card/update_card_limits";
+        public static string SearchCcmsAllCardLimitUrl = "api/dtplus/card/get_ccms_limit_for_all_cards";
+        public static string UpdateCcmsAllCardLimitUrl = "api/dtplus/card/update_ccms_limit_for_all_cards";
+        public static string SearchCcmsIndividualCardLimitUrl = "api/dtplus/card/get_ccms_limit";
+        public static string UpdateCcmsIndividualCardLimitUrl = "api/dtplus/card/update_ccms_limits";
+        public static string ViewCardLimitsUrl = "api/dtplus/card/view_card_limits";
+        public static string MobileAddOrEditUrl = "api/dtplus/card/update_mobile_and_fastag_no_in_card";
         public static string getValidateNewCardLists = "api/dtplus/card/bind_pending_customer_for_card_approval";
         public static string getCardDetailsForCardApproval = "api/dtplus/card/get_card_detail_for_card_approval";
         public static string approveRejectCard = "api/dtplus/card/approve_reject_card";
-        public static string CardControlUrl = "/dtpwebapi/api/dtplus/customer/get_control_card_number";
-        public static string SearchCardMappingUrl = "/dtpwebapi/api/dtplus/card/search_card_mapping_detail";
-        public static string GetCardListUrl = "/dtpwebapi/api/dtplus/customer/get_card_list_from_customer_id";
-        public static string GetCustMapDetailsUrl = "/dtpwebapi/api/dtplus/customer/get_customer_details_for_mapping_card_merchant";
-        public static string GetMerchantForMapUrl = "/dtpwebapi/api/dtplus/customer/get_merchant_for_card_mapping";
-        public static string SaveCustomerMerchantMapUrl = "/dtpwebapi/api/dtplus/customer/add_customer_card_merchant_mapping";
-        public static string TerminalInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/search_for_terminal_installation_request";
-        public static string InsertInstallationRequestUrl = "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request";
-        public static string MappingAllowedCardsToMerchantUrl = "/dtpwebapi/api/dtplus/customer/get_mapping_user_cards_to_merchants";
+        public static string CardControlUrl = "api/dtplus/customer/get_control_card_number";
+        public static string SearchCardMappingUrl = "api/dtplus/card/search_card_mapping_detail";
+        public static string GetCardListUrl = "api/dtplus/customer/get_card_list_from_customer_id";
+        public static string GetCustMapDetailsUrl = "api/dtplus/customer/get_customer_details_for_mapping_card_merchant";
+        public static string GetMerchantForMapUrl = "api/dtplus/customer/get_merchant_for_card_mapping";
+        public static string SaveCustomerMerchantMapUrl = "api/dtplus/customer/add_customer_card_merchant_mapping";
+        public static string TerminalInstallationRequestUrl = "api/dtplus/merchant/search_for_terminal_installation_request";
+        public static string InsertInstallationRequestUrl = "api/dtplus/merchant/insert_terminal_installation_request";
+        public static string MappingAllowedCardsToMerchantUrl = "api/dtplus/customer/get_mapping_user_cards_to_merchants";
 
-        public static string GetTerminalInstallReqAppUrl = "/dtpwebapi/api/dtplus/merchant/get_terminal_installation_request_approval";
-        public static string ApproveRejectTerminalUrl= "/dtpwebapi/api/dtplus/merchant/insert_terminal_installation_request_approval";
+        public static string GetTerminalInstallReqAppUrl = "api/dtplus/merchant/get_terminal_installation_request_approval";
+        public static string ApproveRejectTerminalUrl= "api/dtplus/merchant/insert_terminal_installation_request_approval";
         #endregion
 
         #region Merchant
@@ -136,14 +136,14 @@
 
         #region Login
 
-        public static string getLoginUrl = "/dtpwebapi/api/dtplus/login/get_login";
+        public static string getLoginUrl = "api/dtplus/login/get_login";
         #endregion
 
         #region Security
 
-        public static string BindRbeDetailsUrl = "/dtpwebapi/api/dtplus/officer/bind_rbe_detail";
-        public static string ViewRbeDataUrl = "/dtpwebapi/api/dtplus/officer/get_rbe_detail_by_user_name";
-        public static string ApproveRejectRbeUserUrl = "/dtpwebapi/api/dtplus/officer/approve_reject_rbe";
+        public static string BindRbeDetailsUrl = "api/dtplus/officer/bind_rbe_detail";
+        public static string ViewRbeDataUrl = "api/dtplus/officer/get_rbe_detail_by_user_name";
+        public static string ApproveRejectRbeUserUrl = "api/dtplus/officer/approve_reject_rbe";
         #endregion
 
         #region DriverCard
