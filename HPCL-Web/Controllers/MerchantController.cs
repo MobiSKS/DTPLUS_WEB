@@ -69,6 +69,11 @@ namespace HPCL_Web.Controllers
                 merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+                merchantMdl.Error = tuple.Item2;
+            }
+            else
+            {
+                merchantMdl.Success = tuple.Item2;
             }
 
             ViewBag.Reason = tuple.Item2;
