@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
@@ -101,7 +102,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
 
-            List<ApproveRejectRbeUserResponse> responseMsg = jarr.ToObject<List<ApproveRejectRbeUserResponse>>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
         }
 
@@ -125,7 +126,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
 
-            List<ApproveRejectRbeUserResponse> responseMsg = jarr.ToObject<List<ApproveRejectRbeUserResponse>>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
         }
     }
