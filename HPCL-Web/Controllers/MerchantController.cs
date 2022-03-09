@@ -55,7 +55,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
-            if (!string.IsNullOrEmpty(merchantMdl.SearchMerchantId))
+            if (!string.IsNullOrEmpty(merchantMdl.SearchMerchantId) || string.IsNullOrEmpty(merchantMdl.SearchMerchantId))
             {
                 return RedirectToAction("CreateMerchant", new { MerchantIDValue = merchantMdl.SearchMerchantId });
             }
@@ -69,6 +69,13 @@ namespace HPCL_Web.Controllers
                 merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+                merchantMdl.Error = tuple.Item2;
+                merchantMdl.Success = "";
+            }
+            else
+            {
+                merchantMdl.Error = "";
+                merchantMdl.Success = tuple.Item2;
             }
 
             ViewBag.Reason = tuple.Item2;

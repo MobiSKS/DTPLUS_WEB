@@ -41,7 +41,7 @@
                                                     @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-4">
-                                                    <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                                    <button class="btn btn_primary px-4 py-2" type="submit" onclick="checkForMerchantId(event)" style="width: 130%">SEARCH</button>
                                                 </div>
                                                 @*}
                                                     else
@@ -57,6 +57,7 @@
                                                         }
                                                     }*@
                                             </div>
+                                            <span class="error" id="searchMerchantId_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -644,7 +645,15 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="summaryDetails" role="tabpanel" aria-labelledby="summaryDetails-tab">
-                    <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;">@Html.Raw(ViewBag.Reason)</div>
+                    <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none">@Html.Raw(ViewBag.Reason)</div>
+                    @if (Model.Success != "")
+                    {
+                        <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Message</div>
+                    }
+                    @if (Model.Error != "")
+                    {
+                        <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Message</div>
+                    }
                     <div class="border-1 rounded border-grey w-100">
 
                         <div class="py-2 p-md-4">
@@ -709,10 +718,10 @@
                                                 </div>
                                             </div>
                                             @*<div class="form-group d-flex align-items-center flex-wrap">
-                            <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
-                            <div class="col-md-7 col-12" id="SummaryMerchantID">
-                            </div>
-                        </div>*@
+                                    <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
+                                    <div class="col-md-7 col-12" id="SummaryMerchantID">
+                                    </div>
+                                </div>*@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">SBU Type :</label>
                                                 <div class="col-md-7 col-12" id="SummarySBUType">
@@ -971,7 +980,7 @@
             $("#reason").hide();
         }
         else {
-            $("#reason").show();
+            //$("#reason").show();
             if (status == "1") {
                 $("#finalPrevious").hide();
                 $("#confirm").hide();
@@ -1020,7 +1029,7 @@
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
                 $("#SummaryMobile").html($("#MobileNo").val());
-                $("#SummaryEmail").html($("EmailId").val());
+                $("#SummaryEmail").html($("#EmailId").val());
                 $("#SummaryMisc").html($("#Mics").val());
                 $("#SummaryDTPCautionLimit").html(0);
                 $("#SummaryHpPayCautionLimit").html(0);
@@ -1076,7 +1085,7 @@
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
                 $("#SummaryMobile").html($("#MobileNo").val());
-                $("#SummaryEmail").html($("EmailId").val());
+                $("#SummaryEmail").html($("#EmailId").val());
                 $("#SummaryMisc").html($("#Mics").val());
                 $("#SummaryDTPCautionLimit").html(0);
                 $("#SummaryHpPayCautionLimit").html(0);
@@ -1105,6 +1114,23 @@
         $("#MerchantId").prop("disabled", true);
     });
 
+    function checkForMerchantId(e) {
+        var ret = "Y";
+        if (document.applicationForm.SearchMerchantId.value == "") {
+            document.getElementById("searchMerchantId_error").innerHTML = "Merchant Id is required";
+            document.applicationForm.SearchMerchantId.focus();
+            e.preventDefault();
+            ret = "N";
+        }
+        else {
+            document.getElementById("searchMerchantId_error").innerHTML = "";
+        }
+
+        if (ret == "Y") {
+            $("#form1").unbind().submit();
+        }
+    }
+
     function showAddMerchant() {
         var ret = true;
 
@@ -1120,6 +1146,9 @@
         if (document.applicationForm.RetailOutletName.value == "") {
             document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet is required";
             document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1128,7 +1157,12 @@
 
         if (document.applicationForm.MerchantTypeId.value == "0") {
             document.getElementById("merchantType_error").innerHTML = "Merchant Type is required";
-            document.applicationForm.MerchantTypeId.focus();
+            if (ret != "N") {
+                document.applicationForm.MerchantTypeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1138,17 +1172,32 @@
         if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
             if (document.applicationForm.MappedMerchantId.value == "") {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Mapped Merchant ID is required";
-                document.applicationForm.MappedMerchantId.focus();
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
                 ret = "N";
             }
             else if (!document.applicationForm.MappedMerchantId.value.match(mappedMerchantID)) {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Should start with 3 and 10 Digits Only";
-                document.applicationForm.MappedMerchantId.focus();
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
                 ret = "N";
             }
             else if (!document.applicationForm.MappedMerchantId.value.match(number)) {
                 document.getElementById("mappedMerchantId_error").innerHTML = "Numeric Only";
-                document.applicationForm.MappedMerchantId.focus();
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
                 ret = "N";
             }
             else {
@@ -1158,12 +1207,22 @@
 
         if (document.applicationForm.DealerMobileNo.value == "") {
             document.getElementById("dealerMobileNum_error").innerHTML = "Dealer Mobile Number is required";
-            document.applicationForm.DealerMobileNo.focus();
+            if (ret != "N") {
+                document.applicationForm.DealerMobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.DealerMobileNo.value.match(phoneno)){
             document.getElementById("dealerMobileNum_error").innerHTML = "Mobile Number should have 10 Digits";
-            document.applicationForm.DealerMobileNo.focus();
+            if (ret != "N") {
+                document.applicationForm.DealerMobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1172,7 +1231,12 @@
 
         if (document.applicationForm.OutletCategoryId.value == "0") {
             document.getElementById("outletCategory_error").innerHTML = "Outlet Category is required";
-            document.applicationForm.OutletCategoryId.focus();
+            if (ret != "N") {
+                document.applicationForm.OutletCategoryId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1182,12 +1246,22 @@
         if ($('#OutletCategoryId :selected').text() == "Highway") {
             if (document.applicationForm.HighwayNo2.value == "") {
                 document.getElementById("highwayNum_error").innerHTML = "Highway Number is required";
-                document.applicationForm.HighwayNo2.focus();
+                if (ret != "N") {
+                    document.applicationForm.HighwayNo2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
                 ret = "N";
             }
             else if (!document.applicationForm.HighwayNo2.value.match(number)) {
                 document.getElementById("highwayNum_error").innerHTML = "Numeric Only";
-                document.applicationForm.HighwayNo2.focus();
+                if (ret != "N") {
+                    document.applicationForm.HighwayNo2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
                 ret = "N";
             }
             else {
@@ -1197,7 +1271,12 @@
 
         if (document.applicationForm.SBUTypeId.value == "0") {
             document.getElementById("sbuType_error").innerHTML = "SBU Type is required";
-            document.applicationForm.SBUTypeId.focus();
+            if (ret != "N") {
+                document.applicationForm.SBUTypeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1206,12 +1285,22 @@
 
         if (document.applicationForm.LPGCNGSale.value == "") {
             document.getElementById("lpgCngSale_error").innerHTML = "LPG CNG Sale is required";
-            document.applicationForm.LPGCNGSale.focus();
+            if (ret != "N") {
+                document.applicationForm.LPGCNGSale.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.LPGCNGSale.value.match(lpgCngSale)) {
             document.getElementById("lpgCngSale_error").innerHTML = "LPG CNG Sale value is invalid - From 1 to 1,00,000 Only";
-            document.applicationForm.LPGCNGSale.focus();
+            if (ret != "N") {
+                document.applicationForm.LPGCNGSale.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1220,12 +1309,22 @@
 
         if (document.applicationForm.PancardNumber.value == "") {
             document.getElementById("panCardNum_error").innerHTML = "PAN Card is required";
-            document.applicationForm.PancardNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.PancardNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.PancardNumber.value.match(pancard)) {
             document.getElementById("panCardNum_error").innerHTML = "PAN Card is Invalid";
-            document.applicationForm.PancardNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.PancardNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1234,7 +1333,12 @@
 
         if (!document.applicationForm.GSTNumber.value.match(gstNumber) && document.applicationForm.GSTNumber.value != "") {
             document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
-            document.applicationForm.GSTNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.GSTNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1243,7 +1347,12 @@
 
         if (document.applicationForm.RetailOutletAddress1.value == "") {
             document.getElementById("retail_address1_error").innerHTML = "Address 1 is required";
-            document.applicationForm.RetailOutletAddress1.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1252,7 +1361,12 @@
 
         if (document.applicationForm.RetailOutletAddress2.value == "") {
             document.getElementById("retail_address2_error").innerHTML = "Address 2 is required";
-            document.applicationForm.RetailOutletAddress2.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1261,7 +1375,12 @@
 
         if (document.applicationForm.RetailOutletCity.value == "") {
             document.getElementById("retail_city_error").innerHTML = "City is required";
-            document.applicationForm.RetailOutletCity.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletCity.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1270,7 +1389,12 @@
 
         if (document.applicationForm.RetailOutletStateId.value == "0") {
             document.getElementById("retail_state_error").innerHTML = "State is required";
-            document.applicationForm.RetailOutletStateId.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletStateId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1278,7 +1402,12 @@
         }
         if (document.applicationForm.RetailOutletDistrictId.value == "0") {
             document.getElementById("retail_district_error").innerHTML = "District is required";
-            document.applicationForm.RetailOutletDistrictId.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletDistrictId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1287,17 +1416,32 @@
 
         if (document.applicationForm.RetailOutletPinNumber.value == "") {
             document.getElementById("retail_pincode_error").innerHTML = "Pin is required";
-            document.applicationForm.RetailOutletPinNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.RetailOutletPinNumber.value.match(number)) {
             document.getElementById("retail_pincode_error").innerHTML = "Numeric Only";
-            document.applicationForm.RetailOutletPinNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.RetailOutletPinNumber.value.match(pincode)) {
             document.getElementById("retail_pincode_error").innerHTML = "6 Digits Only";
-            document.applicationForm.RetailOutletPinNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1306,12 +1450,22 @@
 
         if (document.applicationForm.RetailOutletPhoneNumber.value == "") {
             document.getElementById("retail_officePhone_error").innerHTML = "Phone Number is required";
-            document.applicationForm.RetailOutletPhoneNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPhoneNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.RetailOutletPhoneNumber.value.match(number)) {
             document.getElementById("retail_officePhone_error").innerHTML = "Numeric Only";
-            document.applicationForm.RetailOutletPhoneNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPhoneNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1320,7 +1474,12 @@
 
         if (document.applicationForm.ZonalOfficeId.value == "0") {
             document.getElementById("zonal_office_error").innerHTML = "Zonal Office is required";
-            document.applicationForm.ZonalOfficeId.focus();
+            if (ret != "N") {
+                document.applicationForm.ZonalOfficeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1329,7 +1488,12 @@
 
         if (document.applicationForm.RegionalOfficeId.value == "0") {
             document.getElementById("regionalOfc_error").innerHTML = "Regional Office is required";
-            document.applicationForm.RegionalOfficeId.focus();
+            if (ret != "N") {
+                document.applicationForm.RegionalOfficeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1338,7 +1502,12 @@
 
         if (document.applicationForm.SalesAreaId.value == "0") {
             document.getElementById("salesArea_error").innerHTML = "Sales Area is required";
-            document.applicationForm.SalesAreaId.focus();
+            if (ret != "N") {
+                document.applicationForm.SalesAreaId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1347,12 +1516,22 @@
 
         if (document.applicationForm.ErpCode.value == "") {
             document.getElementById("erpCode_error").innerHTML = "ERP Code is required";
-            document.applicationForm.ErpCode.focus();
+            if (ret != "N") {
+                document.applicationForm.ErpCode.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.ErpCode.value.match(erpCodeCheck)) {
             document.getElementById("erpCode_error").innerHTML = "Start with 1 and Only 8 Digits are allowed";
-            document.applicationForm.ErpCode.focus();
+            if (ret != "N") {
+                document.applicationForm.ErpCode.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1361,17 +1540,32 @@
 
         if (document.applicationForm.ContactPersonNameFirstName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "First Name is required";
-            document.applicationForm.ContactPersonNameFirstName.focus();
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameFirstName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (document.applicationForm.ContactPersonNameMiddleName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "Middle Name is required";
-            document.applicationForm.ContactPersonNameMiddleName.focus();
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameMiddleName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (document.applicationForm.ContactPersonNameLastName.value == "") {
             document.getElementById("contact_name_error").innerHTML = "Last Name is required";
-            document.applicationForm.ContactPersonNameLastName.focus();
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameLastName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1380,12 +1574,22 @@
 
         if (document.applicationForm.MobileNo.value == "") {
             document.getElementById("mobile_error").innerHTML = "Mobile Number is required";
-            document.applicationForm.MobileNo.focus();
+            if (ret != "N") {
+                document.applicationForm.MobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.MobileNo.value.match(phoneno)) {
             document.getElementById("mobile_error").innerHTML = "Mobile Number should have 10 Digits";
-            document.applicationForm.MobileNo.focus();
+            if (ret != "N") {
+                document.applicationForm.MobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1394,12 +1598,22 @@
 
         if (document.applicationForm.EmailId.value == "") {
             document.getElementById("email_error").innerHTML = "Email is required";
-            document.applicationForm.EmailId.focus();
+            if (ret != "N") {
+                document.applicationForm.EmailId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.EmailId.value.match(email)) {
             document.getElementById("email_error").innerHTML = "Invalid Email Address";
-            document.applicationForm.EmailId.focus();
+            if (ret != "N") {
+                document.applicationForm.EmailId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1422,12 +1636,22 @@
 
         if (document.applicationForm.CommunicationPinNumber.value != "" && !document.applicationForm.CommunicationPinNumber.value.match(number)) {
             document.getElementById("comm_pin_error").innerHTML = "Numeric Only";
-            document.applicationForm.CommunicationPinNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.CommunicationPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.CommunicationPinNumber.value.match(pincode) && document.applicationForm.CommunicationPinNumber.value != "") {
             document.getElementById("comm_pin_error").innerHTML = "6 Digits Only";
-            document.applicationForm.CommunicationPinNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.CommunicationPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1436,7 +1660,12 @@
 
         if (document.applicationForm.CommunicationPhoneNumber.value != "" && !document.applicationForm.CommunicationPhoneNumber.value.match(number)) {
             document.getElementById("comm_phoneNum_error").innerHTML = "Numeric Only";
-            document.applicationForm.CommunicationPhoneNumber.focus();
+            if (ret != "N") {
+                document.applicationForm.CommunicationPhoneNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1445,7 +1674,12 @@
 
         if (document.applicationForm.CommunicationFax.value != "" && !document.applicationForm.CommunicationFax.value.match(number)) {
             document.getElementById("comm_fax_error").innerHTML = "Numeric Only";
-            document.applicationForm.CommunicationFax.focus();
+            if (ret != "N") {
+                document.applicationForm.CommunicationFax.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1468,12 +1702,32 @@
 
         if (document.applicationForm.NoofLiveTerminals.value == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "Number of Live Terminal is required";
-            document.applicationForm.NoofLiveTerminals.focus();
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "Numeric Only";
-            document.applicationForm.NoofLiveTerminals.focus();
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "Maximum 2 is allowed";
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1482,7 +1736,12 @@
 
         if (document.applicationForm.TerminalTypeRequested.value == "") {
             document.getElementById("terminalTypeReq_error").innerHTML = "Terminal Type is required";
-            document.applicationForm.TerminalTypeRequested.focus();
+            if (ret != "N") {
+                document.applicationForm.TerminalTypeRequested.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -1521,7 +1780,7 @@
             $("#SummaryRetFax").html($("#RetailOutletFax").val());
             $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
             $("#SummaryMobile").html($("#MobileNo").val());
-            $("#SummaryEmail").html($("EmailId").val());
+            $("#SummaryEmail").html($("#EmailId").val());
             $("#SummaryMisc").html($("#Mics").val());
             $("#SummaryDTPCautionLimit").html(0);
             $("#SummaryHpPayCautionLimit").html(0);
@@ -1885,4 +2144,145 @@
             e.preventDefault();
         }
     }
+
+    $("#SearchMerchantId").on("blur", function () {
+        if ($("#SearchMerchantId").val().length > 0) {
+            document.getElementById("searchMerchantId_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletName").on("blur", function () {
+        if ($("#RetailOutletName").val().length > 0) {
+            document.getElementById("retailOutletName_error").innerHTML = "";
+        }
+    });
+    $("#MerchantTypeId").on("blur", function () {
+        if ($("#MerchantTypeId").val().length > 0) {
+            document.getElementById("merchantType_error").innerHTML = "";
+        }
+    });
+    $("#MappedMerchantId").on("blur", function () {
+        if ($("#MappedMerchantId").val().length > 0) {
+            document.getElementById("mappedMerchantId_error").innerHTML = "";
+        }
+    });
+    $("#DealerMobileNo").on("blur", function () {
+        if ($("#DealerMobileNo").val().length > 0) {
+            document.getElementById("dealerMobileNum_error").innerHTML = "";
+        }
+    });
+    $("#OutletCategoryId").on("blur", function () {
+        if ($("#OutletCategoryId").val().length > 0) {
+            document.getElementById("outletCategory_error").innerHTML = "";
+        }
+    });
+    $("#HighwayNo2").on("blur", function () {
+        if ($("#HighwayNo2").val().length > 0) {
+            document.getElementById("highwayNum_error").innerHTML = "";
+        }
+    });
+    $("#SBUTypeId").on("blur", function () {
+        if ($("#SBUTypeId").val().length > 0) {
+            document.getElementById("sbuType_error").innerHTML = "";
+        }
+    });
+    $("#LPGCNGSale").on("blur", function () {
+        if ($("#LPGCNGSale").val().length > 0) {
+            document.getElementById("lpgCngSale_error").innerHTML = "";
+        }
+    });
+    $("#PancardNumber").on("blur", function () {
+        if ($("#PancardNumber").val().length > 0) {
+            document.getElementById("panCardNum_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletAddress1").on("blur", function () {
+        if ($("#RetailOutletAddress1").val().length > 0) {
+            document.getElementById("retail_address1_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletAddress2").on("blur", function () {
+        if ($("#RetailOutletAddress2").val().length > 0) {
+            document.getElementById("retail_address2_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletCity").on("blur", function () {
+        if ($("#RetailOutletCity").val().length > 0) {
+            document.getElementById("retail_city_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletStateId").on("blur", function () {
+        if ($("#RetailOutletStateId").val().length > 0) {
+            document.getElementById("retail_state_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletDistrictId").on("blur", function () {
+        if ($("#RetailOutletDistrictId").val().length > 0) {
+            document.getElementById("retail_district_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletPinNumber").on("blur", function () {
+        if ($("#RetailOutletPinNumber").val().length > 0) {
+            document.getElementById("retail_pincode_error").innerHTML = "";
+        }
+    });
+    $("#RetailOutletPhoneNumber").on("blur", function () {
+        if ($("#RetailOutletPhoneNumber").val().length > 0) {
+            document.getElementById("retail_officePhone_error").innerHTML = "";
+        }
+    });
+    $("#ZonalOfficeId").on("blur", function () {
+        if ($("#ZonalOfficeId").val().length > 0) {
+            document.getElementById("zonal_office_error").innerHTML = "";
+        }
+    });
+    $("#RegionalOfficeId").on("blur", function () {
+        if ($("#RegionalOfficeId").val().length > 0) {
+            document.getElementById("regionalOfc_error").innerHTML = "";
+        }
+    });
+    $("#SalesAreaId").on("blur", function () {
+        if ($("#SalesAreaId").val().length > 0) {
+            document.getElementById("salesArea_error").innerHTML = "";
+        }
+    });
+    $("#ErpCode").on("blur", function () {
+        if ($("#ErpCode").val().length > 0) {
+            document.getElementById("erpCode_error").innerHTML = "";
+        }
+    });
+    $("#ContactPersonNameFirstName").on("blur", function () {
+        if ($("#ContactPersonNameFirstName").val().length > 0) {
+            document.getElementById("contact_name_error").innerHTML = "";
+        }
+    });
+    $("#ContactPersonNameMiddleName").on("blur", function () {
+        if ($("#ContactPersonNameMiddleName").val().length > 0) {
+            document.getElementById("contact_name_error").innerHTML = "";
+        }
+    });
+    $("#ContactPersonNameLastName").on("blur", function () {
+        if ($("#ContactPersonNameLastName").val().length > 0) {
+            document.getElementById("contact_name_error").innerHTML = "";
+        }
+    });
+    $("#MobileNo").on("blur", function () {
+        if ($("#MobileNo").val().length > 0) {
+            document.getElementById("mobile_error").innerHTML = "";
+        }
+    });
+    $("#EmailId").on("blur", function () {
+        if ($("#EmailId").val().length > 0) {
+            document.getElementById("email_error").innerHTML = "";
+        }
+    });
+    $("#NoofLiveTerminals").on("blur", function () {
+        if ($("#NoofLiveTerminals").val().length > 0) {
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "";
+        }
+    });
+    $("#TerminalTypeRequested").on("blur", function () {
+        if ($("#TerminalTypeRequested").val().length > 0) {
+            document.getElementById("terminalTypeReq_error").innerHTML = "";
+        }
+    });
 </script>
