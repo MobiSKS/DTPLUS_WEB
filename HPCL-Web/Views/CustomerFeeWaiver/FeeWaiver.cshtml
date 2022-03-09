@@ -53,6 +53,11 @@
                                         <div class="clearfix"></div>
                                     </fieldset>
 
+                                    <div>
+                                        <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                        </div>
+                                    </div>
 
                                     <div class="table-responsive mt-3">
                                         <table id="customerSearch" class="table table-striped table-bordered text-nowrap" style="display:none;">
@@ -192,7 +197,6 @@
 
                                         </div>
 
-
                                         <table id="approveDetails" class="table table-striped table-bordered table-responsive" style="display:inline-table;">
                                             <tr>
 
@@ -314,27 +318,37 @@
         document.getElementById('detailsWaiverSection').style.display = 'none';
     }
 
-    function OnSuccessFeeWaiverLoad(data) {
-        $("#customerSearch td").parent().remove();
+    function OnSuccessFeeWaiverLoad(res) {
+        console.log(res);
+        if (res.pendingList.success == true) {
 
-        for (var i = 0; i < data.pendingList.length; i++) {
+            document.getElementById("noRecord").style.display = "none";
 
-            var rows = "<tbody><tr>"
-                + "<td><a href='#aaa' class='cust'>" + (data.pendingList[i].customerReferenceNo || '') + "</a></td>"
-                + "<td></td>"
-                + "<td></td>"
-                + "<td></td>"
-                + "<td><span class='frmNo'>" + (data.pendingList[i].formNumber || '') + "</span></td>"
-                + "<td>" + (data.pendingList[i].customerName || '') + "</td>"
-                + "<td>" + (data.pendingList[i].createdRoleName || '') + "</td>"
-                + "<td>" + (data.pendingList[i].mobileNo || '') + "</td>"
-                + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
-                + "</tr ></tbody > ";
+            $("#customerSearch td").parent().remove();
 
-            $('#customerSearch').append(rows);
+            for (var i = 0; i < res.pendingList.data.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><a href='#aaa' class='cust'>" + (res.pendingList.data[i].customerReferenceNo || '') + "</a></td>"
+                    + "<td></td>"
+                    + "<td></td>"
+                    + "<td></td>"
+                    + "<td><span class='frmNo'>" + (res.pendingList.data[i].formNumber || '') + "</span></td>"
+                    + "<td>" + (res.pendingList.data[i].customerName || '') + "</td>"
+                    + "<td>" + (res.pendingList.data[i].createdRoleName || '') + "</td>"
+                    + "<td>" + (res.pendingList.data[i].mobileNo || '') + "</td>"
+                    + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
+                    + "</tr ></tbody > ";
+
+                $('#customerSearch').append(rows);
+            }
+            document.getElementById('customerSearch').style.display = 'inline-table';
+        } else {
+            document.getElementById("customerSearch").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.pendingList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
-
-        document.getElementById('customerSearch').style.display = 'inline-table';
     }
 
 
@@ -580,36 +594,52 @@
             data: { customerReferenceNo: customerReferenceNo },
              success: function (res) {
 
-                 $('input[name="CardPreference"][value="' + res.basicDetails[0].cardPreference + '"]').prop('checked', true);
-                 $('input[name="FeePaymentsCollectFeeWaiverId"][value="' + res.basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
+                 console.log(res);
 
-                 $('#FeePaymentNoId').val(res.basicDetails[0].feePaymentNo);
+                 if (res.searchList.success == true) {
 
-                 var momentDate = new Date(res.basicDetails[0].feePaymentDate);
+                     document.getElementById("noRecord").style.display = "none";
 
-                 var abc = moment(momentDate).format('YYYY-MM-DD');
+                     var basicDetails = res.searchList.data.getApproveFeeWaiverBasicDetail;
+                     var cardDetails = res.searchList.data.getApproveFeeWaiverCardDetail;
 
-                 console.log(abc, "date");
+                     $('input[name="CardPreference"][value="' + basicDetails[0].cardPreference + '"]').prop('checked', true);
+                     $('input[name="FeePaymentsCollectFeeWaiverId"][value="' + basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
 
-                 $('#FeePaymentDateId').val(abc);
+                     $('#FeePaymentNoId').val(basicDetails[0].feePaymentNo);
 
-                 $("#approveDetails td").parent().remove();
+                     var momentDate = new Date(basicDetails[0].feePaymentDate);
 
-                 for (var i = 0; i < res.cardDetails.length; i++) {
+                     var abc = moment(momentDate).format('YYYY-MM-DD');
 
-                     var rows = "<tbody><tr>"
-                         + "<td></td>"
-                         + "<td><input class='form-control' name='" + (res.cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (res.cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
-                         + "<td><select readonly='readonly' class='form-control vls'><option value='" + (res.cardDetails[i].vehicleType || '') + "'>" + (res.cardDetails[i].vehicleType || '') + "</option></select></td>"
-                         + "<td><input class='form-control' name='" + (res.cardDetails[i].vehicleMake || '') + "' type='text' value='" + (res.cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
-                         + "<td><input class='form-control' name='" + (res.cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (res.cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
-                         + "<td>" + (res.cardDetails[i].vechileOwnerName || '') +"</td>"
-                         + "</tr ></tbody > ";
+                     console.log(abc, "date");
 
-                     $('#approveDetails').append(rows);
+                     $('#FeePaymentDateId').val(abc);
 
-                     document.getElementById('detailsWaiverSection').style.display = 'block';
+                     $("#approveDetails td").parent().remove();
+
+                     for (var i = 0; i < cardDetails.length; i++) {
+
+                         var rows = "<tbody><tr>"
+                             + "<td></td>"
+                             + "<td><input class='form-control' name='" + (cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
+                             + "<td><select readonly='readonly' class='form-control vls'><option value='" + (cardDetails[i].vehicleType || '') + "'>" + (cardDetails[i].vehicleType || '') + "</option></select></td>"
+                             + "<td><input class='form-control' name='" + (cardDetails[i].vehicleMake || '') + "' type='text' value='" + (cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
+                             + "<td><input class='form-control' name='" + (cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
+                             + "<td>" + (cardDetails[i].vechileOwnerName || '') + "</td>"
+                             + "</tr ></tbody > ";
+
+                         $('#approveDetails').append(rows);
+
+                         document.getElementById('detailsWaiverSection').style.display = 'block';
+                     }
+                 } else {
+                     document.getElementById("detailsWaiverSection").style.display = "none";
+                     $("#noRecord").html("");
+                     $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                     document.getElementById("noRecord").style.display = "block";
                  }
+
              },
             error: function (ex) {
                 alert('Failed' + ex);
@@ -637,7 +667,9 @@
             data: { customerReferenceNo: customerReferenceNo, comments: comments },
             success: function (res) {
 
-                alert(res);
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res + "</span>");
+                document.getElementById("noRecord").style.display = "block";
 
             },
             error: function (ex) {
@@ -666,7 +698,9 @@
             data: { customerReferenceNo: customerReferenceNo, comments: comments },
             success: function (res) {
 
-                alert(res);
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res + "</span>");
+                document.getElementById("noRecord").style.display = "block";
 
             },
             error: function (ex) {

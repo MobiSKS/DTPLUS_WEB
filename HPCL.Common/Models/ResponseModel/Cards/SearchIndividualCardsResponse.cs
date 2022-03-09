@@ -1,5 +1,19 @@
-﻿namespace HPCL.Common.Models.ResponseModel.Cards
+﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System.Collections.Generic;
+
+namespace HPCL.Common.Models.ResponseModel.Cards
 {
+    public class IndividualCardResponse : ResponseMsg
+    {
+        public DataObject data { get; set; }
+    }
+
+    public class DataObject
+    {
+        public List<SearchIndividualCardsResponse> CCMSBasicDetail { get; set; }
+        public List<CCMSBalanceDetail> CCMSBalanceDetail { get; set; }
+    }
+
     public class SearchIndividualCardsResponse
     {
         public int SrNumber { get; set; }

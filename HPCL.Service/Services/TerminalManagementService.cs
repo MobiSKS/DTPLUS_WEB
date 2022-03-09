@@ -32,7 +32,7 @@ namespace HPCL.Service.Services
             _commonActionService = commonActionService;
         }
 
-        public async Task<Tuple<List<ObjMerchantDetail>, List<ObjTerminalDetail>>> TerminalInstallationRequest(TerminalManagement entity)
+        public async Task<TerminalInstallationRequestResponse> TerminalInstallationRequest(TerminalManagement entity)
         {
             var searchBody = new TerminalManagement();
 
@@ -62,13 +62,17 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            var searchRes = obj["Data"].Value<JObject>();
-            var ObjMerchant = searchRes["ObjMerchantDetail"].Value<JArray>();
-            var ObjTerminal = searchRes["ObjTerminalDetail"].Value<JArray>();
+            //var searchRes = obj["Data"].Value<JObject>();
+            //var ObjMerchant = searchRes["ObjMerchantDetail"].Value<JArray>();
+            //var ObjTerminal = searchRes["ObjTerminalDetail"].Value<JArray>();
 
-            List<ObjMerchantDetail> objMerchantList = ObjMerchant.ToObject<List<ObjMerchantDetail>>();
-            List<ObjTerminalDetail> searchList = ObjTerminal.ToObject<List<ObjTerminalDetail>>();
-            return Tuple.Create(objMerchantList, searchList);
+            TerminalInstallationRequestResponse res = obj.ToObject<TerminalInstallationRequestResponse>();
+
+            //List<ObjMerchantDetail> objMerchantList = ObjMerchant.ToObject<List<ObjMerchantDetail>>();
+            //List<ObjTerminalDetail> searchList = ObjTerminal.ToObject<List<ObjTerminalDetail>>();
+            //return Tuple.Create(objMerchantList, searchList);
+
+            return res;
         }
 
         public async Task<string> AddJustification(string objInsertTerminal)

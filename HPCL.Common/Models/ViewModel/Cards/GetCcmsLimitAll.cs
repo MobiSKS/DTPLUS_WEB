@@ -1,25 +1,18 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using System.Collections.Generic;
+using HPCL.Common.Resources;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class GetCcmsLimitAll : BaseEntity
     {
-        public GetCcmsLimitAll()
-        {
-            CardStatusList = new List<StatusModal>();
-            LimitTypeModals = new List<LimitTypeModal>();
-        }
-
-        [Required(ErrorMessage = "Customer Id is required")]
+        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }
         public int StatusFlag { get; set; }
         public int TypeOfLimit { get; set; }
         public int CcmsLimit { get; set; }
-
-        public virtual List<StatusModal> CardStatusList { get; set; }
-        public virtual List<LimitTypeModal> LimitTypeModals { get; set; }
     }
 
 
@@ -27,7 +20,8 @@ namespace HPCL.Common.Models.ViewModel.Cards
     {
         public string CustomerId { get; set; }
         public int LimitType { get; set; }
+        [Required(ErrorMessage = FieldValidation.AmountNotEmpty)]
+        [RegularExpression(FieldValidation.ValidAmount, ErrorMessage = FieldValidation.ValidAmountErrMsg)]
         public int Amount { get; set; }
-        public string ModifiedBy { get; set; }
     }
 }

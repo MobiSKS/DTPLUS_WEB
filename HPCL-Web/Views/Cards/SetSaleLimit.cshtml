@@ -22,7 +22,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12 mb-0">Customer Id<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerId, new {@id="CustomerDefaultVal", @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control" })
                                                     @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -53,7 +53,7 @@
 
                                                     <select name="Statusflag" id="" class="form-control statusVal">
                                                     </select>
-                                                    
+
                                                     @Html.ValidationMessageFor(m => m.Statusflag, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -68,10 +68,10 @@
                                             <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()">SEARCH</button>
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()" >RESET</a>
+                                            <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" >UPLOAD EXCEL</a>
+                                            <a class="btn btn_primary" href="#" id="btnCancel" name="cancel">UPLOAD EXCEL</a>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -80,7 +80,12 @@
 
                             <div class="clearfix"></div>
 
-                           
+
+                            <div>
+                                <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                </div>
+                            </div>
 
 
                             <div id="UpdateGrid" style="display:none;" class="w-100">
@@ -201,9 +206,6 @@
         if ($("input:text").val() == "") {
             document.getElementById('UpdateGrid').style.display = 'none';
         }
-        if (($("input:text").val() != "")) {
-            document.getElementById('UpdateGrid').style.display = 'inline-table';
-        }
     }
 
     function resetClick() {
@@ -214,34 +216,45 @@
         document.getElementById('UpdateGrid').style.display = 'none';
     }
 
-    function OnSuccessSetLimit(data) {
+    function OnSuccessSetLimit(res) {
 
-        console.log(data, "data");
-        $("#CardSearch td").parent().remove();
+        console.log(res, "data");
 
-        for (var i = 0; i < data.searchList.length; i++) {
+        if (res.searchList.success == true) {
 
-            var rows = "<tbody><tr>"
-                + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
-                + "<td><span class='getCard'>" + (data.searchList[i].cardNumber || '') + "</span></a></td>"
-                + "<td>" + (data.searchList[i].vechileNo || '') + "</td>"
-                + "<td>" + (data.searchList[i].mobileNumber || '') + "</td>"
-                + "<td>" + (data.searchList[i].status || '') + "</td>"
-                + "<td>" + (data.searchList[i].issueDate || '') + "</td>"
-                + "<td>" + (data.searchList[i].expiryDate || '') + "</td>"
+            document.getElementById("noRecord").style.display = "none";
 
-                + "<td><input class='form-control cgl cpl' name='" + (data.searchList[i].cashPurseLimit || '') + "' type='text' value='" + (data.searchList[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control cgl stl' name='" + (data.searchList[i].saleTxnLimit || '') + "' type='text' value='" + (data.searchList[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control cgl dsl' name='" + (data.searchList[i].dailySaleLimit || '') + "' type='text' value='" + (data.searchList[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
-                + "<td><input class='form-control cgl msl' name='" + (data.searchList[i].monthlySaleLimit || '') + "' type='text' value='" + (data.searchList[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
+            $("#CardSearch td").parent().remove();
 
+            var searchGrid = res.searchList.data;
 
-            $('#CardSearch').append(rows);
+            for (var i = 0; i < searchGrid.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                    + "<td><span class='getCard'>" + (searchGrid[i].cardNumber || '') + "</span></a></td>"
+                    + "<td>" + (searchGrid[i].vechileNo || '') + "</td>"
+                    + "<td>" + (searchGrid[i].mobileNumber || '') + "</td>"
+                    + "<td>" + (searchGrid[i].status || '') + "</td>"
+                    + "<td>" + (searchGrid[i].issueDate || '') + "</td>"
+                    + "<td>" + (searchGrid[i].expiryDate || '') + "</td>"
+
+                    + "<td><input class='form-control cgl cpl' name='" + (searchGrid[i].cashPurseLimit || '') + "' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
+                    + "<td><input class='form-control cgl stl' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
+                    + "<td><input class='form-control cgl dsl' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
+                    + "<td><input class='form-control cgl msl' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
+
+                $('#CardSearch').append(rows);
+
+                document.getElementById("CardSearch").style.display = "inline-block";
+            }
+        } else {
+            document.getElementById("CardSearch").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
         }
     }
-
-
-
 
 
     var cardNo;
@@ -260,9 +273,6 @@
             currentRow.find('input:text').attr("readonly", false);
 
             cardNo = currentRow.find('.getCard').text();
-
-
-            //console.log("txt", textBoxValue);
         }
         if (!$(this).is(':checked')) {
             currentRow.find('input:text').attr("readonly", true);
@@ -308,7 +318,9 @@
             data: { limitArray: updateArray},
             success: function (res) {
 
-                alert(res);
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res + "</span>");
+                document.getElementById("noRecord").style.display = "block";
 
             },
             error: function (ex) {

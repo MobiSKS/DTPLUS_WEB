@@ -39,16 +39,17 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> TerminalInstallationRequest(TerminalManagement entity)
         {
-            var Tuple = await _TerminalService.TerminalInstallationRequest(entity);
+            var searchList = await _TerminalService.TerminalInstallationRequest(entity);
 
-            var objMerchantList = Tuple.Item1;
-            var searchList = Tuple.Item2;
+            //var objMerchantList = Tuple.Item1;
+            //var searchList = Tuple.Item2;
+            //var resMsg = Tuple.Item3;
 
             ModelState.Clear();
             return Json(new
             {
-                objMerchantList = objMerchantList,
-                searchList = searchList,
+                //objMerchantList = objMerchantList,
+                searchList = searchList
             });
         }
 

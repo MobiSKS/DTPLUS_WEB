@@ -28,7 +28,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<List<PendingCustResponse>> FeeWaiver(PendingCustomer entity)
+        public async Task<PendingCustResponse> FeeWaiver(PendingCustomer entity)
         {
             var custDetails = new PendingCustomer
             {
@@ -42,13 +42,11 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.bindPendingCustomerUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<PendingCustResponse> pendingList = jarr.ToObject<List<PendingCustResponse>>();
+            PendingCustResponse pendingList = obj.ToObject<PendingCustResponse>();
             return pendingList;
         }
 
-
-        public async Task<Tuple<List<GetApproveFeeWaiverBasicDetail>, List<GetApproveFeeWaiverCardDetail>>> BindPendingCustomer(string customerReferenceNo)
+        public async Task<BindPendingCustomerRes> BindPendingCustomer(string customerReferenceNo)
         {
             var forms = new Dictionary<string, string>
             {
@@ -62,14 +60,10 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getFeeWaiverDetailsUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JObject>();
 
-            var basicJson = jarr["GetApproveFeeWaiverBasicDetail"].Value<JArray>();
-            var cardJson = jarr["GetApproveFeeWaiverCardDetail"].Value<JArray>();
+            BindPendingCustomerRes searchList = obj.ToObject<BindPendingCustomerRes>();
 
-            List<GetApproveFeeWaiverBasicDetail> basicDetails = basicJson.ToObject<List<GetApproveFeeWaiverBasicDetail>>();
-            List<GetApproveFeeWaiverCardDetail> cardDetails = cardJson.ToObject<List<GetApproveFeeWaiverCardDetail>>();
-            return Tuple.Create(basicDetails, cardDetails);
+            return searchList;
         }
 
         public async Task<string> ApproveCustomer(string CustomerReferenceNo, string comments)

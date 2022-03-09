@@ -1,13 +1,17 @@
-﻿using System;
+﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
 {
-    public class TerminalInstallationRequestResponse
+    public class TerminalInstallationRequestResponse : ResponseMsg
     {
-        public ObjMerchantDetail[] ObjMerchantDetail { get; set; }
-        public ObjTerminalDetail[] ObjTerminalDetail { get; set; }
+       public Data Data { get; set; }
+    }
+
+    public class Data
+    {
+        public List<ObjMerchantDetail> ObjMerchantDetail { get; set; }
+        public List<ObjTerminalDetail> ObjTerminalDetail { get; set; }
     }
 
     public class ObjMerchantDetail

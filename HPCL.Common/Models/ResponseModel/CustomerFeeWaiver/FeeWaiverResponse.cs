@@ -1,12 +1,31 @@
-﻿namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
+﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System.Collections.Generic;
+
+namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
 {
-    public class PendingCustResponse
+    public class PendingCustResponse : ResponseMsg
+    {
+       public List<PendingCustResponseBody> data { get; set; }
+    }
+
+    public class PendingCustResponseBody
     {
         public string FormNumber { get; set; }
         public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
         public string MobileNo { get; set; }
         public string CreatedRoleName { get; set; }
+    }
+
+    public class BindPendingCustomerRes : ResponseMsg
+    { 
+        public PendingCustomerData data { get; set; }
+    }
+
+    public class PendingCustomerData
+    {
+        public List<GetApproveFeeWaiverBasicDetail> GetApproveFeeWaiverBasicDetail { get; set; }
+        public List<GetApproveFeeWaiverCardDetail> GetApproveFeeWaiverCardDetail { get; set; }
     }
 
     public class GetApproveFeeWaiverBasicDetail
