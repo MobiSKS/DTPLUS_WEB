@@ -924,89 +924,89 @@ function showCardDetails() {
         document.getElementById("official_designation_error").innerHTML = "";
     }
 
-    var faxCode = document.applicationForm.PermanentFaxCode.value.trim();
+    var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
     if (faxCode != "") {
 
         if (faxCode.length < 2 || faxCode.length > 4) {
-            document.getElementById("PermanentFaxCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.PermanentFaxCode.focus();
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.KeyOffFaxCode.focus();
             return false;
         }
         else {
-            document.getElementById("PermanentFaxCode_error").innerHTML = "";
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
         }
 
     }
     else {
-        document.getElementById("PermanentFaxCode_error").innerHTML = "";
+        document.getElementById("KeyOffFaxCode_error").innerHTML = "";
     }
 
-    var faxno = document.applicationForm.PermanentFax.value.trim();
+    var faxno = document.applicationForm.KeyOffFax.value.trim();
     if (faxno != "") {
         if (faxno.charAt(0) == "0") {
-            document.getElementById("perma_faxNumber_error").innerHTML = "Fax no can not start with 0";
-            document.applicationForm.PermanentFax.focus();
+            document.getElementById("KeyOffFax_error").innerHTML = "Fax no can not start with 0";
+            document.applicationForm.KeyOffFax.focus();
             return false;
         }
         else {
-            document.getElementById("perma_faxNumber_error").innerHTML = "";
+            document.getElementById("KeyOffFax_error").innerHTML = "";
         }
 
         if (faxno.length < 6 || faxno.length > 8) {
-            document.getElementById("perma_faxNumber_error").innerHTML = "Fax no length 6 to 8 digits";
+            document.getElementById("KeyOffFax_error").innerHTML = "Fax no length 6 to 8 digits";
             document.applicationForm.PermanentFax.focus();
             return false;
         }
         else {
-            document.getElementById("perma_faxNumber_error").innerHTML = "";
+            document.getElementById("KeyOffFax_error").innerHTML = "";
         }
 
     }
     else {
-        document.getElementById("perma_faxNumber_error").innerHTML = "";
+        document.getElementById("KeyOffFax_error").innerHTML = "";
     }
 
 
-    var stdCode = document.applicationForm.PerOrRegAddressDialCode.value.trim();
+    var stdCode = document.applicationForm.KeyOffPhoneCode.value.trim();
     if (stdCode != "") {
 
         if (stdCode.length < 2 || stdCode.length > 4) {
-            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.PerOrRegAddressDialCode.focus();
+            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.KeyOffPhoneCode.focus();
             return false;
         }
         else {
-            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+            document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
         }
 
     }
     else {
-        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
     }
 
-    var phno = document.applicationForm.PerOrRegAddressPhoneNumber.value.trim();
+    var phno = document.applicationForm.KeyOffPhoneNumber.value.trim();
     if (phno != "") {
         if (phno.charAt(0) == "0") {
-            document.getElementById("perma_officePhone_error").innerHTML = "Phone no can not start with 0";
-            document.applicationForm.PerOrRegAddressPhoneNumber.focus();
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no can not start with 0";
+            document.applicationForm.KeyOffPhoneNumber.focus();
             return false;
         }
         else {
-            document.getElementById("perma_officePhone_error").innerHTML = "";
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
         }
 
         if (phno.length < 6 || phno.length > 8) {
-            document.getElementById("perma_officePhone_error").innerHTML = "Phone no length 6 to 8 digits";
-            document.applicationForm.PerOrRegAddressPhoneNumber.focus();
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no length 6 to 8 digits";
+            document.applicationForm.KeyOffPhoneNumber.focus();
             return false;
         }
         else {
-            document.getElementById("perma_officePhone_error").innerHTML = "";
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
         }
 
     }
     else {
-        document.getElementById("perma_officePhone_error").innerHTML = "";
+        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
     }
 
 
