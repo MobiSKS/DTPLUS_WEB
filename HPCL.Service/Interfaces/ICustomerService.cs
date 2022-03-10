@@ -31,6 +31,9 @@ namespace HPCL.Service.Interfaces
         Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID);
         Task<CustomerInserCardResponseData> CheckformnumberDuplication(string FormNumber);
         Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo);
-
+        Task<CustomerBalanceInfoModel> BalanceInfo();
+        Task<GetCustomerBalanceResponse> GetCustomerBalanceInfo(string CustomerID);
+        Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
+        Task<JObject> GetCustomerDetailsByCustomerID(string CustomerID);
     }
 }

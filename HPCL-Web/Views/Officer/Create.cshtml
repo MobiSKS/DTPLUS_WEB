@@ -15,6 +15,10 @@
                 <div class="w-100">
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                         <div class="border-1 rounded border-grey">
+                            @if (Model.Error != "")
+                            {
+                                <div id="error" class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Error</div>
+                            }
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officer Details</p>
                             <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
                                 <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
@@ -214,15 +218,15 @@
                     <div style="display:none;">@Html.TextBoxFor(m => m.LocationID)</div>
                     <div style="display:none;">@Html.TextBoxFor(m => m.DistrictID)</div>
                     <div style="display:none;">@Html.TextBoxFor(m => m.OfficerTypeName)</div>
-                    <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
+                    @*<div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>*@
                     <div class="clearfix"></div>
 
                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100 mb-3">
                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                            <button class="btn btn_primary" type="submit" onclick="if (confirm('Are you sure?')) CreateOfficer();">@Label.Add</button>
+                            <button class="btn btn_primary" type="submit" onclick="CreateOfficer();">@Label.Add</button>
                         </div>
                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                            <a asp-action="Details" class="btn btn_primary" type="button">@Label.Cancel</a>
+                            <a asp-controller="Officer" asp-action="Details" class="btn btn_primary" type="button">@Label.Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -312,8 +316,31 @@
             });
             ret = "N";
         }
+        else if (!document.form1.FirstName.value.match(nameCheck)) {
+            document.getElementById("firstName_error").innerHTML = "First Name has invalid characters";
+            if (ret != "N") {
+                document.form1.FirstName.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
         else {
             document.getElementById("firstName_error").innerHTML = "";
+        }
+
+        if (document.form1.LastName.value != "") {
+            if (!document.form1.LastName.value.match(nameCheck)) {
+                document.getElementById("lastName_error").innerHTML = "Last Name has invalid characters";
+                if (ret != "N") {
+                    document.form1.LastName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
         }
 
         if (document.form1.UserName.value == "") {
@@ -450,11 +477,12 @@
                 document.getElementById("email_error").innerHTML = "";
             }
         }
-
+        var confirmstring = "Are you sure ?";
         if (ret == "Y") {
-            $("#form1").unbind().submit();
+            if (confirm(confirmstring)) {
+                $("#form1").unbind().submit();
+            }
         }
-
     };
 
     function getLocation() {
@@ -498,11 +526,20 @@
                                         value: 0,
                                         text: "Select Location"
                                     }).html("Select Location").appendTo("#location");
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#location");
+                                if (data.regionalOfficeID == locationID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#location");
+                                }
                             }
                             else if (data.regionalOfficeID == locationID) {
                                 $('<option selected = "selected">',
@@ -529,11 +566,20 @@
                                         value: 0,
                                         text: "Select Location"
                                     }).html("Select Location").appendTo("#location");
-                                $('<option>',
-                                    {
-                                        value: data.zonalOfficeID,
-                                        text: data.zonalOfficeName
-                                    }).html(data.zonalOfficeName).appendTo("#location");
+                                if (data.zonalOfficeID == locationID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.zonalOfficeID,
+                                            text: data.zonalOfficeName
+                                        }).html(data.zonalOfficeName).appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.zonalOfficeID,
+                                            text: data.zonalOfficeName
+                                        }).html(data.zonalOfficeName).appendTo("#location");
+                                }
                             }
                             else if (data.zonalOfficeID == locationID) {
                                 $('<option selected = "selected">',
@@ -560,13 +606,22 @@
                                         value: 0,
                                         text: "Select Location"
                                     }).html("Select Location").appendTo("#location");
-                                $('<option>',
-                                    {
-                                        value: data.hqid,
-                                        text: data.hqName
-                                    }).html(data.hqName).appendTo("#location");
+                                if (data.hqCode == locationID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.hqid,
+                                            text: data.hqName
+                                        }).html(data.hqName).appendTo("#location");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.hqid,
+                                            text: data.hqName
+                                        }).html(data.hqName).appendTo("#location");
+                                }
                             }
-                            else if (data.hqi == locationID) {
+                            else if (data.hqCode == locationID) {
                                 $('<option selected = "selected">',
                                     {
                                         value: data.hqid,
@@ -620,11 +675,20 @@
                                     value: 0,
                                     text: "Select District"
                                 }).html("Select District").appendTo("#district");
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#district");
+                            if (data.districtID == districtID) {
+                                $('<option selected = "selected">',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#district");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#district");
+                            }
                         }
                         else if (data.districtID == districtID) {
                             $('<option selected = "selected">',
@@ -664,23 +728,72 @@
 
     $("#UserName").on("blur", function () {
         var UserName = this.value;
+        if (UserName != "") {
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ValidateUserName", "Common")',
+                data: { userName: UserName },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success' && v == '0') {
+                        $("#userNamediv").addClass("btmMargin");
+                        $("#userName_error").html("User Name Exists");
+                    }
+                    else {
+                        $("#userName_error").html("");
+                        console.log(v);
+                    }
+                }
+            });
+        }
+    });
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("ValidateUserName", "Common")',
-            data: { userName: UserName },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success' && v == '0') {
-                    $("#userNamediv").addClass("btmMargin");
-                    $("#userName_error").html("User Name Exists");
-                }
-                else {
-                    $("#userName_error").html("");
-                    console.log(v);
-                }
+    $("#FirstName").on("blur", function () {
+        if ($("#FirstName").val().length > 0) {
+            document.getElementById("firstName_error").innerHTML = "";
+        }
+    });
+    $("#UserName").on("blur", function () {
+        if ($("#UserName").val().length > 0) {
+            document.getElementById("userName_error").innerHTML = "";
+        }
+    });
+    $("#OfficerTypeID").on("blur", function () {
+        if ($("#OfficerTypeID").val().length > 0) {
+            document.getElementById("officerType_error").innerHTML = "";
+        }
+    });
+    $("#location").on("blur", function () {
+        if ($("#location").val().length > 0) {
+            document.getElementById("location_error").innerHTML = "";
+        }
+    });
+    $("#Address1").on("blur", function () {
+        if ($("#Address1").val().length > 0) {
+            document.getElementById("address1_error").innerHTML = "";
+        }
+    });
+    $("#State").on("blur", function () {
+        if ($("#State").val().length > 0) {
+            document.getElementById("state_error").innerHTML = "";
+        }
+    });
+    $("#district").on("blur", function () {
+        if ($("#district").val() != null) {
+            if ($("#district").val().length > 0) {
+                document.getElementById("district_error").innerHTML = "";
             }
-        });
+        }
+    });
+    $("#Mobile").on("blur", function () {
+        if ($("#Mobile").val().length > 0) {
+            document.getElementById("mobile_error").innerHTML = "";
+        }
+    });
+    $("#Email").on("blur", function () {
+        if ($("#Email").val().length > 0) {
+            document.getElementById("email_error").innerHTML = "";
+        }
     });
 </script>

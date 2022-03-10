@@ -35,7 +35,9 @@ namespace HPCL.Common.Models.ViewModel.Officers
         }
 
         //[Required(ErrorMessage = "First Name is Required")]
+        [StringLength(30)]
         public string FirstName { get; set; }
+        [StringLength(30)]
         public string LastName { get; set; }
         //[Required]
         public string UserName { get; set; }
@@ -47,26 +49,36 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public string OfficerTypeID { get; set; }
         public string OfficerTypeName { get; set; }
         //[Required(ErrorMessage = "Address1 is Required")]
+        [StringLength(50)]
         public string Address1 { get; set; }
+        [StringLength(50)]
         public string Address2 { get; set; }
+        [StringLength(50)]
         public string Address3 { get; set; }
+        [StringLength(20)]
         public string City { get; set; }
         //[Required(ErrorMessage = "State is Required")]
         public string State { get; set; }
         public string StateId { get; set; }
         //[RegularExpression(@"^[1-9][0-9]{5}$", ErrorMessage = "Should be 6 Digits Only")]
+        [StringLength(6)]
         public string Pin { get; set; }
         //[Required(ErrorMessage = "Mobile is Required")]
         //[RegularExpression(@"^(?!(0))[0-9]{10}$", ErrorMessage = "Should not start with 0 and should be 10 Digits Only")]
+        [StringLength(10)]
         public string Mobile { get; set; }
+        [StringLength(10)]
         public string MobileNo { get; set; }
         public string Phone { get; set; }
         //[Required(ErrorMessage = "Email is Required")]
         //[EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [StringLength(50)]
         public string Email { get; set; }
+        [StringLength(50)]
         public string EmailId { get; set; }
         public string Fax { get; set; }
         public int OfficerID { get; set; }
+        public string Error { get; set; }
         public virtual List<OfficerTypeResponseModal> OfficerTypeMdl { get; set; }
         public virtual List<ZonalOfficeResponseModal> OfficerZoneMdl { get; set; }
         public virtual List<RegionalOfficeResponseModal> OfficerRegionMdl { get; set; }

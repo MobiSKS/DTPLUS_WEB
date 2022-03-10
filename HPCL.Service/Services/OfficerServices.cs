@@ -38,7 +38,7 @@ namespace HPCL.Service.Services
             return ofcrMdl;
         }
 
-        public async Task<string> Create(OfficerModel ofcrMdl)
+        public async Task<Tuple<string,string>> Create(OfficerModel ofcrMdl)
         {
             var officerInsertForms = new OfficerInsertRequestModal
             {
@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
                 PhoneNo = string.IsNullOrEmpty(ofcrMdl.Phone) ? "" : ofcrMdl.Phone,
                 EmailId = string.IsNullOrEmpty(ofcrMdl.Email) ? "" : ofcrMdl.Email,
                 Fax = string.IsNullOrEmpty(ofcrMdl.Fax) ? "" : ofcrMdl.Fax,
-                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerInsertContent = new StringContent(JsonConvert.SerializeObject(officerInsertForms), Encoding.UTF8, "application/json");
@@ -82,15 +82,22 @@ namespace HPCL.Service.Services
             var officerInsertResponse = await _requestService.CommonRequestService(officerInsertContent, url);
             JObject officerInsertObj = JObject.Parse(JsonConvert.DeserializeObject(officerInsertResponse).ToString());
 
-            if (officerInsertObj["Status_Code"].ToString() == "200")
+            if (officerInsertObj["Success"].ToString() != "false" && officerInsertObj["Status_Code"].ToString() == "200")
             {
                 var officerInsertJarr = officerInsertObj["Data"].Value<JArray>();
                 List<SuccessResponse> officerInsertLst = officerInsertJarr.ToObject<List<SuccessResponse>>();
-                return officerInsertLst.First().Reason.ToString();
+                if (officerInsertLst.First().Status.ToString() == "0")
+                {
+                    ofcrMdl.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
+                    ofcrMdl.OfficerStateMdl.AddRange(await _commonActionService.GetStateList());
+                }
+                return Tuple.Create(officerInsertLst.First().Reason.ToString(), officerInsertLst.First().Status.ToString());
             }
             else
             {
-                return officerInsertObj["Message"].ToString();
+                ofcrMdl.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
+                ofcrMdl.OfficerStateMdl.AddRange(await _commonActionService.GetStateList());
+                return Tuple.Create(officerInsertObj["Message"].ToString(), "0");
             }
         }
         public async Task<string> Delete(string officerID)
@@ -164,7 +171,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
-                OfficerType = String.IsNullOrEmpty(officerType) ? "0" : officerType,
+                OfficerType = String.IsNullOrEmpty(officerType) || officerType == "All" ? "0" : officerType,
                 Location = String.IsNullOrEmpty(location) ? "0" : location
             };
 

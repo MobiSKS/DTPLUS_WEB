@@ -312,7 +312,7 @@ namespace HPCL.Service.Services
 
             StringContent validateUserNameContent = new StringContent(JsonConvert.SerializeObject(validateUserNameForms), Encoding.UTF8, "application/json");
 
-            var validateUserNameResponse = await _requestService.CommonRequestService(validateUserNameContent, WebApiUrl.getZonalOffice);
+            var validateUserNameResponse = await _requestService.CommonRequestService(validateUserNameContent, WebApiUrl.validateUserName);
 
             JObject validateUserNameObj = JObject.Parse(JsonConvert.DeserializeObject(validateUserNameResponse).ToString());
             var validateUserNameJarr = validateUserNameObj["Data"].Value<JArray>();
