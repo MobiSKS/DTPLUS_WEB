@@ -187,5 +187,13 @@
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
         #endregion
+
+        #region "AshokLeyLand"
+
+        public static string InsertAlDetailsUrl = "/dtpwebapi/api/dtplus/officer/insert_al_dealer_enrollment";
+        public static string UpdateAlDetailsUrl = "/dtpwebapi/api/dtplus/officer/update_al_dealer_enrollment";
+        public static string getDelerNameUrl = "/dtpwebapi/api/dtplus/officer/get_al_dealer_detail";
+
+        #endregion
     }
 }

@@ -78,6 +78,7 @@ namespace HPCL.Service.Services
                 if (merchantDetailsObj["Status_Code"].ToString() == "200" && merchantDetailsObj["Internel_Status_Code"].ToString() == "1001")
                 {
                     merchantMdl.Message = merchantDetailsObj["Message"].ToString();
+                    return merchantMdl;
                 }
                 else
                 {
