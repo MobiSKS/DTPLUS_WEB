@@ -57,7 +57,7 @@ namespace HPCL_Web.Controllers
         {
             if (!string.IsNullOrEmpty(merchantMdl.SearchMerchantId) || merchantMdl.Search == "Search")
             {
-                return RedirectToAction("CreateMerchant", new { MerchantIDValue = merchantMdl.SearchMerchantId });
+                return RedirectToAction("CreateMerchant", new { MerchantIDValue = merchantMdl.SearchMerchantId, actionFlow = "Edit" });
             }
             var tuple = await _merchantServices.CreateMerchant(merchantMdl);
 
