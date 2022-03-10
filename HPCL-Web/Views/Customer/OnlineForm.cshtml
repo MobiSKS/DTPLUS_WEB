@@ -246,7 +246,7 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Location</label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                        @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +254,7 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                        @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                         <span class="error" id="comm_city_error"></span>
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Location</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                             <span class="error" id="perma_location_error"></span>
                                         </div>
                                     </div>
@@ -395,7 +395,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">City<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                             <span class="error" id="perma_city_error"></span>
                                         </div>
                                     </div>
@@ -1619,9 +1619,10 @@
         }
 
     });
+
     function isNumberKey(evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode;
-        if (charCode = 46 && charCode > 31
+        if (charCode != 46 && charCode > 31
             && (charCode < 48 || charCode > 57))
             return false;
 
@@ -1710,6 +1711,58 @@
 
         if (!ok || (e.ctrlKey && e.altKey)) {
             e.preventDefault();
+        }
+    });
+
+    $("#CommunicationPinCode").on("blur", function () {
+        //debugger;
+        var communicationPinCode = document.getElementById("CommunicationPinCode").value;
+        if (communicationPinCode == "") {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("CommunicationPinCode").value = "";
+            document.getElementById("CommunicationPinCode").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationPinCode").value.length < 6) {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code length must be 6 digit";
+            document.getElementById("CommunicationPinCode").value = "";
+            document.getElementById("CommunicationPinCode").focus();
+            return false;
+        }
+    });
+
+    $("#PerOrRegAddressPinCode").on("blur", function () {
+        //debugger;
+        var PinCode = document.getElementById("PerOrRegAddressPinCode").value;
+        if (PinCode == "") {
+            document.getElementById("perma_pincode_error").innerHTML = "Pin code is required";
+            return (false);
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
+            document.getElementById("perma_pincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("PerOrRegAddressPinCode").value = "";
+            document.getElementById("PerOrRegAddressPinCode").focus();
+            return false;
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
+            document.getElementById("perma_pincode_error").innerHTML = "Pin code length must be 6 digit";
+            document.getElementById("PerOrRegAddressPinCode").value = "";
+            document.getElementById("PerOrRegAddressPinCode").focus();
+            return false;
         }
     });
 

@@ -76,15 +76,15 @@ document.getElementById("uploadDocuments-tab").classList.remove("disable");
 }
 
 function showregAddress() {
-debugger;
-//	if(localStorage.getItem("showregAddress")) {
-//		document.getElementById("address-tab").click();
-//		document.getElementById("address-tab").classList.remove("disable");
-//	}
-//	else {	
-var ret = false;
+    debugger;
+    //	if(localStorage.getItem("showregAddress")) {
+    //		document.getElementById("address-tab").click();
+    //		document.getElementById("address-tab").classList.remove("disable");
+    //	}
+    //	else {	
+    var ret = false;
 
-//console.log(ret);
+    //console.log(ret);
 
     if (document.applicationForm.FormNumber.value == "") {
         document.getElementById("formNumber_error").innerHTML = "Form Number is required";
@@ -103,50 +103,50 @@ var ret = false;
         }
     }
 
-if (document.applicationForm.CustomerTypeID.value == "0") {
-    document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
-    document.applicationForm.CustomerTypeID.focus();
-    return ret;
-}
-else {
-    document.getElementById("customerType_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerTypeID.value == "0") {
+        document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
+        document.applicationForm.CustomerTypeID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("customerType_error").innerHTML = "";
+    }
 
     if (document.applicationForm.CustomerSubTypeID.value == "0" || document.applicationForm.CustomerSubTypeID.value == "") {
         document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type Selection is required";
         document.applicationForm.CustomerSubTypeID.focus();
-    return ret;
-}
-else {
-    document.getElementById("customerSubType_error").innerHTML = "";
-}
+        return ret;
+    }
+    else {
+        document.getElementById("customerSubType_error").innerHTML = "";
+    }
 
-if (document.applicationForm.CustomerDateOfApplication.value == "") {
-    document.getElementById("applicationDate_error").innerHTML = "Date of Application Selection is required";
-    document.applicationForm.CustomerDateOfApplication.focus();
-    return ret;
-}
-else {
-    document.getElementById("applicationDate_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerDateOfApplication.value == "") {
+        document.getElementById("applicationDate_error").innerHTML = "Date of Application Selection is required";
+        document.applicationForm.CustomerDateOfApplication.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("applicationDate_error").innerHTML = "";
+    }
 
 
-if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
-    document.getElementById("zonalOffice_error").innerHTML = "Zonal Office Selection is required";
-    document.applicationForm.CustomerZonalOfficeID.focus();
-    return ret;
-}
-else {
-    document.getElementById("zonalOffice_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
+        document.getElementById("zonalOffice_error").innerHTML = "Zonal Office Selection is required";
+        document.applicationForm.CustomerZonalOfficeID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("zonalOffice_error").innerHTML = "";
+    }
 
     if (document.applicationForm.CustomerRegionID.value == "0") {
-    document.getElementById("regionalOffice_error").innerHTML = "Regional Office Selection is required";
+        document.getElementById("regionalOffice_error").innerHTML = "Regional Office Selection is required";
         document.applicationForm.CustomerRegionID.focus();
-    return ret;
-}
-else {
-    document.getElementById("regionalOffice_error").innerHTML = "";
+        return ret;
+    }
+    else {
+        document.getElementById("regionalOffice_error").innerHTML = "";
     }
 
     if (document.applicationForm.CustomerSalesAreaID.value == "0") {
@@ -167,65 +167,65 @@ else {
         document.getElementById("typeOfCustomer_error").innerHTML = "";
     }
 
-if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-    document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
-    document.applicationForm.IndividualOrgNameTitle.focus();
-    return ret;
-}
-else {
-    document.getElementById("salutaion_error").innerHTML = "";
-}
+    if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
+        document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
+        document.applicationForm.IndividualOrgNameTitle.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("salutaion_error").innerHTML = "";
+    }
 
-if (document.applicationForm.IndividualOrgName.value == "") {
-    document.getElementById("individualName_error").innerHTML = "Enter Individual Or Organization Name";
-    document.applicationForm.IndividualOrgName.focus();
-    return ret;
-}
-else {
-    document.getElementById("individualName_error").innerHTML = "";
-}
+    if (document.applicationForm.IndividualOrgName.value == "") {
+        document.getElementById("individualName_error").innerHTML = "Enter Individual Or Organization Name";
+        document.applicationForm.IndividualOrgName.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("individualName_error").innerHTML = "";
+    }
 
-if (document.applicationForm.CustomerNameOnCard.value == "") {
-    document.getElementById("nameOnCard_error").innerHTML = "Enter Name on Card";
-    document.applicationForm.CustomerNameOnCard.focus();
-    return ret;
-}
-else {
-    document.getElementById("nameOnCard_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerNameOnCard.value == "") {
+        document.getElementById("nameOnCard_error").innerHTML = "Enter Name on Card";
+        document.applicationForm.CustomerNameOnCard.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("nameOnCard_error").innerHTML = "";
+    }
 
-if (document.applicationForm.CustomerTbentityID.value == "0") {
-    document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
-    document.applicationForm.CustomerTbentityID.focus();
-    return ret;
-}
-else {
-    document.getElementById("typeOfbusiness_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerTbentityID.value == "0") {
+        document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
+        document.applicationForm.CustomerTbentityID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("typeOfbusiness_error").innerHTML = "";
+    }
 
-if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
-    document.getElementById("residenceStatus_error").innerHTML = "Select Residential Status";
-    document.applicationForm.CustomerResidenceStatus.focus();
-    return ret;
-}
-else {
-    document.getElementById("residenceStatus_error").innerHTML = "";
-}
+    if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
+        document.getElementById("residenceStatus_error").innerHTML = "Select Residential Status";
+        document.applicationForm.CustomerResidenceStatus.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("residenceStatus_error").innerHTML = "";
+    }
 
-    
 
-        var formNumber = document.getElementById("FormNumber").value;
-        if (formNumber == "") {
-            document.getElementById("formNumber_error").innerHTML = "Form No is required";
-            return (false);
-        }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
-        }
 
-        var fromNumberUsed = false;
+    var formNumber = document.getElementById("FormNumber").value;
+    if (formNumber == "") {
+        document.getElementById("formNumber_error").innerHTML = "Form No is required";
+        return (false);
+    }
+    else {
+        document.getElementById("formNumber_error").innerHTML = "";
+    }
 
-        
+    var fromNumberUsed = false;
+
+
 
     if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
         document.getElementById("formNumber_error").innerHTML = "Form No is already used";
@@ -235,7 +235,7 @@ else {
         document.getElementById("formNumber_error").innerHTML = "";
     }
 
-    
+
     var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;//$('#CustomerTbentityID').va();
 
     if (TypeofBusinessEntityId != 10) {
@@ -269,46 +269,46 @@ else {
         document.getElementById("tierOfCustomer_error").innerHTML = "";
     }
 
-/*else {
-    y = document.applicationForm.mobileno.value;
-    if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
-    {
-        document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
-        document.applicationForm.mobileno.focus();
-        return false
-    }
-    else if (y.length<10)
-    {
-        document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
-        document.applicationForm.mobileno.focus();
-        return false;
-    }
-    
-        else {
-            document.getElementById("phone_error").innerHTML="";
+    /*else {
+        y = document.applicationForm.mobileno.value;
+        if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
+        {
+            document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
+            document.applicationForm.mobileno.focus();
+            return false
         }
-}*/
-
-
-
+        else if (y.length<10)
+        {
+            document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
+            document.applicationForm.mobileno.focus();
+            return false;
+        }
         
+            else {
+                document.getElementById("phone_error").innerHTML="";
+            }
+    }*/
 
-/*if (document.applicationForm.pincode.value == "") {
-   document.getElementById("picode_error").innerHTML="This information is required";
-   return (false);
-} 
-else {
-   var pin = document.applicationForm.pincode.value;
-    if (pin.length<6)
-   {
-       document.getElementById("picode_error").innerHTML="Invalid Pincode, Must be six digits";
-       document.applicationForm.pincode.focus();
-       return false;
-   }
-   else {
-           document.getElementById("picode_error").innerHTML="";
+
+
+
+
+    /*if (document.applicationForm.pincode.value == "") {
+       document.getElementById("picode_error").innerHTML="This information is required";
+       return (false);
+    } 
+    else {
+       var pin = document.applicationForm.pincode.value;
+        if (pin.length<6)
+       {
+           document.getElementById("picode_error").innerHTML="Invalid Pincode, Must be six digits";
+           document.applicationForm.pincode.focus();
+           return false;
        }
-}*/
+       else {
+               document.getElementById("picode_error").innerHTML="";
+           }
+    }*/
 
 
     //var TypeofBusinessEntityId  = $('#CustomerTbentityID').va();
@@ -348,46 +348,46 @@ else {
             return ret;
         }
         else {
-            var result = false;
+            //    var result = false;
+            var result = true;
+            //    var panno = $('#CustomerIncomeTaxPan').val();
+            //    var OrgName = $('#IndividualOrgName').val();
+            //    var correctPANName = '';
 
-            var panno = $('#CustomerIncomeTaxPan').val();
-            var OrgName = $('#IndividualOrgName').val();
-            var correctPANName = '';
+            //    $.ajax({
+            //        type: 'POST',  // http method
+            //        url: "PANValidation/Customer",
+            //        data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
+            //        dataType: "json",
+            //        success: function (data, status, xhr) {
+            //            //debugger;
+            //            var jsonData = JSON.parse(data);
+            //            if (status == 'success' && jsonData['status-code'] == '101') {
+            //                result = true;
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: "PANValidation/Customer",
-                data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    //debugger;
-                    var jsonData = JSON.parse(data);
-                    if (status == 'success' && jsonData['status-code'] == '101') {
-                        result = true;
-
-                        console.log(jsonData);
-                        document.getElementById("address-tab").click();
-                        document.getElementById("address-tab").classList.remove("disable");
-                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                        correctPANName = jsonData["result"]["name"];
-                        if (OrgName == correctPANName) {
-                            localStorage.setItem("showregAddress", true)
-                        }
-                        else {
-                            result = false;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                        }
-                    }
-                    else {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                        document.applicationForm.CustomerIncomeTaxPan.focus();
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                    document.applicationForm.CustomerIncomeTaxPan.focus();
-                }
-            });
+            //                console.log(jsonData);
+            //                document.getElementById("address-tab").click();
+            //                document.getElementById("address-tab").classList.remove("disable");
+            //                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+            //                correctPANName = jsonData["result"]["name"];
+            //                if (OrgName == correctPANName) {
+            //                    localStorage.setItem("showregAddress", true)
+            //                }
+            //                else {
+            //                    result = false;
+            //                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+            //                }
+            //            }
+            //            else {
+            //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+            //                document.applicationForm.CustomerIncomeTaxPan.focus();
+            //            }
+            //        },
+            //        error: function (jqXhr, textStatus, errorMessage) {
+            //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+            //            document.applicationForm.CustomerIncomeTaxPan.focus();
+            //        }
+            //    });
 
         }
         ret = result;
@@ -403,28 +403,28 @@ else {
         }
     }
 
-if (ret == false)
+    if (ret == false)
+        return ret;
+
+    document.getElementById("address-tab").click();
+    document.getElementById("address-tab").classList.remove("disable");
+    localStorage.setItem("showregAddress", true)
+
+
+    /*if (!document.applicationForm.tc.checked) {
+        //toast("true");
+        document.getElementById("tc_error").innerHTML="Must Agree to Terms and Conditions";
+        return (false);
+    } 
+    else {
+        // toast("false");
+            document.getElementById("tc_error").innerHTML="";
+        }*/
+
+    //document.applicationForm.submit();
+    //$('#address-tab').tab('show');
     return ret;
-
-document.getElementById("address-tab").click();
-document.getElementById("address-tab").classList.remove("disable");
-localStorage.setItem("showregAddress", true)
-
-
-/*if (!document.applicationForm.tc.checked) {
-    //toast("true");
-    document.getElementById("tc_error").innerHTML="Must Agree to Terms and Conditions";
-    return (false);
-} 
-else {
-    // toast("false");
-        document.getElementById("tc_error").innerHTML="";
-    }*/
-
-//document.applicationForm.submit();
-//$('#address-tab').tab('show');
-return ret;
-//}
+    //}
 }
 
 function showBasicInfo() {
