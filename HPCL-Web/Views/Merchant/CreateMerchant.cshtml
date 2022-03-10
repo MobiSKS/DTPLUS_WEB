@@ -124,7 +124,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12 displayNone mappedMerchId">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.MappedMerchantId<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
@@ -215,7 +215,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.PanCard<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PancardNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.PancardNumber, new { @class = "form-control", @style = "text-transform:uppercase" })
                                             <div class="error" id="panCardNum_error"></div>
                                         </div>
                                     </div>
@@ -224,7 +224,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.GstNumber</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.GSTNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.GSTNumber, new { @class = "form-control", @style = "text-transform:uppercase" })
                                             <div class="error" id="gstNum_error"></div>
                                         </div>
                                     </div>
@@ -962,6 +962,7 @@
     console.log(salesAreaID);
 
     $(document).ready(function () {
+        //$("#MappedMerchantId").prop("disabled", true);
         @*var message = "@ViewBag.Message";
         var notFoundError = "@ViewBag.NotFoundError";*@
         if (rejectedStatus == "true") {
@@ -2114,15 +2115,17 @@
         $("#SalesAreaIdVal").val(id);
     });
 
-    $("#MerchantTypeId").change(function () {
+    $("#MerchantTypeId").on("change", function () {
+        if ($("#MerchantTypeId").val().length > 0) {
+            document.getElementById("merchantType_error").innerHTML = "";
+        }
         var MerchantTypeVal = $('#MerchantTypeId :selected').text();
-
         if (MerchantTypeVal != "Mobile Dispenser") {
             $("#MappedMerchantID").html("");
-            $("#MappedMerchantID").prop("disabled", true);
+            $(".mappedMerchId").addClass("displayNone");
         }
         else {
-            $("#MappedMerchantID").removeAttr("disabled");
+            $(".mappedMerchId").removeClass("displayNone");
         }
     });
 
@@ -2155,11 +2158,11 @@
             document.getElementById("retailOutletName_error").innerHTML = "";
         }
     });
-    $("#MerchantTypeId").on("blur", function () {
-        if ($("#MerchantTypeId").val().length > 0) {
-            document.getElementById("merchantType_error").innerHTML = "";
-        }
-    });
+    //$("#MerchantTypeId").on("blur", function () {
+    //    if ($("#MerchantTypeId").val().length > 0) {
+    //        document.getElementById("merchantType_error").innerHTML = "";
+    //    }
+    //});
     $("#MappedMerchantId").on("blur", function () {
         if ($("#MappedMerchantId").val().length > 0) {
             document.getElementById("mappedMerchantId_error").innerHTML = "";
