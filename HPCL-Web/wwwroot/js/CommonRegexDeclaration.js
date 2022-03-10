@@ -1,4 +1,4 @@
-﻿var phoneno = /^(?!(0))[0-9]{10}$/;
+﻿var phoneno = /^[6789]\d{9}$/;
 var email = /[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 var number = /^\d+$/;
 var pincode = /^[1-9][0-9]{5}$/;
