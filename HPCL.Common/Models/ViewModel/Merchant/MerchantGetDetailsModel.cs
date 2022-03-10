@@ -72,6 +72,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string DealerName { get; set; }
         [StringLength(10)]
         public string MappedMerchantId { get; set; }
+        [StringLength(10)]
         public string DealerMobileNo { get; set; }
         public string OutletCategoryId { get; set; }
         public string OutletCategoryName { get; set; }
@@ -156,6 +157,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string Action { get; set; }
         public string Error { get; set; }
         public string Success { get; set; }
+        public string Search { get; set; }
         public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
         public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }

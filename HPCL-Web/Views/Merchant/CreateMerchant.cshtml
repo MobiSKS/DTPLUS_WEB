@@ -27,6 +27,10 @@
                             <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Message</div>
 
                         }
+                        @if (Model.Success != "")
+                        {
+                            <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Success</div>
+                        }
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Search Profile</p>
                         <div class="py-2 p-md-4">
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
@@ -36,26 +40,29 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                                    {*@
+                                {*@
                                                 <div class="col-8">
                                                     @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control" })
+                                                </div>
+                                                <div class="col-8" style="display:none">
+                                                    @Html.TextBoxFor(m => m.Search, new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-4">
                                                     <button class="btn btn_primary px-4 py-2" type="submit" onclick="checkForMerchantId(event)" style="width: 130%">SEARCH</button>
                                                 </div>
                                                 @*}
-                                                    else
-                                                    {
-                                                        <div class="col-8">
-                                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
-                                                        </div>
-                                                        @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
-                                                        {
-                                                            <div class="col-4">
-                                                                <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
-                                                            </div>
-                                                        }
-                                                    }*@
+                                else
+                                {
+                                    <div class="col-8">
+                                        @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
+                                    {
+                                        <div class="col-4">
+                                            <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                        </div>
+                                    }
+                                }*@
                                             </div>
                                             <span class="error" id="searchMerchantId_error"></span>
                                         </div>
@@ -70,7 +77,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                                        {*@
+                                    {*@
                                                     <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
                                                     @*}*@
                                                 </div>
@@ -648,11 +655,11 @@
                     <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none">@Html.Raw(ViewBag.Reason)</div>
                     @if (Model.Success != "")
                     {
-                        <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Message</div>
+                        <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Success</div>
                     }
                     @if (Model.Error != "")
                     {
-                        <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Message</div>
+                        <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Error</div>
                     }
                     <div class="border-1 rounded border-grey w-100">
 
@@ -718,10 +725,10 @@
                                                 </div>
                                             </div>
                                             @*<div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
-                                    <div class="col-md-7 col-12" id="SummaryMerchantID">
-                                    </div>
-                                </div>*@
+                                                    <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
+                                                    <div class="col-md-7 col-12" id="SummaryMerchantID">
+                                                    </div>
+                                                </div>*@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">SBU Type :</label>
                                                 <div class="col-md-7 col-12" id="SummarySBUType">
@@ -928,7 +935,7 @@
                                     <button class="btn btn_primary px-4 py-2" onClick="return showPrevMerchantTerminaldetails()" type="button" id="finalPrevious">Previous</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary px-4 py-2" onclick="clicked(event)" type="submit" id="confirm">Confirm</button>
+                                    <button class="btn btn_primary px-4 py-2" onclick="clickedConfirm()" type="button" id="confirm">Confirm</button>
                                 </div>
                             </div>
                         </div>
@@ -1128,6 +1135,7 @@
         }
 
         if (ret == "Y") {
+            $("#Search").val("Search");
             $("#form1").unbind().submit();
         }
     }
@@ -1217,7 +1225,7 @@
             ret = "N";
         }
         else if (!document.applicationForm.DealerMobileNo.value.match(phoneno)){
-            document.getElementById("dealerMobileNum_error").innerHTML = "Mobile Number should have 10 Digits";
+            document.getElementById("dealerMobileNum_error").innerHTML = "Mobile No should start with 6,7,8,9 and have 10 Digits";
             if (ret != "N") {
                 document.applicationForm.DealerMobileNo.focus();
             }
@@ -1584,7 +1592,7 @@
             ret = "N";
         }
         else if (!document.applicationForm.MobileNo.value.match(phoneno)) {
-            document.getElementById("mobile_error").innerHTML = "Mobile Number should have 10 Digits";
+            document.getElementById("mobile_error").innerHTML = "Mobile No should start with 6,7,8,9 and have 10 Digits";
             if (ret != "N") {
                 document.applicationForm.MobileNo.focus();
             }
@@ -2142,9 +2150,10 @@
             $("#HighwayNo2").show();
         }
     });
-    function clicked(e) {
-        if (!confirm('Are you sure?')) {
-            e.preventDefault();
+
+    function clickedConfirm() {
+        if (confirm('Are you sure?')) {
+            $("#applicationForm").unbind().submit();
         }
     }
 
@@ -2219,8 +2228,10 @@
         }
     });
     $("#RetailOutletDistrictId").on("blur", function () {
-        if ($("#RetailOutletDistrictId").val().length > 0) {
-            document.getElementById("retail_district_error").innerHTML = "";
+        if ($("#RetailOutletDistrictId").val() != null) {
+            if ($("#RetailOutletDistrictId").val().length > 0) {
+                document.getElementById("retail_district_error").innerHTML = "";
+            }
         }
     });
     $("#RetailOutletPinNumber").on("blur", function () {
