@@ -1,0 +1,690 @@
+﻿@model HPCL.Common.Models.ViewModel.AshokLeyLand.AlEnrollment
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","AshokLeyland")" class="text_primary">Dealer Dashboard</a> </li>
+            <li class="breadcrumb-item font-weight-light">Dealer Enrollment</li>
+        </ul>
+            <div class="w-100">
+
+                <div id="searchAl">
+
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                            <div class="border-1 rounded border-grey pb-3">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Enrollment</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom:1px solid #ccc;">Search</p>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        <input class="form-control" id="dealerCdVal" name="DealerCode" type="text" value="">
+                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">DTP Dealer Code <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        <input class="form-control" id="DTPDealerCdVal" name="DTPDealerCode" type="text" value="">
+                                                        @Html.ValidationMessageFor(m => m.DTPDealerCode, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="searchDealer()">Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="loadEnrollForm()">Add New Dealer</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div>
+                                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+
+                            </div>
+                        </div>
+
+                </div>
+
+                <div id="detailsSection" style="display:none;">
+
+                    <form id="formsDts">
+
+                        <div>
+                            <div class="alert alert-success" role="alert" style="display:none;" id="responseMsg">
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                            <div class="border-1 rounded border-grey pb-3">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Enrollment</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Dealer Name <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.DealerName, new { @id = "dealerNameFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.DealerName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                            <div class="border-1 rounded border-grey pb-3">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalVal" })
+                                                        @Html.ValidationMessageFor(m => m.ZonalOfficeId, "", new { @id = "zonalErrMsg", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalVal" })
+                                                        @Html.ValidationMessageFor(m => m.RegionalOfficeId, "", new { @id = "regionalErrMsg", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextAreaFor(m=>m.Address1, new { @rows = 2, @class = "form-control", @id= "add1Val" })
+                                                        @Html.ValidationMessageFor(m => m.Address1, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextAreaFor(m => m.Address2, new { @rows = 2, @class = "form-control", @id= "add2Val" })
+                                                        @Html.ValidationMessageFor(m => m.Address2, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Address 3</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextAreaFor(m => m.Address3, new { @rows = 2, @class = "form-control", @id= "add3Val" })
+                                                        @Html.ValidationMessageFor(m => m.Address3, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.CityName, new { @id = "cityFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.CityName, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.StateId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control stateVal" })
+                                                        @Html.ValidationMessageFor(m => m.StateId, "", new { @id = "stateErrMsg", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.DistrictId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control distVal" })
+                                                        @Html.ValidationMessageFor(m => m.DistrictId, "", new { @id = "distErrMsg", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Mobile Number <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.MobileNo, new { @id = "mobFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.MobileNo, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">PIN Code <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.Pin, new { @id = "pinFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.Pin, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Email ID <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.EmailId, new { @id = "emailFetchVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.EmailId, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div style="display:none;" id="enrollNew">
+                                        <div class="d-flex align-items-center justify-content-center mt-0">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="submitEnroll()">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display:none;" id="updateExist">
+                                        <div class="d-flex align-items-center justify-content-center mt-0">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="updateExist()">Update</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="submit">Reset Password</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function thisPageLoad() {
+        location.reload();
+    }
+
+    $(document).ready(function () {
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("GetzonalOfficeList", "Common")',
+              dataType: "json",
+              success: function (data, status, xhr) {
+
+                  console.log(data);
+
+                  $.each(data.zonalOfficeLst, function (i, option) {
+                      $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalVal");
+                  });
+              },
+              error: function (jqXhr, textStatus, errorMessage) {
+                  alert("Error Populating Zonal Office");
+              }
+          });
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("GetStateList", "Common")',
+              dataType: "json",
+              success: function (data, status, xhr) {
+
+                  console.log(data);
+
+                  $.each(data.stateLst, function (i, option) {
+                      $("<option/>").val(option.stateID).text(option.stateName).appendTo(".stateVal");
+                  });
+              },
+              error: function (jqXhr, textStatus, errorMessage) {
+                  alert("Error Populating State Data");
+              }
+          });
+    });
+
+    $(".zonalVal").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#state_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".regionalVal").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.districtName).appendTo(".regionalVal");
+                        });
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+     });
+
+    $(".stateVal").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#state_error").html("");
+            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".distVal").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo(".distVal");
+                        });
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
+                }
+            });
+    });
+
+    function GetRegionId(zonalId, regionId) {
+         var id = zonalId;
+            if (id != 0) {
+                $("#regionalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfficeID: zonalId },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".regionalVal").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo(".regionalVal");
+                        });
+                        $(".regionalVal").val(regionId);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+    };
+
+
+    function GetPerDistrict(stateId, districtId) {
+        var id = stateId;
+            if (id != 0) {
+                $("#state_error").html("");
+            }
+
+        $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".distVal").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo(".distVal");
+                        });
+                        $(".distVal").val(regionId);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
+                }
+            });
+    };
+
+
+    function searchDealer() {
+
+        document.getElementById("responseMsg").style.display = "none";
+
+        var dealerCodeVal = $("#dealerCdVal").val();
+        var dtpDealerVal = $("#DTPDealerCdVal").val();
+
+        if ($('#dealerCdVal').val() == "") {
+            $('#dealerCodeErr').text("Dealer Code should not be empty");
+            return false;
+        }
+
+        $.ajax({
+            url: "@Url.Action("SearchDealer", "AshokLeyLand")",
+            type: "POST",
+            dataType: "JSON",
+            data: { dealerCode: dealerCodeVal, dtpCode: dtpDealerVal },
+            success: function (res) {
+
+                console.log("res", res);
+
+                if (res.searchList.success == true) {
+
+                    document.getElementById("noRecord").style.display = "none";
+                    document.getElementById("searchAl").style.display = "none";
+
+                    var alList = res.searchList.data;
+
+                    $("#dealerCodedFetchVal").val(alList[0].dealerCode || '');
+                    $("#dealerNameFetchVal").val(alList[0].dealerName || '');
+
+                    $('select[name^="ZonalOfficeId"] option[value="' + alList[0].zonalOfficeID + '"]').attr("selected", "selected");
+                    GetRegionId(alList[0].zonalOfficeID, alList[0].zonalOfficeID);
+
+                    $("#add1Val").val(alList[0].address1 || '');
+                    $("#add2Val").val(alList[0].address2 || '');
+                    $("#add3Val").val(alList[0].address3 || '');
+                    $("#cityFetchVal").val(alList[0].cityName || '');
+
+                    $('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
+                    GetPerDistrict(alList[0].stateId, alList[0].districtId);
+
+                    $("#mobFetchVal").val(alList[0].mobileNo || '');
+                    $("#pinFetchVal").val(alList[0].pin || '');
+                    $("#emailFetchVal").val(alList[0].emailId || '');
+
+                    document.getElementById("detailsSection").style.display = "block";
+                    document.getElementById("updateExist").style.display = "block";
+                } else {
+                    document.getElementById("detailsSection").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+
+    }
+
+    function loadEnrollForm() {
+        document.getElementById("responseMsg").style.display = "none";
+        document.getElementById("searchAl").style.display = "none";
+        document.getElementById("detailsSection").style.display = "block";
+        document.getElementById("enrollNew").style.display = "block";
+    }
+
+
+    function submitEnroll() {
+
+        if ($("#formsDts").valid()) {
+
+            var DealerCode = $("#dealerCodedFetchVal").val();
+            var DealerName = $("#dealerNameFetchVal").val();
+            var Address1 = $("#add1Val").val();
+            var Address2 = $("#add2Val").val();
+            var Address3 = $("#add3Val").val();
+            var ZonalOfficeId = $(".zonalVal").val();
+            var RegionalOfficeId = $(".regionalVal").val();
+            var CityName = $("#cityFetchVal").val();
+            var StateId = $(".stateVal").val();
+            var DistrictId = $(".distVal").val();
+            var MobileNo = $("#mobFetchVal").val();
+            var Pin = $("#pinFetchVal").val();
+            var EmailId = $("#emailFetchVal").val();
+
+            var getAllData = [];
+
+            getAllData.push({
+                DealerCode: DealerCode,
+                DealerName: DealerName,
+                Address1: Address1,
+                Address2: Address2,
+                Address3: Address3,
+                ZonalOfficeId: ZonalOfficeId,
+                RegionalOfficeId: RegionalOfficeId,
+                CityName: CityName,
+                StateId: StateId,
+                DistrictId: DistrictId,
+                MobileNo: MobileNo,
+                Pin: Pin,
+                EmailId: EmailId
+            })
+
+
+
+            $.ajax({
+                url: "@Url.Action("AlEnroll", "AshokLeyLand")",
+                type: "POST",
+                data: { str: JSON.stringify(getAllData) },
+                dataType: "JSON",
+                success: function (res) {
+
+                    if (res.result.success == true) {
+                        $("input:text").each(function () {
+                            $(this).val("");
+                        });
+                        $("textarea").each(function () {
+                            $(this).val("");
+                        });
+                        $(".zonalVal").val("");
+                        $(".regionalVal").val("");
+                        $(".stateVal").val("");
+                        $(".distVal").val("");
+
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+
+
+    function updateExist() {
+
+        if ($("#formsDts").valid()) {
+
+        var DealerCode = $("#dealerCodedFetchVal").val();
+        var DealerName = $("#dealerNameFetchVal").val();
+        var Address1 = $("#add1Val").val();
+        var Address2 = $("#add2Val").val();
+        var Address3 = $("#add3Val").val();
+        var ZonalOfficeId = $(".zonalVal").val();
+        var RegionalOfficeId = $(".regionalVal").val();
+        var CityName = $("#cityFetchVal").val();
+        var StateId = $(".stateVal").val();
+        var DistrictId = $(".distVal").val();
+        var MobileNo = $("#mobFetchVal").val();
+        var Pin = $("#pinFetchVal").val();
+        var EmailId = $("#emailFetchVal").val();
+
+        var getAllData = [];
+
+        getAllData.push({
+            DealerCode: DealerCode,
+            DealerName: DealerName,
+            Address1: Address1,
+            Address2: Address2,
+            Address3: Address3,
+            ZonalOfficeId: ZonalOfficeId,
+            RegionalOfficeId: RegionalOfficeId,
+            CityName: CityName,
+            StateId: StateId,
+            DistrictId: DistrictId,
+            MobileNo: MobileNo,
+            Pin: Pin,
+            EmailId: EmailId
+        })
+
+            $.ajax({
+                url: "@Url.Action("AlEnrollUpdate", "AshokLeyLand")",
+                type: "POST",
+                dataType: "JSON",
+                data: { getAllData: JSON.stringify(getAllData) },
+                success: function (res) {
+
+                    if (res.result.success == true) {
+                        $("input:text").each(function () {
+                            $(this).val("");
+                        });
+                        $("textarea").each(function () {
+                            $(this).val("");
+                        });
+
+                        $(".zonalVal").val("");
+                        $(".regionalVal").val("");
+                        $(".stateVal").val("");
+                        $(".distVal").val("");
+
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+</script>
