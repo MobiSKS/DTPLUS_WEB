@@ -27,9 +27,11 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CityName { get; set; }
         [Required(ErrorMessage = "District should not be empty")]
         public int DistrictId { get; set; }
+        [StringLength(6)]
         [Required(ErrorMessage = "Pin should not be empty")]
         [RegularExpression(FieldValidation.ValidPinCode, ErrorMessage = FieldValidation.ValidPinCodeErrMsg)]
         public string Pin { get; set; }
+        [StringLength(10)]
         [Required(ErrorMessage = FieldValidation.MobNoNotEmpty)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
