@@ -49,5 +49,32 @@ namespace HPCL_Web.Controllers
             var result = await _ashokLeyLandService.AlEnrollUpdate(getAllData);
             return Json(new { result = result });
         }
+
+        public async Task<IActionResult> DealerOTCCardRequest()
+        {
+            var modals = await _ashokLeyLandService.DealerOTCCardRequest();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel)
+        {
+
+            alOTCCardRequestModel = await _ashokLeyLandService.DealerOTCCardRequest(alOTCCardRequestModel);
+
+            if (alOTCCardRequestModel.Internel_Status_Code == 1000)
+            {
+                alOTCCardRequestModel.Remarks = "";
+                ViewBag.Message = "AL OTC Card request saved successfully";
+                return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+            }
+
+            return View(alOTCCardRequestModel);
+        }
+
+        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest()
+        {
+            return View();
+        }
+
     }
 }

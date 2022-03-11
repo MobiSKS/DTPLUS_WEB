@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -112,5 +113,39 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+
+        public async Task<ALOTCCardRequestModel> DealerOTCCardRequest()
+        {
+            ALOTCCardRequestModel alOTCCardRequestModel = new ALOTCCardRequestModel();
+            alOTCCardRequestModel.Remarks = "";
+            return alOTCCardRequestModel;
+        }
+        public async Task<ALOTCCardRequestModel> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel)
+        {
+            alOTCCardRequestModel.UserAgent = CommonBase.useragent;
+            alOTCCardRequestModel.UserIp = CommonBase.userip;
+            alOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            alOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(alOTCCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseAlOtcCardRequest);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            alOTCCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            alOTCCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    alOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    alOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return alOTCCardRequestModel;
+        }
+
     }
 }

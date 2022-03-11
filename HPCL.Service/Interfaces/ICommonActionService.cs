@@ -45,5 +45,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerSecretQueModel>> GetCustomerSecretQuestionListForDropdown();
         Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID);
         Task<List<TerminalStatusResponseModal>> GetMerchantStatus();
+        Task<CommonResponseData> CheckDealerCodeIsValid(string DealerCode);
     }
 }

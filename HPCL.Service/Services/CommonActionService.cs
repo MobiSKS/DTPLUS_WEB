@@ -3,6 +3,7 @@ using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
@@ -11,6 +12,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -794,6 +796,31 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<TerminalStatusResponseModal> merchantStatusList = jarr.ToObject<List<TerminalStatusResponseModal>>();
             return merchantStatusList;
+        }
+
+        public async Task<CommonResponseData> CheckDealerCodeIsValid(string DealerCode)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkDealerCode);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
         }
 
     }

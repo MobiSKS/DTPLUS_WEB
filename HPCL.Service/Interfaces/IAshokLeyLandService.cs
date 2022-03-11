@@ -9,5 +9,7 @@ namespace HPCL.Service.Interfaces
         Task<InsertResponse> InsertAlEnroll(string str);
         Task<SearchAlResult> SearchDealer(string dealerCode, string dtpCode);
         Task<InsertResponse> AlEnrollUpdate(string getAllData);
+        Task<ALOTCCardRequestModel> DealerOTCCardRequest();
+        Task<ALOTCCardRequestModel> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel);
     }
 }
