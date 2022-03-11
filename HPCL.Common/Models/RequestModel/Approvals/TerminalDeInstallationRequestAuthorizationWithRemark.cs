@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Approvals;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace HPCL.Common.Models.RequestModel.Approvals
 {
-    public class TerminalDeInstallationRequestAuthorizationWithRemark
+    public class TerminalDeInstallationRequestAuthorizationWithRemark:CommonResponseBase
     {
         public TerminalDeInstallationRequestAuthorizationWithRemark()
         {

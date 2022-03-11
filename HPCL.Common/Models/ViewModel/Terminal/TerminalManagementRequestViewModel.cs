@@ -1,11 +1,12 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Terminal;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel
 {
-    public class TerminalManagementRequestViewModel:BaseEntity
+    public class TerminalManagementRequestViewModel:CommonResponseBase
     {
         public TerminalManagementRequestViewModel()
         {

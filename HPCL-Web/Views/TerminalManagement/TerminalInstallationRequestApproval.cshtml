@@ -86,8 +86,8 @@
                                 </div>
                             </div>
                             <div style="display:none;" id="noRecord" class="mt-3">
-                                <div class="alert alert-warning mb-0" role="alert">
-                                    No Record Found
+                                <div id="message" class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+                                    @*No Record Found*@
                                 </div>
                             </div>
                         </div>
@@ -264,37 +264,41 @@ $(".zonalFetchId").change(function () {
 });
 
 
-function OnSuccess(data) {
+    function OnSuccess(data) {
+        //debugger;
     console.log(data);
 
-    $("#approvalTerminalList td").parent().remove();
+        $("#approvalTerminalList td").parent().remove();
+        if (data.approvalList.terminalApprovalReqDetails.length > 0) {
+            for (var i = 0; i < data.approvalList.terminalApprovalReqDetails.length; i++) {
 
-    for (var i = 0; i < data.approvalList.length; i++) {
+                var rows = "<tbody><tr>"
+                    + "<td><input type='checkbox' class='terminalRow' name='terminalCheck'></td>"
+                    + "<td><span class='terminalVal'>" + (data.approvalList.terminalApprovalReqDetails[i].terminalId || '') + "</span></td>"
+                    + "<td><a href='#a' class='merchantVal'>" + (data.approvalList.terminalApprovalReqDetails[i].merchantId || '') + "</a></td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].terminalType || '') + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].merchantStatus || '') + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].lastMonthSpend) + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].noOfTransactionsOfLastMonth) + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].requestType || '') + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].requestedBy || '') + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].requestedDate || '') + "</td>"
+                    + "<td>" + (data.approvalList.terminalApprovalReqDetails[i].justification || '') + "</td>"
+                    + "</tr ></tbody>";
 
-        var rows = "<tbody><tr>"
-            + "<td><input type='checkbox' class='terminalRow' name='terminalCheck'></td>"
-            + "<td><span class='terminalVal'>" + (data.approvalList[i].terminalId || '') + "</span></td>"
-            + "<td><a href='#a' class='merchantVal'>" + (data.approvalList[i].merchantId || '') + "</a></td>"
-            + "<td>" + (data.approvalList[i].terminalType || '') + "</td>"
-            + "<td>" + (data.approvalList[i].merchantStatus || '') + "</td>"
-            + "<td>" + (data.approvalList[i].lastMonthSpend) + "</td>"
-            + "<td>" + (data.approvalList[i].noOfTransactionsOfLastMonth) + "</td>"
-            + "<td>" + (data.approvalList[i].requestType || '') + "</td>"
-            + "<td>" + (data.approvalList[i].requestedBy || '') + "</td>"
-            + "<td>" + (data.approvalList[i].requestedDate || '') + "</td>"
-            + "<td>" + (data.approvalList[i].justification || '') + "</td>"
-            + "</tr ></tbody>";
+                $('#approvalTerminalList').append(rows);
+            }
+        }
 
-        $('#approvalTerminalList').append(rows);
-    }
-
-    if (data.approvalList.length == 0) {
+        if (data.approvalList.terminalApprovalReqDetails.length == 0) {
         document.getElementById("approvalRejectSection").style.display = "none";
-        document.getElementById("noRecord").style.display = "block";
+            document.getElementById("noRecord").style.display = "block";
+            $("#message").html(data.approvalList.message);
     }
-    if (data.approvalList.length > 0) {
+        if (data.approvalList.terminalApprovalReqDetails.length > 0) {
         document.getElementById("noRecord").style.display = "none";
-        document.getElementById("approvalRejectSection").style.display = "block";
+            document.getElementById("approvalRejectSection").style.display = "block";
+            $("#message").html("");
     }
 };
 
