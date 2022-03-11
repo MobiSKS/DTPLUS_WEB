@@ -1,0 +1,1258 @@
+﻿@model HPCL.Common.Models.ViewModel.AshokLeyLand.AshokLeylandCardCreationModel
+
+@{
+    ViewData["Title"] = "HP (OTC) Card Customer Creation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-1 w-100">
+    <marquee width="100%" direction="left">
+        Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
+    </marquee>
+</div>
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">My HP (OTC) Card Profile</a> </li>
+            <li class="breadcrumb-item font-weight-light">Ashok Leyland Card Creation </li>
+        </ul>
+        <form>
+            <div>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer/Org.Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-2 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                          new SelectListItem(){ Text = "Title", Value = "0" },
+                                                          new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                          new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                          new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                          }, null, new { @class = "form-control px-0" })
+                                            </div>
+                                            <span class="error" id="salutaion_error"></span>
+                                        </div>
+                                        <div class="col-md-5 col-12 px-0">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <span class="error" id="customername_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="nameOnCard_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="communicationCityName_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Pin Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="communicationPincode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                <span class="error" id="comm_states_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">District <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CommunicationDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                                <span class="error" id="comm_district_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationDialCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationPhonePart2_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxPart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFaxPart2_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <div class="error" id="comm_mobileNumber_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="comm_email_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="comm_address1_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off" })
+                                                <span class="error" id="comm_address2_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3 pb-0">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                                <span class="error" id="DealerCode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                                <span class="error" id="SalesExecutiveEmployeeID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Card Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3 pb-0">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">No of Cards <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-6 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="NoOfCards_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12">
+                                            <div class="custom_select">
+                                                @*<button class="btn btn_primary" type="button" style="height:30px;">ADD</button>*@
+                                                <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0 pt-1">
+                        <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
+                            <div class="d-flex align-items-center justify-content-center flex-wrap custom_form_feild">
+                                <div class="form-inline mb-3">
+                                    <label>Card No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Vehicle No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Vehicle Type <sup class="text-danger">*</sup></label>
+                                    <select class="form-control ml-2 mr-2">
+                                        <option>--Select--</option>
+                                        <option>Private</option>
+                                        <option>Commercial</option>
+                                    </select>
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>VIN No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Mobile No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center flex-wrap custom_form_feild">
+                                <div class="form-inline mb-3">
+                                    <label>Card No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Vehicle No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Vehicle Type <sup class="text-danger">*</sup></label>
+                                    <select class="form-control ml-2 mr-2">
+                                        <option>--Select--</option>
+                                        <option>Private</option>
+                                        <option>Commercial</option>
+                                    </select>
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>VIN No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <label>Mobile No <sup class="text-danger">*</sup></label>
+                                    <input class="form-control ml-2 mr-2" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <div class="col-lg-12 col-md-12 col-12 pt-3 pb-0">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-1">
+                                        <label class="font-weight-normal col-md-5 col-12">Copy of Driver License <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="form-check form-check-inline">
+                                                @Html.RadioButtonFor(m => m.CopyofDriverLicense, "Yes", new { @id = "rbtnDriverLicenseYes" })
+                                                <label class="form-check-label ml-1" for="inlineRadio1">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                @Html.RadioButtonFor(m => m.CopyofDriverLicense, "No", new { @id = "rbtnDriverLicenseNo" })
+                                                <label class="form-check-label ml-1" for="inlineRadio2">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-1">
+                                        <label class="font-weight-normal col-md-6 col-12">Copy of Vehicle Registration Certificate <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-check form-check-inline">
+                                                @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "Yes", new { @id = "rbtnVehicleRegistrationYes" })
+                                                <label class="form-check-label ml-1" for="inlineRadio1">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "No", new { @id = "rbtnVehicleRegistrationNo" })
+                                                <label class="form-check-label ml-1" for="inlineRadio2">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (!document.getElementById("rbtnDriverLicenseYes").checked && !document.getElementById("rbtnDriverLicenseNo").checked) {
+            document.getElementById("rbtnDriverLicenseYes").checked = true;
+            document.getElementById("rbtnDriverLicenseNo").checked = false;
+        }
+
+        if (!document.getElementById("rbtnVehicleRegistrationYes").checked && !document.getElementById("rbtnVehicleRegistrationNo").checked) {
+            document.getElementById("rbtnVehicleRegistrationYes").checked = true;
+            document.getElementById("rbtnVehicleRegistrationNo").checked = false;
+        }
+
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode = 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+    $("#CommunicationStateId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_states_error").html("");
+        }
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetDistrictDetailsByState", "Common")',
+            data: { Stateid: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#CommunicationDistrictId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.districtID,
+                                text: data.districtName
+                            }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating District Data");
+            }
+        });
+    });
+
+    function LoadCard1Deatils() {
+        debugger;
+
+        if (document.getElementById("MerchantId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            //$("#MerchantId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RegionalOfficeId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+
+        var regionalOfficeId = document.getElementById("RegionalOfficeId").value;
+        var merchantId = document.getElementById("MerchantId").value;
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetAvailableOTCCardByRegionalId", "MyHpOTCCardCustomer")',
+            data: { RegionalId: regionalOfficeId, MerchantID : merchantId},
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                console.log(data);
+                $("#CardsTable1 td").parent().remove();
+                //console.log('Praveen');
+
+                //document.getElementById("NoOfCardsTbl").deleteTHead();
+                //console.log(data.lstCardDetails);
+
+                for (var i = 0; i < data.lstCardDetails.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
+                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCard1Details(this)' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+                    //+ "<td><span class='rowData CustReferenceNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></td>"
+                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+
+
+                    $('#CardsTable1').append(rows);
+
+                    //console.log(rows);
+                }
+
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating card Data");
+            }
+
+
+        });
+
+
+        debugger;
+
+        //document.getElementById('NoOfCardsTbl').style.display = 'table';
+        //document.getElementById('NoOfCardsTbl').style.display = 'block';
+
+    }
+
+
+    function GetCard1Details(o) {
+        debugger;
+        var cardNo = o.innerText;
+
+        console.log(cardNo);
+
+        $('#CardNumber1').val(cardNo);
+        $('#myModalCard1').modal('hide');
+    }
+
+
+   function LoadCard2Deatils() {
+        debugger;
+
+        if (document.getElementById("MerchantId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            //$("#MerchantId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RegionalOfficeId").value == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
+
+
+       var regionalOfficeId = document.getElementById("RegionalOfficeId").value;
+       var merchantId = document.getElementById("MerchantId").value;
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetAvailableOTCCardByRegionalId", "MyHpOTCCardCustomer")',
+            data: { RegionalId: regionalOfficeId, MerchantID: merchantId},
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                console.log(data);
+                $("#CardsTable2 td").parent().remove();
+                //console.log('Praveen');
+
+                //document.getElementById("NoOfCardsTbl").deleteTHead();
+                //console.log(data.lstCardDetails);
+
+                for (var i = 0; i < data.lstCardDetails.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
+                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCard2Details(this)' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+                    //+ "<td><span class='rowData CustReferenceNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></td>"
+                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+
+
+                    $('#CardsTable2').append(rows);
+
+                    //console.log(rows);
+                }
+
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Vehicle Type Data");
+            }
+
+
+        });
+
+
+
+        //document.getElementById('NoOfCardsTbl').style.display = 'table';
+        //document.getElementById('NoOfCardsTbl').style.display = 'block';
+
+    }
+
+
+    function GetCard2Details(o) {
+        debugger;
+        var cardNo = o.innerText;
+
+        console.log(cardNo);
+
+        $('#CardNumber2').val(cardNo);
+        $('#myModalCard2').modal('hide');
+    }
+
+    $("#IncomeTaxPan").on("blur", function () {
+        //debugger;
+        var panNumber = document.getElementById("IncomeTaxPan").value;
+
+
+        if (panNumber == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        var panNumberUsed = false;
+        localStorage.setItem("PANNOALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
+                data: { PanNo: panNumber },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    var v = data;
+                    if (status == 'success') {
+
+                        if (data.status == "0") {
+                            panNumberUsed = true;
+                            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                            localStorage.setItem("PANNOALREADYUSED", "0");
+                        }
+                        else {
+                            panNumberUsed = false;
+                            document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        panNumberUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //document.getElementById("RBEName").value = "";
+                },
+                statusCode: {
+                    1024: function () {
+                        //document.getElementById("RBEName").value = "";
+                    }
+                }
+            });
+
+        console.log(panNumberUsed);
+        if (panNumberUsed == true) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            //return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        //2nd Validation
+
+        var result = false;
+
+        var panno = $('#IncomeTaxPan').val();
+        var OrgName = $('#IndividualOrgName').val();
+        var correctPANName = '';
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        //localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+
+        //$.ajax({
+        //    type: 'POST',
+        //    url: "PANValidation/MyHpOTCCardCustomer",
+        //    data: { PANNumber: document.getElementById("IncomeTaxPan").value },
+        //    dataType: "json",
+        //    success: function (data, status, xhr) {
+        //        //debugger;
+        //        var jsonData = JSON.parse(data);
+        //        if (status == 'success' && jsonData['status-code'] == '101') {
+        //            result = true;
+
+        //            console.log(jsonData);
+        //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+        //            correctPANName = jsonData["result"]["name"];
+        //            if (OrgName.toUpperCase() == correctPANName.toUpperCase()) {
+        //                localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        //            }
+        //            else {
+        //                result = false;
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+        //                localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+        //            }
+        //            console.log(OrgName);
+        //            console.log(correctPANName);
+        //            console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
+        //        }
+        //        else {
+        //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //            //document.getElementById("IncomeTaxPan").focus();
+        //            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+        //        }
+        //    },
+        //    error: function (jqXhr, textStatus, errorMessage) {
+        //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //        //document.getElementById("IncomeTaxPan").focus();
+        //        localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+        //    }
+        //});
+
+
+    });
+
+
+    function ValidateMandatoryFields() {
+        debugger;
+
+        var ret = false;
+
+        if (document.getElementById("IndividualOrgNameTitle").value == "0") {
+            document.getElementById("salutaion_error").innerHTML = "Title is required";
+            document.getElementById("IndividualOrgNameTitle").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgName").value.trim() == "") {
+            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+            document.getElementById("IndividualOrgName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value.trim() == "") {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card is required";
+            document.getElementById("NameOnCard").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationCityName").value.trim() == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City is required";
+            document.getElementById("CommunicationCityName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPincode").value.trim() == "") {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            document.getElementById("CommunicationPincode").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("communicationPincode_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("CommunicationStateId").value == "0") {
+            document.getElementById("comm_states_error").innerHTML = "State is required";
+            document.getElementById("CommunicationStateId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationDistrictId").value == "0") {
+            document.getElementById("comm_district_error").innerHTML = "District is required";
+            document.getElementById("CommunicationDistrictId").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_district_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
+            document.getElementById("CommunicationMobileNo").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") {
+            document.getElementById("comm_email_error").innerHTML = "Email is required";
+            document.getElementById("CommunicationEmailid").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+            document.getElementById("comm_email_error").innerHTML = "Email is already used";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress1").value == "") {
+            document.getElementById("comm_address1_error").innerHTML = "Address 1 is required";
+            document.getElementById("CommunicationAddress1").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+
+
+        if (document.getElementById("CommunicationAddress2").value == "") {
+            document.getElementById("comm_address2_error").innerHTML = "Address 2 is required";
+            document.getElementById("CommunicationAddress2").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("comm_address2_error").innerHTML = "";
+        }
+
+        if (document.getElementById('DealerCode').value.trim() == "") {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            document.getElementById('DealerCode').focus();
+            return ret;
+        }
+        else {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+        if (localStorage.getItem("DEALERFOUND") == 0) {
+            document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+            return (false);
+        }
+        else {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+        //if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
+        //    if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
+        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
+        //        document.getElementById("VehicleNo2").focus();
+        //        return ret;
+        //    }
+        //    else {
+        //        document.getElementById("VehicleNo2_error").innerHTML = "";
+        //    }
+        //}
+        //else {
+        //    document.getElementById("VehicleNo2_error").innerHTML = "";
+        //}
+
+        //if (document.getElementById("CardNumber2").value != "") {
+        //    if (document.getElementById("MobileNo2").value == "") {
+        //        document.getElementById("MobileNo2_error").innerHTML = "Mobile is required";
+        //        document.getElementById("MobileNo2").focus();
+        //        return ret;
+        //    }
+        //    else {
+        //        document.getElementById("MobileNo2_error").innerHTML = "";
+        //    }
+        //}
+        //else {
+        //    document.getElementById("MobileNo2_error").innerHTML = "";
+        //    document.getElementById("CardNumber2_error").innerHTML = "";
+        //}
+               
+
+        if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
+            return (false);
+        }
+        else {
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "";
+        }
+
+        if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Select Vehicle Registration Certificate";
+            return (false);
+        }
+        else {
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
+        }
+
+        if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "select Yes option to enable save";
+            return (false);
+        }
+        else {
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "";
+        }
+
+        if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "select Yes option to enable save";
+            return (false);
+        }
+        else {
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
+        }
+                
+
+        //if (ret == false)
+        //    return ret;
+
+        return true;
+    }
+
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckMobilNoDuplication", "Common")',
+                data: { MobileNo: communicationMobile },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') {
+
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            mobileNoUsed = true;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+                        }
+                        else {
+                            mobileNoUsed = false;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    }
+                }
+            });
+
+        //if (mobileNoUsed == true) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "communication Email is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckEmailDuplication", "Common")',
+                data: { Emailid: communicationEmail },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            emailUsed = true;
+                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                            localStorage.setItem("EMAILIDALREADYUSED", "0");
+                        }
+                        else {
+                            emailUsed = false;
+                            document.getElementById("comm_email_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    }
+                }
+            });
+
+        //if (emailUsed == true) {
+        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //    //console.log('SAM');
+        //}
+
+    });
+
+    function RemoveSpecialChar(txtName) {
+        if (txtName.value != '' && txtName.value.match(/^[\w ]+$/) == null) {
+            txtName.value = txtName.value.replace(/[\W]/g, '');
+        }
+    }
+
+
+    $("#btnCard1Verify").click(function () {
+        //debugger;
+        var vehicleNo = document.getElementById("VehicleNo1").value;
+        if (vehicleNo == "") {
+            document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is required";
+            $("#VehicleNo1").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("VehicleNo1_error").innerHTML = "";
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    document.getElementById("VehicleNo1_error").innerHTML = "";
+                    console.log(jsonData);
+                    console.log(document.getElementById("VehicleNo1_error").innerHTML);
+                }
+                else {
+                    document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+
+            }
+        });
+
+
+    });
+
+
+    $("#btnCard2Verify").click(function () {
+        //debugger;
+        var vehicleNo = document.getElementById("VehicleNo2").value;
+        if (vehicleNo == "") {
+            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is required";
+            $("#VehicleNo2").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("VehicleNo2_error").innerHTML = "";
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    document.getElementById("VehicleNo2_error").innerHTML = "";
+                    console.log(jsonData);
+                    console.log(document.getElementById("VehicleNo2_error").innerHTML);
+                }
+                else {
+                    document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+
+            }
+        });
+
+
+    });
+
+    $('#VehicleNo1').keydown(function (e) {
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 8 || // Backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+
+        if (!ok) {
+            e.preventDefault();
+        }
+    });
+
+    $('#VehicleNo2').keydown(function (e) {
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 8 || // Backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+
+        if (!ok) {
+            e.preventDefault();
+        }
+    });
+
+      $("#DealerCode").on("blur", function () {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+
+        var dealerCode = document.getElementById("DealerCode").value;
+        if (dealerCode == "") {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            $("#DealerCode").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+            data: { DealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                console.log(data.status);
+
+                if (status == 'success') {
+                    if (data.status == 1) {
+                        document.getElementById("DealerCode_error").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "1");
+                    }
+                    else {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+
+                    if (data == "Failed to load Dealer Details") {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+                }
+                else {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                localStorage.setItem("DEALERFOUND", "0");
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            }
+        });
+
+
+      });
+
+    $("#CommunicationPinCode").on("blur", function () {
+        //debugger;
+        var communicationPinCode = document.getElementById("CommunicationPinCode").value.trim();
+        if (communicationPinCode == "") {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("CommunicationPinCode").value = "";
+            document.getElementById("CommunicationPinCode").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationPinCode").value.length < 6) {
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code length must be 6 digit";
+            document.getElementById("CommunicationPinCode").value = "";
+            document.getElementById("CommunicationPinCode").focus();
+            return false;
+        }
+    });
+
+</script>
