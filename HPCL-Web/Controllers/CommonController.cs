@@ -1,7 +1,10 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -96,7 +99,7 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetStatusType(string status)
         {
             var statusTypeList = await _commonActionService.GetStatusType(status);
-            return Json(new{ statusTypeList = statusTypeList });
+            return Json(new { statusTypeList = statusTypeList });
         }
 
         [HttpPost]
@@ -134,6 +137,29 @@ namespace HPCL_Web.Controllers
             {
                 return Json("Failed to load Dealer Details");
             }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetDistrictDetailsByState(string Stateid)
+        {
+            List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
+            lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
+            return Json(lstDistrict);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckMobilNoDuplication(MobileNo);
+
+            return Json(customerInserCardResponseData);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckEmailDuplication(string Emailid)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
+
+            return Json(customerInserCardResponseData);
         }
 
     }

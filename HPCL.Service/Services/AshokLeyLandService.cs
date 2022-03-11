@@ -18,11 +18,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<SearchAlResult> SearchDealer(string dealerCode, string dtpCode)
@@ -145,6 +147,14 @@ namespace HPCL.Service.Services
             }
 
             return alOTCCardRequestModel;
+        }
+
+        public async Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard()
+        {
+            AshokLeylandCardCreationModel ashokLeylandCardCreationModel = new AshokLeylandCardCreationModel();
+            ashokLeylandCardCreationModel.Remarks = "";
+            ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            return ashokLeylandCardCreationModel;
         }
 
     }
