@@ -46,5 +46,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerRegionModel>> GetRegionalDetailsDropdown(int ZonalOfficeID);
         Task<List<TerminalStatusResponseModal>> GetMerchantStatus();
         Task<CommonResponseData> CheckDealerCodeIsValid(string DealerCode);
+        Task<List<VehicleTypeModel>> GetVehicleTypeDropdown();
     }
 }

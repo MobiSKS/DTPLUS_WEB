@@ -154,6 +154,7 @@ namespace HPCL.Service.Services
             AshokLeylandCardCreationModel ashokLeylandCardCreationModel = new AshokLeylandCardCreationModel();
             ashokLeylandCardCreationModel.Remarks = "";
             ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return ashokLeylandCardCreationModel;
         }
 

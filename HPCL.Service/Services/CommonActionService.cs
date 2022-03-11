@@ -822,6 +822,26 @@ namespace HPCL.Service.Services
 
             return responseData;
         }
+        public async Task<List<VehicleTypeModel>> GetVehicleTypeDropdown()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent contentforms = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(contentforms, WebApiUrl.getVehicleTpe);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<VehicleTypeModel> lstVehicleTpe = jarr.ToObject<List<VehicleTypeModel>>();
+
+            var SortedtList = lstVehicleTpe.OrderBy(x => x.VehicleTypeName).ToList();
+            return SortedtList;
+        }
 
     }
 }

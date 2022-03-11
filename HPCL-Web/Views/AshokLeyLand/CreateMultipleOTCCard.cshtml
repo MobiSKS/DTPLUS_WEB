@@ -12,7 +12,6 @@
             <li class="breadcrumb-item font-weight-light">Ashok Leyland Card Creation </li>
         </ul>
         <form>
-            <div>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -251,13 +250,19 @@
                                         </div>
                                         <div class="col-md-2 col-12">
                                             <div class="custom_select">
-                                                @*<button class="btn btn_primary" type="button" style="height:30px;">ADD</button>*@
                                                 <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-2 col-12">
+                                            <div class="custom_select">
+                                                <button class="btn btn_primary px-4 py-2" type="button" onclick="ClearCardDeatils()">Reset</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
@@ -268,58 +273,46 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
                     <div class="border-1 rounded border-grey pb-0 pt-1">
                         <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-                            <div class="d-flex align-items-center justify-content-center flex-wrap custom_form_feild">
-                                <div class="form-inline mb-3">
-                                    <label>Card No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Vehicle No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Vehicle Type <sup class="text-danger">*</sup></label>
-                                    <select class="form-control ml-2 mr-2">
-                                        <option>--Select--</option>
-                                        <option>Private</option>
-                                        <option>Commercial</option>
-                                    </select>
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>VIN No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Mobile No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center flex-wrap custom_form_feild">
-                                <div class="form-inline mb-3">
-                                    <label>Card No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Vehicle No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Vehicle Type <sup class="text-danger">*</sup></label>
-                                    <select class="form-control ml-2 mr-2">
-                                        <option>--Select--</option>
-                                        <option>Private</option>
-                                        <option>Commercial</option>
-                                    </select>
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>VIN No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                                <div class="form-inline mb-3">
-                                    <label>Mobile No <sup class="text-danger">*</sup></label>
-                                    <input class="form-control ml-2 mr-2" type="text" />
-                                </div>
-                            </div>
+
+                            <table class="table table-bordered text-nowrap" id="NoOfCardsTbl" style="display: none">
+                                    @*<thead>
+                                    <tr>
+                                        <th>Card No.</th>
+                                        <th>Vehicle No.</th>
+                                        <th>Vehicle Type</th>
+                                        <th>VIN No</th>
+                                        <th>Mobile No</th>
+                                    </tr>
+                                  </thead>*@
+                                <tbody id="cardDetails">
+
+                                        @for (int i = 0; i < Model.ObjALCardEntryDetail.Count; i++)
+                                        {
+                                            var j = i + 1;
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].CardNo)
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VechileNo)
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.ObjALCardEntryDetail[i].VehicleType, new SelectList(Model.VehicleTypeMdl, "VehicleTypeName", "VehicleTypeName"), new { @class = "form-control" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VINNumber)
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].MobileNo)
+                                        </td>
+                                    </tr>
+                                        }
+
+                                </tbody>
+                            </table>
+
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -434,74 +427,78 @@
         });
     });
 
-    function LoadCard1Deatils() {
+    function LoadCardDeatils() {
+
         debugger;
 
-        if (document.getElementById("MerchantId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
-            //$("#MerchantId").focus;
+        var noOfCards = document.getElementById("NoOfCards").value;
+        if (noOfCards == "0" || noOfCards == "") {
+            document.getElementById("NoOfCards_error").innerHTML = "No Of Cards is required";
+            $("#NoOfCards").focus;
             return (false);
         }
         else {
-            document.getElementById("MerchantId_error").innerHTML = "";
+            document.getElementById("NoOfCards_error").innerHTML = "";
         }
-
-        if (document.getElementById("RegionalOfficeId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
-            return (false);
-        }
-        else {
-            document.getElementById("MerchantId_error").innerHTML = "";
-        }
-
-
-        var regionalOfficeId = document.getElementById("RegionalOfficeId").value;
-        var merchantId = document.getElementById("MerchantId").value;
 
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("GetAvailableOTCCardByRegionalId", "MyHpOTCCardCustomer")',
-            data: { RegionalId: regionalOfficeId, MerchantID : merchantId},
+            url: '@Url.Action("GetVehicleTypeDetails", "Common")',
+            data: {},
             dataType: "json",
             success: function (data, status, xhr) {
                 //debugger;
-                console.log(data);
-                $("#CardsTable1 td").parent().remove();
-                //console.log('Praveen');
 
-                //document.getElementById("NoOfCardsTbl").deleteTHead();
-                //console.log(data.lstCardDetails);
-
-                for (var i = 0; i < data.lstCardDetails.length; i++) {
-
-                    var rows = "<tbody><tr>"
-                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
-                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCard1Details(this)' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
-                    //+ "<td><span class='rowData CustReferenceNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></td>"
-                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+                var NoOfcards = $('#NoOfCards').val();
+                $("#NoOfCardsTbl td").parent().remove();
 
 
-                    $('#CardsTable1').append(rows);
+                document.getElementById("NoOfCardsTbl").deleteTHead();
 
-                    //console.log(rows);
+                $('#NoOfCardsTbl').append('<thead><tr><th>Card No</th><th>Add Card</th><th>Vehicle No</th><th>Validate VehicleNo</th><th>Vehicle Type</th><th>VIN No</th><th>Mobile No</th></tr></thead>');
+
+
+
+                for (var i = 0; i < parseInt(NoOfcards); i++) {
+                    //var id = 'ddlVehicleType' + i;
+                    var j = (i + 1);
+                    var name = 'ObjALCardEntryDetail[' + (i) + '].VehicleType';
+                    var id = 'ddlVehicleType' + i;
+
+                    var rows = "<tr>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
+                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadCardDeatils()' type='button' name='btnAddCard" + (i) + "'>Add</button></td>"
+                        + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this)' name='ObjALCardEntryDetail[" + (i) + "].VechileNo'></span></td>"
+                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadCardDeatils()' type='button' name='btnValidate" + (i) + "'>Validate</button></td>"
+                        + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                        + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' name='ObjALCardEntryDetail[" + (i) + "].VINNumber'> </span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' name='ObjALCardEntryDetail[" + (i) + "].MobileNo'></span></td></tr>";
+
+
+                    $('#NoOfCardsTbl').append(rows);
+                    console.log(document.getElementById(id));
+
+                    $("#" + id).html("");
+                    $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.vehicleTypeName,
+                                text: data.vehicleTypeName
+                            }).html(data.vehicleTypeName).appendTo("#" + id);
+                    });
                 }
 
 
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating card Data");
+                alert("Error Populating VehicleTpeData Data");
             }
 
 
         });
 
-
-        debugger;
-
-        //document.getElementById('NoOfCardsTbl').style.display = 'table';
-        //document.getElementById('NoOfCardsTbl').style.display = 'block';
-
+        document.getElementById('NoOfCardsTbl').style.display = 'block';
     }
 
 
@@ -723,7 +720,7 @@
         else {
             document.getElementById("salutaion_error").innerHTML = "";
         }
-        
+
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
             document.getElementById("IndividualOrgName").focus();
@@ -900,7 +897,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        
+
         if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
             return (false);
@@ -980,7 +977,7 @@
         //    document.getElementById("MobileNo2_error").innerHTML = "";
         //    document.getElementById("CardNumber2_error").innerHTML = "";
         //}
-               
+
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
@@ -1013,7 +1010,7 @@
         else {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
         }
-                
+
 
         //if (ret == false)
         //    return ret;
@@ -1368,5 +1365,14 @@
             return false;
         }
     });
+
+    function ClearCardDeatils() {
+
+        $('#NoOfCardsTbl > tr').remove();
+        document.getElementById('NoOfCardsTbl').style.display = 'none';
+
+        $('#NoOfCards').attr("readonly", false);
+    }
+
 
 </script>
