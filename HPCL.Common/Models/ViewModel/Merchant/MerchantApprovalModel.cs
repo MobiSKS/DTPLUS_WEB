@@ -28,6 +28,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string ShowTable { get; set; }
+        public string Message { get; set; }
         public virtual List<CategoriesModel> Categories { get; set; }
         public virtual List<MerchantApprovalTableModel> MerchantApprovalTableDetails { get; set; }
     }
