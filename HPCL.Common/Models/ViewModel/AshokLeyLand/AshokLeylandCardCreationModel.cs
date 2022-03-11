@@ -35,7 +35,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         [Required(ErrorMessage = "Customer Or Org Name is Required")]
         public string IndividualOrgName { get; set; }
 
-        [Required(ErrorMessage = "Title is Required")]
+        //[Required(ErrorMessage = "Title is Required")]
         public string IndividualOrgNameTitle { get; set; }
 
         [Required(ErrorMessage = "Name on Card is Required")]
