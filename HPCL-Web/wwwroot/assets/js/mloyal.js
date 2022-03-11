@@ -86,7 +86,7 @@ function showregAddress() {
 
     //console.log(ret);
 
-    if (document.applicationForm.FormNumber.value == "") {
+    if (document.applicationForm.FormNumber.value.trim() == "") {
         document.getElementById("formNumber_error").innerHTML = "Form Number is required";
         document.applicationForm.FormNumber.focus();
         return ret;
@@ -176,8 +176,8 @@ function showregAddress() {
         document.getElementById("salutaion_error").innerHTML = "";
     }
 
-    if (document.applicationForm.IndividualOrgName.value == "") {
-        document.getElementById("individualName_error").innerHTML = "Enter Individual Or Organization Name";
+    if (document.applicationForm.IndividualOrgName.value.trim() == "") {
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
         document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
@@ -185,10 +185,28 @@ function showregAddress() {
         document.getElementById("individualName_error").innerHTML = "";
     }
 
-    if (document.applicationForm.CustomerNameOnCard.value == "") {
-        document.getElementById("nameOnCard_error").innerHTML = "Enter Name on Card";
+    if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
+        document.getElementById("individualName_error").innerHTML = "Name can not be a number";
+        document.applicationForm.IndividualOrgName.focus();
+        return false;
+    }
+    else {
+        document.getElementById("individualName_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
+        document.getElementById("nameOnCard_error").innerHTML = "Name on Card is required";
         document.applicationForm.CustomerNameOnCard.focus();
         return ret;
+    }
+    else {
+        document.getElementById("nameOnCard_error").innerHTML = "";
+    }
+
+    if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
+        document.getElementById("nameOnCard_error").innerHTML = "Name On Card can not be a number";
+        document.applicationForm.CustomerNameOnCard.focus();
+        return false;
     }
     else {
         document.getElementById("nameOnCard_error").innerHTML = "";
@@ -214,7 +232,7 @@ function showregAddress() {
 
 
 
-    var formNumber = document.getElementById("FormNumber").value;
+    var formNumber = document.getElementById("FormNumber").value.trim();
     if (formNumber == "") {
         document.getElementById("formNumber_error").innerHTML = "Form No is required";
         return (false);
@@ -236,12 +254,21 @@ function showregAddress() {
     }
 
 
-    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;//$('#CustomerTbentityID').va();
+    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
 
     if (TypeofBusinessEntityId != 10) {
 
-        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+        if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.applicationForm.CustomerIncomeTaxPan.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CustomerIncomeTaxPan.value.length < 10) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN length must be 10 digit";
             document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
@@ -250,7 +277,7 @@ function showregAddress() {
         }
     }
     else {
-        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+        if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
             document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
@@ -312,6 +339,21 @@ function showregAddress() {
 
 
     //var TypeofBusinessEntityId  = $('#CustomerTbentityID').va();
+
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
+
+    var varDate = new Date(myArray[2], (myArray[1]-1), myArray[0], 0, 0, 0, 0);
+    console.log(today);
+    console.log(varDate);
+    if (varDate > today) {
+        document.getElementById("applicationDate_error").innerHTML = "Date of Application can not be a future date";
+        //document.applicationForm.CustomerDateOfApplication.focus();
+        return ret;
+    }
+
 
     if (TypeofBusinessEntityId != 10) {
 
@@ -467,134 +509,204 @@ sameAscheck.addEventListener("change", function () {
 }
 function showOfficialDetails() {
 
-debugger;
+    debugger;
 
-//if (localStorage.getItem("keyOfficial")){
-//		console.log("ask");
-//			document.getElementById("officialDetails-tab").click();
-//			document.getElementById("officialDetails-tab").classList.remove("disable");
-//	}
-//	
-//	else {
-//console.log("Dont ask")
-if (document.applicationForm.CommunicationAddress1.value == "") {
-    document.getElementById("comm_address1_error").innerHTML = "Communication Address 1 is required";
-    document.applicationForm.CommunicationAddress1.focus();
-    return false;
-}
-else {
-    document.getElementById("comm_address1_error").innerHTML = "";
-}
-
-if (document.applicationForm.CommunicationAddress2.value == "") {
-    document.getElementById("comm_address2_error").innerHTML = "Communication Address 2 is required";
-    document.applicationForm.CommunicationAddress2.focus();
-    return false;
-}
-else {
-    document.getElementById("comm_address2_error").innerHTML = "";
-}
-
-if (document.applicationForm.CommunicationCity.value == "") {
-    document.getElementById("comm_city_error").innerHTML = "Communication City is required";
-    document.applicationForm.CommunicationCity.focus();
-    return false;
-}
-else {
-    document.getElementById("comm_city_error").innerHTML = "";
-}
-
-if (document.applicationForm.CommunicationPinCode.value == "") {
-    document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pin Code is required";
-    document.applicationForm.CommunicationPinCode.focus()
-    return (false);
-}
-else {
-    var pin = document.applicationForm.CommunicationPinCode.value;
-    if (pin.length < 6) {
-        document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pincode, Must be six digits";
-        document.applicationForm.CommunicationPinCode.focus();
+    if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
+        document.getElementById("comm_address1_error").innerHTML = "Communication Address 1 is required";
+        document.applicationForm.CommunicationAddress1.focus();
         return false;
     }
     else {
-        document.getElementById("comm_pincode_error").innerHTML = "";
+        document.getElementById("comm_address1_error").innerHTML = "";
     }
-}
 
-if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
-    document.getElementById("comm_states_error").innerHTML = "Communication Address State Selection is required";
-    document.applicationForm.CommunicationStateID.focus();
-    return false;
-}
-else {
-    document.getElementById("comm_states_error").innerHTML = "";
-}
-
-if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value=="") {
-    document.getElementById("comm_district_error").innerHTML = "Communication Address District Selection is required";
-    document.applicationForm.CommunicationDistrictId.focus();
-    return false;
-}
-else {
-    document.getElementById("comm_district_error").innerHTML = "";
-}
-
-
-//if (document.applicationForm.CommunicationDialCode.value == "") {
-//    document.getElementById("comm_officePhone_error").innerHTML = "Dial Code is required";
-//    document.applicationForm.CommunicationDialCode.focus();
-//    return false;
-//}
-//else if (document.applicationForm.CommunicationPhoneNo.value == "") {
-//    document.getElementById("comm_officePhone_error").innerHTML = "Phone (Office) is required";
-//    document.applicationForm.CommunicationPhoneNo.focus();
-//    return false;
-//}
-//else {
-//    document.getElementById("comm_officePhone_error").innerHTML = "";
-//}
-
-if (document.applicationForm.CommunicationMobileNumber.value == "") {
-    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
-    document.applicationForm.CommunicationMobileNumber.focus();
-    return false;
-
-}
-else {
-    y = document.applicationForm.CommunicationMobileNumber.value;
-    if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
-        document.applicationForm.CommunicationMobileNumber.focus();
-        return false
-    }
-    else if (y.length < 10 || y.length > 10) {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
-        document.applicationForm.CommunicationMobileNumber.focus();
+    if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
+        document.getElementById("comm_address2_error").innerHTML = "Communication Address 2 is required";
+        document.applicationForm.CommunicationAddress2.focus();
         return false;
     }
-
     else {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        document.getElementById("comm_address2_error").innerHTML = "";
     }
-}
 
-if (document.applicationForm.CommunicationEmail.value == "") {
-    document.getElementById("comm_email_error").innerHTML = "Communication Address Email is required";
-    document.applicationForm.CommunicationEmail.focus();
-    return (false);
-}
-else {
-    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (document.applicationForm.CommunicationEmail.value.match(mailformat)) {
-        document.getElementById("comm_email_error").innerHTML = "";
-        //return true
+    if (document.applicationForm.CommunicationCity.value.trim() == "") {
+        document.getElementById("comm_city_error").innerHTML = "Communication City is required";
+        document.applicationForm.CommunicationCity.focus();
+        return false;
     }
     else {
-        document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+        document.getElementById("comm_city_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
+        document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pin Code is required";
+        document.applicationForm.CommunicationPinCode.focus()
+        return (false);
+    }
+    else {
+        var pin = document.applicationForm.CommunicationPinCode.value;
+        if (pin.length < 6) {
+            document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pincode, Must be six digits";
+            document.applicationForm.CommunicationPinCode.focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+    }
+
+    if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
+        document.getElementById("comm_states_error").innerHTML = "Communication Address State Selection is required";
+        document.applicationForm.CommunicationStateID.focus();
+        return false;
+    }
+    else {
+        document.getElementById("comm_states_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
+        document.getElementById("comm_district_error").innerHTML = "Communication Address District Selection is required";
+        document.applicationForm.CommunicationDistrictId.focus();
+        return false;
+    }
+    else {
+        document.getElementById("comm_district_error").innerHTML = "";
+    }
+
+
+    //if (document.applicationForm.CommunicationDialCode.value == "") {
+    //    document.getElementById("comm_officePhone_error").innerHTML = "Dial Code is required";
+    //    document.applicationForm.CommunicationDialCode.focus();
+    //    return false;
+    //}
+
+    var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
+    if (stdCode != "") {
+
+        if (stdCode.length < 2 || stdCode.length > 4) {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.CommunicationDialCode.focus();
+            return false;
+        }
+        else {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+    }
+
+    var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
+    if (phno != "") {
+        if (phno.charAt(0) == "0") {
+            document.getElementById("comm_officePhone_error").innerHTML = "Phone no can not start with 0";
+            document.applicationForm.CommunicationPhoneNo.focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_officePhone_error").innerHTML = "";
+        }
+
+        if (phno.length < 6 || phno.length > 8) {
+            document.getElementById("comm_officePhone_error").innerHTML = "Phone no length 6 to 8 digits";
+            document.applicationForm.CommunicationPhoneNo.focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_officePhone_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("comm_officePhone_error").innerHTML = "";
+    }
+
+
+    var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
+    if (faxCode != "") {
+
+        if (faxCode.length < 2 || faxCode.length > 4) {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.CommunicationFaxCode.focus();
+            return false;
+        }
+        else {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+    }
+
+    var faxphno = document.applicationForm.CommunicationFax.value.trim();
+    if (faxphno != "") {
+        if (phno.charAt(0) == "0") {
+            document.getElementById("CommunicationFax_error").innerHTML = "Fax no can not start with 0";
+            document.applicationForm.CommunicationFax.focus();
+            return false;
+        }
+        else {
+            document.getElementById("CommunicationFax_error").innerHTML = "";
+        }
+
+        if (faxphno.length < 6 || faxphno.length > 8) {
+            document.getElementById("CommunicationFax_error").innerHTML = "Fax no length 6 to 8 digits";
+            document.applicationForm.CommunicationFax.focus();
+            return false;
+        }
+        else {
+            document.getElementById("CommunicationFax_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("CommunicationFax_error").innerHTML = "";
+    }
+
+
+    if (document.applicationForm.CommunicationMobileNumber.value == "") {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
+        document.applicationForm.CommunicationMobileNumber.focus();
+        return false;
+
+    }
+    else {
+        y = document.applicationForm.CommunicationMobileNumber.value.trim();
+        if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
+            document.applicationForm.CommunicationMobileNumber.focus();
+            return false
+        }
+        else if (y.length < 10 || y.length > 10) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
+            document.applicationForm.CommunicationMobileNumber.focus();
+            return false;
+        }
+
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+    }
+
+    if (document.applicationForm.CommunicationEmail.value.trim() == "") {
+        document.getElementById("comm_email_error").innerHTML = "Communication Address Email is required";
         document.applicationForm.CommunicationEmail.focus();
         return (false);
     }
-}
+    else {
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (document.applicationForm.CommunicationEmail.value.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.applicationForm.CommunicationEmail.focus();
+            return (false);
+        }
+    }
 
 
     if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
@@ -613,200 +725,319 @@ else {
         document.getElementById("comm_email_error").innerHTML = "";
     }
 
-if (document.getElementById("sameAddressCheck").checked != true) {
+    if (document.getElementById("sameAddressCheck").checked != true) {
 
-    if (document.getElementById("PerOrRegAddress1").value == "") {
-        document.getElementById("perma_address1_error").innerHTML = "Permanent/Registered Office Address 1 is required";
-        document.getElementById("PerOrRegAddress1").focus();
-        return false;
-    }
-    else {
-        document.getElementById("perma_address1_error").innerHTML = "";
-    }
-
-    if (document.getElementById("PerOrRegAddress2").value == "") {
-        document.getElementById("perma_address2_error").innerHTML = "Permanent/Registered Office Address 2 is required";
-        document.getElementById("PerOrRegAddress2").focus();
-        return false;
-    }
-    else {
-        document.getElementById("perma_address2_error").innerHTML = "";
-    }
-
-
-    if (document.getElementById("PerOrRegAddressCity").value == "") {
-        document.getElementById("perma_city_error").innerHTML = "Permanent/Registered Office City is required";
-        document.getElementById("PerOrRegAddressCity").focus();
-        return false;
-    }
-    else {
-        document.getElementById("perma_city_error").innerHTML = "";
-    }
-
-
-    if (document.getElementById("PerOrRegAddressPinCode").value == "") {
-        document.getElementById("perma_pincode_error").innerHTML = "Permanent/Registered Office Pin code is required";
-        document.getElementById("PerOrRegAddressPinCode").focus()
-        return (false);
-    }
-    else {
-        var pin = document.getElementById("PerOrRegAddressPinCode").value;
-        if (pin.length < 6) {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pincode, Must be six digits";
-            document.getElementById("PerOrRegAddressPinCode").focus();
+        if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
+            document.getElementById("perma_address1_error").innerHTML = "Permanent/Registered Office Address 1 is required";
+            document.getElementById("PerOrRegAddress1").focus();
             return false;
         }
         else {
-            document.getElementById("perma_pincode_error").innerHTML = "";
+            document.getElementById("perma_address1_error").innerHTML = "";
         }
-    }
+
+        if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
+            document.getElementById("perma_address2_error").innerHTML = "Permanent/Registered Office Address 2 is required";
+            document.getElementById("PerOrRegAddress2").focus();
+            return false;
+        }
+        else {
+            document.getElementById("perma_address2_error").innerHTML = "";
+        }
 
 
-    if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
-        document.getElementById("comm_district_error").innerHTML = "Communication Address District is required";
-        document.getElementById("CommunicationDistrictId").focus();
-        return false;
+        if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
+            document.getElementById("perma_city_error").innerHTML = "Permanent/Registered Office City is required";
+            document.getElementById("PerOrRegAddressCity").focus();
+            return false;
+        }
+        else {
+            document.getElementById("perma_city_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
+            document.getElementById("perma_pincode_error").innerHTML = "Permanent/Registered Office Pin code is required";
+            document.getElementById("PerOrRegAddressPinCode").focus()
+            return (false);
+        }
+        else {
+            var pin = document.getElementById("PerOrRegAddressPinCode").value;
+            if (pin.length < 6) {
+                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pincode, Must be six digits";
+                document.getElementById("PerOrRegAddressPinCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("perma_pincode_error").innerHTML = "";
+            }
+        }
+
+
+        if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
+            document.getElementById("comm_district_error").innerHTML = "Communication Address District is required";
+            document.getElementById("CommunicationDistrictId").focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_district_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("PerOrRegAddressStateID").value == "0") {
+            document.getElementById("perma_state_error").innerHTML = "Permanent/Registered Office State is required";
+            document.getElementById("PerOrRegAddressStateID").focus();
+            return false;
+        }
+        else {
+            document.getElementById("perma_state_error").innerHTML = "";
+        }
+
+        $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+
+        if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
+            document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
+            document.getElementById("PermanentDistrictId").focus();
+            return false;
+        }
+        else {
+            document.getElementById("perma_district_error").innerHTML = "";
+        }
+
+
+        ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
+        //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
+        //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
+        //    document.applicationForm.PerOrRegAddressDialCode.focus();
+        //    return false;
+        //}
+        ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
+        //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
+        //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
+        //    document.applicationForm.PerOrRegAddressPhoneNumber.focus();
+        //    return false;
+        //}
+        //else {
+        //    document.getElementById("perma_officePhone_error").innerHTML = "";
+        //    //console.log("dfgdf");				
+        //    //document.getElementById("officialDetails-tab").click();
+        //    //document.getElementById("officialDetails-tab").classList.remove("disable");
+        //    //return true;
+        //}
+
+
     }
     else {
-        document.getElementById("comm_district_error").innerHTML = "";
+
+        permanent_add.querySelectorAll(".error").forEach(function (i) {
+            i.innerHTML = '';
+        })
+
+
+        //    //$("#officialDetails-tab").click();
     }
 
+    document.getElementById("officialDetails-tab").click();
+    document.getElementById("officialDetails-tab").classList.remove("disable");
+    localStorage.setItem("keyOfficial", true)
+    localStorage.removeItem("showregAddress")
 
-    if (document.getElementById("PerOrRegAddressStateID").value == "0") {
-        document.getElementById("perma_state_error").innerHTML = "Permanent/Registered Office State is required";
-        document.getElementById("PerOrRegAddressStateID").focus();
-        return false;
-    }
-    else {
-        document.getElementById("perma_state_error").innerHTML = "";
-    }
-
-    $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
-
-    if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
-        document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
-        document.getElementById("PermanentDistrictId").focus();
-        return false;
-    }
-    else {
-        document.getElementById("perma_district_error").innerHTML = "";
-    }
-
-    
-    ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
-    //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
-    //    document.applicationForm.PerOrRegAddressDialCode.focus();
-    //    return false;
-    //}
-    ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
-    //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
-    //    document.applicationForm.PerOrRegAddressPhoneNumber.focus();
-    //    return false;
-    //}
-    //else {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "";
-    //    //console.log("dfgdf");				
-    //    //document.getElementById("officialDetails-tab").click();
-    //    //document.getElementById("officialDetails-tab").classList.remove("disable");
-    //    //return true;
-    //}
-
-
-}
-else {
-
-    permanent_add.querySelectorAll(".error").forEach(function (i) {
-        i.innerHTML = '';
-    })
-
-
-//    //$("#officialDetails-tab").click();
-}
-
-document.getElementById("officialDetails-tab").click();
-document.getElementById("officialDetails-tab").classList.remove("disable");
-localStorage.setItem("keyOfficial", true)
-localStorage.removeItem("showregAddress")
-
-//}	
+    //}	
 
 }
 
 function showCardDetails() {
-debugger;
-//if (localStorage.getItem("cardDetails")){
-//console.log("ask");
-//	document.getElementById("cardDetails-tab").click();
-//	document.getElementById("cardDetails-tab").classList.remove("disable");
-//}
+    debugger;
 
-//else {
-//console.log("Dont ask")
-if (document.applicationForm.KeyOffTitle.value == "-1") {
-    document.getElementById("officialTitle_error").innerHTML = "Title Selection is required";
-    document.applicationForm.KeyOffTitle.focus();
-    return false;
-}
-else {
-    document.getElementById("officialTitle_error").innerHTML = "";
-}
+    if (document.applicationForm.KeyOffTitle.value == "-1") {
+        document.getElementById("officialTitle_error").innerHTML = "Title Selection is required";
+        document.applicationForm.KeyOffTitle.focus();
+        return false;
+    }
+    else {
+        document.getElementById("officialTitle_error").innerHTML = "";
+    }
 
-if (document.applicationForm.KeyOffFirstName.value == "") {
-    document.getElementById("official_fName_error").innerHTML = "First Name is required";
-    document.applicationForm.KeyOffFirstName.focus();
-    return false;
-}
-else {
-    document.getElementById("official_fName_error").innerHTML = "";
-}
+    if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
+        document.getElementById("official_fName_error").innerHTML = "First Name is required";
+        document.applicationForm.KeyOffFirstName.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_fName_error").innerHTML = "";
+    }
 
-if (document.applicationForm.KeyOffDesignation.value == "") {
-    document.getElementById("official_designation_error").innerHTML = "Designation is required";
-    document.applicationForm.KeyOffDesignation.focus();
-    return false;
-}
-else {
-    document.getElementById("official_designation_error").innerHTML = "";
-}
+    if (!isNaN(document.applicationForm.KeyOffFirstName.value.trim())) {
+        document.getElementById("official_fName_error").innerHTML = "First Name can not be a number";
+        document.applicationForm.KeyOffFirstName.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_fName_error").innerHTML = "";
+    }
 
 
+    if (document.applicationForm.KeyOffLastName.value.trim() != "") {
+        if (!isNaN(document.applicationForm.KeyOffLastName.value.trim())) {
+            document.getElementById("KeyOffLastName_error").innerHTML = "Last Name can not be a number";
+            document.applicationForm.KeyOffLastName.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffLastName_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("KeyOffLastName_error").innerHTML = "";
+    }
 
-//if (document.applicationForm.KeyOffPhoneNumber.value == ""){
-//       		document.getElementById("official_mobile_error").innerHTML="This information is required";
-//	document.applicationForm.KeyOffPhoneNumber.focus();
-//       		return false;	
-
-//       	}	
-//       	else {
-y = document.applicationForm.KeyOffMobileNumber.value;
-if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
-    document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
-    document.applicationForm.KeyOffMobileNumber.focus();
-    return false
-}
-else if (y.length < 10 || y.length > 10) {
-    document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile number (e.g.: 9999990000)";
-    document.applicationForm.KeyOffMobileNumber.focus();
-    return false;
-}
-
-else {
-    document.getElementById("official_mobile_error").innerHTML = "";
-}
-//}
+    if (document.applicationForm.KeyOffMiddleName.value.trim() != "") {
+        if (!isNaN(document.applicationForm.KeyOffMiddleName.value.trim())) {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "Middle Name can not be a number";
+            document.applicationForm.KeyOffMiddleName.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+    }
 
 
-return true;
+    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
+        document.getElementById("official_designation_error").innerHTML = "Designation is required";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
+    }
 
-//document.getElementById("cardDetails-tab").click();
-//document.getElementById("cardDetails-tab").classList.remove("disable");
-//document.getElementById("uploadDocuments-tab").classList.remove("disable");
-//localStorage.setItem("cardDetails", true)
-//localStorage.removeItem("keyOfficial")
+    if (!isNaN(document.applicationForm.KeyOffDesignation.value.trim())) {
+        document.getElementById("official_designation_error").innerHTML = "Designation can not be a number";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
+    }
 
-//}	
+    var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
+    if (faxCode != "") {
+
+        if (faxCode.length < 2 || faxCode.length > 4) {
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.KeyOffFaxCode.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+    }
+
+    var faxno = document.applicationForm.KeyOffFax.value.trim();
+    if (faxno != "") {
+        if (faxno.charAt(0) == "0") {
+            document.getElementById("KeyOffFax_error").innerHTML = "Fax no can not start with 0";
+            document.applicationForm.KeyOffFax.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffFax_error").innerHTML = "";
+        }
+
+        if (faxno.length < 6 || faxno.length > 8) {
+            document.getElementById("KeyOffFax_error").innerHTML = "Fax no length 6 to 8 digits";
+            document.applicationForm.PermanentFax.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffFax_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("KeyOffFax_error").innerHTML = "";
+    }
+
+
+    var stdCode = document.applicationForm.KeyOffPhoneCode.value.trim();
+    if (stdCode != "") {
+
+        if (stdCode.length < 2 || stdCode.length > 4) {
+            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Length 2 to 4 digits";
+            document.applicationForm.KeyOffPhoneCode.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+    }
+
+    var phno = document.applicationForm.KeyOffPhoneNumber.value.trim();
+    if (phno != "") {
+        if (phno.charAt(0) == "0") {
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no can not start with 0";
+            document.applicationForm.KeyOffPhoneNumber.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+        }
+
+        if (phno.length < 6 || phno.length > 8) {
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no length 6 to 8 digits";
+            document.applicationForm.KeyOffPhoneNumber.focus();
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+        }
+
+    }
+    else {
+        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+    }
+
+
+    
+    y = document.applicationForm.KeyOffMobileNumber.value.trim();
+    if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
+        document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
+        document.applicationForm.KeyOffMobileNumber.focus();
+        return false
+    }
+    else if (y.length < 10 || y.length > 10) {
+        document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile number (e.g.: 9999990000)";
+        document.applicationForm.KeyOffMobileNumber.focus();
+        return false;
+    }
+
+    else {
+        document.getElementById("official_mobile_error").innerHTML = "";
+    }
+    //}
+
+
+    return true;
+
+    //document.getElementById("cardDetails-tab").click();
+    //document.getElementById("cardDetails-tab").classList.remove("disable");
+    //document.getElementById("uploadDocuments-tab").classList.remove("disable");
+    //localStorage.setItem("cardDetails", true)
+    //localStorage.removeItem("keyOfficial")
+
+    //}	
 
 
 

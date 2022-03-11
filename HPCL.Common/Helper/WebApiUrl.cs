@@ -95,7 +95,7 @@
         public static string searchMerchant = "api/dtplus/merchant/search_merchant";
         public static string searchTerminal = "api/dtplus/merchant/search_terminal";
         public static string getMerchantStatusList = "api/dtplus/merchant/get_merchant_status";
-
+        
         #endregion
 
         #region customer
@@ -186,6 +186,16 @@
         public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
+        #endregion
+
+        #region "AshokLeyLand"
+
+        public static string InsertAlDetailsUrl = "api/dtplus/officer/insert_al_dealer_enrollment";
+        public static string UpdateAlDetailsUrl = "api/dtplus/officer/update_al_dealer_enrollment";
+        public static string getDelerNameUrl = "api/dtplus/officer/get_al_dealer_detail";
+        public static string checkDealerCode = "api/dtplus/officer/check_dealer_code";
+        public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_al_otc_card_request";
+
         #endregion
     }
 }

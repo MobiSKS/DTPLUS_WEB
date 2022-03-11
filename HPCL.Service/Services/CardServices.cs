@@ -40,7 +40,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     CustomerId = entity.CustomerId,
                     CardNo = entity.CardNo,
-                    MobileNumber = entity.MobileNumber,
+                    MobileNo = entity.MobileNo,
                     VehicleNumber = entity.VehicleNumber,
                     StatusFlag = entity.StatusFlag
                 };
@@ -54,7 +54,10 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    StatusFlag = -1
+                    StatusFlag = -1,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
                 };
             }
             else if (editFlag == "edit" && _httpContextAccessor.HttpContext.Session.GetString("LoginType") != "Customer")
@@ -70,7 +73,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     CustomerId = vGrid.CustomerId,
                     CardNo = vGrid.CardNo,
-                    MobileNumber = vGrid.MobileNumber,
+                    MobileNo = vGrid.MobileNo,
                     VehicleNumber = vGrid.VehicleNumber,
                     StatusFlag = vGrid.StatusFlag
                 };
@@ -276,7 +279,9 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    Statusflag = -1
+                    Statusflag = -1,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
                 };
             }
 
@@ -378,9 +383,9 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = entity.CustomerId,
-                    CardNo = entity.CardNo ?? "",
-                    MobileNo = entity.MobileNo ?? "",
-                    VehicleNo = entity.VehicleNo ?? ""
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNo = entity.VehicleNo
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -390,7 +395,10 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNo = entity.VehicleNo
                 };
             }
 

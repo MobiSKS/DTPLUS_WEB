@@ -16,7 +16,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CardNo { get; set; }
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
-        public string MobileNumber { get; set; }
+        public string MobileNo { get; set; }
         public string VehicleNumber { get; set; }
         public int StatusFlag { get; set; }
         public string CardCategory { get; set; }

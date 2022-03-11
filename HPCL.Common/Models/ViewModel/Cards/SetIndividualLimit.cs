@@ -12,7 +12,6 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CustomerId { get; set; }
         [StringLength(14)]
         public string CardNo { get; set; }
-        [Required(ErrorMessage = FieldValidation.MobNoNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
