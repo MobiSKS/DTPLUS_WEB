@@ -35,7 +35,7 @@
                                         </div>
                                         <div class="col-md-5 col-12 px-0">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "80" })
                                                 <span class="error" id="customername_error"></span>
                                             </div>
                                         </div>
@@ -46,7 +46,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
                                                 <span class="error" id="nameOnCard_error"></span>
                                             </div>
                                         </div>
@@ -69,7 +69,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                                 <span class="error" id="communicationCityName_error"></span>
                                             </div>
                                         </div>
@@ -178,7 +178,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                 <span class="error" id="comm_address1_error"></span>
                                             </div>
                                         </div>
@@ -189,7 +189,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                 <span class="error" id="comm_address2_error"></span>
                                             </div>
                                         </div>
@@ -723,7 +723,7 @@
         else {
             document.getElementById("salutaion_error").innerHTML = "";
         }
-
+        
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
             document.getElementById("IndividualOrgName").focus();
@@ -733,10 +733,28 @@
             document.getElementById("customername_error").innerHTML = "";
         }
 
+        if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+            document.getElementById("customername_error").innerHTML = "Name can not be a number";
+            document.getElementById("IndividualOrgName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
         if (document.getElementById("NameOnCard").value.trim() == "") {
             document.getElementById("nameOnCard_error").innerHTML = "Name On Card is required";
             document.getElementById("NameOnCard").focus();
             return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card can not be a number";
+            document.getElementById("NameOnCard").focus();
+            return false;
         }
         else {
             document.getElementById("nameOnCard_error").innerHTML = "";
@@ -779,6 +797,91 @@
             document.getElementById("comm_district_error").innerHTML = "";
         }
 
+        var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        if (stdCode != "") {
+
+            if (stdCode.length < 2 || stdCode.length > 4) {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationDialCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+        var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (phno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+            if (phno.length < 6 || phno.length > 8) {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+
+        var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+        if (faxCode != "") {
+
+            if (faxCode.length < 2 || faxCode.length > 4) {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationFaxCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        }
+
+        var faxphno = document.getElementById("CommunicationFaxPart2").value.trim();
+        if (faxphno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no can not start with 0";
+                document.getElementById("CommunicationFaxPart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+            }
+
+            if (faxphno.length < 6 || faxphno.length > 8) {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no length 6 to 8 digits";
+                document.getElementById("CommunicationFaxPart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        }
+
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
             document.getElementById("CommunicationMobileNo").focus();
@@ -797,6 +900,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
+        
         if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
             return (false);
@@ -813,7 +917,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationAddress1").value == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address 1 is required";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
@@ -822,9 +926,7 @@
             document.getElementById("comm_address1_error").innerHTML = "";
         }
 
-
-
-        if (document.getElementById("CommunicationAddress2").value == "") {
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") {
             document.getElementById("comm_address2_error").innerHTML = "Address 2 is required";
             document.getElementById("CommunicationAddress2").focus();
             return ret;
@@ -1237,6 +1339,32 @@
             document.getElementById("communicationPincode_error").innerHTML = "Pin code length must be 6 digit";
             document.getElementById("CommunicationPincode").value = "";
             document.getElementById("CommunicationPincode").focus();
+            return false;
+        }
+    });
+
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var OffMobileNumber = document.getElementById("CommunicationMobileNo").value.trim();
+        if (OffMobileNumber == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.length < 10) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
             return false;
         }
     });
