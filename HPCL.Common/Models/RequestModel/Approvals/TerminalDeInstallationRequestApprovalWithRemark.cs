@@ -1,11 +1,12 @@
-﻿using HPCL.Common.Models.ResponseModel.Approvals;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.Approvals;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.RequestModel.Approvals
 {
-    public class TerminalDeInstallationRequestApprovalWithRemark
+    public class TerminalDeInstallationRequestApprovalWithRemark: CommonResponseBase
     {
         public TerminalDeInstallationRequestApprovalWithRemark()
         {

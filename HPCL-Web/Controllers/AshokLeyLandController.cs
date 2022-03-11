@@ -75,6 +75,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> CreateMultipleOTCCard()
+        {
+            var modals = await _ashokLeyLandService.CreateMultipleOTCCard();
+            return View(modals);
+        }
 
     }
 }

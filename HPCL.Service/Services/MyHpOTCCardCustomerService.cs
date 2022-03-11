@@ -284,7 +284,10 @@ namespace HPCL.Service.Services
                 NoOfCardsAllocated = linkCardsToMerchantModel.NoOfCardsAllocated,
                 MerchantId = linkCardsToMerchantModel.MerchantId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                ObjAllocatedCardsToMerchant = linkCardsToMerchantModel.ObjAllocatedCardsToMerchant
+                ObjAllocatedCardsToMerchant = linkCardsToMerchantModel.ObjAllocatedCardsToMerchant,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionalId="1",
+                ZonalId="1"
             };
 
             StringContent Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

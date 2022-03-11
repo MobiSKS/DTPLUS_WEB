@@ -11,5 +11,6 @@ namespace HPCL.Service.Interfaces
         Task<InsertResponse> AlEnrollUpdate(string getAllData);
         Task<ALOTCCardRequestModel> DealerOTCCardRequest();
         Task<ALOTCCardRequestModel> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel);
+        Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard();
     }
 }
