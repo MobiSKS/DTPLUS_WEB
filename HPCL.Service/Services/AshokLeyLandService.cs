@@ -206,6 +206,9 @@ namespace HPCL.Service.Services
                     ashokLeylandCardCreationModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
+                ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                ashokLeylandCardCreationModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(ashokLeylandCardCreationModel.CommunicationStateId));
+                ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             }
 
             return ashokLeylandCardCreationModel;

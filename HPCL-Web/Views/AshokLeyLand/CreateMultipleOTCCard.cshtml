@@ -8,7 +8,7 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">My HP (OTC) Card Profile</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "AshokLeyLand")" class="text_primary">My HP (OTC) Card Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">Ashok Leyland Card Creation </li>
         </ul>
         <form name="AshokLeylandCardCreationForm" method="post" asp-action="CreateMultipleOTCCard" class="w-100" autocomplete="off" enctype="multipart/form-data">
@@ -117,11 +117,11 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                     <span class="error" id="CommunicationDialCode_error"></span>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                     <span class="error" id="CommunicationPhonePart2_error"></span>
                                                 </div>
                                             </div>
@@ -134,11 +134,11 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                     <span class="error" id="CommunicationFaxCode_error"></span>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.CommunicationFaxPart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxPart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                     <span class="error" id="CommunicationFaxPart2_error"></span>
                                                 </div>
                                             </div>
@@ -508,7 +508,7 @@
                     //console.log(cardObj);
                     var rows = "<tr>"
                         //+ "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
-                        + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' readonly name='" + cardObj + "'> </span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' readonly name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
                         //+ "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadAvailityALOTCCard(this,"+ cardObj+ ")' type='button' data-toggle='modal' data-target='#myModalCard' name='btnAddCard" + (i) + "'>Add</button></td>"
                         + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadAvailityALOTCCard(this," + (i) + ")' type='button' data-toggle='modal' data-target='#myModalCard' name='btnAddCard" + (i) + "'>Add</button></td>"
                         + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' name='ObjALCardEntryDetail[" + (i) + "].VechileNo'></span></td>"
@@ -723,7 +723,15 @@
             return ret;
         }
         else {
-            document.getElementById("communicationPincode_error").innerHTML = "";
+            var pin = document.getElementById("CommunicationPincode").value.trim();
+            if (pin.length < 6) {
+                document.getElementById("communicationPincode_error").innerHTML = "Pin code length must be six digits";
+                document.getElementById("CommunicationPincode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("communicationPincode_error").innerHTML = "";
+            }
         }
 
 
@@ -744,6 +752,92 @@
         else {
             document.getElementById("comm_district_error").innerHTML = "";
         }
+
+        var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        if (stdCode != "") {
+
+            if (stdCode.length < 2 || stdCode.length > 4) {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationDialCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+        var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (phno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+            if (phno.length < 6 || phno.length > 8) {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+
+        var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+        if (faxCode != "") {
+
+            if (faxCode.length < 2 || faxCode.length > 4) {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationFaxCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        }
+
+        var faxphno = document.getElementById("CommunicationFaxPart2").value.trim();
+        if (faxphno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no can not start with 0";
+                document.getElementById("CommunicationFaxPart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+            }
+
+            if (faxphno.length < 6 || faxphno.length > 8) {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no length 6 to 8 digits";
+                document.getElementById("CommunicationFaxPart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        }
+
 
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
@@ -780,7 +874,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationAddress1").value == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address 1 is required";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
@@ -792,7 +886,7 @@
         document.getElementById("CopyofDriverLicense").value = document.getElementById("rbtnDriverLicenseYes").value;
         document.getElementById("CopyofVehicleRegistrationCertificate").value = document.getElementById("rbtnVehicleRegistrationYes").value;
 
-        if (document.getElementById("CommunicationAddress2").value == "") {
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") {
             document.getElementById("comm_address2_error").innerHTML = "Address 2 is required";
             document.getElementById("CommunicationAddress2").focus();
             return ret;

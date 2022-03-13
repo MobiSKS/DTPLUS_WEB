@@ -108,16 +108,20 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
         {
 
-            //alOTCCardRequestModel = await _ashokLeyLandService.CreateMultipleOTCCard(alOTCCardRequestModel);
+            ashokLeylandCardCreationModel = await _ashokLeyLandService.CreateMultipleOTCCard(ashokLeylandCardCreationModel);
 
-            //if (alOTCCardRequestModel.Internel_Status_Code == 1000)
-            //{
-            //    alOTCCardRequestModel.Remarks = "";
-            //    ViewBag.Message = "AL OTC Card request saved successfully";
-            //    return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
-            //}
+            if (ashokLeylandCardCreationModel.Internel_Status_Code == 1000)
+            {
+                ashokLeylandCardCreationModel.Remarks = "";
+                ViewBag.Message = "Ashok Leyland Card Customer saved successfully";
+                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard");
+            }
 
             return View(ashokLeylandCardCreationModel);
+        }
+        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard()
+        {
+            return View();
         }
 
     }
