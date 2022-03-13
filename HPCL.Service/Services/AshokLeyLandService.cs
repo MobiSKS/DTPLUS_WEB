@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.RequestModel.AshokLeyLand;
+using System;
 
 namespace HPCL.Service.Services
 {
@@ -179,6 +180,35 @@ namespace HPCL.Service.Services
             List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
 
             return searchList;
+        }
+
+        public async Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
+        {
+            ashokLeylandCardCreationModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.UserAgent = CommonBase.useragent;
+            ashokLeylandCardCreationModel.UserIp = CommonBase.userip;
+            ashokLeylandCardCreationModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.CommunicationPhoneNo = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationDialCode) ? "" : ashokLeylandCardCreationModel.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationPhonePart2) ? "" : ashokLeylandCardCreationModel.CommunicationPhonePart2);
+            ashokLeylandCardCreationModel.CommunicationFax = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxCode) ? "" : ashokLeylandCardCreationModel.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxPart2) ? "" : ashokLeylandCardCreationModel.CommunicationFaxPart2);
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertAlCustomer);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            ashokLeylandCardCreationModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    ashokLeylandCardCreationModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
+            }
+
+            return ashokLeylandCardCreationModel;
         }
 
     }

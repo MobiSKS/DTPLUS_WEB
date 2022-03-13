@@ -82,6 +82,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CommunicationFaxCode { get; set; }
         public string CommunicationFaxPart2 { get; set; }
         public string NoOfCards { get; set; }
+        public int Internel_Status_Code { get; set; }
     }
     public class ALCardEntryDetails
     {

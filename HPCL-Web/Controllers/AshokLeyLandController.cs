@@ -104,5 +104,21 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
+        {
+
+            //alOTCCardRequestModel = await _ashokLeyLandService.CreateMultipleOTCCard(alOTCCardRequestModel);
+
+            //if (alOTCCardRequestModel.Internel_Status_Code == 1000)
+            //{
+            //    alOTCCardRequestModel.Remarks = "";
+            //    ViewBag.Message = "AL OTC Card request saved successfully";
+            //    return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+            //}
+
+            return View(ashokLeylandCardCreationModel);
+        }
+
     }
 }
