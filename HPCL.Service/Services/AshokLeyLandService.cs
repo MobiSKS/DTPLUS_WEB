@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.RequestModel.AshokLeyLand;
 
 namespace HPCL.Service.Services
 {
@@ -156,6 +158,27 @@ namespace HPCL.Service.Services
             ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
             ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return ashokLeylandCardCreationModel;
+        }
+        public async Task<List<CardDetails>> GetAvailableAlOTCCardForDealer(string DealerCode)
+        {
+
+            var requestinfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityAlOTCCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
+
+            return searchList;
         }
 
     }

@@ -289,25 +289,26 @@
                                     @for (int i = 0; i < Model.ObjALCardEntryDetail.Count; i++)
                                     {
                                         var j = i + 1;
-                                        <tr>
-                                            <td>
-                                                @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].CardNo)
-                                            </td>
-                                            <td></td>
-                                            <td>
-                                                @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VechileNo)
-                                            </td>
-                                            <td></td>
-                                            <td>
-                                                @Html.DropDownListFor(m => m.ObjALCardEntryDetail[i].VehicleType, new SelectList(Model.VehicleTypeMdl, "VehicleTypeName", "VehicleTypeName"), new { @class = "form-control" })
-                                            </td>
-                                            <td>
-                                                @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VINNumber)
-                                            </td>
-                                            <td>
-                                                @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].MobileNo)
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].CardNo)
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VechileNo)
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.ObjALCardEntryDetail[i].VehicleType, new SelectList(Model.VehicleTypeMdl, "VehicleTypeName", "VehicleTypeName"), new { @class = "form-control" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VINNumber)
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].MobileNo)
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                     }
 
                                 </tbody>
@@ -366,6 +367,35 @@
             </div>
             @Html.HiddenFor(model => Model.CopyofDriverLicense)
             @Html.HiddenFor(model => Model.CopyofVehicleRegistrationCertificate)
+
+            <!-- Modal : Card -->
+            <div class="modal fade" id="myModalCard" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content" style='overflow:scroll; height:400px;'>
+                        <div class="modal-body">
+                            <table class="table table-bordered text-nowrap" id="CardsTable">
+                                @*style="display: none"*@
+                                <thead>
+                                    <tr>
+                                        <th>Sl No.</th>
+                                        <th>CardNo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cardDetails">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Modal : Card -->
+
         </form>
         <div class="clearfix"></div>
     </div>
@@ -464,7 +494,7 @@
 
                 document.getElementById("NoOfCardsTbl").deleteTHead();
 
-                $('#NoOfCardsTbl').append('<thead><tr><th>Card No</th><th>Add Card</th><th>Vehicle No</th><th>Validate VehicleNo</th><th>Vehicle Type</th><th>VIN No</th><th>Mobile No</th></tr></thead>');
+                $('#NoOfCardsTbl').append('<thead><tr><th>Card No</th><th>Add Card</th><th>Vehicle No</th><th>Validate VehicleNo</th><th>Vehicle Type</th><th>VIN No</th><th>Mobile No</th><th></th></tr></thead>');
 
 
 
@@ -473,19 +503,24 @@
                     var j = (i + 1);
                     var name = 'ObjALCardEntryDetail[' + (i) + '].VehicleType';
                     var id = 'ddlVehicleType' + i;
-
+                    //var cardObj = 'ObjALCardEntryDetail[' + (i) + '].CardNo';
+                    var cardObj = 'CardNo' + i;
+                    //console.log(cardObj);
                     var rows = "<tr>"
-                        + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
-                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadCardDeatils()' type='button' name='btnAddCard" + (i) + "'>Add</button></td>"
-                        + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this)' name='ObjALCardEntryDetail[" + (i) + "].VechileNo'></span></td>"
-                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadCardDeatils()' type='button' name='btnValidate" + (i) + "'>Validate</button></td>"
+                        //+ "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
+                        + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' readonly name='" + cardObj + "'> </span></td>"
+                        //+ "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadAvailityALOTCCard(this,"+ cardObj+ ")' type='button' data-toggle='modal' data-target='#myModalCard' name='btnAddCard" + (i) + "'>Add</button></td>"
+                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadAvailityALOTCCard(this," + (i) + ")' type='button' data-toggle='modal' data-target='#myModalCard' name='btnAddCard" + (i) + "'>Add</button></td>"
+                        + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' name='ObjALCardEntryDetail[" + (i) + "].VechileNo'></span></td>"
+                        + "<td><button class='btn btn_primary px-4 py - 2' onclick='ValidateVehicleNo(this," + (i) + ")' type='button' name='btnValidate" + (i) + "'>Validate</button></td>"
                         + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                         + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' name='ObjALCardEntryDetail[" + (i) + "].VINNumber'> </span></td>"
-                        + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' name='ObjALCardEntryDetail[" + (i) + "].MobileNo'></span></td></tr>";
+                        + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' name='ObjALCardEntryDetail[" + (i) + "].MobileNo'></span></td>"
+                        + "<td class='error'><span class='error'></span></td></tr>";
 
 
                     $('#NoOfCardsTbl').append(rows);
-                    console.log(document.getElementById(id));
+                    //console.log(document.getElementById(id));
 
                     $("#" + id).html("");
                     $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
@@ -510,97 +545,23 @@
     }
 
 
-    function GetCard1Details(o) {
+    function GetCardDetails(o, rowSelected) {
         debugger;
         var cardNo = o.innerText;
 
         console.log(cardNo);
+        console.log(rowSelected);
+        var tbl = document.getElementById('NoOfCardsTbl');
+        mytablebody = tbl.getElementsByTagName("tbody")[0];
+        myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+        mycel = myrow.getElementsByTagName("td")[0];
+        console.log(mycel);
+        mycel.getElementsByTagName("input")[0].value = cardNo;
 
-        $('#CardNumber1').val(cardNo);
-        $('#myModalCard1').modal('hide');
+        $('#myModalCard').modal('hide');
     }
 
-
-   function LoadCard2Deatils() {
-        debugger;
-
-        if (document.getElementById("MerchantId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
-            //$("#MerchantId").focus;
-            return (false);
-        }
-        else {
-            document.getElementById("MerchantId_error").innerHTML = "";
-        }
-
-        if (document.getElementById("RegionalOfficeId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
-            return (false);
-        }
-        else {
-            document.getElementById("MerchantId_error").innerHTML = "";
-        }
-
-
-       var regionalOfficeId = document.getElementById("RegionalOfficeId").value;
-       var merchantId = document.getElementById("MerchantId").value;
-
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetAvailableOTCCardByRegionalId", "MyHpOTCCardCustomer")',
-            data: { RegionalId: regionalOfficeId, MerchantID: merchantId},
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                console.log(data);
-                $("#CardsTable2 td").parent().remove();
-                //console.log('Praveen');
-
-                //document.getElementById("NoOfCardsTbl").deleteTHead();
-                //console.log(data.lstCardDetails);
-
-                for (var i = 0; i < data.lstCardDetails.length; i++) {
-
-                    var rows = "<tbody><tr>"
-                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
-                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCard2Details(this)' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
-                    //+ "<td><span class='rowData CustReferenceNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></td>"
-                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this," + s + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
-
-
-                    $('#CardsTable2').append(rows);
-
-                    //console.log(rows);
-                }
-
-
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Vehicle Type Data");
-            }
-
-
-        });
-
-
-
-        //document.getElementById('NoOfCardsTbl').style.display = 'table';
-        //document.getElementById('NoOfCardsTbl').style.display = 'block';
-
-    }
-
-
-    function GetCard2Details(o) {
-        debugger;
-        var cardNo = o.innerText;
-
-        console.log(cardNo);
-
-        $('#CardNumber2').val(cardNo);
-        $('#myModalCard2').modal('hide');
-    }
-
+ 
     $("#IncomeTaxPan").on("blur", function () {
         //debugger;
         var panNumber = document.getElementById("IncomeTaxPan").value;
@@ -1095,46 +1056,6 @@
     //});
 
 
-    //$("#btnCard2Verify").click(function () {
-    //    //debugger;
-    //    var vehicleNo = document.getElementById("VehicleNo2").value;
-    //    if (vehicleNo == "") {
-    //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is required";
-    //        $("#VehicleNo2").focus;
-    //        return (false);
-    //    }
-    //    else {
-    //        document.getElementById("VehicleNo2_error").innerHTML = "";
-    //    }
-
-
-    //    $.ajax({
-    //        type: 'POST',  // http method
-    //        url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-    //        data: { RegistrationNumber: vehicleNo },  // data to submit
-    //        dataType: "json",
-    //        success: function (data, status, xhr) {
-    //            //debugger;
-    //            var jsonData = JSON.parse(data);
-    //            if (status == 'success' && jsonData['statusCode'] == '101') {
-    //                result = true;
-    //                document.getElementById("VehicleNo2_error").innerHTML = "";
-    //                console.log(jsonData);
-    //                console.log(document.getElementById("VehicleNo2_error").innerHTML);
-    //            }
-    //            else {
-    //                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-    //            }
-    //        },
-    //        error: function (jqXhr, textStatus, errorMessage) {
-    //            document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-
-    //        }
-    //    });
-
-
-    //});
-
     //$('#VehicleNo1').keydown(function (e) {
     //    var k = e.which;
     //    var ok = k >= 65 && k <= 90 || // A-Z
@@ -1148,18 +1069,6 @@
     //    }
     //});
 
-    //$('#VehicleNo2').keydown(function (e) {
-    //    var k = e.which;
-    //    var ok = k >= 65 && k <= 90 || // A-Z
-    //        k >= 96 && k <= 105 || // a-z
-    //        k >= 35 && k <= 40 || // arrows
-    //        k == 8 || // Backspaces
-    //        (!e.shiftKey && k >= 48 && k <= 57); // 0-9
-
-    //    if (!ok) {
-    //        e.preventDefault();
-    //    }
-    //});
 
       $("#DealerCode").on("blur", function () {
         debugger;
@@ -1231,7 +1140,7 @@
         else {
             document.getElementById("communicationPincode_error").innerHTML = "";
         }
-        console.log(pinCode);
+
         if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
             document.getElementById("communicationPincode_error").innerHTML = "Pin code should not start with 0";
             document.getElementById("CommunicationPincode").value = "";
@@ -1281,5 +1190,98 @@
         $('#NoOfCards').attr("readonly", false);
     }
 
+    function LoadAvailityALOTCCard(currentObj, rowSelected) {
+        debugger;
+
+        if (document.getElementById("DealerCode").value.trim() == "") {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            $("#DealerCode").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+        var dealerCode = document.getElementById("DealerCode").value;
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetAvailableAlOTCCardForDealer", "AshokLeyLand")',
+            data: { DealerCode: dealerCode },
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                console.log(data);
+                $("#CardsTable td").parent().remove();
+
+                for (var i = 0; i < data.lstCardDetails.length; i++) {
+
+                    var rows = "<tbody><tr>"
+                        + "<td><span class='rowData'>" + (i + 1) + "</span></td>"
+                        + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='GetCardDetails(this," + (rowSelected) + ")' role='tab'><span class='rowCardNo'>" + (data.lstCardDetails[i].cardNo || '') + "</span></a></td></tr></tbody>"
+
+
+                    $('#CardsTable').append(rows);
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating card Data");
+            }
+
+
+        });
+    }
+
+    function ValidateVehicleNo(o, rowSelected) {
+        debugger;
+        
+        var tbl = document.getElementById('NoOfCardsTbl');
+        mytablebody = tbl.getElementsByTagName("tbody")[0];
+        myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+        mycel = myrow.getElementsByTagName("td")[2];
+        console.log(mycel);
+        mycelError = myrow.getElementsByTagName("td")[7];
+
+        var vehicleNo = mycel.getElementsByTagName("input")[0].value;
+        console.log(vehicleNo);
+
+        if (vehicleNo == '') {
+            mycelError.innerHTML = "Enter Vehicle No";
+            return;
+        }
+        else {
+            mycelError.innerHTML = "";
+        }
+
+        var result = false;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "CheckVehicleRegistrationValid/AshokLeyLand",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    mycelError.innerHTML = "";
+                    console.log(jsonData);
+                    console.log(mycelError.innerHTML);
+                }
+                else {
+                    mycelError.innerHTML = "Invalid Vehicle Registration Number";
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                mycelError.innerHTML = "Invalid Vehicle Registration Number";
+
+            }
+        });
+
+
+    }
 
 </script>
