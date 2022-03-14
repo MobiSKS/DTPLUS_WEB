@@ -21,6 +21,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
 
     public class GetCcmsToCardBalanceTransferDetailModelOutput
     {
+        public int SrNumber { get; set; }
         public string CardNo { get; set; }
         public string VechileNo { get; set; }
         public string Mobileno { get; set; }

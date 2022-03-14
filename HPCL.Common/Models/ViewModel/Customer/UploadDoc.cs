@@ -17,7 +17,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string IdProofDocumentNo { get; set; }
 
         [Required(ErrorMessage = "Id Proof Front Photo is required")]
-        [CustomImageValidate]
         public IFormFile IdProofFront { get; set; }
 
         [Required(ErrorMessage = "Id Proof Back Photo is required")]
@@ -35,6 +34,18 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
+
+
+        //public ValidationResult Validate(ValidationContext validationContext)
+        //{
+        //    var numAttachments = AddressProofFront;
+        //    if (numAttachments == 0)
+        //    {
+        //        yield return new ValidationResult(
+        //            "You must attached at least one file.",
+        //            new string[] { nameof(Attachments) });
+        //    }
+        //}
     }
 
     public class UploadDocResponse
@@ -52,20 +63,19 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string Reason { get; set; }
     }
 
-    public class CustomImageValidate : ValidationAttribute
-    {
-        protected override ValidationResult
-                IsValid(object value, ValidationContext validationContext)
-        {
-            var model = (Customer.UploadDoc)validationContext.ObjectInstance;
-            if (value == model.IdProofBack)
-            {
-                return new ValidationResult("Please use diiferent Image");
-            }
-            else
-            {
-                return ValidationResult.Success;
-            }
-        }
-    }
+    //public class CustomImageValidate : ValidationAttribute
+    //{
+    //    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    //    {
+    //        var model = (Customer.UploadDoc)validationContext.ObjectInstance;
+    //        if (value.FileName == model.IdProofBack.FileName)
+    //        {
+    //            return new ValidationResult("Please use diiferent Image");
+    //        }
+    //        else
+    //        {
+    //            return ValidationResult.Success;
+    //        }
+    //    }
+    //}
 }
