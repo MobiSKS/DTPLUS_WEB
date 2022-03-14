@@ -8,6 +8,5 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CardNo { get; set; }
         public int ServiceId { get; set; }
         public int Flag { get; set; }
-        public string CreatedBy { get; set; }
     }
 }

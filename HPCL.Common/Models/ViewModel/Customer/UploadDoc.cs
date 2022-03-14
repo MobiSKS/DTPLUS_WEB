@@ -1,17 +1,11 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Customer
 {
     public class UploadDoc : BaseEntity
     {
-        public UploadDoc()
-        {
-            ProofTypesModal = new List<ProofType>();
-        }
-
         [Required(ErrorMessage = "Customer Reference No is required")]
         public string CustomerReferenceNo { get; set; }
 
@@ -23,6 +17,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string IdProofDocumentNo { get; set; }
 
         [Required(ErrorMessage = "Id Proof Front Photo is required")]
+        [CustomImageValidate]
         public IFormFile IdProofFront { get; set; }
 
         [Required(ErrorMessage = "Id Proof Back Photo is required")]
@@ -40,8 +35,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
-
-        public virtual List<ProofType> ProofTypesModal { get; set; }
     }
 
     public class UploadDocResponse
@@ -57,5 +50,22 @@ namespace HPCL.Common.Models.ViewModel.Customer
     {
         public int Status { get; set; }
         public string Reason { get; set; }
+    }
+
+    public class CustomImageValidate : ValidationAttribute
+    {
+        protected override ValidationResult
+                IsValid(object value, ValidationContext validationContext)
+        {
+            var model = (Customer.UploadDoc)validationContext.ObjectInstance;
+            if (value == model.IdProofBack)
+            {
+                return new ValidationResult("Please use diiferent Image");
+            }
+            else
+            {
+                return ValidationResult.Success;
+            }
+        }
     }
 }

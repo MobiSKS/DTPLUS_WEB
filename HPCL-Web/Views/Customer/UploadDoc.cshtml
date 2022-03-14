@@ -55,7 +55,7 @@
 
                                     </div>
 
-                                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
+                                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer"  onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
                                         <div id="docUpdateId">
 
                                             <fieldset class="border-1 rounded border-grey pt-3">
@@ -87,7 +87,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new {@id="idFrontErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -96,7 +96,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new {@id="idBackErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -133,9 +133,7 @@
                                                     <div class="form-group d-flex align-items-center flex-wrap">
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
-                                                            @*@Html.DropDownListFor(m => m.AddressProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
                                                             @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
-
                                                             @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -155,7 +153,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new {@id="addFrontErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -164,7 +162,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new {@id="addBackErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -215,13 +213,20 @@
 <script>
 
     function resetClick() {
-        $("input:text").each(function () {
-            $(this).val("");
-        });
-        $("#CardSearch td").parent().remove();
-        document.getElementById('resSearch').style.display = 'none';
-        document.getElementById('uploadSection').style.display = 'none';
+        //$("input:text").each(function () {
+        //    $(this).val("");
+        //});
+        //$("#CardSearch td").parent().remove();
+        //document.getElementById('resSearch').style.display = 'none';
+        //document.getElementById('uploadSection').style.display = 'none';
+
+        location.reload();
     };
+
+    var idFront;
+    var idBack;
+    var addFront;
+    var addBack;
 
     $(document).ready(function () {
 
@@ -244,6 +249,8 @@
 
         $("#IdProofFront").change(function () {
             $("#idPfrontImg").html("");
+
+            idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
             if (regex.test($(this).val().toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
@@ -265,6 +272,8 @@
 
         $("#IdProofBack").change(function () {
             $("#idPbackImg").html("");
+
+            idBack = $(this).val().replace(/C:\\Fakepath\\/i, '');
             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
             if (regex.test($(this).val().toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
@@ -286,6 +295,8 @@
 
         $("#AddressProofFront").change(function () {
             $("#idAfrontImg").html("");
+
+            addFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
             if (regex.test($(this).val().toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
@@ -307,6 +318,7 @@
 
         $("#AddressProofBack").change(function () {
             $("#idAbackImg").html("");
+            addBack = $("#AddressProofBack").val().replace(/C:\\Fakepath\\/i, '');
             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
             if (regex.test($(this).val().toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
@@ -325,9 +337,39 @@
                 alert("Please upload a valid image file.");
             }
         });
-
-
     });
+
+
+    function formCheck() {
+
+        console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
+
+        if (idFront == "unnamed5.jpg") {
+            $("#idFrontErr").text("Please use different Image Document");
+            return falsey
+        }
+
+
+        //if (idFront == idBack || idFront == addFront || idFront == addBack) {
+        //    $("#idFrontErr").text("Please use different Image Document");
+        //    return false;
+        //}
+     
+        //if (idBack == idFront || idBack == addFront || idBack == addBack) {
+        //    $("#idBackErr").text("Please use different Image Document");
+        //    return false;
+        //}
+
+        //if (addFront == idFront || addFront == idBack || addFront == addBack) {
+        //    $("#addFrontErr").text("Please use different Image Document");
+        //    return false;
+        //}
+
+        //if (addBack == idFront || addBack == idBack || addBack == addFront) {
+        //    $("#addBackErr").text("Please use different Image Document");
+        //    return false;
+        //}
+    }
 
    /* docUpdateId*/
     function openSearchGrid() {
@@ -372,6 +414,8 @@
         document.getElementById('uploadSection').style.display = 'block';
         document.getElementById('resSearch').style.display = 'block';
     };
+
+
 
     function OnSuccessUploadDocSave(res) {
         //debugger;
