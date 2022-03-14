@@ -602,7 +602,7 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    StatusFlag = entity.StatusFlag,
+                    //StatusFlag = entity.StatusFlag,
                     TerminalId = "",
                     MerchantId = "",
                     DeploymentStatus = ""
@@ -616,7 +616,19 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    StatusFlag = -1,
+                    //StatusFlag = -1,
+                    TerminalId = "",
+                    MerchantId = "",
+                    DeploymentStatus = ""
+                };
+            }
+            else
+            {
+                searchBody = new ManageTerminalRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
                     TerminalId = "",
                     MerchantId = "",
                     DeploymentStatus = ""
