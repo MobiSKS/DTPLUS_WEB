@@ -195,5 +195,12 @@
         public static string getDelerNameUrl = "/dtpwebapi/api/dtplus/officer/get_al_dealer_detail";
 
         #endregion
+
+        #region "Customer Financial"
+
+        public static string GetCardToCCMSTransferUrl = "/dtpwebapi/api/dtplus/card/get_card_to_ccms_balance_transfer";
+        public static string GetCCMSToCardTransferUrl = "/dtpwebapi/api/dtplus/card/get_ccms_to_card_balance_transfer";
+
+        #endregion
     }
 }

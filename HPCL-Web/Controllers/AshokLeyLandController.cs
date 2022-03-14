@@ -1,10 +1,6 @@
 ﻿using HPCL.Common.Helper;
-using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
