@@ -1,4 +1,6 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,10 +11,12 @@ namespace HPCL_Web.Controllers
     public class AshokLeyLandController : Controller
     {
         private readonly IAshokLeyLandService _ashokLeyLandService;
+        private readonly ICommonActionService _commonActionService;
 
-        public AshokLeyLandController(IAshokLeyLandService ashokLeyLandService)
+        public AshokLeyLandController(IAshokLeyLandService ashokLeyLandService, ICommonActionService commonActionService)
         {
             _ashokLeyLandService = ashokLeyLandService;
+            _commonActionService = commonActionService;
         }
 
         public IActionResult Index()
@@ -45,5 +49,77 @@ namespace HPCL_Web.Controllers
             var result = await _ashokLeyLandService.AlEnrollUpdate(getAllData);
             return Json(new { result = result });
         }
+
+        public async Task<IActionResult> DealerOTCCardRequest()
+        {
+            var modals = await _ashokLeyLandService.DealerOTCCardRequest();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel)
+        {
+
+            alOTCCardRequestModel = await _ashokLeyLandService.DealerOTCCardRequest(alOTCCardRequestModel);
+
+            if (alOTCCardRequestModel.Internel_Status_Code == 1000)
+            {
+                alOTCCardRequestModel.Remarks = "";
+                ViewBag.Message = "AL OTC Card request saved successfully";
+                return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+            }
+
+            return View(alOTCCardRequestModel);
+        }
+
+        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest()
+        {
+            return View();
+        }
+        public async Task<IActionResult> CreateMultipleOTCCard()
+        {
+            var modals = await _ashokLeyLandService.CreateMultipleOTCCard();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableAlOTCCardForDealer(string DealerCode)
+        {
+            List<CardDetails> lstCardDetails = await _ashokLeyLandService.GetAvailableAlOTCCardForDealer(DealerCode);
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            var data = await _commonActionService.CheckVehicleRegistrationValid(RegistrationNumber);
+            return new JsonResult(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
+        {
+
+            ashokLeylandCardCreationModel = await _ashokLeyLandService.CreateMultipleOTCCard(ashokLeylandCardCreationModel);
+
+            if (ashokLeylandCardCreationModel.Internel_Status_Code == 1000)
+            {
+                ashokLeylandCardCreationModel.Remarks = "";
+                ViewBag.Message = "Ashok Leyland Card Customer saved successfully";
+                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard");
+            }
+
+            return View(ashokLeylandCardCreationModel);
+        }
+        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard()
+        {
+            return View();
+        }
+
     }
 }

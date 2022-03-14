@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.Terminal
 {
-    public class TerminalDeinstallationRequestViewModel : BaseEntity
+    public class TerminalDeinstallationRequestViewModel : CommonResponseBase
     {
         public TerminalDeinstallationRequestViewModel()
         {

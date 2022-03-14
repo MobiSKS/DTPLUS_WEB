@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.RequestModel.AshokLeyLand;
+using System;
 
 namespace HPCL.Service.Services
 {
@@ -17,11 +21,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<SearchAlResult> SearchDealer(string dealerCode, string dtpCode)
@@ -112,5 +118,101 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+
+        public async Task<ALOTCCardRequestModel> DealerOTCCardRequest()
+        {
+            ALOTCCardRequestModel alOTCCardRequestModel = new ALOTCCardRequestModel();
+            alOTCCardRequestModel.Remarks = "";
+            return alOTCCardRequestModel;
+        }
+        public async Task<ALOTCCardRequestModel> DealerOTCCardRequest(ALOTCCardRequestModel alOTCCardRequestModel)
+        {
+            alOTCCardRequestModel.UserAgent = CommonBase.useragent;
+            alOTCCardRequestModel.UserIp = CommonBase.userip;
+            alOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            alOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(alOTCCardRequestModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseAlOtcCardRequest);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            alOTCCardRequestModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            alOTCCardRequestModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    alOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    alOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+
+            return alOTCCardRequestModel;
+        }
+
+        public async Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard()
+        {
+            AshokLeylandCardCreationModel ashokLeylandCardCreationModel = new AshokLeylandCardCreationModel();
+            ashokLeylandCardCreationModel.Remarks = "";
+            ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            return ashokLeylandCardCreationModel;
+        }
+        public async Task<List<CardDetails>> GetAvailableAlOTCCardForDealer(string DealerCode)
+        {
+
+            var requestinfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityAlOTCCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
+
+            return searchList;
+        }
+
+        public async Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
+        {
+            ashokLeylandCardCreationModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.UserAgent = CommonBase.useragent;
+            ashokLeylandCardCreationModel.UserIp = CommonBase.userip;
+            ashokLeylandCardCreationModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.CommunicationPhoneNo = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationDialCode) ? "" : ashokLeylandCardCreationModel.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationPhonePart2) ? "" : ashokLeylandCardCreationModel.CommunicationPhonePart2);
+            ashokLeylandCardCreationModel.CommunicationFax = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxCode) ? "" : ashokLeylandCardCreationModel.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxPart2) ? "" : ashokLeylandCardCreationModel.CommunicationFaxPart2);
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertAlCustomer);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            ashokLeylandCardCreationModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    ashokLeylandCardCreationModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
+                ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                ashokLeylandCardCreationModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(ashokLeylandCardCreationModel.CommunicationStateId));
+                ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            }
+
+            return ashokLeylandCardCreationModel;
+        }
+
     }
 }

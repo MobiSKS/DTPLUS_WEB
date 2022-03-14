@@ -1,6 +1,17 @@
-﻿namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
+﻿using HPCL.Common.Helper;
+using System.Collections.Generic;
+
+namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
 {
-    public class TerminalApprovalReqResponse
+    public class TerminalApprovalReqResponse: CommonResponseBase
+    {
+        public TerminalApprovalReqResponse()
+        {
+            TerminalApprovalReqDetails = new List<TerminalApprovalReqDetails>();
+        }
+        public List<TerminalApprovalReqDetails> TerminalApprovalReqDetails { get; set; }
+    }
+    public class TerminalApprovalReqDetails
     {
         public string MerchantId { get; set; }
         public string TerminalId { get; set; }
