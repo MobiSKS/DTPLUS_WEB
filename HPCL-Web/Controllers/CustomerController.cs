@@ -596,115 +596,17 @@ namespace HPCL_Web.Controllers
             if (cardInfo.StatusCode == 1000)
             {
                 ViewBag.Message = "Customer card details saved Successfully";
-                //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
                 customerCardInfo.Status = cardInfo.Status;
                 customerCardInfo.StatusCode = cardInfo.StatusCode;
-                ModelState.Clear();
+                return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = cardInfo.CustomerReferenceNo });
+                //ModelState.Clear();
             }
             else
             {
                 ViewBag.Message = cardInfo.Message;
             }
 
-
             return Json(customerCardInfo);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-
-            //    string feePaymentDate = "";
-
-            //    if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
-            //    {
-            //        string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-            //        feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
-            //    }
-
-            //    feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
-
-
-            //    #region Create Request Info
-
-            //    CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
-
-            //    insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
-            //    insertInfo.CustomerName = customerCardInfo.CustomerName;
-            //    insertInfo.FormNumber = customerCardInfo.FormNumber;
-            //    insertInfo.NoOfCards = customerCardInfo.NoOfCards;
-            //    insertInfo.RBEId = customerCardInfo.RBEId;
-            //    insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
-            //    insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
-            //    insertInfo.FeePaymentDate = feePaymentDate;
-            //    insertInfo.CardPreference = customerCardInfo.CardPreference;
-            //    insertInfo.RBEName = customerCardInfo.RBEName;
-            //    insertInfo.RBEName = customerCardInfo.RBEName;
-            //    insertInfo.Useragent = CommonBase.useragent;
-            //    insertInfo.Userip = CommonBase.userip;
-            //    insertInfo.UserId = HttpContext.Session.GetString("UserName");
-            //    insertInfo.Createdby = HttpContext.Session.GetString("UserName");
-            //    insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
-
-            //    if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
-            //    {
-            //        insertInfo.FeePaymentsCollectFeeWaiver = 0;
-            //    }
-
-            //    #endregion
-
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    //string jsonString = JsonConvert.SerializeObject(CustomerCardData);
-
-
-
-
-
-            //    #region Commented
-
-            //    //// jsonString = jsonString.Replace("\\", "");
-
-            //    ////StringContent content = new StringContent(CustomerCardData, Encoding.UTF8, "application/json");
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
-
-            //    #endregion
-
-            //    CustomerInserCardResponse customerInserCardResponse;
-
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.insertCustomerCard, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-
-            //            using (HttpContent contentUrl = Response.Content)
-            //            {
-            //                var contentString = contentUrl.ReadAsStringAsync().Result;
-            //                customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(contentString);
-            //                if (customerInserCardResponse.Internel_Status_Code == 1000)
-            //                {
-            //                    ViewBag.Message = "Customer card details saved Successfully";
-            //                    //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
-            //                    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
-            //                    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-            //                    ModelState.Clear();
-            //                }
-            //                else
-            //                {
-            //                    ViewBag.Message = customerInserCardResponse.Message;
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //        }
-            //    }
-
-            //}
-
-            //return View(customerCardInfo);
         }
 
 
@@ -1229,6 +1131,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
 
             return Json(new { customer = Customer });
+        }
+
+        public async Task<IActionResult> SuccessAddCardRedirect(int customerReferenceNo)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            return View();
         }
 
     }

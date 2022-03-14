@@ -149,22 +149,7 @@ namespace HPCL.Service.Services
             custMdl.CustomerTypeOfFleetMdl.AddRange(lstTypeOfFleet);
 
 
-            var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                };
-
-            StringContent contentforms = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            var responseVehicleType = await _requestService.CommonRequestService(contentforms, WebApiUrl.getVehicleTpe);
-
-            obj = JObject.Parse(JsonConvert.DeserializeObject(responseVehicleType).ToString());
-            jarr = obj["Data"].Value<JArray>();
-            List<VehicleTypeModel> lstVehicleTpe = jarr.ToObject<List<VehicleTypeModel>>();
-            custMdl.VehicleTypeMdl.AddRange(lstVehicleTpe);
+            custMdl.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
 
             return custMdl;
         }
@@ -587,46 +572,10 @@ namespace HPCL.Service.Services
                 //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
                 //    }
                 //}
+                                
+                cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
 
-                var forms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                                };
-
-
-                //StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-                var responseVehicleTpe = await _requestService.CommonRequestService(TypeOfFleetcontent, WebApiUrl.getVehicleTpe);
-
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseVehicleTpe).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<VehicleTypeModel> lstVehicleType = jarr.ToObject<List<VehicleTypeModel>>();
-
-                cust.VehicleTypeMdl.AddRange(lstVehicleType);
-
-                //using (var VehicleTpeResponse = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-                //{
-                //    if (VehicleTpeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = VehicleTpeResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-                //        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-                //        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-                //        cust.VehicleTypeMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
+               
                 //District
                 var permanentdistrictModel = new Dictionary<string, string>
                                 {
@@ -876,45 +825,9 @@ namespace HPCL.Service.Services
         public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-
-
-            //Fetching Type of Fleet
-            var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                };
-            StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-
-            var responseVehicleTpe = await _requestService.CommonRequestService(TypeOfFleetcontent, WebApiUrl.getVehicleTpe);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseVehicleTpe).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<VehicleTypeModel> lstVehicleType = jarr.ToObject<List<VehicleTypeModel>>();
-            customerCardInfo.VehicleTypeMdl.AddRange(lstVehicleType);
-
-            //using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-            //{
-            //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //    {
-            //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //        var jarr = obj["Data"].Value<JArray>();
-            //        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-            //        //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-            //        //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-            //        customerCardInfo.VehicleTypeMdl.AddRange(lst);
-            //    }
-            //    else
-            //    {
-            //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //    }
-            //}
-
+            customerCardInfo.Remarks = "";
+            customerCardInfo.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+                        
 
             if (!string.IsNullOrEmpty(customerReferenceNo))
             {
@@ -1039,13 +952,13 @@ namespace HPCL.Service.Services
         public async Task<CustomerCardInfo> GetCustomerDetails(string customerReferenceNo)
         {
             //fetching Customer info
-            var CustomerRefinfo = new Dictionary<string, string>
-                    {
-                        {"Useragent", CommonBase.useragent},
-                        {"Userip", CommonBase.userip},
-                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                        {"CustomerReferenceNo", customerReferenceNo}
-                    };
+            var CustomerRefinfo = new CustomerModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerReferenceNo = customerReferenceNo
+            };
 
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
@@ -1210,7 +1123,6 @@ namespace HPCL.Service.Services
 
 
             return customerCardInfo;
-
         }
 
 
