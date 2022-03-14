@@ -16,6 +16,9 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-0">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
+                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
                         <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -113,7 +116,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -130,7 +133,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -238,28 +241,30 @@
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Card Details</p>
                         <div class="col-lg-12 col-md-12 col-12 pt-3 pb-0">
-                            <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-center justify-content-start flex-wrap mb-4">
                                 <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-2">
                                         <label class="font-weight-normal col-md-4 col-12">No of Cards <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-6 col-12">
+                                        <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="NoOfCards_error"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 col-12">
-                                            <div class="custom_select">
-                                                <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <div class="col-md-2 col-12">
-                                            <div class="custom_select">
-                                                <button class="btn btn_primary px-4 py-2" type="button" onclick="ClearCardDeatils()">Reset</button>
-                                            </div>
+                                </div>
+                                <div class="col-lg-6 col-12 px-0">
+                                    <div class="col-md-2 col-12">
+                                        <div class="custom_select">
+                                            <button class="btn btn_primary px-4 py-2" onclick="LoadCardDeatils()" type="button">Add</button>
                                         </div>
+                                        <span class="error" ></span>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <div class="custom_select mb-2">
+                                            <button class="btn btn_primary px-4 py-2" type="button" onclick="ClearCardDeatils()">Reset</button>
+                                        </div>
+                                        <span class="error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -336,6 +341,7 @@
                                                 <label class="form-check-label ml-1" for="inlineRadio2">No</label>
                                             </div>
                                         </div>
+                                        <span class="error" id="CopyofDriverLicense_error"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
@@ -352,6 +358,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <span class="error" id="CopyofVehicleRegistrationCertificate_error"></span>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -912,35 +919,171 @@
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
-        //if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
-        //    if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
-        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
-        //        document.getElementById("VehicleNo2").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("VehicleNo2_error").innerHTML = "";
-        //    }
-        //}
-        //else {
-        //    document.getElementById("VehicleNo2_error").innerHTML = "";
-        //}
+        if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+            document.getElementById('SalesExecutiveEmployeeID').focus();
+            return ret;
+        }
+        else {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        }
 
-        //if (document.getElementById("CardNumber2").value != "") {
-        //    if (document.getElementById("MobileNo2").value == "") {
-        //        document.getElementById("MobileNo2_error").innerHTML = "Mobile is required";
-        //        document.getElementById("MobileNo2").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("MobileNo2_error").innerHTML = "";
-        //    }
-        //}
-        //else {
-        //    document.getElementById("MobileNo2_error").innerHTML = "";
-        //    document.getElementById("CardNumber2_error").innerHTML = "";
-        //}
+       
+        var count = $('#NoOfCardsTbl tr').length;
 
+        //alert(count);
+
+        if (count <= 1) {
+            alert("Add atleast 1 card Details");
+            return false;
+        }
+        document.getElementById("NoOfCards_error").innerHTML = "";
+
+        var DetailsNotFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(1) input').filter(function () {
+            var cardNo = $(this).val().trim();
+
+            if (cardNo.length < 2) {
+                document.getElementById("NoOfCards_error").innerHTML = "Card No is required for all rows";
+                DetailsNotFound = true;
+                return false;
+            }
+        });
+
+        if (DetailsNotFound) {
+            return false;
+        }
+        var DetailsNotFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+            var VehicleNo = $(this).val().trim();
+            if (VehicleNo == "") {
+                document.getElementById("NoOfCards_error").innerHTML = "Vehicle No is required for all rows";
+                DetailsNotFound = true;
+                return false;
+            }
+        });
+
+        if (DetailsNotFound) {
+            return false;
+        }
+        var DetailsNotFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+            var VINNo = $(this).val().trim();
+            if (VINNo == "") {
+                document.getElementById("NoOfCards_error").innerHTML = "VIN No is required for all rows";
+                DetailsNotFound = true;
+                return false;
+            }
+        });
+
+        if (DetailsNotFound) {
+            return false;
+        }
+        var DetailsNotFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+            var MobileNo = $(this).val().trim();
+            if (MobileNo == "") {
+                document.getElementById("NoOfCards_error").innerHTML = "Mobile No is required for all rows";
+                DetailsNotFound = true;
+                return false;
+            }
+        });
+
+        if (DetailsNotFound) {
+            return false;
+        }
+
+        console.log('Duplicate CardNo check');
+
+        var DuplicateFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(1) input').filter(function () {
+            var value = $(this).val();
+            console.log(value);
+            $('#NoOfCardsTbl td:nth-child(1) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Card No " + $(this).val() + " Found";
+                    console.log('Found Duplicate Card No');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
+                }
+            });
+        });
+
+        if (DuplicateFound) {
+            return false;
+        }
+
+        console.log('Duplicate Vehicle No check');
+
+        var DuplicateFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+            var value = $(this).val();
+            console.log(value);
+            $('#NoOfCardsTbl td:nth-child(3) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Vehicle No " + $(this).val() + " Found";
+                    console.log('Found Duplicate Vehicle No');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
+                }
+            });
+        });
+
+        if (DuplicateFound) {
+            return false;
+        }
+
+        console.log('Duplicate VIN No check');
+
+        var DuplicateFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+            var value = $(this).val();
+            console.log(value);
+            $('#NoOfCardsTbl td:nth-child(6) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate VIN No " + $(this).val() + " Found";
+                    console.log('Found Duplicate VIN No');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
+                }
+            });
+        });
+
+        if (DuplicateFound) {
+            return false;
+        }
+
+        console.log('Duplicate Mobile check');
+
+        var DuplicateFound = false;
+
+        $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+            var value = $(this).val();
+            console.log(value);
+            $('#NoOfCardsTbl td:nth-child(7) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Mobile No " + $(this).val() + " Found";
+                    console.log('Found Duplicate Mobile No');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
+                }
+            });
+        });
+
+        if (DuplicateFound) {
+            return false;
+        }
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
@@ -1110,62 +1253,7 @@
     }
 
 
-    //$("#btnCard1Verify").click(function () {
-    //    //debugger;
-    //    var vehicleNo = document.getElementById("VehicleNo1").value;
-    //    if (vehicleNo == "") {
-    //        document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is required";
-    //        $("#VehicleNo1").focus;
-    //        return (false);
-    //    }
-    //    else {
-    //        document.getElementById("VehicleNo1_error").innerHTML = "";
-    //    }
-
-
-    //    $.ajax({
-    //        type: 'POST',  // http method
-    //        url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-    //        data: { RegistrationNumber: vehicleNo },  // data to submit
-    //        dataType: "json",
-    //        success: function (data, status, xhr) {
-    //            //debugger;
-    //            var jsonData = JSON.parse(data);
-    //            if (status == 'success' && jsonData['statusCode'] == '101') {
-    //                result = true;
-    //                document.getElementById("VehicleNo1_error").innerHTML = "";
-    //                console.log(jsonData);
-    //                console.log(document.getElementById("VehicleNo1_error").innerHTML);
-    //            }
-    //            else {
-    //                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-    //            }
-    //        },
-    //        error: function (jqXhr, textStatus, errorMessage) {
-    //            document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-
-    //        }
-    //    });
-
-
-    //});
-
-
-    //$('#VehicleNo1').keydown(function (e) {
-    //    var k = e.which;
-    //    var ok = k >= 65 && k <= 90 || // A-Z
-    //        k >= 96 && k <= 105 || // a-z
-    //        k >= 35 && k <= 40 || // arrows
-    //        k == 8 || // Backspaces
-    //        (!e.shiftKey && k >= 48 && k <= 57); // 0-9
-
-    //    if (!ok) {
-    //        e.preventDefault();
-    //    }
-    //});
-
-
-      $("#DealerCode").on("blur", function () {
+    $("#DealerCode").on("blur", function () {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
 
@@ -1223,7 +1311,7 @@
         });
 
 
-      });
+    });
 
     $("#CommunicationPincode").on("blur", function () {
         debugger;
@@ -1377,6 +1465,19 @@
         });
 
 
+    }
+
+    function IsAlphaNumeric(e) {
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 8 || // Backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+
+        if (!ok) {
+            e.preventDefault();
+        }
     }
 
 </script>
