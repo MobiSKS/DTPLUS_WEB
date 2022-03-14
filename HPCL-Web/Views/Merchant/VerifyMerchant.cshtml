@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="/Merchant/Profile" class="text_primary">Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">Rejected Merchants</li>
         </ul>
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+        <div id="reason" class="mb-3 text-center displayNone" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;"></div>
         <h5>Merchant Approval</h5>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
         {
@@ -68,7 +68,7 @@
         <div id="show_Table">
             @if (Model.MerchantApprovalTableDetails.Count() > 0)
             {<div class="table-responsive">
-                    <table class="table table-striped text-nowrap" id="merchantApprovalDetails">
+                    <table class="table table-striped text-nowrap datatable" id="merchantApprovalDetails">
                         <thead style="background-color:lightgray;">
                             <tr>
                                 <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
@@ -103,7 +103,7 @@
                                     <td>@item.CreatedBy</td>
                                     <td>@item.VerifiedDate</td>
                                     <td>@item.VerifiedBy</td>
-                                    <td><input type="text" id="comments_@i" /><span class="comment_error"></span></td>
+                                    <td><input type="text" id="comments_@i" class="form-control" /><span class="comment_error"></span></td>
                                 </tr>
                             }
                         </tbody>
@@ -206,6 +206,7 @@
         $("#merchantApprovalDetails tr").each(function () {
             $(this).find(".comment_error").html("");
             if ($(this).find('input[type="checkbox"]').is(":checked")) {
+                $("#reason").addClass("displayNone");
                 let comment = $(this).find("input:text").val();
                 if (comment == "") {
                     $(this).find(".comment_error").html("Please fill comment.");
@@ -218,6 +219,10 @@
                 if (erpCode != undefined) {
                     ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
                 }
+            }
+            else {
+                $("#reason").removeClass("displayNone");
+                $("#reason").html("Please select atleast one Erp Code");
             }
         });
 
