@@ -27,10 +27,12 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
                 districtID = 0,
                 districtName = "Select District"
             });
+            VehicleTypeMdl = new List<VehicleTypeModel>();
         }
 
         public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
+        public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
 
         [Required(ErrorMessage = "Customer Or Org Name is Required")]
         public string IndividualOrgName { get; set; }
@@ -80,6 +82,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CommunicationFaxCode { get; set; }
         public string CommunicationFaxPart2 { get; set; }
         public string NoOfCards { get; set; }
+        public int Internel_Status_Code { get; set; }
     }
     public class ALCardEntryDetails
     {

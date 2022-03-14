@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Resources;
@@ -160,6 +161,13 @@ namespace HPCL_Web.Controllers
             CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckEmailDuplication(Emailid);
 
             return Json(customerInserCardResponseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetVehicleTypeDetails()
+        {
+            List<VehicleTypeModel> sortedtList = new List<VehicleTypeModel>();
+            sortedtList = await _commonActionService.GetVehicleTypeDropdown();
+            return Json(new { SortedtList = sortedtList });
         }
 
     }

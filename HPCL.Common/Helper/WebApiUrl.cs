@@ -195,6 +195,8 @@
         public static string getDelerNameUrl = "api/dtplus/officer/get_al_dealer_detail";
         public static string checkDealerCode = "api/dtplus/officer/check_dealer_code";
         public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_al_otc_card_request";
+        public static string getAvailityAlOTCCard = "api/dtplus/merchant/get_availity_al_otc_card";
+        public static string insertAlCustomer = "api/dtplus/merchant/insert_al_customer";
 
         #endregion
     }
