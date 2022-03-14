@@ -113,7 +113,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-2">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -336,6 +336,7 @@
                                                 <label class="form-check-label ml-1" for="inlineRadio2">No</label>
                                             </div>
                                         </div>
+                                        <span class="error" id="CopyofDriverLicense_error"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
@@ -352,6 +353,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <span class="error" id="CopyofVehicleRegistrationCertificate_error"></span>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -912,6 +914,15 @@
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
+        if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+            document.getElementById('SalesExecutiveEmployeeID').focus();
+            return ret;
+        }
+        else {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        }
+
         //if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
         //    if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
         //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
@@ -941,6 +952,35 @@
         //    document.getElementById("CardNumber2_error").innerHTML = "";
         //}
 
+        var count = $('#NoOfCardsTbl tr').length;
+
+        //alert(count);
+
+        if (count <= 1) {
+            alert("Add atleast 1 card Details");
+            return false;
+        }
+        document.getElementById("NoOfCards_error").innerHTML = "";
+        var DuplicateFound = false;
+        console.log('Before Checking For Duplicate CardNo');
+        $('#NoOfCardsTbl td:nth-child(1) input').filter(function () {
+            var value = $(this).val();
+            console.log(value);
+            $('#NoOfCardsTbl td:nth-child(1) input').not(this).each(function () {
+                if ($(this).val() == value) {
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Card No " + $(this).val() + " Found";
+                    console.log('Found Duplicates');
+                    console.log($(this).val());
+                    DuplicateFound = true;
+                    return false;
+                }
+            });
+        });
+
+        if (DuplicateFound) {
+            return false;
+        }
+        console.log('After Checking For Duplicate CardNo');
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
@@ -1377,6 +1417,19 @@
         });
 
 
+    }
+
+    function IsAlphaNumeric(e) {
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 8 || // Backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+
+        if (!ok) {
+            e.preventDefault();
+        }
     }
 
 </script>
