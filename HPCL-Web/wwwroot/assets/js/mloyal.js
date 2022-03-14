@@ -168,12 +168,12 @@ function showregAddress() {
     }
 
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-        document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
+        document.getElementById("individualName_error").innerHTML = "Select Individual Or Org. Name Title";
         document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
     else {
-        document.getElementById("salutaion_error").innerHTML = "";
+        document.getElementById("individualName_error").innerHTML = "";
     }
 
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
@@ -850,12 +850,12 @@ function showCardDetails() {
     debugger;
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
-        document.getElementById("officialTitle_error").innerHTML = "Title Selection is required";
+        document.getElementById("official_fName_error").innerHTML = "Title Selection is required";
         document.applicationForm.KeyOffTitle.focus();
         return false;
     }
     else {
-        document.getElementById("officialTitle_error").innerHTML = "";
+        document.getElementById("official_fName_error").innerHTML = "";
     }
 
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
