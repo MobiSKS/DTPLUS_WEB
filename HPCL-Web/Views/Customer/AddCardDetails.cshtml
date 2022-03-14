@@ -327,6 +327,12 @@
             }
 
         }
+
+        if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
+            document.getElementById("rbtnCard").checked = true;
+            document.getElementById("rbtnCardless").checked = false;
+        }
+       
     });
 
     function setDates() {
@@ -582,8 +588,10 @@
 
         $('#NoOfCards').attr("readonly", true);
         $('#NoOfVehiclesAllCards').attr("readonly", true);
-        var selected = $("input[name='CardPreference']:checked").val()
-
+        var selected = $("input[name='CardPreference']:checked").val();
+        if (selected == "" || selected == undefined)
+            selected = "Not Selected";
+        console.log(selected);
         //var found = false;
         //var custRBEId = document.getElementById("RBEId").value;
 
@@ -688,7 +696,7 @@
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                         else {
                             var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
@@ -697,7 +705,7 @@
                                 + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                     }
                     else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
@@ -705,12 +713,12 @@
                             var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
                                 + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                         else {
                             var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
                                 + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                     }
                     else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
@@ -722,7 +730,7 @@
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                         else {
                             var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
@@ -730,13 +738,14 @@
                                 + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
                                 + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
-                                + "<td class='error'><span class='error'></span></td></tr>";
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
                         }
                     }
 
+                    console.log(rows);
 
                     $('#NoOfCardsTbl').append(rows);
-                    console.log(document.getElementById(id));
+                    //console.log(document.getElementById(id));
 
                     $("#" + id).html("");
                     $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
