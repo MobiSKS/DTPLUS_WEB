@@ -81,6 +81,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string HighwayName { get; set; }
         public string SBUTypeId { get; set; }
         public string SBUName { get; set; }
+        [StringLength(6)]
         public string LPGCNGSale { get; set; }
         public string PancardNumber { get; set; }
         public string GSTNumber { get; set; }
