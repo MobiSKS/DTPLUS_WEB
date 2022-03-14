@@ -17,13 +17,18 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         [Required(ErrorMessage = "Regional Office should not be empty")]
         public int RegionalOfficeId { get; set; }
         [Required(ErrorMessage = "Address1 should not be empty")]
+        [RegularExpression(FieldValidation.ValidAddress, ErrorMessage = FieldValidation.ValidAddressErrMsg)]
         public string Address1 { get; set; }
         [Required(ErrorMessage = "Address2 should not be empty")]
+        [RegularExpression(FieldValidation.ValidAddress, ErrorMessage = FieldValidation.ValidAddressErrMsg)]
         public string Address2 { get; set; }
+
+        [RegularExpression(FieldValidation.ValidAddress, ErrorMessage = FieldValidation.ValidAddressErrMsg)]
         public string Address3 { get; set; }
         [Required(ErrorMessage = "State should not be empty")]
         public int StateId { get; set; }
         [Required(ErrorMessage = "City Name should not be empty")]
+        [RegularExpression(FieldValidation.ValidCity, ErrorMessage = FieldValidation.ValidCityErrMsg)]
         public string CityName { get; set; }
         [Required(ErrorMessage = "District should not be empty")]
         public int DistrictId { get; set; }

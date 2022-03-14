@@ -1,5 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using HPCL_Web.Models;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

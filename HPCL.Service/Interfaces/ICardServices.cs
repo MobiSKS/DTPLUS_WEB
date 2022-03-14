@@ -1,7 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.Cards;
+﻿using HPCL.Common.Models.ResponseModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,7 +14,6 @@ namespace HPCL.Service.Interfaces
         Task<string> CardlessMapping(UpdateMobileModal entity);
         Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity);
         Task<string> UpdateStatus(string cardNo, int Statusflag);
-        Task<SearchCardsResponse> RefreshGrid();
         Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity);
         Task<string> UpdateCards(ObjCardLimits[] limitArray);
         Task<SearchCcmsLimitAllResponse> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity);

@@ -1,12 +1,13 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ViewModel.Customer;
+using HPCL.Common.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HPCL_Web.Models
+namespace HPCL.Common.Models.ResponseModel.CustomerManage
 {
 
     public class CustomerProfileModel:BaseEntity
@@ -211,7 +212,8 @@ namespace HPCL_Web.Models
         public string CustomerFormNumber { get; set; }
         public string CustomerApplicationDate { get; set; }
         public string CustomerRegionalOfficeID { get; set; }
-
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         [Required(ErrorMessage = "CustomerId is Required")]
         public string CustomerId { get; set; }
         public string NameonCard { get; set; }

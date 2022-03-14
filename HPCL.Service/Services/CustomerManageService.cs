@@ -15,7 +15,7 @@ using System.Linq;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using Microsoft.AspNetCore.Mvc;
-using HPCL_Web.Models;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 
 namespace HPCL.Service.Services
 {
