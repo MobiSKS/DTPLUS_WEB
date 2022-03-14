@@ -27,7 +27,7 @@
                                         <div class="d-flex align-items-center flex-wrap mb-0">
                                             <label class="font-weight-normal col-md-5 col-12">Customer Ref No. <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNo", @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNo", @class = "form-control", maxlength = "10" })
                                                 <span class="error" id="CustomerReferenceNo_error"></span>
                                             </div>
                                         </div>
@@ -327,6 +327,12 @@
             }
 
         }
+
+        if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
+            document.getElementById("rbtnCard").checked = true;
+            document.getElementById("rbtnCardless").checked = false;
+        }
+       
     });
 
     function setDates() {
@@ -526,7 +532,6 @@
 
     function LoadCardDeatils() {
 
-        // var vehicleTypelst = "<select id='ppp' class='form - control'>";
         debugger;
 
         //if (document.getElementById("RBEId").value == "") {
@@ -583,7 +588,10 @@
 
         $('#NoOfCards').attr("readonly", true);
         $('#NoOfVehiclesAllCards').attr("readonly", true);
-
+        var selected = $("input[name='CardPreference']:checked").val();
+        if (selected == "" || selected == undefined)
+            selected = "Not Selected";
+        console.log(selected);
         //var found = false;
         //var custRBEId = document.getElementById("RBEId").value;
 
@@ -629,18 +637,6 @@
 
                 var NoOfVehicles = $('#NoOfVehiclesAllCards').val();
 
-
-                @* <thead>
-                    <tr>
-                        <th>S No.</th>
-                        <th>Vehicle No./Card Identifier</th>
-                        <th>Vehicle No.</th>
-                        <th>Vehicle Type</th>
-                        <th>Vehicle Make</th>
-                        <th>Year of Reg.</th>
-                    </tr>
-                </thead> *@
-
                 //<option value="901">Fleet</option>
                 //<option value="906">Credit</option>
 
@@ -653,13 +649,28 @@
                 document.getElementById("NoOfCardsTbl").deleteTHead();
 
                 if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th>Vehicle No.</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th></tr></thead>');
+                    if (selected.toUpperCase() == "CARDLESS") {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th>Vehicle No.</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th></tr></thead>');
+                    }
+                    else {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th>Vehicle No.</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th></tr></thead>');
+                    }
                 }
                 else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th></th></tr></thead>');
+                    if (selected.toUpperCase() == "CARDLESS") {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th>Mobile No</th><th></th></tr></thead>');
+                    }
+                    else {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Card Identifier</th><th></th></tr></thead>');
+                    }
                 }
                 else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-                    $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th></tr></thead>');
+                    if (selected.toUpperCase() == "CARDLESS") {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th></tr></thead>');
+                    }
+                    else {
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th></tr></thead>');
+                    }
                 }
 
 
@@ -674,46 +685,67 @@
                     var j = (i + 1);
                     var name = 'ObjCardDetail[' + (i) + '].VehicleType';
                     var id = 'ddlVehicleType' + i;
-                    //var rows = "<tbody><tr>"
-                    //    + "<td><span class='rowData'>" + i + "</span></td>"
-                    //    + "<td><span class='rowData'><input type='text' class='form - control'> </span></td>"
-                    //    + "<td><select id='" + id +  "'class='vls'></select></td>"
-                    //    + "<td><span class='rowData'><input type='text' class='form - control'></span></td>"
-                    //    + "<td><span class='rowData'><input type='text' class='form - control'></span></td>";
 
                     if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
 
-                        var rows = "<tr>"
-                                            + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
-                                            + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
-                                            + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
-                            + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
-                            + "<td class='error'><span class='error'></span></td></tr>";
+                        if (selected.toUpperCase() == "CARDLESS") {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                                + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
+                        else {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                                + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
                     }
                     else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-
-                        var rows = "<tr>"
-                            + "<td><span class='rowData'>" + j + "</span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                            + "<td class='error'><span class='error'></span></td></tr>";
+                        if (selected.toUpperCase() == "CARDLESS") {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
+                        else {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
                     }
                     else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
 
-                        var rows = "<tr>"
-                                            + "<td><span class='rowData'>" + j + "</span></td>"
-                                            //+ "<td><span class='rowData'><input type='text' maxlength='22' class='form - control' class='cardIdentifierInput' onchange='ValidateVehicleNo(this)' name='ObjCardDetail[" + (i) + "].CardIdentifier'> </span></td>"
-                            + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' style='text-transform:uppercase' class='form - control' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
-                                            + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
-                                            + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
-                            + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
-                            + "<td class='error'><span class='error'></span></td></tr>";
+                        if (selected.toUpperCase() == "CARDLESS") {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' style='text-transform:uppercase' class='form - control' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                                + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo'></span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
+                        else {
+                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
+                                + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' style='text-transform:uppercase' class='form - control' onchange='ValidateVehicleNo(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'></span></td>"
+                                + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].VehicleMake'></span></td>"
+                                + "<td><span class='rowData'><input type='text' class='form - control' name='ObjCardDetail[" + (i) + "].YearOfRegistration'></span></td>"
+                                + "<td class='rowData'><span class='error'></span></td></tr>";
+                        }
                     }
 
+                    console.log(rows);
 
                     $('#NoOfCardsTbl').append(rows);
-                    console.log(document.getElementById(id));
+                    //console.log(document.getElementById(id));
 
                     $("#" + id).html("");
                     $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
@@ -736,19 +768,14 @@
 
         //  vehicleTypelst.append('</select >');
 
-        debugger;
-
-
-
 
         document.getElementById('NoOfCardsTbl').style.display = 'table';
-       // document.getElementById('NoOfCardsTbl').style.display = 'block';
+        // document.getElementById('NoOfCardsTbl').style.display = 'block';
 
         //$('#NoOfCards').attr("disabled", true);
         //$('#FeePaymentDate').attr("disabled", true);
         //$('#FeePaymentNo').attr("disabled", true);
         //$('#FeePaymentDate').attr("disabled", true);
-
     }
 
     function ClearCardDeatils() {
@@ -1007,6 +1034,8 @@
                 //$("#FeePaymentDate").prop('disabled', false);
                 //$('#lblChequeNo').text("Approval Email From");
             }
+
+            LoadCardDeatils();
 
         });
     });

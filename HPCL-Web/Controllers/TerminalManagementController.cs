@@ -19,13 +19,25 @@ namespace HPCL_Web.Controllers
         {
             _TerminalService = ViewServices;
         }
+
         public async Task<IActionResult> Index()
         {
             return View();
         }
+        [HttpPost]
+        public async Task<JsonResult> GetAllStatusValue(ManageTerminalRequest entity)
+        {
+            var searchList = await _TerminalService.GetAllStatusValue(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
         public async Task<IActionResult> ManageTerminal()
         {
-            return View();
+            ManageTerminalModel MangeMdl = new ManageTerminalModel();
+            MangeMdl = await _TerminalService.ManageTerminal();
+
+            return View(MangeMdl);
         }
         public async Task<IActionResult> RegenerateIac()
         {

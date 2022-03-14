@@ -46,6 +46,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string VehicleType { get; set; }
         public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
+        public string MobileNo { get; set; }
     }
 
 }
