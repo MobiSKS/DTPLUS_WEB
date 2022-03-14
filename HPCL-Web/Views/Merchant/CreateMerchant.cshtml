@@ -4,6 +4,10 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Profile", "Merchant")" class="text_primary">Profile</a> </li>
+            <li class="breadcrumb-item font-weight-light">Manage Profile</li>
+        </ul>
         <h5>Manage Profile</h5>
         <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="viewProfile-tab" data-toggle="tab" href="#viewProfile" role="tab" aria-controls="viewProfile" aria-selected="true">View Profile</a> </li>
@@ -36,7 +40,7 @@
                                         <div class="col-md-8 col-12">
                                             <div class="row">
                                                 @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                {*@
+                                                    {*@
                                                 <div class="col-8">
                                                     @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control" })
                                                 </div>
@@ -47,18 +51,18 @@
                                                     <button class="btn btn_primary px-4 py-2" type="submit" onclick="checkForMerchantId(event)" style="width: 130%">SEARCH</button>
                                                 </div>
                                                 @*}
-                                else
-                                {
-                                    <div class="col-8">
-                                        @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
-                                    </div>
-                                    @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
-                                    {
-                                        <div class="col-4">
-                                            <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
-                                        </div>
-                                    }
-                                }*@
+                                                    else
+                                                    {
+                                                        <div class="col-8">
+                                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", @disabled = "disabled" })
+                                                        </div>
+                                                        @if (!string.IsNullOrEmpty(Context.Session.GetString("MerchantID")))
+                                                        {
+                                                            <div class="col-4">
+                                                                <button class="btn btn_primary px-4 py-2" type="submit" onclick="" style="width: 130%">SEARCH</button>
+                                                            </div>
+                                                        }
+                                                    }*@
                                             </div>
                                             <span class="error" id="searchMerchantId_error"></span>
                                         </div>
@@ -74,7 +78,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
-                                    {*@
+                                                        {*@
                                                     <button class="btn btn_primary px-4 py-2" type="button" onclick="return showAddMerchant()" style="width: 60%;margin-left:45%;" id="addMerchantbtn">ADD MERCHANT</button>
                                                     @*}*@
                                                 </div>
@@ -157,7 +161,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12 highwayDetails">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12" id="highwayLabel">@Label.HighwayNo<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
@@ -210,7 +214,7 @@
                                             @Label.LpgCngSale<sup class="text-danger">*</sup><br />(3 months average in KL)
                                         </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.LPGCNGSale, new { @class = "form-control"})
+                                            @Html.TextBoxFor(m => m.LPGCNGSale, new { @class = "form-control" })
                                             <div class="error" id="lpgCngSale_error"></div>
                                         </div>
                                     </div>
@@ -941,8 +945,8 @@
             </div>
             @*</form>*@
         }
-        
-    </div>   
+
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -1126,6 +1130,16 @@
             document.getElementById("searchMerchantId_error").innerHTML = "Merchant Id is required";
             document.applicationForm.SearchMerchantId.focus();
             e.preventDefault();
+            ret = "N";
+        }
+        else if (!document.applicationForm.SearchMerchantId.value.match(mappedMerchantID)) {
+            document.getElementById("searchMerchantId_error").innerHTML = "Invalid Merchant ID";
+            if (ret != "N") {
+                document.applicationForm.SearchMerchantId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
             ret = "N";
         }
         else {
@@ -2139,14 +2153,17 @@
     $("#OutletCategoryId").change(function () {
         var outletCategory = $('#OutletCategoryId :selected').text();
         if (outletCategory != "Highway") {
-            $("#highwayLabel").hide();
-            $("#HighwayNo1").hide();
-            $("#HighwayNo2").hide();
+            $(".highwayDetails").addClass("displayNone");
+
+            //$("#highwayLabel").hide();
+            //$("#HighwayNo1").hide();
+            //$("#HighwayNo2").hide();
         }
         else {
-            $("#highwayLabel").show();
-            $("#HighwayNo1").show();
-            $("#HighwayNo2").show();
+            $(".highwayDetails").removeClass("displayNone");
+            //$("#highwayLabel").show();
+            //$("#HighwayNo1").show();
+            //$("#HighwayNo2").show();
         }
     });
 

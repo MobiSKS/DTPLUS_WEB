@@ -132,9 +132,10 @@
         public static string getPendingCustUrl = "api/dtplus/customer/get_pending_customer_detail_by_form_number";
         public static string checkPanNoDuplication = "api/dtplus/customer/check_pan_card";
         public static string getCustomerDetails = "api/dtplus/customer/get_customer_detail";
-        public static string getCustomerBalanceInfo = "api/dtplus/merchant/get_customer_balance_info";
-        public static string getCustomerCardWiseBalances = "api/dtplus/merchant/get_customer_card_wise_balances";
+        public static string getCustomerBalanceInfo = "api/dtplus/customer/get_customer_balance_info";
+        public static string getCustomerCardWiseBalances = "api/dtplus/customer/get_customer_card_wise_balances";
         public static string getCustomerByCustomerId = "api/dtplus/customer/get_customer_by_customer_id";
+        public static string getccmsbalanceinfoforcustomerid = "api/dtplus/customer/get_ccms_balance_info_for_customer_id";
         #endregion
 
         #region Login
@@ -186,6 +187,7 @@
         public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
+        public static string ManageTerminalUrl = "/dtpwebapi/api/dtplus/merchant/get_manage_terminal_detail";
         #endregion
 
         #region "AshokLeyLand"

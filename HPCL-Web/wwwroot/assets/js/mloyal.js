@@ -1009,8 +1009,20 @@ function showCardDetails() {
         document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
     }
 
+    if (document.applicationForm.KeyOffEmail.value.trim() != "") {
 
-    
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (document.applicationForm.KeyOffEmail.value.match(mailformat)) {
+            document.getElementById("KeyOffEmail_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.applicationForm.KeyOffEmail.focus();
+            return (false);
+        }
+    }
+
+
     y = document.applicationForm.KeyOffMobileNumber.value.trim();
     if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
         document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
@@ -1026,8 +1038,6 @@ function showCardDetails() {
     else {
         document.getElementById("official_mobile_error").innerHTML = "";
     }
-    //}
-
 
     return true;
 
@@ -1036,11 +1046,6 @@ function showCardDetails() {
     //document.getElementById("uploadDocuments-tab").classList.remove("disable");
     //localStorage.setItem("cardDetails", true)
     //localStorage.removeItem("keyOfficial")
-
-    //}	
-
-
-
 }
 
 
