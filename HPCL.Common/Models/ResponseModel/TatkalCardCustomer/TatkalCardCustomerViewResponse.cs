@@ -7,6 +7,8 @@ namespace HPCL.Common.Models.ResponseModel.TatkalCardCustomer
    public  class TatkalCardCustomerViewResponse
     {
 
+
+        public string Srnumber { get; set; }
         public string ZonalOfficeName { get; set; }
         public string RegionalOfficeName { get; set; }
 

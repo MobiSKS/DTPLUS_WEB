@@ -28,5 +28,7 @@ namespace HPCL.Service.Interfaces
         Task<string> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose);
         Task<SearchTerminalModel> SearchTerminal();
         Task<List<SearchTerminalDetailsResponseModal>> SearchTerminalDetails(string terminalId, string merchantId, string terminalType, string issueDate);
+        Task<ManageTerminalModel> ManageTerminal();
+        Task<List<ManageTerminalResponse>> GetAllStatusValue(ManageTerminalRequest entity);
     }
 }
