@@ -14,7 +14,7 @@ using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
-using HPCL_Web.Models;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 
 namespace HPCL_Web.Controllers
 {

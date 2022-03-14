@@ -32,16 +32,16 @@ namespace HPCL.Service
                         var ResponseContent = await Response.Content.ReadAsStringAsync();
                         JObject respObj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         string respMessage = respObj["Message"].ToString();
-                      
-                        //if (respMessage != "Success")
-                        //{
-                        //    var access_token = _api.GetToken();
-                        //    if (access_token.Result != null)
-                        //    {
-                        //        HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
-                        //        goto Start;
-                        //    }
-                        //}
+
+                        if (respMessage != "Success")
+                        {
+                            var access_token = _api.GetToken();
+                            if (access_token.Result != null)
+                            {
+                                HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                                goto Start;
+                            }
+                        }
                         return ResponseContent;
                     }
                     else

@@ -8,9 +8,13 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class CustomerCards : BaseEntity
     {
-        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        //[StringLength(10)]
+        //[RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
+
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
+        [Required(ErrorMessage = "CustomerId is Required")]
         public string CustomerId { get; set; }
         [StringLength(16)]
         [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
