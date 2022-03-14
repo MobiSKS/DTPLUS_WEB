@@ -26,6 +26,13 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CardToCardBalanceTransfer(BalanceTransferSearchModel entity)
+        {
+            var searchList = await _customerFinancialService.SearchCardToCardTransfer(entity);
+            return Json(new { searchList = searchList });
+        }
+
         public IActionResult CCMSToCardBalanceTransfer()
         {
             return View();

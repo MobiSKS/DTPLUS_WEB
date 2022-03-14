@@ -117,7 +117,7 @@
                                                        new SelectListItem(){ Text = "M/s", Value = "M/s"},
                                                        }, null, new { @class = "form-control px-0" })
                                                 </div>
-                                                <span class="error" id="salutaion_error"></span>
+                                                @*<span class="error" id="salutaion_error"></span>*@
                                             </div>
                                             <div class="col-8 pl-0">
                                                 @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder="IndividualOrgName", @class = "form-control", autocomplete = "off", maxlength = "80" })
@@ -508,8 +508,8 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email</label>
                                     <div class="col-md-7 col-12">
-                                        @*<input type="email" class="form-control">*@
                                         @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                        <span class="error" id="KeyOffEmail_error"></span>
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
@@ -555,7 +555,7 @@
                                                 <span class="error" id="official_fName_error"></span>
                                             </div>
                                         </div>
-                                        <span class="error" id="officialTitle_error"></span>
+                                        @*<span class="error" id="officialTitle_error"></span>*@
                                     </div>
                                 </div>
                                 
@@ -903,36 +903,40 @@
     // on customer selection Change
     $("#CustomerTypeID").change(function () {
         var id = this.value;
-            if (id != 0) {
-                $("#customerSubType_error").html("");
-            }
+        if (id != 0) {
+            $("#customerSubType_error").html("");
+        }
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetCustomerSubType", "Customer")',
-                data: { CustomerTypeID: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $("#CustomerSubTypeID").html("");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.customerSubTypeID,
-                                    text: data.customerSubTypeName
-                                }).html(data.customerSubTypeName).appendTo("#CustomerSubTypeID");
-                        });
+        if (id == 918) {//OTC Customer
+             window.location.href = '@Url.Action("CustomerCardCreation", "MyHpOTCCardCustomer")';
+        }
 
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Customer Sub Type");
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetCustomerSubType", "Customer")',
+            data: { CustomerTypeID: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#CustomerSubTypeID").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.customerSubTypeID,
+                                text: data.customerSubTypeName
+                            }).html(data.customerSubTypeName).appendTo("#CustomerSubTypeID");
+                    });
+
                 }
-            });
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Sub Type");
+            }
+        });
     });
 
      // on Zone  selection Change
@@ -1269,7 +1273,7 @@
         var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 
         if ($('#CustomerIncomeTaxPan').val().match(regex)) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
