@@ -590,8 +590,8 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Email</label>
                                     <div class="col-md-7 col-12">
-                                        @*<input type="email" class="form-control">*@
                                         @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                        <span class="error" id="KeyOffEmail_error"></span>
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
@@ -661,22 +661,18 @@
                                             <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                 <span class="d-flex font-12">HCV</span>
                                                 @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedHCV, new { @class = "w-100" })
-                                                @* <input type="text" class="w-100">*@
                                             </div>
                                             <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                 <span class="d-flex font-12">LCV</span>
                                                 @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedLCV, new { @class = "w-100" })
-                                                @*<input type="text" class="w-100">*@
                                             </div>
                                             <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                 <span class="d-flex font-12">MUV/SUV</span>
                                                 @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedMUVSUV, new { @class = "w-100" })
-                                                @*<input type="text" class="w-100">*@
                                             </div>
                                             <div class="py-md-3 mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
                                                 <span class="d-flex font-12">Car/Jeep</span>
                                                 @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedCarJeep, new { @class = "w-100" })
-                                                @*<input type="text" class="w-100">*@
                                             </div>
                                         </div>
                                     </div>
@@ -688,11 +684,6 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
                                             @Html.DropDownListFor(m => m.CustomerTypeOfFleetID, new SelectList(Model.CustomerTypeOfFleetMdl, "TypeOfFleetId", "TypeOfFleetName"), new { @class = "form-control" })
-
-                                            @*<select name="" id="" class="form-control">
-                                        <option value="1701">Owned</option>
-                                        <option value="1701">Attached</option>
-                                        </select>*@
                                         </div>
                                     </div>
                                 </div>
@@ -702,7 +693,6 @@
                                     <label class="font-weight-normal col-md-5 col-12">Card applied for</label>
                                     <div class="col-md-7 col-12">
                                         @Html.TextBoxFor(m => m.KeyOfficialCardAppliedFor, new { @class = "form-control", autocomplete = "off" })
-                                        @*<input type="text" class="form-control">*@
                                     </div>
                                 </div>
                             </div>
@@ -715,7 +705,6 @@
                                                 <div class="py-2">
                                                     <div class=" position-relative pr-4">
                                                         @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile1, new { @class = "form-control" })
-                                                        @*<input type="text" class="form-control">*@
                                                         <a href="#" class="form_info" title="Fuel in Rs.">?</a>
                                                     </div>
                                                 </div>
@@ -724,7 +713,6 @@
                                                 <div class=" py-2">
                                                     <div class=" position-relative pr-4">
                                                         @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile2, new { @class = "form-control" })
-                                                        @* <input type="text" class="form-control">*@
                                                         <a href="#" class="form_info" title="Lube in Rs.">?</a>
                                                     </div>
                                                 </div>
@@ -1280,79 +1268,81 @@
             return;
         }
 
-        if (OrgName == '') {
-            alert('Enter Individual Or Org. Name');
-            return;
+        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if ($('#CustomerIncomeTaxPan').val().match(regex)) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
-        //solo Propritorship 4th Char Pan should be 'P'
-        if (customerTbentityid == '2') {
-            let forthdigitPan = panno.substr(3, 1);
-            console.log(forthdigitPan);
-            if (forthdigitPan != 'P') {
-                console.log('Inside');
-                alert('Enter Valid Pan');
-                return;
-            }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            return (false);
         }
 
-        var result = false;
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: "PANValidation/Customer",
-            data: { PANNumber: panno },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['status-code'] == '101') {
-                    result = true;
-
-                    console.log(jsonData);
-                    console.log(result);
-                    //document.getElementById("address-tab").click();
-                    //document.getElementById("address-tab").classList.remove("disable");
-                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                    correctPANName = jsonData["result"]["name"];
-                    //localStorage.setItem("showregAddress", true)
-
-                    if (result == false) {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
-                    }
-                    else {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "";
-                    }
-                    console.log(correctPANName);
-                    console.log(OrgName);
-                    if (correctPANName != OrgName) {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                    }
-                    else {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "";
-                    }
-
-                }
-                else {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                    console.log(jsonData['status-code']);
-                    //document.applicationForm.CustomerIncomeTaxPan.focus();
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-                console.log(jsonData['status-code']);
-                //document.applicationForm.CustomerIncomeTaxPan.focus();
-            }
-        });
-
-        //if (result == false) {
-        //    alert('Income Tax PAN is not valid');
+        //if (OrgName == '') {
+        //    alert('Enter Individual Or Org. Name');
         //    return;
         //}
-
-        //if (correctPANName != panno) {
-        //    alert('Your pan card name not match with pan card name');
+        ////solo Propritorship 4th Char Pan should be 'P'
+        //if (customerTbentityid == '2') {
+        //    let forthdigitPan = panno.substr(3, 1);
+        //    console.log(forthdigitPan);
+        //    if (forthdigitPan != 'P') {
+        //        console.log('Inside');
+        //        alert('Enter Valid Pan');
+        //        return;
+        //    }
         //}
+
+        //var result = false;
+
+        //$.ajax({
+        //    type: 'POST',  // http method
+        //    url: "PANValidation/Customer",
+        //    data: { PANNumber: panno },  // data to submit
+        //    dataType: "json",
+        //    success: function (data, status, xhr) {
+        //        //debugger;
+        //        var jsonData = JSON.parse(data);
+        //        if (status == 'success' && jsonData['status-code'] == '101') {
+        //            result = true;
+
+        //            console.log(jsonData);
+        //            console.log(result);
+        //            //document.getElementById("address-tab").click();
+        //            //document.getElementById("address-tab").classList.remove("disable");
+        //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+        //            correctPANName = jsonData["result"]["name"];
+        //            //localStorage.setItem("showregAddress", true)
+
+        //            if (result == false) {
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+        //            }
+        //            else {
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "";
+        //            }
+        //            console.log(correctPANName);
+        //            console.log(OrgName);
+        //            if (correctPANName != OrgName) {
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+        //            }
+        //            else {
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "";
+        //            }
+
+        //        }
+        //        else {
+        //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //            console.log(jsonData['status-code']);
+        //            //document.applicationForm.CustomerIncomeTaxPan.focus();
+        //        }
+        //    },
+        //    error: function (jqXhr, textStatus, errorMessage) {
+        //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //        console.log(jsonData['status-code']);
+        //        //document.applicationForm.CustomerIncomeTaxPan.focus();
+        //    }
+        //});
+
     }
 
     $("#CustomerTbentityID").change(function () {
