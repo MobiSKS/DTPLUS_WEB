@@ -10,7 +10,8 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }
-        [StringLength(14)]
+        [StringLength(16)]
+        [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
         public string CardNo { get; set; }
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]

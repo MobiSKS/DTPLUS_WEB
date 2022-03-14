@@ -1418,6 +1418,25 @@ namespace HPCL.Service.Services
 
             return obj;
         }
+        public async Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID)
+        {
+            CustomerCCMSBalanceModel customerCCMSBalance = new CustomerCCMSBalanceModel();
 
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getccmsbalanceinfoforcustomerid);
+
+            customerCCMSBalance = JsonConvert.DeserializeObject<CustomerCCMSBalanceModel>(response);
+
+            return customerCCMSBalance;
+        }
     }
 }

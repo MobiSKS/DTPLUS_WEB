@@ -1138,6 +1138,13 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
+        public async Task<IActionResult> GetCCMSBalanceDetails(string CustomerID)
+        {
+
+            var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
+            return PartialView("~/Views/Customer/_CustomerCCMSBalanceDetails.cshtml", modals);
+        }
+
 
     }
 }

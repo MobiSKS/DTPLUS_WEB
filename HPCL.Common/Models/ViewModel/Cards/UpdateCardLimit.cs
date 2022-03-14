@@ -6,7 +6,6 @@ namespace HPCL.Common.Models.ViewModel.Cards
     public class UpdateCardLimit : BaseEntity
     {
         public ObjCardLimits[] objCardLimits { get; set; }
-        public string ModifiedBy { get; set; }
     }
 
     public class ObjCardLimits
