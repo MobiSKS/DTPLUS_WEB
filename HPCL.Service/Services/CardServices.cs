@@ -197,8 +197,20 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    CardNo = "",
-                    MobileNo = ""
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo
+                };
+            }
+            else if(_httpContextAccessor.HttpContext.Session.GetString("AcDccustId") != "")
+            {
+                searchBody = new SearchCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("AcDccustId"),
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo
                 };
             }
 
@@ -231,27 +243,6 @@ namespace HPCL.Service.Services
             var updateRes = obj["Data"].Value<JArray>();
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse[0].Reason;
-        }
-
-        public async Task<SearchCardsResponse> RefreshGrid()
-        {
-            var searchBody = new SearchCards
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                CustomerId = _httpContextAccessor.HttpContext.Session.GetString("AcDccustId"),
-                CardNo = "",
-                MobileNo = ""
-            };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAllCardStatusUrl);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-
-            SearchCardsResponse searchList = obj.ToObject<SearchCardsResponse>();
-            return searchList;
         }
 
         public async Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity)

@@ -138,11 +138,7 @@
     }
 
     function resetFields() {
-        $("input:text").each(function () {
-            $(this).val("");
-        });
-        $("#CardSearch td").parent().remove();
-        document.getElementById('CardSearch').style.display = 'none';
+        location.reload();
     }
 
 
@@ -216,43 +212,12 @@
                 console.log(res,"res");
 
                 $.ajax({
-                    url: "@Url.Action("RefreshGrid", "Cards")",
+                    url: "@Url.Action("AcDcCardSearch", "Cards")",
                     type: "POST",
                     dataType: "JSON",
                     success: function (res) {
 
-                        if (girdList.success == true) {
-
-                            var girdList = res.searchList.data;
-
-                            $("#CardSearch td").parent().remove();
-
-                            for (var i = 0; i < girdList.length; i++) {
-
-                                var rows = "<tbody><tr>"
-                                    + "<td>" + (girdList[i].srNumber || '') + "</td>"
-                                    + "<td class='crdNo'>" + (girdList[i].cardNumber || '') + "</td>"
-                                    + "<td>" + (girdList[i].vechileNo || '') + "</td>"
-                                    + "<td>" + (girdList[i].mobileNumber || '') + "</td>"
-                                    + "<td class='statusId' style='display:none'>" + (girdList[i].cardStatus || '') + "</td>"
-                                    + "<td class='checkStatus' style='display:none'>" + (girdList[i].status || '') + "</td>"
-                                    + "<td class='changeTxt'></td>"
-                                    + "</tr ></tbody > ";
-
-                                $('#CardSearch').append(rows);
-
-                                if (girdList[i].status == "Active") {
-                                    $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:red;'>REACTIVATE CARD</button>");
-                                }
-                                if (girdList[i].status == "InActive") {
-                                    $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:black;'>DEACTIVATE CARD</button>");
-                                }
-                            }
-                        }
-
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + resp + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
+                        OnSuccessAcDcSearch(res);
 
                     },
                     error: function (ex) {
