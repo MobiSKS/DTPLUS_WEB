@@ -197,7 +197,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             @*<label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>*@
                                             <div class="col-md-7 col-12">
-
+                                                <span class="error" id="Common_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -742,7 +742,7 @@
                         }
                     }
 
-                    console.log(rows);
+                    //console.log(rows);
 
                     $('#NoOfCardsTbl').append(rows);
                     //console.log(document.getElementById(id));
@@ -825,7 +825,7 @@
             document.getElementById("FormNumber_error").innerHTML = "";
         }
 
-        if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value == "") {
+        if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value.trim() == "") {
             document.getElementById("NoOfCards_error").innerHTML = "No of Cards is required";
             document.getElementById("NoOfCards").focus();
             return false;
@@ -939,24 +939,362 @@
             alert("Vehicle Details Not Added");
             return false;
         }
+
         var DuplicateFound = false;
-        console.log('Before Checking For Duplicate VehicleNo');
-        $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
-            var value = $(this).val();
-            $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
-                if ($(this).val() == value) {
-                    document.getElementById("VehicleNo_error").innerHTML = "Duplicate Vehicle Registration Number " + $(this).val() + " Found";
-                    console.log('Found Duplicates');
-                    console.log($(this).val());
-                    DuplicateFound = true;
+        var DetailsNotFound = false;
+        var InvalidYearFound = false;
+
+        var selected = $("input[name='CardPreference']:checked").val();
+        if (selected == "" || selected == undefined)
+            selected = "Not Selected";
+
+        if (customerTypeId == "901" || customerTypeId == "906") {//Fleet And Credit
+
+            document.getElementById("Common_error").innerHTML = "";
+
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var VehicleNo = $(this).val().trim();
+                if (VehicleNo == "") {
+                    document.getElementById("Common_error").innerHTML = "Vehicle No is required for all rows";
+                    DetailsNotFound = true;
                     return false;
                 }
             });
-        });
 
-        if (DuplicateFound) {
-            return false;
+            if (DetailsNotFound) {
+                return false;
+            }
+
+            console.log('Before Checking For Duplicate VehicleNo');
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var value = $(this).val();
+                $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
+                    if ($(this).val() == value) {
+                        document.getElementById("Common_error").innerHTML = "Duplicate Vehicle Registration Number " + $(this).val() + " Found";
+                        console.log('Found Duplicates');
+                        console.log($(this).val());
+                        DuplicateFound = true;
+                        return false;
+                    }
+                });
+            });
+
+            if (DuplicateFound) {
+                return false;
+            }
+            const d = new Date();
+            let curYear = d.getFullYear();
+
+            console.log('Before Checking For Year Of Registration');
+            $('#NoOfCardsTbl td:nth-child(5) input').filter(function () {
+                var YearOfRegistration = $(this).val();
+                if (YearOfRegistration != "") {
+                    if (YearOfRegistration < 1980 || YearOfRegistration > curYear) {
+                        document.getElementById("Common_error").innerHTML = "Year Of Reg. must be between 1980 and " + curYear;
+                        console.log('Found Invalid Year Of Registration');
+                        console.log(YearOfRegistration);
+                        InvalidYearFound = true;
+                        return false;
+                    }
+
+                    if (YearOfRegistration.length < 4) {
+                        document.getElementById("Common_error").innerHTML = "Length of Year Of Registration must be 4 digit";
+                        console.log('Found Invalid Year Of Registration');
+                        console.log(YearOfRegistration);
+                        InvalidYearFound = true;
+                        return false;
+                    }
+
+                }
+            });
+
+            if (InvalidYearFound) {
+                return false;
+            }
+
+            if (selected.toUpperCase() == "CARDLESS") {
+                //$('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+                //    var mobileNo = $(this).val().trim();
+                //    if (mobileNo == "") {
+                //        document.getElementById("Common_error").innerHTML = "Mobile No is required for all rows";
+                //        DetailsNotFound = true;
+                //        return false;
+                //    }
+                //});
+
+                $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+                    var mobileNo = $(this).val().trim();
+
+                    if (mobileNo != "" && mobileNo.charAt(0) == "0") {
+                        document.getElementById("Common_error").innerHTML = "Mobile No should not start with 0";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+
+                    if (mobileNo != "" && mobileNo.length < 10) {
+                        document.getElementById("Common_error").innerHTML = "Mobile No length must be 10 digit";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+                });
+
+                if (DetailsNotFound) {
+                    return false;
+                }
+
+                console.log('Before Checking For Duplicate MobileNo');
+                $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+                    var value = $(this).val();
+                    $('#NoOfCardsTbl td:nth-child(6) input').not(this).each(function () {
+                        if ($(this).val() != "" && value != "" && ($(this).val() == value)) {
+                            document.getElementById("Common_error").innerHTML = "Duplicate Mobile No " + $(this).val() + " Found";
+                            console.log('Found Duplicates');
+                            console.log($(this).val());
+                            DuplicateFound = true;
+                            return false;
+                        }
+                    });
+                });
+
+                if (DuplicateFound) {
+                    return false;
+                }
+            }
+
         }
+        else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
+
+            document.getElementById("Common_error").innerHTML = "";
+
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var cardIdentifier = $(this).val().trim();
+                if (cardIdentifier == "") {
+                    document.getElementById("Common_error").innerHTML = "Card Identifier is required for all rows";
+                    DetailsNotFound = true;
+                    return false;
+                }
+            });
+
+            if (DetailsNotFound) {
+                return false;
+            }
+
+            console.log('Before Checking For Duplicate Card Identifier');
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var value = $(this).val();
+                $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
+                    if ($(this).val() == value) {
+                        document.getElementById("Common_error").innerHTML = "Duplicate Card Identifier " + $(this).val() + " Found";
+                        console.log('Found Duplicates');
+                        console.log($(this).val());
+                        DuplicateFound = true;
+                        return false;
+                    }
+                });
+            });
+
+            if (DuplicateFound) {
+                return false;
+            }
+
+            $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                var VehicleNo = $(this).val().trim();
+                if (VehicleNo == "") {
+                    document.getElementById("Common_error").innerHTML = "Vehicle No is required for all rows";
+                    DetailsNotFound = true;
+                    return false;
+                }
+            });
+
+            if (DetailsNotFound) {
+                return false;
+            }
+
+            console.log('Before Checking For Duplicate VehicleNo');
+            $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                var value = $(this).val();
+                $('#NoOfCardsTbl td:nth-child(3) input').not(this).each(function () {
+                    if ($(this).val() == value) {
+                        document.getElementById("Common_error").innerHTML = "Duplicate Vehicle Registration Number " + $(this).val() + " Found";
+                        console.log('Found Duplicates');
+                        console.log($(this).val());
+                        DuplicateFound = true;
+                        return false;
+                    }
+                });
+            });
+
+            if (DuplicateFound) {
+                return false;
+            }
+            const d = new Date();
+            let curYear = d.getFullYear();
+
+            console.log('Before Checking For Year Of Registration');
+            $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+                var YearOfRegistration = $(this).val();
+                if (YearOfRegistration != "") {
+                    if (YearOfRegistration < 1980 || YearOfRegistration > curYear) {
+                        document.getElementById("Common_error").innerHTML = "Year Of Reg. must be between 1980 and " + curYear;
+                        console.log('Found Invalid Year Of Registration');
+                        console.log(YearOfRegistration);
+                        InvalidYearFound = true;
+                        return false;
+                    }
+
+                    if (YearOfRegistration.length < 4) {
+                        document.getElementById("Common_error").innerHTML = "Length of Year Of Registration must be 4 digit";
+                        console.log('Found Invalid Year Of Registration');
+                        console.log(YearOfRegistration);
+                        InvalidYearFound = true;
+                        return false;
+                    }
+
+                }
+            });
+
+            if (InvalidYearFound) {
+                return false;
+            }
+
+            if (selected.toUpperCase() == "CARDLESS") {
+                //$('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+                //    var mobileNo = $(this).val().trim();
+                //    if (mobileNo == "") {
+                //        document.getElementById("Common_error").innerHTML = "Mobile No is required for all rows";
+                //        DetailsNotFound = true;
+                //        return false;
+                //    }
+                //});
+
+                $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+                    var mobileNo = $(this).val().trim();
+
+                    if (mobileNo != "" && mobileNo.charAt(0) == "0") {
+                        document.getElementById("Common_error").innerHTML = "Mobile No should not start with 0";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+
+                    if (mobileNo != "" && mobileNo.length < 10) {
+                        document.getElementById("Common_error").innerHTML = "Mobile No length must be 10 digit";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+                });
+
+                if (DetailsNotFound) {
+                    return false;
+                }
+
+                console.log('Before Checking For Duplicate MobileNo');
+                $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+                    var value = $(this).val();
+                    $('#NoOfCardsTbl td:nth-child(7) input').not(this).each(function () {
+                        if ($(this).val() != "" && value != "" && ($(this).val() == value)) {
+                            document.getElementById("Common_error").innerHTML = "Duplicate Mobile No " + $(this).val() + " Found";
+                            console.log('Found Duplicates');
+                            console.log($(this).val());
+                            DuplicateFound = true;
+                            return false;
+                        }
+                    });
+                });
+
+                if (DuplicateFound) {
+                    return false;
+                }
+            }
+
+        }
+        else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
+
+            document.getElementById("Common_error").innerHTML = "";
+
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var cardIdentifier = $(this).val().trim();
+                if (cardIdentifier == "") {
+                    document.getElementById("Common_error").innerHTML = "Card Identifier is required for all rows";
+                    DetailsNotFound = true;
+                    return false;
+                }
+            });
+
+            if (DetailsNotFound) {
+                return false;
+            }
+
+            console.log('Before Checking For Duplicate Card Identifier');
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
+                var value = $(this).val();
+                $('#NoOfCardsTbl td:nth-child(2) input').not(this).each(function () {
+                    if ($(this).val() == value) {
+                        document.getElementById("Common_error").innerHTML = "Duplicate Card Identifier " + $(this).val() + " Found";
+                        console.log('Found Duplicates');
+                        console.log($(this).val());
+                        DuplicateFound = true;
+                        return false;
+                    }
+                });
+            });
+
+            if (DuplicateFound) {
+                return false;
+            }
+
+
+            if (selected.toUpperCase() == "CARDLESS") {
+                //$('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                //    var mobileNo = $(this).val().trim();
+                //    if (mobileNo == "") {
+                //        document.getElementById("Common_error").innerHTML = "Mobile No is required for all rows";
+                //        DetailsNotFound = true;
+                //        return false;
+                //    }
+                //});
+
+                $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                    var mobileNo = $(this).val().trim();
+
+                    if (mobileNo != "" && mobileNo.charAt(0) == "0") {
+                        document.getElementById("Common_error").innerHTML = "Mobile No should not start with 0";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+
+                    if (mobileNo != "" && mobileNo.length < 10) {
+                        document.getElementById("Common_error").innerHTML = "Mobile No length must be 10 digit";
+                        DetailsNotFound = true;
+                        return false;
+                    }
+                });
+
+                if (DetailsNotFound) {
+                    return false;
+                }
+
+                console.log('Before Checking For Duplicate MobileNo');
+                $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                    var value = $(this).val();
+                    $('#NoOfCardsTbl td:nth-child(3) input').not(this).each(function () {
+                        if ($(this).val() != "" && value != "" && ($(this).val() == value)) {
+                            document.getElementById("Common_error").innerHTML = "Duplicate Mobile No " + $(this).val() + " Found";
+                            console.log('Found Duplicates');
+                            console.log($(this).val());
+                            DuplicateFound = true;
+                            return false;
+                        }
+                    });
+                });
+
+                if (DuplicateFound) {
+                    return false;
+                }
+            }
+
+        }
+
+        
 
         return true;
     }
