@@ -1,9 +1,14 @@
-﻿<div class="bg-white p-2 p-md-4">
+﻿@model HPCL.Common.Models.ViewModel.CustomerFinancial.BalanceTransferSearchModel
+@using Microsoft.AspNetCore.Http;
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="bg-white p-2 p-md-4">
     <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
         <li class="breadcrumb-item"><a href="@Url.Action("Index","CustomerFinancial")" class="text_primary">Financial</a> </li>
         <li class="breadcrumb-item font-weight-light">Card To Card Balance Transfer</li>
     </ul>
-    <form>
+    <form method="post" data-ajax="true" data-ajax-controller="CustomerFinancial" data-ajax-action="CardToCardBalanceTransfer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
         <div class="w-100">
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                 <div class="border-1 rounded border-grey pb-0">
@@ -16,7 +21,8 @@
                                     <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            <input class="form-control" id="" name="customerid" type="text" value="">
+                                            @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -26,7 +32,8 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            <input class="form-control" id="" name="cardnum" type="text" value="">
+                                            @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +45,8 @@
                                     <label class="font-weight-normal col-md-4 col-12">Mobile No <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            <input class="form-control" id="" name="mobileno" type="text" value="">
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -47,10 +55,10 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button">Search</button>
+                                <button class="btn btn_primary" type="submit">Search</button>
                             </div>
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button">Reset</button>
+                                <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
                             </div>
                             <div class="px-2">
                                 <button class="btn btn_primary" type="button">Upload to Excel</button>
@@ -59,8 +67,15 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+
+                <div>
+                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="searchResult" style="display:none;">
+                    <table id="CardToCardSearchRes" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                         <thead>
                             <tr>
                                 <th>S No.</th>
@@ -76,246 +91,6 @@
                                 <th>Amount To Transfer</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                            <tr>
-                                <td>14</td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>7100090000000088</td>
-                                <td>MH03</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>20/02/2022</td>
-                                <td>Active</td>
-                                <td>8000005.89</td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                                <td><input class="form-control" type="text" id="" value=""></td>
-                            </tr>
-                        </tbody>
                     </table>
                     <div class="clearfix"></div>
                     <div class="d-flex align-items-center justify-content-center mt-0">
@@ -329,3 +104,91 @@
     </form>
     <div class="clearfix"></div>
 </div>
+
+
+<script type="text/javascript">
+
+    function resetClick() {
+        location.reload();
+    }
+
+      $(document).ready(function () {
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("CardToCardBalanceTransfer", "CustomerFinancial")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    OnSuccess(data);
+
+                    $("#custIdVal").val('@Context.Session.GetString("UserId")');
+                    $("#custIdVal").attr("readonly", true);
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+      });
+
+
+    function OnSuccess(res) {
+
+        console.log(res);
+
+        if (res.searchList.success == true) {
+
+            var girdList = res.searchList.data;
+
+            document.getElementById("noRecord").style.display = "none";
+
+            $("#CardToCardSearchRes td").parent().remove();
+
+            for (var i = 0; i < girdList.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td>" + (girdList[i].srNumber || '') + "</td>"
+                    + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                    + "<td>" + (girdList[i].cardNumber || '') + "</td>"
+                    + "<td>" + (girdList[i].vechileNo || '') + "</td>"
+                    + "<td>" + (girdList[i].mobileno || '') + "</td>"
+                    + "<td>" + (girdList[i].issueDate || '') + "</td>"
+                    + "<td>" + (girdList[i].expiryDate || '') + "</td>"
+                    + "<td>" + (girdList[i].status || '') + "</td>"
+                    + "<td>" + (girdList[i].cardBalance || '') + "</td>"
+                    + "<td><input class='form-control mobn' name='cardNumber' type='text' value='' readonly='readonly'></td>"
+                    + "<td><input class='form-control mobn' name='AmountToTransfer' type='text' value='' readonly='readonly'></td>"
+                    + "</tr ></tbody>";
+
+                $('#CardToCardSearchRes').append(rows);
+            }
+            document.getElementById('searchResult').style.display = 'block';
+        } else {
+            document.getElementById("searchResult").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+    }
+
+    $("#CardToCardSearchRes").on('click', '.checkEnable', function (e) {
+        currentRow = $(this).closest("tr");
+        if ($(this).is(':checked')) {
+            currentRow.find('input:text').attr("readonly", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('input:text').attr("readonly", true);
+        }
+    });
+
+    function OnFailure(data) {
+        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+
+</script>

@@ -93,5 +93,41 @@ namespace HPCL.Service.Services
             CCMSToCardBalanceTransferSearchResponse searchList = obj.ToObject<CCMSToCardBalanceTransferSearchResponse>();
             return searchList;
         }
+
+        public async Task<CardToCardBalanceTransferSearchResponse> SearchCardToCardTransfer(BalanceTransferSearchModel entity)
+        {
+            var reqBody = new BalanceTransferSearchModel();
+
+            if (entity.CustomerID != null)
+            {
+                reqBody = new BalanceTransferSearchModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = entity.CustomerID,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                reqBody = new BalanceTransferSearchModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCardToCardTransferUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CardToCardBalanceTransferSearchResponse searchList = obj.ToObject<CardToCardBalanceTransferSearchResponse>();
+            return searchList;
+        }
     }
 }
