@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
 {
     public interface ICustomerService
     {
-        Task<List<UploadDocResponse>> UploadDoc(UploadDoc entity);
+        Task<UploadDocResponse> UploadDoc(UploadDoc entity);
         Task<string> SaveUploadDoc(UploadDoc entity);
         Task<CustomerModel> OnlineForm();
         Task<CustomerModel> OnlineForm(CustomerModel cust);

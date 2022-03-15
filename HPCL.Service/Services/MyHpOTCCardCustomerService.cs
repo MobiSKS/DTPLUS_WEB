@@ -377,6 +377,7 @@ namespace HPCL.Service.Services
             var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getotccardallocationactivation);
 
             JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            getMyCardAllocationandActivation= JsonConvert.DeserializeObject<MyCardAllocationandActivationModel>(cardDetailsResponse);
             var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
             List<MyCardAllocationandActivationDetails> getMyCardAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<MyCardAllocationandActivationDetails>>();
             getMyCardAllocationandActivation.MyCardAllocationandActivationDetails.AddRange(getMyCardAllocationandActivationDetails);

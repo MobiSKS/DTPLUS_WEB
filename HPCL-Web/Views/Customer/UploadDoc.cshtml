@@ -30,10 +30,10 @@
                                                             @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
-                                                </div>                                                
+                                                </div>
                                             </div>
                                             <div class="clearfix"></div>
-                                            <div class="d-flex align-items-center justify-content-start" >
+                                            <div class="d-flex align-items-center justify-content-start">
                                                 <div id="resSearch" style="display:none" class="w-100 mb-3"></div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-center mb-3">
@@ -44,10 +44,17 @@
                                                     <a class="btn btn_primary px-4 py-2" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
                                                 </div>
                                             </div>
-                                            
+
                                         </fieldset>
                                     </div>
                                 </form>
+
+                                <div>
+                                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
 
                                 <div id="uploadSection" style="display:none;">
 
@@ -55,7 +62,7 @@
 
                                     </div>
 
-                                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer"  onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
+                                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
                                         <div id="docUpdateId">
 
                                             <fieldset class="border-1 rounded border-grey pt-3">
@@ -87,7 +94,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new {@id="idFrontErr", @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @id = "idFrontErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -96,7 +103,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new {@id="idBackErr", @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @id = "idBackErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -153,7 +160,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new {@id="addFrontErr", @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @id = "addFrontErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,7 +169,7 @@
                                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
                                                         <div class="col-md-7 col-12">
                                                             @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new {@id="addBackErr", @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @id = "addBackErr", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -390,37 +397,48 @@
 
         console.log(res);
 
-        $("#resSearch div").parent().remove();
+        if (res.searchCustomer.result.success == true) {
 
-        $("#resSearch").append('<div class="form-group">'
-            + '<div class="col-xl-6 col-12 px-2">'
-                  +  '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                       + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
-                       + '<div class="col-md-7 col-12">'
-            + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-            + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result[0].title + '&nbsp;' + res.searchCustomer.result[0].firstName + '&nbsp;' + res.searchCustomer.result[0].middleName + '&nbsp;' + res.searchCustomer.result[0].lastName + ' ">'
-                          +'</div>'
-                         +'</div>'
-                    +'</div>'
-                +'</div>'
-            +'</div>'
-           +' <div class="form-group">'
-               +' <div class="col-xl-6 col-12 px-2">'
-                 +'   <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                    +'    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
-                     +'   <div class="col-md-7 col-12">'
-                        +'    <div class="d-flex align-items-center justify-content-start flex-wrap">'
-            + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result[0].formNumber + '" >'
-                          +'  </div>'
-                       +' </div>'
-                +' </div>'
-                +' </div>'
-            +'</div>');
+            document.getElementById("noRecord").style.display = "none";
 
-        //$("#resSearch").attr("class", "alert alert-dark");
-        document.getElementById('uploadSection').style.display = 'block';
-        document.getElementById('resSearch').style.display = 'block';
-        $("#CustomerReferenceNoId").prop('readonly', true);
+            $("#resSearch div").parent().remove();
+
+            $("#resSearch").append('<div class="form-group">'
+                + '<div class="col-xl-6 col-12 px-2">'
+                + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
+                + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
+                + '<div class="col-md-7 col-12">'
+                + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
+                + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].title + '&nbsp;' + res.searchCustomer.result.data[0].firstName + '&nbsp;' + res.searchCustomer.result.data[0].middleName + '&nbsp;' + res.searchCustomer.result.data[0].lastName + ' ">'
+                + '</div>'
+                + '</div>'
+                + '</div>'
+                + '</div>'
+                + '</div>'
+                + ' <div class="form-group">'
+                + ' <div class="col-xl-6 col-12 px-2">'
+                + '   <div class="d-flex align-items-center justify-content-start flex-wrap">'
+                + '    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
+                + '   <div class="col-md-7 col-12">'
+                + '    <div class="d-flex align-items-center justify-content-start flex-wrap">'
+                + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].formNumber + '" >'
+                + '  </div>'
+                + ' </div>'
+                + ' </div>'
+                + ' </div>'
+                + '</div>');
+
+            //$("#resSearch").attr("class", "alert alert-dark");
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('resSearch').style.display = 'block';
+            $("#CustomerReferenceNoId").prop('readonly', true);
+        } else {
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('resSearch').style.display = 'none';
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchCustomer.result.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
     };
 
 

@@ -44,7 +44,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                            <span class="error" id="Merchant_error"></span>
+                                            <span class="error" style="display:none" id="Merchant_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -256,11 +256,21 @@
         var merchantID = $("#MerchantId").val();
         var flag = "Y";
         if (merchantID == "") {
+            $("#Merchant_error").attr("style", "display:block");
             $("#Merchant_error").html("Enter Merchant ID");
             flag = "N";
         }
-        else
-            $("#Merchant_error").html("");
+        else {
+            if (!merchantID.match(mappedMerchantID)) {
+                $("#Merchant_error").attr("style", "display:block");
+                $("#Merchant_error").html("Invalid Merchant Id");
+                flag = "N";
+            }
+            else {
+                $("#Merchant_error").attr("style", "display:none");
+                $("#Merchant_error").html("");
+            }
+        }
         if (deInstallationType == "0") {
             $("#type_error").html("Select Deinstallation Type");
             flag = "N";
