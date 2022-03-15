@@ -62,10 +62,10 @@
     <div class="clearfix"></div>
     <div class="d-flex align-items-center justify-content-center mt-0">
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="if (confirm('Are you sure?')) terminalDeInstallationForFinal('Approve');">Authorize</button>
+            <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForFinal('Approve');">Authorize</button>
         </div>
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="if (confirm('Are you sure?')) terminalDeInstallationForFinal('Reject');">Reject</button>
+            <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForFinal('Reject');">Reject</button>
         </div>
     </div>
 }
@@ -100,13 +100,15 @@ else
         ObjApprovalRejectDetail = [];
         $("#terminalDeInstallApprovalTable tr").each(function () {
             if ($(this).find('input[type="checkbox"]').is(":checked")) {
-                let merchant = $(this).find(".merchantId").html();
-                let terminal = $(this).find(".terminalId").html();
-                if (merchant != undefined && terminal != undefined) {
-                    ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
-                }
-                else {
-                    flag = "N";
+                if (confirm('Are you sure! You want to approve the selected record')) {
+                    let merchant = $(this).find(".merchantId").html();
+                    let terminal = $(this).find(".terminalId").html();
+                    if (merchant != undefined && terminal != undefined) {
+                        ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
+                    }
+                    else {
+                        flag = "N";
+                    }
                 }
             }
         });
@@ -128,6 +130,9 @@ else
                 }
                 });
             }
+        else if (ObjApprovalRejectDetail.length == 0) {
+            alert("Please select at least one row");
+        }
         }
     };
 </script>
