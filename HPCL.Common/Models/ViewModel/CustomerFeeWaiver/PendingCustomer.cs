@@ -1,5 +1,7 @@
 ﻿
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Resources;
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
 namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
@@ -7,6 +9,8 @@ namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
     public class PendingCustomer : BaseEntity
     {
         public string StateId { get; set; }
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidFormNo, ErrorMessage = FieldValidation.ValidFormNoErrMsg)]
         public string FormNumber { get; set; }
         public string CustomerName { get; set; }
         public string Createdon { get; set; }

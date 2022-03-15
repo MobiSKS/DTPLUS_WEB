@@ -45,6 +45,9 @@
 
         public const string ValidCardNo = @"^(?!(0))[0-9]{16}$";
         public const string ValidCardNoErrMsg = "Enter a valid Card Number";
+
+        public const string ValidFormNo = @"^(?!(0))[0-9]{10}$";
+        public const string ValidFormNoErrMsg = "Enter valid Form Number";
         #endregion
 
         #region "Not Empty Validation"
