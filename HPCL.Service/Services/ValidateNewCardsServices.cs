@@ -42,7 +42,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent actionOnCardsContent = new StringContent(JsonConvert.SerializeObject(actionOnCardsForms), Encoding.UTF8, "application/json");
-            var actionOnCardsResponse = await _requestService.CommonRequestService(actionOnCardsContent, WebApiUrl.updateTerminalDeInstallationRequestAuthorization);
+            var actionOnCardsResponse = await _requestService.CommonRequestService(actionOnCardsContent, WebApiUrl.approveRejectCard);
             JObject actionOnCardsObj = JObject.Parse(JsonConvert.DeserializeObject(actionOnCardsResponse).ToString());
 
             if (actionOnCardsObj["Status_Code"].ToString() == "200")
