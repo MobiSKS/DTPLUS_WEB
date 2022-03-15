@@ -301,10 +301,12 @@ namespace HPCL.Service.Services
             if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
             {
                 string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
-                string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
-
                 fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                if (!string.IsNullOrEmpty(merchaApprovalMdl.ToDate) && !string.IsNullOrEmpty(merchaApprovalMdl.ToDate))
+                {
+                    string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
+                    toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                }
             }
             else
             {

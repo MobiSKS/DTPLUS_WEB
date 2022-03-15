@@ -1,11 +1,12 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer
 {
-    public class MyCardAllocationandActivationModel : CommonResponseData
+    public class MyCardAllocationandActivationModel : CommonResponseBase
     {
         public MyCardAllocationandActivationModel()
         {
