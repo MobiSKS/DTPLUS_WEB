@@ -8,7 +8,7 @@
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Tatkal Card Customer</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "TatkalCardCustomer")" class="text_primary">Tatkal Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">Create Tatkal Customer</li>
         </ul>
         <form name="TatkalCardCustomerCreationForm" method="post" asp-action="CreateTatkalCustomer" class="w-100" autocomplete="off" enctype="multipart/form-data">
@@ -110,7 +110,7 @@
                                         <label class="font-weight-normal offset-md-1  col-md-4 col-12">Secret Answer<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                             </div>
                                             <span class="error" id="KeyOfficialSecretAnswer_error"></span>
                                         </div>
@@ -145,7 +145,7 @@
                                                     <span class="error" id="salutaion_error"></span>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "80" })
                                                     <span class="error" id="customername_error"></span>
                                                 </div>
                                             </div>
@@ -182,10 +182,12 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <div class="error" id="CommunicationDialCode_error"></div>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <div class="error" id="CommunicationPhonePart2_error"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,7 +212,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @*<textarea class="form-control" id="Textarea1" rows="2"></textarea>*@
-                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                 <span class="error" id="comm_address1_error"></span>
                                             </div>
                                         </div>
@@ -345,7 +347,7 @@
         return true;
     }
 
-       $("#FormNumber").on("blur", function () {
+    $("#FormNumber").on("blur", function () {
         //debugger;
         var formNumber = document.getElementById("FormNumber").value;
         if (formNumber == "") {
@@ -354,6 +356,20 @@
         }
         else {
             document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+            document.getElementById("formNumber_error").innerHTML = "Form No should not start with 0";
+            document.getElementById("FormNumber").value = "";
+            document.getElementById("FormNumber").focus();
+            return false;
+        }
+
+        if (document.getElementById("FormNumber").value.length < 10) {
+            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
+            document.getElementById("FormNumber").value = "";
+            document.getElementById("FormNumber").focus();
+            return false;
         }
 
         var formNumberUsed = false;
@@ -406,7 +422,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
         }
 
-       });
+    });
 
     $("#CommunicationMobileNo").on("blur", function () {
         //debugger;
@@ -417,6 +433,20 @@
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.length < 10) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
         }
 
         var mobileNoUsed = false;
@@ -560,7 +590,7 @@
         else {
             document.getElementById("regionalOffice_error").innerHTML = "";
         }
-                      
+
         if (document.getElementById("FormNumber").value == "") {
             document.getElementById("formNumber_error").innerHTML = "Form Number is required";
             //document.getElementById("FormNumber").focus();
@@ -606,7 +636,7 @@
             document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "";
         }
 
-        if (document.getElementById("KeyOfficialSecretAnswer").value == "") {
+        if (document.getElementById("KeyOfficialSecretAnswer").value.trim() == "") {
             document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Secret Answer is required";
             document.getElementById("KeyOfficialSecretAnswer").focus();
             return ret;
@@ -624,7 +654,7 @@
             document.getElementById("salutaion_error").innerHTML = "";
         }
 
-        if (document.getElementById("IndividualOrgName").value == "") {
+        if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
             document.getElementById("IndividualOrgName").focus();
             return ret;
@@ -633,7 +663,16 @@
             document.getElementById("customername_error").innerHTML = "";
         }
 
-        if (document.getElementById("NameOnCard").value == "") {
+        if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+            document.getElementById("customername_error").innerHTML = "Name can not be a number";
+            document.getElementById("IndividualOrgName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value.trim() == "") {
             document.getElementById("nameOnCard_error").innerHTML = "Name on Card is required";
             document.getElementById("NameOnCard").focus();
             return ret;
@@ -642,7 +681,16 @@
             document.getElementById("nameOnCard_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationMobileNo").value == "") {
+        if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card can not be a number";
+            document.getElementById("NameOnCard").focus();
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is required";
             document.getElementById("CommunicationMobileNo").focus();
             return ret;
@@ -651,16 +699,68 @@
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationEmailid").value == "") {
+        var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        if (stdCode != "") {
+
+            if (stdCode.length < 2 || stdCode.length > 4) {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationDialCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+        var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (phno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+            if (phno.length < 6 || phno.length > 8) {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") {
             document.getElementById("comm_email_error").innerHTML = "Email is required";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
         }
         else {
-            document.getElementById("comm_email_error").innerHTML = "";
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (document.getElementById("CommunicationEmailid").value.match(mailformat)) {
+                document.getElementById("comm_email_error").innerHTML = "";
+                //return true
+            }
+            else {
+                document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                document.getElementById("CommunicationEmailid").focus();
+                return (false);
+            }
         }
 
-        if (document.getElementById("CommunicationAddress1").value == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address is required";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
@@ -669,7 +769,7 @@
             document.getElementById("comm_address1_error").innerHTML = "";
         }
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -677,8 +777,8 @@
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
-              
-               
+
+
         if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
             return (false);
@@ -694,7 +794,7 @@
         else {
             document.getElementById("comm_email_error").innerHTML = "";
         }
-                             
+
 
         if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
             document.getElementById("formNumber_error").innerHTML = "Form No is already used";
@@ -713,7 +813,7 @@
         }
 
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -786,5 +886,61 @@
             e.preventDefault();
         }
     });
+
+    $("#IncomeTaxPan").on("blur", function () {
+        //debugger;
+        var panNumber = document.getElementById("IncomeTaxPan").value;
+
+        
+        if (panNumber == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        var panNumberUsed = false;
+        localStorage.setItem("PANNOALREADYUSED", "1");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckPanNoDuplication", "Common")',
+            data: { PanNo: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
+
+                    if (data.status == "0") {
+                        panNumberUsed = true;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        localStorage.setItem("PANNOALREADYUSED", "0");
+                    }
+                    else {
+                        panNumberUsed = false;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    }
+                }
+                else {
+                    //console.log(v);
+                    panNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
+
+
+    });
+
 
 </script>
