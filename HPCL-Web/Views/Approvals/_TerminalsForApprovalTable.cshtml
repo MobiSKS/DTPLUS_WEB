@@ -60,10 +60,10 @@
     <div class="clearfix"></div>
     <div class="d-flex align-items-center justify-content-center mt-0">
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="if (confirm('Are you sure?')) terminalDeInstallationForAuthorization('Approve');">Approve</button>
+            <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForAuthorization('Approve');">Approve</button>
         </div>
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="if (confirm('Are you sure?')) terminalDeInstallationForAuthorization('Reject');">Reject</button>
+            <button class="btn btn_primary" type="button" onclick="terminalDeInstallationForAuthorization('Reject');">Reject</button>
         </div>
     </div>
 }
@@ -94,38 +94,45 @@ else
         if (remark == "") {
             $("#remark_error").html("Please fill Remarks!");
         }
+
         else {
-        $("#remark_error").html("");
-        ObjApprovalRejectDetail = [];
-        $("#terminalDeInstallApprovalTable tr").each(function () {
-            if ($(this).find('input[type="checkbox"]').is(":checked")) {
-                let merchant = $(this).find(".merchantId").html();
-                let terminal = $(this).find(".terminalId").html();
-                if (merchant != undefined && terminal != undefined) {
-                    ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
+            $("#remark_error").html("");
+            ObjApprovalRejectDetail = [];
+            $("#terminalDeInstallApprovalTable tr").each(function () {
+                if ($(this).find('input[type="checkbox"]').is(":checked")) {
+                        var merchantID = $(this).find(".merchantId").html();;
+                        if (confirm('Are you sure! You want to approve the selected record')) {
+                            let merchant = $(this).find(".merchantId").html();
+                            let terminal = $(this).find(".terminalId").html();
+                            if (merchant != undefined && terminal != undefined) {
+                                ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
+                            }
+                            else {
+                                flag = "N";
+                            }
+                    }
                 }
-                else {
-                    flag = "N";
-                }
-            }
-        });
-        if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
-            var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationInsertInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("TerminalDeInstallRequestApprovalRejection", "Approvals")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                data: JSON.stringify(modal),
-                success: function (data) {
-                    console.log(data);
-                    $("#reason").html(data);
-                    $(".toBeHiddenOnSuccess").hide();
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
-                }
+            });
+            if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
+                var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationInsertInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("TerminalDeInstallRequestApprovalRejection", "Approvals")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(modal),
+                    success: function (data) {
+                        console.log(data);
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
                 });
+            }
+            else if (ObjApprovalRejectDetail.length == 0) {
+                alert("Please select at least one row");
             }
         }
     };
