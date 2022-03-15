@@ -92,15 +92,6 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> RefreshGrid()
-        {
-            var searchList = await _cardService.RefreshGrid();
-
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
-        }
-
         public IActionResult SetSaleLimit()
         {
             return View();
