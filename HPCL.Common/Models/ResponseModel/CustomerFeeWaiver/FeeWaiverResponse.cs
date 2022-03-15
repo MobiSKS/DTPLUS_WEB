@@ -11,6 +11,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
     public class PendingCustResponseBody
     {
         public string FormNumber { get; set; }
+        public string ZonalOfficeName { get; set; }
+        public string RegionalOfficeName { get; set; }
         public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
         public string MobileNo { get; set; }
