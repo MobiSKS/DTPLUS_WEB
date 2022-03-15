@@ -13,6 +13,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
     public class UpdateMobileModal
     {
         public string CardNumber { get; set; }
+        [StringLength(10)]
         [Required(ErrorMessage = FieldValidation.MobNoNotEmpty)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNumber { get; set; }
