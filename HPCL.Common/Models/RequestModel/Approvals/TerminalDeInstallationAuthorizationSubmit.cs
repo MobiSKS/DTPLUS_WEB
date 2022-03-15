@@ -10,6 +10,6 @@ namespace HPCL.Common.Models.RequestModel.Approvals
     {
         public string Remark { get; set; }
         public string Action { get; set; }
-        public List<MerchantTerminalMapModal> ObjTerminalDeInstallationInsertInput { get; set; }
+        public List<MerchantTerminalMapModal> ObjTerminalDeInstallationAuthorizationInput { get; set; }
     }
 }
