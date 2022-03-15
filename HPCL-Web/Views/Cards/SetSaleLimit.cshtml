@@ -59,7 +59,7 @@
 
                             <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4">
                                 <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()">SEARCH</button>
+                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit">SEARCH</button>
                                 </div>
                                 <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                     <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
@@ -89,7 +89,7 @@
                         <div class="table-responsive">
                             <table id="CardSearch" class="table table-striped table-bordered text-nowrap" style="display:inline-table">
                                 <tr>
-
+                                    <th>@Html.DisplayName("Sr No")</th>
                                     <th>
                                         @Html.DisplayName("Select")
                                     </th>
@@ -186,7 +186,7 @@
                     $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
                     $("#CustomerDefaultVal").attr("readonly", true);
 
-                    document.getElementById('UpdateGrid').style.display = 'inline-table';
+                    document.getElementById('UpdateGrid').style.display = 'block';
 
                 },
                 error: function (ex) {
@@ -196,18 +196,8 @@
         }
     });
 
-    function openSearchGrid() {
-        if ($("input:text").val() == "") {
-            document.getElementById('UpdateGrid').style.display = 'none';
-        }
-    }
-
     function resetClick() {
-        $("input:text").each(function () {
-            $(this).val("");
-        });
-        $("#CardSearch td").parent().remove();
-        document.getElementById('UpdateGrid').style.display = 'none';
+        location.reload();
     }
 
     function OnSuccessSetLimit(res) {
@@ -225,6 +215,7 @@
             for (var i = 0; i < searchGrid.length; i++) {
 
                 var rows = "<tbody><tr>"
+                    + "<td>" + (searchGrid[i].srNumber || '') + "</td>"
                     + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
                     + "<td><span class='getCard'>" + (searchGrid[i].cardNumber || '') + "</span></a></td>"
                     + "<td>" + (searchGrid[i].vechileNo || '') + "</td>"
@@ -240,10 +231,10 @@
 
                 $('#CardSearch').append(rows);
 
-                document.getElementById("CardSearch").style.display = "inline-block";
+                document.getElementById("UpdateGrid").style.display = "block";
             }
         } else {
-            document.getElementById("CardSearch").style.display = "none";
+            document.getElementById("UpdateGrid").style.display = "none";
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
