@@ -382,7 +382,7 @@ namespace HPCL.Service.Services
         {
             DriverCardAllocationanadActivationViewModel getDrtiverAllocationandActivation = new DriverCardAllocationanadActivationViewModel();
 
-            var cardAllocationforms = new DriverCardAllocationanadActivationViewModel
+            var cardAllocationforms = new GetCardAllocationActivation
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
@@ -399,6 +399,7 @@ namespace HPCL.Service.Services
             var cardDetailsResponse = await _requestService.CommonRequestService(stringContent, WebApiUrl.getdrivercardallocationactivation);
 
             JObject cardDetailsResponseObj = JObject.Parse(JsonConvert.DeserializeObject(cardDetailsResponse).ToString());
+            getDrtiverAllocationandActivation = JsonConvert.DeserializeObject<DriverCardAllocationanadActivationViewModel>(cardDetailsResponse);
             var cardDetailsResponseJarr = cardDetailsResponseObj["Data"].Value<JArray>();
             List<DriverCardAllocationandActivationDetails> getDriverAllocationandActivationDetails = cardDetailsResponseJarr.ToObject<List<DriverCardAllocationandActivationDetails>>();
             getDrtiverAllocationandActivation.DriverCardAllocationandActivationDetails.AddRange(getDriverAllocationandActivationDetails);

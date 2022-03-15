@@ -1,5 +1,7 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Customer
@@ -48,7 +50,12 @@ namespace HPCL.Common.Models.ViewModel.Customer
         //}
     }
 
-    public class UploadDocResponse
+    public class UploadDocResponse: ResponseMsg
+    {
+        public List<UploadDocData> data { get; set; }
+    }
+
+    public class UploadDocData
     {
         public string Title { get; set; }
         public string FirstName { get; set; }
@@ -56,7 +63,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string LastName { get; set; }
         public string FormNumber { get; set; }
     }
-    
+
+
     public class UpdateKycResponse
     {
         public int Status { get; set; }

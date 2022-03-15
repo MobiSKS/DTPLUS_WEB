@@ -545,7 +545,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 Remark = deInstall.Remark,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                ObjMerchantTerminalMapInput = deInstall.ObjMerchantTerminalMapInput
+                ObjTerminalProblematicDeinstalledToDeinstalled = deInstall.ObjTerminalProblematicDeinstalledToDeinstalled
             };
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(deInstallForms), Encoding.UTF8, "application/json");

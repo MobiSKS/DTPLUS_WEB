@@ -69,6 +69,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span style="display:none" class="error" id="merchantId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -243,6 +244,23 @@
         }
         else
             $("#toDate_error").html("");
+        var merchantId = $("#MerchantId").val();
+        if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Invalid Merchant Id");
+                flag = "N";
+            }
+            else {
+                $("#merchantId_error").attr("style", "display:none");
+                $("#merchantId_error").html("");
+            }
+        }
+        else {
+            $("#merchantId_error").attr("style", "display:none");
+            $("#merchantId_error").html("");
+        }
+
         if (flag == "N")
             e.preventDefault();
 
@@ -275,6 +293,7 @@
         $("#show_Table").html("");
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
+        $("#merchantId_error").html("");
        
     };
     $("#RegionalOfficeId").change(function () {
@@ -374,7 +393,7 @@
         if (merchantDetail.length > 0 && flag == "Y") {
             if (confirm("Are you sure you want to close this request?")) {
                 $("#comment_error").html("");
-                var terminationReqmodel = { Remark: comments, ObjMerchantTerminalMapInput: merchantDetail };
+                var terminationReqmodel = { Remark: comments, ObjTerminalProblematicDeinstalledToDeinstalled: merchantDetail };
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("SubmitProblematicDeinstalltoDeinstall", "TerminalManagement")',

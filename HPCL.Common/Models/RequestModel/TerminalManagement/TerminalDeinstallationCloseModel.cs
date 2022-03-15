@@ -9,11 +9,13 @@ namespace HPCL.Common.Models.RequestModel.TerminalManagement
     {
         public TerminalDeinstallationCloseModel()
         {
+            ObjTerminalProblematicDeinstalledToDeinstalled = new List<MerchantTerminalDeInstallationCloseDetail>();
             ObjMerchantTerminalMapInput = new List<MerchantTerminalDeInstallationCloseDetail>();
         }
         public string Status { get; set; }
         public string Remark { get; set; }
         public string Comments { get; set; }
+        public List<MerchantTerminalDeInstallationCloseDetail> ObjTerminalProblematicDeinstalledToDeinstalled { get; set; }
         public List<MerchantTerminalDeInstallationCloseDetail> ObjMerchantTerminalMapInput { get; set; }
     }
     public class MerchantTerminalDeInstallationCloseDetail
