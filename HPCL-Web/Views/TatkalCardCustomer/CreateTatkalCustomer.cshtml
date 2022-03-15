@@ -228,6 +228,7 @@
                                                 @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
                                                 <span class="error" id="incomeTaxPan_error"></span>
                                             </div>
+                                      
                                         </div>
                                     </div>
                                 </div>
@@ -609,6 +610,20 @@
             document.getElementById("applicationDate_error").innerHTML = "";
         }
 
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const myArray = document.getElementById("DateOfApplication").value.split("-");
+
+        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+        console.log(today);
+        console.log(varDate);
+        if (varDate > today) {
+            document.getElementById("applicationDate_error").innerHTML = "Application Date can not be a future date";
+            //document.getElementById("DateOfApplication").focus();
+            return ret;
+        }
+
         if (document.getElementById("SignedOn").value == "") {
             document.getElementById("SignedOn_error").innerHTML = "Signed On is required";
             document.getElementById("SignedOn").focus();
@@ -898,6 +913,16 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if ($('#IncomeTaxPan').val().match(regex)) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            return (false);
         }
 
         var panNumberUsed = false;
