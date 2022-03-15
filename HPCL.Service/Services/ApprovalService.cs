@@ -140,7 +140,7 @@ namespace HPCL.Service.Services
                 Action = approvalRejectionMdl.Action,
                 Remark = approvalRejectionMdl.Remark,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                ObjTerminalDeInstallationInsertInput = approvalRejectionMdl.ObjTerminalDeInstallationInsertInput
+                ObjTerminalDeInstallationAuthorizationInput = approvalRejectionMdl.ObjTerminalDeInstallationAuthorizationInput
             };
 
             StringContent approvalRejectionTerminalReqContent = new StringContent(JsonConvert.SerializeObject(approvalRejectionTerminalReqForms), Encoding.UTF8, "application/json");
