@@ -62,9 +62,6 @@
                                                     @Html.DisplayName("Customer Reference No")
                                                 </th>
                                                 <th>
-                                                    @Html.DisplayName("Customer Code")
-                                                </th>
-                                                <th>
                                                     @Html.DisplayName("Zonal")
                                                 </th>
                                                 <th>
@@ -111,7 +108,7 @@
                                                             @Html.RadioButtonFor(m => m.CardPreference, "Card", new { disabled = "disabled" }) <span class="ml-2"> Card </span>
                                                         </div>
                                                         <div class="d-flex align-items-center justify-content-start">
-                                                             @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { disabled = "disabled" }) <span class="ml-2"> Cardless </span>
+                                                            @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { disabled = "disabled" }) <span class="ml-2"> Cardless </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -131,42 +128,69 @@
 
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
-                                                        <div class="d-flex align-items-center justify-content-start">
-                                                            <div class="d-flex align-items-center justify-content-start mr-3">
-                                                                  @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(CR)", new { disabled = "disabled" }) <span class="ml-2"> Fee Collect(CR)</span>
-                                                            </div>
-                                                            <div class="d-flex align-items-center justify-content-start mr-3">
-                                                                  @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(Cheque)", new { disabled = "disabled" }) <span class="ml-2"> Fee Collect(Cheque)</span>
-                                                            </div>
-                                                            <div class="d-flex align-items-center justify-content-start mr-3">
-                                                                 @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Waiver", new { disabled = "disabled" }) <span class="ml-2"> Fee Waiver </span>
-                                                            </div>
+                                                    <div class="d-flex align-items-center justify-content-start">
+                                                        <div class="d-flex align-items-center justify-content-start mr-3">
+                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectorFeeWaiver, "Online", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                            <span class="ml-2">Online</span>
                                                         </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
-                                                            @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
-                                                            @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                        <div class="d-flex align-items-center justify-content-start mr-3">
+                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                            <span class="ml-2">Fee Waiver</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if (Model.CardPreference == "Card")
+                                            {
+                                                @if (Model.FeePaymentsCollectFeeWaiverId == 1)
+                                                {
+                                                    <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
+                                                        <div class="col-md-6 col-12">
+                                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                                <label class="font-weight-normal col-md-5 col-12">Payment Source<sup class="text-danger">*</sup></label>
+                                                                <div class="col-md-7 col-12">
+                                                                    @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                    @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
+                                                        <div class="col-md-6 col-12">
+                                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                                <label class="font-weight-normal col-md-5 col-12">Payment Date<sup class="text-danger">*</sup></label>
+                                                                <div class="col-md-7 col-12">
+                                                                    @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                    @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
+                                                        <div class="col-md-6 col-12">
+                                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                                <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
+                                                                <div class="col-md-7 col-12">
+                                                                    @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                    @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6 col-12">
+                                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                                <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
+                                                                <div class="col-md-7 col-12">
+                                                                    @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                    @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
                                         </fieldset>
 
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -175,37 +199,37 @@
 
                                         <table id="approveDetails" class="table table-bordered table-responsive" style="display:inline-table;">
                                             <thead>
-                                            <tr>
+                                                <tr>
 
-                                                <th>
-                                                    @Html.DisplayName("Sr. No.")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Vehicle Number/Card Identifier")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Vehicle Type")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Vehicle Make")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Year of Registration")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Vehicle Owner Name")
-                                                </th>
+                                                    <th>
+                                                        @Html.DisplayName("Sr. No.")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Card Identifier")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle Type")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle Make")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Year of Registration")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle Owner Name")
+                                                    </th>
 
-                                            </tr>
+                                                </tr>
                                             </thead>
                                         </table>
 
 
-                                        <div class="d-flex mt-2 justify-content-center">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;float:left">EDIT</button>
-                                            </div>
-                                        </div>
+                                        @*<div class="d-flex mt-2 justify-content-center">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;float:left">EDIT</button>
+                                                </div>
+                                            </div>*@
 
 
 
@@ -222,10 +246,10 @@
                                         <div class="col-md-12 col-12 mt-3">
                                             <div class="d-flex align-items-center justify-content-center mt-3">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="approveClick()" >APPROVE</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="approveClick()">APPROVE</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="rejectClick()" >REJECT</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="rejectClick()">REJECT</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -253,7 +277,7 @@
     <div class="vertical-alignment-helper">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">                        
+                <div class="modal-header">
                     <h5 class="modal-title text_primary" id="exampleModalLabel">Customer Details</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -282,7 +306,7 @@
 
     function OnSuccessFeeWaiverLoad(res) {
         console.log(res);
-        
+
         if (res.pendingList.success == true) {
 
             document.getElementById("noRecord").style.display = "none";
@@ -293,28 +317,35 @@
 
                 var rows = "<tbody><tr>"
                     + "<td><a href='#aaa' class='cust'>" + (res.pendingList.data[i].customerReferenceNo || '') + "</a></td>"
-                    + "<td></td>"
-                    + "<td></td>"
-                    + "<td></td>"
+                    + "<td>" + (res.pendingList.data[i].zonalOfficeName || '') + "</td>"
+                    + "<td>" + (res.pendingList.data[i].regionalOfficeName || '') + "</td>"
                     + "<td><span class='frmNo'>" + (res.pendingList.data[i].formNumber || '') + "</span></td>"
                     + "<td>" + (res.pendingList.data[i].customerName || '') + "</td>"
                     + "<td>" + (res.pendingList.data[i].createdRoleName || '') + "</td>"
                     + "<td>" + (res.pendingList.data[i].mobileNo || '') + "</td>"
-                    + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
+                    + "<td><a href='#aa' class='approveDtls' onclick='gotopage()'>APPROVE</a></td>"
                     + "</tr ></tbody > ";
 
                 $('#customerSearch').append(rows);
             }
             document.getElementById('customerSearch').style.display = 'inline-table';
+            $('html, body').animate({
+                scrollTop: $("#customerSearch").offset().top
+            }, 2000);
         } else {
             document.getElementById("customerSearch").style.display = "none";
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.pendingList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
         }
-        
+
     }
 
+    function gotopage() {
+        $('html, body').animate({
+            scrollTop: $("#detailsSection").offset().top
+        }, 2000);
+    }
 
     $("#customerSearch").on('click', '.cust', function (e) {
 
