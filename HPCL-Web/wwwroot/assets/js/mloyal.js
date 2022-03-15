@@ -1,5 +1,15 @@
 //// JavaScript Document
 
+
+
+$(document).on("ajaxStart", function () {
+    $("#loader").fadeIn();
+})
+
+$(document).on("ajaxStop", function () {
+    $("#loader").fadeOut();
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
