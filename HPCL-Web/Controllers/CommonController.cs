@@ -170,5 +170,14 @@ namespace HPCL_Web.Controllers
             return Json(new { SortedtList = sortedtList });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckPanNoDuplication(string PanNo)
+        {
+            CustomerInserCardResponseData customerInserCardResponseData = new CustomerInserCardResponseData();
+            customerInserCardResponseData = await _commonActionService.CheckPanNoDuplication(PanNo);
+
+            return Json(customerInserCardResponseData);
+        }
+
     }
 }
