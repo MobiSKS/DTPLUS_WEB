@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
 {
-    public class DriverCardAllocationanadActivationViewModel : BaseEntity
+    public class DriverCardAllocationanadActivationViewModel : CommonResponseBase
     {
         public DriverCardAllocationanadActivationViewModel()
         {
@@ -31,6 +32,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string CustomerId { get; set; }
+        public string RegionalId { get; set; }
         public virtual List<RegionalOfficeResponseModal> RegionMdl { get; set; }
         public virtual List<ZonalOfficeResponseModal> ZoneMdl { get; set; }
     }
