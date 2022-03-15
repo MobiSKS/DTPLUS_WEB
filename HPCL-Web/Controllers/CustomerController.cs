@@ -610,9 +610,14 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public IActionResult UploadDoc()
+        public IActionResult UploadDoc(string customerReferenceNo)
         {
-            return View();
+            UploadDoc uploadDoc = new UploadDoc();
+            if (!string.IsNullOrEmpty(customerReferenceNo))
+            {
+                uploadDoc.CustomerReferenceNo = customerReferenceNo;
+            }
+            return View(uploadDoc);
         }
 
         [HttpPost]

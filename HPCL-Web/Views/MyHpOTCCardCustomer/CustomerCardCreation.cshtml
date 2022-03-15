@@ -923,41 +923,51 @@
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
-                data: { PanNo: panNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 
-                        if (data.status == "0") {
-                            panNumberUsed = true;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
-                            localStorage.setItem("PANNOALREADYUSED", "0");
-                        }
-                        else {
-                            panNumberUsed = false;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "";
-                        }
+        if ($('#IncomeTaxPan').val().match(regex)) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            return (false);
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
+            data: { PanNo: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
+
+                    if (data.status == "0") {
+                        panNumberUsed = true;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        localStorage.setItem("PANNOALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        panNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        panNumberUsed = false;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    panNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
 
         console.log(panNumberUsed);
         if (panNumberUsed == true) {
@@ -1025,9 +1035,9 @@
         debugger;
 
         var ret = false;
-        
 
-        if (document.getElementById("MerchantId").value == "") {
+
+        if (document.getElementById("MerchantId").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID is required";
             document.getElementById("MerchantId").focus();
             return ret;
@@ -1036,7 +1046,7 @@
             document.getElementById("MerchantId_error").innerHTML = "";
         }
 
-        if (document.getElementById("Zone").value == "") {
+        if (document.getElementById("Zone").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Click search button to load merchant details";
             document.getElementById("MerchantId").focus();
             return ret;
@@ -1045,7 +1055,7 @@
             document.getElementById("MerchantId_error").innerHTML = "";
         }
 
-        if (document.getElementById("FormNumber").value == "") {
+        if (document.getElementById("FormNumber").value.trim() == "") {
             document.getElementById("formNumber_error").innerHTML = "Form Number is required";
             //document.getElementById("FormNumber").focus();
             return ret;
@@ -1063,7 +1073,7 @@
             document.getElementById("salutaion_error").innerHTML = "";
         }
 
-        if (document.getElementById("IndividualOrgName").value == "") {
+        if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
             document.getElementById("IndividualOrgName").focus();
             return ret;
@@ -1072,7 +1082,7 @@
             document.getElementById("customername_error").innerHTML = "";
         }
 
-        if (document.getElementById("NameOnCard").value == "") {
+        if (document.getElementById("NameOnCard").value.trim() == "") {
             document.getElementById("nameOnCard_error").innerHTML = "Name On Card is required";
             document.getElementById("NameOnCard").focus();
             return ret;
@@ -1081,7 +1091,7 @@
             document.getElementById("nameOnCard_error").innerHTML = "";
         }
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -1090,7 +1100,7 @@
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationCityName").value == "") {
+        if (document.getElementById("CommunicationCityName").value.trim() == "") {
             document.getElementById("communicationCityName_error").innerHTML = "City is required";
             document.getElementById("CommunicationCityName").focus();
             return ret;
@@ -1098,8 +1108,8 @@
         else {
             document.getElementById("communicationCityName_error").innerHTML = "";
         }
-        //console.log('Before CommunicationPincode');
-        if (document.getElementById("CommunicationPincode").value == "") {
+
+        if (document.getElementById("CommunicationPincode").value.trim() == "") {
             document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
             document.getElementById("CommunicationPincode").focus();
             return ret;
@@ -1109,7 +1119,7 @@
         }
 
 
-        if (document.getElementById("CommunicationStateId").value == "0") {
+        if (document.getElementById("CommunicationStateId").value.trim() == "0") {
             document.getElementById("comm_states_error").innerHTML = "State is required";
             document.getElementById("CommunicationStateId").focus();
             return ret;
@@ -1127,7 +1137,7 @@
             document.getElementById("comm_district_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationMobileNo").value == "") {
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
             document.getElementById("CommunicationMobileNo").focus();
             return ret;
@@ -1136,7 +1146,7 @@
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationEmailid").value == "") {
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") {
             document.getElementById("comm_email_error").innerHTML = "Email is required";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
@@ -1161,7 +1171,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationAddress1").value == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address 1 is required";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
@@ -1172,7 +1182,7 @@
 
 
 
-        if (document.getElementById("CommunicationAddress2").value == "") {
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") {
             document.getElementById("comm_address2_error").innerHTML = "Address 2 is required";
             document.getElementById("CommunicationAddress2").focus();
             return ret;
@@ -1242,7 +1252,7 @@
             document.getElementById("VehicleNo1_error").innerHTML = "";
         }
 
-        if (document.getElementById("MobileNo1").value == "") {
+        if (document.getElementById("MobileNo1").value.trim() == "") {
             document.getElementById("MobileNo1_error").innerHTML = "Mobile is required";
             document.getElementById("MobileNo1").focus();
             return ret;
@@ -1353,7 +1363,7 @@
         }
 
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -1489,7 +1499,7 @@
 
     $("#CommunicationEmailid").on("blur", function () {
         //debugger;
-        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value.trim();
         if (communicationEmail == "") {
             document.getElementById("comm_email_error").innerHTML = "communication Email is required";
             return (false);
@@ -1501,46 +1511,56 @@
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "MyHpOTCCardCustomer")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    if (status == 'success') {
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").focus();
+            return (false);
+        }
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "MyHpOTCCardCustomer")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
+
+                    //if (data == "Failed to load Customer Details")
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                }
+            }
+        });
 
         //if (emailUsed == true) {
         //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
