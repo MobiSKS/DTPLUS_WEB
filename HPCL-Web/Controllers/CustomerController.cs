@@ -1149,7 +1149,18 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
             return PartialView("~/Views/Customer/_CustomerCCMSBalanceDetails.cshtml", modals);
         }
+        public async Task<IActionResult> GetFormNumber()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenerateFormNumber()
+        {
+            var FormNumber = await _customerService.GenerateFormNumber();
 
+            //return Json(new { FormNumber = FormNumber });
+            return Json(FormNumber);
+        }
 
     }
 }

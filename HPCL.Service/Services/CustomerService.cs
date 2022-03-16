@@ -1447,5 +1447,24 @@ namespace HPCL.Service.Services
 
             return customerCCMSBalance;
         }
+        public async Task<string> GenerateFormNumber()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getFormNumber);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<FormNumberResponseModel> lstFormNumber = jarr.ToObject<List<FormNumberResponseModel>>();
+            string FormNumber = lstFormNumber[0].FormNumber;
+
+            return FormNumber;
+        }
+
     }
 }
