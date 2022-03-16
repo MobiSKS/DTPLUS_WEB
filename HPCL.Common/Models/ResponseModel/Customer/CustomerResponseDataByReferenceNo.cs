@@ -18,6 +18,8 @@ namespace HPCL.Common.Models.ResponseModel.Customer
     public class CustomerResponseDataByReferenceNo
     {
         public string Title { get; set; }
+
+        public string KeyInitials { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
