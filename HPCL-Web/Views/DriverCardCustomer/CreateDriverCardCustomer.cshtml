@@ -860,9 +860,9 @@
         $('#myModalCard1').modal('hide');
     }
 
-       $("#CommunicationMobileNo").on("blur", function () {
+    $("#CommunicationMobileNo").on("blur", function () {
         //debugger;
-           var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
         if (communicationMobile == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
             return (false);
@@ -874,55 +874,47 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "DriverCardCustomer")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "DriverCardCustomer")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                }
+            }
+        });*@
 
-        //if (mobileNoUsed == true) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
 
-       });
+    });
 
     $("#CommunicationEmailid").on("blur", function () {
         //debugger;
@@ -949,55 +941,46 @@
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "DriverCardCustomer")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "DriverCardCustomer")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                }
+            }
+        });*@
 
-        //if (emailUsed == true) {
-        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_email_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
 
     });
 
@@ -1404,7 +1387,7 @@
         }
     });
 
-     $("#IncomeTaxPan").on("blur", function () {
+    $("#IncomeTaxPan").on("blur", function () {
         //debugger;
         var panNumber = document.getElementById("IncomeTaxPan").value.trim();
 
@@ -1430,7 +1413,7 @@
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("CheckPanNoDuplication", "Common")',
             data: { PanNo: panNumber },  // data to submit
@@ -1464,10 +1447,10 @@
                     //document.getElementById("RBEName").value = "";
                 }
             }
-        });
+        });*@
 
 
-     });
+    });
 
     $("#CommunicationPincode").on("blur", function () {
         //debugger;

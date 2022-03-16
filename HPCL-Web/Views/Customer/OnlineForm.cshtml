@@ -861,44 +861,6 @@
             });
         }
     });
-    //$("#customerSubType").change(function () {
-    //    var id = this.value;
-    //    $("#CustomerSubTypeID").val(id);
-    //});
-    //$("#PerOrRegAddressDistrict").change(function () {
-    //    var id = this.value;
-    //    $("#PermanentDistrictId").val(id);
-    //});
-
-    //$("#regionalOffice").change(function () {
-    //    var id = this.value;
-    //    $("#CustomerRegionID").val(id);
-    //});
-
-
-    //$("#IndividualOrgNameTitleddl").change(function () {
-    //    debugger;
-    //    var Title = this.value;
-    //    $("#IndividualOrgNameTitle").val(Title);
-    //});
-
-    //$("#residenceStatus").change(function () {
-    //    debugger;
-    //    var resStatus = this.value;
-    //    $("#CustomerResidenceStatus").val(resStatus);
-    //});
-
-    //$("#KeyOffTitleddl").change(function () {
-    //    var offTitle = this.value;
-    //    $("#KeyOffTitle").val(offTitle);
-    //});
-
-
-
-    //$("#CommunicationDistrict").change(function () {
-    //    var id = this.value;
-    //    $("#CommunicationDistrictId").val(id);
-    //});
 
     // on customer selection Change
     $("#CustomerTypeID").change(function () {
@@ -1173,91 +1135,7 @@
            // sameas = false;
         }
     }
-
- function LoadCardDeatils() {
-
-        debugger;
-
-         $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
-                data: {},
-                dataType: "json",
-             success: function (data, status, xhr) {
-                 debugger;
-
-                 var NoOfcards = $('#NoOfCardsId').val();
-                 $("#NoOfCardsTbl td").parent().remove();
-
-                 for (var i = 1; i < parseInt(NoOfcards) + 1; i++) {
-                     var id = 'ddlVehicleType' + i;
-                     var j = i;
-                     //var rows = "<tr>"
-                     //    + "<td><span class='rowData'>" + i + "</span></td>"
-                     //    + "<td><span class='rowData'><input type='text' class='form - control' id='CardDetailsMdl[" + j +  "].CardIdentifier' name='CardDetailsMdl[" + j +  "].CardIdentifier'> </span></td>"
-                     //    + "<td><select id='VehicleType" + id + "' class='vls' name='VehicleType" + id +  "'></select></td>"
-                     //    + "<td><span class='rowData'><input type='text' class='form - control' id='CardDetailsMdl[" + j +  "].VehicleMake' name='CardDetailsMdl[" + j +  "].VehicleMake'></span></td>"
-                     //    + "<td><span class='rowData'><input type='text' class='form - control' id='CardDetailsMdl[" + j + "].YearOfRegistration' name='CardDetailsMdl[" + j + "].YearOfRegistration'></span></td></tr>";
-
-                     var rows = "<tr>"
-                         + "<td><span class='rowData'>" + i + "</span></td>"
-                         + "<td><span class='rowData'><input type='text' class='form - control' name='CardDetailsMdl[" + (j-1) + "].CardIdentifier'> </span></td>"
-                         //+ "<td><select id='CardDetailsMdl[" + (j - 1) + "].VehicleType' class='vls' name='CardDetailsMdl[" + (j - 1) + "].VehicleType'></select></td>"
-                         + "<td><select id='VehicleType" + id + "'class='vls' name='VehicleType" + id + "'></select></td>"
-                         + "<td><span class='rowData'><input type='text' class='form - control' name='CardDetailsMdl[" + (j - 1) + "].VehicleMake'></span></td>"
-                         + "<td><span class='rowData'><input type='text' class='form - control' name='CardDetailsMdl[" + (j - 1) + "].YearOfRegistration'></span></td></tr>";
-
-                     $('#NoOfCardsTbl').append(rows);
-                     //$("#" + id).html("");
-                     var ctrl = "CardDetailsMdl[" + (j - 1) + "].VehicleType";
-                     //$("#ctrl").html("");
-                     //$("#" + ctrl).html("");
-                     $("#" + id).html("");
-                     //debugger;
-                     //alert(document.getElementById('CardDetailsMdl[0].VehicleType'));
-                     //alert(document.getElementByName('CardDetailsMdl[0].VehicleType'));
-                     //alert(document.getElementByName('CardDetailsMdl[0].VehicleMake'));
-                     $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
-                         $('<option>',
-                             {
-                                 value: data.vehicleTypeId,
-                                 text: data.vehicleTypeName
-                             }).html(data.vehicleTypeName).appendTo("#VehicleType" + id); //.appendTo("#" + ctrl);
-                     });
-                 }
-
-                 },
-                 error: function (jqXhr, textStatus, errorMessage) {
-                     alert("Error Populating VehicleTpeData Data");
-                 }
-
-           });
-
-        debugger;
-     document.getElementById('NoOfCardsTbl').style.display = 'block';
-
-        $('#NoOfCardsId').attr('disabled', true);
-        $('#FeePaymentsChequeDate').attr('disabled', true);
-        $('#FeePaymentsChequeNo').attr('disabled', true);
-
-    }
-
-    function ClearCardDeatils() {
-
-        $('#NoOfCardsId').val('');
-        $('#FeePaymentsChequeDate').val('');
-        $('#FeePaymentsChequeNo').val('');
-        $('#NoOfCardsTbl > tr').remove();
-        document.getElementById('NoOfCardsTbl').style.display = 'none';
-
-
-        $('#NoOfCardsId').attr('disabled', false);
-        $('#FeePaymentsChequeDate').attr('disabled', false);
-        $('#FeePaymentsChequeNo').attr('disabled', false);
-        $('#FeePaymentsChequeDate').attr('disabled', false);
-
-    }
-
+        
     function ValidatePAN() {
         debugger;
         var panno = $('#CustomerIncomeTaxPan').val();
@@ -1502,56 +1380,46 @@
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "Customer")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "Customer")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
-        //console.log(fromNumberUsed);
-        if (emailUsed == true) {
-            //console.log('Kumar');
-            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-            //return (false);
-        }
-        else {
-            document.getElementById("comm_email_error").innerHTML = "";
-            //console.log('SAM');
-        }
+                else {
+                    //console.log(v);
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });*@
 
     });
 
@@ -1583,56 +1451,46 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "Customer")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "Customer")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
-        //console.log(fromNumberUsed);
-        if (mobileNoUsed == true) {
-            //console.log('Kumar');
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-            //return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-            //console.log('SAM');
-        }
+                else {
+                    //console.log(v);
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });*@
 
     });
 
@@ -1668,50 +1526,42 @@
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckPanNoDuplication", "Customer")',
-                data: { PanNo: panNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckPanNoDuplication", "Customer")',
+            data: { PanNo: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        if (data.status == "0") {
-                            panNumberUsed = true;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
-                            localStorage.setItem("PANNOALREADYUSED", "0");
-                        }
-                        else {
-                            panNumberUsed = false;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "";
-                        }
+                    if (data.status == "0") {
+                        panNumberUsed = true;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        localStorage.setItem("PANNOALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        panNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        panNumberUsed = false;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    panNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });*@
 
-        console.log(panNumberUsed);
-        if (panNumberUsed == true) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is already used";
-            //return (false);
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
 
     });
 
