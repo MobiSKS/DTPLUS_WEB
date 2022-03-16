@@ -11,6 +11,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
     public class PendingCustResponseBody
     {
         public string FormNumber { get; set; }
+        public string ZonalOfficeName { get; set; }
+        public string RegionalOfficeName { get; set; }
         public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
         public string MobileNo { get; set; }
@@ -36,15 +38,20 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
         public string FeePaymentsCollectorFeeWaiver { get; set; }
         public string FeePaymentNo { get; set; }
         public string FeePaymentDate { get; set; }
+        public int CustomerTypeId { get; set; }
+        public string CustomerTypeName { get; set; }
     }
 
     public class GetApproveFeeWaiverCardDetail
     {
+        public int SrNumber { get; set; }
         public string CardIdentifier { get; set; }
         public string VehicleType { get; set; }
         public string VehicleMake { get; set; }
         public int YearOfRegistration { get; set; }
         public string VechileOwnerName { get; set; }
+        public string VechileNo { get; set; }
+        public string Mobileno { get; set; }
     }
 
 }

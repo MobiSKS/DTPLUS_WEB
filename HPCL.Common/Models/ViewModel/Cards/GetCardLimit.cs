@@ -11,14 +11,12 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }
-        [StringLength(14)]
+        [StringLength(16)]
+        [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
         public string CardNo { get; set; }
         [StringLength(10)]
-        [Required(ErrorMessage = FieldValidation.MobNoNotEmpty)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
         public int Statusflag { get; set; }
-
-        public virtual List<StatusModal> CardStatusList { get; set; }
     }
 }

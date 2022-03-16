@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,11 +8,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
 {
     public class UploadDoc : BaseEntity
     {
-        public UploadDoc()
-        {
-            ProofTypesModal = new List<ProofType>();
-        }
-
         [Required(ErrorMessage = "Customer Reference No is required")]
         public string CustomerReferenceNo { get; set; }
 
@@ -41,10 +37,25 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
 
-        public virtual List<ProofType> ProofTypesModal { get; set; }
+
+        //public ValidationResult Validate(ValidationContext validationContext)
+        //{
+        //    var numAttachments = AddressProofFront;
+        //    if (numAttachments == 0)
+        //    {
+        //        yield return new ValidationResult(
+        //            "You must attached at least one file.",
+        //            new string[] { nameof(Attachments) });
+        //    }
+        //}
     }
 
-    public class UploadDocResponse
+    public class UploadDocResponse: ResponseMsg
+    {
+        public List<UploadDocData> data { get; set; }
+    }
+
+    public class UploadDocData
     {
         public string Title { get; set; }
         public string FirstName { get; set; }
@@ -52,10 +63,27 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string LastName { get; set; }
         public string FormNumber { get; set; }
     }
-    
+
+
     public class UpdateKycResponse
     {
         public int Status { get; set; }
         public string Reason { get; set; }
     }
+
+    //public class CustomImageValidate : ValidationAttribute
+    //{
+    //    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    //    {
+    //        var model = (Customer.UploadDoc)validationContext.ObjectInstance;
+    //        if (value.FileName == model.IdProofBack.FileName)
+    //        {
+    //            return new ValidationResult("Please use diiferent Image");
+    //        }
+    //        else
+    //        {
+    //            return ValidationResult.Success;
+    //        }
+    //    }
+    //}
 }

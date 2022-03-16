@@ -5,12 +5,6 @@
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
-<div class="mt-1 w-100">
-    <marquee width="100%" direction="left">
-        Dear Fleet Customer, For TDS related information, Please check the latest notification at TDS Alert
-    </marquee>
-</div>
-
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
@@ -29,16 +23,16 @@
                                         <label class="font-weight-normal col-md-2 col-12">Search Terminal <sup class="text-danger">*</sup></label>
                                         <div class="col-md-10 col-12">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" onclick="text(0)" checked value="option1">
-                                                <label class="form-check-label" for="inlineRadio1">Terminal Status</label>
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" onclick="text(0)" checked value="option1" style="margin-right:0px;">
+                                                <label class="form-check-label ml-2" for="inlineRadio1">Terminal Status</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="enable_tb" type="radio" name="inlineRadioOptions" id="inlineRadio" onclick="text(1)" value="option2">
-                                                <label class="form-check-label" for="inlineRadio2">Terminal ID</label>
+                                                <label class="form-check-label ml-2" for="inlineRadio2">Terminal ID</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="enable_tb" type="radio" name="inlineRadioOptions" id="inlineRadio" onclick="text(2)" value="option3">
-                                                <label class="form-check-label" for="inlineRadio3">Merchant ID</label>
+                                                <label class="form-check-label ml-2" for="inlineRadio3">Merchant ID</label>
                                             </div>
                                         </div>
                                     </div>
@@ -49,7 +43,7 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Select Status <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <div class="col-md-7 col-12">
+                                            <div class="custom_select">
                                                 <select name="StatusFlag" id="status" class="form-control statusVal">
                                                 </select>
 
@@ -83,8 +77,8 @@
                         <div class="clearfix"></div>
 
                         <div>
-                            <div class="px-3">
-                                <table id="ManagTerminalTable" class="table table-bordered" style="display:none;">
+                            <div class="px-3 manageTerminalTable displayNone">
+                                <table id="ManagTerminalTable" class="table table-bordered datatable" style="display:none;">
                                     <thead>
                                         <tr>
                                             <th>
@@ -100,13 +94,13 @@
                                                 @Html.DisplayName("Deployment Status")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("TerminalIssuance Type")
+                                                @Html.DisplayName("Terminal Issuance Type")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("MappedMerchantId")
+                                                @Html.DisplayName("Mapped Merchant Id")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("ServiceChargeInRsPerLtr")
+                                                @Html.DisplayName("Service Charge In Rs Per Ltr")
                                             </th>
                                             <th>
                                                 @Html.DisplayName("Route Id")
@@ -114,11 +108,12 @@
                                             <th>
                                                 @Html.DisplayName("Effective Date ")
                                             </th>
-                                            <th>
+                                            @*<th>
                                                 @Html.DisplayName("Action")
-                                            </th>
+                                            </th>*@
                                         </tr>
                                     </thead>
+                                    <tbody class="manageTerminalBody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -201,11 +196,12 @@ $(document).ready(function () {
             dataType: "json",
             success: function (res) {
                 console.log(res, "res");
+                $(".manageTerminalTable").removeClass("displayNone");
                     $("#ManagTerminalTable").show();
 
                     for (var i = 0; i < res.searchList.length; i++) {
 
-                        var rows = "<tbody><tr>"
+                        var rows = "<tr>"
                             + "<td>" + (res.searchList[i].merchantid || '') + "</td>"
                             + "<td>" + (res.searchList[i].terminalid || '') + "</td>"
                             + "<td>" + (res.searchList[i].approvalDate || '') + "</td>"
@@ -215,9 +211,9 @@ $(document).ready(function () {
                             + "<td>" + (res.searchList[i].serviceChargeInRsPerLtr || '') + "</td>"
                             + "<td>" + (res.searchList[i].routeId|| '') + "</td>"
                             + "<td>" + (res.searchList[i].effectiveDate || '') + "</td>"
-                            + "</tr ></tbody > ";
+                            + "</tr >";
 
-                        $("#ManagTerminalTable").append(rows);
+                        $(".manageTerminalBody").append(rows);
 
 
                     }

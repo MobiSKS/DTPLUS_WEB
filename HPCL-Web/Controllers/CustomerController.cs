@@ -610,9 +610,14 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public IActionResult UploadDoc()
+        public IActionResult UploadDoc(string customerReferenceNo)
         {
-            return View();
+            UploadDoc uploadDoc = new UploadDoc();
+            if (!string.IsNullOrEmpty(customerReferenceNo))
+            {
+                uploadDoc.CustomerReferenceNo = customerReferenceNo;
+            }
+            return View(uploadDoc);
         }
 
         [HttpPost]
@@ -1138,6 +1143,13 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
+        public async Task<IActionResult> GetCCMSBalanceDetails(string CustomerID)
+        {
+
+            var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
+            return PartialView("~/Views/Customer/_CustomerCCMSBalanceDetails.cshtml", modals);
+        }
+
 
     }
 }

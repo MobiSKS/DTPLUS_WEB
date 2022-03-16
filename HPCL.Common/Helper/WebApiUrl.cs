@@ -135,6 +135,7 @@
         public static string getCustomerBalanceInfo = "api/dtplus/customer/get_customer_balance_info";
         public static string getCustomerCardWiseBalances = "api/dtplus/customer/get_customer_card_wise_balances";
         public static string getCustomerByCustomerId = "api/dtplus/customer/get_customer_by_customer_id";
+        public static string getccmsbalanceinfoforcustomerid = "api/dtplus/customer/get_ccms_balance_info_for_customer_id";
         #endregion
 
         #region Login
@@ -186,7 +187,7 @@
         public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
-        public static string ManageTerminalUrl = "/dtpwebapi/api/dtplus/merchant/get_manage_terminal_detail";
+        public static string ManageTerminalUrl = "api/dtplus/merchant/get_manage_terminal_detail";
         #endregion
 
         #region "AshokLeyLand"
@@ -203,8 +204,9 @@
 
         #region "Customer Financial"
 
-        public static string GetCardToCCMSTransferUrl = "/dtpwebapi/api/dtplus/card/get_card_to_ccms_balance_transfer";
-        public static string GetCCMSToCardTransferUrl = "/dtpwebapi/api/dtplus/card/get_ccms_to_card_balance_transfer";
+        public static string GetCardToCCMSTransferUrl = "api/dtplus/card/get_card_to_ccms_balance_transfer";
+        public static string GetCCMSToCardTransferUrl = "api/dtplus/card/get_ccms_to_card_balance_transfer";
+        public static string GetCardToCardTransferUrl = "api/dtplus/card/get_card_to_card_balance_transfer";
 
         #endregion
     }

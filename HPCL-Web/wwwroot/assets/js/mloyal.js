@@ -1,5 +1,15 @@
 //// JavaScript Document
 
+
+
+$(document).on("ajaxStart", function () {
+    $("#loader").fadeIn();
+})
+
+$(document).on("ajaxStop", function () {
+    $("#loader").fadeOut();
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
@@ -168,12 +178,12 @@ function showregAddress() {
     }
 
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-        document.getElementById("salutaion_error").innerHTML = "Select Individual Or Org. Name Title";
+        document.getElementById("individualName_error").innerHTML = "Select Individual Or Org. Name Title";
         document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
     else {
-        document.getElementById("salutaion_error").innerHTML = "";
+        document.getElementById("individualName_error").innerHTML = "";
     }
 
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
@@ -850,12 +860,12 @@ function showCardDetails() {
     debugger;
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
-        document.getElementById("officialTitle_error").innerHTML = "Title Selection is required";
+        document.getElementById("official_fName_error").innerHTML = "Title Selection is required";
         document.applicationForm.KeyOffTitle.focus();
         return false;
     }
     else {
-        document.getElementById("officialTitle_error").innerHTML = "";
+        document.getElementById("official_fName_error").innerHTML = "";
     }
 
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
@@ -1009,8 +1019,20 @@ function showCardDetails() {
         document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
     }
 
+    if (document.applicationForm.KeyOffEmail.value.trim() != "") {
 
-    
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (document.applicationForm.KeyOffEmail.value.match(mailformat)) {
+            document.getElementById("KeyOffEmail_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.applicationForm.KeyOffEmail.focus();
+            return (false);
+        }
+    }
+
+
     y = document.applicationForm.KeyOffMobileNumber.value.trim();
     if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
         document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
@@ -1026,8 +1048,6 @@ function showCardDetails() {
     else {
         document.getElementById("official_mobile_error").innerHTML = "";
     }
-    //}
-
 
     return true;
 
@@ -1036,11 +1056,6 @@ function showCardDetails() {
     //document.getElementById("uploadDocuments-tab").classList.remove("disable");
     //localStorage.setItem("cardDetails", true)
     //localStorage.removeItem("keyOfficial")
-
-    //}	
-
-
-
 }
 
 

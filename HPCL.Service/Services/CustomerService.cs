@@ -31,7 +31,7 @@ namespace HPCL.Service.Services
             _commonActionService = commonActionService;
         }
 
-        public async Task<List<UploadDocResponse>> UploadDoc(UploadDoc entity)
+        public async Task<UploadDocResponse> UploadDoc(UploadDoc entity)
         {
             var searchBody = new UploadDoc
             {
@@ -48,8 +48,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.searchCustRefUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<UploadDocResponse> searchCustomer = jarr.ToObject<List<UploadDocResponse>>();
+            UploadDocResponse searchCustomer = obj.ToObject<UploadDocResponse>();
             return searchCustomer;
         }
 
@@ -1418,6 +1417,25 @@ namespace HPCL.Service.Services
 
             return obj;
         }
+        public async Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID)
+        {
+            CustomerCCMSBalanceModel customerCCMSBalance = new CustomerCCMSBalanceModel();
 
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getccmsbalanceinfoforcustomerid);
+
+            customerCCMSBalance = JsonConvert.DeserializeObject<CustomerCCMSBalanceModel>(response);
+
+            return customerCCMSBalance;
+        }
     }
 }

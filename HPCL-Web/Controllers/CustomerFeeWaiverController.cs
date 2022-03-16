@@ -19,7 +19,8 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> FeeWaiver()
         {
-            return View();
+            PendingCustomer pendingCustomer = new PendingCustomer();
+            return View(pendingCustomer);
         }
 
         [HttpPost]

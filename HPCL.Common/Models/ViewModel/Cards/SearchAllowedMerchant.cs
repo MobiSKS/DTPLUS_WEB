@@ -6,7 +6,8 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class SearchAllowedMerchant : BaseEntity
     {
-        [StringLength(14)]
+        [StringLength(16)]
+        [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
         public string CardNumber { get; set; }
         //[Required(ErrorMessage = FieldValidation.MerchantNotEmpty)]
         [StringLength(10)]

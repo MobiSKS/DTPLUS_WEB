@@ -276,19 +276,21 @@ namespace HPCL.Service.Services
                 FirstName = ofcrEditUpdateMdl.FirstName,
                 LastName = ofcrEditUpdateMdl.LastName,
                 Address1 = ofcrEditUpdateMdl.Address1,
-                Address2 = ofcrEditUpdateMdl.Address2,
-                Address3 = ofcrEditUpdateMdl.Address3,
-                StateId = ofcrEditUpdateMdl.State.ToString(),
-                CityName = ofcrEditUpdateMdl.City,
-                DistrictId = ofcrEditUpdateMdl.DistrictID.ToString(),
-                Pin = ofcrEditUpdateMdl.Pin.ToString(),
-                MobileNo = ofcrEditUpdateMdl.Mobile,
-                PhoneNo = ofcrEditUpdateMdl.Phone,
-                EmailId = ofcrEditUpdateMdl.Email,
-                Fax = ofcrEditUpdateMdl.Fax,
+                Address2 = string.IsNullOrEmpty(ofcrEditUpdateMdl.Address2) ? "" : ofcrEditUpdateMdl.Address2,
+                Address3 = string.IsNullOrEmpty(ofcrEditUpdateMdl.Address3) ? "" : ofcrEditUpdateMdl.Address3,
+                StateId = ofcrEditUpdateMdl.State,
+                CityName = string.IsNullOrEmpty(ofcrEditUpdateMdl.City) ? "" : ofcrEditUpdateMdl.City,
+                DistrictId = string.IsNullOrEmpty(ofcrEditUpdateMdl.DistrictID) ? "0" : ofcrEditUpdateMdl.DistrictID,
+                Pin = string.IsNullOrEmpty(ofcrEditUpdateMdl.Pin) ? "" : ofcrEditUpdateMdl.Pin,
+                MobileNo = string.IsNullOrEmpty(ofcrEditUpdateMdl.Mobile) ? "" : ofcrEditUpdateMdl.Mobile,
+                PhoneNo = string.IsNullOrEmpty(ofcrEditUpdateMdl.Phone) ? "" : ofcrEditUpdateMdl.Phone,
+                EmailId = string.IsNullOrEmpty(ofcrEditUpdateMdl.Email) ? "" : ofcrEditUpdateMdl.Email,
+                Fax = string.IsNullOrEmpty(ofcrEditUpdateMdl.Fax) ? "" : ofcrEditUpdateMdl.Fax,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 OfficerId = ofcrEditUpdateMdl.OfficerID
             };
+
+
 
             StringContent editOfficerUpdateContent = new StringContent(JsonConvert.SerializeObject(editOfficerUpdateForms), Encoding.UTF8, "application/json");
 

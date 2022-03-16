@@ -2,12 +2,12 @@
 @using HPCL.Common.Resources
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
 
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-
-        <form method="post" data-ajax="true" data-ajax-controller="Customer" data-ajax-action="ValidateNewCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <form method="post" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="Customer" data-ajax-action="ValidateNewCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
 
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -72,11 +72,11 @@
                                     <div class="d-flex align-items-center justify-content-center mt-3">
                                         <div class="col-md-3 col-12 px-0">
                                             <div class="col-12 d-flex align-items-center justify-content-center">
-                                                <div class="pr-2 w-50">
-                                                    <button class="btn btn_primary px-4 py-2" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
                                                 </div>
-                                                <div class="pl-2 w-50">
-                                                    <button class="btn btn_primary px-4 py-2" id="=btnCancel" name="cancel" style="background-color:#084693;color:white;" onclick="ResetFields()">@Label.Reset</button>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" id="=btnCancel" name="cancel" style="background-color:#084693;color:white;" onclick="ResetFields()">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,57 +84,59 @@
 
                                     <div class="table-responsive mt-4">
                                         <table id="CustomerSearch" class="table table-striped table-bordered table-responsive text-nowrap" style="display:none;">
-                                            <tr>
-                                                <th>
-                                                    @Html.DisplayName("SlNo")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Form No")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Customer RefNo")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Customer Name")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Customer Address")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Phone No")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Mobile No")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Total Cards")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Created Role Name")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Created By")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Created Date")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Status Name")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("KYC Status")
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Action")
-                                                </th>
-                                                @*<th style="display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        @Html.DisplayName("SlNo")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Form No")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Customer RefNo")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Customer Name")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Customer Address")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Phone No")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Mobile No")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Total Cards")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Created Role Name")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Created By")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Created Date")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Status Name")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("KYC Status")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Action")
+                                                    </th>
+                                                    @*<th style="display: none;">
 
                                                     </th>
                                                     <th style="display: none;">
 
                                                     </th>*@
 
-                                            </tr>
+                                                </tr>
+                                            </thead>
                                         </table>
                                     </div>
 
@@ -380,7 +382,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @*@Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control" })*@
+                                                                        @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -396,7 +398,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @*@Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control" })*@
+                                                                        @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -520,7 +522,7 @@
                                                                 <div class="col-md-7 col-12">
                                                                     <div class="row">
                                                                         <div class="col-4">
-                                                                            @*@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
+                                                                            @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
 
                                                                         </div>
                                                                         <div class="col-8 pl-0">
@@ -538,7 +540,7 @@
                                                                 <div class="col-md-7 col-12">
                                                                     <div class="row">
                                                                         <div class="col-4">
-                                                                            @*@Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
+                                                                            @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                         </div>
                                                                         <div class="col-8 pl-0">
                                                                             @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -556,7 +558,7 @@
                                 </div>
 
 
-                                <div id="OfficialDetailsSection" class="tab-pane" role="tabpanel">
+                                <div id="OfficialDetailsSection" class="tab-pane mt-3" role="tabpanel">
 
                                     <div class="w-100">
                                         @*<div class="tab-pane fade" id="officialDetails" role="tabpanel" aria-labelledby="officialDetails-tab">*@
@@ -604,7 +606,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @*@Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
+                                                                        @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -645,7 +647,7 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="row">
                                                                     <div class="col-4">
-                                                                        @*@Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
+                                                                        @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                     </div>
                                                                     <div class="col-8 pl-0">
                                                                         @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
@@ -698,18 +700,18 @@
                                                             <label class="font-weight-normal col-md-5 col-12">Area of Operation</label>
                                                             <div class="col-md-7 col-12">
                                                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                                    <label class="d-flex align-items-center justify-content-between py-3">
-                                                                        @Html.TextBoxFor(m => m.AreaOfOperation, new { @class = "form-control", style = "width:230px;", @readonly = "readonly", disabled = "disabled" })
+                                                                    <label class="d-flex align-items-center justify-content-between">
+                                                                        @Html.TextBoxFor(m => m.AreaOfOperation, new { @class = "form-control", style = "width:242px;", @readonly = "readonly", disabled = "disabled" })
                                                                         @*@Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter State</p>*@
+                                                                        <p class="m-0">Inter State</p>*@
                                                                     </label>
-                                                                    <label class="d-flex align-items-center justify-content-between py-3">
+                                                                    <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter City</p>*@
+                                                                        <p class="m-0">Inter City</p>*@
                                                                     </label>
-                                                                    <label class="d-flex align-items-center justify-content-between py-3">
+                                                                    <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Intra City</p>*@
+                                                                        <p class="m-0">Intra City</p>*@
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -832,7 +834,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        <img alt="Id proof front" id="IdProofFront" />
+                                                        <img src="/assets/images/id-card.png" alt="Id proof front" id="IdProofFront" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -840,7 +842,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        <img alt="Id proof back" id="IdProofBack" />
+                                                        <img src="/assets/images/id-card.png" alt="Id proof back" id="IdProofBack" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -896,7 +898,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        <img alt="Address proof front" id="AddressProofFront" />
+                                                        <img src="/assets/images/id-card.png" alt="Address proof front" id="AddressProofFront" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -904,7 +906,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        <img alt="Address proof back" id="AddressProofBack" />
+                                                        <img src="/assets/images/id-card.png" alt="Address proof back" id="AddressProofBack" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -982,6 +984,13 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
         let tableCustData = sessionStorage.getItem("tableCustData");
         let getCusId = sessionStorage.getItem("cusmId");
 
@@ -1447,7 +1456,8 @@
         }
                 //////////////////////////
 
-                alert(res);
+                $("#reason").html(res);
+                $(".toBeHiddenOnSuccess").hide();
             },
             error: function (ex) {
                 alert('Failed' + ex);
@@ -1552,7 +1562,8 @@
         }
                 //////////////////////////
 
-                alert(res);
+                $("#reason").html(res);
+                $(".toBeHiddenOnSuccess").hide();
             },
             error: function (ex) {
                 alert('Failed' + ex);

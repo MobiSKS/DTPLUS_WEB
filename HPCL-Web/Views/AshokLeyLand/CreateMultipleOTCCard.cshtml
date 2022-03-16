@@ -180,7 +180,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                 <span class="error" id="comm_address1_error"></span>
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                 <span class="error" id="comm_address2_error"></span>
                                             </div>
                                         </div>
@@ -1199,49 +1199,60 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").focus();
+            return (false);
+        }
+
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "Common")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    if (status == 'success') {
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "Common")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                }
+            }
+        });
 
 
     });

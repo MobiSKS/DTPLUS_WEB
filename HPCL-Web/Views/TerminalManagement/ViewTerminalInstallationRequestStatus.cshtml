@@ -9,7 +9,7 @@
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
         {
             <div class="w-100">
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Terminal Installation Request Status</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
@@ -67,7 +67,8 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="merchantId_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -75,7 +76,7 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Terminal ID</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                         </div>
                                     </div>
                                 </div>
@@ -221,6 +222,7 @@
         $("#show_Table").html("");
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
+        $("#merchantId_error").html("");
 
     };
     $("#btnSearch").on("click", (function (e) {
@@ -240,6 +242,23 @@
         }
         else
             $("#toDate_error").html("");
+        var merchantId = $("#MerchantId").val();
+        if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Invalid Merchant Id");
+                flag = "N";
+            }
+            else {
+                $("#merchantId_error").attr("style", "display:none");
+                $("#merchantId_error").html("");
+            }
+        }
+        else {
+            $("#merchantId_error").attr("style", "display:none");
+            $("#merchantId_error").html("");
+        }
+
         if (flag == "N")
             e.preventDefault();
 
@@ -309,5 +328,12 @@
         });
     };
 
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
 
+        return true;
+    }
 </script>
