@@ -61,9 +61,6 @@
                                                     @Html.DisplayName("Customer Reference No")
                                                 </th>
                                                 <th>
-                                                    @Html.DisplayName("Customer Code")
-                                                </th>
-                                                <th>
                                                     @Html.DisplayName("Zonal")
                                                 </th>
                                                 <th>
@@ -106,10 +103,10 @@
                                                 <div class="form-group">
                                                     <div class="d-flex align-items-center justify-content-start">
                                                         <div class="d-flex align-items-center justify-content-start mr-3">
-                                                            @Html.RadioButtonFor(m => m.CardPreference, "Card", new { disabled = "disabled" }) <span class="ml-2"> Card </span>
+                                                            @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "cardChecked", disabled = "disabled" }) <span class="ml-2"> Card </span>
                                                         </div>
                                                         <div class="d-flex align-items-center justify-content-start">
-                                                            @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { disabled = "disabled" }) <span class="ml-2"> Cardless </span>
+                                                            @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "cardlessChecked", disabled = "disabled" }) <span class="ml-2"> Cardless </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -119,64 +116,122 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
 
-                                        <fieldset class="border-1 rounded border-grey">
+                                        <fieldset class="border-1 rounded border-grey" id="cardInsideSection" style="display:none;">
                                             <legend class="font-weight-bold font-12 d-inline-block w-auto px-2 ml-2">Fee Payment Details</legend>
 
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                             </div>
 
-                                            <div class="col-md-6 col-12">
+                                            <div class="col-md-6 col-12" >
                                                 <div class="form-group">
                                                     <div class="d-flex align-items-center justify-content-start">
                                                         <div class="d-flex align-items-center justify-content-start mr-3">
-                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(CR)", new { disabled = "disabled" }) <span class="ml-2"> Fee Collect(CR)</span>
+                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectorFeeWaiver, "Online", new { @id = "rbtnOnline", @class = "radio-toolbar", @disabled = "disabled" })
+                                                            <span class="ml-2">Online</span>
                                                         </div>
                                                         <div class="d-flex align-items-center justify-content-start mr-3">
-                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Collect(Cheque)", new { disabled = "disabled" }) <span class="ml-2"> Fee Collect(Cheque)</span>
-                                                        </div>
-                                                        <div class="d-flex align-items-center justify-content-start mr-3">
-                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiverId, "Fee Waiver", new { disabled = "disabled" }) <span class="ml-2"> Fee Waiver </span>
+                                                            @Html.RadioButtonFor(m => m.FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { @id = "rbtnFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                            <span class="ml-2">Fee Waiver</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
-                                                            @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                            <div id="onlineRadioClick" style="display:none;">
+                                                <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Payment Source<sup class="text-danger">*</sup></label>
+                                                            <div class="col-md-7 col-12">
+                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-6 col-12">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
-                                                            @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Payment Date<sup class="text-danger">*</sup></label>
+                                                            <div class="col-md-7 col-12">
+                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+
+
+
+                                            <div id="feeWaiverRadioClick" style="display:none;">
+                                                <div class="d-flex align-items-center justify-content-start flex-wrap col-12">
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
+                                                            <div class="col-md-7 col-12">
+                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
+                                                            <div class="col-md-7 col-12">
+                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 
                                         </fieldset>
 
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
 
-                                        <table id="approveDetails" class="table table-bordered table-responsive" style="display:inline-table;">
+                                        <table id="FleetAndCredit" class="table table-bordered table-responsive" style="display:none;">
                                             <thead>
                                                 <tr>
 
                                                     <th>
-                                                        @Html.DisplayName("Sr. No.")
+                                                        Sr. No.
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayName("Vehicle Number/Card Identifier")
+                                                        @Html.DisplayName("Vehicle Number")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle Type")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle Make")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Year Of Registration")
+                                                    </th>
+                                                    <th class="mobhide">
+                                                        @Html.DisplayName("Mobile No")
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+
+                                        <table id="AttachedAndGeneric" class="table table-bordered table-responsive" style="display:none;">
+                                            <thead>
+                                                <tr>
+
+                                                    <th>
+                                                        Sr. No.
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Card Identifier")
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Vehicle No")
                                                     </th>
                                                     <th>
                                                         @Html.DisplayName("Vehicle Type")
@@ -187,20 +242,37 @@
                                                     <th>
                                                         @Html.DisplayName("Year of Registration")
                                                     </th>
-                                                    <th>
-                                                        @Html.DisplayName("Vehicle Owner Name")
+                                                    <th class="mobhide">
+                                                        @Html.DisplayName("Mobile No")
                                                     </th>
 
                                                 </tr>
                                             </thead>
                                         </table>
 
+                                        <table id="CorporateAndNonFleet" class="table table-bordered table-responsive" style="display:none;">
+                                            <thead>
+                                                <tr>
 
-                                        <div class="d-flex mt-2 justify-content-center">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;float:left">EDIT</button>
-                                            </div>
-                                        </div>
+                                                    <th>
+                                                        Sr. No.
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayName("Card Identifier")
+                                                    </th>
+                                                    <th class="mobhide">
+                                                        @Html.DisplayName("Mobile No")
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+
+
+                                        @*<div class="d-flex mt-2 justify-content-center">
+            <div class="px-2">
+                <button class="btn btn_primary" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;float:left">EDIT</button>
+            </div>
+        </div>*@
 
 
 
@@ -298,19 +370,21 @@
 
                 var rows = "<tbody><tr>"
                     + "<td><a href='#aaa' class='cust'>" + (res.pendingList.data[i].customerReferenceNo || '') + "</a></td>"
-                    + "<td></td>"
-                    + "<td></td>"
-                    + "<td></td>"
+                    + "<td>" + (res.pendingList.data[i].zonalOfficeName || '') + "</td>"
+                    + "<td>" + (res.pendingList.data[i].regionalOfficeName || '') + "</td>"
                     + "<td><span class='frmNo'>" + (res.pendingList.data[i].formNumber || '') + "</span></td>"
                     + "<td>" + (res.pendingList.data[i].customerName || '') + "</td>"
                     + "<td>" + (res.pendingList.data[i].createdRoleName || '') + "</td>"
                     + "<td>" + (res.pendingList.data[i].mobileNo || '') + "</td>"
-                    + "<td><a href='#aa' class='approveDtls'>APPROVE</a></td>"
+                    + "<td><a href='#aa' class='approveDtls' onclick='gotopage()'>APPROVE</a></td>"
                     + "</tr ></tbody > ";
 
                 $('#customerSearch').append(rows);
             }
             document.getElementById('customerSearch').style.display = 'inline-table';
+            $('html, body').animate({
+                scrollTop: $("#customerSearch").offset().top
+            }, 2000);
         } else {
             document.getElementById("customerSearch").style.display = "none";
             $("#noRecord").html("");
@@ -320,6 +394,11 @@
 
     }
 
+    function gotopage() {
+        $('html, body').animate({
+            scrollTop: $("#detailsSection").offset().top
+        }, 2000);
+    }
 
     $("#customerSearch").on('click', '.cust', function (e) {
 
@@ -568,12 +647,14 @@
                  if (res.searchList.success == true) {
 
                      document.getElementById("noRecord").style.display = "none";
+                     document.getElementById("cardInsideSection").style.display = "none";
+
 
                      var basicDetails = res.searchList.data.getApproveFeeWaiverBasicDetail;
                      var cardDetails = res.searchList.data.getApproveFeeWaiverCardDetail;
 
                      $('input[name="CardPreference"][value="' + basicDetails[0].cardPreference + '"]').prop('checked', true);
-                     $('input[name="FeePaymentsCollectFeeWaiverId"][value="' + basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
+                     $('input[name="FeePaymentsCollectorFeeWaiver"][value="' + basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
 
                      $('#FeePaymentNoId').val(basicDetails[0].feePaymentNo);
 
@@ -585,23 +666,120 @@
 
                      $('#FeePaymentDateId').val(abc);
 
-                     $("#approveDetails td").parent().remove();
+                     console.log($('input[name="CardPreference"]:checked').val(), "pref");
 
-                     for (var i = 0; i < cardDetails.length; i++) {
-
-                         var rows = "<tbody><tr>"
-                             + "<td></td>"
-                             + "<td><input class='form-control' name='" + (cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
-                             + "<td><select readonly='readonly' class='form-control vls'><option value='" + (cardDetails[i].vehicleType || '') + "'>" + (cardDetails[i].vehicleType || '') + "</option></select></td>"
-                             + "<td><input class='form-control' name='" + (cardDetails[i].vehicleMake || '') + "' type='text' value='" + (cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
-                             + "<td><input class='form-control' name='" + (cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
-                             + "<td>" + (cardDetails[i].vechileOwnerName || '') + "</td>"
-                             + "</tr ></tbody > ";
-
-                         $('#approveDetails').append(rows);
-
-                         document.getElementById('detailsWaiverSection').style.display = 'block';
+                     if ($('input[name=CardPreference]:checked').val() == "Card") {
+                         document.getElementById("cardInsideSection").style.display = "block";
+                         $(".mobhide").hide();
+                     /*    document.getElementsByClassName(".mobhide").style.display = "none";*/
+                     } else if ($('input[name=CardPreference]:checked').val() == "Cardless") {
+                         document.getElementById("cardInsideSection").style.display = "none";
+                         /*    document.getElementsByClassName(".mobhide").style.display = "block";*/
+                         $(".mobhide").show();
                      }
+
+                     console.log($('input[name="FeePaymentsCollectorFeeWaiver"]:checked').val(), "cards");
+
+                     if ($('input[name=FeePaymentsCollectorFeeWaiver]:checked').val() == "Fee Waiver") {
+                         document.getElementById("onlineRadioClick").style.display = "none";
+                         document.getElementById("feeWaiverRadioClick").style.display = "block";
+                     } else if ($('input[name=FeePaymentsCollectorFeeWaiver]:checked').val() == "Online"){
+                         document.getElementById("feeWaiverRadioClick").style.display = "none";
+                         document.getElementById("onlineRadioClick").style.display = "block";
+                     }
+
+                     if ((basicDetails[0].customerTypeName == "Fleet") || (basicDetails[0].customerTypeName == "Credit")) {
+
+                         $("#FleetAndCredit td").parent().remove();
+
+                         for (var i = 0; i < cardDetails.length; i++) {
+
+                             var rows = "<tbody><tr>"
+                                 + "<td>" + (cardDetails[i].srNumber || '') +"</td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].vechileNo || '') + "' type='text' value='" + (cardDetails[i].vechileNo || '') + "' readonly='readonly'></td>"
+                                 + "<td><select readonly='readonly' class='form-control vls'><option value='" + (cardDetails[i].vehicleType || '') + "'>" + (cardDetails[i].vehicleType || '') + "</option></select></td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].vehicleMake || '') + "' type='text' value='" + (cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
+                                 + "<td class='mobhide'><input class='form-control' name='" + (cardDetails[i].mobileno || '') + "' type='text' value='" + (cardDetails[i].mobileno || '') + "' readonly='readonly'></td>"
+
+                                 + "</tr ></tbody > ";
+
+                             $('#FleetAndCredit').append(rows);
+
+                             if ($('input[name=CardPreference]:checked').val() == "Cardless") {
+                                 $(".mobhide").show();
+                             } else {
+                                 $(".mobhide").hide();
+                             }
+
+                             document.getElementById('FleetAndCredit').style.display = 'inline-table';
+                             document.getElementById('AttachedAndGeneric').style.display = 'none';
+                             document.getElementById('CorporateAndNonFleet').style.display = 'none';
+                             document.getElementById('detailsWaiverSection').style.display = 'block';
+                         }
+                     }
+                     else if ((basicDetails[0].customerTypeName == "Attached") || (basicDetails[0].customerTypeName == "Generic")) {
+
+
+                         $("#AttachedAndGeneric td").parent().remove();
+
+                         for (var i = 0; i < cardDetails.length; i++) {
+
+                             var rows = "<tbody><tr>"
+                                 + "<td>" + (cardDetails[i].srNumber || '') + "</td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].vechileNo || '') + "' type='text' value='" + (cardDetails[i].vechileNo || '') + "' readonly='readonly'></td>"
+                                 + "<td><select readonly='readonly' class='form-control vls'><option value='" + (cardDetails[i].vehicleType || '') + "'>" + (cardDetails[i].vehicleType || '') + "</option></select></td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].vehicleMake || '') + "' type='text' value='" + (cardDetails[i].vehicleMake || '') + "' readonly='readonly'></td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].yearOfRegistration || '') + "' type='text' value='" + (cardDetails[i].yearOfRegistration || '') + "' readonly='readonly'></td>"
+                                 + "<td class='mobhide'><input class='form-control' name='" + (cardDetails[i].mobileno || '') + "' type='text' value='" + (cardDetails[i].mobileno || '') + "' readonly='readonly'></td>"
+                                 + "</tr ></tbody > ";
+
+                             $('#AttachedAndGeneric').append(rows);
+
+                             if ($('input[name=CardPreference]:checked').val() == "Cardless") {
+                                 $(".mobhide").show();
+                             } else {
+                                 $(".mobhide").hide();
+                             }
+
+                             document.getElementById('FleetAndCredit').style.display = 'none';
+                             document.getElementById('AttachedAndGeneric').style.display = 'inline-table';
+                             document.getElementById('CorporateAndNonFleet').style.display = 'none';
+
+                             document.getElementById('detailsWaiverSection').style.display = 'block';
+                         }
+
+
+                     }
+                     else if ((basicDetails[0].customerTypeName == "Corporate") || (basicDetails[0].customerTypeName == "Non Fleet")) {
+
+                         $("#CorporateAndNonFleet td").parent().remove();
+
+                         for (var i = 0; i < cardDetails.length; i++) {
+
+                             var rows = "<tbody><tr>"
+                                 + "<td>" + (cardDetails[i].srNumber || '') + "</td>"
+                                 + "<td><input class='form-control' name='" + (cardDetails[i].cardIdentifier || '') + "' type='text' value='" + (cardDetails[i].cardIdentifier || '') + "' readonly='readonly'></td>"
+                                 + "<td class='mobhide'><input class='form-control' name='" + (cardDetails[i].mobileno || '') + "' type='text' value='" + (cardDetails[i].mobileno || '') + "' readonly='readonly'></td>"
+                                 + "</tr ></tbody > ";
+
+                             $('#CorporateAndNonFleet').append(rows);
+
+                             if ($('input[name=CardPreference]:checked').val() == "Cardless") {
+                                 $(".mobhide").show();
+                             } else {
+                                 $(".mobhide").hide();
+                             }
+
+                             document.getElementById('FleetAndCredit').style.display = 'none';
+                             document.getElementById('AttachedAndGeneric').style.display = 'none';
+                             document.getElementById('CorporateAndNonFleet').style.display = 'inline-table';
+
+                             document.getElementById('detailsWaiverSection').style.display = 'block';
+                         }
+                     }
+
                  } else {
                      document.getElementById("detailsWaiverSection").style.display = "none";
                      $("#noRecord").html("");
@@ -616,6 +794,19 @@
         });
 
     });
+
+
+    $('input[type=radio][name=FeePaymentsCollectorFeeWaiver]').change(function () {
+        if ($(this).val() == "Fee Waiver") {
+            document.getElementById("onlineRadioClick").style.display = "none";
+            document.getElementById("feeWaiverRadioClick").style.display = "block";
+        } else {
+            document.getElementById("feeWaiverRadioClick").style.display = "none";
+            document.getElementById("onlineRadioClick").style.display = "block";
+        }
+    });
+
+
 
 
     function approveClick() {

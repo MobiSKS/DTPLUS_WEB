@@ -465,6 +465,7 @@
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
                         <div class="modal-body">
+                            <input type='text' id='txt_searchCard1' placeholder='Search Card No' onkeyup='SearchCard1Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable1">
                                 @*style="display: none"*@
                                 <thead>
@@ -492,6 +493,7 @@
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
                         <div class="modal-body">
+                            <input type='text' id='txt_searchCard2' placeholder='Search Card No' onkeyup='SearchCard2Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable2">
                                 @*style="display: none"*@
                                 <thead>
@@ -840,6 +842,7 @@
         console.log(cardNo);
 
         $('#CardNumber1').val(cardNo);
+        $('#txt_searchCard1').val('');
         $('#myModalCard1').modal('hide');
     }
 
@@ -921,6 +924,7 @@
         console.log(cardNo);
 
         $('#CardNumber2').val(cardNo);
+        $('#txt_searchCard2').val('');
         $('#myModalCard2').modal('hide');
     }
 
@@ -1879,5 +1883,99 @@
             return false;
         }
     });
+
+    $("#MobileNo1").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("MobileNo1").value.trim();
+        if (communicationMobile == "") {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("MobileNo1_error").innerHTML = "";
+        }
+
+        if (document.getElementById("MobileNo1").value.substring(0, 1) == "0") {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("MobileNo1").value = "";
+            document.getElementById("MobileNo1").focus();
+            return false;
+        }
+
+        if (document.getElementById("MobileNo1").value.length < 10) {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("MobileNo1").value = "";
+            document.getElementById("MobileNo1").focus();
+            return false;
+        }
+
+    });
+
+    $("#MobileNo2").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("MobileNo2").value.trim();
+        //if (communicationMobile == "") {
+        //    document.getElementById("MobileNo2_error").innerHTML = "Mobile No is required";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("MobileNo2_error").innerHTML = "";
+        //}
+
+        if (document.getElementById("MobileNo2").value.substring(0, 1) == "0") {
+            document.getElementById("MobileNo2_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("MobileNo2").value = "";
+            document.getElementById("MobileNo2").focus();
+            return false;
+        }
+
+        if (communicationMobile != "") {
+            if (document.getElementById("MobileNo2").value.length < 10) {
+                document.getElementById("MobileNo2_error").innerHTML = "Mobile No length must be 10 digit";
+                document.getElementById("MobileNo2").value = "";
+                document.getElementById("MobileNo2").focus();
+                return false;
+            }
+        }
+
+    });
+
+    function SearchCard1Function() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txt_searchCard1");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("CardsTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function SearchCard2Function() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txt_searchCard2");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("CardsTable2");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 
 </script>
