@@ -676,7 +676,7 @@ function showOfficialDetails() {
     }
 
 
-    if (document.applicationForm.CommunicationMobileNumber.value == "") {
+    if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
         document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
         document.applicationForm.CommunicationMobileNumber.focus();
         return false;
