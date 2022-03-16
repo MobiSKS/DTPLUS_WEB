@@ -1479,13 +1479,24 @@
 
     $("#CommunicationEmail").on("blur", function () {
         //debugger;
-        var communicationEmail = document.getElementById("CommunicationEmail").value;
+        var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
         if (communicationEmail == "") {
             document.getElementById("comm_email_error").innerHTML = "communication Email is required";
             return (false);
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmail").focus();
+            return (false);
         }
 
         var emailUsed = false;
@@ -1794,6 +1805,25 @@
             document.getElementById("KeyOffMobileNumber").value = "";
             document.getElementById("KeyOffMobileNumber").focus();
             return false;
+        }
+    });
+
+    $("#KeyOffEmail").on("blur", function () {
+        //debugger;
+        var OffEmail = document.getElementById("KeyOffEmail").value.trim();
+
+        if (OffEmail != "") {
+
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (OffEmail.match(mailformat)) {
+                document.getElementById("KeyOffEmail_error").innerHTML = "";
+                //return true
+            }
+            else {
+                document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                document.getElementById("KeyOffEmail").focus();
+                return (false);
+            }
         }
     });
 
