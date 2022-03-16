@@ -852,6 +852,16 @@ namespace HPCL.Service.Services
                     customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
 
                     StringBuilder sb = new StringBuilder();
+
+                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].Title.ToString()))
+                        sb.Append(customerResponseByReferenceNo.Data[0].Title.ToString());
+
+                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].KeyInitials.ToString()))
+                        sb.Append(customerResponseByReferenceNo.Data[0].KeyInitials.ToString());
+
+                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+                        sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+
                     if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
                         sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
 
