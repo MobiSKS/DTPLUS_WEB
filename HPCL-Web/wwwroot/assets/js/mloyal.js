@@ -10,6 +10,14 @@ $(document).on("ajaxStop", function () {
     $("#loader").fadeOut();
 })
 
+$(document).on("ajaxError", function () {
+   // alert('test');
+    setTimeout(function () {
+        $("#loader").fadeOut();
+    }, 100)
+    
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
