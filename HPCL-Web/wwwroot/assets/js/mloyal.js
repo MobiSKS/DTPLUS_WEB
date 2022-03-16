@@ -11,7 +11,11 @@ $(document).on("ajaxStop", function () {
 })
 
 $(document).on("ajaxError", function () {
-    $("#loader").fadeOut();
+   // alert('test');
+    setTimeout(function () {
+        $("#loader").fadeOut();
+    }, 100)
+    
 })
 
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
