@@ -10,7 +10,7 @@ $(document).on("ajaxStop", function () {
     $("#loader").fadeOut();
 })
 
-$(document).on("ajaxFail", function () {
+$(document).on("ajaxError", function () {
     $("#loader").fadeOut();
 })
 
