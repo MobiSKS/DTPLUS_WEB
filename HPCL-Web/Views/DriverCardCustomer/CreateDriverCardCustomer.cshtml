@@ -46,7 +46,7 @@
                                 <div class="d-flex align-items-center flex-wrap pt-3">
                                     <div class="col-lg-4 col-12 px-0">
                                         <div class="d-flex align-items-center flex-wrap">
-                                            <div class="font-weight-bold col-md-5 col-12">
+                                            <div class="font-weight-bold col-md-5 col-12 text-right">
                                                 Retail Outlet Name
                                             </div>
                                             <div class="col-md-7 col-12">
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="col-lg-4 col-12 px-0">
                                         <div class="d-flex align-items-center flex-wrap">
-                                            <div class="font-weight-bold col-md-5 col-12 px-0">
+                                            <div class="font-weight-bold col-md-5 col-12 text-right">
                                                 Zonal Office
                                             </div>
                                             <div class="col-md-7 col-12 col-12">
@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="col-lg-4 col-12 px-0">
                                         <div class="d-flex align-items-center flex-wrap">
-                                            <div class="font-weight-bold col-md-5 col-12 px-0">
+                                            <div class="font-weight-bold col-md-5 col-12 text-right">
                                                 Regional Office
                                             </div>
                                             <div class="col-md-7 col-12 col-12 px-0">
@@ -130,7 +130,7 @@
                                                         <span class="error" id="salutaion_error"></span>
                                                     </div>
                                                     <div class="col-8 pl-0">
-                                                        @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                        @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "80" })
                                                         <span class="error" id="customername_error"></span>
                                                     </div>
                                                 </div>
@@ -164,7 +164,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                                     <span class="error" id="communicationCityName_error"></span>
                                                 </div>
                                             </div>
@@ -213,10 +213,12 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <div class="error" id="CommunicationDialCode_error"></div>
                                                     </div>
                                                     <div class="col-8 pl-0">
-                                                        @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <div class="error" id="CommunicationPhonePart2_error"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -252,7 +254,7 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @*<textarea class="form-control" id="Textarea2" rows="3"></textarea>*@
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                     <span class="error" id="comm_address1_error"></span>
                                                 </div>
                                             </div>
@@ -302,7 +304,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">File Name <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control", autocomplete = "off", maxlength = "80" })
                                                     <span class="error" id="AddressProofDocumentNo_error"></span>
                                                 </div>
                                             </div>
@@ -428,11 +430,17 @@
 
             <!-- Modal : Card1 -->
             <div class="modal fade" id="myModalCard1" role="dialog">
-                <div class="modal-dialog">
-
+                <div class="modal-dialog modal-lg">
+                    
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
                         <div class="modal-body">
+                            <input type='text' id='txt_searchCard' placeholder='Search Card No' class="form-control mb-3" onkeyup='SearchCardFunction()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable1">
                                 @*style="display: none"*@
                                 <thead>
@@ -445,9 +453,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                       <!--<div class="modal-footer">
+                            <button type="button" class="btn btn_primary" data-dismiss="modal">Close</button>
+                        </div>-->
                     </div>
 
                 </div>
@@ -605,69 +613,64 @@
     });
 
 
-       $("#btnSearch").click(function () {
+    $("#btnSearch").click(function () {
         //debugger;
         var merchantId = document.getElementById("MerchantId").value;
-           if (merchantId == "") {
-               document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
-               //$("#merchantId").focus;
-               return (false);
-           }
-           else {
-               document.getElementById("MerchantId_error").innerHTML = "";
-           }
+        if (merchantId == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            //$("#merchantId").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantId_error").innerHTML = "";
+        }
 
-           if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
-               document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
-               document.getElementById("MerchantId").focus();
-               return ret;
-           }
+        if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
+            document.getElementById("MerchantId").focus();
+            return ret;
+        }
+
+        if (document.getElementById("MerchantId").value.length < 10) {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number";
+            document.getElementById("MerchantId").focus();
+            return (false);
+        }
 
         //var found = false;
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetMerchantDetailsByMerchantId", "DriverCardCustomer")',
-                data: { MerchantID: merchantId },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetMerchantDetailsByMerchantId", "DriverCardCustomer")',
+            data: { MerchantID: merchantId },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
-                        document.getElementById("Zone").value = data.zonalOfficeName;
-                        document.getElementById("RegionalOffice").value = data.regionalOfficeName;
-                        document.getElementById("OutletName").value = data.retailOutletName;
-                        document.getElementById("RegionalOfficeId").value = data.regionalOfficeId;
-                        $("#MerchantId").prop('readonly', true);
-                        dvOtherDetails.style.display = "block";
-                        dvHeaderDetails.style.display = "block";
-                        document.getElementById("MerchantId_error").innerHTML = "";
+                if (status == 'success') {
+                    document.getElementById("Zone").value = data.zonalOfficeName;
+                    document.getElementById("RegionalOffice").value = data.regionalOfficeName;
+                    document.getElementById("OutletName").value = data.retailOutletName;
+                    document.getElementById("RegionalOfficeId").value = data.regionalOfficeId;
+                    $("#MerchantId").prop('readonly', true);
+                    dvOtherDetails.style.display = "block";
+                    dvHeaderDetails.style.display = "block";
+                    document.getElementById("MerchantId_error").innerHTML = "";
 
-                        if (data == "Failed to load Merchant Details") {
-                            document.getElementById("Zone").value = "";
-                            document.getElementById("RegionalOffice").value = "";
-                            document.getElementById("OutletName").value = "";
-                            document.getElementById("RegionalOfficeId").value = "";
-                            $("#MerchantId").prop('readonly', false);
-                            dvOtherDetails.style.display = "none";
-                            dvHeaderDetails.style.display = "none";
-                            document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
-                        }
-                    }
-                    else {
-                        $("#MerchantId_error").html("");
+                    if (data == "Failed to load Merchant Details") {
                         document.getElementById("Zone").value = "";
                         document.getElementById("RegionalOffice").value = "";
                         document.getElementById("OutletName").value = "";
-                        $("#MerchantId").prop('readonly', false);
                         document.getElementById("RegionalOfficeId").value = "";
+                        $("#MerchantId").prop('readonly', false);
                         dvOtherDetails.style.display = "none";
                         dvHeaderDetails.style.display = "none";
                         document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
+                }
+                else {
+                    $("#MerchantId_error").html("");
                     document.getElementById("Zone").value = "";
                     document.getElementById("RegionalOffice").value = "";
                     document.getElementById("OutletName").value = "";
@@ -676,33 +679,58 @@
                     dvOtherDetails.style.display = "none";
                     dvHeaderDetails.style.display = "none";
                     document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("Zone").value = "";
-                        document.getElementById("RegionalOffice").value = "";
-                        document.getElementById("OutletName").value = "";
-                        $("#MerchantId").prop('readonly', false);
-                        document.getElementById("RegionalOfficeId").value = "";
-                        dvOtherDetails.style.display = "none";
-                        dvHeaderDetails.style.display = "none";
-                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
-                    }
                 }
-            });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("Zone").value = "";
+                document.getElementById("RegionalOffice").value = "";
+                document.getElementById("OutletName").value = "";
+                $("#MerchantId").prop('readonly', false);
+                document.getElementById("RegionalOfficeId").value = "";
+                dvOtherDetails.style.display = "none";
+                dvHeaderDetails.style.display = "none";
+                document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("Zone").value = "";
+                    document.getElementById("RegionalOffice").value = "";
+                    document.getElementById("OutletName").value = "";
+                    $("#MerchantId").prop('readonly', false);
+                    document.getElementById("RegionalOfficeId").value = "";
+                    dvOtherDetails.style.display = "none";
+                    dvHeaderDetails.style.display = "none";
+                    document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                }
+            }
+        });
 
 
-       });
+    });
 
     $("#FormNumber").on("blur", function () {
         //debugger;
-        var formNumber = document.getElementById("FormNumber").value;
+        var formNumber = document.getElementById("FormNumber").value.trim();
         if (formNumber == "") {
             document.getElementById("formNumber_error").innerHTML = "Form No is required";
             return (false);
         }
         else {
             document.getElementById("formNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+            document.getElementById("formNumber_error").innerHTML = "Form No should not start with 0";
+            document.getElementById("FormNumber").value = "";
+            document.getElementById("FormNumber").focus();
+            return false;
+        }
+
+        if (document.getElementById("FormNumber").value.length < 10) {
+            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
+            document.getElementById("FormNumber").value = "";
+            document.getElementById("FormNumber").focus();
+            return false;
         }
 
         var formNumberUsed = false;
@@ -760,7 +788,7 @@
     function LoadCard1Deatils() {
         debugger;
 
-        if (document.getElementById("MerchantId").value == "") {
+        if (document.getElementById("MerchantId").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
             //$("#MerchantId").focus;
             return (false);
@@ -828,12 +856,13 @@
         console.log(cardNo);
 
         $('#CardNo').val(cardNo);
+        $('#txt_searchCard').val('');
         $('#myModalCard1').modal('hide');
     }
 
        $("#CommunicationMobileNo").on("blur", function () {
         //debugger;
-        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+           var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
         if (communicationMobile == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
             return (false);
@@ -897,13 +926,24 @@
 
     $("#CommunicationEmailid").on("blur", function () {
         //debugger;
-        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value.trim();
         if (communicationEmail == "") {
             document.getElementById("comm_email_error").innerHTML = "communication Email is required";
             return (false);
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").focus();
+            return (false);
         }
 
         var emailUsed = false;
@@ -966,7 +1006,7 @@
 
         var ret = false;
 
-        if (document.getElementById("MerchantId").value == "") {
+        if (document.getElementById("MerchantId").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID is required";
             document.getElementById("MerchantId").focus();
             return ret;
@@ -984,7 +1024,7 @@
             document.getElementById("MerchantId_error").innerHTML = "";
         }
 
-        if (document.getElementById("FormNumber").value == "") {
+        if (document.getElementById("FormNumber").value.trim() == "") {
             document.getElementById("formNumber_error").innerHTML = "Form Number is required";
             //document.getElementById("FormNumber").focus();
             return ret;
@@ -993,7 +1033,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
         }
 
-        if (document.getElementById("CardNo").value == "") {
+        if (document.getElementById("CardNo").value.trim() == "") {
             document.getElementById("CardNo_error").innerHTML = "Card Number is required";
             document.getElementById("CardNo").focus();
             return ret;
@@ -1011,8 +1051,8 @@
             document.getElementById("salutaion_error").innerHTML = "";
         }
 
-        if (document.getElementById("IndividualOrgName").value == "") {
-            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+        if (document.getElementById("IndividualOrgName").value.trim() == "") {
+            document.getElementById("customername_error").innerHTML = "Driver Name is required";
             document.getElementById("IndividualOrgName").focus();
             return ret;
         }
@@ -1020,7 +1060,16 @@
             document.getElementById("customername_error").innerHTML = "";
         }
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+            document.getElementById("customername_error").innerHTML = "Driver Name can not be a number";
+            document.getElementById("IndividualOrgName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -1029,7 +1078,7 @@
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationCityName").value == "") {
+        if (document.getElementById("CommunicationCityName").value.trim() == "") {
             document.getElementById("communicationCityName_error").innerHTML = "City is required";
             document.getElementById("CommunicationCityName").focus();
             return ret;
@@ -1038,7 +1087,7 @@
             document.getElementById("communicationCityName_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationPincode").value == "") {
+        if (document.getElementById("CommunicationPincode").value.trim() == "") {
             document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
             document.getElementById("CommunicationPincode").focus();
             return ret;
@@ -1058,7 +1107,7 @@
         }
 
 
-        if (document.getElementById("CommunicationEmailid").value == "") {
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") {
             document.getElementById("comm_email_error").innerHTML = "Email is required";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
@@ -1067,7 +1116,49 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationMobileNo").value == "") {
+        var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        if (stdCode != "") {
+
+            if (stdCode.length < 2 || stdCode.length > 4) {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationDialCode").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+        var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (phno != "") {
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+            if (phno.length < 6 || phno.length > 8) {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
+                document.getElementById("CommunicationPhonePart2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
             document.getElementById("CommunicationMobileNo").focus();
             return ret;
@@ -1092,7 +1183,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        if (document.getElementById("DrivingLicence").value == "") {
+        if (document.getElementById("DrivingLicence").value.trim() == "") {
             document.getElementById("DrivingLicence_error").innerHTML = "Driving Licence is required";
             document.getElementById("DrivingLicence").focus();
             return ret;
@@ -1101,7 +1192,7 @@
             document.getElementById("DrivingLicence_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationAddress1").value == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address is required";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
@@ -1120,7 +1211,7 @@
             document.getElementById("AddressProofType_error").innerHTML = "";
         }
 
-        if (document.getElementById("AddressProof").value == "") {
+        if (document.getElementById("AddressProof").value.trim() == "") {
             document.getElementById("AddressProof_error").innerHTML = "Address Proof is required";
             document.getElementById("AddressProof").focus();
             return ret;
@@ -1129,7 +1220,7 @@
             document.getElementById("AddressProof_error").innerHTML = "";
         }
 
-        if (document.getElementById("AddressProofDocumentNo").value == "") {
+        if (document.getElementById("AddressProofDocumentNo").value.trim() == "") {
             document.getElementById("AddressProofDocumentNo_error").innerHTML = "File Name is required";
             document.getElementById("AddressProofDocumentNo").focus();
             return ret;
@@ -1176,7 +1267,7 @@
         //    document.getElementById("VehicleNo2_error").innerHTML = "";
         //}
 
-        if (document.getElementById("BeneficiaryName").value == "") {
+        if (document.getElementById("BeneficiaryName").value.trim() == "") {
             document.getElementById("BeneficiaryName_error").innerHTML = "Beneficiary Name is required";
             document.getElementById("BeneficiaryName").focus();
             return ret;
@@ -1185,7 +1276,7 @@
             document.getElementById("BeneficiaryName_error").innerHTML = "";
         }
 
-        if (document.getElementById("RelationWithBeneficiary").value == "") {
+        if (document.getElementById("RelationWithBeneficiary").value.trim() == "") {
             document.getElementById("RelationWithBeneficiary_error").innerHTML = "Relation With Beneficiary is required";
             document.getElementById("RelationWithBeneficiary").focus();
             return ret;
@@ -1194,7 +1285,7 @@
             document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
         }
 
-        if (document.getElementById("BeneficiaryMobile").value == "") {
+        if (document.getElementById("BeneficiaryMobile").value.trim() == "") {
             document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile is required";
             document.getElementById("BeneficiaryMobile").focus();
             return ret;
@@ -1220,7 +1311,7 @@
         }
 
 
-        if (document.getElementById("IncomeTaxPan").value == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
@@ -1303,5 +1394,222 @@
             e.preventDefault();
         }
     });
+
+     $("#IncomeTaxPan").on("blur", function () {
+        //debugger;
+        var panNumber = document.getElementById("IncomeTaxPan").value.trim();
+
+
+        if (panNumber == "") {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if ($('#IncomeTaxPan').val().match(regex)) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            return (false);
+        }
+
+        var panNumberUsed = false;
+        localStorage.setItem("PANNOALREADYUSED", "1");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckPanNoDuplication", "Common")',
+            data: { PanNo: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
+
+                    if (data.status == "0") {
+                        panNumberUsed = true;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        localStorage.setItem("PANNOALREADYUSED", "0");
+                    }
+                    else {
+                        panNumberUsed = false;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    }
+                }
+                else {
+                    //console.log(v);
+                    panNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
+
+
+     });
+
+    $("#CommunicationPincode").on("blur", function () {
+        //debugger;
+        var communicationPinCode = document.getElementById("CommunicationPincode").value.trim();
+        if (communicationPinCode == "") {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin code is required";
+            return (false);
+        }
+        else {
+            document.getElementById("communicationPincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("CommunicationPincode").value = "";
+            document.getElementById("CommunicationPincode").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationPincode").value.length < 6) {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin code length must be 6 digit";
+            document.getElementById("CommunicationPincode").value = "";
+            document.getElementById("CommunicationPincode").focus();
+            return false;
+        }
+    });
+
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
+        if (communicationMobile == "") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.length < 10) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckMobilNoDuplication", "Common")',
+                data: { MobileNo: communicationMobile },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    var v = data;
+                    if (status == 'success') {
+
+                        //if (data == "Failed to load Customer Details")
+                        //    document.getElementById("RBEName").value = "";
+                        //console.log('Test');
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.status == "0") {
+                            mobileNoUsed = true;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+                        }
+                        else {
+                            mobileNoUsed = false;
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                        mobileNoUsed = true;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //document.getElementById("RBEName").value = "";
+                },
+                statusCode: {
+                    1024: function () {
+                        //document.getElementById("RBEName").value = "";
+                    }
+                }
+            });
+        //console.log(fromNumberUsed);
+        if (mobileNoUsed == true) {
+            //console.log('Kumar');
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            //return (false);
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+            //console.log('SAM');
+        }
+
+    });
+
+    $("#BeneficiaryMobile").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("BeneficiaryMobile").value.trim();
+        if (communicationMobile == "") {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile No is required";
+            return (false);
+        }
+        else {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "";
+        }
+
+        if (document.getElementById("BeneficiaryMobile").value.substring(0, 1) == "0") {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile No should not start with 0";
+            document.getElementById("BeneficiaryMobile").value = "";
+            document.getElementById("BeneficiaryMobile").focus();
+            return false;
+        }
+
+        if (document.getElementById("BeneficiaryMobile").value.length < 10) {
+            document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile No length must be 10 digit";
+            document.getElementById("BeneficiaryMobile").value = "";
+            document.getElementById("BeneficiaryMobile").focus();
+            return false;
+        }
+    });
+
+    function SearchCardFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txt_searchCard");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("CardsTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 
 </script>
