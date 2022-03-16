@@ -6,6 +6,7 @@ namespace HPCL.Common.Models.ViewModel.ViewCard
     public class ViewCardDetails : BaseEntity
     {
         [Required(ErrorMessage = "CustomerId is Required")]
+        [StringLength(10)]
         public string Customerid { get; set; }
 
         public string CardNo { get; set; }
