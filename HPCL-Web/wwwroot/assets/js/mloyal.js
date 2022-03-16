@@ -10,6 +10,10 @@ $(document).on("ajaxStop", function () {
     $("#loader").fadeOut();
 })
 
+$(document).on("ajaxFail", function () {
+    $("#loader").fadeOut();
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
