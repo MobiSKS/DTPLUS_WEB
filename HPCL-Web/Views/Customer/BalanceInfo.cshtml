@@ -768,64 +768,76 @@
             document.getElementById("CustomerId_error").innerHTML = "";
         }
 
+        if (document.getElementById("CustomerId").value.substring(0, 1) != "2") {
+            document.getElementById("CustomerId_error").innerHTML = "Customer ID should be 10 digit number starting with 2";
+            document.getElementById("CustomerId").focus();
+            return (false);
+        }
+
+        if (document.getElementById("CustomerId").value.length < 10) {
+            document.getElementById("CustomerId_error").innerHTML = "Customer ID should be 10 digit number";
+            document.getElementById("CustomerId").focus();
+            return (false);
+        }
+
         //var found = false;
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetCustomerBalanceInfo", "Customer")',
-                data: { CustomerID: customerId },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(data.customerBalanceResponse);
-                    console.log(status);
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetCustomerBalanceInfo", "Customer")',
+            data: { CustomerID: customerId },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(data.customerBalanceResponse);
+                console.log(status);
 
-                    if (status == 'success') {
-                        $("#CustomerBalanceTbl td").parent().remove();
+                if (status == 'success') {
+                    $("#CustomerBalanceTbl td").parent().remove();
 
-                        for (var i = 0; i < data.customerBalanceResponse.length; i++) {
-                            var customerID = data.customerBalanceResponse[i].customerID;
-                            var rows = "<tbody><tr>"
-                                //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                + "<td><span class='rowData CustReferenceNo'>" + (data.customerBalanceResponse[i].cardBalance || '') + "</span></td>"
-                                + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data.customerBalanceResponse[i].ccmsLimitValue || '') + "</span></a></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].drivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiredDrivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiringDrivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].cashPurseLimit || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].dailyCashLimitBalance || '') + "</span></td>"
-                                //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
-                                + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
-
-
-                            $('#CustomerBalanceTbl').append(rows);
+                    for (var i = 0; i < data.customerBalanceResponse.length; i++) {
+                        var customerID = data.customerBalanceResponse[i].customerID;
+                        var rows = "<tbody><tr>"
+                            //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                            //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                            + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                            + "<td><span class='rowData CustReferenceNo'>" + (data.customerBalanceResponse[i].cardBalance || '') + "</span></td>"
+                            + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data.customerBalanceResponse[i].ccmsLimitValue || '') + "</span></a></td>"
+                            + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].drivestars || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiredDrivestars || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiringDrivestars || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].cashPurseLimit || '') + "</span></td>"
+                            + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].dailyCashLimitBalance || '') + "</span></td>"
+                            //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
+                            + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
 
 
-                        }
-
-                        document.getElementById('dvCustomerBalance').style.display = 'block';
+                        $('#CustomerBalanceTbl').append(rows);
 
 
-                        //if (data == "Failed to load Customer Details")
-                            //document.getElementById("RBEName").value = "";
                     }
-                    else {
-                        //$("#RBEId_error").html("");
-                        //document.getElementById("RBEName").value = "";
-                        //found = false;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
+
+                    document.getElementById('dvCustomerBalance').style.display = 'block';
+
+
+                    //if (data == "Failed to load Customer Details")
                     //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
-                    }
                 }
-            });
+                else {
+                    //$("#RBEId_error").html("");
+                    //document.getElementById("RBEName").value = "";
+                    //found = false;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
 
     });
 
