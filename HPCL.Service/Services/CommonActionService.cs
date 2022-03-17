@@ -3,6 +3,7 @@ using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
@@ -842,6 +843,30 @@ namespace HPCL.Service.Services
             var SortedtList = lstVehicleTpe.OrderBy(x => x.VehicleTypeName).ToList();
             return SortedtList;
         }
+        public async Task<CommonResponseData> CheckPanCardDuplicationByDistrictid(string DistrictId, string IncomeTaxPan)
+        {
+            CommonResponseData responseData = new CommonResponseData();
 
+            var requestinfo = new CheckPancardbyDistrictIdRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                DistrictId = DistrictId,
+                IncomeTaxPan = IncomeTaxPan
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkPanCardByDistrictid);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
+        }
     }
 }

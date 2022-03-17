@@ -300,6 +300,10 @@ namespace HPCL.Common.Models
         public string AddressProofBack { get; set; }
         public int Internel_Status_Code { get; set; }
         public string CustomerReferenceNo { get; set; }
+        public string IsDuplicatePanNo { get; set; }
+        public string AllowPanDuplication { get; set; }
+        public string PanCardRemarks { get; set; }
+        
     }
 
     

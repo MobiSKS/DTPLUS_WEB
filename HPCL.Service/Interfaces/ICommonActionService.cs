@@ -47,5 +47,6 @@ namespace HPCL.Service.Interfaces
         Task<List<TerminalStatusResponseModal>> GetMerchantStatus();
         Task<CommonResponseData> CheckDealerCodeIsValid(string DealerCode);
         Task<List<VehicleTypeModel>> GetVehicleTypeDropdown();
+        Task<CommonResponseData> CheckPanCardDuplicationByDistrictid(string DistrictId, string IncomeTaxPan);
     }
 }
