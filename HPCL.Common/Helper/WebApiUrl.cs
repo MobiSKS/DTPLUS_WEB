@@ -137,6 +137,7 @@
         public static string getCustomerByCustomerId = "api/dtplus/customer/get_customer_by_customer_id";
         public static string getccmsbalanceinfoforcustomerid = "api/dtplus/customer/get_ccms_balance_info_for_customer_id";
         public static string getFormNumber = "api/dtplus/customer/get_form_number";
+        public static string checkPanCardByDistrictid = "api/dtplus/customer/check_pan_card_by_district_id";
         #endregion
 
         #region Login

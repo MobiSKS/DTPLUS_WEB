@@ -855,13 +855,17 @@ function showOfficialDetails() {
         //    //$("#officialDetails-tab").click();
     }
 
+    if (document.getElementById("IsDuplicatePanNo").value == "0") {
+/*        $("#panvalidation").load(target, function () {*/
+            $("#panvalidation").modal("show");
+/*        });*/
+        return false;
+    }
+
     document.getElementById("officialDetails-tab").click();
     document.getElementById("officialDetails-tab").classList.remove("disable");
     localStorage.setItem("keyOfficial", true)
     localStorage.removeItem("showregAddress")
-
-    //}	
-
 }
 
 function showCardDetails() {
@@ -1055,6 +1059,19 @@ function showCardDetails() {
 
     else {
         document.getElementById("official_mobile_error").innerHTML = "";
+    }
+
+    if (localStorage.getItem("DUPLICATEPANUSED") == 0) {
+        if (document.getElementById("PanCardRemarks").value.trim() == "") {
+            document.getElementById("PanCardRemarks_error").innerHTML = "Enter Pan Card Remarks";
+            return (false);
+        }
+        else {
+            document.getElementById("PanCardRemarks_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("PanCardRemarks_error").innerHTML = "";
     }
 
     return true;

@@ -1081,10 +1081,15 @@ namespace HPCL_Web.Controllers
         {
             var FormNumber = await _customerService.GenerateFormNumber();
 
-            //return Json(new { FormNumber = FormNumber });
             return Json(FormNumber);
         }
-                
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictid(string DistrictId, string IncomeTaxPan)
+        {
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictid(DistrictId, IncomeTaxPan);
+
+            return Json(result);
+        }
 
     }
 }

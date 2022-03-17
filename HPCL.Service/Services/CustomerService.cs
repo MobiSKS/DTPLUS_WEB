@@ -260,11 +260,12 @@ namespace HPCL.Service.Services
                     {"NoOfCards", cust.NoOfCards.ToString()},
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     {"Createdby", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
-                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
-                     {"FormNumber", cust.FormNumber.ToString()}
+                    {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
+                    {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
+                    {"FormNumber", cust.FormNumber.ToString()},
+                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)}
 
-                };
+            };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerTypeForms), Encoding.UTF8, "application/json");
 
