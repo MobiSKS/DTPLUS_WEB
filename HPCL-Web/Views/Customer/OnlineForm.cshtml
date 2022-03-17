@@ -423,7 +423,6 @@
                                         <label class="font-weight-normal offset-md-2 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @*<select id="PerOrRegAddressDistrict" class="form-control"></select>*@
                                                 @Html.DropDownListFor(m => m.PermanentDistrictId, new SelectList(Model.PerOrRegAddressDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
                                             </div>
                                             <span class="error" id="perma_district_error"></span>
@@ -1015,6 +1014,7 @@
                 dataType: "json",
                 success: function (data, status, xhr) {
                     var v = data;
+                    
                     if (status == 'success') {
                         $("#PermanentDistrictId").html("");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
@@ -1047,7 +1047,144 @@
         var sameAscheck = document.getElementById("sameAddressCheck");
         var permanent_add = document.querySelector("#permanent_add");
         // var sameas = false;
+
+
         if (document.getElementById("sameAddressCheck").checked == true) {
+
+            if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
+                document.getElementById("comm_address1_error").innerHTML = "Communication Address 1 is required";
+                document.applicationForm.CommunicationAddress1.focus();
+                return false;
+            }
+            else {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+
+            if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
+                document.getElementById("comm_address2_error").innerHTML = "Communication Address 2 is required";
+                document.applicationForm.CommunicationAddress2.focus();
+                return false;
+            }
+            else {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+
+            if (document.applicationForm.CommunicationCity.value.trim() == "") {
+                document.getElementById("comm_city_error").innerHTML = "Communication City is required";
+                document.applicationForm.CommunicationCity.focus();
+                return false;
+            }
+            else {
+                document.getElementById("comm_city_error").innerHTML = "";
+            }
+
+            if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
+                document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pin Code is required";
+                document.applicationForm.CommunicationPinCode.focus()
+                return (false);
+            }
+            else {
+                var pin = document.applicationForm.CommunicationPinCode.value;
+                if (pin.length < 6) {
+                    document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pincode, Must be six digits";
+                    document.applicationForm.CommunicationPinCode.focus();
+                    return false;
+                }
+                else {
+                    document.getElementById("comm_pincode_error").innerHTML = "";
+                }
+            }
+
+            if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
+                document.getElementById("comm_states_error").innerHTML = "Communication Address State Selection is required";
+                document.applicationForm.CommunicationStateID.focus();
+                return false;
+            }
+            else {
+                document.getElementById("comm_states_error").innerHTML = "";
+            }
+
+            if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
+                document.getElementById("comm_district_error").innerHTML = "Communication Address District Selection is required";
+                document.applicationForm.CommunicationDistrictId.focus();
+                return false;
+            }
+            else {
+                document.getElementById("comm_district_error").innerHTML = "";
+            }
+
+
+
+            if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
+                document.applicationForm.CommunicationMobileNumber.focus();
+                return false;
+
+            }
+            else {
+                y = document.applicationForm.CommunicationMobileNumber.value.trim();
+                if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
+                    document.applicationForm.CommunicationMobileNumber.focus();
+                    return false
+                }
+                else if (y.length < 10 || y.length > 10) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
+                    document.applicationForm.CommunicationMobileNumber.focus();
+                    return false;
+                }
+
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                }
+            }
+
+            if (document.applicationForm.CommunicationEmail.value.trim() == "") {
+                document.getElementById("comm_email_error").innerHTML = "Communication Address Email is required";
+                document.applicationForm.CommunicationEmail.focus();
+                return (false);
+            }
+            else {
+                var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+                if (document.applicationForm.CommunicationEmail.value.match(mailformat)) {
+                    document.getElementById("comm_email_error").innerHTML = "";
+                    //return true
+                }
+                else {
+                    document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                    document.applicationForm.CommunicationEmail.focus();
+                    return (false);
+                }
+            }
+            var id = $('#CommunicationStateID').val();
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: "GetDistrictDetails/Customer",
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+
+                    if (status == 'success') {
+                        $("#PermanentDistrictId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.districtID,
+                                    text: data.districtName
+                                }).html(data.districtName).appendTo("#PermanentDistrictId");
+                        });
+                        document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
+                }
+            });
 
             $('#PerOrRegAddress1').val($('#CommunicationAddress1').val());
             $('#PerOrRegAddress2').val($('#CommunicationAddress2').val());
@@ -1062,53 +1199,20 @@
             $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
             $('#PermanentFaxCode').val($('#CommunicationFaxCode').val());
 
-            var id = $('#CommunicationStateID').val();
-
-              $.ajax({
-                  type: 'POST',  // http method
-                  url: "GetDistrictDetails/Customer",
-                data: { Stateid: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $("#PermanentDistrictId").html("");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#PermanentDistrictId");
-                        });
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating District Data");
-                }
-            });
 
             var Distrid = $('#CommunicationDistrictId').val();
             var DistrictName = $("#CommunicationDistrictId option:selected").text();
-            //if (Distrid != 0 || Distrid != undefined) {
-            // $("#PermanentDistrictId").html("");
-            //$('<option>',
-            //    {
-            //        value: Distrid ,
-            //        text: DistrictName
-            //    }).html(DistrictName).appendTo("#PermanentDistrictId");
-            //}
+
             $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
-            $("#PermanentDistrictId").val($('#CommunicationDistrictId').val());
             if (document.getElementById("sameAddressCheck").checked == true) {
                 permanent_add.querySelectorAll("input, select").forEach(function (i) {
                     i.setAttribute("disabled", true);
                 })
             }
-           // sameas = true;
+            // sameas = true;
 
+            $("#PermanentDistrictId").val($('#CommunicationDistrictId').val());
+            document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
         }
         else {
 
@@ -1132,19 +1236,19 @@
                 })
             }
 
-           // sameas = false;
+            // sameas = false;
         }
     }
-        
+
     function ValidatePAN() {
         debugger;
-        var panno = $('#CustomerIncomeTaxPan').val();
-        var OrgName = $('#IndividualOrgName').val();
+        var panno = $('#CustomerIncomeTaxPan').val().trim();
+        var OrgName = $('#IndividualOrgName').val().trim();
         var customerTbentityid = $("#CustomerTbentityID").val();
         var correctPANName = '';
 
         if (panno == '') {
-            alert('Enter Income Tax PAN');
+            document.getElementById("incomeTaxPan_error").innerHTML = "Enter Income Tax PAN";
             return;
         }
 
@@ -1369,11 +1473,11 @@
         var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (communicationEmail.match(mailformat)) {
             document.getElementById("comm_email_error").innerHTML = "";
-            //return true
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            document.getElementById("CommunicationEmail").focus();
+            document.getElementById("CommunicationEmail").value = "";
+            //document.getElementById("CommunicationEmail").focus();
             return (false);
         }
 
@@ -1675,6 +1779,31 @@
                 return (false);
             }
         }
+    });
+
+    $("#CustomerDateOfApplication").on("change", function () {
+        //debugger;
+        var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
+        console.log(selectedDate);
+
+        if (selectedDate != "") {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
+
+            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+            console.log(today);
+            console.log(varDate);
+            if (varDate > today) {
+                document.getElementById("applicationDate_error").innerHTML = "Date of Application can not be a future date";
+                setDates();
+            }
+            else {
+                document.getElementById("applicationDate_error").innerHTML = "";
+            }
+        }
+
     });
 
 </script>
