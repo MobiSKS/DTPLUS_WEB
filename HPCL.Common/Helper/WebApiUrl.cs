@@ -211,5 +211,11 @@
         public static string GetCardToCardTransferUrl = "api/dtplus/card/get_card_to_card_balance_transfer";
 
         #endregion
+
+        #region "Merchant Financial"
+
+        public static string GetUploadMerchantCautionLimitUrl = "api/dtplus/merchant/view_merchant_caution_limit";
+
+        #endregion
     }
 }

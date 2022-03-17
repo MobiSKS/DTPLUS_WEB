@@ -179,5 +179,12 @@ namespace HPCL_Web.Controllers
             return Json(customerInserCardResponseData);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantStatus()
+        {
+            var merchantStatusList = await _commonActionService.GetMerchantStatus();
+
+            return Json(new { merchantStatusList = merchantStatusList });
+        }
     }
 }
