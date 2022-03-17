@@ -1037,7 +1037,7 @@
                 dataType: "json",
                 success: function (data, status, xhr) {
                     var v = data;
-                    
+
                     if (status == 'success') {
                         $("#PermanentDistrictId").html("");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
@@ -1632,7 +1632,7 @@
 
     $("#CustomerIncomeTaxPan").on("blur", function () {
         //debugger;
-        var panNumber = document.getElementById("CustomerIncomeTaxPan").value;
+        var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
 
         var customerTbentityid = $("#CustomerTbentityID").val();
 
@@ -1652,6 +1652,50 @@
 
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("DUPLICATEPANUSED", "1");
+
+        var districtId = $("#CommunicationDistrictId").val();
+
+        if (districtId != 0 && customerTbentityid != "10") {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
+                data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    var v = data;
+                    if (status == 'success') {
+
+                        console.log('Test');
+                        console.log(data);
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") {
+                            //document.getElementById("comm_district_error").innerHTML = "Pan already used";
+                            localStorage.setItem("DUPLICATEPANUSED", "0");
+                            document.getElementById('IsDuplicatePanNo').value = "0";
+                        }
+                        else {
+                            localStorage.setItem("DUPLICATEPANUSED", "1");
+                            document.getElementById('IsDuplicatePanNo').value = "1";
+                            document.getElementById("comm_district_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        //console.log(v);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                statusCode: {
+                    1024: function () {
+                    }
+                }
+            });
+        }
 
         @*$.ajax({
             type: 'POST',  // http method
@@ -1838,7 +1882,7 @@
 
         document.getElementById('IsDuplicatePanNo').value = "1";
         document.getElementById('AllowPanDuplication').value = "N";
-        
+
         if (id != 0 && customerTbentityID != "10") {
 
             $.ajax({
