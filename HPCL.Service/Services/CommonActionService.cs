@@ -772,7 +772,7 @@ namespace HPCL.Service.Services
             lstCustomerRegionModel.Add(new CustomerRegionModel
             {
                 RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Regional Office",
+                RegionalOfficeName = "--Select--",
 
             });
             var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();

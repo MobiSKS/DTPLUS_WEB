@@ -103,7 +103,6 @@ namespace HPCL.Service.Services
 
         public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(TerminalManagementRequestViewModel terminalReq)
         {
-            TerminalManagementRequestViewModel TerminalManagementResponseData = new TerminalManagementRequestViewModel();
             string fromDate = "", toDate = "";
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
@@ -137,12 +136,11 @@ namespace HPCL.Service.Services
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.searchforterminalinstallationrequestclose);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
-            TerminalManagementResponseData = JsonConvert.DeserializeObject<TerminalManagementRequestViewModel>(TerminalRequestResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalManagementRequestViewModel>(TerminalRequestResponse);
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalManagementRequestDetailsModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalManagementRequestDetailsModel>>();
             terminalReq.TerminalManagementRequestDetails.AddRange(TerminalInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
-            terminalReq.Message = TerminalManagementResponseData.Message;
             return terminalReq;
         }
         public async Task<string> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel terminalManagementRequestModel)
@@ -219,7 +217,6 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
 
-            TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
 
             var TerminalManagementRequest = new TerminalManagementModel
@@ -235,7 +232,7 @@ namespace HPCL.Service.Services
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getterminaldeinstallationrequest);
-            ResponseModel = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JObject>();
@@ -247,7 +244,6 @@ namespace HPCL.Service.Services
                terminalDetails.ToObject<List<TerminalDeinstallationDetail>>();
             terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
             terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
-            terminalReq.Message = ResponseModel.Message;
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
@@ -284,7 +280,6 @@ namespace HPCL.Service.Services
 
         public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             string fromDate = "", toDate = "";
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
@@ -317,12 +312,11 @@ namespace HPCL.Service.Services
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getterminaldeinstallationrequestclose);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
-            ResponseModel = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
-            terminalReq.Message = ResponseModel.Message;
             return terminalReq;
         }
 
@@ -358,7 +352,6 @@ namespace HPCL.Service.Services
 
         public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            TerminalDeinstallationRequestViewModel ResponseModel=new TerminalDeinstallationRequestViewModel();
             string fromDate = "", toDate = "";
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
@@ -392,12 +385,11 @@ namespace HPCL.Service.Services
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.viewterminaldeinstallationrequeststatus);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
-            ResponseModel= JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason()); 
-            terminalReq.Message = ResponseModel.Message;
             return terminalReq;
         }
 
@@ -494,7 +486,6 @@ namespace HPCL.Service.Services
         }
         public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(TerminalDeinstallationRequestViewModel terminalReq)
         {
-            TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             string fromDate = "", toDate = "";
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
@@ -527,12 +518,11 @@ namespace HPCL.Service.Services
             var deInstallResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getproblematicdeinstalledtodeinstalled);
 
             JObject deInstallReqObj = JObject.Parse(JsonConvert.DeserializeObject(deInstallResponse).ToString());
-            ResponseModel = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(deInstallResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(deInstallResponse);
             var deInstallObjJarr = deInstallReqObj["Data"].Value<JArray>();
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = deInstallObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
-            terminalReq.Message = ResponseModel.Message;
             return terminalReq;
         }
 

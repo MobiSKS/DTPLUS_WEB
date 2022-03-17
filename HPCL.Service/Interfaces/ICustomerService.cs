@@ -36,5 +36,6 @@ namespace HPCL.Service.Interfaces
         Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
         Task<JObject> GetCustomerDetailsByCustomerID(string CustomerID);
         Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
+        Task<string> GenerateFormNumber();
     }
 }

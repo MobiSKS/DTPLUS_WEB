@@ -156,47 +156,6 @@ namespace HPCL_Web.Controllers
             List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
             lstDistrict = await _customerService.GetDistrictDetails(Stateid);
             return Json(lstDistrict);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"StateID", Stateid.ToString()}
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getDistrict, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-            //            lst.Add(new OfficerDistrictModel
-            //            {
-            //                stateID = 0,
-            //                districtID = 0,
-            //                districtName = "Select District"
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.districtID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading District Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -205,42 +164,6 @@ namespace HPCL_Web.Controllers
             List<VehicleTypeModel> sortedtList = new List<VehicleTypeModel>();
             sortedtList = await _customerService.GetVehicleTypeDetails();
             return Json(new { SortedtList = sortedtList });
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")}
-
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-            //            var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-            //            return Json(new { SortedtList = SortedtList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Vehicle Type Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -1149,7 +1072,19 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
             return PartialView("~/Views/Customer/_CustomerCCMSBalanceDetails.cshtml", modals);
         }
+        public async Task<IActionResult> GetFormNumber()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenerateFormNumber()
+        {
+            var FormNumber = await _customerService.GenerateFormNumber();
 
+            //return Json(new { FormNumber = FormNumber });
+            return Json(FormNumber);
+        }
+                
 
     }
 }

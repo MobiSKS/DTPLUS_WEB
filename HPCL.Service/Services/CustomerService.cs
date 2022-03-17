@@ -686,54 +686,20 @@ namespace HPCL.Service.Services
             var SortedtList = lstCustomerSubType.OrderBy(x => x.CustomerSubTypeID).ToList();
 
             return SortedtList;
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerSubType, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-            //            lst.Add(new CustomerSubTypeModel
-            //            {
-            //                CustomerSubTypeID = 0,
-            //                CustomerSubTypeName = "--Select --"
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading customer sub type Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
-
-
         }
 
         public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
         {
 
-            var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"StateID", Stateid.ToString()}
-                };
+            var request = new GetDistrictListRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                StateID = Stateid.ToString()
+            };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getDistrict);
 
@@ -748,32 +714,6 @@ namespace HPCL.Service.Services
             });
             var SortedtList = lstOfficerDistrictModel.OrderBy(x => x.districtID).ToList();
             return SortedtList;
-
-            //using (var Response = await client.PostAsync(WebApiUrl.getDistrict, content))
-            //{
-            //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //    {
-            //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //        var jarr = obj["Data"].Value<JArray>();
-            //        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-            //        lst.Add(new OfficerDistrictModel
-            //        {
-            //            stateID = 0,
-            //            districtID = 0,
-            //            districtName = "Select District"
-            //        });
-            //        var SortedtList = lst.OrderBy(x => x.districtID).ToList();
-            //        return Json(SortedtList);
-            //    }
-            //    else
-            //    {
-            //        ModelState.Clear();
-            //        ModelState.AddModelError(string.Empty, "Error Loading District Details");
-            //        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //    }
-            //}
         }
 
         public async Task<List<VehicleTypeModel>> GetVehicleTypeDetails()
@@ -797,28 +737,6 @@ namespace HPCL.Service.Services
 
             var SortedtList = lstVehicleTypeModel.OrderBy(x => x.VehicleTypeId).ToList();
             return SortedtList;
-
-            //using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, content))
-            //{
-            //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //    {
-            //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //        var jarr = obj["Data"].Value<JArray>();
-            //        List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-            //        var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-            //        return Json(new { SortedtList = SortedtList });
-            //    }
-            //    else
-            //    {
-            //        ModelState.Clear();
-            //        ModelState.AddModelError(string.Empty, "Error Loading Vehicle Type Details");
-            //        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //    }
-            //}
-
         }
 
         public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
@@ -1447,5 +1365,24 @@ namespace HPCL.Service.Services
 
             return customerCCMSBalance;
         }
+        public async Task<string> GenerateFormNumber()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getFormNumber);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<FormNumberResponseModel> lstFormNumber = jarr.ToObject<List<FormNumberResponseModel>>();
+            string FormNumber = lstFormNumber[0].FormNumber;
+
+            return FormNumber;
+        }
+        
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using HPCL.Common.Helper;
+using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel.Merchant
 {
-    public class MerchantApprovalModel
+    public class MerchantApprovalModel:CommonResponseBase
     {
         public MerchantApprovalModel()
         {

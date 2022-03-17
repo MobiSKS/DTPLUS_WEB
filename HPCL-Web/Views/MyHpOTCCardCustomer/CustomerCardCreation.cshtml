@@ -470,7 +470,7 @@
                             </button>
                          </div>
                         <div class="modal-body">
-                            <input type='text' id='txt_searchCard1' placeholder='Search Card No'  class="form-control mb-3" onkeyup='SearchCard1Function()'>
+                            <input type='text' id='txt_searchCard1' placeholder='Search Card No'  class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCard1Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable1">
                                 @*style="display: none"*@
                                 <thead>
@@ -490,12 +490,17 @@
             <!-- Modal : Card1 -->
             <!-- Modal : Card2 -->
             <div class="modal fade" id="myModalCard2" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog  modal-lg">
 
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
+                         <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
                         <div class="modal-body">
-                            <input type='text' id='txt_searchCard2' placeholder='Search Card No' onkeyup='SearchCard2Function()'>
+                            <input type='text' id='txt_searchCard2' placeholder='Search Card No' class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCard2Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable2">
                                 @*style="display: none"*@
                                 <thead>
@@ -508,9 +513,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                       
                     </div>
 
                 </div>
@@ -962,7 +965,7 @@
             return (false);
         }
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',
             url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
             data: { PanNo: panNumber },  // data to submit
@@ -1005,7 +1008,7 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
+        }*@
 
         //2nd Validation
 
@@ -1609,53 +1612,44 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "MyHpOTCCardCustomer")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "MyHpOTCCardCustomer")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
-
-        //if (mobileNoUsed == true) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                }
+            }
+        });*@
 
     });
 
@@ -1684,7 +1678,7 @@
             return (false);
         }
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("CheckEmailDuplication", "MyHpOTCCardCustomer")',
             data: { Emailid: communicationEmail },  // data to submit
@@ -1722,16 +1716,7 @@
                     document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
                 }
             }
-        });
-
-        //if (emailUsed == true) {
-        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_email_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+        });*@
 
     });
 

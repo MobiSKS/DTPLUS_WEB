@@ -10,6 +10,14 @@ $(document).on("ajaxStop", function () {
     $("#loader").fadeOut();
 })
 
+$(document).on("ajaxError", function () {
+   // alert('test');
+    setTimeout(function () {
+        $("#loader").fadeOut();
+    }, 100)
+    
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
@@ -676,7 +684,7 @@ function showOfficialDetails() {
     }
 
 
-    if (document.applicationForm.CommunicationMobileNumber.value == "") {
+    if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
         document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
         document.applicationForm.CommunicationMobileNumber.focus();
         return false;

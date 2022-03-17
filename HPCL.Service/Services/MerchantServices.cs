@@ -326,6 +326,7 @@ namespace HPCL.Service.Services
             var merchantRejectedResponse = await _requestService.CommonRequestService(MerchantRejectedContent, WebApiUrl.getRejectedMerchant);
 
             JObject merchantRejectedObj = JObject.Parse(JsonConvert.DeserializeObject(merchantRejectedResponse).ToString());
+            merchaApprovalMdl = JsonConvert.DeserializeObject<MerchantApprovalModel>(merchantRejectedResponse);
             var merchantRejectedJarr = merchantRejectedObj["Data"].Value<JArray>();
             List<MerchantApprovalTableModel> merchantApprovalLst = merchantRejectedJarr.ToObject<List<MerchantApprovalTableModel>>();
             merchaApprovalMdl.MerchantApprovalTableDetails.AddRange(merchantApprovalLst);

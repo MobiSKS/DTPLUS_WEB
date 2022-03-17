@@ -14,8 +14,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
             RegionMdl.Add(new CustomerRegionModel
             {
                 RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Region"
-
+                RegionalOfficeName = "--Select--"
             });
         }
         public virtual List<CustomerRegionModel> RegionMdl { get; set; }

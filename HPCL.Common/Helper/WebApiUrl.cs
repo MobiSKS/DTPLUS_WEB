@@ -136,6 +136,7 @@
         public static string getCustomerCardWiseBalances = "api/dtplus/customer/get_customer_card_wise_balances";
         public static string getCustomerByCustomerId = "api/dtplus/customer/get_customer_by_customer_id";
         public static string getccmsbalanceinfoforcustomerid = "api/dtplus/customer/get_ccms_balance_info_for_customer_id";
+        public static string getFormNumber = "api/dtplus/customer/get_form_number";
         #endregion
 
         #region Login
