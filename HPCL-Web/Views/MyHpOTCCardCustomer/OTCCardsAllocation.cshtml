@@ -1,4 +1,5 @@
 ﻿@model HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer.MIDAllocationOfCardsModel
+@using HPCL.Common.Resources;
 
 @{
     ViewData["Title"] = "MID Allocation of Cards via Web";
@@ -39,7 +40,6 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NoOfUnallocatedCards, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" })
-                                                @*<span class="error" id="NoofCards_error"></span>*@
                                             </div>
                                         </div>
                                     </div>
@@ -48,14 +48,11 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnUnallocatedCards">Get Unallocated Cards</button>
-                                    @*<button class="btn btn_primary" type="submit" onclick="return CheckValidations();">Process Request</button>*@
+                                    <button class="btn btn_primary" type="button" id="btnUnallocatedCards">@Label.GetUnallocatedCards</button>
                                 </div>
                                 @*<div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
-                                <button class="btn btn_primary" type="button" id="btnChecked">Get checked</button>
-                            </div>*@
-
+                                    <button class="btn btn_primary" type="button" id="btnDownloadUnallocatedCards" onclick="tableToCSV()">@Label.DownloadUnallocatedCards</button>
+                                </div>*@
                             </div>
                             <div id="dvDetails" class="mt-3" style="display:none;">
                                 <div class="d-flex align-items-center flex-wrap">
@@ -107,11 +104,10 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center mt-3">
                                     <div class="px-2">
-                                        @*<button class="btn btn_primary" type="submit" onclick="return CheckValidations();">Save</button>*@
-                                        <button class="btn btn_primary" type="button" id="btnSave">Save</button>
+                                        <button class="btn btn_primary" type="button" id="btnSave">@Label.Save</button>
                                     </div>
                                     <div class="px-2">
-                                        <button class="btn btn_primary" type="button" id="btnReset">Reset</button>
+                                        <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                     </div>
                                 </div>
                             </div>
@@ -388,4 +384,68 @@
                 $('#CustomerRegionID').val('0');
             });
 
+    function tableToCSV() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+
+            // Get each column data
+            var cols = rows[i].querySelectorAll('td,th');
+
+            // Stores each csv row data
+            var csvrow = [];
+           
+            for (var j = 0; j < cols.length; j++) {
+              
+                // Get the text data of each cell
+                // of a row and push it to csvrow
+                //csvrow.push(cols[j].innerHTML);
+                csvrow.push(cols[j].firstChild.value);
+                console.log(cols[j].firstChild.value);
+            }
+
+            // Combine each column value with comma
+            csv_data.push(csvrow.join(","));
+            //console.log(csvrow);
+            console.log(csv_data);
+        }
+        
+        // Combine each row data with new line character
+        csv_data = csv_data.join('\n');
+        console.log(csv_data);
+        // Call this function to download csv file
+        downloadCSVFile(csv_data);
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "UnallocatedOTCCards.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+    
 </script>

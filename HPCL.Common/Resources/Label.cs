@@ -12,7 +12,7 @@
         public const string Action = "Action";
         public const string LimitType = "Limit Type";
         public const string Amount = "Amount";
-
+           
         #endregion
 
         #region "Officer"
@@ -66,6 +66,8 @@
         public const string ExportToExcel = "Export To Excel";
         public const string ProcessRequest = "PROCESS REQUEST";
         public const string Submit = "SUBMIT";
+        public const string GetUnallocatedCards = "GET UNALLOCATED CARDS";
+        public const string DownloadUnallocatedCards = "DOWNLOAD UNALLOCATED CARDS";
         #endregion
 
         #region "Common Fields"
