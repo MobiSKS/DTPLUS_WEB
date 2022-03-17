@@ -48,5 +48,6 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> CheckDealerCodeIsValid(string DealerCode);
         Task<List<VehicleTypeModel>> GetVehicleTypeDropdown();
         Task<CommonResponseData> CheckPanCardDuplicationByDistrictid(string DistrictId, string IncomeTaxPan);
+        Task<List<CustomerTypeModel>> GetCustomerTypeListDropdown();
     }
 }

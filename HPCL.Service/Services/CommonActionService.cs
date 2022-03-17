@@ -868,5 +868,27 @@ namespace HPCL.Service.Services
 
             return responseData;
         }
+
+        public async Task<List<CustomerTypeModel>> GetCustomerTypeListDropdown()
+        {
+            var request = new GetCustomerTypeRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CTFlag = "1"
+            };
+
+
+            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getCustomerType);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerTypeModel> SortedtList = jarr.ToObject<List<CustomerTypeModel>>();
+
+            return SortedtList;
+        }
     }
 }

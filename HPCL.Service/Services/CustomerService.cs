@@ -82,27 +82,8 @@ namespace HPCL.Service.Services
         public async Task<CustomerModel> OnlineForm()
         {
             CustomerModel custMdl = new CustomerModel();
-
-            //Fetching CustomerType
-            var CustType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    {"CTFlag",  "1" }
-                };
-
-
-            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
-
-            var responseCustType = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getCustomerType);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustType).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-            custMdl.CustomerTypeMdl.AddRange(lst);
-
-
+            
+            custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
             custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
 
@@ -118,8 +99,8 @@ namespace HPCL.Service.Services
 
             var responseTBEntity = await _requestService.CommonRequestService(TBEntitycontent, WebApiUrl.getTbentityName);
 
-            obj = JObject.Parse(JsonConvert.DeserializeObject(responseTBEntity).ToString());
-            jarr = obj["Data"].Value<JArray>();
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseTBEntity).ToString());
+            var jarr = obj["Data"].Value<JArray>();
             List<CustomerTbentityModel> lstTBEntity = jarr.ToObject<List<CustomerTbentityModel>>();
             custMdl.CustomerTbentityMdl.AddRange(lstTBEntity);
 
@@ -284,24 +265,7 @@ namespace HPCL.Service.Services
 
             if (cust.Internel_Status_Code != 1000)
             {
-                //Fetching CustomerType
-                var CustType = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"CTFlag",  "1" }
-                                };
-
-
-                StringContent contentCustomerType = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
-
-                var responseCustomerType = await _requestService.CommonRequestService(contentCustomerType, WebApiUrl.getCustomerType);
-
-                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomerType).ToString());
-                var jarr = obj["Data"].Value<JArray>();
-                List<CustomerTypeModel> lstCustomerType = jarr.ToObject<List<CustomerTypeModel>>();
-                cust.CustomerTypeMdl.AddRange(lstCustomerType);
+                cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
 
                 //Customer SubType
@@ -317,8 +281,8 @@ namespace HPCL.Service.Services
 
                 var responseCustomerSubType = await _requestService.CommonRequestService(contentCustomerSubType, WebApiUrl.getCustomerSubType);
 
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomerSubType).ToString());
-                jarr = obj["Data"].Value<JArray>();
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomerSubType).ToString());
+                var jarr = obj["Data"].Value<JArray>();
                 List<CustomerSubTypeModel> lstCustomerSubType = jarr.ToObject<List<CustomerSubTypeModel>>();
 
                 lstCustomerSubType.Add(new CustomerSubTypeModel
@@ -328,30 +292,7 @@ namespace HPCL.Service.Services
                 });
                 var SortedtList = lstCustomerSubType.OrderBy(x => x.CustomerSubTypeID).ToList();
                 cust.CustomerSubTypeMdl.AddRange(SortedtList);
-
-
-                //using (var CustomerSubTypeResponse = await client.PostAsync(WebApiUrl.getCustomerSubType, contentCustomerSubType))
-                //{
-                //    if (CustomerSubTypeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = CustomerSubTypeResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-                //        lst.Add(new CustomerSubTypeModel
-                //        {
-                //            CustomerSubTypeID = 0,
-                //            CustomerSubTypeName = "Select Customer Subtype"
-                //        });
-                //        var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-                //        cust.CustomerSubTypeMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
+                               
 
                 cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
@@ -639,26 +580,6 @@ namespace HPCL.Service.Services
             List<CustomerTypeModel> lstCustomerType = jarr.ToObject<List<CustomerTypeModel>>();
 
             return lstCustomerType;
-
-            //using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
-            //{
-            //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //    {
-            //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //        var jarr = obj["Data"].Value<JArray>();
-            //        List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-            //        custMdl.CustomerTypeMdl.AddRange(lst);
-            //        return Json(lst);
-            //    }
-            //    else
-            //    {
-            //        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        // ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //    }
-            //}
-
         }
 
         public async Task<List<CustomerSubTypeModel>> GetCustomerSubType(int CustomerTypeID)

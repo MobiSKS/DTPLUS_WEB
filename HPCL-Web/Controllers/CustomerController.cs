@@ -723,71 +723,108 @@ namespace HPCL_Web.Controllers
 
             List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
 
-
             CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
 
-            FormNumber = string.Empty;
+            if (Customer != null)
+            {
+                if (!string.IsNullOrEmpty(Customer.CommunicationPhoneNo))
+                {
+                    string[] subs = Customer.CommunicationPhoneNo.Split('-');
 
+                    if (subs.Count() > 1)
+                    {
+                        Customer.CommunicationDialCode = subs[0].ToString();
+                        Customer.CommunicationPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.CommunicationPh = Customer.CommunicationPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.CommunicationFax))
+                {
+                    string[] subs = Customer.CommunicationFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.CommunicationFaxCode = subs[0].ToString();
+                        Customer.CommunicationFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.CommunicationFaxPh = Customer.CommunicationFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.PermanentFax))
+                {
+                    string[] subs = Customer.PermanentFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.PermanentFaxCode = subs[0].ToString();
+                        Customer.PermanentFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.PermanentFaxPh = Customer.CommunicationFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.PermanentPhoneNo))
+                {
+                    string[] subs = Customer.PermanentPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.PerOrRegAddressDialCode = subs[0].ToString();
+                        Customer.PerOrRegAddressPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.PerOrRegAddressPh = Customer.PermanentPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
+                {
+                    string[] subs = Customer.KeyOfficialPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.KeyOffDialCode = subs[0].ToString();
+                        Customer.KeyOffPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.KeyOffPh = Customer.KeyOfficialPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialFax))
+                {
+                    string[] subs = Customer.KeyOfficialFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.KeyOffFaxCode = subs[0].ToString();
+                        Customer.KeyOffFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.KeyOffPh = Customer.KeyOfficialFax;
+                    }
+                }
+            }
+
+            FormNumber = string.Empty;
 
             HttpContext.Session.SetString("FormNumberSession", FormNumber);
 
             ModelState.Clear();
 
             return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-
-            //HttpContext.Session.SetString("FormNumberSession", FormNumber);
-
-            //var customerBody = new Dictionary<string, string>
-            //{
-            //    {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"FormNumber" , FormNumber}
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getcustomerdetailsByFormNumber, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-
-            //            var searchRes = obj["Data"].Value<JObject>();
-            //            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
-
-            //            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
-
-            //            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
-
-            //            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
-
-
-            //            CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
-
-            //            FormNumber = string.Empty;
-
-
-            //            HttpContext.Session.SetString("FormNumberSession", FormNumber);
-
-            //            ModelState.Clear();
-
-            //            return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
