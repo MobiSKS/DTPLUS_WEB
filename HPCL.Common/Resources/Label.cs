@@ -68,6 +68,8 @@
         public const string Submit = "SUBMIT";
         public const string GetUnallocatedCards = "GET UNALLOCATED CARDS";
         public const string DownloadUnallocatedCards = "DOWNLOAD UNALLOCATED CARDS";
+        public const string Verify = "VERIFY";
+        
         #endregion
 
         #region "Common Fields"
