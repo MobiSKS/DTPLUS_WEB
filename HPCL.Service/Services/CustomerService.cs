@@ -82,52 +82,17 @@ namespace HPCL.Service.Services
         public async Task<CustomerModel> OnlineForm()
         {
             CustomerModel custMdl = new CustomerModel();
-            
+            custMdl.Remarks = "";
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
             custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
-
-            //fetching Type of Business Entity
-            var TBEntityForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                };
-            StringContent TBEntitycontent = new StringContent(JsonConvert.SerializeObject(TBEntityForms), Encoding.UTF8, "application/json");
-
-            var responseTBEntity = await _requestService.CommonRequestService(TBEntitycontent, WebApiUrl.getTbentityName);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseTBEntity).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerTbentityModel> lstTBEntity = jarr.ToObject<List<CustomerTbentityModel>>();
-            custMdl.CustomerTbentityMdl.AddRange(lstTBEntity);
-
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
             custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
 
-
             custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
-
-            //Fetching Type of Fleet
-            var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                };
-            StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-
-            var responseTypeOfFleet = await _requestService.CommonRequestService(TypeOfFleetcontent, WebApiUrl.getTypeOfFleet);
-
-            obj = JObject.Parse(JsonConvert.DeserializeObject(responseTypeOfFleet).ToString());
-            jarr = obj["Data"].Value<JArray>();
-            List<CustomerTypeOfFleetModel> lstTypeOfFleet = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
-            custMdl.CustomerTypeOfFleetMdl.AddRange(lstTypeOfFleet);
-
+            custMdl.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
 
             custMdl.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
 
@@ -266,100 +231,32 @@ namespace HPCL.Service.Services
             if (cust.Internel_Status_Code != 1000)
             {
                 cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-
-
-                //Customer SubType
-                var customerSubType = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    { "CustomerTypeId", cust.CustomerTypeID.ToString() }
-                                };
-
-                StringContent contentCustomerSubType = new StringContent(JsonConvert.SerializeObject(customerSubType), Encoding.UTF8, "application/json");
-
-                var responseCustomerSubType = await _requestService.CommonRequestService(contentCustomerSubType, WebApiUrl.getCustomerSubType);
-
-                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomerSubType).ToString());
-                var jarr = obj["Data"].Value<JArray>();
-                List<CustomerSubTypeModel> lstCustomerSubType = jarr.ToObject<List<CustomerSubTypeModel>>();
-
-                lstCustomerSubType.Add(new CustomerSubTypeModel
-                {
-                    CustomerSubTypeID = 0,
-                    CustomerSubTypeName = "Select Customer Sub type"
-                });
-                var SortedtList = lstCustomerSubType.OrderBy(x => x.CustomerSubTypeID).ToList();
-                cust.CustomerSubTypeMdl.AddRange(SortedtList);
-                               
-
+                                
+                cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown());
+                   
                 cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
-
-                //using (var zonalOfficeResponse = await client.PostAsync(WebApiUrl.getZonalOffice, Zonecontent))
-                //{
-                //    if (zonalOfficeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = zonalOfficeResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<CustomerZonalOfficeModel> lst = jarr.ToObject<List<CustomerZonalOfficeModel>>();
-                //        cust.CustomerZonalOfficeMdl.AddRange(lst);
-
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
                 //Regional Office
-                var customerRegionalOffice = new Dictionary<string, string>
-                                    {
-                                        {"Useragent", CommonBase.useragent},
-                                        {"Userip", CommonBase.userip},
-                                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                        {"ZonalId", cust.CustomerZonalOfficeID.ToString() }
+                //var customerRegionalOffice = new Dictionary<string, string>
+                //                    {
+                //                        {"Useragent", CommonBase.useragent},
+                //                        {"Userip", CommonBase.userip},
+                //                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                //                        {"ZonalId", cust.CustomerZonalOfficeID.ToString() }
 
-                                };
+                //                };
 
-                StringContent customerRegionalOfficecontent = new StringContent(JsonConvert.SerializeObject(customerRegionalOffice), Encoding.UTF8, "application/json");
+                //StringContent customerRegionalOfficecontent = new StringContent(JsonConvert.SerializeObject(customerRegionalOffice), Encoding.UTF8, "application/json");
 
-                var responseRegionalOffice = await _requestService.CommonRequestService(customerRegionalOfficecontent, WebApiUrl.getRegionalOffice);
+                //var responseRegionalOffice = await _requestService.CommonRequestService(customerRegionalOfficecontent, WebApiUrl.getRegionalOffice);
 
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<CustomerRegionModel> lstRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
+                //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
+                //var jarr = obj["Data"].Value<JArray>();
+                //List<CustomerRegionModel> lstRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
 
-                cust.CustomerRegionMdl.AddRange(lstRegionModel);
-
-                //using (var customerRegionalOfficeResponse = await client.PostAsync(WebApiUrl.getRegionalOffice, customerRegionalOfficecontent))
-                //{
-                //    if (customerRegionalOfficeResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = customerRegionalOfficeResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<CustomerRegionModel> lst = jarr.ToObject<List<CustomerRegionModel>>();
-
-                //        //lst.Add(new CustomerRegionModel
-                //        //{
-                //        //    RegionalOfficeID = 0,
-                //        //    RegionalOfficeName = "Select Region",
-
-                //        //});
-                //        //var SortedtList = lst.OrderBy(x => x.RegionalOfficeID).ToList();
-                //        //cust.CustomerRegionMdl.AddRange(SortedtList);
-                //        cust.CustomerRegionMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
+                //cust.CustomerRegionMdl.AddRange(lstRegionModel);
+                cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
+                                
 
                 //sales Area Dropdown
                 var saleAreaReqData = new Dictionary<string, string>
@@ -375,86 +272,35 @@ namespace HPCL.Service.Services
 
                 var responseSalesArea = await _requestService.CommonRequestService(contentRegionData, WebApiUrl.getSalesArea);
 
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseSalesArea).ToString());
-                jarr = obj["Data"].Value<JArray>();
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseSalesArea).ToString());
+                var jarr = obj["Data"].Value<JArray>();
                 List<SalesAreaModel> lstSalesArea = jarr.ToObject<List<SalesAreaModel>>();
 
                 cust.SalesAreaMdl.AddRange(lstSalesArea);
-
-                //using (var SalesAreaResponse = await client.PostAsync(WebApiUrl.getSalesArea, contentRegionData))
-                //{
-                //    if (SalesAreaResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = SalesAreaResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-                //        cust.SalesAreaMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
-
-                //fetching Type of Business Entity
-                var TBEntityForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                                };
-                StringContent TBEntitycontent = new StringContent(JsonConvert.SerializeObject(TBEntityForms), Encoding.UTF8, "application/json");
-
-                var responseTBEntity = await _requestService.CommonRequestService(TBEntitycontent, WebApiUrl.getTbentityName);
-
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseTBEntity).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<CustomerTbentityModel> lstTBEntity = jarr.ToObject<List<CustomerTbentityModel>>();
-
-                cust.CustomerTbentityMdl.AddRange(lstTBEntity);
-
-                //using (var TbentityNameResponse = await client.PostAsync(WebApiUrl.getTbentityName, TBEntitycontent))
-                //{
-                //    if (TbentityNameResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = TbentityNameResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<CustomerTbentityModel> lst = jarr.ToObject<List<CustomerTbentityModel>>();
-                //        cust.CustomerTbentityMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
-
+                
+                cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+                               
                 cust.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
 
 
-                var districtModel = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"StateID", cust.CommunicationStateID.ToString()}
-                                };
+                //var districtModel = new Dictionary<string, string>
+                //                {
+                //                    {"Useragent", CommonBase.useragent},
+                //                    {"Userip", CommonBase.userip},
+                //                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                //                    {"StateID", cust.CommunicationStateID.ToString()}
+                //                };
 
-                StringContent districtModelContent = new StringContent(JsonConvert.SerializeObject(districtModel), Encoding.UTF8, "application/json");
+                //StringContent districtModelContent = new StringContent(JsonConvert.SerializeObject(districtModel), Encoding.UTF8, "application/json");
 
-                var responseDistrict = await _requestService.CommonRequestService(districtModelContent, WebApiUrl.getDistrict);
+                //var responseDistrict = await _requestService.CommonRequestService(districtModelContent, WebApiUrl.getDistrict);
 
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseDistrict).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<OfficerDistrictModel> lstistrict = jarr.ToObject<List<OfficerDistrictModel>>();
+                //obj = JObject.Parse(JsonConvert.DeserializeObject(responseDistrict).ToString());
+                //jarr = obj["Data"].Value<JArray>();
+                //List<OfficerDistrictModel> lstistrict = jarr.ToObject<List<OfficerDistrictModel>>();
 
-                cust.CommunicationDistrictMdl.AddRange(lstistrict);
+                //cust.CommunicationDistrictMdl.AddRange(lstistrict);
+                cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
 
                 //using (var districtModelResponse = await client.PostAsync(WebApiUrl.getDistrict, districtModelContent))
                 //{
@@ -474,46 +320,10 @@ namespace HPCL.Service.Services
                 //    }
                 //}
 
-
-
                 cust.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
-
-
-                //Fetching Type of Fleet
-                var CustomerTypeOfFleetForms = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                                };
-                StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-
-                var responseTypeOfFleet = await _requestService.CommonRequestService(TypeOfFleetcontent, WebApiUrl.getTypeOfFleet);
-
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseTypeOfFleet).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<CustomerTypeOfFleetModel> lstTypeOfFleet = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
-
-                cust.CustomerTypeOfFleetMdl.AddRange(lstTypeOfFleet);
-
-                //using (var TypeOfFleetResponse = await client.PostAsync(WebApiUrl.getTypeOfFleet, TypeOfFleetcontent))
-                //{
-                //    if (TypeOfFleetResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = TypeOfFleetResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<CustomerTypeOfFleetModel> lst = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
-                //        cust.CustomerTypeOfFleetMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
                                 
+                cust.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
+                                                                
                 cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
 
                

@@ -890,5 +890,73 @@ namespace HPCL.Service.Services
 
             return SortedtList;
         }
+        public async Task<List<CustomerTbentityModel>> GetCustomerTbentityListDropdown()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+
+            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getTbentityName);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerTbentityModel> SortedtList = jarr.ToObject<List<CustomerTbentityModel>>();
+
+            return SortedtList;
+        }
+        public async Task<List<CustomerTypeOfFleetModel>> GetCustomerTypeOfFleetDropdown()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+
+            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getTypeOfFleet);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerTypeOfFleetModel> SortedtList = jarr.ToObject<List<CustomerTypeOfFleetModel>>();
+
+            return SortedtList;
+        }
+        public async Task<List<CustomerSubTypeModel>> GetCustomerSubTypeDropdown()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+
+            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getCustomerSubType);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerSubTypeModel> lstCustomerSubTypeModel = jarr.ToObject<List<CustomerSubTypeModel>>();
+
+            lstCustomerSubTypeModel.Add(new CustomerSubTypeModel
+            {
+                CustomerSubTypeID = 0,
+                CustomerSubTypeName = "Select Customer Sub type"
+            });
+            var SortedtList = lstCustomerSubTypeModel.OrderBy(x => x.CustomerSubTypeID).ToList();
+
+            return SortedtList;
+        }
+
     }
 }
