@@ -231,140 +231,28 @@ namespace HPCL.Service.Services
             if (cust.Internel_Status_Code != 1000)
             {
                 cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-                                
+
                 cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown());
-                   
+
                 cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
-                //Regional Office
-                //var customerRegionalOffice = new Dictionary<string, string>
-                //                    {
-                //                        {"Useragent", CommonBase.useragent},
-                //                        {"Userip", CommonBase.userip},
-                //                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                //                        {"ZonalId", cust.CustomerZonalOfficeID.ToString() }
-
-                //                };
-
-                //StringContent customerRegionalOfficecontent = new StringContent(JsonConvert.SerializeObject(customerRegionalOffice), Encoding.UTF8, "application/json");
-
-                //var responseRegionalOffice = await _requestService.CommonRequestService(customerRegionalOfficecontent, WebApiUrl.getRegionalOffice);
-
-                //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
-                //var jarr = obj["Data"].Value<JArray>();
-                //List<CustomerRegionModel> lstRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
-
-                //cust.CustomerRegionMdl.AddRange(lstRegionModel);
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
-                                
+                                                
+                cust.SalesAreaMdl.AddRange(await _commonActionService.GetSalesAreaDropdown(cust.CustomerRegionID.ToString()));
 
-                //sales Area Dropdown
-                var saleAreaReqData = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"RegionID", cust.CustomerRegionID.ToString() }
-                                };
-
-
-                StringContent contentRegionData = new StringContent(JsonConvert.SerializeObject(saleAreaReqData), Encoding.UTF8, "application/json");
-
-                var responseSalesArea = await _requestService.CommonRequestService(contentRegionData, WebApiUrl.getSalesArea);
-
-                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseSalesArea).ToString());
-                var jarr = obj["Data"].Value<JArray>();
-                List<SalesAreaModel> lstSalesArea = jarr.ToObject<List<SalesAreaModel>>();
-
-                cust.SalesAreaMdl.AddRange(lstSalesArea);
-                
                 cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
-                               
+
                 cust.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
 
-
-                //var districtModel = new Dictionary<string, string>
-                //                {
-                //                    {"Useragent", CommonBase.useragent},
-                //                    {"Userip", CommonBase.userip},
-                //                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                //                    {"StateID", cust.CommunicationStateID.ToString()}
-                //                };
-
-                //StringContent districtModelContent = new StringContent(JsonConvert.SerializeObject(districtModel), Encoding.UTF8, "application/json");
-
-                //var responseDistrict = await _requestService.CommonRequestService(districtModelContent, WebApiUrl.getDistrict);
-
-                //obj = JObject.Parse(JsonConvert.DeserializeObject(responseDistrict).ToString());
-                //jarr = obj["Data"].Value<JArray>();
-                //List<OfficerDistrictModel> lstistrict = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                //cust.CommunicationDistrictMdl.AddRange(lstistrict);
                 cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
 
-                //using (var districtModelResponse = await client.PostAsync(WebApiUrl.getDistrict, districtModelContent))
-                //{
-                //    if (districtModelResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = districtModelResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                //        cust.CommunicationDistrictMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
                 cust.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
-                                
+
                 cust.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
-                                                                
+
                 cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
-
-               
-                //District
-                var permanentdistrictModel = new Dictionary<string, string>
-                                {
-                                    {"Useragent", CommonBase.useragent},
-                                    {"Userip", CommonBase.userip},
-                                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                                    {"StateID", cust.PerOrRegAddressStateID.ToString()}
-                                };
-
-                StringContent perDistrictModelContent = new StringContent(JsonConvert.SerializeObject(permanentdistrictModel), Encoding.UTF8, "application/json");
-
-                var responseDistrictModel = await _requestService.CommonRequestService(perDistrictModelContent, WebApiUrl.getDistrict);
-
-                obj = JObject.Parse(JsonConvert.DeserializeObject(responseDistrictModel).ToString());
-                jarr = obj["Data"].Value<JArray>();
-                List<OfficerDistrictModel> lstDistrict = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                cust.PerOrRegAddressDistrictMdl.AddRange(lstDistrict);
-
-                //using (var perDistrictModelResponse = await client.PostAsync(WebApiUrl.getDistrict, perDistrictModelContent))
-                //{
-                //    if (perDistrictModelResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = perDistrictModelResponse.Content.ReadAsStringAsync().Result;
-
-                //        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-                //        var jarr = obj["Data"].Value<JArray>();
-                //        List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-
-                //        cust.PerOrRegAddressDistrictMdl.AddRange(lst);
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
-
-
+                
+                cust.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.PerOrRegAddressStateID.ToString()));
             }
 
             return cust;
@@ -373,13 +261,12 @@ namespace HPCL.Service.Services
         public async Task<List<CustomerTypeModel>> GetCustomerType()
         {
 
-            var CustType = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-                };
-
+            var CustType = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
 
@@ -394,12 +281,12 @@ namespace HPCL.Service.Services
 
         public async Task<List<CustomerSubTypeModel>> GetCustomerSubType(int CustomerTypeID)
         {
-            var customerType = new Dictionary<string, string>
-             {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                    { "CustomerTypeId", CustomerTypeID.ToString() }
+            var customerType = new GetCustomerSubTypeDropDownRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerTypeId = CustomerTypeID.ToString()
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
@@ -419,47 +306,17 @@ namespace HPCL.Service.Services
 
             return SortedtList;
         }
-
-        public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
+        
+        public async Task<List<VehicleTypeModel>> GetVehicleTypeDetails()
         {
-
-            var request = new GetDistrictListRequestModel()
+            var request = new BaseEntity()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                StateID = Stateid.ToString()
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDistrict);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<OfficerDistrictModel> lstOfficerDistrictModel = jarr.ToObject<List<OfficerDistrictModel>>();
-            lstOfficerDistrictModel.Add(new OfficerDistrictModel
-            {
-                stateID = 0,
-                districtID = 0,
-                districtName = "Select District"
-            });
-            var SortedtList = lstOfficerDistrictModel.OrderBy(x => x.districtID).ToList();
-            return SortedtList;
-        }
-
-        public async Task<List<VehicleTypeModel>> GetVehicleTypeDetails()
-        {
-
-            var forms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-
-                };
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getVehicleTpe);
 
@@ -476,7 +333,7 @@ namespace HPCL.Service.Services
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo.Remarks = "";
             customerCardInfo.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
-                        
+
 
             if (!string.IsNullOrEmpty(customerReferenceNo))
             {
@@ -544,64 +401,6 @@ namespace HPCL.Service.Services
                         }
                     }
                 }
-
-                //using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
-                //{
-                //    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-
-                //        customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
-                //        if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
-                //        {
-                //            customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-                //            customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
-
-                //            StringBuilder sb = new StringBuilder();
-                //            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-                //                sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
-
-                //            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-                //                sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
-
-                //            if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-                //                sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
-
-                //            customerCardInfo.CustomerName = sb.ToString();
-
-                //            customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-                //            customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
-
-                //            if (customerResponseByReferenceNo.Data != null)
-                //            {
-                //                customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
-                //                customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
-                //                customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-                //                customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
-                //                customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-                //                customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
-                //                if (customerCardInfo.RBEId == "0")
-                //                    customerCardInfo.RBEId = "";
-                //                if (customerCardInfo.NoOfCards == "0")
-                //                    customerCardInfo.NoOfCards = "";
-                //                if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
-                //                {
-                //                    customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
-                //                }
-                //            }
-                //        }
-                //        else
-                //        {
-                //            ViewBag.Message = customerResponseByReferenceNo.Message;
-                //        }
-
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-                //    }
-                //}
 
             }
 
@@ -699,10 +498,7 @@ namespace HPCL.Service.Services
             }
 
             return customerCardInfo;
-
         }
-
-
 
         public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
         {
@@ -790,15 +586,15 @@ namespace HPCL.Service.Services
 
             CustomerModel customerModel = new CustomerModel();
 
-            var OfficerType = new Dictionary<string, string>
+            var request = new BaseEntity()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerType), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getOfficerType);
 
@@ -809,7 +605,6 @@ namespace HPCL.Service.Services
             List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
 
             customerModel.OfficerTypeMdl.AddRange(lst);
-
 
             return customerModel;
         }
@@ -936,84 +731,8 @@ namespace HPCL.Service.Services
             });
             var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
             return SortedtList;
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-            //            lst.Add(new SalesAreaModel
-            //            {
-            //                SalesAreaID = 0,
-            //                SalesAreaName = "Select Sales Area",
-
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading sales Area Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
-
         }
-        public async Task<CustomerInserCardResponseData> CheckformnumberDuplication(string FormNumber)
-        {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"FormNumber", FormNumber }
-            };
-
-
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-
-            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkformnumberDuplication);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            return lst[0];
-        }
-        public async Task<CustomerInserCardResponseData> CheckMobilNoDuplication(string MobileNo)
-        {
-            //fetching Customer info
-            var CustomerFormNumber = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"CommunicationMobileNo", MobileNo }
-            };
-
-
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-
-            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkmobileNoDuplication);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            return lst[0];
-        }
-
+                
         public async Task<CustomerBalanceInfoModel> BalanceInfo()
         {
             CustomerBalanceInfoModel custMdl = new CustomerBalanceInfoModel();

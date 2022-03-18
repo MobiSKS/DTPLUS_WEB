@@ -154,7 +154,7 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
             List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
-            lstDistrict = await _customerService.GetDistrictDetails(Stateid);
+            lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
             return Json(lstDistrict);
         }
 
@@ -612,51 +612,6 @@ namespace HPCL_Web.Controllers
             searchList = await _customerService.ValidateNewCustomer(entity);
 
             return Json(new { searchList = searchList });
-
-            //var searchBody = new Dictionary<string, string>
-            //{
-            //    {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
-            //    {"Createdon" , entity.CustomerDateOfApplication},
-            //    {"FormNumber" , entity.FormNumber},
-            //    {"StateId" , null},
-            //    {"CustomerName" , null}
-            //};
-
-            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            var jsonSerializerOptions = new JsonSerializerOptions()
-            //            {
-            //                IgnoreNullValues = true
-            //            };
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-            //            ModelState.Clear();
-            //            return Json(new { searchList = searchList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -944,47 +899,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckformnumberDuplication(string FormNumber)
         {
-            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckformnumberDuplication(FormNumber);
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckformNumberDuplication(FormNumber);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerFormNumber = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"FormNumber", FormNumber }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkformnumberDuplication, cusFormcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Form Details");
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -998,49 +915,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
         {
-            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckMobilNoDuplication(MobileNo);
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckMobilNoDuplication(MobileNo);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerFormNumber = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"CommunicationMobileNo", MobileNo }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-
-            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkmobileNoDuplication, cusFormcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Mobile Details");
-            //        }
-            //    }
-            //}
-
         }
 
         [HttpPost]

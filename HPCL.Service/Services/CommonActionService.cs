@@ -371,16 +371,15 @@ namespace HPCL.Service.Services
 
         public async Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber)
         {
-            var CustomerFormNumber = new Dictionary<string, string>
+            var request = new CheckformNumberDuplicationRequest()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"FormNumber", FormNumber }
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                FormNumber = FormNumber
             };
 
-
-            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkformnumberDuplication);
 
@@ -392,16 +391,15 @@ namespace HPCL.Service.Services
 
         public async Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid)
         {
-
-            var requestBody = new Dictionary<string, string>
+            var request = new GetDistrictListRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"StateID", Stateid.ToString()}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                StateID = Stateid.ToString()
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getDistrict);
 
@@ -954,6 +952,34 @@ namespace HPCL.Service.Services
                 CustomerSubTypeName = "Select Customer Sub type"
             });
             var SortedtList = lstCustomerSubTypeModel.OrderBy(x => x.CustomerSubTypeID).ToList();
+
+            return SortedtList;
+        }
+        public async Task<List<SalesAreaModel>> GetSalesAreaDropdown(string RegionID)
+        {
+            var request = new GetSalesAreaDropdownRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                RegionID = RegionID
+            };
+
+
+            StringContent custTypeContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custTypeContent, WebApiUrl.getSalesArea);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SalesAreaModel> lstCustomerSubTypeModel = jarr.ToObject<List<SalesAreaModel>>();
+
+            //lstCustomerSubTypeModel.Add(new SalesAreaModel
+            //{
+            //    SalesAreaID = 0,
+            //    SalesAreaName = "Select Sales Area"
+            //});
+            var SortedtList = lstCustomerSubTypeModel.OrderBy(x => x.SalesAreaID).ToList();
 
             return SortedtList;
         }
