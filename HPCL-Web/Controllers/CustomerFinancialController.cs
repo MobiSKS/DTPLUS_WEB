@@ -56,5 +56,18 @@ namespace HPCL_Web.Controllers
             var searchList = await _customerFinancialService.SearchCardToCCMSTransfer(entity);
             return Json(new { searchList = searchList });
         }
+        public IActionResult CustomerTransactionDetails()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerTransactionDetails(string CustomerID, string CardNo,string MobileNo,string FromDate,string ToDate)
+        {
+
+            var models=await _customerFinancialService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
+
+            return Json(models);
+        }
+
     }
 }

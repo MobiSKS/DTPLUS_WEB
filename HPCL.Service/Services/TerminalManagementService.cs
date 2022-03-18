@@ -217,6 +217,7 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
 
+            TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
 
             var TerminalManagementRequest = new TerminalManagementModel
@@ -224,7 +225,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MerchantId = terminalReq.MerchantId!=null ? terminalReq.MerchantId : "",
+                MerchantId = terminalReq.MerchantId != null ? terminalReq.MerchantId : "",
                 TerminalId = terminalReq.TerminalId != null ? terminalReq.TerminalId : "",
                 ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
                 RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
@@ -232,7 +233,7 @@ namespace HPCL.Service.Services
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.getterminaldeinstallationrequest);
-            terminalReq = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
+            ResponseModel = JsonConvert.DeserializeObject<TerminalDeinstallationRequestViewModel>(TerminalRequestResponse);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JObject>();
@@ -244,6 +245,7 @@ namespace HPCL.Service.Services
                terminalDetails.ToObject<List<TerminalDeinstallationDetail>>();
             terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
             terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
+            terminalReq.Message = ResponseModel.Message;
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }

@@ -226,49 +226,41 @@
 
     };
     $("#btnSearch").on("click", (function (e) {
-
         var fromdate = $("#FromDate").val();
         var todate = $("#ToDate").val();
+        var merchantId = $("#MerchantId").val();
         var flag = "Y";
         if (fromdate == "") {
             $("#fromDate_error").attr("style", "display:block");
             $("#fromDate_error").html("Select From Date");
             flag = "N";
         }
-        else {
-            $("#fromDate_error").attr("style", "display:none");
-            $("#fromDate_error").html("");
-        }
-        if (todate == "") {
+
+        else if (todate == "") {
             $("#toDate_error").attr("style", "display:block");
             $("#toDate_error").html("Select To Date");
             flag = "N";
         }
+        else if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Please enter valid Merchant ID");
+                flag = "N";
+            }
+        }
+        else if (fromdate != "" && todate != "") {
+            var fromD = stringToDate($("#FromDate").val());
+            var toD = stringToDate($("#ToDate").val());
+            flag = checkDates(fromD, toD);
+        }
         else {
             $("#toDate_error").attr("style", "display:none");
             $("#toDate_error").html("");
-        }
-
-        var merchantId = $("#MerchantId").val();
-        if (merchantId != "") {
-            if (!merchantId.match(mappedMerchantID)) {
-                $("#merchantId_error").attr("style", "display:block");
-                $("#merchantId_error").html("Invalid Merchant Id");
-                flag = "N";
-            }
-            else {
-                $("#merchantId_error").attr("style", "display:none");
-                $("#merchantId_error").html("");
-            }
-        }
-        else {
+            $("#fromDate_error").attr("style", "display:none");
+            $("#fromDate_error").html("");
             $("#merchantId_error").attr("style", "display:none");
             $("#merchantId_error").html("");
         }
-        var fromD = stringToDate($("#FromDate").val(), "dd-mm-yyyy", "-");
-        var toD = stringToDate($("#ToDate").val(), "dd-mm-yyyy", "-");
-        flag = checkDates(fromD, toD);
-
         if (flag == "N")
             e.preventDefault();
 
@@ -350,7 +342,7 @@
         var fromD = "";
         var toD = "";
         if ($(this).hasClass("fromdate")) {
-            fromD = stringToDate($("#FromDate").val(), "mm/dd/yyyy", "/");
+            fromD = stringToDate($("#FromDate").val());
             var fromMonth = fromD.getMonth() + 1;
             var fromday = fromD.getDate();
             var fromoutput = (fromday < 10 ? '0' : '') + fromday + '-' +
@@ -360,9 +352,9 @@
             $("#FromDate").val(fromoutput);
         }
         else
-            fromD = stringToDate($("#FromDate").val(), "dd-mm-yyyy", "-");
+            fromD = stringToDate($("#FromDate").val());
         if ($(this).hasClass("todate")) {
-            toD = stringToDate($("#ToDate").val(), "mm/dd/yyyy", "/");
+            toD = stringToDate($("#ToDate").val());
             var toMonth = toD.getMonth() + 1;
             var today = toD.getDate();
             var tooutput = (today < 10 ? '0' : '') + today + '-' +
@@ -371,7 +363,7 @@
             $("#ToDate").val(tooutput);
         }
         else
-            toD = stringToDate($("#ToDate").val(), "dd-mm-yyyy", "-");
+            toD = stringToDate($("#ToDate").val());
         checkDates(fromD, toD);
         $("#show_Table").html("");
     });
@@ -385,11 +377,7 @@
                 $("#fromDate_error").html("From Date should be less or equal to To date");
                 dateflag = "N";
             }
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-            if (toD > new Date()) {
+            else if (toD > new Date()) {
                 $("#toDate_error").attr("style", "display:block");
                 $("#toDate_error").html("To Date should be less or equal to Today's date");
                 dateflag = "N";
@@ -397,20 +385,34 @@
             else {
                 $("#toDate_error").html("");
                 $("#toDate_error").attr("style", "display:none");
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
             }
-            return dateflag;
+           
         }
+        return dateflag;
     }
-    function stringToDate(_date, _format, _delimiter) {
-        var formatLowerCase = _format.toLowerCase();
-        var formatItems = formatLowerCase.split(_delimiter);
-        var dateItems = _date.split(_delimiter);
-        var monthIndex = formatItems.indexOf("mm");
-        var dayIndex = formatItems.indexOf("dd");
-        var yearIndex = formatItems.indexOf("yyyy");
-        var month = parseInt(dateItems[monthIndex]);
-        month -= 1;
-        var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-        return formatedDate;
+    function stringToDate(_date) {
+        if (_date != "") {
+            var _delimiter = '';
+            var formatLowerCase = "";
+            if (_date.includes('/')) {
+                _delimiter = '/';
+                formatLowerCase = "mm/dd/yyyy";
+            }
+            else if (_date.includes('-')) {
+                _delimiter = '-';
+                formatLowerCase = "dd-mm-yyyy";
+            }
+            var formatItems = formatLowerCase.split(_delimiter);
+            var dateItems = _date.split(_delimiter);
+            var monthIndex = formatItems.indexOf("mm");
+            var dayIndex = formatItems.indexOf("dd");
+            var yearIndex = formatItems.indexOf("yyyy");
+            var month = parseInt(dateItems[monthIndex]);
+            month -= 1;
+            var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+            return formatedDate;
+        }
     }
 </script>
