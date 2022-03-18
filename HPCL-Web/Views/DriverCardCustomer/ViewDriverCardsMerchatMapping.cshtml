@@ -29,7 +29,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", autocomplete = "off", maxlength = "16" })
+                                                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", autocomplete = "off", maxlength = "16", onkeypress = "return isNumberKey(event)" })
                                                 @*<span class="error" id="CardNumber_error"></span>*@
                                             </div>
                                         </div>
@@ -79,9 +79,9 @@
 
     $("#btnSearch").click(function () {
         //debugger;
-        var merchantId = document.getElementById("MerchantId").value;
+        var merchantId = document.getElementById("MerchantId").value.trim();
         if (merchantId == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Merchant Id field cannot be left blank";
             //$("#merchantId").focus;
             return (false);
         }
@@ -101,10 +101,45 @@
             return (false);
         }
 
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetMerchantDetailsByMerchantId", "DriverCardCustomer")',
+            data: { MerchantID: merchantId },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+
+                if (status == 'success') {
+                    document.getElementById("MerchantId_error").innerHTML = "";
+                    viewDriverCardMerchantAllocationTbl.style.display = "block";
+
+                    if (data == "Failed to load Merchant Details") {
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
+                        viewDriverCardMerchantAllocationTbl.style.display = "none";
+                    }
+                }
+                else {
+                    $("#MerchantId_error").html("");
+                    document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
+                    viewDriverCardMerchantAllocationTbl.style.display = "none";
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
+                viewDriverCardMerchantAllocationTbl.style.display = "none";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
+                    viewDriverCardMerchantAllocationTbl.style.display = "none";
+                }
+            }
+        });
+
         var cardNumber = document.getElementById("CardNumber").value;
 
-        //var found = false;
-        viewDriverCardMerchantAllocationTbl.style.display = "block";
+        //viewDriverCardMerchantAllocationTbl.style.display = "block";
 
         $.ajax({
             type: 'GET',  // http method
