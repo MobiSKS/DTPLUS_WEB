@@ -811,7 +811,6 @@ function showOfficialDetails() {
             document.getElementById("perma_state_error").innerHTML = "";
         }
 
-        $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
 
         if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
             document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
