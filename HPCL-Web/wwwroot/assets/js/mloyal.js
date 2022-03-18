@@ -856,10 +856,12 @@ function showOfficialDetails() {
     }
 
     if (document.getElementById("IsDuplicatePanNo").value == "0") {
-/*        $("#panvalidation").load(target, function () {*/
-            $("#panvalidation").modal("show");
-/*        });*/
+        $("#panvalidation").modal("show");
         return false;
+    }
+    else {
+        document.getElementById("lblPanCardRemarks").style.display = "none";
+        document.getElementById("PanCardRemarks").style.display = "none";
     }
 
     document.getElementById("officialDetails-tab").click();

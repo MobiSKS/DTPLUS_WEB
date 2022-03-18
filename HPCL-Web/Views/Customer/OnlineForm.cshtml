@@ -706,9 +706,9 @@
                             </div>
                             <div class="col-lg-6 col-md-12 col-12">
                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Pan Card Remarks</label>
+                                    <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks</label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
+                                        @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly", style = "display:none;" })
                                         <span class="error" id="PanCardRemarks_error"></span>
                                     </div>
                                 </div>
@@ -1362,6 +1362,7 @@
             $('#lblPanText').text('Govt. Dept. Identification Details');
             $('#btnVerify').hide();
             $('#lblCustPOI').show();
+            document.getElementById('IsDuplicatePanNo').value = "1";
         }
         else {
             $('#lblPanText').text('Income Tax PAN');
@@ -1639,6 +1640,7 @@
         if (customerTbentityid == 10) {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
             localStorage.setItem("PANNOALREADYUSED", "1");
+            document.getElementById("IsDuplicatePanNo").value = "1";
             return;
         }
 
@@ -1935,6 +1937,8 @@
         if (selectedButton == "OK") {
             $('#AllowPanDuplication').val('Y');
             $("#PanCardRemarks").prop('readonly', false);
+            document.getElementById("lblPanCardRemarks").style.display = "block";
+            document.getElementById("PanCardRemarks").style.display = "block";
             document.getElementById("officialDetails-tab").click();
             document.getElementById("officialDetails-tab").classList.remove("disable");
             localStorage.setItem("keyOfficial", true)
@@ -1943,6 +1947,8 @@
         else {
             $('#AllowPanDuplication').val('N');
             $("#PanCardRemarks").prop('readonly', true);
+            document.getElementById("lblPanCardRemarks").style.display = "none";
+            document.getElementById("PanCardRemarks").style.display = "none";
         }
         console.log($('#AllowPanDuplication').val());
         $('#panvalidation').modal('hide');
