@@ -928,24 +928,7 @@ function showCardDetails() {
         document.getElementById("KeyOffMiddleName_error").innerHTML = "";
     }
 
-
-    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
-        document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
-        document.applicationForm.KeyOffDesignation.focus();
-        return false;
-    }
-    else {
-        document.getElementById("official_designation_error").innerHTML = "";
-    }
-
-    if (!isNaN(document.applicationForm.KeyOffDesignation.value.trim())) {
-        document.getElementById("official_designation_error").innerHTML = "Designation can not be a number";
-        document.applicationForm.KeyOffDesignation.focus();
-        return false;
-    }
-    else {
-        document.getElementById("official_designation_error").innerHTML = "";
-    }
+       
 
     var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
     if (faxCode != "") {
@@ -1060,6 +1043,24 @@ function showCardDetails() {
 
     else {
         document.getElementById("official_mobile_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
+        document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
+    }
+
+    if (!isNaN(document.applicationForm.KeyOffDesignation.value.trim())) {
+        document.getElementById("official_designation_error").innerHTML = "Designation can not be a number";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
     }
 
     if (localStorage.getItem("DUPLICATEPANUSED") == 0) {
