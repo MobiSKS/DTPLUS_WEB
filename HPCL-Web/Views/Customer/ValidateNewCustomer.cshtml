@@ -44,8 +44,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", @id = "FormNumber" }) @*@id = "GetCustomerIdValue"*@
-                                                    @*@Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })*@
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", @id = "FormNumber", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="formNumber_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@
                                         <div class="col-md-3 col-12 px-0">
                                             <div class="col-12 d-flex align-items-center justify-content-center">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
+                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
                                                     <button class="btn btn_primary" id="=btnCancel" name="cancel" style="background-color:#084693;color:white;" onclick="ResetFields()">@Label.Reset</button>
@@ -947,6 +947,9 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                            <a id="btnUpdateCustomer" class="btn btn_primary py-2 px-4" onclick="updateCustomer()">UPDATE CUSTOMER</a>
+                                        </div>
+                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer()" href="#">VALIDATE</a>@*href="#CustomerCardsSection"*@
                                             @*<button class="btn" id="=btnApprove" name="btnApprove" style="background-color:#084693;color:white;" onclick="ApproveCustomer()">VALIDATE</button>*@
                                             <span class="error" id="Referenceno_error"></span>
@@ -1565,7 +1568,47 @@
         return true;
     };
 
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
 
+        return true;
+    }
+    $("#FormNumber").on("blur", function () {
+        //debugger;
+        if (document.getElementById("FormNumber").value.trim() != "") {
+
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Form No should not start with 0";
+                document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+
+            if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
+                document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+        }
+    });
+
+    function updateCustomer() {
+        console.log($('#FormNumberForSearch').val());
+        var formNo = $('#FormNumberForSearch').val();
+        var link = '@Url.Action("UpdateCustomer", "Customer", new { FormNumber = "-1" })';
+        link = link.replace("-1", formNo);
+        window.location.href = link;
+    };
 </script>
 <style>
     .nav-item > li.active > a,

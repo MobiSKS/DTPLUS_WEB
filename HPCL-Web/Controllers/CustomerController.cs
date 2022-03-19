@@ -96,50 +96,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetCustomerSubType(int CustomerTypeID)
         {
-
             List<CustomerSubTypeModel> lstCustomerSubType = new List<CustomerSubTypeModel>();
-            lstCustomerSubType = await _customerService.GetCustomerSubType(CustomerTypeID);
+            lstCustomerSubType = await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID);
             return Json(lstCustomerSubType);
-
-            //var customerType = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        { "CustomerTypeId", CustomerTypeID.ToString() }
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerSubType, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-            //            lst.Add(new CustomerSubTypeModel
-            //            {
-            //                CustomerSubTypeID = 0,
-            //                CustomerSubTypeName = "--Select --"
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading customer sub type Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -1003,6 +962,26 @@ namespace HPCL_Web.Controllers
             var result = await _commonActionService.CheckPanCardDuplicationByDistrictid(DistrictId, IncomeTaxPan);
 
             return Json(result);
+        }
+
+        public async Task<IActionResult> UpdateCustomer(string FormNumber)
+        {
+            var modals = await _customerService.UpdateCustomer(FormNumber);
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCustomer(CustomerModel cust)
+        {
+
+            var modals = await _customerService.UpdateCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo });
+            }
+
+            return View(modals);
         }
 
     }

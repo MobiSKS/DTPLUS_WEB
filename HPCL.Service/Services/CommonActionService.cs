@@ -972,14 +972,41 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<SalesAreaModel> lstCustomerSubTypeModel = jarr.ToObject<List<SalesAreaModel>>();
+            List<SalesAreaModel> lstSalesAreaModel = jarr.ToObject<List<SalesAreaModel>>();
 
-            //lstCustomerSubTypeModel.Add(new SalesAreaModel
+            //lstSalesAreaModel.Add(new SalesAreaModel
             //{
             //    SalesAreaID = 0,
             //    SalesAreaName = "Select Sales Area"
             //});
-            var SortedtList = lstCustomerSubTypeModel.OrderBy(x => x.SalesAreaID).ToList();
+            var SortedtList = lstSalesAreaModel.OrderBy(x => x.SalesAreaID).ToList();
+
+            return SortedtList;
+        }
+        public async Task<List<CustomerSubTypeModel>> GetCustomerSubTypeDropdown(int CustomerTypeID)
+        {
+            var customerType = new GetCustomerSubTypeDropDownRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CustomerTypeId = CustomerTypeID.ToString()
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
+
+
+            var responseCustomerSubType = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerSubType);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseCustomerSubType).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerSubTypeModel> lstCustomerSubType = jarr.ToObject<List<CustomerSubTypeModel>>();
+            lstCustomerSubType.Add(new CustomerSubTypeModel
+            {
+                CustomerSubTypeID = 0,
+                CustomerSubTypeName = "Select Customer Sub Type"
+            });
+            var SortedtList = lstCustomerSubType.OrderBy(x => x.CustomerSubTypeID).ToList();
 
             return SortedtList;
         }

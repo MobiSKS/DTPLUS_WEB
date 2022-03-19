@@ -16,7 +16,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerModel> OnlineForm();
         Task<CustomerModel> OnlineForm(CustomerModel cust);
         Task<List<CustomerTypeModel>> GetCustomerType();
-        Task<List<CustomerSubTypeModel>> GetCustomerSubType(int CustomerTypeID);
         Task<List<VehicleTypeModel>> GetVehicleTypeDetails();
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerDetails(string customerReferenceNo);
@@ -34,5 +33,7 @@ namespace HPCL.Service.Interfaces
         Task<JObject> GetCustomerDetailsByCustomerID(string CustomerID);
         Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
         Task<string> GenerateFormNumber();
+        Task<CustomerModel> UpdateCustomer(string FormNumber);
+        Task<CustomerModel> UpdateCustomer(CustomerModel cust);
     }
 }
