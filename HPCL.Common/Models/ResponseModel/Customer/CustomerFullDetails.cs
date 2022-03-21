@@ -117,6 +117,6 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string CommunicationPh { get; set; }
         public string KeyOffDialCode { get; set; }
         public string KeyOffPh { get; set; }
-
+        public string PanCardRemarks { get; set; }
     }
 }
