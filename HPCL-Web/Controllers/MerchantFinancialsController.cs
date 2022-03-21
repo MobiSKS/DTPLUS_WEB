@@ -21,10 +21,6 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> BatchDetails()
-        {
-            return View();
-        }
         public async Task<IActionResult> ERPReloadSaleEarningDetails()
         {
             return View();
@@ -49,10 +45,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> SettlementDetails()
-        {
-            return View();
-        }
+     
         public async Task<IActionResult> TransactionDetails()
         {
             return View();
@@ -72,6 +65,33 @@ namespace HPCL_Web.Controllers
         {
             var searchList = await _merchantFinancialService.ViewUploadMerchantCautionLimit(entity);
             return Json(new { searchList = searchList });
+        }
+
+        public IActionResult SettlementDetails()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SettlementDetails(GetMerchantSettlementDetails entity)
+        {
+            var searchList = await _merchantFinancialService.SettlementDetails(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> BatchDetails(string terminalId, int batchId)
+        {
+            ViewBag.TerminalId = terminalId;
+            ViewBag.BatchId = batchId;
+
+            var batchDetails = await _merchantFinancialService.GetBatchDetails(terminalId, batchId);
+            return View(batchDetails);
+        }
+
+        public async Task<IActionResult> TerminalDetails(string terminalId)
+        {
+            var terminalDetails = await _merchantFinancialService.GetTerminalDetails(terminalId);
+            return View(terminalDetails);
         }
     }
 }
