@@ -139,7 +139,8 @@
         public static string getFormNumber = "api/dtplus/customer/get_form_number";
         public static string checkPanCardByDistrictid = "api/dtplus/customer/check_pan_card_by_district_id";
         public static string gettransactionssummary = "api/dtplus/customer/get_transactions_summary";
-        public static string updateCustomer = "/api/dtplus/customer/update_customer";
+        public static string updateCustomer = "api/dtplus/customer/update_customer";
+        public static string checkPanCardByDistrictIdAndCustomerReferenceno = "api/dtplus/customer/check_pan_card_by_district_id_and_customer_reference_no";
         #endregion
 
         #region Login

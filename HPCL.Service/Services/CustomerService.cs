@@ -845,6 +845,7 @@ namespace HPCL.Service.Services
                 if (Customer != null)
                 {
                     custMdl.FormNumber = Customer.FormNumber;
+                    custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
 
                     custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(custMdl.CustomerTypeID));
@@ -1035,6 +1036,15 @@ namespace HPCL.Service.Services
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.TierOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TierOfCustomerId) ? "0" : Customer.TierOfCustomerId);
                     custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);
+                    custMdl.PanCardRemarks = Customer.PanCardRemarks;
+
+                    custMdl.IsDuplicatePanNo = "0";
+                    custMdl.AllowPanDuplication = "N";
+                    if (!string.IsNullOrEmpty(custMdl.PanCardRemarks))
+                    {
+                        custMdl.IsDuplicatePanNo = "1";
+                        custMdl.AllowPanDuplication = "Y";
+                    }
 
                     if (Customer.AreaOfOperation != null)
                     {
@@ -1107,6 +1117,7 @@ namespace HPCL.Service.Services
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
+                    {"CustomerReferenceNo", cust.CustomerReferenceNo},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
                     {"DateOfApplication", customerDateOfApplication},

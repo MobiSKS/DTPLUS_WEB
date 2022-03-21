@@ -345,7 +345,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.ExistingCustomerId, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.ExistingCustomerId, new { @class = "form-control", autocomplete = "off", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                     <span class="error" id="CustomerId_error"></span>
                                                 </div>
                                             </div>
@@ -378,7 +378,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Beneficiary Name <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                     <span class="error" id="BeneficiaryName_error"></span>
                                                 </div>
                                             </div>
@@ -440,13 +440,13 @@
                             </button>
                          </div>
                         <div class="modal-body">
-                            <input type='text' id='txt_searchCard' placeholder='Search Card No' class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCardFunction()'>
+                            <input type='text' id='txt_searchCard' placeholder='Search Card Number' class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCardFunction()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable1">
                                 @*style="display: none"*@
                                 <thead>
                                     <tr>
-                                        <th>Sl No.</th>
-                                        <th>CardNo</th>
+                                        <th>Serial No</th>
+                                        <th>Card Number</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cardDetails">
@@ -501,6 +501,7 @@
                 document.getElementById("CustomerName").value = "";
             }
 
+            document.getElementById("CustomerId_error").value = "";
         });
 
 
@@ -859,63 +860,7 @@
         $('#txt_searchCard').val('');
         $('#myModalCard1').modal('hide');
     }
-
-    $("#CommunicationMobileNo").on("blur", function () {
-        //debugger;
-        var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
-        if (communicationMobile == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        }
-
-        var mobileNoUsed = false;
-        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
-
-        @*$.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckMobilNoDuplication", "DriverCardCustomer")',
-            data: { MobileNo: communicationMobile },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
-
-                if (status == 'success') {
-
-                    //console.log('Test');
-                    //console.log(data.status);
-                    //console.log(data.reason);
-                    if (data.status == "0") {
-                        mobileNoUsed = true;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                    }
-                    else {
-                        mobileNoUsed = false;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                    }
-                }
-                else {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                    mobileNoUsed = true;
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                }
-            }
-        });*@
-
-
-    });
-
+    
     $("#CommunicationEmailid").on("blur", function () {
         //debugger;
         var communicationEmail = document.getElementById("CommunicationEmailid").value.trim();
@@ -934,6 +879,7 @@
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").value = "";
             document.getElementById("CommunicationEmailid").focus();
             return (false);
         }
@@ -987,12 +933,12 @@
     function ValidateMandatoryFields() {
         debugger;
 
-        var ret = false;
+        var ret = true;
 
         if (document.getElementById("MerchantId").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
             document.getElementById("MerchantId").focus();
-            return ret;
+            ret = false;
         }
         else {
             document.getElementById("MerchantId_error").innerHTML = "";
@@ -1001,7 +947,7 @@
         if (document.getElementById("Zone").value == "") {
             document.getElementById("MerchantId_error").innerHTML = "Click search button to load merchant details";
             document.getElementById("MerchantId").focus();
-            return ret;
+            ret = false;
         }
         else {
             document.getElementById("MerchantId_error").innerHTML = "";
@@ -1010,16 +956,30 @@
         if (document.getElementById("FormNumber").value.trim() == "") {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
             document.getElementById("FormNumber").focus();
-            return ret;
+            ret = false;
         }
         else {
             document.getElementById("formNumber_error").innerHTML = "";
         }
 
+        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+            document.getElementById("formNumber_error").innerHTML = "Form No should not start with 0";
+            document.getElementById("FormNumber").value = "";
+            //document.getElementById("FormNumber").focus();
+            ret = false;
+        }
+
+        if (document.getElementById("FormNumber").value.length < 10) {
+            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
+            document.getElementById("FormNumber").value = "";
+            //document.getElementById("FormNumber").focus();
+            ret = false;
+        }
+
         if (document.getElementById("CardNo").value.trim() == "") {
             document.getElementById("CardNo_error").innerHTML = "Card Number field cannot be left blank";
-            document.getElementById("CardNo").focus();
-            return ret;
+            //document.getElementById("CardNo").focus();
+            ret = false;
         }
         else {
             document.getElementById("CardNo_error").innerHTML = "";
@@ -1027,47 +987,47 @@
 
         if (document.getElementById("IndividualOrgNameTitle").value == "0") {
             document.getElementById("salutaion_error").innerHTML = "Select Title";
-            document.getElementById("IndividualOrgNameTitle").focus();
-            return ret;
+            //document.getElementById("IndividualOrgNameTitle").focus();
+            ret = false;
         }
         else {
             document.getElementById("salutaion_error").innerHTML = "";
         }
 
+        var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
+
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("customername_error").innerHTML = "Driver Name field cannot be left blank";
-            document.getElementById("IndividualOrgName").focus();
-            return ret;
+            //document.getElementById("IndividualOrgName").focus();
+            ret = false;
         }
         else {
-            document.getElementById("customername_error").innerHTML = "";
-        }
 
-        var nameCheck = /^[A-Za-z]{2,40}$/;
+            if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+                document.getElementById("customername_error").innerHTML = "Driver Name field is not valid";
+                //document.getElementById("IndividualOrgName").focus();
+                ret = false;
+            }
+            else {
+                document.getElementById("customername_error").innerHTML = "";
+            }
 
-        if (!document.getElementById("IndividualOrgName").value.trim().match(nameCheck)) {
-            document.getElementById("customername_error").innerHTML = "Driver Name field is not valid";
-            document.getElementById("IndividualOrgName").focus();
-            return ret;
+            if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
+                document.getElementById("customername_error").innerHTML = "Driver Name field is not valid";
+                //document.getElementById("IndividualOrgName").focus();
+                ret = false;
+            }
+            else {
+                document.getElementById("customername_error").innerHTML = "";
+            }
         }
-        else {
-            document.getElementById("customername_error").innerHTML = "";
-        }
-
-        if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
-            document.getElementById("customername_error").innerHTML = "Driver Name can not be a number";
-            document.getElementById("IndividualOrgName").focus();
-            return false;
-        }
-        else {
-            document.getElementById("customername_error").innerHTML = "";
-        }
+               
 
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.getElementById("IncomeTaxPan").value = "";
-            document.getElementById("IncomeTaxPan").focus();
-            return ret;
+            //document.getElementById("IncomeTaxPan").focus();
+            ret = false;
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
@@ -1075,8 +1035,8 @@
 
         if (document.getElementById("CommunicationCityName").value.trim() == "") {
             document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
-            document.getElementById("CommunicationCityName").focus();
-            return ret;
+            //document.getElementById("CommunicationCityName").focus();
+            ret = false;
         }
         else {
             document.getElementById("communicationCityName_error").innerHTML = "";
@@ -1084,27 +1044,26 @@
 
         if (document.getElementById("CommunicationPincode").value.trim() == "") {
             document.getElementById("communicationPincode_error").innerHTML = "Pin Code field cannot be left blank";
-            document.getElementById("CommunicationPincode").focus();
-            return ret;
+            //document.getElementById("CommunicationPincode").focus();
+            ret = false;
         }
         else {
             var pincodeFormat = /^[1-9][0-9]{5}$/;
             if (document.getElementById("CommunicationPincode").value.match(pincodeFormat)) {
                 document.getElementById("communicationPincode_error").innerHTML = "";
-                //return true
             }
             else {
                 document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code";
-                document.getElementById("CommunicationPincode").focus();
-                return (false);
+                //document.getElementById("CommunicationPincode").focus();
+                ret = false;
             }
         }
 
 
         if (document.getElementById("CommunicationStateId").value == "0") {
             document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
-            document.getElementById("CommunicationStateId").focus();
-            return ret;
+            //document.getElementById("CommunicationStateId").focus();
+            ret = false;
         }
         else {
             document.getElementById("comm_states_error").innerHTML = "";
@@ -1113,8 +1072,8 @@
 
         if (document.getElementById("CommunicationEmailid").value.trim() == "") {
             document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
-            document.getElementById("CommunicationEmailid").focus();
-            return ret;
+            //document.getElementById("CommunicationEmailid").focus();
+            ret = false;
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "";
@@ -1125,8 +1084,8 @@
 
             if (stdCode.length < 2 || stdCode.length > 4) {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
-                document.getElementById("CommunicationDialCode").focus();
-                return false;
+                //document.getElementById("CommunicationDialCode").focus();
+                ret = false;
             }
             else {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "";
@@ -1141,8 +1100,8 @@
         if (phno != "") {
             if (phno.charAt(0) == "0") {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
-                document.getElementById("CommunicationPhonePart2").focus();
-                return false;
+                //document.getElementById("CommunicationPhonePart2").focus();
+                ret = false;
             }
             else {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
@@ -1150,8 +1109,8 @@
 
             if (phno.length < 6 || phno.length > 8) {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
-                document.getElementById("CommunicationPhonePart2").focus();
-                return false;
+                //document.getElementById("CommunicationPhonePart2").focus();
+                ret = false;
             }
             else {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
@@ -1164,33 +1123,33 @@
 
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
-            document.getElementById("CommunicationMobileNo").focus();
-            return ret;
+            //document.getElementById("CommunicationMobileNo").focus();
+            ret = false;
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
-        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        }
+        //if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+        //    ret = false;
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //}
 
-        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-            document.getElementById("comm_email_error").innerHTML = "Email is already used";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_email_error").innerHTML = "";
-        }
+        //if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+        //    document.getElementById("comm_email_error").innerHTML = "Email is already used";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //}
 
         if (document.getElementById("DrivingLicence").value.trim() == "") {
             document.getElementById("DrivingLicence_error").innerHTML = "Driving Licence field cannot be left blank";
-            document.getElementById("DrivingLicence").focus();
-            return ret;
+            //document.getElementById("DrivingLicence").focus();
+            ret = false;
         }
         else {
             document.getElementById("DrivingLicence_error").innerHTML = "";
@@ -1198,8 +1157,8 @@
 
         if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
-            document.getElementById("CommunicationAddress1").focus();
-            return ret;
+            //document.getElementById("CommunicationAddress1").focus();
+            ret = false;
         }
         else {
             document.getElementById("comm_address1_error").innerHTML = "";
@@ -1208,8 +1167,8 @@
 
         if (document.getElementById("AddressProofType").value == "0") {
             document.getElementById("AddressProofType_error").innerHTML = "Document Type field cannot be left blank";
-            document.getElementById("AddressProofType").focus();
-            return ret;
+            //document.getElementById("AddressProofType").focus();
+            ret = false;
         }
         else {
             document.getElementById("AddressProofType_error").innerHTML = "";
@@ -1217,8 +1176,8 @@
 
         if (document.getElementById("AddressProof").value.trim() == "") {
             document.getElementById("AddressProof_error").innerHTML = "Address Proof field cannot be left blank";
-            document.getElementById("AddressProof").focus();
-            return ret;
+            //document.getElementById("AddressProof").focus();
+            ret = false;
         }
         else {
             document.getElementById("AddressProof_error").innerHTML = "";
@@ -1226,8 +1185,8 @@
 
         if (document.getElementById("AddressProofDocumentNo").value.trim() == "") {
             document.getElementById("AddressProofDocumentNo_error").innerHTML = "File Name field cannot be left blank";
-            document.getElementById("AddressProofDocumentNo").focus();
-            return ret;
+            //document.getElementById("AddressProofDocumentNo").focus();
+            ret = false;
         }
         else {
             document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
@@ -1238,8 +1197,8 @@
         if (selected == "Yes") {
             if (document.getElementById("ExistingCustomerId").value == "") {
                 document.getElementById("CustomerId_error").innerHTML = "Existing CustomerId field cannot be left blank";
-                document.getElementById("ExistingCustomerId").focus();
-                return ret;
+                //document.getElementById("ExistingCustomerId").focus();
+                ret = false;
             }
             else {
                 document.getElementById("CustomerId_error").innerHTML = "";
@@ -1248,7 +1207,7 @@
             if (document.getElementById("ExistingCustomerId").value != "") {
                 if (document.getElementById("CustomerName").value == "") {
                     document.getElementById("CustomerName_error").innerHTML = "Invalid Customer Id";
-                    return ret;
+                    ret = false;
                 }
                 else {
                     document.getElementById("CustomerName_error").innerHTML = "";
@@ -1277,8 +1236,8 @@
 
         if (document.getElementById("BeneficiaryName").value.trim() == "") {
             document.getElementById("BeneficiaryName_error").innerHTML = "Beneficiary Name field cannot be left blank";
-            document.getElementById("BeneficiaryName").focus();
-            return ret;
+            //document.getElementById("BeneficiaryName").focus();
+            ret = false;
         }
         else {
             document.getElementById("BeneficiaryName_error").innerHTML = "";
@@ -1286,8 +1245,8 @@
 
         if (document.getElementById("RelationWithBeneficiary").value.trim() == "") {
             document.getElementById("RelationWithBeneficiary_error").innerHTML = "Relation With Beneficiary field cannot be left blank";
-            document.getElementById("RelationWithBeneficiary").focus();
-            return ret;
+            //document.getElementById("RelationWithBeneficiary").focus();
+            ret = false;
         }
         else {
             document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
@@ -1295,8 +1254,8 @@
 
         if (document.getElementById("BeneficiaryMobile").value.trim() == "") {
             document.getElementById("BeneficiaryMobile_error").innerHTML = "Beneficiary Mobile field cannot be left blank";
-            document.getElementById("BeneficiaryMobile").focus();
-            return ret;
+            //document.getElementById("BeneficiaryMobile").focus();
+            ret = false;
         }
         else {
             document.getElementById("BeneficiaryMobile_error").innerHTML = "";
@@ -1304,7 +1263,7 @@
 
         if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
             document.getElementById("formNumber_error").innerHTML = "Form No is already used";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("formNumber_error").innerHTML = "";
@@ -1312,7 +1271,7 @@
 
         if (localStorage.getItem("PANNOALREADYUSED") == 0) {
             document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
@@ -1322,14 +1281,14 @@
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             //document.getElementById("IncomeTaxPan").focus();
-            return ret;
+            ret = false;
         }
         else {
             var result = false;
 
             if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                return (false);
+                ret = false;
             }
             else {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
@@ -1337,22 +1296,27 @@
 
         }
 
-       //if (ret == false)
-        //    return ret;
 
-        return true;
+        return ret;
     }
 
     $("#ExistingCustomerId").on("blur", function () {
         //debugger;
         var customerId = document.getElementById("ExistingCustomerId").value;
         if (customerId == "") {
-            document.getElementById("CustomerId_error").innerHTML = "Existing Customer Id cannot be left blank";
+            document.getElementById("CustomerId_error").innerHTML = "Customer Id field cannot be left blank";
              //$("#ExistingCustomerId").focus;
             return (false);
         }
         else {
             document.getElementById("CustomerId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("ExistingCustomerId").value.length < 10) {
+            document.getElementById("CustomerId_error").innerHTML = "Customer Id field length must be 10 digit";
+            document.getElementById("ExistingCustomerId").value = "";
+            document.getElementById("ExistingCustomerId").focus();
+            return false;
         }
 
             $.ajax({
@@ -1423,7 +1387,7 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
-            document.getElementById("IncomeTaxPan").innerHTML = "";
+            document.getElementById("IncomeTaxPan").value = "";
             return (false);
         }
 
@@ -1481,7 +1445,7 @@
         }
 
         if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin code";
             document.getElementById("CommunicationPincode").value = "";
             document.getElementById("CommunicationPincode").focus();
             return false;
@@ -1535,56 +1499,56 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "Common")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "Common")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
         //console.log(fromNumberUsed);
         if (mobileNoUsed == true) {
             //console.log('Kumar');
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
             //return (false);
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
             //console.log('SAM');
-        }
+        }*@
 
     });
 
@@ -1632,5 +1596,77 @@
             }
         }
     }
+
+    $("#BeneficiaryName").on("blur", function () {
+        //debugger;
+        var beneficiaryName = document.getElementById("BeneficiaryName").value.trim();
+        if (beneficiaryName == "") {
+            document.getElementById("BeneficiaryName_error").innerHTML = "Beneficiary Name field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("BeneficiaryName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("BeneficiaryName").value.trim())) {
+            document.getElementById("BeneficiaryName_error").innerHTML = "Invalid Beneficiary Name";
+            document.getElementById("BeneficiaryName").value = "";
+            document.getElementById("BeneficiaryName").value.focus();
+            return false;
+        }
+        else {
+            document.getElementById("BeneficiaryName_error").innerHTML = "";
+        }
+
+    });
+
+    $("#CommunicationCityName").on("blur", function () {
+        //debugger;
+        var cityName = document.getElementById("CommunicationCityName").value.trim();
+        if (cityName == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City";
+            document.getElementById("CommunicationCityName").value = "";
+            document.getElementById("CommunicationCityName").value.focus();
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+        
+
+    });
+
+    $("#DrivingLicence").on("blur", function () {
+        //debugger;
+        var drivingLicence = document.getElementById("DrivingLicence").value.trim();
+        if (drivingLicence == "") {
+            document.getElementById("DrivingLicence_error").innerHTML = "Driving License field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("DrivingLicence_error").innerHTML = "";
+        }
+
+        var dlFormat = /^([A-Z]{2})(\d{2}|\d{3})[a-zA-Z]{0,1}(\d{4})(\d{7})$/;
+        if (drivingLicence.match(mailformat)) {
+            document.getElementById("DrivingLicence_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("DrivingLicence_error").innerHTML = "Invalid Driving License";
+            document.getElementById("DrivingLicence").value = "";
+            document.getElementById("DrivingLicence").focus();
+            return (false);
+        }        
+
+    });
 
 </script>
