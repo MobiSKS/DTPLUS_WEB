@@ -9,4 +9,7 @@ var lpgCngSale = /^(?:[1-9][0-9]{0,4}(d{1,2})?|100000|100000.00)$/;
 var erpCodeCheck = /^(?=(1))[0-9]{8}$/;
 var nameCheck = /^[A-Za-z]{2,40}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
+var mappedterminalID = /^(?=(5))[0-9]{10}$/;
+var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
+var noOfTerminalsCheck = /^[1-2]{1}$/;
 var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;

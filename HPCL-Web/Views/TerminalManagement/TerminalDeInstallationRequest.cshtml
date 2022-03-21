@@ -61,6 +61,7 @@
                                                     else
                                                         @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             }
+                                            <span style="display:none" class="error" id="terminalId_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -254,6 +255,7 @@
         //debugger;
         var deInstallationType = $("#DeinstallationTypeID :selected").val();
         var merchantID = $("#MerchantId").val();
+        var terminalId = $("#TerminalId").val();
         var flag = "Y";
         if (merchantID == "") {
             $("#Merchant_error").attr("style", "display:block");
@@ -269,6 +271,13 @@
             else {
                 $("#Merchant_error").attr("style", "display:none");
                 $("#Merchant_error").html("");
+            }
+        }
+        if (terminalId != "") {
+            if (!terminalId.match(mappedterminalID)) {
+                $("#terminalId_error").attr("style", "display:block");
+                $("#terminalId_error").html("Please enter valid Terminal ID");
+                flag = "N";
             }
         }
         if (deInstallationType == "0") {
@@ -306,6 +315,7 @@
         $("#Merchant_error").html("");
         $("#type_error").html("");
         $("#TerminalId").prop("readonly", false);
+        $("#terminalId_error").html("");
     };
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
