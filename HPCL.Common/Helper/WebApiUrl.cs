@@ -136,6 +136,11 @@
         public static string getCustomerCardWiseBalances = "api/dtplus/customer/get_customer_card_wise_balances";
         public static string getCustomerByCustomerId = "api/dtplus/customer/get_customer_by_customer_id";
         public static string getccmsbalanceinfoforcustomerid = "api/dtplus/customer/get_ccms_balance_info_for_customer_id";
+        public static string getFormNumber = "api/dtplus/customer/get_form_number";
+        public static string checkPanCardByDistrictid = "api/dtplus/customer/check_pan_card_by_district_id";
+        public static string gettransactionssummary = "api/dtplus/customer/get_transactions_summary";
+        public static string updateCustomer = "api/dtplus/customer/update_customer";
+        public static string checkPanCardByDistrictIdAndCustomerReferenceno = "api/dtplus/customer/check_pan_card_by_district_id_and_customer_reference_no";
         #endregion
 
         #region Login
@@ -207,6 +212,15 @@
         public static string GetCardToCCMSTransferUrl = "api/dtplus/card/get_card_to_ccms_balance_transfer";
         public static string GetCCMSToCardTransferUrl = "api/dtplus/card/get_ccms_to_card_balance_transfer";
         public static string GetCardToCardTransferUrl = "api/dtplus/card/get_card_to_card_balance_transfer";
+
+        #endregion
+
+        #region "Merchant Financial"
+
+        public static string GetUploadMerchantCautionLimitUrl = "api/dtplus/merchant/view_merchant_caution_limit";
+        public static string GetSattlementDetailsUrl = "api/dtplus/merchant/merchant_settlement_detail";
+        public static string GetBatchDetailsUrl = "api/dtplus/merchant/merchant_batch_detail";
+        public static string GetTerminalDetailsUrl = "api/dtplus/merchant/terminal_detail";
 
         #endregion
     }

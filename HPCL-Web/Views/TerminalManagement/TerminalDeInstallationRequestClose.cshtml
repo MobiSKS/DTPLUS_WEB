@@ -1,6 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
 
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "TerminalManagement")" class="text_primary">Terminal Management</a> </li>
@@ -41,10 +41,10 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span class="error" id="fromDate_error"></span>
                                         </div>
@@ -52,10 +52,10 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">To Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span class="error" id="toDate_error"></span>
                                         </div>
@@ -80,6 +80,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span style="display:none" class="error" id="terminalId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -88,10 +89,10 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
                                 </div>
                             </div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
@@ -211,97 +212,20 @@
 
       var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
-
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
 
     $(document).ready(function () {
 
-            if (fromdate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-
-            if (todate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                setDates();
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-            getMerchantRegionalOfc();
+        setDates();
+        getMerchantRegionalOfc();
 
     });
     $("#btnReset").click(function () {
         setDates();
-
-    });
-    $("#btnSearch").on("click", (function (e) {
-
-        var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
-        var flag = "Y";
-        if (fromdate == "") {
-            $("#fromDate_error").html("Select From Date");
-            flag = "N";
-        }
-        else
-            $("#fromDate_error").html("");
-        if (todate == "") {
-            $("#toDate_error").html("Select To Date");
-            flag = "N";
-        }
-        else
-            $("#toDate_error").html("");
-        var merchantId = $("#MerchantId").val();
-        if (merchantId != "") {
-            if (!merchantId.match(mappedMerchantID)) {
-                $("#merchantId_error").attr("style", "display:block");
-                $("#merchantId_error").html("Invalid Merchant Id");
-                flag = "N";
-            }
-            else {
-                $("#merchantId_error").attr("style", "display:none");
-                $("#merchantId_error").html("");
-            }
-        }
-        else {
-            $("#merchantId_error").attr("style", "display:none");
-            $("#merchantId_error").html("");
-        }
-
-        if (flag == "N")
-            e.preventDefault();
-
-    })
-    );
-    function setDates() {
-
-        var fromd = new Date();
-        var fromMonth = fromd.getMonth();
-        var fromday = fromd.getDate();
-        var fromdate = (fromday < 10 ? '0' : '') + fromday + '-' +
-            (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
-            fromd.getFullYear();
-
-        var d = new Date();
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-
-        $("#FromDate").val(fromdate);
-        $("#ToDate").val(output);
         $("#ZonalOfficeId").val(0);
         $("#RegionalOfcIdVal").val("");
         getMerchantRegionalOfc();
@@ -311,6 +235,67 @@
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
         $("#merchantId_error").html("");
+        $("#terminalId_error").html("");
+    });
+    $("#btnSearch").on("click", (function (e) {
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        var merchantId = $("#MerchantId").val();
+        var terminalId = $("#TerminalId").val();
+        var flag = "Y";
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates();
+        }
+        if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Please enter valid Merchant ID");
+                flag = "N";
+            }
+        }
+        if (terminalId != "") {
+            if (!terminalId.match(mappedterminalID)) {
+                $("#terminalId_error").attr("style", "display:block");
+                $("#terminalId_error").html("Please enter valid Terminal ID");
+                flag = "N";
+            }
+        }
+        if (flag == "Y") {
+            $("#toDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#fromDate_error").html("");
+            $("#merchantId_error").attr("style", "display:none");
+            $("#merchantId_error").html("");
+        }
+        if (flag == "N")
+            e.preventDefault();
+
+    })
+    );
+    function setDates() {
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
+
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
+       
 
     };
     $("#RegionalOfficeId").change(function () {
@@ -463,4 +448,41 @@
 
         return true;
     }
+    $(".date").on('change', function (e) {
+        checkDates();
+        $("#show_Table").html("");
+    });
+
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
+        var dateflag = "Y";
+        if (fromD != "" && toD != "") {
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = "N";
+            }
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+        }
+       
+        if (toD != "") {
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+        }
+
+        return dateflag;
+    }
+
 </script>

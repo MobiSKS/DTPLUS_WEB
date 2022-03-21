@@ -10,6 +10,14 @@ $(document).on("ajaxStop", function () {
     $("#loader").fadeOut();
 })
 
+$(document).on("ajaxError", function () {
+   // alert('test');
+    setTimeout(function () {
+        $("#loader").fadeOut();
+    }, 100)
+    
+})
+
 document.addEventListener("contextmenu", (event)=> event.preventDefault())
 $(document).ready(function(){
     
@@ -97,14 +105,14 @@ function showregAddress() {
     //console.log(ret);
 
     if (document.applicationForm.FormNumber.value.trim() == "") {
-        document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+        document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
         document.applicationForm.FormNumber.focus();
         return ret;
     }
     else {
         console.log(document.applicationForm.FormNumber.value.length);
         if (document.applicationForm.FormNumber.value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Form Number length must be 10 digit";
+            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
             document.applicationForm.FormNumber.focus();
             return ret;
         }
@@ -114,7 +122,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerTypeID.value == "0") {
-        document.getElementById("customerType_error").innerHTML = "Customer Type Selection is required";
+        document.getElementById("customerType_error").innerHTML = "Customer Type field cannot be left blank";
         document.applicationForm.CustomerTypeID.focus();
         return ret;
     }
@@ -123,7 +131,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerSubTypeID.value == "0" || document.applicationForm.CustomerSubTypeID.value == "") {
-        document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type Selection is required";
+        document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type field cannot be left blank";
         document.applicationForm.CustomerSubTypeID.focus();
         return ret;
     }
@@ -132,7 +140,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerDateOfApplication.value == "") {
-        document.getElementById("applicationDate_error").innerHTML = "Date of Application Selection is required";
+        document.getElementById("applicationDate_error").innerHTML = "Date of Application field cannot be left blank";
         document.applicationForm.CustomerDateOfApplication.focus();
         return ret;
     }
@@ -142,7 +150,7 @@ function showregAddress() {
 
 
     if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
-        document.getElementById("zonalOffice_error").innerHTML = "Zonal Office Selection is required";
+        document.getElementById("zonalOffice_error").innerHTML = "Zonal Office field cannot be left blank";
         document.applicationForm.CustomerZonalOfficeID.focus();
         return ret;
     }
@@ -151,7 +159,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerRegionID.value == "0") {
-        document.getElementById("regionalOffice_error").innerHTML = "Regional Office Selection is required";
+        document.getElementById("regionalOffice_error").innerHTML = "Regional Office field cannot be left blank";
         document.applicationForm.CustomerRegionID.focus();
         return ret;
     }
@@ -160,7 +168,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerSalesAreaID.value == "0") {
-        document.getElementById("salesArea_error").innerHTML = "Sales Area Selection is required";
+        document.getElementById("salesArea_error").innerHTML = "Sales Area field cannot be left blank";
         document.applicationForm.CustomerSalesAreaID.focus();
         return ret;
     }
@@ -169,7 +177,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.TypeOfCustomerID.value == "0") {
-        document.getElementById("typeOfCustomer_error").innerHTML = "Customer Type Selection is required";
+        document.getElementById("typeOfCustomer_error").innerHTML = "Customer Type field cannot be left blank";
         document.applicationForm.TypeOfCustomerID.focus();
         return ret;
     }
@@ -178,7 +186,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-        document.getElementById("individualName_error").innerHTML = "Select Individual Or Org. Name Title";
+        document.getElementById("individualName_error").innerHTML = "Select Title";
         document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
@@ -186,41 +194,60 @@ function showregAddress() {
         document.getElementById("individualName_error").innerHTML = "";
     }
 
+    var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
+
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
-        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field cannot be left blank";
         document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
     else {
-        document.getElementById("individualName_error").innerHTML = "";
-    }
 
-    if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
-        document.getElementById("individualName_error").innerHTML = "Name can not be a number";
-        document.applicationForm.IndividualOrgName.focus();
-        return false;
+        if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.applicationForm.IndividualOrgName.focus();
+            return false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+
+        if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.applicationForm.IndividualOrgName.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
     }
-    else {
-        document.getElementById("individualName_error").innerHTML = "";
-    }
+        
 
     if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
-        document.getElementById("nameOnCard_error").innerHTML = "Name on Card is required";
+        document.getElementById("nameOnCard_error").innerHTML = "CardName field cannot be left blank";
         document.applicationForm.CustomerNameOnCard.focus();
         return ret;
     }
     else {
-        document.getElementById("nameOnCard_error").innerHTML = "";
-    }
+        if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.applicationForm.CustomerNameOnCard.focus();
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
 
-    if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
-        document.getElementById("nameOnCard_error").innerHTML = "Name On Card can not be a number";
-        document.applicationForm.CustomerNameOnCard.focus();
-        return false;
+        if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.applicationForm.CustomerNameOnCard.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
     }
-    else {
-        document.getElementById("nameOnCard_error").innerHTML = "";
-    }
+    
 
     if (document.applicationForm.CustomerTbentityID.value == "0") {
         document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
@@ -232,7 +259,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
-        document.getElementById("residenceStatus_error").innerHTML = "Select Residential Status";
+        document.getElementById("residenceStatus_error").innerHTML = "Residential Status field cannot be left blank";
         document.applicationForm.CustomerResidenceStatus.focus();
         return ret;
     }
@@ -244,7 +271,7 @@ function showregAddress() {
 
     var formNumber = document.getElementById("FormNumber").value.trim();
     if (formNumber == "") {
-        document.getElementById("formNumber_error").innerHTML = "Form No is required";
+        document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
         return (false);
     }
     else {
@@ -269,7 +296,7 @@ function showregAddress() {
     if (TypeofBusinessEntityId != 10) {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
@@ -298,7 +325,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.TierOfCustomerID.value == "0") {
-        document.getElementById("tierOfCustomer_error").innerHTML = "Select Tier Of Customer";
+        document.getElementById("tierOfCustomer_error").innerHTML = "Tier Of Customer field cannot be left blank";
         document.applicationForm.TierOfCustomerID.focus();
         return ret;
     }
@@ -368,7 +395,7 @@ function showregAddress() {
     if (TypeofBusinessEntityId != 10) {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
@@ -395,7 +422,7 @@ function showregAddress() {
         }
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
@@ -455,6 +482,7 @@ function showregAddress() {
         }
     }
 
+    
     if (ret == false)
         return ret;
 
@@ -522,7 +550,7 @@ function showOfficialDetails() {
     debugger;
 
     if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
-        document.getElementById("comm_address1_error").innerHTML = "Communication Address 1 is required";
+        document.getElementById("comm_address1_error").innerHTML = "Address1 field cannot be left blank";
         document.applicationForm.CommunicationAddress1.focus();
         return false;
     }
@@ -531,7 +559,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
-        document.getElementById("comm_address2_error").innerHTML = "Communication Address 2 is required";
+        document.getElementById("comm_address2_error").innerHTML = "Address2 field cannot be left blank";
         document.applicationForm.CommunicationAddress2.focus();
         return false;
     }
@@ -540,7 +568,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationCity.value.trim() == "") {
-        document.getElementById("comm_city_error").innerHTML = "Communication City is required";
+        document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
         document.applicationForm.CommunicationCity.focus();
         return false;
     }
@@ -549,14 +577,14 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
-        document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pin Code is required";
+        document.getElementById("comm_pincode_error").innerHTML = "Pin Code field cannot be left blank";
         document.applicationForm.CommunicationPinCode.focus()
         return (false);
     }
     else {
         var pin = document.applicationForm.CommunicationPinCode.value;
         if (pin.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Communication Address Pincode, Must be six digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Pincode, Must be six digits";
             document.applicationForm.CommunicationPinCode.focus();
             return false;
         }
@@ -566,7 +594,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
-        document.getElementById("comm_states_error").innerHTML = "Communication Address State Selection is required";
+        document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
         document.applicationForm.CommunicationStateID.focus();
         return false;
     }
@@ -575,7 +603,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
-        document.getElementById("comm_district_error").innerHTML = "Communication Address District Selection is required";
+        document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
         document.applicationForm.CommunicationDistrictId.focus();
         return false;
     }
@@ -676,8 +704,8 @@ function showOfficialDetails() {
     }
 
 
-    if (document.applicationForm.CommunicationMobileNumber.value == "") {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Address Mobile is required";
+    if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
         document.applicationForm.CommunicationMobileNumber.focus();
         return false;
 
@@ -701,7 +729,7 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationEmail.value.trim() == "") {
-        document.getElementById("comm_email_error").innerHTML = "Communication Address Email is required";
+        document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
         document.applicationForm.CommunicationEmail.focus();
         return (false);
     }
@@ -720,7 +748,7 @@ function showOfficialDetails() {
 
 
     if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
         return (false);
     }
     else {
@@ -728,7 +756,7 @@ function showOfficialDetails() {
     }
 
     if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        document.getElementById("comm_email_error").innerHTML = "Email is already used";
         return (false);
     }
     else {
@@ -738,7 +766,7 @@ function showOfficialDetails() {
     if (document.getElementById("sameAddressCheck").checked != true) {
 
         if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
-            document.getElementById("perma_address1_error").innerHTML = "Permanent/Registered Office Address 1 is required";
+            document.getElementById("perma_address1_error").innerHTML = "Address1 field cannot be left blank";
             document.getElementById("PerOrRegAddress1").focus();
             return false;
         }
@@ -747,7 +775,7 @@ function showOfficialDetails() {
         }
 
         if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
-            document.getElementById("perma_address2_error").innerHTML = "Permanent/Registered Office Address 2 is required";
+            document.getElementById("perma_address2_error").innerHTML = "Address2 field cannot be left blank";
             document.getElementById("PerOrRegAddress2").focus();
             return false;
         }
@@ -757,7 +785,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
-            document.getElementById("perma_city_error").innerHTML = "Permanent/Registered Office City is required";
+            document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
             document.getElementById("PerOrRegAddressCity").focus();
             return false;
         }
@@ -767,7 +795,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
-            document.getElementById("perma_pincode_error").innerHTML = "Permanent/Registered Office Pin code is required";
+            document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
             document.getElementById("PerOrRegAddressPinCode").focus()
             return (false);
         }
@@ -785,7 +813,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
-            document.getElementById("comm_district_error").innerHTML = "Communication Address District is required";
+            document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
             document.getElementById("CommunicationDistrictId").focus();
             return false;
         }
@@ -795,7 +823,7 @@ function showOfficialDetails() {
 
 
         if (document.getElementById("PerOrRegAddressStateID").value == "0") {
-            document.getElementById("perma_state_error").innerHTML = "Permanent/Registered Office State is required";
+            document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
             document.getElementById("PerOrRegAddressStateID").focus();
             return false;
         }
@@ -803,10 +831,9 @@ function showOfficialDetails() {
             document.getElementById("perma_state_error").innerHTML = "";
         }
 
-        $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
 
         if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
-            document.getElementById("perma_district_error").innerHTML = "Permanent/Registered Office District is required";
+            document.getElementById("perma_district_error").innerHTML = "District field cannot be left blank";
             document.getElementById("PermanentDistrictId").focus();
             return false;
         }
@@ -847,20 +874,27 @@ function showOfficialDetails() {
         //    //$("#officialDetails-tab").click();
     }
 
+    if (document.getElementById("IsDuplicatePanNo").value == "0") {
+        $("#panvalidation").modal("show");
+        return false;
+    }
+    else {
+        document.getElementById("PanCardRemarks").value = "";
+        document.getElementById("lblPanCardRemarks").style.display = "none";
+        document.getElementById("PanCardRemarks").style.display = "none";
+    }
+
     document.getElementById("officialDetails-tab").click();
     document.getElementById("officialDetails-tab").classList.remove("disable");
     localStorage.setItem("keyOfficial", true)
     localStorage.removeItem("showregAddress")
-
-    //}	
-
 }
 
 function showCardDetails() {
     debugger;
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
-        document.getElementById("official_fName_error").innerHTML = "Title Selection is required";
+        document.getElementById("official_fName_error").innerHTML = "Select Title";
         document.applicationForm.KeyOffTitle.focus();
         return false;
     }
@@ -869,7 +903,7 @@ function showCardDetails() {
     }
 
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
-        document.getElementById("official_fName_error").innerHTML = "First Name is required";
+        document.getElementById("official_fName_error").innerHTML = "First Name field cannot be left blank";
         document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
@@ -878,7 +912,7 @@ function showCardDetails() {
     }
 
     if (!isNaN(document.applicationForm.KeyOffFirstName.value.trim())) {
-        document.getElementById("official_fName_error").innerHTML = "First Name can not be a number";
+        document.getElementById("official_fName_error").innerHTML = "First Name cannot be a number";
         document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
@@ -903,7 +937,7 @@ function showCardDetails() {
 
     if (document.applicationForm.KeyOffMiddleName.value.trim() != "") {
         if (!isNaN(document.applicationForm.KeyOffMiddleName.value.trim())) {
-            document.getElementById("KeyOffMiddleName_error").innerHTML = "Middle Name can not be a number";
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "Middle Name cannot be a number";
             document.applicationForm.KeyOffMiddleName.focus();
             return false;
         }
@@ -915,24 +949,7 @@ function showCardDetails() {
         document.getElementById("KeyOffMiddleName_error").innerHTML = "";
     }
 
-
-    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
-        document.getElementById("official_designation_error").innerHTML = "Designation is required";
-        document.applicationForm.KeyOffDesignation.focus();
-        return false;
-    }
-    else {
-        document.getElementById("official_designation_error").innerHTML = "";
-    }
-
-    if (!isNaN(document.applicationForm.KeyOffDesignation.value.trim())) {
-        document.getElementById("official_designation_error").innerHTML = "Designation can not be a number";
-        document.applicationForm.KeyOffDesignation.focus();
-        return false;
-    }
-    else {
-        document.getElementById("official_designation_error").innerHTML = "";
-    }
+       
 
     var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
     if (faxCode != "") {
@@ -1047,6 +1064,37 @@ function showCardDetails() {
 
     else {
         document.getElementById("official_mobile_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
+        document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
+    }
+
+    if (!isNaN(document.applicationForm.KeyOffDesignation.value.trim())) {
+        document.getElementById("official_designation_error").innerHTML = "Designation can not be a number";
+        document.applicationForm.KeyOffDesignation.focus();
+        return false;
+    }
+    else {
+        document.getElementById("official_designation_error").innerHTML = "";
+    }
+
+    if (localStorage.getItem("DUPLICATEPANUSED") == 0) {
+        if (document.getElementById("PanCardRemarks").value.trim() == "") {
+            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("PanCardRemarks_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("PanCardRemarks_error").innerHTML = "";
     }
 
     return true;
@@ -1560,4 +1608,33 @@ else {
     document.getElementById("captcha_error").innerHTML = "";
 }
 
+}
+
+function GetClientConfirmation(o) {
+    debugger;
+    var selectedButton = o.innerText;
+
+    console.log(selectedButton);
+
+    if (selectedButton == "OK") {
+        $('#AllowPanDuplication').val('Y');
+        $("#PanCardRemarks").prop('readonly', false);
+        document.getElementById("lblPanCardRemarks").style.display = "block";
+        document.getElementById("PanCardRemarks").style.display = "block";
+        document.getElementById("officialDetails-tab").click();
+        document.getElementById("officialDetails-tab").classList.remove("disable");
+        localStorage.setItem("keyOfficial", true)
+        localStorage.removeItem("showregAddress")
+    }
+    else {
+        $('#AllowPanDuplication').val('N');
+        $("#PanCardRemarks").prop('readonly', true);
+        document.getElementById("lblPanCardRemarks").style.display = "none";
+        document.getElementById("PanCardRemarks").style.display = "none";
+        document.getElementById("address-tab").click();
+        document.getElementById("address-tab").classList.remove("disable");
+        localStorage.setItem("showregAddress", true)
+    }
+    console.log($('#AllowPanDuplication').val());
+    $('#panvalidation').modal('hide');
 }

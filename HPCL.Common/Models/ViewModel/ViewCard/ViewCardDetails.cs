@@ -1,11 +1,15 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Resources;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.ViewCard
 {
     public class ViewCardDetails : BaseEntity
     {
-        [Required(ErrorMessage = "CustomerId is Required")]
+
+        [Required(ErrorMessage = "CustomerID Required")]
+        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
+        [StringLength(10)]
         public string Customerid { get; set; }
 
         public string CardNo { get; set; }

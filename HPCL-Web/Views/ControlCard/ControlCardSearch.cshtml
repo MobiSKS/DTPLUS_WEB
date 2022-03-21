@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="#" class="text_primary">Search</a> </li>
@@ -25,7 +25,7 @@
                                         <div class="col-sm-3 col-md-3 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                                <span class="error" id="Customer_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-7 col-12">
@@ -63,6 +63,9 @@
 
                             </table>
                         </div>
+                        <div class="col-12 text-center alert-danger p-2" id="NoRecord" style="display:none">
+                            No Records found!
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,6 +85,7 @@
 
 
     function resetFields() {
+        $("#NoRecord").attr("style", "display:none");
         $("input:text").each(function () {
             $(this).val("");
         });
@@ -125,6 +129,28 @@
         alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
     }
 
+    function test() {
+        var ret = "Y";
+        if (!document.applicationForm.CustomerId.value.match(number)) {
+            document.getElementById("Customer_error").innerHTML = "Numeric Only";
+            if (ret != "N") {
+                document.applicationForm.MappedMerchantId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+    }
+
+    $('#CustomerId').on("input", function (evt) {
+        var self = $(this);
+        self.val(self.val().replace(/\D/g, ""));
+        if ((evt.which < 48 || evt.which > 57)) {
+            evt.preventDefault();
+        }
+    });
+
    $("#btnSave").on('click', function (e) {
 
        var customerid = $("#Customerid").val();
@@ -140,21 +166,27 @@
             data: { customerId: customerId },
             success: function (res) {
                 console.log(res, "res");
-                $("#OfficerTable").show();
+                
+                if (res.searchList.length > 0) {
 
-                for (var i = 0; i < res.searchList.length; i++) {
+                    for (var i = 0; i < res.searchList.length; i++) {
+                        $("#OfficerTable").show();
 
-                    var rows = "<tbody><tr>"
-                        + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].customerID || '') + "</td>"
-                        + "<td>" + (res.searchList[i].customerName || '') + "</td>"
-                        + "<td>" + (res.searchList[i].controlCardNo || '') + "</td>"
-                        + "</tr ></tbody > ";
+                        var rows = "<tbody><tr>"
+                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].customerID || '') + "</td>"
+                            + "<td>" + (res.searchList[i].customerName || '') + "</td>"
+                            + "<td>" + (res.searchList[i].controlCardNo || '') + "</td>"
+                            + "</tr ></tbody > ";
 
-                    $("#OfficerTable").append(rows);
+                        $("#OfficerTable").append(rows);
 
 
+                    }
+                } else {
+                    $("#OfficerTable").hide();
+                    $("#NoRecord").attr("style", "display:block");
                 }
 
             },

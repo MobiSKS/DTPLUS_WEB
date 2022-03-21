@@ -582,53 +582,63 @@
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
+        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if ($('#IncomeTaxPan').val().match(regex)) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            return (false);
+        }
+
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
-                data: { PanNo: panNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',
+            url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
+            data: { PanNo: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        if (data.status == "0") {
-                            panNumberUsed = true;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
-                            localStorage.setItem("PANNOALREADYUSED", "0");
-                        }
-                        else {
-                            panNumberUsed = false;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "";
-                        }
+                    if (data.status == "0") {
+                        panNumberUsed = true;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        localStorage.setItem("PANNOALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        panNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        panNumberUsed = false;
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    panNumberUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });*@
 
-        console.log(panNumberUsed);
-        if (panNumberUsed == true) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
-            //return (false);
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
+        //console.log(panNumberUsed);
+        //if (panNumberUsed == true) {
+        //    document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("incomeTaxPan_error").innerHTML = "";
+        //}
 
         //2nd Validation
 
@@ -1135,56 +1145,61 @@
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
+        if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
+        if (document.getElementById("CommunicationMobileNo").value.length < 10) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("CommunicationMobileNo").value = "";
+            document.getElementById("CommunicationMobileNo").focus();
+            return false;
+        }
+
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "Common")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "Common")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
-
-        //if (mobileNoUsed == true) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                }
+            }
+        });*@
 
     });
 
@@ -1199,49 +1214,60 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").focus();
+            return (false);
+        }
+
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "Common")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "Common")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                }
+            }
+        });*@
 
 
     });

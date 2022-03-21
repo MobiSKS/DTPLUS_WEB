@@ -104,5 +104,19 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string TypeOfCustomerId { get; set; }
         public string TierOfCustomerName { get; set; }
 
+        public string CommunicationFaxCode { get; set; }
+        public string CommunicationFaxPh { get; set; }
+        public string PermanentFaxCode { get; set; }
+        public string PermanentFaxPh { get; set; }
+        public string KeyOffFaxCode { get; set; }
+        public string KeyOffFaxPh { get; set; }
+
+        public string PerOrRegAddressDialCode { get; set; }
+        public string PerOrRegAddressPh { get; set; }
+        public string CommunicationDialCode { get; set; }
+        public string CommunicationPh { get; set; }
+        public string KeyOffDialCode { get; set; }
+        public string KeyOffPh { get; set; }
+        public string PanCardRemarks { get; set; }
     }
 }

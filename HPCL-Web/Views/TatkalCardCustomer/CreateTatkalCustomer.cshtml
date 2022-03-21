@@ -1,5 +1,5 @@
 ﻿@model HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer.TatkalCardCustomerModel
-
+@using HPCL.Common.Resources;
 @{
     ViewData["Title"] = "Request for My HP (OTC) Card";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Ph (Off) </label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -228,7 +228,7 @@
                                                 @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
                                                 <span class="error" id="incomeTaxPan_error"></span>
                                             </div>
-                                      
+
                                         </div>
                                     </div>
                                 </div>
@@ -241,10 +241,10 @@
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3 mb-0">
                     <div class="px-2">
-                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Submit</button>
+                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
                     </div>
                     <div class="px-2">
-                        <button class="btn btn_primary" type="button" id="btnFooterReset">Reset</button>
+                        <button class="btn btn_primary" type="button" id="btnFooterReset">@Label.Reset</button>
                     </div>
                 </div>
             </div>
@@ -453,7 +453,7 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("CheckMobilNoDuplication", "TatkalCardCustomer")',
             data: { MobileNo: communicationMobile },  // data to submit
@@ -490,16 +490,7 @@
                     document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
                 }
             }
-        });
-
-        //if (mobileNoUsed == true) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+        });*@
 
     });
 
@@ -514,58 +505,59 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
+        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (communicationEmail.match(mailformat)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").focus();
+            return (false);
+        }
+
         var emailUsed = false;
         localStorage.setItem("EMAILIDALREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckEmailDuplication", "TatkalCardCustomer")',
-                data: { Emailid: communicationEmail },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckEmailDuplication", "TatkalCardCustomer")',
+            data: { Emailid: communicationEmail },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            emailUsed = true;
-                            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                            localStorage.setItem("EMAILIDALREADYUSED", "0");
-                        }
-                        else {
-                            emailUsed = false;
-                            document.getElementById("comm_email_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        emailUsed = true;
+                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                        emailUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        emailUsed = false;
+                        document.getElementById("comm_email_error").innerHTML = "";
                     }
                 }
-            });
-
-        //if (emailUsed == true) {
-        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_email_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+                else {
+                    //console.log(v);
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    emailUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                }
+            }
+        });*@
 
     });
 
@@ -575,7 +567,7 @@
         var ret = false;
 
         if (document.getElementById("ZonalOffice").value == "" || document.getElementById("ZonalOffice").value == "0") {
-            document.getElementById("zonalOffice_error").innerHTML = "Zonal Office is required";
+            document.getElementById("zonalOffice_error").innerHTML = "The Zonal Office can not be left blank";
             document.getElementById("ZonalOffice").focus();
             return ret;
         }
@@ -584,7 +576,7 @@
         }
 
         if (document.getElementById("RegionalOffice").value == "" || document.getElementById("RegionalOffice").value == "0") {
-            document.getElementById("regionalOffice_error").innerHTML = "Regional Office is required";
+            document.getElementById("regionalOffice_error").innerHTML = "The Regional Office can not be left blank";
             document.getElementById("RegionalOffice").focus();
             return ret;
         }
@@ -593,7 +585,7 @@
         }
 
         if (document.getElementById("FormNumber").value == "") {
-            document.getElementById("formNumber_error").innerHTML = "Form Number is required";
+            document.getElementById("formNumber_error").innerHTML = "Form Number field can not be left blank";
             //document.getElementById("FormNumber").focus();
             return ret;
         }
@@ -602,14 +594,14 @@
         }
 
         if (document.getElementById("DateOfApplication").value == "") {
-            document.getElementById("applicationDate_error").innerHTML = "Application Date is required";
+            document.getElementById("applicationDate_error").innerHTML = "Application date field can not be left blank";
             document.getElementById("DateOfApplication").focus();
             return ret;
         }
         else {
             document.getElementById("applicationDate_error").innerHTML = "";
         }
-
+               
         var today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -619,13 +611,13 @@
         console.log(today);
         console.log(varDate);
         if (varDate > today) {
-            document.getElementById("applicationDate_error").innerHTML = "Application Date can not be a future date";
+            document.getElementById("applicationDate_error").innerHTML = "Application Date: should be less or equal to Today's Date";
             //document.getElementById("DateOfApplication").focus();
             return ret;
         }
 
         if (document.getElementById("SignedOn").value == "") {
-            document.getElementById("SignedOn_error").innerHTML = "Signed On is required";
+            document.getElementById("SignedOn_error").innerHTML = "Signed On field can not be left blank";
             document.getElementById("SignedOn").focus();
             return ret;
         }
@@ -633,8 +625,17 @@
             document.getElementById("SignedOn_error").innerHTML = "";
         }
 
+        const myArray1 = document.getElementById("SignedOn").value.split("-");
+
+        var varDate1 = new Date(myArray1[2], (myArray1[1] - 1), myArray1[0], 0, 0, 0, 0);
+
+        if (varDate1 > today) {
+            document.getElementById("SignedOn_error").innerHTML = "Signed On: should be less or equal to Today's Date";
+            return ret;
+        }
+
         if (document.getElementById("CommunicationStateId").value == "0") {
-            document.getElementById("comm_states_error").innerHTML = "State is required";
+            document.getElementById("comm_states_error").innerHTML = "The State field can not be left blank";
             document.getElementById("CommunicationStateId").focus();
             return ret;
         }
@@ -643,7 +644,7 @@
         }
 
         if (document.getElementById("KeyOfficialSecretQuestion").value == "0") {
-            document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "Secret Question is required";
+            document.getElementById("KeyOfficialSecretQuestion_error").innerHTML = "The Secret Question field can not be left blank";
             document.getElementById("KeyOfficialSecretQuestion").focus();
             return ret;
         }
@@ -652,7 +653,7 @@
         }
 
         if (document.getElementById("KeyOfficialSecretAnswer").value.trim() == "") {
-            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Secret Answer is required";
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "The Secret Answer field can not be left blank";
             document.getElementById("KeyOfficialSecretAnswer").focus();
             return ret;
         }
@@ -661,7 +662,7 @@
         }
 
         if (document.getElementById("IndividualOrgNameTitle").value == "0") {
-            document.getElementById("salutaion_error").innerHTML = "Title is required";
+            document.getElementById("salutaion_error").innerHTML = "Select Title";
             document.getElementById("IndividualOrgNameTitle").focus();
             return ret;
         }
@@ -670,12 +671,22 @@
         }
 
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
-            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+            document.getElementById("customername_error").innerHTML = "Individual/Org. name can not be left blank";
             document.getElementById("IndividualOrgName").focus();
             return ret;
         }
         else {
             document.getElementById("customername_error").innerHTML = "";
+        }
+
+        var nameCheck = /^[A-Za-z]{2,40}$/;
+        if (document.getElementById("IndividualOrgName").value.match(nameCheck)) {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "Individual/Org. name field should not be any special characters";
+            document.getElementById("IndividualOrgName").focus();
+            return ret;
         }
 
         if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
@@ -688,12 +699,21 @@
         }
 
         if (document.getElementById("NameOnCard").value.trim() == "") {
-            document.getElementById("nameOnCard_error").innerHTML = "Name on Card is required";
+            document.getElementById("nameOnCard_error").innerHTML = "The CardName field can not be left blank";
             document.getElementById("NameOnCard").focus();
             return ret;
         }
         else {
             document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value.match(nameCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field should not be any special characters";
+            document.getElementById("NameOnCard").focus();
+            return ret;
         }
 
         if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
@@ -706,12 +726,30 @@
         }
 
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is required";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "The Mobile field can not be left blank";
             document.getElementById("CommunicationMobileNo").focus();
             return ret;
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationDialCode").value.trim() == "") {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
+            document.getElementById("CommunicationDialCode").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPhonePart2").value.trim() == "") {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
+            document.getElementById("CommunicationPhonePart2").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
         }
 
         var stdCode = document.getElementById("CommunicationDialCode").value.trim();
@@ -758,7 +796,7 @@
 
 
         if (document.getElementById("CommunicationEmailid").value.trim() == "") {
-            document.getElementById("comm_email_error").innerHTML = "Email is required";
+            document.getElementById("comm_email_error").innerHTML = "The Email field can not be left blank";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
         }
@@ -776,7 +814,7 @@
         }
 
         if (document.getElementById("CommunicationAddress1").value.trim() == "") {
-            document.getElementById("comm_address1_error").innerHTML = "Address is required";
+            document.getElementById("comm_address1_error").innerHTML = "The Address field can not be left blank";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
         }
@@ -785,7 +823,7 @@
         }
 
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN can not be left blank";
             //document.getElementById("IncomeTaxPan").focus();
             return ret;
         }
@@ -794,21 +832,21 @@
         }
 
 
-        if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        }
+        //if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        //}
 
-        if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_email_error").innerHTML = "";
-        }
+        //if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
+        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("comm_email_error").innerHTML = "";
+        //}
 
 
         if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
@@ -906,7 +944,7 @@
         //debugger;
         var panNumber = document.getElementById("IncomeTaxPan").value;
 
-        
+
         if (panNumber == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is required";
             return (false);
@@ -922,13 +960,14 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            document.getElementById("IncomeTaxPan").value = "";
             return (false);
         }
 
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("CheckPanNoDuplication", "Common")',
             data: { PanNo: panNumber },  // data to submit
@@ -962,8 +1001,58 @@
                     //document.getElementById("RBEName").value = "";
                 }
             }
-        });
+        });*@
 
+
+    });
+
+    $("#DateOfApplication").on("change", function () {
+        //debugger;
+        var selectedDate = document.getElementById("DateOfApplication").value.trim();
+        console.log(selectedDate);
+
+        if (selectedDate != "") {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const myArray = document.getElementById("DateOfApplication").value.split("-");
+
+            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+            console.log(today);
+            console.log(varDate);
+            if (varDate > today) {
+                document.getElementById("applicationDate_error").innerHTML = "Application Date: should be less or equal to Today's Date";
+                setDates();
+            }
+            else {
+                document.getElementById("applicationDate_error").innerHTML = "";
+            }
+        }
+
+    });
+
+    $("#SignedOn").on("change", function () {
+        //debugger;
+        var selectedDate = document.getElementById("SignedOn").value.trim();
+        console.log(selectedDate);
+
+        if (selectedDate != "") {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const myArray = document.getElementById("SignedOn").value.split("-");
+
+            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+            console.log(today);
+            console.log(varDate);
+            if (varDate > today) {
+                document.getElementById("SignedOn_error").innerHTML = "Signed On: should be less or equal to Today's Date";
+                setDates();
+            }
+            else {
+                document.getElementById("SignedOn_error").innerHTML = "";
+            }
+        }
 
     });
 

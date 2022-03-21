@@ -1,8 +1,7 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.MerchantFinancials;
+using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -10,10 +9,18 @@ namespace HPCL_Web.Controllers
     [TypeFilter(typeof(SessionExpireActionFilter))]
     public class MerchantFinancialsController : Controller
     {
-        public async Task<IActionResult> BatchDetails()
+        private readonly IMerchantFinancialService _merchantFinancialService;
+
+        public MerchantFinancialsController(IMerchantFinancialService merchantFinancialService)
+        {
+            _merchantFinancialService = merchantFinancialService;
+        }
+
+        public IActionResult Index()
         {
             return View();
         }
+
         public async Task<IActionResult> ERPReloadSaleEarningDetails()
         {
             return View();
@@ -38,10 +45,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> SettlementDetails()
-        {
-            return View();
-        }
+     
         public async Task<IActionResult> TransactionDetails()
         {
             return View();
@@ -51,5 +55,43 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        public IActionResult ViewUploadMerchantCautionLimit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ViewUploadMerchantCautionLimit(GetUploadMerchantCautionLimit entity)
+        {
+            var searchList = await _merchantFinancialService.ViewUploadMerchantCautionLimit(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        public IActionResult SettlementDetails()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SettlementDetails(GetMerchantSettlementDetails entity)
+        {
+            var searchList = await _merchantFinancialService.SettlementDetails(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> BatchDetails(string terminalId, int batchId)
+        {
+            ViewBag.TerminalId = terminalId;
+            ViewBag.BatchId = batchId;
+
+            var batchDetails = await _merchantFinancialService.GetBatchDetails(terminalId, batchId);
+            return View(batchDetails);
+        }
+
+        public async Task<IActionResult> TerminalDetails(string terminalId)
+        {
+            var terminalDetails = await _merchantFinancialService.GetTerminalDetails(terminalId);
+            return View(terminalDetails);
+        }
     }
 }

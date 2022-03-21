@@ -122,34 +122,34 @@
                 </thead>
             </table>
         </div>
-        <div class="mb-3" id="CardEdit" style="display:none">
-            <table class="table table-striped table-responsive d-md-table d-block text-nowrap display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayName(" ")
-                        </th>
 
-                        <th>
-                            @Html.DisplayName("Card Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Vehicle No")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Mobile Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("FastagNumber")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Action")
-                        </th>
+        <table id="CardEdit" class="table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName(" ")
+                    </th>
 
-                    </tr>
-                </thead>
-            </table>
-        </div>
+                    <th>
+                        @Html.DisplayName("Card Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Vehicle No")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Mobile Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("FastagNumber")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Action")
+                    </th>
+
+                </tr>
+            </thead>
+        </table>
+
         <div class="mb-3" id="Edit" style="display:none">
             <table class="table table-striped table-responsive d-md-table d-block text-nowrap display" style="width:100%">
                 <thead>
@@ -177,61 +177,62 @@
                 </thead>
             </table>
         </div>
-        <div class="mb-3" id="CardADD" style="display:none;">
-            <table class="table table-striped table-responsive d-md-table d-block text-nowrap display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayName(" ")
-                        </th>
 
-                        <th>
-                            @Html.DisplayName("Card Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Vehicle No")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Mobile Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("FastagNumber")
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="mb-3" id="CardMapp" style="display:none;">
-            <table class="table table-striped table-responsive d-md-table d-block text-nowrap display table-bordered" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayName("Card Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Vehicle No")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Mobile Number")
-                        </th>
-                        <th>
-                            @Html.DisplayName("FastagNumber")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Date")
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <table id="CardADD" class="table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName(" ")
+                    </th>
+
+                    <th>
+                        @Html.DisplayName("Card Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Vehicle No")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Mobile Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("FastagNumber")
+                    </th>
+                </tr>
+            </thead>
+        </table>
+
+
+        <table id="CardMapp" class="table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Card Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Vehicle No")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Mobile Number")
+                    </th>
+                    <th>
+                        @Html.DisplayName("FastagNumber")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Date")
+                    </th>
+                </tr>
+            </thead>
+        </table>
+
         <div class="form-group d-flex align-items-center justify-content-center flex-wrap mt-3">
             <div class="px-2">
-                <button class="btn" type="submit" id="save" name="submit" style="background-color:#084693;color:white;display:none;">Save</button>
-                <button class="btn" type="submit" id="Update" name="Update" style="background-color:#084693;color:white;display:none;">UPDATE</button>
+                <button class="btn btn_primary" type="submit" id="save" name="submit" style="display:none;">Save</button>
+                <button class="btn btn_primary" type="submit" id="Update" name="Update" style="display:none;">UPDATE</button>
             </div>
         </div>
     </form>
 </div>
+@using Microsoft.AspNetCore.Http;
 <script type="text/javascript">
     function showGrid() {
         if ($("input:text").val() == "") {
@@ -241,7 +242,19 @@
             document.getElementById('CardSearch').style.display = 'block';
         }
     }
-
+    $('#Customerid').on("input", function (evt) {
+        var self = $(this);
+        self.val(self.val().replace(/\D/g, ""));
+        if ((evt.which < 48 || evt.which > 57)) {
+            evt.preventDefault();
+        }
+    });
+    $('#Customerid').on("input", function (evt) {
+        var cust = document.getElementById('Customerid').val();
+        if (cust.length < 10 && cust.length > 20) {
+            alert(false);
+        }
+    });
 
     function resetFields() {
         $("input:text").each(function () {
@@ -256,7 +269,7 @@
 
         console.log(data);
 
-
+        $("#CardSearch td").parent().remove();
 
        // $("#CardSearch td").parent().remove();
         var rows = "<tbody>";
@@ -606,7 +619,8 @@
             dataType: "JSON",
             data: { customerId: customerid },
             success: function (res) {
-
+                $("#Customerid").val('@Context.Session.GetString("UserId")');
+                $("#Customerid").attr('disabled', 'true');
                 console.log(res, "res");
                 $("#Card").show();
                 $("#CardNo").show();

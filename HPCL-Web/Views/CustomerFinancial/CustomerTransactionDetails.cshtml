@@ -1,0 +1,454 @@
+﻿@model HPCL.Common.Models.ViewModel.CustomerFinancial.CustomerTransactionViewModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","CustomerFinancial")" class="text_primary">Financial</a> </li>
+            <li class="breadcrumb-item font-weight-light">Transaction Details</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Transaction Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-md-8 col-12 offset-1 offset-md-1">
+                                    <div class="custom_select">
+                                        <input type="radio" id="rbCustomerID" name="Status" value=">Customer ID" class="rbTransactionType" checked>
+                                        <span style="margin:0 10px">Customer ID</span>
+                                        <input type="radio" id="rbCardNo" name="Status" value="Card Number" class="rbTransactionType">
+                                        <span style="margin:0 10px">Card Number</span>
+                                        <input type="radio" id="rbMobileNo" name="Status" value="Mobile Number" class="rbTransactionType">
+                                        <span style="margin:0 10px">Mobile Number</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12">Customer Id<sup class="text-danger">*</sup></label>
+                                        <label id="lblCardNo" class="font-weight-normal col-md-3 col-12" style="display:none">Card Number<sup class="text-danger">*</sup></label>
+                                        <label id="lblMobileNo" class="font-weight-normal col-md-3 col-12" style="display:none">Mobile Number<sup class="text-danger">*</sup></label>
+
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select" id="customerIdDiv">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+                                            <div class="custom_select" id="cardNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+                                            <div class="custom_select" id="mobileNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="customerId_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label class="font-weight-normal col-md-3 col-12">From Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label class="font-weight-normal col-md-3 col-12">To Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button">EXPORT TO EXCEL</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button">EXPORT TO PDF</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0" id="divtable" style="display:none">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Summary of Transactions</p>
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <table id="CustTransactionSummary" class="table1 table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Account Number</th>
+                                        <th>Customer Name</th>
+                                        @*<th>Customer Code</th>*@
+                                        <th>Sale</th>
+                                        <th>Reload(CCMS & Cash)</th>
+                                        <th>CCMS Recharge</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <table id="CustTransactionDetails" class="table1 table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Terminal Id</th>
+                                        <th>Merchant</th>
+                                        @*<th>BatchID/ROC</th>*@
+                                        <th>Account Number</th>
+                                        <th>Vehicle No/User Name</th>
+                                        <th>Txn Date</th>
+                                        <th>Txn Type</th>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Volume(Ltr.)</th>
+                                        <th>Currency</th>
+                                        <th>Service Charge</th>
+                                        <th>Amount</th>
+                                        <th>Discount</th>
+                                        <th>Odometer Reading</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div class="clearfix"></div>
+        <div>
+            <div id="message" class="mb-3 text-center" style="display:none">
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    $(document).ready(function () {
+        setDates();
+        if ($("#rbCardNo").is(":checked")) {
+            $("#lblCustomerId").attr("style", "display:none");
+            $("#lblCardNo").attr("style", "display:block");
+            $("#lblMobileNo").attr("style", "display:none");
+        }
+        else if ($("#rbMobileNo").is(":checked")) {
+            $("#lblCustomerId").attr("style", "display:none");
+            $("#lblCardNo").attr("style", "display:none");
+            $("#lblMobileNo").attr("style", "display:block");
+        }
+        else {
+            $("#lblCustomerId").attr("style", "display:block");
+            $("#lblCardNo").attr("style", "display:none");
+            $("#lblMobileNo").attr("style", "display:none");
+        }
+
+    });
+    function setDates() {
+        //debugger;
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth());
+        fromd.setDate(fromd.getDate() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
+
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
+
+        $("#CustomerID").val("");
+        $("#CardNo").val("");
+        $("#MobileNo").val("");
+
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
+    };
+    $(".rbTransactionType").change(function () {
+
+        if ($("#rbCustomerID").is(":checked")) {
+            $("#cardNoDiv").attr("style", "display:none");
+            $("#mobileNoDiv").attr("style", "display:none");
+            $("#customerIdDiv").attr("style", "display:block");
+            $("#lblCustomerId").attr("style", "display:block");
+            $("#lblCardNo").attr("style", "display:none");
+            $("#lblMobileNo").attr("style", "display:none");
+
+        }
+        if ($("#rbCardNo").is(":checked")) {
+            $("#cardNoDiv").attr("style", "display:block");
+            $("#mobileNoDiv").attr("style", "display:none");
+            $("#customerIdDiv").attr("style", "display:none");
+            $("#lblCustomerId").attr("style", "display:none");
+            $("#lblCardNo").attr("style", "display:block");
+            $("#lblMobileNo").attr("style", "display:none");
+        }
+        if ($("#rbMobileNo").is(":checked")) {
+            $("#cardNoDiv").attr("style", "display:none");
+            $("#mobileNoDiv").attr("style", "display:block");
+            $("#customerIdDiv").attr("style", "display:none");
+            $("#lblCustomerId").attr("style", "display:none");
+            $("#lblCardNo").attr("style", "display:none");
+            $("#lblMobileNo").attr("style", "display:block");
+        }
+
+    });
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    $(".date").on('change', function (e) {
+        var fromD = "";
+        var toD = "";
+        fromD = $("#FromDate").val();
+        toD = $("#ToDate").val();
+        checkDates(fromD, toD);
+        $("#show_Table").html("");
+    });
+
+    function checkDates(fromD, toD) {
+        var dateflag = "Y";
+        var d1 = new Date(fromD);
+        var d2 = new Date(toD);
+
+        if (fromD != "" && toD != "") {
+            var aday = 24 * 60 * 60 * 1000;
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = "N";
+            }
+            else if ((Math.abs(d2-d1) / aday) > 31)
+            {
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
+                dateflag = "N";
+            }
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+
+        }
+        return dateflag;
+    }
+
+    $("#btnSearch").on("click", (function (e) {
+         var fromdate = $("#FromDate").val();
+         var todate = $("#ToDate").val();
+         var customerId = "", cardNo = "", mobileNo = "";
+         if ($("#rbCardNo").is(":checked")) {
+             cardNo = $("#CardNo").val();
+         }
+         else if ($("#rbMobileNo").is(":checked")) {
+             mobileNo = $("#MobileNo").val();
+         }
+         else {
+             customerId = $("#CustomerID").val();
+         }
+         var flag = "Y";
+         if (fromdate == "") {
+             $("#fromDate_error").attr("style", "display:block");
+             $("#fromDate_error").html("Select From Date");
+             flag = "N";
+         }
+         if (todate == "") {
+             $("#toDate_error").attr("style", "display:block");
+             $("#toDate_error").html("Select To Date");
+             flag = "N";
+        }
+         if (fromdate != "" && todate != "") {
+             flag = checkDates(fromdate, todate);
+         }
+        if (customerId == "" && mobileNo == "" && cardNo == "") {
+            $("#customerId_error").attr("style", "display:block");
+            $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+            flag = "N";
+        }
+        else {
+            if (customerId != "") {
+                if (customerId.substring(0, 1) != "2") {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Customer ID should be 10 digit number starting with 2");
+                    flag = "N";
+                }
+                else if (customerId.length < 10) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Customer ID should be 10 digit number");
+                    flag = "N";
+                }
+                else {
+                    $("#customerId_error").attr("style", "display:none");
+                    $("#customerId_error").html("");
+                }
+
+            }
+            if (mobileNo != "") {
+                if (mobileNo.length < 10) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Invalid Mobile Number");
+                    flag = "N";
+                }
+                else {
+                    $("#customerId_error").attr("style", "display:none");
+                    $("#customerId_error").html("");
+                }
+            }
+        }
+
+
+         if (flag == "N")
+             e.preventDefault();
+
+
+         if (flag == "Y") {
+             //customerId = "2000000004";
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetCustomerTransactionDetails", "CustomerFinancial")',
+                 data: { CustomerID: customerId, CardNo: cardNo, MobileNo: mobileNo, FromDate: fromdate, ToDate: todate},  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     console.log(data);
+                     if (status == 'success') {
+                         $("#message").attr("style", "display:none");
+                         $("#CustTransactionDetails td").parent().remove();
+                         if (data.getTransactionsDetailSummary.length > 0) {
+                             for (var i = 0; i < data.getTransactionsDetailSummary.length; i++) {
+                                 var rows = "<tbody><tr>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].srNumber || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].terminalId || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].merchantId || '') + "</span></td>"
+                                     /*+ "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].batchIdandROC || '') + "</span></td>"*/
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].accountNumber || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].vechileNo || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].txnDate || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].txnType || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].productName || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].price || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].volume || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].currency || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].serviceCharge || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].amount || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].discount || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].odometerReading || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].status || '') + "</span></td></tr></tbody>"
+
+
+                                 $('#CustTransactionDetails').append(rows);
+
+
+                             }
+
+                         }
+                         $("#CustTransactionSummary td").parent().remove();
+                         if (data.getTransactionsSaleSummary.length > 0) {
+                             for (var i = 0; i < data.getTransactionsSaleSummary.length; i++) {
+                                 var rows = "<tbody><tr>"
+
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].accountNumber || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerName || '') + "</span></td>"
+                                    /* + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerId || '') + "</span></td>"*/
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].sale || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].reloadCcmsCash || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].ccmsRecharge || '') + "</span></td>"
+                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].dailyCashLimitBalance || '') + "</span></td></tr></tbody>"
+
+
+                                 $('#CustTransactionSummary').append(rows);
+
+
+                             }
+                         }
+
+
+                         if (data.getTransactionsSaleSummary.length == 0 && data.getTransactionsDetailSummary.length == 0) {
+                             $("#message").html("");
+                             $("#message").append(data.message);
+
+                             $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
+                             $("#divtable").attr("style", "display:none");
+
+                         }
+                         else {
+                             $("#message").attr("style", "display:none");
+                             $("#divtable").attr("style", "display:block");
+                             $('html, body').animate({
+                                 scrollTop: $("#CustTransactionSummary").offset().top
+                             }, 2000);
+                         }
+                     }
+
+                 },
+             });
+         }
+
+    })
+    );
+    $("#btnReset").click(function () {
+        location.reload();
+
+    });
+</script>

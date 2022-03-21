@@ -1,5 +1,5 @@
 ﻿@model HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer.MyHPOTCCardCustomerModel
-
+@using HPCL.Common.Resources
 @{
     ViewData["Title"] = "HP (OTC) Card Customer Creation";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -32,10 +32,10 @@
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button" id="btnSearch">Search</button>
+                                            <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button" id="btnReset">Reset</button>
+                                            <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +268,7 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
                                                     <div class="error" id="comm_email_error"></div>
                                                 </div>
                                             </div>
@@ -334,7 +334,7 @@
 
                                             </div>
                                             <div class="col-md-2 px-0">
-                                                <button class="btn btn_primary" type="button" id="btnCard1Verify" style="height:30px;">Verify</button>
+                                                <button class="btn btn_primary" type="button" id="btnCard1Verify" style="height:30px;">@Label.Verify</button>
                                             </div>
                                         </div>
                                     </div>
@@ -376,7 +376,7 @@
 
                                             </div>
                                             <div class="col-md-2 px-0">
-                                                <button class="btn btn_primary" type="button" id="btnCard2Verify" style="height:30px;">Verify</button>
+                                                <button class="btn btn_primary" type="button" id="btnCard2Verify" style="height:30px;">@Label.Verify</button>
                                             </div>
                                         </div>
                                     </div>
@@ -408,12 +408,10 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="d-flex align-items-center justify-content-start flex-wrap">
                                                     <div class="d-flex align-items-center mr-3">
-                                                        @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">*@
                                                         @Html.RadioButtonFor(m => m.CopyofDriverLicense, "Yes", new { @id = "rbtnDriverLicenseYes" })
                                                         <label class="form-check-label ml-1" for="inlineRadio1">Yes</label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
                                                         @Html.RadioButtonFor(m => m.CopyofDriverLicense, "No", new { @id = "rbtnDriverLicenseNo" })
                                                         <label class="form-check-label ml-1" for="inlineRadio2">No</label>
                                                     </div>
@@ -428,12 +426,10 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="d-flex align-items-center justify-content-start flex-wrap">
                                                     <div class="d-flex align-items-center mr-3">
-                                                        @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">*@
                                                         @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "Yes", new { @id = "rbtnVehicleRegistrationYes" })
                                                         <label class="form-check-label ml-1" for="inlineRadio1">Yes</label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
                                                         @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "No", new { @id = "rbtnVehicleRegistrationNo" })
                                                         <label class="form-check-label ml-1" for="inlineRadio2">No</label>
                                                     </div>
@@ -446,7 +442,7 @@
                                 <div class="clearfix"></div>
                                 <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
                                     <div class="px-2">
-                                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Submit</button>
+                                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -460,26 +456,29 @@
 
             <!-- Modal : Card1 -->
             <div class="modal fade" id="myModalCard1" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
 
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
                         <div class="modal-body">
+                            <input type='text' id='txt_searchCard1' placeholder='Search Card Number'  class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCard1Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable1">
                                 @*style="display: none"*@
                                 <thead>
                                     <tr>
-                                        <th>Sl No.</th>
-                                        <th>CardNo</th>
+                                        <th>Serial No</th>
+                                        <th>Card Number</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cardDetails">
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                        </div>                        
                     </div>
 
                 </div>
@@ -487,26 +486,30 @@
             <!-- Modal : Card1 -->
             <!-- Modal : Card2 -->
             <div class="modal fade" id="myModalCard2" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog  modal-lg">
 
                     <!-- Modal content-->
                     <div class="modal-content" style='overflow:scroll; height:400px;'>
+                         <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
                         <div class="modal-body">
+                            <input type='text' id='txt_searchCard2' placeholder='Search Card Number' class="form-control mb-3" onkeypress='return isNumberKey(event)' onkeyup='SearchCard2Function()'>
                             <table class="table table-bordered text-nowrap" id="CardsTable2">
                                 @*style="display: none"*@
                                 <thead>
                                     <tr>
-                                        <th>Sl No.</th>
-                                        <th>CardNo</th>
+                                        <th>Serial No</th>
+                                        <th>Card Number</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cardDetails">
                                 </tbody>
                             </table>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                       
                     </div>
 
                 </div>
@@ -547,11 +550,60 @@
         dvOtherDetails.style.display = "none";
         dvHeaderDetails.style.display = "none";
         document.getElementById("MerchantId_error").innerHTML = "";
+        document.getElementById("FormNumber").value = "";
+        document.getElementById("IndividualOrgName").value = "";
+        document.getElementById("NameOnCard").value = "";
+        document.getElementById("IncomeTaxPan").value = "";
+        document.getElementById("CommunicationCityName").value = "";
+        document.getElementById("CommunicationPincode").value = "";
+        document.getElementById("CommunicationDialCode").value = "";
+        document.getElementById("CommunicationPhonePart2").value = "";
+        document.getElementById("CommunicationFaxCode").value = "";
+        document.getElementById("CommunicationFaxPart2").value = "";
+        document.getElementById("CommunicationMobileNo").value = "";
+        document.getElementById("CommunicationEmailid").value = "";
+        document.getElementById("CommunicationAddress1").value = "";
+        document.getElementById("CommunicationAddress2").value = "";
+        document.getElementById("CardNumber1").value = "";
+        document.getElementById("VehicleNo1").value = "";
+        document.getElementById("MobileNo1").value = "";
+        document.getElementById("CardNumber2").value = "";
+        document.getElementById("VehicleNo2").value = "";
+        document.getElementById("MobileNo2").value = "";
+        document.getElementById("IndividualOrgNameTitle").value="0"
+        document.getElementById("CommunicationStateId").value = "0"
+        document.getElementById("CommunicationDistrictId").value = "0"
+        document.getElementById("formNumber_error").innerHTML = "";
+        document.getElementById("salutaion_error").innerHTML = "";
+        document.getElementById("customername_error").innerHTML = "";
+        document.getElementById("nameOnCard_error").innerHTML = "";
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+        document.getElementById("communicationCityName_error").innerHTML = "";
+        document.getElementById("communicationPincode_error").innerHTML = "";
+        document.getElementById("comm_states_error").innerHTML = "";
+        document.getElementById("comm_district_error").innerHTML = "";
+        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        document.getElementById("comm_faxNumber_error").innerHTML = "";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        document.getElementById("comm_email_error").innerHTML = "";
+        document.getElementById("comm_address1_error").innerHTML = "";
+        document.getElementById("comm_address2_error").innerHTML = "";
+        document.getElementById("CardNumber1_error").innerHTML = "";
+        document.getElementById("VehicleNo1_error").innerHTML = "";
+        document.getElementById("MobileNo1_error").innerHTML = "";
+        document.getElementById("CardNumber2_error").innerHTML = "";
+        document.getElementById("VehicleNo2_error").innerHTML = "";
+        document.getElementById("MobileNo2_error").innerHTML = "";
+        
         if (document.getElementById("LoggedInAs").value == "MERCHANT") {
             $("#MerchantId").prop('readonly', true);
         }
         else {
             $("#MerchantId").prop('readonly', false);
+            document.getElementById("MerchantId").value = "";
         }
     });
 
@@ -560,7 +612,7 @@
         //debugger;
         var merchantId = document.getElementById("MerchantId").value;
         if (merchantId == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant ID";
              //$("#merchantId").focus;
             return (false);
         }
@@ -571,7 +623,13 @@
         if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
             document.getElementById("MerchantId").focus();
-            return ret;
+            return (false);
+        }
+
+        if (document.getElementById("MerchantId").value.length < 10) {
+            document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number";
+            document.getElementById("MerchantId").focus();
+            return (false);
         }
 
         //var found = false;
@@ -605,7 +663,7 @@
                             $("#MerchantId").prop('readonly', false);
                             dvOtherDetails.style.display = "none";
                             dvHeaderDetails.style.display = "none";
-                            document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                            document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
                         }
                     }
                     else {
@@ -618,7 +676,7 @@
                         document.getElementById("RegionalOfficeId").value = "";
                         dvOtherDetails.style.display = "none";
                         dvHeaderDetails.style.display = "none";
-                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -630,7 +688,7 @@
                     document.getElementById("RegionalOfficeId").value = "";
                     dvOtherDetails.style.display = "none";
                     dvHeaderDetails.style.display = "none";
-                    document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                    document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
                 },
                 statusCode: {
                     1024: function () {
@@ -642,7 +700,7 @@
                         document.getElementById("RegionalOfficeId").value = "";
                         dvOtherDetails.style.display = "none";
                         dvHeaderDetails.style.display = "none";
-                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant Id does not exist";
                     }
                 }
             });
@@ -654,7 +712,7 @@
         //debugger;
         var formNumber = document.getElementById("FormNumber").value;
         if (formNumber == "") {
-            document.getElementById("formNumber_error").innerHTML = "Form No is required";
+            document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
             return (false);
         }
         else {
@@ -766,7 +824,7 @@
         debugger;
 
         if (document.getElementById("MerchantId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant Id";
             //$("#MerchantId").focus;
             return (false);
         }
@@ -775,7 +833,7 @@
         }
 
         if (document.getElementById("RegionalOfficeId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Region Id cannot be left blank";
             return (false);
         }
         else {
@@ -840,6 +898,7 @@
         console.log(cardNo);
 
         $('#CardNumber1').val(cardNo);
+        $('#txt_searchCard1').val('');
         $('#myModalCard1').modal('hide');
     }
 
@@ -848,7 +907,7 @@
         debugger;
 
         if (document.getElementById("MerchantId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant Id";
             //$("#MerchantId").focus;
             return (false);
         }
@@ -857,7 +916,7 @@
         }
 
         if (document.getElementById("RegionalOfficeId").value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Region Id is required";
+            document.getElementById("MerchantId_error").innerHTML = "Region Id cannot be left blank";
             return (false);
         }
         else {
@@ -921,6 +980,7 @@
         console.log(cardNo);
 
         $('#CardNumber2').val(cardNo);
+        $('#txt_searchCard2').val('');
         $('#myModalCard2').modal('hide');
     }
 
@@ -930,7 +990,7 @@
 
 
         if (panNumber == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN No is required";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             return (false);
         }
         else {
@@ -947,10 +1007,11 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            document.getElementById("IncomeTaxPan").value = "";
             return (false);
         }
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',
             url: '@Url.Action("CheckPanNoDuplication", "MyHpOTCCardCustomer")',
             data: { PanNo: panNumber },  // data to submit
@@ -993,7 +1054,7 @@
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
+        }*@
 
         //2nd Validation
 
@@ -1055,7 +1116,7 @@
 
 
         if (document.getElementById("MerchantId").value.trim() == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant ID is required";
+            document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant ID";
             document.getElementById("MerchantId").focus();
             return ret;
         }
@@ -1073,16 +1134,16 @@
         }
 
         if (document.getElementById("FormNumber").value.trim() == "") {
-            document.getElementById("formNumber_error").innerHTML = "Form Number is required";
-            //document.getElementById("FormNumber").focus();
+            document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
+            document.getElementById("FormNumber").focus();
             return ret;
         }
         else {
             document.getElementById("formNumber_error").innerHTML = "";
         }
-        //console.log('Before IndividualOrgNameTitle');
+
         if (document.getElementById("IndividualOrgNameTitle").value == "0") {
-            document.getElementById("salutaion_error").innerHTML = "Title is required";
+            document.getElementById("salutaion_error").innerHTML = "Select Title";
             document.getElementById("IndividualOrgNameTitle").focus();
             return ret;
         }
@@ -1091,7 +1152,18 @@
         }
 
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
-            document.getElementById("customername_error").innerHTML = "Customer/Org.Name is required";
+            document.getElementById("customername_error").innerHTML = "Customer/Org.Name field cannot be left blank";
+            document.getElementById("IndividualOrgName").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("customername_error").innerHTML = "";
+        }
+
+        var nameCheck = /^[A-Za-z]{2,40}$/;
+
+        if (!document.getElementById("IndividualOrgName").value.trim().match(nameCheck)) {
+            document.getElementById("customername_error").innerHTML = "Customer/Org.Name field is not valid";
             document.getElementById("IndividualOrgName").focus();
             return ret;
         }
@@ -1109,7 +1181,17 @@
         }
 
         if (document.getElementById("NameOnCard").value.trim() == "") {
-            document.getElementById("nameOnCard_error").innerHTML = "Name On Card is required";
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            document.getElementById("NameOnCard").focus();
+            return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+
+        if (!document.getElementById("NameOnCard").value.trim().match(nameCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field is not valid";
             document.getElementById("NameOnCard").focus();
             return ret;
         }
@@ -1127,8 +1209,8 @@
         }
 
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
-            //document.getElementById("IncomeTaxPan").focus();
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("IncomeTaxPan").focus();
             return ret;
         }
         else {
@@ -1136,7 +1218,7 @@
         }
 
         if (document.getElementById("CommunicationCityName").value.trim() == "") {
-            document.getElementById("communicationCityName_error").innerHTML = "City is required";
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
             document.getElementById("CommunicationCityName").focus();
             return ret;
         }
@@ -1145,7 +1227,7 @@
         }
 
         if (document.getElementById("CommunicationPincode").value.trim() == "") {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            document.getElementById("communicationPincode_error").innerHTML = "Pin Code field cannot be left blank";
             document.getElementById("CommunicationPincode").focus();
             return ret;
         }
@@ -1163,7 +1245,7 @@
 
 
         if (document.getElementById("CommunicationStateId").value.trim() == "0") {
-            document.getElementById("comm_states_error").innerHTML = "State is required";
+            document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
             document.getElementById("CommunicationStateId").focus();
             return ret;
         }
@@ -1172,7 +1254,7 @@
         }
 
         if (document.getElementById("CommunicationDistrictId").value == "0") {
-            document.getElementById("comm_district_error").innerHTML = "District is required";
+            document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
             document.getElementById("CommunicationDistrictId").focus();
             return ret;
         }
@@ -1267,7 +1349,7 @@
 
 
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile is required";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
             document.getElementById("CommunicationMobileNo").focus();
             return ret;
         }
@@ -1276,7 +1358,7 @@
         }
 
         if (document.getElementById("CommunicationEmailid").value.trim() == "") {
-            document.getElementById("comm_email_error").innerHTML = "Email is required";
+            document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
             document.getElementById("CommunicationEmailid").focus();
             return ret;
         }
@@ -1285,7 +1367,7 @@
         }
 
         if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
             return (false);
         }
         else {
@@ -1293,7 +1375,7 @@
         }
 
         if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-            document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+            document.getElementById("comm_email_error").innerHTML = "Email is already used";
             return (false);
         }
         else {
@@ -1301,7 +1383,7 @@
         }
 
         if (document.getElementById("CommunicationAddress1").value.trim() == "") {
-            document.getElementById("comm_address1_error").innerHTML = "Address 1 is required";
+            document.getElementById("comm_address1_error").innerHTML = "Address 1 field cannot be left blank";
             document.getElementById("CommunicationAddress1").focus();
             return ret;
         }
@@ -1312,7 +1394,7 @@
 
 
         if (document.getElementById("CommunicationAddress2").value.trim() == "") {
-            document.getElementById("comm_address2_error").innerHTML = "Address 2 is required";
+            document.getElementById("comm_address2_error").innerHTML = "Address 2 field cannot be left blank";
             document.getElementById("CommunicationAddress2").focus();
             return ret;
         }
@@ -1321,7 +1403,7 @@
         }
 
         if (document.getElementById("CardNumber1").value == "" && document.getElementById("CardNumber2").value == "") {
-            document.getElementById("CardNumber1_error").innerHTML = "At least 1 card details required";
+            document.getElementById("CardNumber1_error").innerHTML = "Map at least one card with this Customer!";
             document.getElementById("CardNumber1").focus();
             document.getElementById("CardNumber2_error").innerHTML = "";
             return ret;
@@ -1345,7 +1427,7 @@
 
         //if (document.getElementById("CardNumber1").value != "") {
         //    if (document.getElementById("VehicleNo1").value == "") {
-        //        document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No 1 is required";
+        //        document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No1 cannot be left blank";
         //        document.getElementById("VehicleNo1").focus();
         //        return ret;
         //    }
@@ -1353,7 +1435,7 @@
         //        document.getElementById("VehicleNo1_error").innerHTML = "";
         //    }
         //    if (document.getElementById("MobileNo1").value == "") {
-        //        document.getElementById("MobileNo1_error").innerHTML = "Mobile 1 is required";
+        //        document.getElementById("MobileNo1_error").innerHTML = "Mobile1 cannot be left blank";
         //        document.getElementById("MobileNo1").focus();
         //        return ret;
         //    }
@@ -1382,7 +1464,7 @@
         }
 
         if (document.getElementById("MobileNo1").value.trim() == "") {
-            document.getElementById("MobileNo1_error").innerHTML = "Mobile is required";
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile field cannot be left blank";
             document.getElementById("MobileNo1").focus();
             return ret;
         }
@@ -1399,7 +1481,7 @@
 
         //if (document.getElementById("CardNumber2").value != "") {
         //    if (document.getElementById("VehicleNo2").value == "") {
-        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No 2 is required";
+        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No2 cannot be left blank";
         //        document.getElementById("VehicleNo2").focus();
         //        return ret;
         //    }
@@ -1407,7 +1489,7 @@
         //        document.getElementById("VehicleNo2_error").innerHTML = "";
         //    }
         //    if (document.getElementById("MobileNo2").value == "") {
-        //        document.getElementById("MobileNo2_error").innerHTML = "Mobile 2 is required";
+        //        document.getElementById("MobileNo2_error").innerHTML = "Mobile2 cannot be left blank";
         //        document.getElementById("MobileNo2").focus();
         //        return ret;
         //    }
@@ -1437,7 +1519,7 @@
 
         if (document.getElementById("CardNumber2").value != "") {
             if (document.getElementById("MobileNo2").value == "") {
-                document.getElementById("MobileNo2_error").innerHTML = "Mobile is required";
+                document.getElementById("MobileNo2_error").innerHTML = "Mobile field cannot be left blank";
                 document.getElementById("MobileNo2").focus();
                 return ret;
             }
@@ -1459,7 +1541,7 @@
         }
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
-            document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "Please select Copy of Driver License";
             return (false);
         }
         else {
@@ -1467,7 +1549,7 @@
         }
 
         if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
-            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Select Vehicle Registration Certificate";
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Please select Copy of Vehicle Registration Certificate";
             return (false);
         }
         else {
@@ -1500,8 +1582,8 @@
 
 
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is required";
-            //document.getElementById("IncomeTaxPan").focus();
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("IncomeTaxPan").focus();
             return ret;
         }
         else {
@@ -1573,7 +1655,7 @@
         //debugger;
         var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
         if (communicationMobile == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "communication Mobile No is required";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No cannot be left blank";
             return (false);
         }
         else {
@@ -1597,53 +1679,44 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "MyHpOTCCardCustomer")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "MyHpOTCCardCustomer")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
 
-                    if (status == 'success') {
+                if (status == 'success') {
 
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
-
-        //if (mobileNoUsed == true) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+                }
+            }
+        });*@
 
     });
 
@@ -1651,7 +1724,7 @@
         //debugger;
         var communicationEmail = document.getElementById("CommunicationEmailid").value.trim();
         if (communicationEmail == "") {
-            document.getElementById("comm_email_error").innerHTML = "communication Email is required";
+            document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
             return (false);
         }
         else {
@@ -1672,7 +1745,7 @@
             return (false);
         }
 
-        $.ajax({
+        @*$.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("CheckEmailDuplication", "MyHpOTCCardCustomer")',
             data: { Emailid: communicationEmail },  // data to submit
@@ -1688,7 +1761,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         emailUsed = true;
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        document.getElementById("comm_email_error").innerHTML = "Email is already used";
                         localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
@@ -1698,28 +1771,19 @@
                 }
                 else {
                     //console.log(v);
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    document.getElementById("comm_email_error").innerHTML = "Email is already used";
                     emailUsed = true;
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                document.getElementById("comm_email_error").innerHTML = "Email is already used";
             },
             statusCode: {
                 1024: function () {
-                    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                    document.getElementById("comm_email_error").innerHTML = "Email is already used";
                 }
             }
-        });
-
-        //if (emailUsed == true) {
-        //    document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
-        //    //return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_email_error").innerHTML = "";
-        //    //console.log('SAM');
-        //}
+        });*@
 
     });
 
@@ -1734,7 +1798,7 @@
         //debugger;
         var vehicleNo = document.getElementById("VehicleNo1").value;
         if (vehicleNo == "") {
-            document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is required";
+            document.getElementById("VehicleNo1_error").innerHTML = "Please Enter Vehicle Number";
             $("#VehicleNo1").focus;
             return (false);
         }
@@ -1753,7 +1817,7 @@
                 var jsonData = JSON.parse(data);
                 if (status == 'success' && jsonData['statusCode'] == '101') {
                     result = true;
-                    document.getElementById("VehicleNo1_error").innerHTML = "";
+                    document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is valid";
                     console.log(jsonData);
                     console.log(document.getElementById("VehicleNo1_error").innerHTML);
                 }
@@ -1775,7 +1839,7 @@
         //debugger;
         var vehicleNo = document.getElementById("VehicleNo2").value;
         if (vehicleNo == "") {
-            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is required";
+            document.getElementById("VehicleNo2_error").innerHTML = "Please Enter Vehicle Number";
             $("#VehicleNo2").focus;
             return (false);
         }
@@ -1794,7 +1858,7 @@
                 var jsonData = JSON.parse(data);
                 if (status == 'success' && jsonData['statusCode'] == '101') {
                     result = true;
-                    document.getElementById("VehicleNo2_error").innerHTML = "";
+                    document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is valid";
                     console.log(jsonData);
                     console.log(document.getElementById("VehicleNo2_error").innerHTML);
                 }
@@ -1856,7 +1920,7 @@
         //debugger;
         var communicationPinCode = document.getElementById("CommunicationPincode").value;
         if (communicationPinCode == "") {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin code is required";
+            document.getElementById("communicationPincode_error").innerHTML = "Pin code cannot be left blank";
             return (false);
         }
         else {
@@ -1879,5 +1943,99 @@
             return false;
         }
     });
+
+    $("#MobileNo1").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("MobileNo1").value.trim();
+        if (communicationMobile == "") {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("MobileNo1_error").innerHTML = "";
+        }
+
+        if (document.getElementById("MobileNo1").value.substring(0, 1) == "0") {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("MobileNo1").value = "";
+            document.getElementById("MobileNo1").focus();
+            return false;
+        }
+
+        if (document.getElementById("MobileNo1").value.length < 10) {
+            document.getElementById("MobileNo1_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("MobileNo1").value = "";
+            document.getElementById("MobileNo1").focus();
+            return false;
+        }
+
+    });
+
+    $("#MobileNo2").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("MobileNo2").value.trim();
+        //if (communicationMobile == "") {
+        //    document.getElementById("MobileNo2_error").innerHTML = "Mobile No cannot be left blank";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("MobileNo2_error").innerHTML = "";
+        //}
+
+        if (document.getElementById("MobileNo2").value.substring(0, 1) == "0") {
+            document.getElementById("MobileNo2_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("MobileNo2").value = "";
+            document.getElementById("MobileNo2").focus();
+            return false;
+        }
+
+        if (communicationMobile != "") {
+            if (document.getElementById("MobileNo2").value.length < 10) {
+                document.getElementById("MobileNo2_error").innerHTML = "Mobile No length must be 10 digit";
+                document.getElementById("MobileNo2").value = "";
+                document.getElementById("MobileNo2").focus();
+                return false;
+            }
+        }
+
+    });
+
+    function SearchCard1Function() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txt_searchCard1");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("CardsTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function SearchCard2Function() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txt_searchCard2");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("CardsTable2");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 
 </script>

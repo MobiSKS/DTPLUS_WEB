@@ -16,28 +16,28 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
             {
                 CountryID = 0,
                 StateID = 0,
-                StateName = "Select State"
+                StateName = "--Select--"
             });
 
             CustomerZonalOfficeMdl = new List<CustomerZonalOfficeModel>();
             CustomerZonalOfficeMdl.Add(new CustomerZonalOfficeModel
             {
                 ZonalOfficeID = 0,
-                ZonalOfficeName = "Select Zonal Office"
+                ZonalOfficeName = "--Select--"
             });
 
             CustomerRegionMdl = new List<CustomerRegionModel>();
             CustomerRegionMdl.Add(new CustomerRegionModel
             {
                 RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Region"
+                RegionalOfficeName = "--Select--"
             });
 
             CustomerSecretQueMdl = new List<CustomerSecretQueModel>();
             CustomerSecretQueMdl.Add(new CustomerSecretQueModel
             {
                 SecretQuestionId = 0,
-                SecretQuestionName = "Select Secret Question"
+                SecretQuestionName = "--Select--"
             });
         }
 

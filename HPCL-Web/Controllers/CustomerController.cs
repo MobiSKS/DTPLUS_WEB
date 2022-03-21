@@ -96,50 +96,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetCustomerSubType(int CustomerTypeID)
         {
-
             List<CustomerSubTypeModel> lstCustomerSubType = new List<CustomerSubTypeModel>();
-            lstCustomerSubType = await _customerService.GetCustomerSubType(CustomerTypeID);
+            lstCustomerSubType = await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID);
             return Json(lstCustomerSubType);
-
-            //var customerType = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        { "CustomerTypeId", CustomerTypeID.ToString() }
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerType), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerSubType, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerSubTypeModel> lst = jarr.ToObject<List<CustomerSubTypeModel>>();
-            //            lst.Add(new CustomerSubTypeModel
-            //            {
-            //                CustomerSubTypeID = 0,
-            //                CustomerSubTypeName = "--Select --"
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.CustomerSubTypeID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading customer sub type Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -154,49 +113,8 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
             List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
-            lstDistrict = await _customerService.GetDistrictDetails(Stateid);
+            lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
             return Json(lstDistrict);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"StateID", Stateid.ToString()}
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getDistrict, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<OfficerDistrictModel> lst = jarr.ToObject<List<OfficerDistrictModel>>();
-            //            lst.Add(new OfficerDistrictModel
-            //            {
-            //                stateID = 0,
-            //                districtID = 0,
-            //                districtName = "Select District"
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.districtID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading District Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -205,42 +123,6 @@ namespace HPCL_Web.Controllers
             List<VehicleTypeModel> sortedtList = new List<VehicleTypeModel>();
             sortedtList = await _customerService.GetVehicleTypeDetails();
             return Json(new { SortedtList = sortedtList });
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")}
-
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-            //            var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-            //            return Json(new { SortedtList = SortedtList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Vehicle Type Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -689,51 +571,6 @@ namespace HPCL_Web.Controllers
             searchList = await _customerService.ValidateNewCustomer(entity);
 
             return Json(new { searchList = searchList });
-
-            //var searchBody = new Dictionary<string, string>
-            //{
-            //    {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
-            //    {"Createdon" , entity.CustomerDateOfApplication},
-            //    {"FormNumber" , entity.FormNumber},
-            //    {"StateId" , null},
-            //    {"CustomerName" , null}
-            //};
-
-            //HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            var jsonSerializerOptions = new JsonSerializerOptions()
-            //            {
-            //                IgnoreNullValues = true
-            //            };
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-            //            ModelState.Clear();
-            //            return Json(new { searchList = searchList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -800,71 +637,108 @@ namespace HPCL_Web.Controllers
 
             List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
 
-
             CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
 
-            FormNumber = string.Empty;
+            if (Customer != null)
+            {
+                if (!string.IsNullOrEmpty(Customer.CommunicationPhoneNo))
+                {
+                    string[] subs = Customer.CommunicationPhoneNo.Split('-');
 
+                    if (subs.Count() > 1)
+                    {
+                        Customer.CommunicationDialCode = subs[0].ToString();
+                        Customer.CommunicationPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.CommunicationPh = Customer.CommunicationPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.CommunicationFax))
+                {
+                    string[] subs = Customer.CommunicationFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.CommunicationFaxCode = subs[0].ToString();
+                        Customer.CommunicationFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.CommunicationFaxPh = Customer.CommunicationFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.PermanentFax))
+                {
+                    string[] subs = Customer.PermanentFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.PermanentFaxCode = subs[0].ToString();
+                        Customer.PermanentFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.PermanentFaxPh = Customer.CommunicationFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.PermanentPhoneNo))
+                {
+                    string[] subs = Customer.PermanentPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.PerOrRegAddressDialCode = subs[0].ToString();
+                        Customer.PerOrRegAddressPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.PerOrRegAddressPh = Customer.PermanentPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
+                {
+                    string[] subs = Customer.KeyOfficialPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.KeyOffDialCode = subs[0].ToString();
+                        Customer.KeyOffPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.KeyOffPh = Customer.KeyOfficialPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialFax))
+                {
+                    string[] subs = Customer.KeyOfficialFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        Customer.KeyOffFaxCode = subs[0].ToString();
+                        Customer.KeyOffFaxPh = subs[1].ToString();
+                    }
+                    else
+                    {
+                        Customer.KeyOffPh = Customer.KeyOfficialFax;
+                    }
+                }
+            }
+
+            FormNumber = string.Empty;
 
             HttpContext.Session.SetString("FormNumberSession", FormNumber);
 
             ModelState.Clear();
 
             return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-
-            //HttpContext.Session.SetString("FormNumberSession", FormNumber);
-
-            //var customerBody = new Dictionary<string, string>
-            //{
-            //    {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"FormNumber" , FormNumber}
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getcustomerdetailsByFormNumber, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-
-            //            var searchRes = obj["Data"].Value<JObject>();
-            //            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
-
-            //            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
-
-            //            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
-
-            //            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
-
-
-            //            CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
-
-            //            FormNumber = string.Empty;
-
-
-            //            HttpContext.Session.SetString("FormNumberSession", FormNumber);
-
-            //            ModelState.Clear();
-
-            //            return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -984,47 +858,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckformnumberDuplication(string FormNumber)
         {
-            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckformnumberDuplication(FormNumber);
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckformNumberDuplication(FormNumber);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerFormNumber = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"FormNumber", FormNumber }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkformnumberDuplication, cusFormcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Form Details");
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -1038,49 +874,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckMobilNoDuplication(string MobileNo)
         {
-            CustomerInserCardResponseData customerInserCardResponseData = await _customerService.CheckMobilNoDuplication(MobileNo);
+            CustomerInserCardResponseData customerInserCardResponseData = await _commonActionService.CheckMobilNoDuplication(MobileNo);
 
             return Json(customerInserCardResponseData);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //fetching Customer info
-            //    var CustomerFormNumber = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"CommunicationMobileNo", MobileNo }
-            //        };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-
-            //    StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(CustomerFormNumber), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.checkmobileNoDuplication, cusFormcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
-            //            return Json(lst[0]);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Mobile Details");
-            //        }
-            //    }
-            //}
-
         }
 
         [HttpPost]
@@ -1149,7 +945,52 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
             return PartialView("~/Views/Customer/_CustomerCCMSBalanceDetails.cshtml", modals);
         }
+        public async Task<IActionResult> GetFormNumber()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenerateFormNumber()
+        {
+            var FormNumber = await _customerService.GenerateFormNumber();
 
+            return Json(FormNumber);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictid(string DistrictId, string IncomeTaxPan)
+        {
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictid(DistrictId, IncomeTaxPan);
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> UpdateCustomer(string FormNumber)
+        {
+            var modals = await _customerService.UpdateCustomer(FormNumber);
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCustomer(CustomerModel cust)
+        {
+
+            var modals = await _customerService.UpdateCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("ValidateNewCustomer");
+            }
+
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        {
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, CustomerReferenceNo);
+
+            return Json(result);
+        }
 
     }
 }

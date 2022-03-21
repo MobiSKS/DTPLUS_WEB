@@ -18,7 +18,7 @@
             <li class="breadcrumb-item font-weight-light">Rejected Merchants</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1"}))
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
         {
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -27,29 +27,34 @@
                             <div class="border-1 rounded border-grey">
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Rejected Merchants</p>
                                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
-                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">From Date</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">From Date</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date"})
+                                                    </div>
+                                                    <span style="display:none" class="error" id="fromDate_error"></span>
+                                                </div>
                                             </div>
-                                            <span class="error" style="font-size: 14px; color: #dc3545 !important " id="fromDate"></span>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                    </div>
+                                                    <span style="display:none" class="error" id="toDate_error"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">To Date</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
-                                            </div>
-                                            <span class="error" style="font-size: 14px; color: #dc3545 !important " id="toDate"></span>
-                                        </div>
-                                    </div>
-                                    </div>
+                                    
                                     <div class="col-12 d-flex align-items-center justify-content-center mt-2">
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="submit">Search</button>
+                                            <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
                                         </div>
                                         <div class="px-2">
                                             <button class="btn btn_primary" type="button" onclick="setDates();">Reset</button>
@@ -118,8 +123,8 @@
             }
             else
             {
-                <div class="col-12 text-center alert-danger p-2">
-                    No Records found!
+                <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+                    @Model.Message
                 </div>
             }
         </div>
@@ -129,7 +134,11 @@
     var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
     var notFoundError = "@ViewBag.NotFoundError";
-
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
         $('#merchantRejectedDetails table').DataTable({
             "paging": true,
@@ -140,52 +149,69 @@
                 "info": "Showing _START_ to _END_ of _TOTAL_ Records",
             }
         });
-        
-        if (notFoundError == "") {
-            if (fromdate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-
-            if (todate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                setDates();
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-           
-
+        setDates();
+    });
+    $("#btnSearch").on("click", (function (e) {
+       
+        var dateflag = checkDates();
+        if (dateflag == "N") {
+            $("#show_Table").html("");
+            e.preventDefault();
         }
-        else {
-            alert("Details not found");
-        }
-
+    })
+    );
+    $(".date").on('change', function (e) {
+        checkDates();
+        $("#show_Table").html("");
     });
 
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
+        var dateflag = "Y";
+        if (fromD != "" && toD != "") {
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("From Date should be less or equal to To date");
+                dateflag = "N";
+            }
+        }
+        else {
+            $("#fromDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#toDate_error").attr("style", "display:none");
+        }
+        if (toD != "") {
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+        }
+
+        return dateflag;
+    }
+
     function setDates() {
-        var d = new Date();
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
 
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month +  '-' +
-            d.getFullYear();
-
-        $("#FromDate").val(output);
-        $("#ToDate").val(output);
-
-
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
+        $("#toDate_error").attr("style", "display:none");
+        $("#fromDate_error").attr("style", "display:none");
         $("#show_Table").html("");
     };
 

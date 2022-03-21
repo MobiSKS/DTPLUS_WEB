@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
             RegionMdl.Add(new CustomerRegionModel
             {
                 RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Region"
+                RegionalOfficeName = "--Select--"
             });
 
         }
