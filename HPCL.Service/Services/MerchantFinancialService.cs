@@ -150,5 +150,45 @@ namespace HPCL.Service.Services
             terminalDetailsResponse.objTerminalDeploymentDetail.AddRange(terminalDeploymentDetails);
             return terminalDetailsResponse;
         }
+
+        public async Task<TransactionlDetailsResponse> GetTransactionlDetails(GetTransactionDetails entity)
+        {
+            var reqBody = new GetTransactionDetails();
+
+            if (entity.FromDate != null && entity.ToDate != null)
+            {
+                reqBody = new GetTransactionDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    MerchantId = entity.MerchantId,
+                    TerminalId = entity.TerminalId,
+                    TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
+                    FromDate = entity.FromDate,
+                    ToDate = entity.ToDate
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
+            {
+                reqBody = new GetTransactionDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    TerminalId = entity.TerminalId,
+                    TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
+                    FromDate = entity.FromDate,
+                    ToDate = entity.ToDate
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetTransactionDetailsUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            TransactionlDetailsResponse searchList = obj.ToObject<TransactionlDetailsResponse>();
+            return searchList;
+        }
     }
 }
