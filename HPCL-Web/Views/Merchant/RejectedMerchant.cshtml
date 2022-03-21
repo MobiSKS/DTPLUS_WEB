@@ -30,29 +30,28 @@
                                     <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-5 col-12">From Date</label>
+                                                <label class="font-weight-normal col-md-4 col-12">From Date</label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date fromdate" })
+                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date"})
                                                     </div>
                                                     <span style="display:none" class="error" id="fromDate_error"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-5 col-12">To Date</label>
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date todate" })
+                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                                     </div>
                                                     <span style="display:none" class="error" id="toDate_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-12 d-flex align-items-center justify-content-center mt-2">
                                         <div class="px-2">
                                             <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
@@ -135,7 +134,11 @@
     var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
     var notFoundError = "@ViewBag.NotFoundError";
-
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
         $('#merchantRejectedDetails table').DataTable({
             "paging": true,
@@ -146,80 +149,25 @@
                 "info": "Showing _START_ to _END_ of _TOTAL_ Records",
             }
         });
-
-        if (notFoundError == "") {
-            if (fromdate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yyyy' });
-            }
-
-            if (todate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                setDates();
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yyyy' });
-            }
-
-
-        }
-        else {
-            alert("Details not found");
-        }
-
+        setDates();
     });
     $("#btnSearch").on("click", (function (e) {
-        var fromD = stringToDate($("#FromDate").val());
-        var toD = stringToDate($("#ToDate").val());
-        var dateflag = checkDates(fromD,toD);
+       
+        var dateflag = checkDates();
         if (dateflag == "N") {
             $("#show_Table").html("");
             e.preventDefault();
         }
-
     })
     );
-    $(".date").datepicker().on('change.dp', function (e) {
-        var fromD = "";
-        var toD = "";
-        if ($(this).hasClass("fromdate")) {
-            fromD = stringToDate($("#FromDate").val());
-            var fromMonth = fromD.getMonth() + 1;
-        var fromday = fromD.getDate();
-        var fromoutput = (fromday < 10 ? '0' : '') + fromday + '-' +
-            (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
-
-            fromD.getFullYear();
-        $("#FromDate").val(fromoutput);
-        }
-        else
-            fromD = stringToDate($("#FromDate").val());
-        if ($(this).hasClass("todate")){
-            toD = stringToDate($("#ToDate").val());
-            var toMonth = toD.getMonth()+1;
-            var today = toD.getDate();
-            var tooutput = (today < 10 ? '0' : '') + today + '-' +
-                (toMonth < 10 ? '0' : '') + toMonth + '-' +
-                toD.getFullYear();
-            $("#ToDate").val(tooutput);
-        }
-        else
-            toD = stringToDate($("#ToDate").val());
-        checkDates(fromD,toD);
+    $(".date").on('change', function (e) {
+        checkDates();
         $("#show_Table").html("");
     });
 
-    function checkDates(fromD, toD) {
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
         var dateflag = "Y";
         if (fromD != "" && toD != "") {
             if (fromD > toD) {
@@ -228,7 +176,15 @@
                 $("#fromDate_error").html("From Date should be less or equal to To date");
                 dateflag = "N";
             }
-            else if (toD > new Date()) {
+        }
+        else {
+            $("#fromDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#toDate_error").attr("style", "display:none");
+        }
+        if (toD != "") {
+            if (toD > today) {
                 $("#toDate_error").attr("style", "display:block");
                 $("#toDate_error").html("To Date should be less or equal to Today's date");
                 dateflag = "N";
@@ -236,54 +192,22 @@
             else {
                 $("#toDate_error").html("");
                 $("#toDate_error").attr("style", "display:none");
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
             }
-            
         }
+
         return dateflag;
     }
-    function stringToDate(_date) {
-        if (_date != "") {
-            var _delimiter = '';
-            var formatLowerCase = "";
-            if (_date.includes('/')) {
-                _delimiter = '/';
-                formatLowerCase = "mm/dd/yyyy";
-            }
-            else if (_date.includes('-')) {
-                _delimiter = '-';
-                formatLowerCase = "dd-mm-yyyy";
-            }
-            var formatItems = formatLowerCase.split(_delimiter);
-            var dateItems = _date.split(_delimiter);
-            var monthIndex = formatItems.indexOf("mm");
-            var dayIndex = formatItems.indexOf("dd");
-            var yearIndex = formatItems.indexOf("yyyy");
-            var month = parseInt(dateItems[monthIndex]);
-            month -= 1;
-            var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-            return formatedDate;
-        }
-    }
+
     function setDates() {
         var fromd = new Date();
-        var fromMonth = fromd.getMonth();
-        var fromday = fromd.getDate();
-        var fromoutput = (fromday < 10 ? '0' : '') + fromday + '-' +
-            (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
-            fromd.getFullYear();
+        fromd.setMonth(fromd.getMonth() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
 
-        var d = new Date();
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var tooutput = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-
-        $("#FromDate").val(fromoutput);
-        $("#ToDate").val(tooutput);
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
         $("#fromDate_error").html("");
         $("#toDate_error").html("");
         $("#toDate_error").attr("style", "display:none");

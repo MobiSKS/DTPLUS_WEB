@@ -14,18 +14,14 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Transaction Details</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <div class="col-md-7 col-12 offset-1 offset-md-1">
-                                            <div class="custom_select">
-                                                <input type="radio" id="rbCustomerID" name="Status" value=">Customer ID" class="rbTransactionType" checked>
-                                                <span style="margin:0 10px">Customer ID</span>
-                                                <input type="radio" id="rbCardNo" name="Status" value="Card Number" class="rbTransactionType">
-                                                <span style="margin:0 10px">Card Number</span>
-                                                <input type="radio" id="rbMobileNo" name="Status" value="Mobile Number" class="rbTransactionType">
-                                                <span style="margin:0 10px">Mobile Number</span>
-                                            </div>
-                                        </div>
+                                <div class="col-md-8 col-12 offset-1 offset-md-1">
+                                    <div class="custom_select">
+                                        <input type="radio" id="rbCustomerID" name="Status" value=">Customer ID" class="rbTransactionType" checked>
+                                        <span style="margin:0 10px">Customer ID</span>
+                                        <input type="radio" id="rbCardNo" name="Status" value="Card Number" class="rbTransactionType">
+                                        <span style="margin:0 10px">Card Number</span>
+                                        <input type="radio" id="rbMobileNo" name="Status" value="Mobile Number" class="rbTransactionType">
+                                        <span style="margin:0 10px">Mobile Number</span>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +61,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date fromdate" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
 
                                         </div>
@@ -82,7 +78,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">To Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date todate" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
 
                                         </div>
@@ -121,7 +117,7 @@
                                     <tr>
                                         <th>Account Number</th>
                                         <th>Customer Name</th>
-                                        <th>Customer Code</th>
+                                        @*<th>Customer Code</th>*@
                                         <th>Sale</th>
                                         <th>Reload(CCMS & Cash)</th>
                                         <th>CCMS Recharge</th>
@@ -137,7 +133,7 @@
                                         <th>SNo.</th>
                                         <th>Terminal Id</th>
                                         <th>Merchant</th>
-                                        <th>BatchID/ROC</th>
+                                        @*<th>BatchID/ROC</th>*@
                                         <th>Account Number</th>
                                         <th>Vehicle No/User Name</th>
                                         <th>Txn Date</th>
@@ -172,32 +168,13 @@
 </div>
 <script type="text/javascript">
 
-    var fromdate = $("#FromDate").val();
-    var todate = $("#ToDate").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
-        if (fromdate == "") {
-            $("#FromDate").datepicker({
-                "setDate": new Date(),
-                "autoclose": true,
-                dateFormat: 'dd-mm-yy'
-            });
-        }
-        else {
-            $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-        }
-
-        if (todate == "") {
-            $("#ToDate").datepicker({
-                "setDate": new Date(),
-                "autoclose": true,
-                dateFormat: 'dd-mm-yy'
-            });
-            setDates();
-        }
-        else {
-            $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-        }
-
+        setDates();
         if ($("#rbCardNo").is(":checked")) {
             $("#lblCustomerId").attr("style", "display:none");
             $("#lblCardNo").attr("style", "display:block");
@@ -216,23 +193,17 @@
 
     });
     function setDates() {
-        var d = new Date();
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
+        //debugger;
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth());
+        fromd.setDate(fromd.getDate() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
 
-
-        var fromday = d.getDate()-1;
-        var fromdate = (fromday < 10 ? '0' : '') + fromday + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-        $("#FromDate").val(fromdate);
-        $("#ToDate").val(output);
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
 
         $("#CustomerID").val("");
         $("#CardNo").val("");
@@ -278,47 +249,29 @@
 
         return true;
     }
-    $(".date").datepicker().on('change.dp', function (e) {
+    $(".date").on('change', function (e) {
         var fromD = "";
         var toD = "";
-        if ($(this).hasClass("fromdate")) {
-            fromD = stringToDate($("#FromDate").val());
-            var fromMonth = fromD.getMonth() + 1;
-            var fromday = fromD.getDate();
-            var fromoutput = (fromday < 10 ? '0' : '') + fromday + '-' +
-                (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
-
-                fromD.getFullYear();
-            $("#FromDate").val(fromoutput);
-        }
-        else
-            fromD = stringToDate($("#FromDate").val());
-        if ($(this).hasClass("todate")) {
-            toD = stringToDate($("#ToDate").val());
-            var toMonth = toD.getMonth() + 1;
-            var today = toD.getDate();
-            var tooutput = (today < 10 ? '0' : '') + today + '-' +
-                (toMonth < 10 ? '0' : '') + toMonth + '-' +
-                toD.getFullYear();
-            $("#ToDate").val(tooutput);
-        }
-        else
-            toD = stringToDate($("#ToDate").val());
+        fromD = $("#FromDate").val();
+        toD = $("#ToDate").val();
         checkDates(fromD, toD);
         $("#show_Table").html("");
     });
 
     function checkDates(fromD, toD) {
         var dateflag = "Y";
+        var d1 = new Date(fromD);
+        var d2 = new Date(toD);
+
         if (fromD != "" && toD != "") {
             var aday = 24 * 60 * 60 * 1000;
             if (fromD > toD) {
 
                 $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("From Date should be less or equal to To date");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
                 dateflag = "N";
             }
-            else if (Math.abs((fromD - toD )/aday)> 31)
+            else if ((Math.abs(d2-d1) / aday) > 31)
             {
                 $("#fromDate_error").attr("style", "display:block");
                 $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
@@ -328,7 +281,7 @@
                 $("#fromDate_error").html("");
                 $("#fromDate_error").attr("style", "display:none");
             }
-            if (toD > new Date()) {
+            if (toD > today) {
                 $("#toDate_error").attr("style", "display:block");
                 $("#toDate_error").html("To Date should be less or equal to Today's date");
                 dateflag = "N";
@@ -337,32 +290,11 @@
                 $("#toDate_error").html("");
                 $("#toDate_error").attr("style", "display:none");
             }
-            return dateflag;
+
         }
+        return dateflag;
     }
-    function stringToDate(_date) {
-        if (_date != "") {
-            var _delimiter = '';
-            var formatLowerCase = "";
-            if (_date.includes('/')) {
-                _delimiter = '/';
-                formatLowerCase = "mm/dd/yyyy";
-            }
-            else if (_date.includes('-')) {
-                _delimiter = '-';
-                formatLowerCase = "dd-mm-yyyy";
-            }
-            var formatItems = formatLowerCase.split(_delimiter);
-            var dateItems = _date.split(_delimiter);
-            var monthIndex = formatItems.indexOf("mm");
-            var dayIndex = formatItems.indexOf("dd");
-            var yearIndex = formatItems.indexOf("yyyy");
-            var month = parseInt(dateItems[monthIndex]);
-            month -= 1;
-            var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-            return formatedDate;
-        }
-    }
+
     $("#btnSearch").on("click", (function (e) {
          var fromdate = $("#FromDate").val();
          var todate = $("#ToDate").val();
@@ -380,55 +312,57 @@
          if (fromdate == "") {
              $("#fromDate_error").attr("style", "display:block");
              $("#fromDate_error").html("Select From Date");
-             flag = "N"; 
-         }
-         else if (todate == "") {
-             $("#toDate_error").attr("style", "display:block");
-             $("#toDate_error").html("Select To Date");
-             flag = "N"; 
-         }
-         else if (customerId == "" && mobileNo == "" && cardNo == "") {
-             $("#customerId_error").attr("style", "display:block");
-             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
              flag = "N";
          }
-         else if (customerId != "") {
-             if (customerId.substring(0, 1) != "2") {
-                 $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Customer ID should be 10 digit number starting with 2");
-                 flag = "N";
-             }
-             else if (customerId.length < 10) {
-                 $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Customer ID should be 10 digit number");
-                 flag = "N";
-             }
-         
+         if (todate == "") {
+             $("#toDate_error").attr("style", "display:block");
+             $("#toDate_error").html("Select To Date");
+             flag = "N";
+        }
+         if (fromdate != "" && todate != "") {
+             flag = checkDates(fromdate, todate);
          }
-         else if (mobileNo != "") {
-             if (mobileNo.length < 10) {
-                 $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Invalid Mobile Number");
-                 flag = "N";
-             }
-         }
-         else if (fromdate != "" && todate != "") {
-             var fromD = stringToDate($("#FromDate").val());
-             var toD = stringToDate($("#ToDate").val());
-             flag = checkDates(fromD, toD);
-         }
-         else {
-             $("#fromDate_error").attr("style", "display:none");
-             $("#fromDate_error").html("");
-             $("#toDate_error").attr("style", "display:none");
-             $("#toDate_error").html("");
-             $("#customerId_error").attr("style", "display:none");
-             $("#customerId_error").html("");
-         }
+        if (customerId == "" && mobileNo == "" && cardNo == "") {
+            $("#customerId_error").attr("style", "display:block");
+            $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+            flag = "N";
+        }
+        else {
+            if (customerId != "") {
+                if (customerId.substring(0, 1) != "2") {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Customer ID should be 10 digit number starting with 2");
+                    flag = "N";
+                }
+                else if (customerId.length < 10) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Customer ID should be 10 digit number");
+                    flag = "N";
+                }
+                else {
+                    $("#customerId_error").attr("style", "display:none");
+                    $("#customerId_error").html("");
+                }
+
+            }
+            if (mobileNo != "") {
+                if (mobileNo.length < 10) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Invalid Mobile Number");
+                    flag = "N";
+                }
+                else {
+                    $("#customerId_error").attr("style", "display:none");
+                    $("#customerId_error").html("");
+                }
+            }
+        }
+
+
          if (flag == "N")
              e.preventDefault();
-        
-      
+
+
          if (flag == "Y") {
              //customerId = "2000000004";
              $.ajax({
@@ -447,7 +381,7 @@
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].srNumber || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].terminalId || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].merchantId || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].batchIdandROC || '') + "</span></td>"
+                                     /*+ "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].batchIdandROC || '') + "</span></td>"*/
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].accountNumber || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].vechileNo || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].txnDate || '') + "</span></td>"
@@ -476,7 +410,7 @@
 
                                      + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].accountNumber || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerName || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerId || '') + "</span></td>"
+                                    /* + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerId || '') + "</span></td>"*/
                                      + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].sale || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].reloadCcmsCash || '') + "</span></td>"
                                      + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].ccmsRecharge || '') + "</span></td>"
@@ -493,7 +427,7 @@
                          if (data.getTransactionsSaleSummary.length == 0 && data.getTransactionsDetailSummary.length == 0) {
                              $("#message").html("");
                              $("#message").append(data.message);
-                             
+
                              $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
                              $("#divtable").attr("style", "display:none");
 
@@ -508,10 +442,6 @@
                      }
 
                  },
-                 error: function (xhr, ajaxOptions, thrownError) {
-
-                 },
-
              });
          }
 

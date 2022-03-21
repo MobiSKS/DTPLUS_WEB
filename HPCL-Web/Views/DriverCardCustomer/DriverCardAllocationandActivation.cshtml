@@ -1,6 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.DriverCardCustomer.DriverCardAllocationanadActivationViewModel
 @using HPCL.Common.Resources
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "DriverCardCustomer")" class="text_primary">Driver Card Customer</a> </li>
@@ -41,7 +41,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date fromdate" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span style="display:none" class="error" id="fromDate_error"></span>
                                         </div>
@@ -52,7 +52,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date todate" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span style="display:none" class="error" id="toDate_error"></span>
                                         </div>
@@ -75,13 +75,13 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalId)</div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="searchCardActivationandAllocation()">Search</button>
+                                    <button class="btn btn_primary" type="button" onclick="searchCardActivationandAllocation()">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnReset" type="button">Reset</button>
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnDownload" type="button">Download</button>
+                                    <button class="btn btn_primary" id="btnDownload" type="button">DOWNLOAD</button>
                                 </div>
                             </div>
                         </div>
@@ -100,31 +100,24 @@
 <script type="text/javascript">
     var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
         $(".toBeHiddenOnSuccess").show();
-        if (fromdate == "") {
-            $("#FromDate").datepicker({
-                "setDate": new Date(),
-                "autoclose": true,
-                dateFormat: 'dd-mm-yy'
-            });
-        }
-        else {
-            $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-        }
-
-        if (todate == "") {
-            $("#ToDate").datepicker({
-                "setDate": "",
-                "autoclose": true,
-                dateFormat: 'dd-mm-yy'
-            });
-        }
-        else {
-            $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-        }
-    
-      
+        //var inDate = document.querySelectorAll(".date");
+        //inDate.forEach(function (e) {
+        //    e.addEventListener("focusin", function (ev) {
+        //        e.type = 'date';
+        //    })
+        //});
+        //inDate.forEach(function (e) {
+        //    e.addEventListener("focusout", function (ev) {
+        //        e.type = 'text';
+        //    })
+        //});
     });
     $("#btnReset").click(function () {
         $("#ZonalOfficeId").val(0);
@@ -192,13 +185,28 @@
         var fromD = "";
         var toD = "";
         if ($("#FromDate").val()!="")
-            fromD = stringToDate($("#FromDate").val());
+            fromD = $("#FromDate").val();
         if ($("#ToDate").val() != "")
-            toD = stringToDate($("#ToDate").val());
+            toD = $("#ToDate").val();
         var dateflag = checkDates(fromD, toD);
         if (dateflag == "N") {
             return;
         }
+        else {
+            if ((fromD != "" && toD == "") || (fromD == "" && toD != "")) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("Please Select Both From Date and To Date");
+                dateflag = "N";
+                return;
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+        }
+       
         var zoID = $("#ZonalOfficeId").val();
         var roID = $("#RegionalOfficeId").val();
         var fromDate = $("#FromDate").val();
@@ -240,55 +248,37 @@
 
         return true;
     }
-    $(".date").datepicker().on('change.dp', function (e) {
+    $(".date").on('change', function (e) {
         var fromD = "";
         var toD = "";
-        if ($(this).hasClass("fromdate")) {
-            if ($("#FromDate").val() != "") {
-                fromD = stringToDate($("#FromDate").val());
-                var fromMonth = fromD.getMonth() + 1;
-                var fromday = fromD.getDate();
-                var fromoutput = (fromday < 10 ? '0' : '') + fromday + '-' +
-                    (fromMonth < 10 ? '0' : '') + fromMonth + '-' +
-
-                    fromD.getFullYear();
-                $("#FromDate").val(fromoutput);
-            }
-        }
-        else {
-            if ($("#FromDate").val() != "")
-                fromD = stringToDate($("#FromDate").val());
-        }
-        if ($(this).hasClass("todate")) {
-            if ($("#ToDate").val() != "") {
-                toD = stringToDate($("#ToDate").val());
-                var toMonth = toD.getMonth() + 1;
-                var today = toD.getDate();
-                var tooutput = (today < 10 ? '0' : '') + today + '-' +
-                    (toMonth < 10 ? '0' : '') + toMonth + '-' +
-                    toD.getFullYear();
-                $("#ToDate").val(tooutput);
-            }
-        }
-        else {
-            if ($("#ToDate").val() != "")
-                toD = stringToDate($("#ToDate").val());
-        }
+        if ($("#FromDate").val() != "")
+            fromD = $("#FromDate").val();
         if ($("#ToDate").val() != "")
-            checkDates(fromD, toD);
+            toD = $("#ToDate").val();
+        checkDates(fromD, toD);
+        $("#cardActivationandAllocation").html("");
         
     });
 
-    function checkDates(fromD, toD) {
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
         var dateflag = "Y";
         if (fromD != "" && toD != "") {
             if (fromD > toD) {
 
                 $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("From Date should be less or equal to To date");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
                 dateflag = "N";
             }
-            else if (toD > new Date()) {
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+        }
+
+        if (toD != "") {
+            if (toD > today) {
                 $("#toDate_error").attr("style", "display:block");
                 $("#toDate_error").html("To Date should be less or equal to Today's date");
                 dateflag = "N";
@@ -296,36 +286,9 @@
             else {
                 $("#toDate_error").html("");
                 $("#toDate_error").attr("style", "display:none");
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
             }
         }
-        else if (fromD != "" && toD == "") {
-            $("#toDate_error").attr("style", "display:block");
-            $("#toDate_error").html("Please Select Both From Date and To Date");
-            dateflag = "N";
-        }
+
         return dateflag;
-    }
-    function stringToDate(_date) {
-        var _delimiter = '';
-        var formatLowerCase = "";
-        if (_date.includes('/')) {
-            _delimiter = '/';
-            formatLowerCase = "mm/dd/yyyy";
-        }
-        else if (_date.includes('-')) {
-            _delimiter = '-';
-            formatLowerCase = "dd-mm-yyyy";
-        }
-        var formatItems = formatLowerCase.split(_delimiter);
-        var dateItems = _date.split(_delimiter);
-        var monthIndex = formatItems.indexOf("mm");
-        var dayIndex = formatItems.indexOf("dd");
-        var yearIndex = formatItems.indexOf("yyyy");
-        var month = parseInt(dateItems[monthIndex]);
-        month -= 1;
-        var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-        return formatedDate;
     }
 </script>
