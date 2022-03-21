@@ -4,458 +4,442 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="border-1 rounded border-grey h-100 mt-3">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Upload Document</p>
+                    <div class="w-100">
 
-            <div class="tab-content mt-3" id="myTabContent">
-                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                    <div class="border-1 rounded border-grey h-100 mt-3">
+                        @Html.ValidationSummary(false)
 
-
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Upload Document</p>
-                        <div class="p-2 p-md-4">
-                            <div class="w-100">
-
-                                @Html.ValidationSummary(false)
-
-                                <form method="post" data-ajax="true" asp-controller="Customer" asp-action="UploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDoc" data-ajax-failure="OnFailure">
-
-                                    <div>
-                                        <fieldset class="border-1 rounded border-grey">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search Customer</legend>
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Reference Number<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                            <div class="d-flex align-items-center justify-content-start">
-                                                <div id="resSearch" style="display:none" class="w-100 mb-3"></div>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-center mb-3">
-                                                <div class="px-2">
-                                                    <button class="btn btn_primary px-4 py-2" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()" style="background-color:#084693;color:white;">SEARCH</button>
-                                                </div>
-                                                <div class="px-2">
-                                                    <a class="btn btn_primary px-4 py-2" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
-                                                </div>
-                                            </div>
-
-                                        </fieldset>
-                                    </div>
-                                </form>
-
-                                <div>
-                                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-
-
-                                <div id="uploadSection" style="display:none;">
-
+                        <form method="post" data-ajax="true" asp-controller="Customer" asp-action="UploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDoc" data-ajax-failure="OnFailure">
+                            <p class="text-dark pb-2 mb-0 font-weight-bold ml-4 mr-4" style="border-bottom: 1px solid #ccc;">
+                                Search
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
+                                <div class="col-md-6 col-12 px-2">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-
-                                    </div>
-
-                                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
-                                        <div id="docUpdateId">
-
-                                            <fieldset class="border-1 rounded border-grey pt-3">
-                                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Id Proof</legend>
-
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Proof Of Identity<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
-
-                                                            @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.IdProofDocumentNo, new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofDocumentNo, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @id = "idFrontErr", @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @id = "idBackErr", @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <div class="col-md-5 col-6"></div>
-                                                        <div class="col-md-7 col-12">
-                                                            <div id="idPfrontImg"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <div class="col-md-5 col-6"></div>
-                                                        <div class="col-md-7 col-12">
-                                                            <div id="idPbackImg"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </fieldset>
-
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-
-                                            </div>
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-
-                                            </div>
-
-                                            <fieldset class="border-1 rounded border-grey mb-4 pt-3">
-                                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Address Proof</legend>
-
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofDocumentNo, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @id = "addFrontErr", @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
-                                                        <div class="col-md-7 col-12">
-                                                            @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control", Type = "file" })
-                                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @id = "addBackErr", @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <div class="col-md-5 col-6"></div>
-                                                        <div class="col-md-7 col-12">
-                                                            <div id="idAfrontImg"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 px-2">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <div class="col-md-5 col-6"></div>
-                                                        <div class="col-md-7 col-12">
-                                                            <div id="idAbackImg"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </fieldset>
-
-                                            <div class="clearfix"></div>
-
-                                            <div class="d-flex align-items-center justify-content-center mt-3">
-                                                <div class="px-2">
-                                                    <button class="btn btn_primary px-4 py-2" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SAVE</button>
-                                                </div>
-                                            </div>
-
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Reference Number<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
                                         </div>
-                                    </form>
-
-
+                                    </div>
                                 </div>
-
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-start">
+                                <div id="resSearch" style="display:none" class="w-100 mb-3"></div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary px-4 py-2" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()" style="background-color:#084693;color:white;">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <a class="btn btn_primary px-4 py-2" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
+                                </div>
                             </div>
 
-                            <div class="clearfix"></div>
-                        </div>
+                        </form>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
                     </div>
                 </div>
+                <div class="clearfix"></div>
+
+
+                <div id="uploadSection" style="display:none;">
+
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                    </div>
+
+                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
+                        <div id="docUpdateId">
+                            
+                                <div class="border-1 rounded border-grey mb-3">
+                                    <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Id Proof</p>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Proof Of Identity<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
+
+                                                @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                                @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.IdProofDocumentNo, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.IdProofDocumentNo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control form-control-file", Type = "file" })
+                                                @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @id = "idFrontErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control form-control-file", Type = "file" })
+                                                @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @id = "idBackErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <div class="col-md-5 col-6"></div>
+                                            <div class="col-md-7 col-12">
+                                                <div id="idPfrontImg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <div class="col-md-5 col-6"></div>
+                                            <div class="col-md-7 col-12">
+                                                <div id="idPbackImg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            
+                            @*<div class="form-group d-flex align-items-center flex-wrap">
+                                </div>
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                </div>
+                            *@
+                            
+                                <div class="border-1 rounded border-grey mb-4 pt-0">
+                                    <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Address Proof</p>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                                @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.AddressProofDocumentNo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control form-control-file", Type = "file" })
+                                                @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @id = "addFrontErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control form-control-file", Type = "file" })
+                                                @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @id = "addBackErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <div class="col-md-5 col-6"></div>
+                                            <div class="col-md-7 col-12">
+                                                <div id="idAfrontImg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 px-2">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <div class="col-md-5 col-6"></div>
+                                            <div class="col-md-7 col-12">
+                                                <div id="idAbackImg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            
+                            <div class="clearfix"></div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary px-4 py-2" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SAVE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="clearfix"></div>
+
             </div>
+        </div>
     </div>
 </div>
 
 
 <script>
 
-    function resetClick() {
-        //$("input:text").each(function () {
-        //    $(this).val("");
-        //});
-        //$("#CardSearch td").parent().remove();
-        //document.getElementById('resSearch').style.display = 'none';
-        //document.getElementById('uploadSection').style.display = 'none';
-        document.getElementById('CustomerReferenceNoId').value = '';
-        $("#CustomerReferenceNoId").prop('readonly', false);
-        //location.reload();
-         window.location.href = '@Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "" })';
-    };
+     function resetClick() {
+         //$("input:text").each(function () {
+         //    $(this).val("");
+         //});
+         //$("#CardSearch td").parent().remove();
+         //document.getElementById('resSearch').style.display = 'none';
+         //document.getElementById('uploadSection').style.display = 'none';
+         document.getElementById('CustomerReferenceNoId').value = '';
+         $("#CustomerReferenceNoId").prop('readonly', false);
+         //location.reload();
+          window.location.href = '@Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "" })';
+     };
 
-    var idFront;
-    var idBack;
-    var addFront;
-    var addBack;
+     var idFront;
+     var idBack;
+     var addFront;
+     var addBack;
 
-    $(document).ready(function () {
+     $(document).ready(function () {
 
-        if ($("#CustomerReferenceNoId").val() != "") {
-            openSearchGrid();
-            $("#btnSave").click();
-        }
+         if ($("#CustomerReferenceNoId").val() != "") {
+             openSearchGrid();
+             $("#btnSave").click();
+         }
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("ProofType", "Common")',
-            dataType: "json",
-            success: function (data, status, xhr) {
+         $.ajax({
+             type: 'POST',  // http method
+             url: '@Url.Action("ProofType", "Common")',
+             dataType: "json",
+             success: function (data, status, xhr) {
 
-                console.log(data);
+                 console.log(data);
 
-                $.each(data.proofTypeList, function (i, option) {
-                    $("<option/>").val(option.proofTypeId).text(option.proofTypeName).appendTo(".proofType");
-                });
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Proof Type");
-            }
-        });
+                 $.each(data.proofTypeList, function (i, option) {
+                     $("<option/>").val(option.proofTypeId).text(option.proofTypeName).appendTo(".proofType");
+                 });
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                 alert("Error Populating Proof Type");
+             }
+         });
 
-        $("#IdProofFront").change(function () {
-            $("#idPfrontImg").html("");
+         $("#IdProofFront").change(function () {
+             $("#idPfrontImg").html("");
 
-            idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-            if (regex.test($(this).val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    $("#idPfrontImg").show();
-                    $("#idPfrontImg").append("<img />");
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $("#idPfrontImg img").attr("src", e.target.result);
-                        $("#idPfrontImg img").attr("style", "width: 200px");
-                    }
-                    reader.readAsDataURL($(this)[0].files[0]);
-                } else {
-                    alert("This browser does not support FileReader.");
-                }
-            } else {
-                alert("Please upload a valid image file.");
-            }
-        });
+             idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+             if (regex.test($(this).val().toLowerCase())) {
+                 if (typeof (FileReader) != "undefined") {
+                     $("#idPfrontImg").show();
+                     $("#idPfrontImg").append("<img />");
+                     var reader = new FileReader();
+                     reader.onload = function (e) {
+                         $("#idPfrontImg img").attr("src", e.target.result);
+                         $("#idPfrontImg img").attr("style", "width: 200px");
+                     }
+                     reader.readAsDataURL($(this)[0].files[0]);
+                 } else {
+                     alert("This browser does not support FileReader.");
+                 }
+             } else {
+                 alert("Please upload a valid image file.");
+             }
+         });
 
-        $("#IdProofBack").change(function () {
-            $("#idPbackImg").html("");
+         $("#IdProofBack").change(function () {
+             $("#idPbackImg").html("");
 
-            idBack = $(this).val().replace(/C:\\Fakepath\\/i, '');
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-            if (regex.test($(this).val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    $("#idPbackImg").show();
-                    $("#idPbackImg").append("<img />");
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $("#idPbackImg img").attr("src", e.target.result);
-                        $("#idPbackImg img").attr("style", "width: 200px");
-                    }
-                    reader.readAsDataURL($(this)[0].files[0]);
-                } else {
-                    alert("This browser does not support FileReader.");
-                }
-            } else {
-                alert("Please upload a valid image file.");
-            }
-        });
+             idBack = $(this).val().replace(/C:\\Fakepath\\/i, '');
+             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+             if (regex.test($(this).val().toLowerCase())) {
+                 if (typeof (FileReader) != "undefined") {
+                     $("#idPbackImg").show();
+                     $("#idPbackImg").append("<img />");
+                     var reader = new FileReader();
+                     reader.onload = function (e) {
+                         $("#idPbackImg img").attr("src", e.target.result);
+                         $("#idPbackImg img").attr("style", "width: 200px");
+                     }
+                     reader.readAsDataURL($(this)[0].files[0]);
+                 } else {
+                     alert("This browser does not support FileReader.");
+                 }
+             } else {
+                 alert("Please upload a valid image file.");
+             }
+         });
 
-        $("#AddressProofFront").change(function () {
-            $("#idAfrontImg").html("");
+         $("#AddressProofFront").change(function () {
+             $("#idAfrontImg").html("");
 
-            addFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-            if (regex.test($(this).val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    $("#idAfrontImg").show();
-                    $("#idAfrontImg").append("<img />");
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $("#idAfrontImg img").attr("src", e.target.result);
-                        $("#idAfrontImg img").attr("style", "width: 200px");
-                    }
-                    reader.readAsDataURL($(this)[0].files[0]);
-                } else {
-                    alert("This browser does not support FileReader.");
-                }
-            } else {
-                alert("Please upload a valid image file.");
-            }
-        });
+             addFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+             if (regex.test($(this).val().toLowerCase())) {
+                 if (typeof (FileReader) != "undefined") {
+                     $("#idAfrontImg").show();
+                     $("#idAfrontImg").append("<img />");
+                     var reader = new FileReader();
+                     reader.onload = function (e) {
+                         $("#idAfrontImg img").attr("src", e.target.result);
+                         $("#idAfrontImg img").attr("style", "width: 200px");
+                     }
+                     reader.readAsDataURL($(this)[0].files[0]);
+                 } else {
+                     alert("This browser does not support FileReader.");
+                 }
+             } else {
+                 alert("Please upload a valid image file.");
+             }
+         });
 
-        $("#AddressProofBack").change(function () {
-            $("#idAbackImg").html("");
-            addBack = $("#AddressProofBack").val().replace(/C:\\Fakepath\\/i, '');
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-            if (regex.test($(this).val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    $("#idAbackImg").show();
-                    $("#idAbackImg").append("<img />");
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $("#idAbackImg img").attr("src", e.target.result);
-                        $("#idAbackImg img").attr("style", "width: 200px");
-                    }
-                    reader.readAsDataURL($(this)[0].files[0]);
-                } else {
-                    alert("This browser does not support FileReader.");
-                }
-            } else {
-                alert("Please upload a valid image file.");
-            }
-        });
-    });
-
-
-    function formCheck() {
-
-        console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
-
-        if (idFront == "unnamed5.jpg") {
-            $("#idFrontErr").text("Please use different Image Document");
-            return falsey
-        }
+         $("#AddressProofBack").change(function () {
+             $("#idAbackImg").html("");
+             addBack = $("#AddressProofBack").val().replace(/C:\\Fakepath\\/i, '');
+             var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+             if (regex.test($(this).val().toLowerCase())) {
+                 if (typeof (FileReader) != "undefined") {
+                     $("#idAbackImg").show();
+                     $("#idAbackImg").append("<img />");
+                     var reader = new FileReader();
+                     reader.onload = function (e) {
+                         $("#idAbackImg img").attr("src", e.target.result);
+                         $("#idAbackImg img").attr("style", "width: 200px");
+                     }
+                     reader.readAsDataURL($(this)[0].files[0]);
+                 } else {
+                     alert("This browser does not support FileReader.");
+                 }
+             } else {
+                 alert("Please upload a valid image file.");
+             }
+         });
+     });
 
 
-        //if (idFront == idBack || idFront == addFront || idFront == addBack) {
-        //    $("#idFrontErr").text("Please use different Image Document");
-        //    return false;
-        //}
+     function formCheck() {
 
-        //if (idBack == idFront || idBack == addFront || idBack == addBack) {
-        //    $("#idBackErr").text("Please use different Image Document");
-        //    return false;
-        //}
+         console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
 
-        //if (addFront == idFront || addFront == idBack || addFront == addBack) {
-        //    $("#addFrontErr").text("Please use different Image Document");
-        //    return false;
-        //}
-
-        //if (addBack == idFront || addBack == idBack || addBack == addFront) {
-        //    $("#addBackErr").text("Please use different Image Document");
-        //    return false;
-        //}
-    }
-
-   /* docUpdateId*/
-    function openSearchGrid() {
-        if ($("#CustomerReferenceNoId").val() == "") {
-            document.getElementById('resSearch').style.display = 'none';
-            document.getElementById('uploadSection').style.display = 'none';
-        }
-    };
-
-    function OnSuccessUploadDoc(res) {
-
-        console.log(res);
-
-        if (res.searchCustomer.result.success == true) {
-
-            document.getElementById("noRecord").style.display = "none";
-
-            $("#resSearch div").parent().remove();
-
-            $("#resSearch").append('<div class="form-group">'
-                + '<div class="col-xl-6 col-12 px-2">'
-                + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
-                + '<div class="col-md-7 col-12">'
-                + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].title + '&nbsp;' + res.searchCustomer.result.data[0].firstName + '&nbsp;' + res.searchCustomer.result.data[0].middleName + '&nbsp;' + res.searchCustomer.result.data[0].lastName + ' ">'
-                + '</div>'
-                + '</div>'
-                + '</div>'
-                + '</div>'
-                + '</div>'
-                + ' <div class="form-group">'
-                + ' <div class="col-xl-6 col-12 px-2">'
-                + '   <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                + '    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
-                + '   <div class="col-md-7 col-12">'
-                + '    <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].formNumber + '" >'
-                + '  </div>'
-                + ' </div>'
-                + ' </div>'
-                + ' </div>'
-                + '</div>');
-
-            //$("#resSearch").attr("class", "alert alert-dark");
-            document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('resSearch').style.display = 'block';
-            $("#CustomerReferenceNoId").prop('readonly', true);
-        } else {
-            document.getElementById('uploadSection').style.display = 'none';
-            document.getElementById('resSearch').style.display = 'none';
-            $("#noRecord").html("");
-            $("#noRecord").append("<span>" + res.searchCustomer.result.message + "</span>");
-            document.getElementById("noRecord").style.display = "block";
-        }
-    };
+         if (idFront == "unnamed5.jpg") {
+             $("#idFrontErr").text("Please use different Image Document");
+             return falsey
+         }
 
 
+         //if (idFront == idBack || idFront == addFront || idFront == addBack) {
+         //    $("#idFrontErr").text("Please use different Image Document");
+         //    return false;
+         //}
 
-    function OnSuccessUploadDocSave(res) {
-        //debugger;
-        const myArray = res.split(",");
-        console.log(myArray[1]);
-        //alert(res);
-        /*alert(myArray[0]);*/
-        //var customerReferenceNo = $('#CustomerReferenceNo').val();
-        //console.log(customerReferenceNo);
-        window.location.href = "/Customer/SuccessUploadRedirect?customerReferenceNo=" + myArray[1];
-    };
+         //if (idBack == idFront || idBack == addFront || idBack == addBack) {
+         //    $("#idBackErr").text("Please use different Image Document");
+         //    return false;
+         //}
 
-    function OnFailure(data) {
-        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
-    }
+         //if (addFront == idFront || addFront == idBack || addFront == addBack) {
+         //    $("#addFrontErr").text("Please use different Image Document");
+         //    return false;
+         //}
+
+         //if (addBack == idFront || addBack == idBack || addBack == addFront) {
+         //    $("#addBackErr").text("Please use different Image Document");
+         //    return false;
+         //}
+     }
+
+    /* docUpdateId*/
+     function openSearchGrid() {
+         if ($("#CustomerReferenceNoId").val() == "") {
+             document.getElementById('resSearch').style.display = 'none';
+             document.getElementById('uploadSection').style.display = 'none';
+         }
+     };
+
+     function OnSuccessUploadDoc(res) {
+
+         console.log(res);
+
+         if (res.searchCustomer.result.success == true) {
+
+             document.getElementById("noRecord").style.display = "none";
+
+             $("#resSearch div").parent().remove();
+
+             $("#resSearch").append('<div class="form-group">'
+                 + '<div class="col-xl-6 col-12 px-2">'
+                 + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
+                 + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
+                 + '<div class="col-md-7 col-12">'
+                 + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
+                 + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].title + '&nbsp;' + res.searchCustomer.result.data[0].firstName + '&nbsp;' + res.searchCustomer.result.data[0].middleName + '&nbsp;' + res.searchCustomer.result.data[0].lastName + ' ">'
+                 + '</div>'
+                 + '</div>'
+                 + '</div>'
+                 + '</div>'
+                 + '</div>'
+                 + ' <div class="form-group">'
+                 + ' <div class="col-xl-6 col-12 px-2">'
+                 + '   <div class="d-flex align-items-center justify-content-start flex-wrap">'
+                 + '    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
+                 + '   <div class="col-md-7 col-12">'
+                 + '    <div class="d-flex align-items-center justify-content-start flex-wrap">'
+                 + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].formNumber + '" >'
+                 + '  </div>'
+                 + ' </div>'
+                 + ' </div>'
+                 + ' </div>'
+                 + '</div>');
+
+             //$("#resSearch").attr("class", "alert alert-dark");
+             document.getElementById('uploadSection').style.display = 'block';
+             document.getElementById('resSearch').style.display = 'block';
+             $("#CustomerReferenceNoId").prop('readonly', true);
+         } else {
+             document.getElementById('uploadSection').style.display = 'none';
+             document.getElementById('resSearch').style.display = 'none';
+             $("#noRecord").html("");
+             $("#noRecord").append("<span>" + res.searchCustomer.result.message + "</span>");
+             document.getElementById("noRecord").style.display = "block";
+         }
+     };
+
+
+
+     function OnSuccessUploadDocSave(res) {
+         //debugger;
+         const myArray = res.split(",");
+         console.log(myArray[1]);
+         //alert(res);
+         /*alert(myArray[0]);*/
+         //var customerReferenceNo = $('#CustomerReferenceNo').val();
+         //console.log(customerReferenceNo);
+         window.location.href = "/Customer/SuccessUploadRedirect?customerReferenceNo=" + myArray[1];
+     };
+
+     function OnFailure(data) {
+         alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+     }
 
 </script>

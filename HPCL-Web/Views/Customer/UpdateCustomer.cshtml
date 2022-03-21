@@ -3,360 +3,216 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
-        <h5>Customer Enrollment</h5>
+        <h5>Customer Update</h5>
         <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Information</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="officialDetails-tab" data-toggle="tab" href="#officialDetails" role="tab" aria-controls="officialDetails" aria-selected="false">Key Official Details</a> </li>
-            @*<li class="nav-item"> <a class="nav-link disable" id="cardDetails-tab" data-toggle="tab" href="#cardDetails" role="tab" aria-controls="cardDetails" aria-selected="false">Card Details</a> </li>*@
-            @*<li class="nav-item"> <a class="nav-link disable" id="uploadDocuments-tab" data-toggle="tab" href="#uploadDocuments" role="tab" aria-controls="uploadDocuments" aria-selected="false">Upload Documents</a> </li>*@
         </ul>
-        @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-    <form name="applicationForm" method="post" asp-action="OnlineForm" class="w-100">
-        @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
-        {*@
-        <div class="tab-content mt-3" id="myTabContent">
-            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                <div class="w-100">
-                    <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                        <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
-                            <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
-                                @Html.DisplayFor(m => m.Remarks)
-                            </div>
-                            <div class="py-4 pr-4 pl-0 px-md-4">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                        <span class="error" id="formNumber_error"></span>
-                                    </div>
+        <form name="applicationForm" method="post" asp-action="UpdateCustomer" class="w-100">
+            @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
+                {*@
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
+                                <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                                    @Html.DisplayFor(m => m.Remarks)
                                 </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Customer Type <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerTypeID, new SelectList(Model.CustomerTypeMdl, "CustomerTypeID", "CustomerTypeName"), new { @class = "form-control" })
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off", @readonly = "readonly" })
+                                            <span class="error" id="formNumber_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTypeID, new SelectList(Model.CustomerTypeMdl, "CustomerTypeID", "CustomerTypeName"), new { @class = "form-control", disabled = "true" })
 
+                                            </div>
+                                            <span class="error" id="customerType_error"></span>
                                         </div>
-                                        <span class="error" id="customerType_error"></span>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @*<select id="customerSubType" class="form-control"></select>*@
-                                            @Html.DropDownListFor(m => m.CustomerSubTypeID, new SelectList(Model.CustomerSubTypeMdl, "CustomerSubTypeID", "CustomerSubTypeName"), new { @class = "form-control" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerSubTypeID, new SelectList(Model.CustomerSubTypeMdl, "CustomerSubTypeID", "CustomerSubTypeName"), new { @class = "form-control", disabled = "true" })
+                                            </div>
+                                            <span class="error" id="customerSubType_error"></span>
                                         </div>
-                                        <span class="error" id="customerSubType_error"></span>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
-                                        <span class="error" id="applicationDate_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                            <span class="error" id="applicationDate_error"></span>
                                         </div>
-                                        <span class="error" id="zonalOffice_error"></span>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @*<select id="regionalOffice" class="form-control"></select>*@
-                                            @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="zonalOffice_error"></span>
                                         </div>
-                                        <span class="error" id="regionalOffice_error"></span>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
-                                        <span class="error" id="salesArea_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
-                                               new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
-                                               new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
-                                               new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
-                                               new SelectListItem(){ Text = "New Customer", Value = "3"},
-                                               }, null, new { @class = "form-control" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="regionalOffice_error"></span>
                                         </div>
-                                        <span class="error" id="typeOfCustomer_error"></span>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
+                                            <span class="error" id="salesArea_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
+                                                   new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
+                                                   new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
+                                                   new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
+                                                   new SelectListItem(){ Text = "New Customer", Value = "3"},
+                                                   }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="typeOfCustomer_error"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 col-md-12 col-12 pr-0 pl-md-2 pl-0 py-2">
-                        <div class="border-1 rounded border-grey h-100">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Personal Details</p>
-                            <div class="py-4 pr-4 pl-0 px-md-4">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
-                                                       new SelectListItem(){ Text = "Title", Value = "-1" },
-                                                       new SelectListItem(){ Text = "Mr", Value = "Mr"},
-                                                       new SelectListItem(){ Text = "Ms", Value = "Ms"},
-                                                       new SelectListItem(){ Text = "M/s", Value = "M/s"},
-                                                       }, null, new { @class = "form-control px-0" })
+                        <div class="col-lg-6 col-md-12 col-12 pr-0 pl-md-2 pl-0 py-2">
+                            <div class="border-1 rounded border-grey h-100">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Personal Details</p>
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                           new SelectListItem(){ Text = "Title", Value = "-1" },
+                                                           new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                           new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                           new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                           }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                    @*<span class="error" id="salutaion_error"></span>*@
                                                 </div>
-                                                @*<span class="error" id="salutaion_error"></span>*@
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder = "IndividualOrgName", @class = "form-control", autocomplete = "off", maxlength = "80" })
+                                                    <span class="error" id="individualName_error"></span>
+                                                </div>
                                             </div>
-                                            <div class="col-8 pl-0">
-                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder = "IndividualOrgName", @class = "form-control", autocomplete = "off", maxlength = "80" })
-                                                <span class="error" id="individualName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerNameOnCard, new { placeholder = "Name on Card", @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                            <span class="error" id="nameOnCard_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
                                             </div>
+                                            <span class="error" id="typeOfbusiness_error"></span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerNameOnCard, new { placeholder = "Name on Card", @class = "form-control", autocomplete = "off", maxlength = "22" })
-                                        <span class="error" id="nameOnCard_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Residence Status<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
+                                                    new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
+                                                    new SelectListItem(){ Text = "Indian", Value = "Indian"},
+                                                    new SelectListItem(){ Text = "NRI", Value = "NRI"},
+                                                    }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="residenceStatus_error"></span>
                                         </div>
-                                        <span class="error" id="typeOfbusiness_error"></span>
                                     </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Residence Status<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
-                                                new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
-                                                new SelectListItem(){ Text = "Indian", Value = "Indian"},
-                                                new SelectListItem(){ Text = "NRI", Value = "NRI"},
-                                                }, null, new { @class = "form-control" })
-                                        </div>
-                                        <span class="error" id="residenceStatus_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-6 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-6 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
 
-                                        <span class="error" id="incomeTaxPan_error"></span>
-                                    </div>
-                                    <div class="col-md-2 col-12 pl-md-0">
-                                        <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
-                                    </div>
-                                </div>
-
-                                <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
-                                    <label>** Please provide the document details that you are going to upload as POI</label>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-8 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
-                                              new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
-                                              new SelectListItem(){ Text = "1", Value = "1"},
-                                              new SelectListItem(){ Text = "2", Value = "2"},
-                                              new SelectListItem(){ Text = "3", Value = "3"},
-                                              }, null, new { @class = "form-control" })
+                                            <span class="error" id="incomeTaxPan_error"></span>
                                         </div>
-                                        <span class="error" id="tierOfCustomer_error"></span>
+                                        <div class="col-md-2 col-12 pl-md-0">
+                                            <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
+                                        <label>** Please provide the document details that you are going to upload as POI</label>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
+                                                  new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
+                                                  new SelectListItem(){ Text = "1", Value = "1"},
+                                                  new SelectListItem(){ Text = "2", Value = "2"},
+                                                  new SelectListItem(){ Text = "3", Value = "3"},
+                                                  }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="tierOfCustomer_error"></span>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="d-flex align-items-center justify-content-center mt-3">
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="button" onclick="return showregAddress()">Next</button>
                             </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="d-flex align-items-center justify-content-center mt-3">
-                        <div class="px-2">
-                            <button class="btn btn_primary" type="button" onclick="return showregAddress()">Next</button>
-                        </div>
-                    </div>
                 </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                <div class="border-1 rounded border-grey h-100">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
-                    <div class="py-2 p-md-4">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 1<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                        <span class="error" id="comm_address1_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                        <span class="error" id="comm_address2_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 3</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Location</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">City<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
-                                        <span class="error" id="comm_city_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                        <span class="error" id="comm_pincode_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">State<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
-                                        </div>
-                                        <span class="error" id="comm_states_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CommunicationDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
-                                        </div>
-                                        <span class="error" id="comm_district_error"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>@*<sup class="text-danger">*</sup>*@
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="CommunicationDialCode_error"></span>
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="comm_officePhone_error"></span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="CommunicationFaxCode_error"></span>
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="CommunicationFax_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                        <div class="error" id="comm_mobileNumber_error"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CommunicationEmail, new { @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
-                                        <div class="error" id="comm_email_error"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="border-1 rounded border-grey h-100 mt-3">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address</p>
-                    <div class="py-2 p-md-4">
-                        <label class="d-flex align-items-center justify-content-start px-3">
-                            <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2" onclick="sameAddressAsCommunication()">
-                            <p class="m-0">Same as Communication Address</p>
-                        </label>
-                        <div class="row w-100" id="permanent_add">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                    <div class="border-1 rounded border-grey h-100">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 1<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                            <div class="error" id="perma_address1_error"></div>
+                                            @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            <span class="error" id="comm_address1_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-2 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                            <div class="error" id="perma_address2_error"></div>
+                                            @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            <span class="error" id="comm_address2_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -364,16 +220,15 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 3</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-2 col-md-3 col-12">Location</label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Location</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
-                                            <span class="error" id="perma_location_error"></span>
+                                            @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
                                         </div>
                                     </div>
                                 </div>
@@ -381,17 +236,17 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">City<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
-                                            <span class="error" id="perma_city_error"></span>
+                                            @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                            <span class="error" id="comm_city_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-2 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                            <span class="error" id="perma_pincode_error"></span>
+                                            @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="comm_pincode_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -400,35 +255,53 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">State<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.PerOrRegAddressStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                             </div>
-                                            <span class="error" id="perma_state_error"></span>
+                                            <span class="error" id="comm_states_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-2 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.PermanentDistrictId, new SelectList(Model.PerOrRegAddressDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CommunicationDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
                                             </div>
-                                            <span class="error" id="perma_district_error"></span>
+                                            <span class="error" id="comm_district_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Home) </label> @*<sup class="text-danger">*</sup>*@
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>@*<sup class="text-danger">*</sup>*@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="PerOrRegAddressDialCode_error"></span>
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationDialCode_error"></span>
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="perma_officePhone_error"></span>
+                                                    @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="comm_officePhone_error"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFax_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -436,269 +309,138 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-2 col-md-3 col-12">Fax</label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="PermanentFaxCode_error"></span>
-                                                </div>
-                                                <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="perma_faxNumber_error"></span>
-                                                </div>
-                                            </div>
+                                            @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <div class="error" id="comm_mobileNumber_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationEmail, new { @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
+                                            <div class="error" id="comm_email_error"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                    <div class="px-2">
-                        <button class="btn btn_primary px-4 py-2" type="button" onclick="showBasicInfo()">Previous</button>
-                    </div>
-                    <div class="px-2">
-                        <button class="btn btn_primary px-4 py-2" type="button" onclick="return showOfficialDetails()">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="officialDetails" role="tabpanel" aria-labelledby="officialDetails-tab">
-                <div class="border-1 rounded border-grey w-100">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
-                    <div class="py-2 p-md-4">
-                        <div class="d-flex align-items-start justify-content-between flex-wrap row">
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                        @*<input type="text" class="form-control">*@
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Middle Name </label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                        <span class="error" id="KeyOffMiddleName_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
-                                    <div class="col-md-7 col-12">
-                                        @*<input type="date" class="form-control">*@
-                                        @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control", autocomplete = "off" })
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
-                                        <span class="error" id="KeyOffEmail_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Designation <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                        <span class="error" id="official_designation_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="KeyOffFaxCode_error"></span>
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="KeyOffFax_error"></span>
+                    <div class="border-1 rounded border-grey h-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address</p>
+                        <div class="py-2 p-md-4">
+                            <label class="d-flex align-items-center justify-content-start px-3">
+                                <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2" onclick="sameAddressAsCommunication()">
+                                <p class="m-0">Same as Communication Address</p>
+                            </label>
+                            <div class="row w-100" id="permanent_add">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 1<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="perma_address1_error"></div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">First Name <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="perma_address2_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 3</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Location</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                                <span class="error" id="perma_location_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">City<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                                <span class="error" id="perma_city_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="perma_pincode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">State<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.DropDownListFor(x => x.KeyOffTitle, new[]{
-                                                      new SelectListItem(){ Text = "Title", Value = "-1"},
-                                                      new SelectListItem(){ Text = "Mr", Value = "Mr"},
-                                                      new SelectListItem(){ Text = "Ms", Value = "Ms"},
-                                                      new SelectListItem(){ Text = "M/s", Value = "M/s"},
-                                                      }, null, new { @class = "form-control px-0" })
+                                                    @Html.DropDownListFor(m => m.PerOrRegAddressStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                                 </div>
-                                            </div>
-                                            <div class="col-md-8 col-12">
-                                                @Html.TextBoxFor(m => m.KeyOffFirstName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                                <span class="error" id="official_fName_error"></span>
-                                            </div>
-                                        </div>
-                                        @*<span class="error" id="officialTitle_error"></span>*@
-                                    </div>
-                                </div>
-
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Last Name</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffLastName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                        <span class="error" id="KeyOffLastName_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
-                                    <div class="col-md-7 col-12">
-                                        @*<input type="date" class="form-control">*@
-                                        @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", autocomplete = "off" })
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile <sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                        <span class="error" id="official_mobile_error"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office)</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="KeyOffPhoneCode_error"></span>
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="KeyOffPhoneNumber_error"></span>
+                                                <span class="error" id="perma_state_error"></span>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-                <div class="border-1 rounded border-grey w-100 mt-3">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Other Details</p>
-                    <div class="py-2 p-md-4">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap row">
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Secret Question</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.KeyOfficialSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
-                                        @* <input type="text" class="form-control">*@
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Area of Operation</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                            <label class="d-flex align-items-center justify-content-between">
-                                                @*<input type="checkbox" class="mr-2">*@
-                                                @Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState" })
-                                                <p class="m-0 ml-2">Inter State</p>
-                                            </label>
-                                            <label class="d-flex align-items-center justify-content-between">
-                                                @*<input type="checkbox" class="mr-2">*@
-                                                @Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity" })
-                                                <p class="m-0 ml-2">Inter City</p>
-                                            </label>
-                                            <label class="d-flex align-items-center justify-content-between">
-                                                @*<input type="checkbox" class="mr-2">*@
-                                                @Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity" })
-                                                <p class="m-0 ml-2">Intra City</p>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Fleet Size (No of Vehicles Owned)</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                            <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
-                                                <span class="d-flex font-12">HCV</span>
-                                                @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedHCV, new { @class = "w-100 form-control" })
-                                                @* <input type="text" class="w-100">*@
-                                            </div>
-                                            <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
-                                                <span class="d-flex font-12">LCV</span>
-                                                @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedLCV, new { @class = "w-100 form-control" })
-                                                @*<input type="text" class="w-100">*@
-                                            </div>
-                                            <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
-                                                <span class="d-flex font-12">MUV/SUV</span>
-                                                @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedMUVSUV, new { @class = "w-100 form-control" })
-                                                @*<input type="text" class="w-100">*@
-                                            </div>
-                                            <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
-                                                <span class="d-flex font-12">Car/Jeep</span>
-                                                @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedCarJeep, new { @class = "w-100 form-control" })
-                                                @*<input type="text" class="w-100">*@
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.PermanentDistrictId, new SelectList(Model.PerOrRegAddressDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" id="perma_district_error"></span>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Type of Fleet</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerTypeOfFleetID, new SelectList(Model.CustomerTypeOfFleetMdl, "TypeOfFleetId", "TypeOfFleetName"), new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Card applied for</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.KeyOfficialCardAppliedFor, new { @class = "form-control", autocomplete = "off" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12">Approx Monthly Spends on Vehicles</label>
-                                    <div class="col-md-7 col-12">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-8">
-                                                <div class="py-2">
-                                                    <div class=" position-relative pr-4">
-                                                        @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile1, new { @class = "form-control" })
-                                                        <a href="#" class="form_info" title="Fuel in Rs.">?</a>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Home) </label> @*<sup class="text-danger">*</sup>*@
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="PerOrRegAddressDialCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="perma_officePhone_error"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-4">
-                                                <div class=" py-2">
-                                                    <div class=" position-relative pr-4">
-                                                        @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile2, new { @class = "form-control" })
-                                                        <a href="#" class="form_info" title="Lube in Rs.">?</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Fax</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="PermanentFaxCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="perma_faxNumber_error"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -706,81 +448,334 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-12 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks</label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly", style = "display:none;" })
-                                        <span class="error" id="PanCardRemarks_error"></span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="showBasicInfo()">Previous</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showOfficialDetails()">Next</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="officialDetails" role="tabpanel" aria-labelledby="officialDetails-tab">
+                    <div class="border-1 rounded border-grey w-100">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-start justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            @*<input type="text" class="form-control">*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Middle Name </label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffMiddleName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
+                                        <div class="col-md-7 col-12">
+                                            @*<input type="date" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
+                                            <span class="error" id="KeyOffEmail_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Designation <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="official_designation_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFax_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">First Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.KeyOffTitle, new[]{
+                                                          new SelectListItem(){ Text = "Title", Value = "-1"},
+                                                          new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                          new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                          new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                          }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 col-12">
+                                                    @Html.TextBoxFor(m => m.KeyOffFirstName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="official_fName_error"></span>
+                                                </div>
+                                            </div>
+                                            @*<span class="error" id="officialTitle_error"></span>*@
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Last Name</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffLastName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffLastName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
+                                        <div class="col-md-7 col-12">
+                                            @*<input type="date" class="form-control">*@
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="official_mobile_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffPhoneCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffPhoneNumber_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
+                    </div>
+                    <div class="border-1 rounded border-grey w-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Other Details</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Secret Question</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.KeyOfficialSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
+                                            @* <input type="text" class="form-control">*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Area of Operation</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState" })
+                                                    <p class="m-0 ml-2">Inter State</p>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity" })
+                                                    <p class="m-0 ml-2">Inter City</p>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity" })
+                                                    <p class="m-0 ml-2">Intra City</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Fleet Size (No of Vehicles Owned)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">HCV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedHCV, new { @class = "w-100 form-control" })
+                                                    @* <input type="text" class="w-100">*@
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">LCV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedLCV, new { @class = "w-100 form-control" })
+                                                    @*<input type="text" class="w-100">*@
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">MUV/SUV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedMUVSUV, new { @class = "w-100 form-control" })
+                                                    @*<input type="text" class="w-100">*@
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">Car/Jeep</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedCarJeep, new { @class = "w-100 form-control" })
+                                                    @*<input type="text" class="w-100">*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Type of Fleet</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTypeOfFleetID, new SelectList(Model.CustomerTypeOfFleetMdl, "TypeOfFleetId", "TypeOfFleetName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Card applied for</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialCardAppliedFor, new { @class = "form-control", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Approx Monthly Spends on Vehicles</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-8">
+                                                    <div class="py-2">
+                                                        <div class=" position-relative pr-4">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile1, new { @class = "form-control" })
+                                                            <a href="#" class="form_info" title="Fuel in Rs.">?</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class=" py-2">
+                                                        <div class=" position-relative pr-4">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile2, new { @class = "form-control" })
+                                                            <a href="#" class="form_info" title="Lube in Rs.">?</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly", style = "display:none;" })
+                                            <span class="error" id="PanCardRemarks_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="showregAddressInfo()">Previous</button>
+                        </div>
+                        <div class="px-2">
+                            @*<button class="btn btn_primary px-4 py-2" type="button" onclick="return showCardDetails()">Next</button>*@
+                            <button class="btn btn_primary px-4 py-2" id="btnAdd" type="submit" onclick="return showCardDetails()">Save</button>
+                        </div>
                     </div>
                 </div>
-                <div class="clearfix"></div>
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                    <div class="px-2">
-                        <button class="btn btn_primary px-4 py-2" type="button" onclick="showregAddressInfo()">Previous</button>
-                    </div>
-                    <div class="px-2">
-                        @*<button class="btn btn_primary px-4 py-2" type="button" onclick="return showCardDetails()">Next</button>*@
-                        <button class="btn btn_primary px-4 py-2" id="btnAdd" type="submit" onclick="return showCardDetails()">Save</button>
+
+                <div style="display:none;">@Html.CheckBoxFor(m => m.IsSameAsCommAddress, new { id = "hdnSameAsCommAddress" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress1, new { id = "hdnPerOrRegAddress1" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress2, new { id = "hdnPerOrRegAddress2" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress3, new { id = "hdnPerOrRegAddress3" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { id = "hdnPerOrRegAddressLocation" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressCity, new { id = "hdnPerOrRegAddressCity" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { id = "hdnPerOrRegAddressPinCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressStateID, new { id = "hdnPerOrRegAddressStateID" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDistrict, new { id = "hdnPerOrRegAddressDistrict" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFaxCode, new { id = "hdnPermanentFaxCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                @Html.HiddenFor(model => Model.IsDuplicatePanNo)
+                @Html.HiddenFor(model => Model.AllowPanDuplication)
+
+            </div>
+
+            <!-- Modal : Dialog -->
+            <!-- PAN Validation Modal -->
+            <div class="modal fade" id="panvalidation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12 col-12">
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
+                                    <p class="mb-0">Entered PAN is already existing in DT Plus system. Still you want to proceed?</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">OK</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">CANCEL</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div style="display:none;">@Html.CheckBoxFor(m => m.IsSameAsCommAddress, new { id = "hdnSameAsCommAddress" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress1, new { id = "hdnPerOrRegAddress1" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress2, new { id = "hdnPerOrRegAddress2" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress3, new { id = "hdnPerOrRegAddress3" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { id = "hdnPerOrRegAddressLocation" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressCity, new { id = "hdnPerOrRegAddressCity" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { id = "hdnPerOrRegAddressPinCode" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressStateID, new { id = "hdnPerOrRegAddressStateID" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDistrict, new { id = "hdnPerOrRegAddressDistrict" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFaxCode, new { id = "hdnPermanentFaxCode" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>
-            <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
-            @Html.HiddenFor(model => Model.IsDuplicatePanNo)
-            @Html.HiddenFor(model => Model.AllowPanDuplication)
-
-        </div>
-
-        <!-- Modal : Dialog -->
-        <!-- PAN Validation Modal -->
-        <div class="modal fade" id="panvalidation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header py-2">
-                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col-lg-12 col-12">
-                            <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
-                                <p class="mb-0">Entered PAN is already existing in DT Plus system. Still you want to proceed?</p>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center mt-3">
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">OK</button>
-                            </div>
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">CANCEL</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal : Dialog -->
-    </form>
+            <!-- Modal : Dialog -->
+        </form>
 
 
     </div>
@@ -803,6 +798,10 @@
         }
 
         localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("FORMNOALREADYUSED", "1");
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+        localStorage.setItem("DUPLICATEPANUSED", "1");
 
         if (notFoundError == "") {
             if (custDateOfApplication == "") {
@@ -841,6 +840,7 @@
                 $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
             }
         }
+        
     });
 
     function setDates() {
@@ -1406,7 +1406,7 @@
     });
 
 
-    $("#FormNumber").on("blur", function () {
+    @*$("#FormNumber").on("blur", function () {
         //debugger;
         var formNumber = document.getElementById("FormNumber").value;
         if (formNumber == "") {
@@ -1482,7 +1482,7 @@
             console.log('SAM');
         }
 
-    });
+    });*@
 
     $("#CommunicationEmail").on("blur", function () {
         //debugger;
