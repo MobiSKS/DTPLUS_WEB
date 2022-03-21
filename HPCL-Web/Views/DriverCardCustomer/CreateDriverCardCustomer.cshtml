@@ -345,7 +345,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.ExistingCustomerId, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.ExistingCustomerId, new { @class = "form-control", autocomplete = "off", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                     <span class="error" id="CustomerId_error"></span>
                                                 </div>
                                             </div>
@@ -378,7 +378,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Beneficiary Name <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                                     <span class="error" id="BeneficiaryName_error"></span>
                                                 </div>
                                             </div>
@@ -501,6 +501,7 @@
                 document.getElementById("CustomerName").value = "";
             }
 
+            document.getElementById("CustomerId_error").value = "";
         });
 
 
@@ -859,63 +860,7 @@
         $('#txt_searchCard').val('');
         $('#myModalCard1').modal('hide');
     }
-
-    $("#CommunicationMobileNo").on("blur", function () {
-        //debugger;
-        var communicationMobile = document.getElementById("CommunicationMobileNo").value.trim();
-        if (communicationMobile == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
-            return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        }
-
-        var mobileNoUsed = false;
-        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
-
-        @*$.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckMobilNoDuplication", "DriverCardCustomer")',
-            data: { MobileNo: communicationMobile },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
-
-                if (status == 'success') {
-
-                    //console.log('Test');
-                    //console.log(data.status);
-                    //console.log(data.reason);
-                    if (data.status == "0") {
-                        mobileNoUsed = true;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                    }
-                    else {
-                        mobileNoUsed = false;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                    }
-                }
-                else {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                    mobileNoUsed = true;
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                }
-            }
-        });*@
-
-
-    });
-
+    
     $("#CommunicationEmailid").on("blur", function () {
         //debugger;
         var communicationEmail = document.getElementById("CommunicationEmailid").value.trim();
@@ -934,6 +879,7 @@
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            document.getElementById("CommunicationEmailid").value = "";
             document.getElementById("CommunicationEmailid").focus();
             return (false);
         }
@@ -1347,12 +1293,19 @@
         //debugger;
         var customerId = document.getElementById("ExistingCustomerId").value;
         if (customerId == "") {
-            document.getElementById("CustomerId_error").innerHTML = "Existing Customer Id cannot be left blank";
+            document.getElementById("CustomerId_error").innerHTML = "Customer Id field cannot be left blank";
              //$("#ExistingCustomerId").focus;
             return (false);
         }
         else {
             document.getElementById("CustomerId_error").innerHTML = "";
+        }
+
+        if (document.getElementById("ExistingCustomerId").value.length < 10) {
+            document.getElementById("CustomerId_error").innerHTML = "Customer Id field length must be 10 digit";
+            document.getElementById("ExistingCustomerId").value = "";
+            document.getElementById("ExistingCustomerId").focus();
+            return false;
         }
 
             $.ajax({
@@ -1481,7 +1434,7 @@
         }
 
         if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin code";
             document.getElementById("CommunicationPincode").value = "";
             document.getElementById("CommunicationPincode").focus();
             return false;
@@ -1535,56 +1488,56 @@
         var mobileNoUsed = false;
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckMobilNoDuplication", "Common")',
-                data: { MobileNo: communicationMobile },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
+        @*$.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckMobilNoDuplication", "Common")',
+            data: { MobileNo: communicationMobile },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                var v = data;
+                if (status == 'success') {
 
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        //console.log('Test');
-                        //console.log(data.status);
-                        //console.log(data.reason);
-                        if (data.status == "0") {
-                            mobileNoUsed = true;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
-                            localStorage.setItem("MOBILENUMBERREADYUSED", "0");
-                        }
-                        else {
-                            mobileNoUsed = false;
-                            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                        }
+                    //if (data == "Failed to load Customer Details")
+                    //    document.getElementById("RBEName").value = "";
+                    //console.log('Test');
+                    //console.log(data.status);
+                    //console.log(data.reason);
+                    if (data.status == "0") {
+                        mobileNoUsed = true;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+                        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
-                        //console.log(v);
-                        mobileNoUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
+                        mobileNoUsed = false;
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
                     }
                 }
-            });
+                else {
+                    //console.log(v);
+                    mobileNoUsed = true;
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //document.getElementById("RBEName").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    //document.getElementById("RBEName").value = "";
+                }
+            }
+        });
         //console.log(fromNumberUsed);
         if (mobileNoUsed == true) {
             //console.log('Kumar');
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
             //return (false);
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
             //console.log('SAM');
-        }
+        }*@
 
     });
 
@@ -1632,5 +1585,77 @@
             }
         }
     }
+
+    $("#BeneficiaryName").on("blur", function () {
+        //debugger;
+        var beneficiaryName = document.getElementById("BeneficiaryName").value.trim();
+        if (beneficiaryName == "") {
+            document.getElementById("BeneficiaryName_error").innerHTML = "Beneficiary Name field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("BeneficiaryName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("BeneficiaryName").value.trim())) {
+            document.getElementById("BeneficiaryName_error").innerHTML = "Invalid Beneficiary Name";
+            document.getElementById("BeneficiaryName").value = "";
+            document.getElementById("BeneficiaryName").value.focus();
+            return false;
+        }
+        else {
+            document.getElementById("BeneficiaryName_error").innerHTML = "";
+        }
+
+    });
+
+    $("#CommunicationCityName").on("blur", function () {
+        //debugger;
+        var cityName = document.getElementById("CommunicationCityName").value.trim();
+        if (cityName == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City";
+            document.getElementById("CommunicationCityName").value = "";
+            document.getElementById("CommunicationCityName").value.focus();
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+        
+
+    });
+
+    $("#DrivingLicence").on("blur", function () {
+        //debugger;
+        var drivingLicence = document.getElementById("DrivingLicence").value.trim();
+        if (drivingLicence == "") {
+            document.getElementById("DrivingLicence_error").innerHTML = "Driving License field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("DrivingLicence_error").innerHTML = "";
+        }
+
+        var dlFormat = /^([A-Z]{2})(\d{2}|\d{3})[a-zA-Z]{0,1}(\d{4})(\d{7})$/gm;
+        if (drivingLicence.match(mailformat)) {
+            document.getElementById("DrivingLicence_error").innerHTML = "";
+            //return true
+        }
+        else {
+            document.getElementById("DrivingLicence_error").innerHTML = "Invalid Driving License";
+            document.getElementById("DrivingLicence").value = "";
+            document.getElementById("DrivingLicence").focus();
+            return (false);
+        }        
+
+    });
 
 </script>
