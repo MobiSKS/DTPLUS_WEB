@@ -186,5 +186,13 @@ namespace HPCL_Web.Controllers
 
             return Json(new { merchantStatusList = merchantStatusList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetTransactionType()
+        {
+            var SortedtList = await _commonActionService.GetTransactionTypeDropdown();
+
+            return Json(new { SortedtList = SortedtList });
+        }
     }
 }

@@ -54,5 +54,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerSubTypeModel>> GetCustomerSubTypeDropdown();
         Task<List<SalesAreaModel>> GetSalesAreaDropdown(string RegionID);
         Task<List<CustomerSubTypeModel>> GetCustomerSubTypeDropdown(int CustomerTypeID);
+        Task<List<TransactionTypeResponse>> GetTransactionTypeDropdown();
     }
 }

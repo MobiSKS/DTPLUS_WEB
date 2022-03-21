@@ -1,17 +1,20 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.MerchantFinancials
 {
-    public class GetMerchantSettlementDetails : BaseEntity
+    public class GetTransactionDetails : BaseEntity
     {
         [Required(ErrorMessage = FieldValidation.MerchantNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMerchantId, ErrorMessage = FieldValidation.ValidMerchantIdErrMsg)]
         public string MerchantId { get; set; }
         public string TerminalId { get; set; }
+        public string TransactionType { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public List<string> TransType { get; set; }
     }
 }

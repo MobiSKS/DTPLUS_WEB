@@ -1,12 +1,13 @@
-﻿
+﻿@model HPCL.Common.Models.ViewModel.MerchantFinancials.GetTransactionDetails
+@using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Financial</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Financial</a> </li>
             <li class="breadcrumb-item font-weight-light">Transaction Details</li>
         </ul>
-        <form>
+        <form id="transactionSubmit">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -18,63 +19,77 @@
                                         <label class="col-md-2 col-12">&nbsp;</label>
                                         <div class="col-md-10 col-12">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-                                                <label class="form-check-label" for="inlineRadio3">Merchant</label>
+                                                <input type="radio" name="SearchType" value="Merchant" checked="checked" /> <span class="ml-2"> Merchant </span>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                                <label class="form-check-label" for="inlineRadio2">Terminal</label>
+                                                <input type="radio" name="SearchType" value="Terminal" />  <span class="ml-2"> Terminal </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
+                                <div class="col-lg-6 col-12" id="merchantSec" style="display:none;">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="MerchantID" type="text" value="">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "custIdVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+
+                                <div class="col-lg-6 col-12" id="terminalSec" style="display:none;">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Terminal ID </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="fromdate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.TerminalId, new { @id = "custIdVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.TerminalId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="todate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
                                             </div>
+                                            <span class="error" id="fromDate"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Transaction Type <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12"> To Date </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <!-- Multiselect dropdown -->
-                                                <select multiple class="selectpicker multiSelect w-100">
-                                                    <option>Sale</option>
-                                                    <option>Reload</option>
-                                                    <option>Loyality Sale</option>
-                                                    <option>Tracking</option>
-                                                    <option>Loyality Redeem</option>
-                                                </select><!-- End -->
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="toDate"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Transaction Type </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.ListBoxFor(m => m.TransType, Enumerable.Empty<SelectListItem>(), new { @class = "selectpicker multiSelect w-100" })
+
                                             </div>
                                         </div>
                                     </div>
@@ -84,10 +99,10 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
+                                    <button class="btn btn_primary" type="button" onclick="GetTransList()">Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
+                                    <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button">Export To Excel</button>
@@ -95,6 +110,43 @@
                             </div>
                         </div>
                         <div class="clearfix"></div>
+
+                        <div>
+                            <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="table-responsive" id="tblResponse" style="display:none;">
+                            <table id="TransactionSearchTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="display:inline-table;width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>S No.</th>
+                                        <th>Batch ID</th>
+                                        <th>ROC No.</th>
+                                        <th>Retail Outlet Name</th>
+                                        <th>Terminal ID</th>
+                                        <th>Card Number</th>
+                                        <th>NameOnCard</th>
+                                        <th>Transaction Date</th>
+                                        <th>Transaction Type</th>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Volume(Ltr.)</th>
+                                        <th>Currency</th>
+                                        <th>Amount (Rupees/Points)</th>
+                                        <th>Service Charge</th>
+                                        <th>Drive Stars</th>
+                                        <th>Voided By ROC</th>
+                                        <th>Voided ROC</th>
+                                        <th>FSM Name</th>
+                                        <th>Mobile Number</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -102,3 +154,226 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    function resetClick() {
+        location.reload();
+    }
+
+     $(document).ready(function () {
+
+
+        if ($('input[name=SearchType]:checked').val() == "Merchant") {
+            console.log($('input[name=SearchType]:checked').val());
+            document.getElementById("merchantSec").style.display = "block";
+            document.getElementById("terminalSec").style.display = "none";
+        } else if ($('input[name=SearchType]:checked').val() == "Terminal") {
+            console.log($('input[name=SearchType]:checked').val());
+            document.getElementById("merchantSec").style.display = "none";
+            document.getElementById("terminalSec").style.display = "block";
+        }
+
+        $('input[type=radio][name=SearchType]').change(function () {
+            if ($(this).val() == "Merchant") {
+                console.log($(this).val());
+                document.getElementById("merchantSec").style.display = "block";
+                document.getElementById("terminalSec").style.display = "none";
+            } else if ($(this).val() == "Terminal") {
+                console.log($(this).val());
+                document.getElementById("merchantSec").style.display = "none";
+                document.getElementById("terminalSec").style.display = "block";
+            }
+        });
+
+         $.ajax({
+             type: 'POST',  // http method
+             url: '@Url.Action("GetTransactionType", "Common")',
+             dataType: "json",
+             success: function (data, status, xhr) {
+
+                 console.log("trans type data :  ", data);
+
+                 console.log("trans type :  ", data.sortedtList);
+
+                 $.each(data.sortedtList, function (i, option) {
+                     $("<option/>").val(option.transactionID).text(option.transactionType).appendTo("#TransType");
+                 });
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                 alert("Error Populating Transaction Type");
+             }
+         });
+
+
+
+    var fromdate = $("#FromDate").val();
+    var todate = $("#ToDate").val();
+    var notFoundError = "@ViewBag.NotFoundError";
+
+
+        if (notFoundError == "") {
+            if (fromdate == "") {
+                $("#FromDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function (selected) {
+                        $("#ToDate").datepicker("option", "minDate", selected)
+                    }
+                });
+            }
+            else {
+                $("#FromDate").datepicker({ dateFormat: 'yy-mm-dd' });
+            }
+
+            if (todate == "") {
+                $("#ToDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'yy-mm-dd',
+                    maxDate: '+30d',
+                    onSelect: function (selected) {
+                        $("#FromDate").datepicker("option", "maxDate", selected)
+                    }
+                });
+                setDates();
+            }
+            else {
+                $("#ToDate").datepicker({ dateFormat: 'yy-mm-dd' });
+            }
+        }
+        else {
+            alert("Details not found");
+        }
+
+
+        $("#fromDateId").datepicker("setDate", new Date());
+        $("#toDateId").datepicker("setDate", new Date());
+
+
+    });
+
+    function setDates() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = d.getFullYear() + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
+
+        $("#FromDate").val(output);
+        $("#ToDate").val(output);
+        $("#CategoryID").val(1);
+
+        $("#show_Table").html("");
+    };
+
+    function GetTransList() {
+
+
+        if ($("#transactionSubmit").valid()) {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("TransactionDetails", "MerchantFinancials")',
+                data: $('#transactionSubmit').serialize(),  // data to submit
+                success: function (res, status, xhr) {
+
+                    console.log(res);
+
+                    if (res.searchList.success == true) {
+
+                        var girdList = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+                        var girdList = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+                        $("#TransactionSearchTbl td").parent().remove();
+
+                        $('#TransactionSearchTbl').DataTable().clear().destroy();
+
+                        var tbl = $('#TransactionSearchTbl').DataTable({
+                            //paging: true,
+                            //searching: false,
+                            //stateSave: true,
+                            "bDestroy": true
+                            //"lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                            //"autoWidth": false,
+                            //"oLanguage": {
+                            //    "sLengthMenu": "Display _MENU_ Records",
+                            //    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            //}
+                        });
+
+                        $("#TransactionSearchTbl").dataTable().fnDestroy();
+
+                        for (var i = 0; i < girdList.length; i++) {
+
+                            var srNumber = (i+1);
+                            var batchId = (girdList[i].batchId || '');
+                            var invoiceNo = (girdList[i].invoiceNo || '');
+                            var retailOutletName = (girdList[i].retailOutletName || '');
+                            var terminalId = (girdList[i].terminalId || '');
+                            var cardNo = (girdList[i].cardNo || '');
+                            var nameOnCard = (girdList[i].nameOnCard || '');
+                            var transactionDate = (girdList[i].transactionDate || '');
+                            var transactionType = (girdList[i].transactionType || '');
+                            var product = (girdList[i].product || '');
+                            var price = (girdList[i].price);
+                            var volume = (girdList[i].volume);
+                            var currency = (girdList[i].currency || '');
+                            var amount = (girdList[i].amount);
+                            var serviceCharge = (girdList[i].serviceCharge);
+                            var driveStars = (girdList[i].driveStars);
+                            var voidedByRoc = (girdList[i].voidedByRoc || '');
+                            var voidedRoc = (girdList[i].voidedRoc || '');
+                            var fsmName = (girdList[i].fsmName || '');
+                            var mobileNo = (girdList[i].mobileNo || '');
+                            var status = (girdList[i].status || '');
+                          
+                            tbl.row.add([
+                                srNumber,
+                                batchId,
+                                invoiceNo,
+                                retailOutletName,
+                                terminalId,
+                                cardNo,
+                                nameOnCard,
+                                transactionDate,
+                                transactionType,
+                                product,
+                                price,
+                                volume,
+                                currency,
+                                amount,
+                                serviceCharge,
+                                driveStars,
+                                voidedByRoc,
+                                voidedRoc,
+                                fsmName,
+                                mobileNo,
+                                status
+                            ]).draw();
+                        }
+                        document.getElementById('tblResponse').style.display = 'block';
+                    } else {
+                        document.getElementById("tblResponse").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error");
+                }
+            });
+        } else {
+            return false;
+        }
+
+    }
+</script>

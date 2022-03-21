@@ -220,6 +220,8 @@
         public static string GetSattlementDetailsUrl = "api/dtplus/merchant/merchant_settlement_detail";
         public static string GetBatchDetailsUrl = "api/dtplus/merchant/merchant_batch_detail";
         public static string GetTerminalDetailsUrl = "api/dtplus/merchant/terminal_detail";
+        public static string GetTransactionDetailsUrl = "api/dtplus/merchant/merchant_transaction_detail";
+        public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
 
         #endregion
     }

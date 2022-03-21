@@ -575,7 +575,6 @@ namespace HPCL.Service.Services
             return lsts;
         }
 
-
         public async Task<List<TerminalManagementCloseReasonModel>> GetTerminalRequestCloseReason()
         {
             var forms = new Dictionary<string, string>
@@ -691,8 +690,7 @@ namespace HPCL.Service.Services
 
             return responseData;
         }
-
-     
+   
         public async Task<List<CustomerZonalOfficeModel>> GetZonalOfficeListForDropdown()
         {
             var requestData = new BaseEntity()
@@ -1011,5 +1009,23 @@ namespace HPCL.Service.Services
             return SortedtList;
         }
 
+        public async Task<List<TransactionTypeResponse>> GetTransactionTypeDropdown()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetTransationTypeUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TransactionTypeResponse> SortedtList = jarr.ToObject<List<TransactionTypeResponse>>();
+            return SortedtList;
+        }
     }
 }
