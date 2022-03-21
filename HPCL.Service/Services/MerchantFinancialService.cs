@@ -164,7 +164,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     MerchantId = entity.MerchantId,
                     TerminalId = entity.TerminalId,
-                    TransactionType = string.Join(",", entity.TransType),
+                    TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
                     FromDate = entity.FromDate,
                     ToDate = entity.ToDate
                 };
@@ -178,7 +178,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     TerminalId = entity.TerminalId,
-                    TransactionType = string.Join(",", entity.TransType),
+                    TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
                     FromDate = entity.FromDate,
                     ToDate = entity.ToDate
                 };
