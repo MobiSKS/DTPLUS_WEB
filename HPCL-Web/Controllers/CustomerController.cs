@@ -978,10 +978,18 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo });
+                return RedirectToAction("ValidateNewCustomer");
             }
 
             return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        {
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, CustomerReferenceNo);
+
+            return Json(result);
         }
 
     }

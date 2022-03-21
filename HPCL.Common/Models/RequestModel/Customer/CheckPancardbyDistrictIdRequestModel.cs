@@ -9,5 +9,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
     {
         public string IncomeTaxPan { get; set; }
         public string DistrictId { get; set; }
+        public string CustomerReferenceNo { get; set; }
     }
 }
