@@ -11,7 +11,6 @@ namespace HPCL.Common.Models.ViewModel.Locations
         public string HQName { get; set; }
         [Required(ErrorMessage = "Head Office Short Name is Required")]
         public string HQShortName { get; set; }
-        public string CreatedBy { get; set; }
     }
 
     public class UpdateHeadOfficeDetails: BaseEntity
@@ -20,6 +19,5 @@ namespace HPCL.Common.Models.ViewModel.Locations
         public string HQCode { get; set; }
         public string HQName { get; set; }
         public string HQShortName { get; set; }
-        public string ModifiedBy { get; set; }
     }
 }

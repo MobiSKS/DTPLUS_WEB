@@ -37,6 +37,9 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
 
+        public string FormNumber { get; set; }
+        public string CustomerName { get; set; }
+        public string IdProofFrontSRC { get; set; }
 
         //public ValidationResult Validate(ValidationContext validationContext)
         //{

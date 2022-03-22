@@ -25,7 +25,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SbuTypeResponseModal>> GetSbuTypeList();
         Task<List<SalesAreaResponseModal>> GetSalesAreaList(string regionId);
         Task<string> ValidateUserName(string userName);
-        Task<List<RegionModel>> GetRegionList();
+        //Task<List<RegionModel>> GetRegionList();
         Task<List<CustomerStateModel>> GetCustStateList();
         Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber);
         Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
