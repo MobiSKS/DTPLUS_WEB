@@ -11,11 +11,11 @@
         #region Officer
 
         public static string getOfficerType = "api/dtplus/officer/get_officer_type";
-        public static string getLocationZone = "api/dtplus/settings/get_zone";
-        public static string getLocationRegion = "api/dtplus/settings/get_region";
+        //public static string getLocationZone = "api/dtplus/settings/get_zone";
+        //public static string getLocationRegion = "api/dtplus/settings/get_region";
         public static string getLocationHq = "api/dtplus/hq/get_hq";
-        public static string getState = "api/dtplus/settings/get_state";
-        public static string getDistrict = "api/dtplus/settings/get_district";
+        public static string getState = "​api​/dtplus​/state​/get_state";
+        public static string getDistrict = "api/dtplus/district/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
         public static string insertRbeOfficer = "api/dtplus/officer/insert_rbe_officer";
@@ -204,7 +204,7 @@
         public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_al_otc_card_request";
         public static string getAvailityAlOTCCard = "api/dtplus/merchant/get_availity_al_otc_card";
         public static string insertAlCustomer = "api/dtplus/merchant/insert_al_customer";
-
+        public static string viewAlOTCCardDealerAllocation = "api/dtplus/merchant/view_al_otc_card_dealer_allocation";
         #endregion
 
         #region "Customer Financial"

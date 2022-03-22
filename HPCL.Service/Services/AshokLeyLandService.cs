@@ -214,5 +214,33 @@ namespace HPCL.Service.Services
             return ashokLeylandCardCreationModel;
         }
 
+        public async Task<ViewALOTCCardDealerMappingModel> ViewALOTCCardsDealerMapping()
+        {
+            ViewALOTCCardDealerMappingModel model = new ViewALOTCCardDealerMappingModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<ALOTCCardDealerAllocationResponse> GetViewALOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetALOTCCardDealerAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewAlOTCCardDealerAllocation);
+
+            ALOTCCardDealerAllocationResponse response = new ALOTCCardDealerAllocationResponse();
+
+            response = JsonConvert.DeserializeObject<ALOTCCardDealerAllocationResponse>(ResponseContent);
+
+            return response;
+        }
+
     }
 }

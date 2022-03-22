@@ -324,26 +324,26 @@ namespace HPCL.Service.Services
             return validateUserNameLst.First().Status.ToString();
         }
 
-        public async Task<List<RegionModel>> GetRegionList()
-        {
-            var CustomerRegion = new Dictionary<string, string>
-            {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"ZoneID",  "0" }
-            };
+        //public async Task<List<RegionModel>> GetRegionList()
+        //{
+        //    var CustomerRegion = new Dictionary<string, string>
+        //    {
+        //        {"Useragent", CommonBase.useragent},
+        //        {"Userip", CommonBase.userip},
+        //        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+        //        {"ZonalID",  "0" }
+        //    };
 
-            StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
+        //    StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
 
-            var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.getLocationRegion);
+        //    var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.regionalOffice);
 
-            JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
-            var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
-            List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
+        //    JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
+        //    var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
+        //    List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
 
-            return customerRegionLst;
-        }
+        //    return customerRegionLst;
+        //}
 
         public async Task<List<CustomerStateModel>> GetCustStateList()
         {
