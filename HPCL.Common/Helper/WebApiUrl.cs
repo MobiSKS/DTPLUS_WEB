@@ -223,6 +223,9 @@
         public static string GetTerminalDetailsUrl = "api/dtplus/merchant/terminal_detail";
         public static string GetTransactionDetailsUrl = "api/dtplus/merchant/merchant_transaction_detail";
         public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
+        public static string getmerchantsalereloaddeltadetail = "api/dtplus/merchant/merchant_sale_reload_delta_detail";
+
+
 
         #endregion
     }
