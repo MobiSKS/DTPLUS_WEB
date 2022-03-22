@@ -14,7 +14,7 @@
         //public static string getLocationZone = "api/dtplus/settings/get_zone";
         //public static string getLocationRegion = "api/dtplus/settings/get_region";
         public static string getLocationHq = "api/dtplus/hq/get_hq";
-        public static string getState = "​api​/dtplus​/state​/get_state";
+        public static string getState = "api/dtplus/state/get_state";
         public static string getDistrict = "api/dtplus/district/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
@@ -224,8 +224,7 @@
         public static string GetTransactionDetailsUrl = "api/dtplus/merchant/merchant_transaction_detail";
         public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
         public static string getmerchantsalereloaddeltadetail = "api/dtplus/merchant/merchant_sale_reload_delta_detail";
-
-
+        public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
 
         #endregion
     }
