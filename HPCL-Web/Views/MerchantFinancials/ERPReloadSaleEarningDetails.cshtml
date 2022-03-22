@@ -1,12 +1,14 @@
-﻿
+﻿@model HPCL.Common.Models.ViewModel.MerchantFinancials.MerchantERPReloadSaleEarningModel
+@using HPCL.Common.Resources
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Financial</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","MerchantFinancials")" class="text_primary">Financial</a> </li>
             <li class="breadcrumb-item font-weight-light">ERP Reload/Sale/Earning Details</li>
         </ul>
-        <form>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+        {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -18,11 +20,13 @@
                                         <label class="col-md-2 col-12">&nbsp;</label>
                                         <div class="col-md-10 col-12">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">*@
+                                                @Html.RadioButtonFor(m => m.TerminalOrMerchant, "Merchant", new { @id = "rbtnMerchant" })
                                                 <label class="form-check-label" for="inlineRadio3">Merchant</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                                @*<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">*@
+                                                @Html.RadioButtonFor(m => m.TerminalOrMerchant, "Terminal", new { @id = "rbtnTerminal" })
                                                 <label class="form-check-label" for="inlineRadio2">Terminal</label>
                                             </div>
                                         </div>
@@ -35,7 +39,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="MerchantID" type="text" value="">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "MerchantId", @class = "form-control", maxlength = "20" })
+                                                <span class="error" id="MerchantId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -47,8 +52,9 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="fromdate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
+                                            <span class="error" id="toDate_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -57,8 +63,9 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="todate" type="date" value="">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
+                                            <span class="error" id="toDate_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -67,21 +74,208 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
+                                    <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                 </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Export To Excel</button>
-                                </div>
+                                @*<div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnExport">@Label.ExportToExcel</button>
+                                </div>*@
                             </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
-        </form>
-        <div class="clearfix"></div>
+            <div class="clearfix"></div>
+        }
+        <div id="show_Table" class="toBeHiddenOnSuccess">
+            @if (Model.SaleEarningDetails.Count() > 0)
+            {
+                <div class="table-responsive">
+                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+                        <thead style="background-color:lightgray;">
+                            <tr>
+                                <th style="width:5%;">Sr No</th>
+                                <th style="width:10%;">Terminal ID</th>
+                                <th style="width:5%;">Batch ID</th>
+                                <th style="width:10%;">Settlement Date</th>
+                                <th style="width:10%;">Sale(Rs.)</th>
+                                <th style="width:10%;">Reload(Rs.)</th>
+                                <th style="width:10%;">Earning(Rs.)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var item in Model.SaleEarningDetails)
+                            {
+                                i = i + 1;
+
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.TerminalID</td>
+                                    <td>@item.BatchID</td>
+                                    <td>@item.SettlementDate</td>
+                                    <td>@item.Sale</td>
+                                    <td>@item.Reload</td>
+                                    <td>@item.Earning</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="clearfix"></div>
+            }
+            else
+            {
+                <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+                    @Model.Message
+                </div>
+            }
+        </div>
     </div>
 </div>
+<script type="text/javascript">
+    //debugger;
+
+    var fromdate = $("#FromDate").val();
+    var todate = $("#ToDate").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+
+    $(document).ready(function () {
+
+        setDates();
+        getMerchantRegionalOfc();
+    });
+    $("#btnSearch").on("click", (function (e) {
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        var merchantId = $("#MerchantId").val();
+        var terminalId = $("#TerminalId").val();
+        var flag = "Y";
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates();
+        }
+        if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Please enter valid Merchant ID");
+                flag = "N";
+            }
+        }
+        if (terminalId != "") {
+            if (!terminalId.match(mappedterminalID)) {
+                $("#terminalId_error").attr("style", "display:block");
+                $("#terminalId_error").html("Please enter valid Terminal ID");
+                flag = "N";
+            }
+        }
+        if (flag == "Y") {
+            $("#toDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#fromDate_error").html("");
+            $("#merchantId_error").attr("style", "display:none");
+            $("#merchantId_error").html("");
+        }
+        if (flag == "N")
+            e.preventDefault();
+
+    })
+    );
+    $("#btnReset").click(function () {
+        setDates();
+        $("#show_Table").html("");
+        $("#ZonalOfficeId").val(0);
+        $("#RegionalOfcIdVal").val("");
+        getMerchantRegionalOfc();
+        $("#MerchantId").val("");
+        $("#TerminalId").val("");
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
+        $("#merchantId_error").html("");
+        $("#terminalId_error").html("");
+    });
+    function setDates() {
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
+
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
+    };
+    $("#RegionalOfficeId").change(function () {
+        var id = this.value;
+        $("#RegionalOfcIdVal").val(id);
+    });
+
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    $(".date").on('change', function (e) {
+
+        checkDates();
+        $("#show_Table").html("");
+    });
+
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
+        var dateflag = "Y";
+        if (fromD != "" && toD != "") {
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = "N";
+            }
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+        }
+
+        if (toD != "") {
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+        }
+
+        return dateflag;
+    }
+
+</script>
