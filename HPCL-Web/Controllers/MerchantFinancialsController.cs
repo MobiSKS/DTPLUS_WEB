@@ -78,14 +78,15 @@ namespace HPCL_Web.Controllers
             var searchList = await _merchantFinancialService.SettlementDetails(entity);
             return Json(new { searchList = searchList });
         }
-
-        public async Task<IActionResult> BatchDetails(string terminalId, int batchId)
+        public async Task<IActionResult> BatchDetails()
         {
-            ViewBag.TerminalId = terminalId;
-            ViewBag.BatchId = batchId;
-
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetBatchDetails(string terminalId, int batchId)
+        {
             var batchDetails = await _merchantFinancialService.GetBatchDetails(terminalId, batchId);
-            return View(batchDetails);
+            return Json(batchDetails);
         }
 
         public async Task<IActionResult> TerminalDetails(string terminalId)

@@ -120,12 +120,13 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetBatchDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            batchDetailsResponse = JsonConvert.DeserializeObject<BatchDetailsResponse>(response);
             var merchantObj = obj["Data"].Value<JArray>();
             List<BatchDetailsResponseData> searchList = merchantObj.ToObject<List<BatchDetailsResponseData>>();
-            batchDetailsResponse.data.AddRange(searchList);
+            batchDetailsResponse.BatchDetailsResponseData.AddRange(searchList);
             return batchDetailsResponse;
         }
-
+      
         public async Task<GetTerminalDetailsResponse> GetTerminalDetails(string terminalId)
         {
             GetTerminalDetailsResponse terminalDetailsResponse = new GetTerminalDetailsResponse();
