@@ -347,16 +347,16 @@ namespace HPCL.Service.Services
 
         public async Task<List<CustomerStateModel>> GetCustStateList()
         {
-            var CustomerStateRequest = new Dictionary<string, string>
+            var request = new GetStatesRequestModel
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"Country", "0"}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CountryID = "0"
             };
 
 
-            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(CustomerStateRequest), Encoding.UTF8, "application/json");
+            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var responseState = await _requestService.CommonRequestService(Statecontent, WebApiUrl.getState);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
@@ -366,7 +366,6 @@ namespace HPCL.Service.Services
             var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
 
             return sortedtList;
-
         }
 
         public async Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber)
