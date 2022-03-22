@@ -204,7 +204,7 @@
         public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_al_otc_card_request";
         public static string getAvailityAlOTCCard = "api/dtplus/merchant/get_availity_al_otc_card";
         public static string insertAlCustomer = "api/dtplus/merchant/insert_al_customer";
-
+        public static string viewAlOTCCardDealerAllocation = "api/dtplus/merchant/view_al_otc_card_dealer_allocation";
         #endregion
 
         #region "Customer Financial"
