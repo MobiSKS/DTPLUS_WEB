@@ -39,6 +39,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         public string FormNumber { get; set; }
         public string CustomerName { get; set; }
+        public string IdProofFrontSRC { get; set; }
 
         //public ValidationResult Validate(ValidationContext validationContext)
         //{

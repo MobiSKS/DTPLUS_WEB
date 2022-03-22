@@ -516,6 +516,7 @@ namespace HPCL_Web.Controllers
                         uploadDoc.FormNumber = FormNumber;
                         uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
                         uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
+                        uploadDoc.IdProofFrontSRC = response.IdProofFront;
                         //uploadDoc.IdProofFront = response.IdProofFront;
                         //uploadDoc.IdProofBack = response.IdProofBack;
                         uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);

@@ -21,7 +21,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Reference Number<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                             @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -29,7 +29,28 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-start">
-                                <div id="resSearch" style="display:none" class="w-100 mb-3"></div>
+                                <div id="resSearch" style="display:none" class="w-100 mb-3">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
+                                        <div class="col-md-6 col-12 px-2">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CustomerName, new { @id = "CustomerName", @class = "form-control", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
+                                        <div class="col-md-6 col-12 px-2">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumber", @class = "form-control", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-center mb-3">
                                 <div class="px-2">
@@ -39,7 +60,7 @@
                                     <a class="btn btn_primary px-4 py-2" href="#" id="btnCancel" name="cancel" onclick="resetClick()" style="background-color:#084693;color:white;">RESET</a>
                                 </div>
                             </div>
-
+                            @Html.HiddenFor(model => Model.IdProofFrontSRC)
                         </form>
                     </div>
                     <div>
@@ -239,6 +260,12 @@
                  $.each(data.proofTypeList, function (i, option) {
                      $("<option/>").val(option.proofTypeId).text(option.proofTypeName).appendTo(".proofType");
                  });
+
+                 
+                 if (@Model.AddressProofType> 0)
+                     document.getElementById("AddressProofType").value = @Model.AddressProofType;
+                 if (@Model.IdProofType> 0)
+                     document.getElementById("IdProofType").value = @Model.IdProofType;
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Proof Type");
@@ -377,69 +404,58 @@
          }
      };
 
-     function OnSuccessUploadDoc(res) {
+ 
+    function OnSuccessUploadDoc(res) {
 
-         console.log(res);
+        console.log(res);
 
-         if (res.searchCustomer.result.success == true) {
+        if (res.searchCustomer.result.success == true) {
 
-             document.getElementById("noRecord").style.display = "none";
+            document.getElementById("noRecord").style.display = "none";
 
-             $("#resSearch div").parent().remove();
+            //$("#resSearch div").parent().remove();
 
-             $("#resSearch").append('<div class="form-group">'
-                 + '<div class="col-xl-6 col-12 px-2">'
-                 + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                 + '<label class="font-weight-normal col-md-5 col-12 mb-0">Cutomer Name</label>'
-                 + '<div class="col-md-7 col-12">'
-                 + '<div class="d-flex align-items-center justify-content-start flex-wrap">'
-                 + ' <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].title + '&nbsp;' + res.searchCustomer.result.data[0].firstName + '&nbsp;' + res.searchCustomer.result.data[0].middleName + '&nbsp;' + res.searchCustomer.result.data[0].lastName + ' ">'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>'
-                 + ' <div class="form-group">'
-                 + ' <div class="col-xl-6 col-12 px-2">'
-                 + '   <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                 + '    <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>'
-                 + '   <div class="col-md-7 col-12">'
-                 + '    <div class="d-flex align-items-center justify-content-start flex-wrap">'
-                 + '   <input type="text" class="form-control" readonly value="' + res.searchCustomer.result.data[0].formNumber + '" >'
-                 + '  </div>'
-                 + ' </div>'
-                 + ' </div>'
-                 + ' </div>'
-                 + '</div>');
+            document.getElementById("CustomerName").value = res.searchCustomer.result.data[0].title + ' ' + res.searchCustomer.result.data[0].firstName + ' ' + res.searchCustomer.result.data[0].middleName + ' ' + res.searchCustomer.result.data[0].lastName;
+            document.getElementById("FormNumber").value = res.searchCustomer.result.data[0].formNumber;
 
-             //$("#resSearch").attr("class", "alert alert-dark");
-             document.getElementById('uploadSection').style.display = 'block';
-             document.getElementById('resSearch').style.display = 'block';
-             $("#CustomerReferenceNoId").prop('readonly', true);
-         } else {
-             document.getElementById('uploadSection').style.display = 'none';
-             document.getElementById('resSearch').style.display = 'none';
-             $("#noRecord").html("");
-             $("#noRecord").append("<span>" + res.searchCustomer.result.message + "</span>");
-             document.getElementById("noRecord").style.display = "block";
-         }
-     };
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('resSearch').style.display = 'block';
+            $("#CustomerReferenceNoId").prop('readonly', true);
+        } else {
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('resSearch').style.display = 'none';
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchCustomer.result.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+    };
 
 
-
-     function OnSuccessUploadDocSave(res) {
-         //debugger;
-         const myArray = res.split(",");
-         console.log(myArray[1]);
-         //alert(res);
-         /*alert(myArray[0]);*/
-         //var customerReferenceNo = $('#CustomerReferenceNo').val();
-         //console.log(customerReferenceNo);
-         window.location.href = "/Customer/SuccessUploadRedirect?customerReferenceNo=" + myArray[1];
-     };
+    function OnSuccessUploadDocSave(res) {
+        //debugger;
+        const myArray = res.split(",");
+        console.log(myArray[1]);
+        //alert(res);
+        /*alert(myArray[0]);*/
+        //var customerReferenceNo = $('#CustomerReferenceNo').val();
+        //console.log(customerReferenceNo);
+        var imagePath = $('#IdProofFrontSRC').val();
+        if (imagePath != "")
+            window.location.href = "/Customer/ValidateNewCustomer";
+        else
+            window.location.href = "/Customer/SuccessUploadRedirect?customerReferenceNo=" + myArray[1];
+    };
 
      function OnFailure(data) {
          alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
-     }
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
 
 </script>
