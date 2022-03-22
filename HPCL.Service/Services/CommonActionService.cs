@@ -347,7 +347,7 @@ namespace HPCL.Service.Services
 
         public async Task<List<CustomerStateModel>> GetCustStateList()
         {
-            var request = new GetStatesRequestModel
+            var requestData = new GetStatesRequestModel()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
@@ -355,8 +355,7 @@ namespace HPCL.Service.Services
                 CountryID = "0"
             };
 
-
-            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
             var responseState = await _requestService.CommonRequestService(Statecontent, WebApiUrl.getState);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
