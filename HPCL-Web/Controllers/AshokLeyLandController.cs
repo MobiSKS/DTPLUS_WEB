@@ -122,5 +122,19 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ViewALOTCCardsDealerMapping()
+        {
+            ViewALOTCCardDealerMappingModel Model = new ViewALOTCCardDealerMappingModel();
+            Model = await _ashokLeyLandService.ViewALOTCCardsDealerMapping();
+
+            return View(Model);
+        }
+
+        public async Task<IActionResult> GetViewALOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var modals = await _ashokLeyLandService.GetViewALOTCCardDealerAllocation(DealerCode, CardNo);
+            return PartialView("~/Views/AshokLeyLand/_ALOTCCardsDealerAllocationTable.cshtml", modals);
+        }
+
     }
 }
