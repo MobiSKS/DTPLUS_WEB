@@ -194,23 +194,34 @@ function showregAddress() {
         document.getElementById("individualName_error").innerHTML = "";
     }
 
+    var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
+
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
         document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field cannot be left blank";
         document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
     else {
-        document.getElementById("individualName_error").innerHTML = "";
-    }
 
-    if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
-        document.getElementById("individualName_error").innerHTML = "Name can not be a number";
-        document.applicationForm.IndividualOrgName.focus();
-        return false;
+        if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.applicationForm.IndividualOrgName.focus();
+            return false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+
+        if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.applicationForm.IndividualOrgName.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
     }
-    else {
-        document.getElementById("individualName_error").innerHTML = "";
-    }
+        
 
     if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
         document.getElementById("nameOnCard_error").innerHTML = "CardName field cannot be left blank";
@@ -218,17 +229,25 @@ function showregAddress() {
         return ret;
     }
     else {
-        document.getElementById("nameOnCard_error").innerHTML = "";
-    }
+        if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.applicationForm.CustomerNameOnCard.focus();
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
 
-    if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
-        document.getElementById("nameOnCard_error").innerHTML = "Name On Card can not be a number";
-        document.applicationForm.CustomerNameOnCard.focus();
-        return false;
+        if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.applicationForm.CustomerNameOnCard.focus();
+            return ret;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
     }
-    else {
-        document.getElementById("nameOnCard_error").innerHTML = "";
-    }
+    
 
     if (document.applicationForm.CustomerTbentityID.value == "0") {
         document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
@@ -463,6 +482,7 @@ function showregAddress() {
         }
     }
 
+    
     if (ret == false)
         return ret;
 
@@ -859,6 +879,7 @@ function showOfficialDetails() {
         return false;
     }
     else {
+        document.getElementById("PanCardRemarks").value = "";
         document.getElementById("lblPanCardRemarks").style.display = "none";
         document.getElementById("PanCardRemarks").style.display = "none";
     }
@@ -1587,4 +1608,33 @@ else {
     document.getElementById("captcha_error").innerHTML = "";
 }
 
+}
+
+function GetClientConfirmation(o) {
+    debugger;
+    var selectedButton = o.innerText;
+
+    console.log(selectedButton);
+
+    if (selectedButton == "OK") {
+        $('#AllowPanDuplication').val('Y');
+        $("#PanCardRemarks").prop('readonly', false);
+        document.getElementById("lblPanCardRemarks").style.display = "block";
+        document.getElementById("PanCardRemarks").style.display = "block";
+        document.getElementById("officialDetails-tab").click();
+        document.getElementById("officialDetails-tab").classList.remove("disable");
+        localStorage.setItem("keyOfficial", true)
+        localStorage.removeItem("showregAddress")
+    }
+    else {
+        $('#AllowPanDuplication').val('N');
+        $("#PanCardRemarks").prop('readonly', true);
+        document.getElementById("lblPanCardRemarks").style.display = "none";
+        document.getElementById("PanCardRemarks").style.display = "none";
+        document.getElementById("address-tab").click();
+        document.getElementById("address-tab").classList.remove("disable");
+        localStorage.setItem("showregAddress", true)
+    }
+    console.log($('#AllowPanDuplication').val());
+    $('#panvalidation').modal('hide');
 }

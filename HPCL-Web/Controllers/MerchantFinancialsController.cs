@@ -46,10 +46,6 @@ namespace HPCL_Web.Controllers
             return View();
         }
      
-        public async Task<IActionResult> TransactionDetails()
-        {
-            return View();
-        }
         public async Task<IActionResult> ViewEarningBreakUp()
         {
             return View();
@@ -93,6 +89,18 @@ namespace HPCL_Web.Controllers
         {
             var terminalDetails = await _merchantFinancialService.GetTerminalDetails(terminalId);
             return View(terminalDetails);
+        }
+
+        public IActionResult TransactionDetails()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> TransactionDetails(GetTransactionDetails entity)
+        {
+            var searchList = await _merchantFinancialService.GetTransactionlDetails(entity);
+            return Json(new { searchList = searchList });
         }
     }
 }

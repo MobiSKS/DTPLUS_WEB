@@ -11,6 +11,7 @@ using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
+using System;
 
 namespace HPCL_Web.Controllers
 {
@@ -492,12 +493,38 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public IActionResult UploadDoc(string customerReferenceNo)
+        public async Task<IActionResult> UploadDoc(string customerReferenceNo, string FormNumber)
         {
             UploadDoc uploadDoc = new UploadDoc();
+            uploadDoc.CustomerReferenceNo = "";
+            uploadDoc.FormNumber = "";
+            uploadDoc.IdProofType = 0;
+            uploadDoc.AddressProofType = 0;
+            uploadDoc.IdProofDocumentNo = "";
+            uploadDoc.AddressProofDocumentNo = "";
+
             if (!string.IsNullOrEmpty(customerReferenceNo))
             {
                 uploadDoc.CustomerReferenceNo = customerReferenceNo;
+
+                if (!string.IsNullOrEmpty(FormNumber))
+                {
+                    var response = await _customerService.UploadDoc(FormNumber);
+
+                    if (response != null)
+                    {
+                        uploadDoc.FormNumber = FormNumber;
+                        uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
+                        uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
+                        uploadDoc.IdProofFrontSRC = response.IdProofFront;
+                        //uploadDoc.IdProofFront = response.IdProofFront;
+                        //uploadDoc.IdProofBack = response.IdProofBack;
+                        uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
+                        uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
+                        //uploadDoc.AddressProofFront = response.AddressProofFront;
+                        //uploadDoc.AddressProofBack = response.AddressProofBack;
+                    }
+                }
             }
             return View(uploadDoc);
         }
@@ -524,42 +551,6 @@ namespace HPCL_Web.Controllers
         {
             CustomerModel customerModel = new CustomerModel();
             customerModel = await _customerService.ValidateNewCustomer();
-
-
-            //var OfficerType = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")}
-            //    };
-
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(OfficerType), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-
-            //            List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
-
-            //            customerModel.OfficerTypeMdl.AddRange(lst);
-            //        }
-            //        else
-            //        {
-            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //        }
-            //    }
-
-            //}
 
             return View(customerModel);
         }
@@ -978,10 +969,18 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo });
+                return RedirectToAction("ValidateNewCustomer");
             }
 
             return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        {
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, CustomerReferenceNo);
+
+            return Json(result);
         }
 
     }

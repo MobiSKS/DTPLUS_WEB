@@ -139,7 +139,8 @@
         public static string getFormNumber = "api/dtplus/customer/get_form_number";
         public static string checkPanCardByDistrictid = "api/dtplus/customer/check_pan_card_by_district_id";
         public static string gettransactionssummary = "api/dtplus/customer/get_transactions_summary";
-        public static string updateCustomer = "/api/dtplus/customer/update_customer";
+        public static string updateCustomer = "api/dtplus/customer/update_customer";
+        public static string checkPanCardByDistrictIdAndCustomerReferenceno = "api/dtplus/customer/check_pan_card_by_district_id_and_customer_reference_no";
         #endregion
 
         #region Login
@@ -220,6 +221,8 @@
         public static string GetSattlementDetailsUrl = "api/dtplus/merchant/merchant_settlement_detail";
         public static string GetBatchDetailsUrl = "api/dtplus/merchant/merchant_batch_detail";
         public static string GetTerminalDetailsUrl = "api/dtplus/merchant/terminal_detail";
+        public static string GetTransactionDetailsUrl = "api/dtplus/merchant/merchant_transaction_detail";
+        public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
 
         #endregion
     }

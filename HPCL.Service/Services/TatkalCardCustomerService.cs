@@ -121,7 +121,7 @@ namespace HPCL.Service.Services
         public async Task<TatkalViewRequestModel> ViewAllocatedMapCard()
         {
             TatkalViewRequestModel custModel = new TatkalViewRequestModel();
-            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+            custModel.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
 
             string fromDate = "", toDate = "";
             if (!string.IsNullOrEmpty(custModel.FromDate) && !string.IsNullOrEmpty(custModel.FromDate))
