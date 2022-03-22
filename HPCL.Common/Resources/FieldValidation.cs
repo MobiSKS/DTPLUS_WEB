@@ -48,6 +48,10 @@
 
         public const string ValidFormNo = @"^(?!(0))[0-9]{10}$";
         public const string ValidFormNoErrMsg = "Enter valid Form Number";
+
+        public const string ValidTerminalId = @"^(?=(5))[0-9]{10}$";
+        public const string ValidTerminalIdErrMsg = "start with 5 and contains 10 digits";
+
         #endregion
 
         #region "Not Empty Validation"
@@ -56,6 +60,7 @@
         public const string MobNoNotEmpty = "Mobile Number should not be Empty";
         public const string MerchantNotEmpty = "Merchant ID should not be Empty";
         public const string AmountNotEmpty = "Amount should not be Empty";
+        public const string TerminalNotEmpty = "Terminal ID should not be Empty";
         #endregion
     }
 }

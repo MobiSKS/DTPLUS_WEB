@@ -10,5 +10,6 @@ namespace HPCL.Service.Interfaces
         Task<MerchantSettlementDetailsResponse> SettlementDetails(GetMerchantSettlementDetails entity);
         Task<BatchDetailsResponse> GetBatchDetails(string terminalId, int batchId);
         Task<GetTerminalDetailsResponse> GetTerminalDetails(string terminalId);
+        Task<TransactionlDetailsResponse> GetTransactionlDetails(GetTransactionDetails entity);
     }
 }
