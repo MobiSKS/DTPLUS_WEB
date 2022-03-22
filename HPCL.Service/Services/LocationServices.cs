@@ -25,7 +25,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<string> HeadOfficeDetails(HeadOfficeDetails headOfficeDetails)
+        public async Task<HeadOfficeDetailsResponse> HeadOfficeDetails()
         {
             var forms = new Dictionary<string, string>
             {
@@ -34,75 +34,72 @@ namespace HPCL.Service.Services
                 {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
             };
 
-            List<HeadOfficeDetailsResponse> lst = new List<HeadOfficeDetailsResponse>();
+            HeadOfficeDetailsResponse lst = new HeadOfficeDetailsResponse();
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getLocationHq);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            lst = jarr.ToObject<List<HeadOfficeDetailsResponse>>();
+            List<HODResData> hodRes = jarr.ToObject<List<HODResData>>();
+            lst.data.AddRange(hodRes);
+            return lst;
 
 
-            var checkHqCode = lst.Where(x => x.HQCode == headOfficeDetails.HQCode);
+            //if
+            //{
+            //    int hqId = lst.Select(x => x.HQID).FirstOrDefault();
 
-            var checkHqName = lst.Where(x => x.HQCode == headOfficeDetails.HQCode);
+            //    var requestBody = new UpdateHeadOfficeDetails
+            //    {
+            //        HQID= hqId,
+            //        HQCode= headOfficeDetails.HQCode,
+            //        HQName=headOfficeDetails.HQName,
+            //        HQShortName=headOfficeDetails.HQShortName,
+            //        ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            //        UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            //        UserAgent=CommonBase.useragent,
+            //        UserIp=CommonBase.userip
+            //    };
 
-            if (checkHqCode.Count() == 0 || checkHqName.Count() == 0)
+
+            //    StringContent contentUpdate = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            //    var responseUpdate = await _requestService.CommonRequestService(contentUpdate, WebApiUrl.updateHeadOffice);
+
+            //    JObject objUpdate = JObject.Parse(JsonConvert.DeserializeObject(responseUpdate).ToString());
+
+            //    if (obj["Message"].Value<string>() == "Success")
+            //    {
+            //        var jarrUpdate = objUpdate["Data"].Value<JArray>();
+            //        List<SuccessResponse> updateResponse = jarrUpdate.ToObject<List<SuccessResponse>>();
+            //        return updateResponse[0].Reason;
+            //    }
+            //}
+            //return "Isuue with the request";
+        }
+
+        public async Task<string> UpdateHod(HeadOfficeDetailsResponse entity)
+        {
+            var requestBody = new UpdateHeadOfficeDetails
             {
-                var createResponseBody = new HeadOfficeDetails
-                {
-                    HQCode = headOfficeDetails.HQCode,
-                    HQName = headOfficeDetails.HQName,
-                    HQShortName = headOfficeDetails.HQShortName,
-                    CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip
-                };
+                UserAgent=CommonBase.useragent,
+                UserIp=CommonBase.userip,
+                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                HQID= entity.data[0].HQID,
+                HQCode= entity.data[0].HQCode,
+                HQName=entity.data[0].HQName,
+                HQShortName=entity.data[0].HQShortName,
+                ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
 
-                StringContent contentCreate = new StringContent(JsonConvert.SerializeObject(createResponseBody), Encoding.UTF8, "application/json");
-                var responseCreate = await _requestService.CommonRequestService(contentCreate, WebApiUrl.createHeadOffice);
+            StringContent contentUpdate = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var responseUpdate = await _requestService.CommonRequestService(contentUpdate, WebApiUrl.updateHeadOffice);
 
-                JObject objCreate = JObject.Parse(JsonConvert.DeserializeObject(responseCreate).ToString());
+            JObject objUpdate = JObject.Parse(JsonConvert.DeserializeObject(responseUpdate).ToString());
 
-                if (objCreate["Message"].Value<string>() == "Success")
-                {
-                    var jarrCreate = objCreate["Data"].Value<JArray>();
-                    List<SuccessResponse> insertResponse = jarrCreate.ToObject<List<SuccessResponse>>();
-                    return insertResponse[0].Reason;
-                }
-            }
-            else
-            {
-                int hqId = lst.Select(x => x.HQID).FirstOrDefault();
-
-                var requestBody = new UpdateHeadOfficeDetails
-                {
-                    HQID= hqId,
-                    HQCode= headOfficeDetails.HQCode,
-                    HQName=headOfficeDetails.HQName,
-                    HQShortName=headOfficeDetails.HQShortName,
-                    ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent=CommonBase.useragent,
-                    UserIp=CommonBase.userip
-                };
-
-
-                StringContent contentUpdate = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-                var responseUpdate = await _requestService.CommonRequestService(contentUpdate, WebApiUrl.updateHeadOffice);
-
-                JObject objUpdate = JObject.Parse(JsonConvert.DeserializeObject(responseUpdate).ToString());
-
-                if (obj["Message"].Value<string>() == "Success")
-                {
-                    var jarrUpdate = objUpdate["Data"].Value<JArray>();
-                    List<SuccessResponse> updateResponse = jarrUpdate.ToObject<List<SuccessResponse>>();
-                    return updateResponse[0].Reason;
-                }
-            }
-            return "Isuue with the request";
+            var jarrUpdate = objUpdate["Data"].Value<JArray>();
+            List<SuccessResponse> updateResponse = jarrUpdate.ToObject<List<SuccessResponse>>();
+            return updateResponse[0].Reason;
         }
     }
 }

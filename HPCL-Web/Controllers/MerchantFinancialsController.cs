@@ -102,5 +102,14 @@ namespace HPCL_Web.Controllers
             var searchList = await _merchantFinancialService.GetTransactionlDetails(entity);
             return Json(new { searchList = searchList });
         }
+
+        public async Task<IActionResult> SettlementBatchDetails(string terminalId, int batchId)
+        {
+            ViewBag.TerminalId = terminalId;
+            ViewBag.BatchId = batchId;
+
+            var batchDetails = await _merchantFinancialService.GetBatchDetails(terminalId, batchId);
+            return View(batchDetails);
+        }
     }
 }
