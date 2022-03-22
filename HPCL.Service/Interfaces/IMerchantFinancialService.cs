@@ -11,5 +11,6 @@ namespace HPCL.Service.Interfaces
         Task<BatchDetailsResponse> GetBatchDetails(string terminalId, int batchId);
         Task<GetTerminalDetailsResponse> GetTerminalDetails(string terminalId);
         Task<TransactionlDetailsResponse> GetTransactionlDetails(GetTransactionDetails entity);
+        Task<MerchantDeltaReportModel> GetMerchantDeltaReport(string MerchantId, string TerminalId, string FromDate, string ToDate);
     }
 }

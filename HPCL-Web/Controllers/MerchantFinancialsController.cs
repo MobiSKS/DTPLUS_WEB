@@ -111,5 +111,11 @@ namespace HPCL_Web.Controllers
             var batchDetails = await _merchantFinancialService.GetBatchDetails(terminalId, batchId);
             return View(batchDetails);
         }
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantDeltaReport(string MerchantId, string TerminalId,string FromDate,string ToDate)
+        {
+            var batchDetails = await _merchantFinancialService.GetMerchantDeltaReport(MerchantId, TerminalId,FromDate,ToDate);
+            return Json(batchDetails);
+        }
     }
 }

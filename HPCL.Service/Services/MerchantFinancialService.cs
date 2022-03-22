@@ -191,5 +191,42 @@ namespace HPCL.Service.Services
             TransactionlDetailsResponse searchList = obj.ToObject<TransactionlDetailsResponse>();
             return searchList;
         }
+        public async Task<MerchantDeltaReportModel> GetMerchantDeltaReport(string MerchantId, string TerminalId, string FromDate, string ToDate)
+        {
+            MerchantDeltaReportModel MerchantDeltaReport = new MerchantDeltaReportModel();
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                string[] fromDateArr = FromDate.Split("-");
+                string[] toDateArr = ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+
+            }
+            var reqBody = new GetDeltaReport
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                TerminalId = TerminalId,
+                MerchantId = MerchantId,
+                FromDate=fromDate,
+                ToDate=toDate
+            };
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getmerchantsalereloaddeltadetail);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response,settings).ToString());
+            MerchantDeltaReport = JsonConvert.DeserializeObject<MerchantDeltaReportModel>(response,settings);
+            var merchantObj = obj["Data"].Value<JArray>();
+            List<MerchantDeltaReportDetails> searchList = merchantObj.ToObject<List<MerchantDeltaReportDetails>>();
+            MerchantDeltaReport.MerchantDeltaReportDetails.AddRange(searchList);
+            return MerchantDeltaReport;
+        }
     }
 }
