@@ -237,7 +237,7 @@ namespace HPCL.Service.Services
                 cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
-                                                
+
                 cust.SalesAreaMdl.AddRange(await _commonActionService.GetSalesAreaDropdown(cust.CustomerRegionID.ToString()));
 
                 cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
@@ -251,7 +251,7 @@ namespace HPCL.Service.Services
                 cust.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
 
                 cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
-                
+
                 cust.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.PerOrRegAddressStateID.ToString()));
             }
 
@@ -278,7 +278,7 @@ namespace HPCL.Service.Services
 
             return lstCustomerType;
         }
-        
+
         public async Task<List<VehicleTypeModel>> GetVehicleTypeDetails()
         {
             var request = new BaseEntity()
@@ -704,7 +704,7 @@ namespace HPCL.Service.Services
             var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
             return SortedtList;
         }
-                
+
         public async Task<CustomerBalanceInfoModel> BalanceInfo()
         {
             CustomerBalanceInfoModel custMdl = new CustomerBalanceInfoModel();
@@ -1224,6 +1224,30 @@ namespace HPCL.Service.Services
             }
 
             return cust;
+        }
+
+        public async Task<UploadDocResponseBody> UploadDoc(string FormNumber)
+        {
+            UploadDocResponseBody UploadDocResponseBody = new UploadDocResponseBody();
+
+            if (!string.IsNullOrEmpty(FormNumber))
+            {
+                JObject obj = await ViewCustomerDetails(FormNumber);
+
+                var searchRes = obj["Data"].Value<JObject>();
+                var custResult = searchRes["GetCustomerDetails"].Value<JArray>();
+
+                var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
+
+                List<CustomerFullDetails> customerList = custResult.ToObject<List<CustomerFullDetails>>();
+
+                List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
+                UploadDocResponseBody = UploadDocList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+
+            }
+
+            return UploadDocResponseBody;
         }
 
     }

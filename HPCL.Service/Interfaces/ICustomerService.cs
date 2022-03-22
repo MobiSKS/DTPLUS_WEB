@@ -35,5 +35,6 @@ namespace HPCL.Service.Interfaces
         Task<string> GenerateFormNumber();
         Task<CustomerModel> UpdateCustomer(string FormNumber);
         Task<CustomerModel> UpdateCustomer(CustomerModel cust);
+        Task<UploadDocResponseBody> UploadDoc(string FormNumber);
     }
 }

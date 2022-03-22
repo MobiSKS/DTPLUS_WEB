@@ -950,6 +950,9 @@
                                             <a id="btnUpdateCustomer" class="btn btn_primary py-2 px-4" onclick="updateCustomer()">UPDATE CUSTOMER</a>
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                            <a id="btnUpdateKYCDocuments" class="btn btn_primary py-2 px-4" onclick="updateKYCDocuments()">UPDATE KYC Documents</a>
+                                        </div>
+                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer()" href="#">VALIDATE</a>@*href="#CustomerCardsSection"*@
                                             @*<button class="btn" id="=btnApprove" name="btnApprove" style="background-color:#084693;color:white;" onclick="ApproveCustomer()">VALIDATE</button>*@
                                             <span class="error" id="Referenceno_error"></span>
@@ -1261,6 +1264,7 @@
                 $('#AreaOfOperation').val(res.customer.areaOfOperation);
                 //$('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
                 //$('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOB);
+                $('#CustomerReferenceNoForSearch').val(res.customer.customerReferenceNo);
 
                 const dateDOB = new Date(res.customer.keyOfficialDOB);
                 //$('#applicationDate').val(dateObj.getDate());
@@ -1607,6 +1611,17 @@
         var formNo = $('#FormNumberForSearch').val();
         var link = '@Url.Action("UpdateCustomer", "Customer", new { FormNumber = "-1" })';
         link = link.replace("-1", formNo);
+        window.location.href = link;
+    };
+    function updateKYCDocuments() {
+        console.log($('#FormNumberForSearch').val());
+        var formNo = $('#FormNumberForSearch').val();
+        var customerReferenceNoForSearch = $('#CustomerReferenceNoForSearch').val();
+
+        var link = '@Html.Raw(Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "-1", FormNumber="-2" }))';
+        link = link.replace("-1", customerReferenceNoForSearch);
+        link = link.replace("-2", formNo);
+        console.log(link);
         window.location.href = link;
     };
 </script>
