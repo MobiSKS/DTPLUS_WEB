@@ -14,7 +14,7 @@
         //public static string getLocationZone = "api/dtplus/settings/get_zone";
         //public static string getLocationRegion = "api/dtplus/settings/get_region";
         public static string getLocationHq = "api/dtplus/hq/get_hq";
-        public static string getState = "​api​/dtplus​/state​/get_state";
+        public static string getState = "api/dtplus/state/get_state";
         public static string getDistrict = "api/dtplus/district/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";

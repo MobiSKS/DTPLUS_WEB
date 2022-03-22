@@ -1,23 +1,85 @@
-﻿@model HPCL.Common.Models.ResponseModel.MerchantFinancial.BatchDetailsResponse
+﻿@model IEnumerable<HPCL.Common.Models.CommonEntity.ResponseEnities.ZonalOfficeResponseModal>
 @using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Financial</a> </li>
-            <li class="breadcrumb-item font-weight-light">Batch Details</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Locations</a> </li>
+            <li class="breadcrumb-item font-weight-light">Zonal Office Details</li>
         </ul>
+ 
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Zonal Office Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
 
-        <div class="w-100">
-            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                <div class="border-1 rounded border-grey pb-3">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Batch Details</p>
+                            @*<div class="clearfix"></div>*@
+
+                            <div class="table-responsive" id="tblResponse">
+                                <table id="ZonalOfficeListTbl" class="datatable table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="display:inline-table;width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>S No.</th>
+                                            <th>Zonal Office Code</th>
+                                            <th>Zonal Office ERP Code</th>
+                                            <th>Short Name</th>
+                                            <th>Zonal Office Name</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="ZonalOfficeList">
+                                        @{
+                                            int sno = 0;
+                                        }
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @{ sno++; }
+                                                    @sno
+                                                </td>
+                                                <td>@item.ZonalOfficeCode</td>
+                                                <td>@item.ZonalOfficeERPCode</td>
+                                                <td>@item.ZonalOfficeShortName</td>
+                                                <td>@item.ZonalOfficeName</td>
+                                                <td>
+                                                    <a><img src="./assets/images/EditForm.png" /></a>
+                                                </td>
+                                                <td>
+                                                    <a><img src="./assets/images/edit_record.png" /></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
 
 
+                                </table>
+                            </div>
 
-
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
             </div>
-        </div>
+        <div class="clearfix"></div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#ZonalOfficeListTbl table').DataTable({
+            paging: true,
+            searching: false,
+            stateSave: true,
+            "bDestroy": true,
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+            "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+</script>
