@@ -184,9 +184,8 @@
                                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">State <sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
-                                                            <select name="StateID" id="" class="form-control stateVal">
-                                                                <option selected="selected" value="-1">--Select--</option>
-                                                            </select>
+                                                            @Html.DropDownListFor(m => m.StateID, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control stateVal" })
+                                                            @Html.ValidationMessageFor(m => m.StateID, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -198,9 +197,7 @@
                                                     <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
-                                                            <select name="DistrictID" id="" class="form-control distVal">
-                                                                <option selected="selected" value="-1">--Select--</option>
-                                                            </select>
+                                                            @Html.DropDownListFor(m => m.DistrictID, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control distVal" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -257,7 +254,7 @@
                                                 <button class="btn btn_primary" type="submit">Search</button>
                                             </div>
                                             <div class="px-2">
-                                                <button class="btn btn_primary" type="button">Reset</button>
+                                                <button class="btn btn_primary" type="button" onclick="resetClickMer()">Reset</button>
                                             </div>
                                         </div>
 
@@ -330,6 +327,9 @@
 
 <script type="text/javascript">
 
+    function resetClickMer() {
+        location.reload();
+    }
 
     $(document).ready(function () {
 
@@ -367,6 +367,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".distVal").html("");
+                        $('<option>--Select--</option>').appendTo(".distVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -454,6 +455,7 @@
             document.getElementById("searchMerchantId").style.display = "block";
         } else {
             $("#noRecord").html("");
+            $("#noRecordMerchant").html("");
             $("#noRecordMerchant").append("<span>" + res.merchantList.message + "</span>");
             document.getElementById("noRecord").style.display = "none";
             document.getElementById("noRecordMerchant").style.display = "block";

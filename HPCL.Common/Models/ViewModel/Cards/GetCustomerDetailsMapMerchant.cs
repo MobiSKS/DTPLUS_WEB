@@ -11,6 +11,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerID { get; set; }
         public string MerchantID { get; set; }
+        [Required(ErrorMessage = "Please Select State")]
         public string StateID { get; set; }
         public string DistrictID { get; set; }
         public string City { get; set; }
