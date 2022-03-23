@@ -233,6 +233,7 @@
         public static string GetCityUrl = "api/dtplus/city/get_city";
         public static string DeleteCityUrl = "api/dtplus/city/delete_city";
         public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
+        public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
 
         #endregion
     }
