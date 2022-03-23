@@ -156,35 +156,35 @@
         #endregion
 
         #region DriverCard
-        public static string insertDriverCardRequest = "api/dtplus/customer/insert_driver_card_request";
-        public static string getAllUnAllocatedCardsForDriverCard = "api/dtplus/merchant/get_all_un_allocated_cards_for_driver_card";
-        public static string allocatedDriverCardToMerchant = "api/dtplus/merchant/allocated_driver_card_to_merchant";
-        public static string getAvailityDriverCard = "api/dtplus/merchant/get_availity_driver_card";
-        public static string insertDriverCardCustomer = "api/dtplus/merchant/insert_driver_card_customer";
+        public static string insertDriverCardRequest = "api/dtplus/driver/insert_driver_card_request";
+        public static string getAllUnAllocatedCardsForDriverCard = "api/dtplus/driver/get_all_un_allocated_cards_for_driver_card";
+        public static string allocatedDriverCardToMerchant = "api/dtplus/driver/allocated_driver_card_to_merchant";
+        public static string getAvailityDriverCard = "api/dtplus/driver/get_availity_driver_card";
+        public static string insertDriverCardCustomer = "api/dtplus/driver/insert_driver_card_customer";
         public static string getcustomerNameByCustomerId = "api/dtplus/customer/get_customer_name_by_customer_id";
-        public static string ViewRequestDriverCard = "api/dtplus/merchant/view_requested_driver_card";
-        public static string viewDriverCardMerchantAllocation = "api/dtplus/merchant/view_driver_card_merchant_allocation";
-        public static string getdrivercardallocationactivation = "api/dtplus/customer/get_driver_card_allocation_activation";
-        public static string insertDealerWiseDriverCardRequest = "api/dtplus/merchant/insert_dealer_wise_driver_card_request";
+        public static string ViewRequestDriverCard = "api/dtplus/driver/view_requested_driver_card";
+        public static string viewDriverCardMerchantAllocation = "api/dtplus/driver/view_driver_card_merchant_allocation";
+        public static string getdrivercardallocationactivation = "api/dtplus/driver/get_driver_card_allocation_activation";
+        public static string insertDealerWiseDriverCardRequest = "api/dtplus/driver/insert_dealer_wise_driver_card_request";
         #endregion
 
         #region MyHpOTCCardCustomer
-        public static string insertOTCCardRequest = "api/dtplus/customer/insert_otc_card_request";
+        public static string insertOTCCardRequest = "api/dtplus/otc/insert_otc_card_request";
         public static string searchMerchantForCardCreation = "api/dtplus/merchant/search_merchant_for_card_creation";
-        public static string getAvailityOtcCard = "api/dtplus/merchant/get_availity_otc_card";
-        public static string insertOtcCustomer = "api/dtplus/merchant/insert_otc_customer";
+        public static string getAvailityOtcCard = "api/dtplus/otc/get_availity_otc_card";
+        public static string insertOtcCustomer = "api/dtplus/otc/insert_otc_customer";
         public static string verifyMerchantByMerchantidAndRegionalid = "api/dtplus/merchant/verify_merchant_by_merchant_id_and_regional_id";
-        public static string getAllUnAllocatedCardsForOtcCard = "api/dtplus/merchant/get_all_un_allocated_cards_for_otc_card";
-        public static string allocatedOtcCardToMerchant = "api/dtplus/merchant/allocated_otc_card_to_merchant";
-        public static string ViewOTCCardRequest = "api/dtplus/merchant/view_requested_otc_card";
-        public static string viewOtcCardMerchantAllocation = "api/dtplus/merchant/view_otc_card_merchant_allocation";
-        public static string getotccardallocationactivation = "api/dtplus/customer/get_otc_card_allocation_activation";
-        public static string insertDealerWiseOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_otc_card_request";
+        public static string getAllUnAllocatedCardsForOtcCard = "api/dtplus/otc/get_all_un_allocated_cards_for_otc_card";
+        public static string allocatedOtcCardToMerchant = "api/dtplus/otc/allocated_otc_card_to_merchant";
+        public static string ViewOTCCardRequest = "api/dtplus/otc/view_requested_otc_card";
+        public static string viewOtcCardMerchantAllocation = "api/dtplus/otc/view_otc_card_merchant_allocation";
+        public static string getotccardallocationactivation = "api/dtplus/otc/get_otc_card_allocation_activation";
+        public static string insertDealerWiseOtcCardRequest = "api/dtplus/otc/insert_dealer_wise_otc_card_request";
         #endregion
 
         #region TatkalCardCustomer
-        public static string insertTatkalCardRequest = "api/dtplus/customer/insert_tatkal_card_request";
-        public static string insertTatkalCardCustomer = "api/dtplus/customer/insert_tatkal_card_customer";
+        public static string insertTatkalCardRequest = "api/dtplus/tatkal/insert_tatkal_card_request";
+        public static string insertTatkalCardCustomer = "api/dtplus/tatkal/insert_tatkal_card_customer";
         #endregion
 
         #region Terminal
