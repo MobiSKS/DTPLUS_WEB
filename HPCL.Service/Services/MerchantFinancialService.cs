@@ -242,8 +242,10 @@ namespace HPCL.Service.Services
                 string[] fromDateArr = Model.FromDate.Split("-");
                 string[] toDateArr = Model.ToDate.Split("-");
 
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                //fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                //toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                fromDate = fromDateArr[0] + "-" + fromDateArr[1] + "-" + fromDateArr[2];
+                toDate = toDateArr[0] + "-" + toDateArr[1] + "-" + toDateArr[2];
             }
             else
             {

@@ -20,8 +20,9 @@ namespace HPCL.Common.Models.ViewModel.MerchantFinancials
 
     public class MerchantERPReloadSaleEarningDetails
     {
-        public string TerminalID { get; set; }
-        public string BatchID { get; set; }
+        public string SrNumber { get; set; }
+        public string TerminalId { get; set; }
+        public string BatchId { get; set; }
         public string SettlementDate { get; set; }
         public string Sale { get; set; }
         public string Reload { get; set; }
