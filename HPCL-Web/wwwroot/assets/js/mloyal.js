@@ -223,13 +223,13 @@ function showregAddress() {
         
 
     if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
-        document.getElementById("nameOnCard_error").innerHTML = "CardName field cannot be left blank";
+        document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
         document.applicationForm.CustomerNameOnCard.focus();
         return ret;
     }
     else {
         if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
-            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field is not valid";
             document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
@@ -238,7 +238,7 @@ function showregAddress() {
         }
 
         if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
-            document.getElementById("nameOnCard_error").innerHTML = "CardName field is not valid";
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field is not valid";
             document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
