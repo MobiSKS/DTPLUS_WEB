@@ -748,7 +748,7 @@ function showOfficialDetails() {
 
 
     if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No is already used";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
         return (false);
     }
     else {
