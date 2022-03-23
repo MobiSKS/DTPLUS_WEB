@@ -8,6 +8,7 @@ using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ViewModel.Locations;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -257,7 +258,6 @@ namespace HPCL.Service.Services
 
         public async Task<List<StateResponseModal>> GetStateList()
         {
-
             var officerStateForms = new StateRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -1053,5 +1053,39 @@ namespace HPCL.Service.Services
             return responseData;
         }
 
+        public async Task<List<GetCountryRegionResponse>> GetCountryRegion()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ZonalId = "0"
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCountryRegionUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetCountryRegionResponse> countryRegionList = jarr.ToObject<List<GetCountryRegionResponse>>();
+            return countryRegionList;
+        }
+
+        public async Task<List<GetCityResponse>> GetCity()
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCityUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetCityResponse> cityList = jarr.ToObject<List<GetCityResponse>>();
+            return cityList;
+        }
     }
 }

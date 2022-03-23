@@ -44,38 +44,6 @@ namespace HPCL.Service.Services
             List<HODResData> hodRes = jarr.ToObject<List<HODResData>>();
             lst.data.AddRange(hodRes);
             return lst;
-
-
-            //if
-            //{
-            //    int hqId = lst.Select(x => x.HQID).FirstOrDefault();
-
-            //    var requestBody = new UpdateHeadOfficeDetails
-            //    {
-            //        HQID= hqId,
-            //        HQCode= headOfficeDetails.HQCode,
-            //        HQName=headOfficeDetails.HQName,
-            //        HQShortName=headOfficeDetails.HQShortName,
-            //        ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-            //        UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
-            //        UserAgent=CommonBase.useragent,
-            //        UserIp=CommonBase.userip
-            //    };
-
-
-            //    StringContent contentUpdate = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            //    var responseUpdate = await _requestService.CommonRequestService(contentUpdate, WebApiUrl.updateHeadOffice);
-
-            //    JObject objUpdate = JObject.Parse(JsonConvert.DeserializeObject(responseUpdate).ToString());
-
-            //    if (obj["Message"].Value<string>() == "Success")
-            //    {
-            //        var jarrUpdate = objUpdate["Data"].Value<JArray>();
-            //        List<SuccessResponse> updateResponse = jarrUpdate.ToObject<List<SuccessResponse>>();
-            //        return updateResponse[0].Reason;
-            //    }
-            //}
-            //return "Isuue with the request";
         }
 
         public async Task<string> UpdateHod(HeadOfficeDetailsResponse entity)
@@ -100,6 +68,25 @@ namespace HPCL.Service.Services
             var jarrUpdate = objUpdate["Data"].Value<JArray>();
             List<SuccessResponse> updateResponse = jarrUpdate.ToObject<List<SuccessResponse>>();
             return updateResponse[0].Reason;
+        }
+
+        public async Task<string> DeleteCity(int cityId)
+        {
+            var requestData = new DeleteCItyReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CityID = cityId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteCityUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
         }
     }
 }

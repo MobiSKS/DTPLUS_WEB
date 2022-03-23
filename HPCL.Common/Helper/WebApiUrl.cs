@@ -225,7 +225,13 @@
         public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
         public static string getmerchantsalereloaddeltadetail = "api/dtplus/merchant/merchant_sale_reload_delta_detail";
 
+        #endregion
 
+        #region "Locations"
+
+        public static string GetCountryRegionUrl = "api/dtplus/countryregion/get_country_region";
+        public static string GetCityUrl = "api/dtplus/city/get_city";
+        public static string DeleteCityUrl = "api/dtplus/city/delete_city";
 
         #endregion
     }
