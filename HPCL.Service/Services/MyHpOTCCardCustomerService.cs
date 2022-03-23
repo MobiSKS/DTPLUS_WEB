@@ -192,7 +192,7 @@ namespace HPCL.Service.Services
 
             return customerModel;
         }
-               
+   
         public async Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId)
         {
             OTCUnAllocatedCardsResponse responseData = new OTCUnAllocatedCardsResponse();
