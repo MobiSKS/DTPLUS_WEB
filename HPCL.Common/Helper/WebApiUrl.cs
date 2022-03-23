@@ -62,12 +62,12 @@
         public static string GetCustMapDetailsUrl = "api/dtplus/customer/get_customer_details_for_mapping_card_merchant";
         public static string GetMerchantForMapUrl = "api/dtplus/customer/get_merchant_for_card_mapping";
         public static string SaveCustomerMerchantMapUrl = "api/dtplus/customer/add_customer_card_merchant_mapping";
-        public static string TerminalInstallationRequestUrl = "api/dtplus/merchant/search_for_terminal_installation_request";
-        public static string InsertInstallationRequestUrl = "api/dtplus/merchant/insert_terminal_installation_request";
+        public static string TerminalInstallationRequestUrl = "api/dtplus/terminal/search_for_terminal_installation_request";
+        public static string InsertInstallationRequestUrl = "api/dtplus/terminal/insert_terminal_installation_request";
         public static string MappingAllowedCardsToMerchantUrl = "api/dtplus/customer/get_mapping_user_cards_to_merchants";
 
-        public static string GetTerminalInstallReqAppUrl = "api/dtplus/merchant/get_terminal_installation_request_approval";
-        public static string ApproveRejectTerminalUrl= "api/dtplus/merchant/insert_terminal_installation_request_approval";
+        public static string GetTerminalInstallReqAppUrl = "api/dtplus/terminal/get_terminal_installation_request_approval";
+        public static string ApproveRejectTerminalUrl= "api/dtplus/terminal/insert_terminal_installation_request_approval";
         #endregion
 
         #region Merchant
@@ -81,19 +81,19 @@
         public static string approveRejectMerchant = "api/dtplus/merchant/approve_reject_merchant";
         public static string getRejectedMerchant = "api/dtplus/merchant/get_rejected_merchant";
         public static string getMerchantbyERPCode = "api/dtplus/merchant/get_merchant_by_erp_code";
-        public static string searchforterminalinstallationrequestclose = "api/dtplus/merchant/search_for_terminal_installation_request_close";
-        public static string getreasonlist = "api/dtplus/merchant/get_reason_list";
-        public static string updateterminalinstallationrequestclose = "api/dtplus/merchant/update_terminal_installation_request_close";
-        public static string viewterminalinstallationrequeststatus = "api/dtplus/merchant/view_terminal_installation_request_status";
-        public static string getterminaldeinstallationrequest = "api/dtplus/merchant/get_terminal_de_installation_request";
-        public static string updateterminaldeinstalrequest = "api/dtplus/merchant/update_terminal_de_instal_request";
-        public static string getterminaldeinstallationrequestclose = "api/dtplus/merchant/get_terminal_de_installation_request_close";
-        public static string terminaldeinstalupdaterequestclose = "api/dtplus/merchant/terminal_de_instal_update_request_close";
-        public static string viewterminaldeinstallationrequeststatus = "api/dtplus/merchant/view_terminal_de_installation_request_status";
-        public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/get_problematic_de_installed_to_deinstalled";
-        public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/merchant/insert_problematic_de_installed_to_deinstalled";
+        public static string searchforterminalinstallationrequestclose = "api/dtplus/terminal/search_for_terminal_installation_request_close";
+        public static string getreasonlist = "api/dtplus/terminal/get_reason_list";
+        public static string updateterminalinstallationrequestclose = "api/dtplus/terminal/update_terminal_installation_request_close";
+        public static string viewterminalinstallationrequeststatus = "api/dtplus/terminal/view_terminal_installation_request_status";
+        public static string getterminaldeinstallationrequest = "api/dtplus/terminal/get_terminal_de_installation_request";
+        public static string updateterminaldeinstalrequest = "api/dtplus/terminal/update_terminal_de_instal_request";
+        public static string getterminaldeinstallationrequestclose = "api/dtplus/terminal/get_terminal_de_installation_request_close";
+        public static string terminaldeinstalupdaterequestclose = "api/dtplus/terminal/terminal_de_instal_update_request_close";
+        public static string viewterminaldeinstallationrequeststatus = "api/dtplus/terminal/view_terminal_de_installation_request_status";
+        public static string getproblematicdeinstalledtodeinstalled = "api/dtplus/terminal/get_problematic_de_installed_to_deinstalled";
+        public static string insertproblematicdeinstalledtodeinstalled = "api/dtplus/terminal/insert_problematic_de_installed_to_deinstalled";
         public static string searchMerchant = "api/dtplus/merchant/search_merchant";
-        public static string searchTerminal = "api/dtplus/merchant/search_terminal";
+        public static string searchTerminal = "api/dtplus/terminal/search_terminal";
         public static string getMerchantStatusList = "api/dtplus/merchant/get_merchant_status";
         
         #endregion
@@ -187,27 +187,27 @@
         public static string insertTatkalCardCustomer = "api/dtplus/customer/insert_tatkal_card_customer";
         #endregion
 
-        #region "Terminal"
-        public static string getTerminalDeInstallationRequestApproval = "api/dtplus/merchant/get_terminal_de_installation_request_approval";
-        public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/merchant/insert_terminal_de_installation_request_approval";
-        public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/get_terminal_de_installation_request_authorization";
-        public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/merchant/insert_terminal_de_installation_request_authorization";
-        public static string ManageTerminalUrl = "api/dtplus/merchant/get_manage_terminal_detail";
+        #region Terminal
+        public static string getTerminalDeInstallationRequestApproval = "api/dtplus/terminal/get_terminal_de_installation_request_approval";
+        public static string updateTerminalDeInstallationRequestApproval = "api/dtplus/terminal/insert_terminal_de_installation_request_approval";
+        public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/get_terminal_de_installation_request_authorization";
+        public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/insert_terminal_de_installation_request_authorization";
+        public static string ManageTerminalUrl = "api/dtplus/terminal/get_manage_terminal_detail";
         #endregion
 
-        #region "AshokLeyLand"
+        #region AshokLeyLand
 
-        public static string InsertAlDetailsUrl = "api/dtplus/officer/insert_al_dealer_enrollment";
-        public static string UpdateAlDetailsUrl = "api/dtplus/officer/update_al_dealer_enrollment";
-        public static string getDelerNameUrl = "api/dtplus/officer/get_al_dealer_detail";
-        public static string checkDealerCode = "api/dtplus/officer/check_dealer_code";
-        public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/merchant/insert_dealer_wise_al_otc_card_request";
-        public static string getAvailityAlOTCCard = "api/dtplus/merchant/get_availity_al_otc_card";
-        public static string insertAlCustomer = "api/dtplus/merchant/insert_al_customer";
-        public static string viewAlOTCCardDealerAllocation = "api/dtplus/merchant/view_al_otc_card_dealer_allocation";
+        public static string InsertAlDetailsUrl = "api/dtplus/ashokleyland/insert_al_dealer_enrollment";
+        public static string UpdateAlDetailsUrl = "api/dtplus/ashokleyland/update_al_dealer_enrollment";
+        public static string getDelerNameUrl = "api/dtplus/ashokleyland/get_al_dealer_detail";
+        public static string checkDealerCode = "api/dtplus/ashokleyland/check_dealer_code";
+        public static string insertDealerWiseAlOtcCardRequest = "api/dtplus/ashokleyland/insert_dealer_wise_al_otc_card_request";
+        public static string getAvailityAlOTCCard = "api/dtplus/ashokleyland/get_availity_al_otc_card";
+        public static string insertAlCustomer = "api/dtplus/ashokleyland/insert_al_customer";
+        public static string viewAlOTCCardDealerAllocation = "api/dtplus/ashokleyland/view_al_otc_card_dealer_allocation";
         #endregion
 
-        #region "Customer Financial"
+        #region Customer Financial
 
         public static string GetCardToCCMSTransferUrl = "api/dtplus/card/get_card_to_ccms_balance_transfer";
         public static string GetCCMSToCardTransferUrl = "api/dtplus/card/get_ccms_to_card_balance_transfer";
@@ -215,19 +215,19 @@
 
         #endregion
 
-        #region "Merchant Financial"
+        #region Merchant Financial
 
         public static string GetUploadMerchantCautionLimitUrl = "api/dtplus/merchant/view_merchant_caution_limit";
         public static string GetSattlementDetailsUrl = "api/dtplus/merchant/merchant_settlement_detail";
         public static string GetBatchDetailsUrl = "api/dtplus/merchant/merchant_batch_detail";
-        public static string GetTerminalDetailsUrl = "api/dtplus/merchant/terminal_detail";
+        public static string GetTerminalDetailsUrl = "api/dtplus/terminal/terminal_detail";
         public static string GetTransactionDetailsUrl = "api/dtplus/merchant/merchant_transaction_detail";
         public static string GetTransationTypeUrl = "api/dtplus/settings/get_transaction_type";
         public static string getmerchantsalereloaddeltadetail = "api/dtplus/merchant/merchant_sale_reload_delta_detail";
 
         #endregion
 
-        #region "Locations"
+        #region Locations
 
         public static string GetCountryRegionUrl = "api/dtplus/countryregion/get_country_region";
         public static string GetCityUrl = "api/dtplus/city/get_city";
