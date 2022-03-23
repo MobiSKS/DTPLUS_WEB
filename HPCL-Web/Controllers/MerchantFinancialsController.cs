@@ -21,10 +21,6 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ERPReloadSaleEarningDetails()
-        {
-            return View();
-        }
         public async Task<IActionResult> MerchantAccountStatement()
         {
             return View();
@@ -116,6 +112,12 @@ namespace HPCL_Web.Controllers
         {
             var batchDetails = await _merchantFinancialService.GetMerchantDeltaReport(MerchantId, TerminalId,FromDate,ToDate);
             return Json(batchDetails);
+        }
+
+        public async Task<IActionResult> ERPReloadSaleEarningDetails(MerchantERPReloadSaleEarningModel Model)
+        {
+            var modals = await _merchantFinancialService.ERPReloadSaleEarningDetails(Model);
+            return View(modals);
         }
     }
 }

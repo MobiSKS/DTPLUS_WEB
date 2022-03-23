@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.MerchantFinancials;
 using HPCL.Common.Models.ResponseModel.CustomerFinancial;
 using HPCL.Common.Models.ResponseModel.MerchantFinancial;
 using HPCL.Common.Models.ViewModel.MerchantFinancials;
@@ -228,5 +229,49 @@ namespace HPCL.Service.Services
             MerchantDeltaReport.MerchantDeltaReportDetails.AddRange(searchList);
             return MerchantDeltaReport;
         }
+
+        public async Task<MerchantERPReloadSaleEarningModel> ERPReloadSaleEarningDetails(MerchantERPReloadSaleEarningModel Model)
+        {
+            string fromDate = "", toDate = "";
+
+            Model.SaleEarningDetails = new List<MerchantERPReloadSaleEarningDetails>();
+            Model.Message = "";
+
+            if (!string.IsNullOrEmpty(Model.FromDate) && !string.IsNullOrEmpty(Model.ToDate))
+            {
+                string[] fromDateArr = Model.FromDate.Split("-");
+                string[] toDateArr = Model.ToDate.Split("-");
+
+                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(Model.TerminalOrMerchant))
+                    Model.TerminalOrMerchant = "Merchant";
+                return Model;
+            }
+            var requestData = new MerchantERPReloadSaleEarningRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = fromDate,
+                ToDate = toDate,
+                MerchantId = Model.TerminalOrMerchant == "Merchant" ? Model.MerchantId : "",
+                TerminalId = Model.TerminalOrMerchant == "Terminal" ? Model.MerchantId : ""
+            };
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.merchantErpReloadSaleEarningDetail);
+
+            JObject Obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            Model.Message = Obj["Message"].ToString();
+            var Jarr = Obj["Data"].Value<JArray>();
+            List<MerchantERPReloadSaleEarningDetails> list = Jarr.ToObject<List<MerchantERPReloadSaleEarningDetails>>();
+            Model.SaleEarningDetails.AddRange(list);
+            return Model;
+        }
+
     }
 }
