@@ -56,5 +56,7 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerSubTypeModel>> GetCustomerSubTypeDropdown(int CustomerTypeID);
         Task<List<TransactionTypeResponse>> GetTransactionTypeDropdown();
         Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo);
+        Task<List<GetCountryRegionResponse>> GetCountryRegion();
+        Task<List<GetCityResponse>> GetCity();
     }
 }

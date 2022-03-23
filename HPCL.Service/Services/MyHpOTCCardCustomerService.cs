@@ -80,6 +80,7 @@ namespace HPCL.Service.Services
         public async Task<MyHPOTCCardCustomerModel> CustomerCardCreation()
         {
             MyHPOTCCardCustomerModel custModel = new MyHPOTCCardCustomerModel();
+            custModel.Remarks = "";
 
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
             custModel.LoggedInAs = "";
@@ -191,7 +192,7 @@ namespace HPCL.Service.Services
 
             return customerModel;
         }
-               
+   
         public async Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId)
         {
             OTCUnAllocatedCardsResponse responseData = new OTCUnAllocatedCardsResponse();
