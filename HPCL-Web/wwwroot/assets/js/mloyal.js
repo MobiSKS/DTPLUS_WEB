@@ -105,14 +105,14 @@ function showregAddress() {
     //console.log(ret);
 
     if (document.applicationForm.FormNumber.value.trim() == "") {
-        document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
+        document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
         document.applicationForm.FormNumber.focus();
         return ret;
     }
     else {
         console.log(document.applicationForm.FormNumber.value.length);
         if (document.applicationForm.FormNumber.value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
             document.applicationForm.FormNumber.focus();
             return ret;
         }
@@ -270,7 +270,7 @@ function showregAddress() {
 
     var formNumber = document.getElementById("FormNumber").value.trim();
     if (formNumber == "") {
-        document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
+        document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
         return ret;
     }
     else {
@@ -282,7 +282,7 @@ function showregAddress() {
 
 
     if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
-        document.getElementById("formNumber_error").innerHTML = "Form No is already used";
+        document.getElementById("formNumber_error").innerHTML = "Form Number is already used";
         return ret;
     }
     else {
