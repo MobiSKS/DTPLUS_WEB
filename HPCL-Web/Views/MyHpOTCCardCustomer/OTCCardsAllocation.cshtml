@@ -139,6 +139,7 @@
                     document.getElementById("CustomerRegionID_error").innerHTML = "";
                 }
 
+
                 var result = false;
                 //$("dvCards").empty();
                 document.getElementById("dvCards").innerHTML = "";
@@ -294,6 +295,9 @@
                 var id = this.value;
                 if (id != 0) {
                     $("#CustomerRegionID_error").html("");
+                    document.getElementById("MerchantID").value = "";
+                    document.getElementById("dvCards").innerHTML = "";
+                    document.getElementById("NoOfUnallocatedCards").value = "";
                 }
 
             });
@@ -309,72 +313,71 @@
                 }
             });
 
-            $("#btnSave").click(function () {
-                debugger;
-                if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0")
-                {
-                    alert("Enter No of Cards Allocated");
-                    return;
+    $("#btnSave").click(function () {
+        debugger;
+        if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0") {
+            alert("Enter No of Cards Allocated");
+            return;
+        }
+        var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
+        var merchantId = document.getElementById("MerchantID").value;
+        if (merchantId == "") {
+            document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
+            //$("#MerchantID").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("MerchantID_error").innerHTML = "";
+        }
+
+        var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
+        var selectedCards = 0;
+        ObjOTCCardModel = [];
+
+        $("input:checkbox[name=card]:checked").each(function () {
+            //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+            selectedCards = selectedCards + 1;
+            ObjOTCCardModel.push({ CardNo: $(this).val() });
+        });
+        //alert(selectedCards);
+
+        if (NoofCardsAllocated != selectedCards) {
+            alert("No. of Cards Allocated and Selected Un-Allocated Card(s) do not match");
+            return;
+        }
+
+        if (ObjOTCCardModel.length > 0) {
+            var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
+            console.log(model);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveOTCCardsAllocation", "MyHpOTCCardCustomer")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(model),
+                success: function (data) {
+                    //alert(data.message);
+                    console.log(data);
+                    console.log(data.commonResponseData.internel_Status_Code);
+                    if (data.commonResponseData.internel_Status_Code == 1000) {
+                        window.location.href = '@Html.Raw(@Url.Action("SuccessOTCCardsAllocation", "MyHpOTCCardCustomer"))';
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
                 }
-                var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
-                var merchantId = document.getElementById("MerchantID").value;
-                if (merchantId == "") {
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
-                    //$("#MerchantID").focus;
-                    return (false);
-                }
-                else {
-                    document.getElementById("MerchantID_error").innerHTML = "";
-                }
-
-               var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
-                var selectedCards = 0;
-                ObjOTCCardModel = [];
-
-               $("input:checkbox[name=card]:checked").each(function () {
-                    //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
-                   selectedCards = selectedCards + 1;
-                   ObjOTCCardModel.push({ CardNo: $(this).val() });
-               });
-                //alert(selectedCards);
-
-                if (NoofCardsAllocated != selectedCards) {
-                    alert("No. of Cards Allocated and Selected Un-Allocated Card(s) do not match");
-                    return;
-                }
-
-                if (ObjOTCCardModel.length > 0) {
-                    var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
-                    console.log(model);
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("SaveOTCCardsAllocation", "MyHpOTCCardCustomer")',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: 'json',
-                        data: JSON.stringify(model),
-                            success: function (data) {
-                                //alert(data.message);
-                                console.log(data);
-                                console.log(data.commonResponseData.internel_Status_Code);
-                                if (data.commonResponseData.internel_Status_Code == 1000) {
-                                     window.location.href = '@Html.Raw(@Url.Action("SuccessOTCCardsAllocation", "MyHpOTCCardCustomer"))';
-                                }
-                            },
-                            error: function (ex) {
-                                alert('Error.' + ex);
-                            }
-                        });
-                }
-
-
             });
+        }
 
-            $("#btnReset").click(function () {
-                dvDetails.style.display = 'none';
-                document.getElementById("MerchantID").value = "";
-                document.getElementById("NoOfUnallocatedCards").value = "";
-                $('#CustomerRegionID').val('0');
-            });
+
+    });
+
+    $("#btnReset").click(function () {
+        dvDetails.style.display = 'none';
+        document.getElementById("MerchantID").value = "";
+        document.getElementById("NoOfUnallocatedCards").value = "";
+        $('#CustomerRegionID').val('0');
+    });
 
     function tableToCSV() {
 
