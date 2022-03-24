@@ -241,7 +241,6 @@
         #endregion
 
         public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
-        public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
         public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
 
     }
