@@ -181,6 +181,15 @@
                                             <span class="error" id="tierOfCustomer_error"></span>
                                         </div>
                                     </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
+                                            </div>
+                                            <span class="error" id="PanCardRemarks_error"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -701,15 +710,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-md-12 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks</label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly", style = "display:none;" })
-                                            <span class="error" id="PanCardRemarks_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -842,6 +842,17 @@
         }
 
         $("#CustomerIncomeTaxPan").focus();
+
+        if ($('#AllowPanDuplication').val() == "Y") {
+            document.getElementById("lblPanCardRemarks").style.display = "block";
+            document.getElementById("PanCardRemarks").style.display = "block";
+            $("#PanCardRemarks").prop('readonly', false);
+        }
+        else {
+            document.getElementById("lblPanCardRemarks").style.display = "none";
+            document.getElementById("PanCardRemarks").style.display = "none";
+            $("#PanCardRemarks").prop('readonly', true);
+        }
         
     });
 
@@ -1172,8 +1183,7 @@
                 return (false);
             }
             else {
-                var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-                if (document.applicationForm.CommunicationEmail.value.match(mailformat)) {
+                if (document.applicationForm.CommunicationEmail.value.match(email)) {
                     document.getElementById("comm_email_error").innerHTML = "";
                     //return true
                 }
@@ -1265,96 +1275,7 @@
             // sameas = false;
         }
     }
-
-    function ValidatePAN() {
-        debugger;
-        var panno = $('#CustomerIncomeTaxPan').val().trim();
-        var OrgName = $('#IndividualOrgName').val().trim();
-        var customerTbentityid = $("#CustomerTbentityID").val();
-        var correctPANName = '';
-
-        if (panno == '') {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            return;
-        }
-
-        var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-
-        if ($('#CustomerIncomeTaxPan').val().match(regex)) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
-            return (false);
-        }
-
-        //if (OrgName == '') {
-        //    alert('Enter Individual Or Org. Name');
-        //    return;
-        //}
-        ////solo Propritorship 4th Char Pan should be 'P'
-        //if (customerTbentityid == '2') {
-        //    let forthdigitPan = panno.substr(3, 1);
-        //    console.log(forthdigitPan);
-        //    if (forthdigitPan != 'P') {
-        //        console.log('Inside');
-        //        alert('Enter Valid Pan');
-        //        return;
-        //    }
-        //}
-
-        //var result = false;
-
-        //$.ajax({
-        //    type: 'POST',  // http method
-        //    url: "PANValidation/Customer",
-        //    data: { PANNumber: panno },  // data to submit
-        //    dataType: "json",
-        //    success: function (data, status, xhr) {
-        //        //debugger;
-        //        var jsonData = JSON.parse(data);
-        //        if (status == 'success' && jsonData['status-code'] == '101') {
-        //            result = true;
-
-        //            console.log(jsonData);
-        //            console.log(result);
-        //            //document.getElementById("address-tab").click();
-        //            //document.getElementById("address-tab").classList.remove("disable");
-        //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-        //            correctPANName = jsonData["result"]["name"];
-        //            //localStorage.setItem("showregAddress", true)
-
-        //            if (result == false) {
-        //                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
-        //            }
-        //            else {
-        //                document.getElementById("incomeTaxPan_error").innerHTML = "";
-        //            }
-        //            console.log(correctPANName);
-        //            console.log(OrgName);
-        //            if (correctPANName != OrgName) {
-        //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-        //            }
-        //            else {
-        //                document.getElementById("incomeTaxPan_error").innerHTML = "";
-        //            }
-
-        //        }
-        //        else {
-        //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-        //            console.log(jsonData['status-code']);
-        //            //document.applicationForm.CustomerIncomeTaxPan.focus();
-        //        }
-        //    },
-        //    error: function (jqXhr, textStatus, errorMessage) {
-        //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-        //        console.log(jsonData['status-code']);
-        //        //document.applicationForm.CustomerIncomeTaxPan.focus();
-        //    }
-        //});
-
-    }
-
+    
     $("#CustomerTbentityID").change(function () {
             var id = this.value;
          if (id != 0) {
@@ -1407,85 +1328,7 @@
 
     });
 
-
-    @*$("#FormNumber").on("blur", function () {
-        //debugger;
-        var formNumber = document.getElementById("FormNumber").value;
-        if (formNumber == "") {
-            document.getElementById("formNumber_error").innerHTML = "Form No field cannot be left blank";
-            return (false);
-        }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
-        }
-
-        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-            document.getElementById("formNumber_error").innerHTML = "Form No should not start with 0";
-            document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
-            return false;
-        }
-
-        if (document.getElementById("FormNumber").value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Form No length must be 10 digit";
-            document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
-            return false;
-        }
-
-        var fromNumberUsed = false;
-        localStorage.setItem("FORMNOALREADYUSED", "1");
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckformnumberDuplication", "Customer")',
-                data: { FormNumber: formNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
-
-                        //if (data == "Failed to load Customer Details")
-                        //    document.getElementById("RBEName").value = "";
-                        if (data.status == "0") {
-                            fromNumberUsed = true;
-                            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
-                            localStorage.setItem("FORMNOALREADYUSED", "0");
-                        }
-                        else {
-                            fromNumberUsed = false;
-                            document.getElementById("formNumber_error").innerHTML = "";
-                        }
-                    }
-                    else {
-                        //console.log(v);
-                        fromNumberUsed = true;
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    //document.getElementById("RBEName").value = "";
-                },
-                statusCode: {
-                    1024: function () {
-                        //document.getElementById("RBEName").value = "";
-                    }
-                }
-            });
-
-        //console.log(fromNumberUsed);
-        if (fromNumberUsed == true) {
-            document.getElementById("formNumber_error").innerHTML = "Form No is already used";
-            //return (false);
-        }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
-            console.log('SAM');
-        }
-
-    });*@
-
+    
     $("#CommunicationEmail").on("blur", function () {
         //debugger;
         var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
@@ -1497,8 +1340,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-        var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (communicationEmail.match(mailformat)) {
+        if (communicationEmail.match(email)) {
             document.getElementById("comm_email_error").innerHTML = "";
         }
         else {
@@ -1558,7 +1400,7 @@
         //debugger;
         var communicationMobile = document.getElementById("CommunicationMobileNumber").value;
         if (communicationMobile == "") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No field cannot be left blank";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
             return (false);
         }
         else {
@@ -1566,14 +1408,14 @@
         }
 
         if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             document.getElementById("CommunicationMobileNumber").value = "";
             document.getElementById("CommunicationMobileNumber").focus();
             return false;
         }
 
         if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number length must be 10 digit";
             document.getElementById("CommunicationMobileNumber").value = "";
             document.getElementById("CommunicationMobileNumber").focus();
             return false;
@@ -1600,7 +1442,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         mobileNoUsed = true;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Communication Mobile No is already used";
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
                         localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
@@ -1636,15 +1478,30 @@
         if (customerTbentityid == 10) {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
             document.getElementById("IsDuplicatePanNo").value = "1";
+            $('#AllowPanDuplication').val('N');
+            localStorage.setItem("IsDuplicatePanNo", "1");
             return;
         }
-
+                
         if (panNumber == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             return (false);
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        if (customerTbentityid == 2) {
+            let forthdigitPan = panNumber.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P') {
+                document.getElementById("CustomerIncomeTaxPan").value = "";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+                return;
+            }
+            else {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            }
         }
 
         var panNumberUsed = false;
@@ -1674,18 +1531,28 @@
                             //document.getElementById("comm_district_error").innerHTML = "Pan already used";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
+                            document.getElementById("lblPanCardRemarks").style.display = "block";
+                            document.getElementById("PanCardRemarks").style.display = "block";
                         }
                         else {
                             localStorage.setItem("DUPLICATEPANUSED", "1");
                             document.getElementById('IsDuplicatePanNo').value = "1";
                             document.getElementById("comm_district_error").innerHTML = "";
+                            document.getElementById("lblPanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").value = "";
                         }
                     }
                     else {
-                        //console.log(v);
+                        document.getElementById("lblPanCardRemarks").style.display = "none";
+                        document.getElementById("PanCardRemarks").style.display = "none";
+                        document.getElementById("PanCardRemarks").value = "";
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("lblPanCardRemarks").style.display = "none";
+                    document.getElementById("PanCardRemarks").style.display = "none";
+                    document.getElementById("PanCardRemarks").value = "";
                 },
                 statusCode: {
                     1024: function () {
@@ -1760,7 +1627,7 @@
         }
 
         if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
-            document.getElementById("comm_pincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
             document.getElementById("CommunicationPinCode").value = "";
             document.getElementById("CommunicationPinCode").focus();
             return false;
@@ -1786,7 +1653,7 @@
         }
 
         if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
-            document.getElementById("perma_pincode_error").innerHTML = "Pin code should not start with 0";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
             document.getElementById("PerOrRegAddressPinCode").value = "";
             document.getElementById("PerOrRegAddressPinCode").focus();
             return false;
@@ -1804,7 +1671,7 @@
         //debugger;
         var OffMobileNumber = document.getElementById("KeyOffMobileNumber").value;
         if (OffMobileNumber == "") {
-            document.getElementById("official_mobile_error").innerHTML = "Mobile No field cannot be left blank";
+            document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
             return (false);
         }
         else {
@@ -1812,14 +1679,14 @@
         }
 
         if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0") {
-            document.getElementById("official_mobile_error").innerHTML = "Mobile No should not start with 0";
+            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             document.getElementById("KeyOffMobileNumber").value = "";
             document.getElementById("KeyOffMobileNumber").focus();
             return false;
         }
 
         if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
-            document.getElementById("official_mobile_error").innerHTML = "Mobile No length must be 10 digit";
+            document.getElementById("official_mobile_error").innerHTML = "Mobile Number length must be 10 digit";
             document.getElementById("KeyOffMobileNumber").value = "";
             document.getElementById("KeyOffMobileNumber").focus();
             return false;
@@ -1832,8 +1699,7 @@
 
         if (OffEmail != "") {
 
-            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if (OffEmail.match(mailformat)) {
+            if (OffEmail.match(email)) {
                 document.getElementById("KeyOffEmail_error").innerHTML = "";
                 //return true
             }
@@ -1923,6 +1789,69 @@
         }
 
     });
-       
+
+    $("#IndividualOrgName").on("blur", function () {
+        //debugger;
+        var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
+        if (individualOrgName == "") {
+            document.getElementById("individualName_error").innerHTML = "Customer/Org.Name field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name field";
+            document.getElementById("IndividualOrgName").value = "";
+            document.getElementById("IndividualOrgName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name field";
+            document.getElementById("IndividualOrgName").value = "";
+            document.getElementById("IndividualOrgName").focus();
+            return false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+    });
+
+    $("#CustomerNameOnCard").on("blur", function () {
+        //debugger;
+        var customerNameOnCard = document.getElementById("CustomerNameOnCard").value.trim();
+        if (customerNameOnCard == "") {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card field";
+            document.getElementById("CustomerNameOnCard").value = "";
+            document.getElementById("CustomerNameOnCard").focus();
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card field";
+            document.getElementById("CustomerNameOnCard").value = "";
+            document.getElementById("CustomerNameOnCard").focus();
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+    });
 
 </script>

@@ -33,10 +33,6 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ReceivablePayableDetails()
-        {
-            return View();
-        }
         public async Task<IActionResult> ReFuelCardPaymentConfirmation()
         {
             return View();
@@ -117,6 +113,11 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ERPReloadSaleEarningDetails(MerchantERPReloadSaleEarningModel Model)
         {
             var modals = await _merchantFinancialService.ERPReloadSaleEarningDetails(Model);
+            return View(modals);
+        }
+        public async Task<IActionResult> ReceivablePayableDetails(MerchantReceivablePayableModel Model)
+        {
+            var modals = await _merchantFinancialService.ReceivablePayableDetails(Model);
             return View(modals);
         }
     }
