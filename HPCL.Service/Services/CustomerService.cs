@@ -120,6 +120,15 @@ namespace HPCL.Service.Services
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
             }
 
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
+            }
+
             string customerDateOfApplication = "";
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
@@ -815,8 +824,6 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
-            //custMdl.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(custMdl.CustomerZonalOfficeID));
-
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
             custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
@@ -1089,6 +1096,15 @@ namespace HPCL.Service.Services
                     cust.AreaOfOperation = "Intra City";
                 else
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
+            }
+
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
             }
 
             string customerDateOfApplication = "";

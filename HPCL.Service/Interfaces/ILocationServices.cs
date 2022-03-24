@@ -8,5 +8,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<HeadOfficeDetailsResponse> HeadOfficeDetails();
         Task<string> UpdateHod(HeadOfficeDetailsResponse entity);
+        Task<string> DeleteCity(int cityId);
     }
 }

@@ -218,6 +218,10 @@ namespace HPCL.Service.Services
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
 
             MultipartFormDataContent form = new MultipartFormDataContent();
 

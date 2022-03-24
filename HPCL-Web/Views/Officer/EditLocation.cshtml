@@ -1,7 +1,7 @@
 ﻿@model HPCL.Common.Models.ViewModel.Officers.OfficerLocationModel
 @using HPCL.Common.Resources
 
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <h5>Officer Details</h5>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
@@ -10,15 +10,15 @@
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tlab">
                     <div class="w-100">
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                            <div class="border-1 rounded border-grey"></div>
+                            <div class="border-1 rounded border-grey">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Location Mapping</p>
-                            <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                                <table style="border: 1px solid black;border-collapse: collapse;">
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 px-4 py-3">
+                                <table class="table table-bordered table-striped d-md-table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.Regions</th>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.UserName</th>
-                                            <th style="border: 1px solid black;border-collapse: collapse;">@Label.Action</th>
+                                            <th>@Label.Regions</th>
+                                            <th>@Label.UserName</th>
+                                            <th>@Label.Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -26,10 +26,10 @@
                                             foreach (var item in Model.LocationMappings)
                                             {
                                                 <tr>
-                                                    <td style="border: 1px solid black;border-collapse: collapse;">@item.ROName</td>
-                                                    <td style="border: 1px solid black;border-collapse: collapse;">@Model.UserName</td>
-                                                    <td style="border: 1px solid black;border-collapse: collapse;">
-                                                        <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID="@Model.OfficerID" onclick="return confirm('Are sure wants to delete?');"><img src="~/assets/images/officerPage/delete.png" style="width: 15%;" /></a>
+                                                    <td>@item.ROName</td>
+                                                    <td>@Model.UserName</td>
+                                                    <td>
+                                                        <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID="@Model.OfficerID" onclick="return confirm('Are sure wants to delete?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                     </td>
                                                 </tr>
                                             }
@@ -37,13 +37,15 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="clearfix"></div>
+                            </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                            <div class="border-1 rounded border-grey"></div>
+                            <div class="border-1 rounded border-grey">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">@Label.AddLocation</p>
-                            <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                                <div>
-                                    <div class="py-2 pr-4 pl-0 pr-md-4">
+                            <div class="col-lg-12 col-md-12 col-12 py-3">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.ZoneOfc <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
@@ -53,6 +55,8 @@
                                                 <span class="error" id="zonalOffice_error"></span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
@@ -62,12 +66,18 @@
                                                 <span class="error" id="regionalOffice_error"></span>
                                             </div>
                                         </div>
+                                     </div>
+                                     </div>
+                                     <div class="d-flex align-items-center flex-wrap">
+                                         <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.IsNewUser</label>
                                             <div class="col-md-7 col-12">
                                                 @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control", @style = "width: 5%" })
                                             </div>
                                         </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.UserName <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
@@ -75,8 +85,11 @@
                                                 <span class="error" id="userName_error"></span>
                                             </div>
                                         </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
+                            </div>
                             </div>
                         </div>
                         <div style="display:none;">@Html.TextBoxFor(m => m.UserName, new { id = "userNameValue" })</div>
@@ -88,14 +101,16 @@
                             <div class="px-2">
                                 @*<button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;" onclick="addLocation()">@Label.AddLocation</button>*@
                                 <button class="btn btn_primary" type="submit" onclick="addLocationOfficer()">@Label.AddLocation</button>
-                                <button class="btn btn_primary" type="submit">@Label.Reset</button>
                                 @*<button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>*@
+                            </div>
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="submit">@Label.Reset</button>
                             </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-            </div>
+           
         }
     </div>
 </div>

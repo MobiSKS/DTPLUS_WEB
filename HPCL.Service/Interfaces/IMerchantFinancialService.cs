@@ -13,5 +13,6 @@ namespace HPCL.Service.Interfaces
         Task<TransactionlDetailsResponse> GetTransactionlDetails(GetTransactionDetails entity);
         Task<MerchantDeltaReportModel> GetMerchantDeltaReport(string MerchantId, string TerminalId, string FromDate, string ToDate);
         Task<MerchantERPReloadSaleEarningModel> ERPReloadSaleEarningDetails(MerchantERPReloadSaleEarningModel Model);
+        Task<MerchantReceivablePayableModel> ReceivablePayableDetails(MerchantReceivablePayableModel Model);
     }
 }
