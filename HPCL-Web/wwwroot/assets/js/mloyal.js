@@ -289,7 +289,7 @@ function showregAddress() {
 
 
     if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
-        document.getElementById("formNumber_error").innerHTML = "Form Number already used";
+        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
         return ret;
     }
     else {
@@ -407,7 +407,7 @@ function showregAddress() {
         }
 
         if (localStorage.getItem("PANNOALREADYUSED") == 0) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already used";
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
             return ret;
         }
         else {
@@ -766,7 +766,7 @@ function showOfficialDetails() {
 
 
     if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already used";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
         return (false);
     }
     else {
@@ -774,7 +774,7 @@ function showOfficialDetails() {
     }
 
     if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-        document.getElementById("comm_email_error").innerHTML = "Email already used";
+        document.getElementById("comm_email_error").innerHTML = "Email already exists";
         return (false);
     }
     else {
