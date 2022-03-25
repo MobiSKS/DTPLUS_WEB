@@ -28,6 +28,7 @@ namespace HPCL.Service
             services.AddTransient<IAshokLeyLandService, AshokLeyLandService>();
             services.AddTransient<ICustomerFinancialService, CustomerFinancialService>();
             services.AddTransient<IMerchantFinancialService, MerchantFinancialService>();
+            services.AddTransient<IHotlistingService, HotlistingService>();
             return services;
         }
     }

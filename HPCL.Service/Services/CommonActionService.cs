@@ -1107,5 +1107,62 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
+        public async Task<List<HotlistStatus>> GetActionList(string EntityTypeId)
+        {
+            var forms = new HotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getactionlist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistStatus> HotlistStatus = jarr.ToObject<List<HotlistStatus>>();
+            var sortedtList = HotlistStatus.OrderBy(x => x.StatusId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<HotlistEntity>> GetEntityTypeList()
+        {
+            var forms = new BaseEntity
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getentitytypelist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistEntity> HotlistEntity = jarr.ToObject<List<HotlistEntity>>();
+            var sortedtList = HotlistEntity.OrderBy(x => x.EntityId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<HotlistReason>> GetReasonListForEntities(string EntityTypeId,string Actionid)
+        {
+            var forms = new HotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
+                Actionid= Actionid != "" ? Convert.ToInt32(Actionid) : 0,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getreasonlistforentities);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistReason> HotlistReason = jarr.ToObject<List<HotlistReason>>();
+            var sortedtList = HotlistReason.OrderBy(x => x.StatusId).ToList();
+            return sortedtList;
+        }
     }
 }
