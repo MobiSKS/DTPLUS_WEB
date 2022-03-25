@@ -53,8 +53,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">Date</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @type = "date", @class = "form-control" })
-                                                    @*@Html.ValidationMessageFor(m => m.CustomerDateOfApplication, "", new { @class = "text-danger" })*@
+                                                    @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @type = "date", @class = "form-control date" })
+                                                    <span class="error" id="CustomerDateOfApplication_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -87,13 +87,13 @@
                                             <thead>
                                                 <tr>
                                                     <th>
-                                                        @Html.DisplayName("SlNo")
+                                                        S.NO
                                                     </th>
                                                     <th>
                                                         @Html.DisplayName("Form No")
                                                     </th>
                                                     <th>
-                                                        @Html.DisplayName("Customer RefNo")
+                                                        Customer Ref No
                                                     </th>
                                                     <th>
                                                         @Html.DisplayName("Customer Name")
@@ -1379,6 +1379,12 @@
 </script>
 
 <script type="text/javascript">
+    var todate = $("#CustomerDateOfApplication").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
 
     function ApproveCustomer() {
         debugger;
@@ -1635,6 +1641,24 @@
         console.log(link);
         window.location.href = link;
     };
+
+    $(".date").on('change', function (e) {
+
+        var applicationDate = $("#CustomerDateOfApplication").val();
+
+        if (applicationDate != "") {
+            if (applicationDate > today) {
+                $("#CustomerDateOfApplication_error").attr("style", "display:block");
+                $("#CustomerDateOfApplication_error").html("Date selection should be less or equal to Today's date");
+                $("#CustomerDateOfApplication").val(today);
+            }
+            else {
+                $("#CustomerDateOfApplication_error").html("");
+                $("#CustomerDateOfApplication_error").attr("style", "display:none");
+            }
+        }
+    });
+
 </script>
 <style>
     .nav-item > li.active > a,

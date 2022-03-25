@@ -13,4 +13,4 @@ var mappedterminalID = /^(?=(5))[0-9]{10}$/;
 var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
 var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
-var addressFormat = /^[a-zA-Z0-9\s,. '-]{3,}$/;
+var addressFormat = /^[a-zA-Z0-9\s,. '-]{3,}$/;//Dont Use,not working
