@@ -591,21 +591,21 @@ namespace HPCL.Service.Services
 
         public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
         {
-            var searchBody = new Dictionary<string, string>
+            var request = new GetValidateNewCustomerRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
-                {"Createdon" , entity.CustomerDateOfApplication},
-                {"FormNumber" , entity.FormNumber},
-                {"StateId" , null},
-                {"CustomerName" , null}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CreatedBy = entity.OfficerTypeID > 0 ? entity.OfficerTypeID.ToString() : null,
+                Createdon = entity.CustomerDateOfApplication,
+                FormNumber = entity.FormNumber,
+                StateId = null,
+                CustomerName = null
             };
 
-            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
+            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForApproval);
 
