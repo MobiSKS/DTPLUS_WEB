@@ -1,0 +1,332 @@
+﻿@model HPCL.Common.Models.ViewModel.Hotlisting.HotlistorReactivateViewModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Hotlisting")" class="text_primary">Hotlisting</a> </li>
+            <li class="breadcrumb-item font-weight-light">Hotlist/Reactivate</li>
+        </ul>
+
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Hotlisted/Reactivated Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label id="lblEntityTypeId" class="font-weight-normal col-md-3 col-12">Entity Type<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.EntityTypeId, new SelectList(Model.HotlistEntity, "EntityId", "EntityName"), new { @class = "form-control", onchange = "showEntity()" })
+                                                <span class="error" id="entity_typeerror"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12 divshowDetails">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label id="lblMerchantId" class="font-weight-normal col-md-3 col-12 merchant" style="display:none">Merchant Id<sup class="text-danger">*</sup></label>
+                                        <label id="lblTerminalId" class="font-weight-normal col-md-3 col-12 terminal" style="display:none">Terminal Id<sup class="text-danger">*</sup></label>
+                                        <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 customer" style="display:none">Customer Id<sup class="text-danger">*</sup></label>
+                                        <label id="lblCardNo" class="font-weight-normal col-md-3 col-12 cardNo" style="display:none">Card Number<sup class="text-danger">*</sup></label>
+
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select merchant" id="merchantIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select terminal" id="terminalIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select customer" id="customerIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select cardNo" id="cardNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <span style="display:none" class="error" id="entityid_error"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-0 divshowDetails" style="display:none">
+                                <div class="px-2 divshowDetails" style="display:none">
+                                    <button class="btn btn_primary" type="button" id="btnSearch">GET HOTLIST DATA</button>
+                                </div>
+                                <div class="px-2 divshowDetails" style="display:none">
+                                    <button class="btn btn_primary" type="button" id="btnReset">RESET</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+        <div class="border-1 rounded border-grey pb-3" id="divDisplayData" style="display:none;">
+            <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Entity Hotlisting & Activation Details</p>
+            <div class="col-lg-12 col-md-12 col-12 py-3">
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Entity Type :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.EntityType, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Entity ID :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.EntityIdVal, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Hotlist/Reactivate Start Date :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.HotlistDate, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Action :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.Action, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Reason :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.HotlistReason, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" d-flex align-items-start flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-3 col-12">Remarks :</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", @readonly = "readonly" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div>
+            <div id="message" class="mb-3 text-center" style="display:none">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+        $(document).ready(function () {
+        });
+    function showEntity() {
+        var id = $('#EntityTypeId :selected').val();
+        if (id > 0) {
+            $(".divshowDetails").attr("style", "display:block");
+
+            if ($('#EntityTypeId :selected').text() == "Customer") {
+                $(".customer").attr("style", "display:block");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:none");
+
+            }
+            else if ($('#EntityTypeId :selected').text() == "Merchant") {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:block");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:none");
+            }
+            else if ($('#EntityTypeId :selected').text() == "Card") {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:block");
+            }
+            else {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:block");
+                $(".cardNo").attr("style", "display:none");
+            }
+            $("#entity_typeerror").attr("style", "display:none");
+            $("#entity_typeerror").html("");
+        }
+        else {
+            $(".divshowDetails").attr("style", "display:none");
+            $(".customer").attr("style", "display:none");
+            $(".merchant").attr("style", "display:none");
+            $(".terminal").attr("style", "display:none");
+            $(".cardNo").attr("style", "display:none");
+            $("#entity_typeerror").attr("style", "display:block");
+            $("#entity_typeerror").html("Select Entity Type");
+        }
+    }
+    function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    $("#btnSearch").click(function () {
+
+        var flag = "Y";
+        var merchantId = "", terminalId = "", cardNo = "", customerId = "", entityIdVal = "";;
+        if ($('#EntityTypeId :selected').text() == "Customer") {
+            customerId = $("#CustomerId").val();
+            if (customerId != "") {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Please enter valid ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = customerId;
+            }
+        }
+        else if ($('#EntityTypeId :selected').text() == "Merchant") {
+            merchantId = $("#MerchantId").val();
+            if (merchantId != "") {
+                if (!merchantId.match(mappedMerchantID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Please enter valid ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = merchantId;
+            }
+        }
+        else if ($('#EntityTypeId :selected').text() == "Card") {
+            cardNo = $("#CardNo").val();
+            if (cardNo != "") {
+                if (cardNo.length!=16) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Please enter valid ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = cardNo;
+            }
+        }
+
+        else {
+            terminalId = $("#TerminalId").val();
+            if (terminalId != "") {
+                if (!terminalId.match(mappedterminalID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Please enter valid ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = terminalId;
+            }
+        }
+        if (merchantId == "" && terminalId == "" && customerId == "" && cardNo == "") {
+            $("#entityid_error").attr("style", "display:block");
+            $("#entityid_error").html("Enter Entity ID");
+            flag = "N";
+        }
+        if (flag == "N")
+            e.preventDefault();
+
+        else {
+            var entityTypeId = $('#EntityTypeId :selected').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetHotlistedorReactivatedData", "Hotlisting")',
+                dataType: 'json',
+                data: { EntityTypeId: entityTypeId, EntityId: entityIdVal },
+                success: function (data) {
+                    if (data.data.length > 0) {
+                        var hotlistDate = (data.data[0].hotlistDate).slice(0, (data.data[0].hotlistDate).indexOf(' '))
+                        $("#EntityType").val(data.data[0].entityType);
+                        $("#EntityIdVal").val(data.data[0].entityIdValue);
+                        $("#HotlistDate").val(hotlistDate);
+                        $("#Action").val(data.data[0].action);
+                        $("#HotlistReason").val(data.data[0].reason);
+                        $("#Remarks").val(data.data[0].remarks);
+                        $("#divDisplayData").attr("style", "display:block");
+                        $("#message").attr("style", "display:none");
+                    }
+                    else {
+                        $("#divDisplayData").attr("style", "display:none");
+                        $("#message").html("");
+                        $("#message").append(data.message);
+                        $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+            });
+        }
+    });
+
+        $("#btnReset").click(function () {
+            location.reload();
+
+        });
+</script>

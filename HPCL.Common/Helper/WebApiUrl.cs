@@ -235,5 +235,14 @@
         public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
 
         #endregion
+
+        #region Admin Hotlist
+        public static string getactionlist = "api/dtplus/hotlist/get_action_list";
+        public static string getentitytypelist = "api/dtplus/hotlist/get_entity_type_list";
+        public static string getreasonlistforentities = "api/dtplus/hotlist/get_reason_list_for_entities";
+        public static string updatehotlistorreactivate = "api/dtplus/hotlist/update_hotlist_or_reactivate";
+        public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
+
+        #endregion
     }
 }

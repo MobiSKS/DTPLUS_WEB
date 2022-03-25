@@ -194,5 +194,21 @@ namespace HPCL_Web.Controllers
 
             return Json(new { SortedtList = SortedtList });
         }
+        [HttpPost]
+        public async Task<JsonResult> GetActionList(string EntityTypeId)
+        {
+            var sortedtList = await _commonActionService.GetActionList(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId,string ActionId)
+        {
+            var sortedtList = await _commonActionService.GetReasonListForEntities(EntityTypeId,ActionId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
     }
 }
