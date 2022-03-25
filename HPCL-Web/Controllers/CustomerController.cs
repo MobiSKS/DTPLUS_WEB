@@ -983,5 +983,12 @@ namespace HPCL_Web.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckVechileNoUsed(string VechileNo)
+        {
+            var Model = await _commonActionService.CheckVechileNoUsed(VechileNo);
+
+            return Json(Model);
+        }
     }
 }

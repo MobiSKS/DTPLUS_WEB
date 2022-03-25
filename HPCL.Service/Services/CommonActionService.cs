@@ -1086,5 +1086,26 @@ namespace HPCL.Service.Services
             List<GetCityResponse> cityList = jarr.ToObject<List<GetCityResponse>>();
             return cityList;
         }
+        public async Task<CustomerInserCardResponseData> CheckVechileNoUsed(string VechileNo)
+        {
+            //Request info
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                VechileNo = VechileNo
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkVechileNo);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
     }
 }

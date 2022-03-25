@@ -58,5 +58,6 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo);
         Task<List<GetCountryRegionResponse>> GetCountryRegion();
         Task<List<GetCityResponse>> GetCity();
+        Task<CustomerInserCardResponseData> CheckVechileNoUsed(string VechileNo);
     }
 }

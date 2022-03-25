@@ -509,7 +509,6 @@ namespace HPCL.Service.Services
             insertInfo.FeePaymentDate = feePaymentDate;
             insertInfo.CardPreference = customerCardInfo.CardPreference;
             insertInfo.RBEName = customerCardInfo.RBEName;
-            insertInfo.RBEName = customerCardInfo.RBEName;
             insertInfo.Useragent = CommonBase.useragent;
             insertInfo.Userip = CommonBase.userip;
             insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
