@@ -87,14 +87,14 @@ namespace HPCL.Common.Models
             CommunicationDistrictMdl.Add(new OfficerDistrictModel
             {
                 districtID = 0,
-                districtName = "Select Communication District"
+                districtName = "Select District"
             });
 
             PerOrRegAddressDistrictMdl = new List<OfficerDistrictModel>();
             PerOrRegAddressDistrictMdl.Add(new OfficerDistrictModel
             {
                 districtID = 0,
-                districtName = "Select Permanent District"
+                districtName = "Select District"
             });
 
         }
