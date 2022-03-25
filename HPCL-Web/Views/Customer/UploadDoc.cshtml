@@ -4,6 +4,10 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","ApplicationFormDataEntry")" class="text_primary">Application Form Data Entry</a> </li>
+            <li class="breadcrumb-item font-weight-light">Upload Document</li>
+        </ul>
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                 <div class="border-1 rounded border-grey h-100 mt-3">
@@ -48,14 +52,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                 </div>
+                                </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-center mb-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()" >SEARCH</button>
+                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()" >RESET</a>
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
                                 </div>
                             </div>
                             @Html.HiddenFor(model => Model.IdProofFrontSRC)
@@ -74,133 +78,133 @@
                     <div class="form-group d-flex align-items-center flex-wrap">
                     </div>
 
-                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" onsubmit="return formCheck()" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
+                    <form method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
                         <div id="docUpdateId">
-                            
-                                <div class="border-1 rounded border-grey mb-3">
-                                    <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Id Proof</p>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Proof Of Identity<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
 
-                                                @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
-                                                @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.IdProofDocumentNo, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.IdProofDocumentNo, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="border-1 rounded border-grey mb-3">
+                                <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Id Proof</p>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Proof Of Identity<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
 
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control form-control-file", Type = "file" })
-                                                @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @id = "idFrontErr", @class = "text-danger" })
-                                            </div>
+                                            @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                            @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control form-control-file", Type = "file" })
-                                                @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @id = "idBackErr", @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <div class="col-md-5 col-6"></div>
-                                            <div class="col-md-7 col-12">
-                                                <div id="idPfrontImg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <div class="col-md-5 col-6"></div>
-                                            <div class="col-md-7 col-12">
-                                                <div id="idPbackImg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
                                 </div>
-                            
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.IdProofDocumentNo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.IdProofDocumentNo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.IdProofFront, new { @id = "IdProofFront", @class = "form-control form-control-file", Type = "file" })
+                                            @Html.ValidationMessageFor(m => m.IdProofFront, "", new { @id = "idFrontErr", @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.IdProofBack, new { @id = "IdProofBack", @class = "form-control form-control-file", Type = "file" })
+                                            @Html.ValidationMessageFor(m => m.IdProofBack, "", new { @id = "idBackErr", @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <div class="col-md-5 col-6"></div>
+                                        <div class="col-md-7 col-12">
+                                            <div id="idPfrontImg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <div class="col-md-5 col-6"></div>
+                                        <div class="col-md-7 col-12">
+                                            <div id="idPbackImg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
                             @*<div class="form-group d-flex align-items-center flex-wrap">
-                                </div>
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center flex-wrap">
+                            </div>
                             *@
-                            
-                                <div class="border-1 rounded border-grey mb-4 pt-0">
-                                    <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Address Proof</p>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
-                                                @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.AddressProofDocumentNo, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control form-control-file", Type = "file" })
-                                                @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @id = "addFrontErr", @class = "text-danger" })
-                                            </div>
+                            <div class="border-1 rounded border-grey mb-4 pt-0">
+                                <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Address Proof</p>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                            @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control form-control-file", Type = "file" })
-                                                @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @id = "addBackErr", @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <div class="col-md-5 col-6"></div>
-                                            <div class="col-md-7 col-12">
-                                                <div id="idAfrontImg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12 px-2">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <div class="col-md-5 col-6"></div>
-                                            <div class="col-md-7 col-12">
-                                                <div id="idAbackImg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
                                 </div>
-                            
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Document Number<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.AddressProofDocumentNo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Front Photo<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.AddressProofFront, new { @id = "AddressProofFront", @class = "form-control form-control-file", Type = "file" })
+                                            @Html.ValidationMessageFor(m => m.AddressProofFront, "", new { @id = "addFrontErr", @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Back Photo<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.AddressProofBack, new { @id = "AddressProofBack", @class = "form-control form-control-file", Type = "file" })
+                                            @Html.ValidationMessageFor(m => m.AddressProofBack, "", new { @id = "addBackErr", @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <div class="col-md-5 col-6"></div>
+                                        <div class="col-md-7 col-12">
+                                            <div id="idAfrontImg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 px-2">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <div class="col-md-5 col-6"></div>
+                                        <div class="col-md-7 col-12">
+                                            <div id="idAbackImg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
                             <div class="clearfix"></div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3">
@@ -272,8 +276,22 @@
 
          $("#IdProofFront").change(function () {
              $("#idPfrontImg").html("");
-
+             //var rv = true;
              idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+             //if (idBack == idFront) {
+             //    $('#IdProofFront').val('');
+             //    $("#idFrontErr").text("Please use different Image Document");
+             //    return rv = false;
+             //} else if (idFront == addFront) {
+             //    $('#IdProofFront').val('');
+             //    $("#idFrontErr").text("Please use different Image Document");
+             //    return rv = false;
+             //} else if (idFront == addBack) {
+             //    $('#IdProofFront').val('');
+             //    $("#idFrontErr").text("Please use different Image Document");
+             //    return rv = false;
+             //}
+
              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
              if (regex.test($(this).val().toLowerCase())) {
                  if (typeof (FileReader) != "undefined") {
@@ -286,10 +304,10 @@
                      }
                      reader.readAsDataURL($(this)[0].files[0]);
                  } else {
-                     alert("This browser does not support FileReader.");
+                     $('#IdProofFront').val('');
                  }
              } else {
-                 alert("Please upload a valid image file.");
+                 $('#IdProofFront').val('');
              }
          });
 
@@ -363,14 +381,14 @@
      });
 
 
-     function formCheck() {
+     //function formCheck() {
 
-         console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
+         //console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
 
-         if (idFront == "unnamed5.jpg") {
-             $("#idFrontErr").text("Please use different Image Document");
-             return falsey
-         }
+         //if (idFront == "unnamed5.jpg") {
+         //    $("#idFrontErr").text("Please use different Image Document");
+         //    return false;
+         //}
 
 
          //if (idFront == idBack || idFront == addFront || idFront == addBack) {
@@ -392,7 +410,7 @@
          //    $("#addBackErr").text("Please use different Image Document");
          //    return false;
          //}
-     }
+  /*   }*/
 
     /* docUpdateId*/
      function openSearchGrid() {

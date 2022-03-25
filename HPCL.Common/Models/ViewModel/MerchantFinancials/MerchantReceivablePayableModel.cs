@@ -4,28 +4,27 @@ using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.MerchantFinancials
 {
-    public class MerchantERPReloadSaleEarningModel
+    public class MerchantReceivablePayableModel
     {
         public string MerchantId { get; set; }
         public string TerminalOrMerchant { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
-        public List<MerchantERPReloadSaleEarningDetails> SaleEarningDetails { get; set; }
+        public List<MerchantReceivablePayableDetails> ReceivablePayableDetails { get; set; }
         public string Message { get; set; }
-        public MerchantERPReloadSaleEarningModel()
+        public MerchantReceivablePayableModel()
         {
-            SaleEarningDetails = new List<MerchantERPReloadSaleEarningDetails>();
+            ReceivablePayableDetails = new List<MerchantReceivablePayableDetails>();
         }
     }
 
-    public class MerchantERPReloadSaleEarningDetails
+    public class MerchantReceivablePayableDetails
     {
         public string SrNumber { get; set; }
         public string TerminalId { get; set; }
         public string BatchId { get; set; }
         public string SettlementDate { get; set; }
-        public string Sale { get; set; }
-        public string Reload { get; set; }
-        public string Earning { get; set; }
+        public string Receivable { get; set; }
+        public string Payable { get; set; }
     }
 }

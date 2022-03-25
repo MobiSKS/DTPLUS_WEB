@@ -27,11 +27,11 @@ namespace HPCL.Service.Services
 
         public async Task<HeadOfficeDetailsResponse> HeadOfficeDetails()
         {
-            var forms = new Dictionary<string, string>
+            var forms = new BaseEntity
             {
-                {"useragent", CommonBase.useragent},
-                {"userip", CommonBase.userip},
-                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                UserAgent=CommonBase.useragent,
+                UserIp=CommonBase.userip,
+                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             HeadOfficeDetailsResponse lst = new HeadOfficeDetailsResponse();
@@ -76,13 +76,108 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CityID = cityId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteCityUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
+        }
+
+        public async Task<string> DeleteZonalOffice(int zonalOfficeID)
+        {
+            var requestData = new DeleteZonalOfficeReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZonalOfficeID = zonalOfficeID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteZonalOfficeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
+        }
+
+        public async Task<string> DeleteRegionalOffice(int regionalOfficeID)
+        {
+            var requestData = new DeleteRegionalOfficeReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionalOfficeID = regionalOfficeID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteRegionalOfficeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
+        }
+
+        public async Task<string> DeleteCountryRegion(int regionID)
+        {
+            var requestData = new DeleteCountryRegionReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionID = regionID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteCountryRegionUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
+        }
+
+        public async Task<string> DeleteState(int stateID)
+        {
+            var requestData = new DeleteStateReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                StateID = stateID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteStateUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res[0].Reason;
+        }
+
+        public async Task<string> DeleteDistrict(int districtID)
+        {
+            var requestData = new DeleteDistrictReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DistrictID = districtID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteDistrictUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();

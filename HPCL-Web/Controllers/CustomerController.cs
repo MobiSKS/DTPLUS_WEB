@@ -569,49 +569,6 @@ namespace HPCL_Web.Controllers
         {
             List<SearchCustomerResponseGrid> updatedSearchList = await _customerService.ReloadUpdatedGrid();
             return Json(new { updatedSearchList = updatedSearchList });
-
-            //var str = HttpContext.Session.GetString("viewUpdatedCustGrid");
-
-            //CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
-
-            //var searchBody = new Dictionary<string, string>
-            //{
-            //   {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
-            //    {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
-            //    {"FormNumber", vGrid.FormNumber},
-            //    {"StateId" , null},
-            //    {"CustomerName" , null}
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerPendingForApproval, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<SearchCustomerResponseGrid> updatedSearchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-            //            ModelState.Clear();
-            //            return Json(new { updatedSearchList = updatedSearchList });
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -737,58 +694,6 @@ namespace HPCL_Web.Controllers
         {
             UpdateKycResponse updateKycResponse = await _customerService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus);
             return Json(updateKycResponse.Reason);
-
-            //var approvalBody = new Dictionary<string, string>
-            //{
-            //    {"Useragent", CommonBase.useragent},
-            //    {"Userip", CommonBase.userip},
-            //    {"Userid", HttpContext.Session.GetString("UserName")},
-            //    {"CustomerReferenceNo" , CustomerReferenceNo},
-            //    {"Comments" , Comments},
-            //    {"Approvalstatus" , Approvalstatus},
-            //    {"ApprovedBy" , HttpContext.Session.GetString("UserName")}
-            //};
-
-            ////HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.approveOrrejectcustomer, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            //var jsonSerializerOptions = new JsonSerializerOptions()
-            //            //{
-            //            //    IgnoreNullValues = true
-            //            //};
-            //            //JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            //var jarr = obj["Data"].Value<JArray>();
-            //            //List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
-            //            //ModelState.Clear();
-            //            //return Json(new { searchList = searchList });
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
-            //            ModelState.Clear();
-
-
-            //            return Json(insertKyc[0].Reason);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         [HttpPost]
@@ -983,5 +888,12 @@ namespace HPCL_Web.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckVechileNoUsed(string VechileNo)
+        {
+            var Model = await _commonActionService.CheckVechileNoUsed(VechileNo);
+
+            return Json(Model);
+        }
     }
 }

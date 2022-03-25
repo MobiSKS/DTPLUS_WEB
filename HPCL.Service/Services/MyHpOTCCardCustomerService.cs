@@ -144,6 +144,10 @@ namespace HPCL.Service.Services
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
             customerModel.CommunicationFax = (string.IsNullOrEmpty(customerModel.CommunicationFaxCode) ? "" : customerModel.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationFaxPart2) ? "" : customerModel.CommunicationFaxPart2);
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
 
             customerModel.ObjOTCCardEntryDetail.Clear();
 

@@ -320,7 +320,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.Pin<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.RetailOutletPinNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletPinNumber, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             <span class="error" id="retail_pincode_error"></span>
                                         </div>
                                     </div>
@@ -535,7 +535,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.Pin</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CommunicationPinNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CommunicationPinNumber, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                         </div>
                                         <span class="error" id="comm_pin_error" style="margin-top:-2.7%; margin-left:42%;"></span>
                                     </div>
@@ -1266,7 +1266,7 @@
         }
 
         if ($('#OutletCategoryId :selected').text() == "Highway") {
-            if (document.applicationForm.HighwayNo2.value == "") {
+            if (document.applicationForm.HighwayNo2.value.trim() == "") {
                 document.getElementById("highwayNum_error").innerHTML = "Highway Number is required";
                 if (ret != "N") {
                     document.applicationForm.HighwayNo2.focus();
@@ -1277,7 +1277,7 @@
                 ret = "N";
             }
             else if (!document.applicationForm.HighwayNo2.value.match(number)) {
-                document.getElementById("highwayNum_error").innerHTML = "Numeric Only";
+                document.getElementById("highwayNum_error").innerHTML = "Highway Number is required";
                 if (ret != "N") {
                     document.applicationForm.HighwayNo2.focus();
                 }
@@ -2314,5 +2314,53 @@
         if ($("#TerminalTypeRequested").val().length > 0) {
             document.getElementById("terminalTypeReq_error").innerHTML = "";
         }
+    });
+
+    $("#CommunicationPinNumber").on("blur", function () {
+        //debugger;
+        if (document.getElementById("CommunicationPinNumber").value.trim() == "") {
+            document.getElementById("comm_pin_error").innerHTML = "Pin code field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (document.getElementById("CommunicationPinNumber").value.substring(0, 1) == "0") {
+                document.getElementById("comm_pin_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                document.getElementById("CommunicationPinNumber").value = "";
+                document.getElementById("CommunicationPinNumber").focus();
+                return false;
+            }
+
+            if (document.getElementById("CommunicationPinNumber").value.length < 6) {
+                document.getElementById("comm_pin_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                document.getElementById("CommunicationPinNumber").value = "";
+                document.getElementById("CommunicationPinNumber").focus();
+                return false;
+            }
+        }
+        
+    });
+
+    $("#RetailOutletPinNumber").on("blur", function () {
+        //debugger;
+        if (document.getElementById("RetailOutletPinNumber").value.trim() == "") {
+            document.getElementById("retail_pincode_error").innerHTML = "Pin code field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (document.getElementById("RetailOutletPinNumber").value.substring(0, 1) == "0") {
+                document.getElementById("retail_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                document.getElementById("RetailOutletPinNumber").value = "";
+                document.getElementById("RetailOutletPinNumber").focus();
+                return false;
+            }
+
+            if (document.getElementById("RetailOutletPinNumber").value.length < 6) {
+                document.getElementById("retail_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                document.getElementById("RetailOutletPinNumber").value = "";
+                document.getElementById("RetailOutletPinNumber").focus();
+                return false;
+            }
+        }
+
     });
 </script>

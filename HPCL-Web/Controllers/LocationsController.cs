@@ -20,6 +20,8 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        #region "Head Office Details"
         public async Task<IActionResult> HeadOfficeDetails()
         {
             var response = await _locationServices.HeadOfficeDetails();
@@ -33,30 +35,64 @@ namespace HPCL_Web.Controllers
             ViewBag.HodUpdateRes = response;
             return Json(response);
         }
+        #endregion
 
+        #region "Zonal Office"
         public async Task<IActionResult> ZonalOfficersList()
         {
             var response = await _commonActionService.GetZonalOfficeList();
             return View(response);
         }
 
+        public async Task<IActionResult> DeleteZonalOffice(int zonalOfficeID)
+        {
+            var cityLists = await _locationServices.DeleteZonalOffice(zonalOfficeID);
+            return RedirectToAction("ZonalOfficersList");
+        }
+        #endregion
+
+        #region "Regional Office"
         public IActionResult RegionalOfficersList()
         {
             return View();
         }
 
+        public async Task<IActionResult> DeleteRegionalOffice(int regionalOfficeID)
+        {
+            var cityLists = await _locationServices.DeleteRegionalOffice(regionalOfficeID);
+            return RedirectToAction("RegionalOfficersList");
+        }
+        #endregion
+
+        #region "Country Region"
         public async Task<IActionResult> CountryRegionList()
         {
             var countryRegionList = await _commonActionService.GetCountryRegion();
             return View(countryRegionList);
         }
 
+        public async Task<IActionResult> DeleteCountryRegion(int regionID)
+        {
+            var cityLists = await _locationServices.DeleteCountryRegion(regionID);
+            return RedirectToAction("CountryRegionList");
+        }
+        #endregion
+
+        #region "State"
         public async Task<IActionResult> StateList()
         {
             var stateList = await _commonActionService.GetStateList();
             return View(stateList);
         }
 
+        public async Task<IActionResult> DeleteState(int stateID)
+        {
+            var cityLists = await _locationServices.DeleteState(stateID);
+            return RedirectToAction("StateList");
+        }
+        #endregion
+
+        #region "District"
         public async Task<IActionResult> DistrictList()
         {
             string stateId = "0";
@@ -64,6 +100,14 @@ namespace HPCL_Web.Controllers
             return View(districtList);
         }
 
+        public async Task<IActionResult> DeleteDistrict(int districtID)
+        {
+            var cityLists = await _locationServices.DeleteDistrict(districtID);
+            return RedirectToAction("DistrictList");
+        }
+        #endregion
+
+        #region "City"
         public async Task<IActionResult> CityList()
         {
             var cityList = await _commonActionService.GetCity();
@@ -72,9 +116,10 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> DeleteCity(int cityId)
         {
-            var cityList = await _locationServices.DeleteCity(cityId);
+            var cityLists = await _locationServices.DeleteCity(cityId);
             return RedirectToAction("CityList");
         }
+        #endregion 
     }
 }
 

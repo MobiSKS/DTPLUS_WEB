@@ -120,6 +120,15 @@ namespace HPCL.Service.Services
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
             }
 
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
+            }
+
             string customerDateOfApplication = "";
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
@@ -500,7 +509,6 @@ namespace HPCL.Service.Services
             insertInfo.FeePaymentDate = feePaymentDate;
             insertInfo.CardPreference = customerCardInfo.CardPreference;
             insertInfo.RBEName = customerCardInfo.RBEName;
-            insertInfo.RBEName = customerCardInfo.RBEName;
             insertInfo.Useragent = CommonBase.useragent;
             insertInfo.Userip = CommonBase.userip;
             insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
@@ -583,21 +591,21 @@ namespace HPCL.Service.Services
 
         public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
         {
-            var searchBody = new Dictionary<string, string>
+            var request = new GetValidateNewCustomerRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
-                {"Createdby" , entity.OfficerTypeID>0? entity.OfficerTypeID.ToString(): null },
-                {"Createdon" , entity.CustomerDateOfApplication},
-                {"FormNumber" , entity.FormNumber},
-                {"StateId" , null},
-                {"CustomerName" , null}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CreatedBy = entity.OfficerTypeID > 0 ? entity.OfficerTypeID.ToString() : null,
+                Createdon = entity.CustomerDateOfApplication,
+                FormNumber = entity.FormNumber,
+                StateId = null,
+                CustomerName = null
             };
 
-            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(searchBody));
+            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForApproval);
 
@@ -814,8 +822,6 @@ namespace HPCL.Service.Services
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
             custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
-
-            //custMdl.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(custMdl.CustomerZonalOfficeID));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -1089,6 +1095,15 @@ namespace HPCL.Service.Services
                     cust.AreaOfOperation = "Intra City";
                 else
                     cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
+            }
+
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
             }
 
             string customerDateOfApplication = "";

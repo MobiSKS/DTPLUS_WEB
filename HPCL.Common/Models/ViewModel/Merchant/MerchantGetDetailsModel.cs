@@ -77,6 +77,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string OutletCategoryId { get; set; }
         public string OutletCategoryName { get; set; }
         public string HighwayNo1 { get; set; }
+        [StringLength(50)]
         public string HighwayNo2 { get; set; }
         public string HighwayName { get; set; }
         public string SBUTypeId { get; set; }
