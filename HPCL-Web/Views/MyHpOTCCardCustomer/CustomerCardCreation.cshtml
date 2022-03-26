@@ -331,7 +331,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Vehicle Number</label>
                                             <div class="col-md-6 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control", maxlength = "10", @style = "text-transform:uppercase" })
+                                                    @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control", maxlength = "10", @style = "text-transform:uppercase", @onchange = "ValidateVehicleNo(this,1)" })
                                                     <span class="error" id="VehicleNo1_error"></span>
                                                 </div>
 
@@ -373,7 +373,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Vehicle Number </label>
                                             <div class="col-md-6 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control", @style = "text-transform:uppercase", maxlength = "10" })
+                                                    @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control", @style = "text-transform:uppercase", maxlength = "10", @onchange = "ValidateVehicleNo(this,2)" })
                                                     <span class="error" id="VehicleNo2_error"></span>
                                                 </div>
 
@@ -1470,7 +1470,7 @@
 
         if (document.getElementById("VehicleNo1").value != "") { //Vehicle length min-6 max 10
             if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) {
-                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No length is not valid";
+                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                 //document.getElementById("VehicleNo1").focus();
                 ret = false;
             }
@@ -1524,7 +1524,7 @@
 
         if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
             if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
-                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
+                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                 //document.getElementById("VehicleNo2").focus();
                 ret = false;
             }
@@ -2210,5 +2210,70 @@
             document.getElementById("nameOnCard_error").innerHTML = "";
         }
     });
+
+    function ValidateVehicleNo(o, rowSelected) {
+        debugger;
+        var vehicleNo = o.value.trim();
+        console.log(vehicleNo);
+
+        if (vehicleNo == '') {
+            if (rowSelected == "1") {
+                VehicleNo1_error.innerHTML = "Please Enter Vehicle Number";
+                return;
+            }
+            else {
+                VehicleNo2_error.innerHTML = "Please Enter Vehicle Number";
+            }
+        }
+        else {
+            if (rowSelected == "1") {
+                VehicleNo1_error.innerHTML = "";
+            }
+            else {
+                VehicleNo2_error.innerHTML = "";
+            }
+        }
+
+        var result = false;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "CheckVehicleRegistrationValid/Common",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    if (rowSelected == "1") {
+                        VehicleNo1_error.innerHTML = "Vehicle Number is valid";
+                    }
+                    else {
+                        VehicleNo2_error.innerHTML = "Vehicle Number is valid";
+                    }
+                    console.log(jsonData);
+                }
+                else {
+                    if (rowSelected == "1") {
+                        VehicleNo1_error.innerHTML = "Invalid Vehicle Number";
+                    }
+                    else {
+                        VehicleNo2_error.innerHTML = "Invalid Vehicle Number";
+                    }
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                if (rowSelected == "1") {
+                    VehicleNo1_error.innerHTML = "Invalid Vehicle Number";
+                }
+                else {
+                    VehicleNo2_error.innerHTML = "Invalid Vehicle Number";
+                }
+
+            }
+        });
+
+    }
 
 </script>

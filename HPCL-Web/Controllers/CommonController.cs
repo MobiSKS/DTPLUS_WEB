@@ -210,5 +210,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(sortedtList);
         }
+        [HttpPost]
+        public async Task<JsonResult> CheckVehicleRegistrationValid(string RegistrationNumber)
+        {
+            var data = await _commonActionService.CheckVehicleRegistrationValid(RegistrationNumber);
+            return new JsonResult(data);
+        }
+
     }
 }
