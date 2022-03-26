@@ -535,6 +535,36 @@
         {
             $('#MerchantId').attr('readonly', 'true');
         }
+
+        var dlYesChecked = true;
+        var rcYesChecked = true;
+
+        if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
+            dlYesChecked = false;
+        }
+        else {
+            if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
+                dlYesChecked = false;
+            }
+        }
+
+        if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
+            rcYesChecked = false;
+        }
+        else {
+            if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
+                rcYesChecked = false;
+            }
+        }
+        //alert(dlYesChecked);
+        //alert(rcYesChecked);
+        if (dlYesChecked && rcYesChecked) {
+            $(":submit").removeAttr("disabled");
+        }
+        else {
+            $(":submit").attr("disabled", true);
+        }
+
     });
 
 
@@ -2275,5 +2305,61 @@
         });
 
     }
+
+    $('input[type=radio][name=CopyofDriverLicense]').change(function () {
+
+        var rcYesChecked = true;
+        if (this.value == "Yes") {
+
+            if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
+                rcYesChecked = false;
+            }
+            else {
+                if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
+                    rcYesChecked = false;
+                }
+            }
+
+            if (rcYesChecked) {
+                $(":submit").removeAttr("disabled");
+            }
+            else {
+                $(":submit").attr("disabled", true);
+            }
+
+        } else if (this.value == "No") {
+
+            $(":submit").attr("disabled", true);
+        }
+
+    });
+
+    $('input[type=radio][name=CopyofVehicleRegistrationCertificate]').change(function () {
+
+        var dlYesChecked = true;
+        if (this.value == "Yes") {
+
+            if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
+                dlYesChecked = false;
+            }
+            else {
+                if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
+                    dlYesChecked = false;
+                }
+            }
+
+            if (dlYesChecked) {
+                $(":submit").removeAttr("disabled");
+            }
+            else {
+                $(":submit").attr("disabled", true);
+            }
+
+        } else if (this.value == "No") {
+
+            $(":submit").attr("disabled", true);
+        }
+
+    });
 
 </script>
