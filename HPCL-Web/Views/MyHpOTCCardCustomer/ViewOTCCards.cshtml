@@ -100,6 +100,10 @@
 
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
+
+        if ($('#ViewOTC_wrapper').length) {
+            document.getElementById('ViewOTC_wrapper').style.display = 'none';
+        }
     };
 
 
@@ -137,28 +141,53 @@
                 console.log(res, "res");
                 $("#NoRecord").attr("style", "display:none");
 
+                $("#ViewOTC td").parent().remove();
+
+                $('#ViewOTC').DataTable().clear().destroy();
+
+                var tbll = $('#ViewOTC').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "bDestroy": true,
+                    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
+
                 if (res.searchList.length > 0) {
                     $("#ViewOTC").show();
                     for (var i = 0; i < res.searchList.length; i++) {
 
-                        var rows = "<tbody><tr>"
-                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerId || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
-                            + "<td>" + (res.searchList[i].createdDate || '') + "</td>"
-                            + "<td>" + (res.searchList[i].createdBy || '') + "</td>"
-                            + "</tr ></tbody > ";
+                        var zonalOfficeName = (res.searchList[i].zonalOfficeName || '');
+                        var regionalOfficeName = (res.searchList[i].regionalOfficeName || '');
+                        var customerId = (res.searchList[i].customerId || '');
+                        var customerName = (res.searchList[i].customerName || '');
+                        var cardNo = (res.searchList[i].cardNo || '') ;
+                        var createdDate = (res.searchList[i].createdDate || '');
+                        var createdBy = (res.searchList[i].createdBy || '');
+                       
 
-
-                        $("#ViewOTC").append(rows);
-
+                        tbll.row.add([
+                            zonalOfficeName,
+                            regionalOfficeName,
+                            customerId,
+                            customerName,
+                            cardNo,
+                            createdDate,
+                            createdBy
+                        ]).draw();
 
                     }
                 } else {
                     $("#ViewOTC").hide();
                     $("#NoRecord").attr("style", "display:block");
+                    if ($('#ViewOTC_wrapper').length) {
+                        document.getElementById('ViewOTC_wrapper').style.display = 'none';
+                    }
                 }
 
             },
@@ -170,20 +199,4 @@
 
     });
 
-    //function CheckValidations() {
-
-    //    var ret = false;
-
-    //    //console.log(ret);
-
-    //    if (document.getElementById('CustomerRegionID').value == "" || document.getElementById('CustomerRegionID').value == "0") {
-    //        document.getElementById("CustomerRegionID_error").innerHTML = "Region Name is required";
-    //        document.getElementById('CustomerRegionID').focus();
-    //        return ret;
-    //    }
-    //    else {
-    //        document.getElementById("CustomerRegionID_error").innerHTML = "";
-    //    }
-    //    return true;
-    //}
 </script>
