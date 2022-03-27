@@ -422,7 +422,7 @@ function showregAddress() {
             console.log(forthdigitPan);
             if (forthdigitPan != 'P') {
                 console.log('Inside');
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
                 return ret;
             }
         }
@@ -1676,7 +1676,7 @@ function ValidatePAN() {
         document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
     }
     else {
-        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
         return (false);
     }
 
@@ -1690,7 +1690,7 @@ function ValidatePAN() {
         console.log(forthdigitPan);
         if (forthdigitPan != 'P') {
             console.log('Inside');
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
             alert('Please Enter Valid Pan Number');
             return;
         }
@@ -1721,7 +1721,7 @@ function ValidatePAN() {
     //            //localStorage.setItem("showregAddress", true)
 
     //            if (result == false) {
-    //                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+    //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
     //            }
     //            else {
     //                document.getElementById("incomeTaxPan_error").innerHTML = "";

@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,12 +12,12 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         public TatkalCardCustomerModel()
         {
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
-                StateName = "--Select--"
+                StateName = "--Select State--"
             });
 
             CustomerZonalOfficeMdl = new List<CustomerZonalOfficeModel>();
@@ -67,7 +68,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         [Required(ErrorMessage = "Communication Form Number is Required")]
         public string FormNumber { get; set; }
 
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<CustomerRegionModel> CustomerRegionMdl { get; set; }
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }
 
