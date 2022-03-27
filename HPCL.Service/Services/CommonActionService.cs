@@ -276,7 +276,9 @@ namespace HPCL.Service.Services
             var officeStateJarr = officeStateObj["Data"].Value<JArray>();
             List<StateResponseModal> stateLst = officeStateJarr.ToObject<List<StateResponseModal>>();
 
-            return stateLst;
+            var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
+
+            return sortedtList;
         }
 
         public async Task<List<ZonalOfficeResponseModal>> GetZonalOfficeList()
@@ -323,50 +325,7 @@ namespace HPCL.Service.Services
 
             return validateUserNameLst.First().Status.ToString();
         }
-
-        //public async Task<List<RegionModel>> GetRegionList()
-        //{
-        //    var CustomerRegion = new Dictionary<string, string>
-        //    {
-        //        {"Useragent", CommonBase.useragent},
-        //        {"Userip", CommonBase.userip},
-        //        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-        //        {"ZonalID",  "0" }
-        //    };
-
-        //    StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
-
-        //    var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.regionalOffice);
-
-        //    JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
-        //    var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
-        //    List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
-
-        //    return customerRegionLst;
-        //}
-
-        public async Task<List<CustomerStateModel>> GetCustStateList()
-        {
-            var requestData = new GetStatesRequestModel()
-            {
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                CountryID = "0"
-            };
-
-            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
-            var responseState = await _requestService.CommonRequestService(Statecontent, WebApiUrl.getState);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerStateModel> stateLst = jarr.ToObject<List<CustomerStateModel>>();
-
-            var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
-
-            return sortedtList;
-        }
-
+                
         public async Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber)
         {
             var request = new CheckformNumberDuplicationRequest()

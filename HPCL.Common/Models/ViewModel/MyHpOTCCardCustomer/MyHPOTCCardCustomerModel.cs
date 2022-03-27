@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Officers;
 
 namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
@@ -14,8 +15,8 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         {
             ObjOTCCardEntryDetail = new List<OTCCardEntryDetailsMdl>();
 
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -80,7 +81,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         public virtual List<OTCCardEntryDetailsMdl> ObjOTCCardEntryDetail { get; set; }
 
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
 
         public string CardNumber1 { get; set; }

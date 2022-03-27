@@ -13,7 +13,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerTypeModel>> GetCustomerType();
         Task<List<CustomerZonalOfficeModel>> GetZonalOffice();
         Task<List<CustomerTbentityModel>> GetCustomerTbentityModel();
-        Task<List<CustomerStateModel>> GetCustomerState();
         Task<List<CustomerSecretQueModel>> GetCustomerSecretQue();
         Task<List<CustomerTypeOfFleetModel>> GetCustomerTypeofFlee();
 

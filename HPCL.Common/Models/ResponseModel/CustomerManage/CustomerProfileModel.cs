@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Common.Resources;
 using System;
@@ -40,8 +41,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
                 RegionalOfficeID = 0,
                 RegionalOfficeName = "Select Region"
             });
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -197,7 +198,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public virtual List<CustomerSubTypeModel> CustomerSubTypeMdl { get; set; }
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }
         public virtual List<CustomerRegionModel> CustomerRegionMdl { get; set; }
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<CustomerDistrictModel> CustomerDistrictMdl { get; set; }
         public virtual List<CustomerTbentityModel> CustomerTbentityMdl { get; set; }
         public virtual List<CustomerTypeOfFleetModel> CustomerTypeOfFleetMdl { get; set; }

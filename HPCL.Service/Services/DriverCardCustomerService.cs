@@ -83,7 +83,7 @@ namespace HPCL.Service.Services
         {
             DriverCardCustomerModel custMdl = new DriverCardCustomerModel();
 
-            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             custMdl.DocumentTypeMdl.AddRange(await _commonActionService.GetAddressProofList());
 
             custMdl.LoggedInAs = "";
@@ -275,7 +275,7 @@ namespace HPCL.Service.Services
                 else
                     customerModel.Remarks = customerResponse.Message;
 
-                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 customerModel.DocumentTypeMdl.AddRange(await _commonActionService.GetAddressProofList());
             }
 

@@ -88,7 +88,7 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
-            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
 
             custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
@@ -251,7 +251,7 @@ namespace HPCL.Service.Services
 
                 cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
-                cust.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                cust.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
 
                 cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
 
@@ -591,13 +591,20 @@ namespace HPCL.Service.Services
 
         public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
         {
+            string customerDateOfApplication = "";
+           
+            if (!string.IsNullOrEmpty(entity.CustomerDateOfApplication))
+            {
+                string[] custDateOfApplication = entity.CustomerDateOfApplication.Split("-");
+                customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            }
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
                 CreatedBy = entity.OfficerTypeID > 0 ? entity.OfficerTypeID.ToString() : null,
-                Createdon = entity.CustomerDateOfApplication,
+                Createdon = customerDateOfApplication,
                 FormNumber = entity.FormNumber,
                 StateId = null,
                 CustomerName = null
@@ -825,7 +832,7 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
-            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
 
             custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
@@ -1225,7 +1232,7 @@ namespace HPCL.Service.Services
 
                 cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
-                cust.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                cust.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
 
                 cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
 
