@@ -151,42 +151,56 @@
     function CheckValidations() {
         debugger;
 
-        var ret = false;
+        var ret = true;
 
-        if (document.getElementById('MerchantId').value == "") {
+        if (document.getElementById('MerchantId').value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant ID";
-            document.getElementById('MerchantId').focus();
-            return ret;
+            //document.getElementById('MerchantId').focus();
+            ret = false;
         }
         else {
-            document.getElementById("MerchantId_error").innerHTML = "";
+
+            if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
+
+            if (document.getElementById("MerchantId").value.length < 10) {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
+
+            if (localStorage.getItem("MERCHANTIDFOUND") == 0) {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
         }
 
-
-        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") {
+        if (document.getElementById('NoofCards').value.trim() == "" || document.getElementById('NoofCards').value.trim() == "0") {
             document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
-            document.getElementById('NoofCards').focus();
-            return ret;
+            //document.getElementById('NoofCards').focus();
+            ret = false;
         }
         else {
             if (Number(document.getElementById('NoofCards').value) < 10 || Number(document.getElementById('NoofCards').value) > 999) {
                 document.getElementById("NoofCards_error").innerHTML = "No. Of OTC Cards should be 10 to 999";
-                document.getElementById('NoofCards').focus();
-                return ret;
+                //document.getElementById('NoofCards').focus();
+                ret = false;
             }
             else {
                 document.getElementById("NoofCards_error").innerHTML = "";
             }
         }
-
-        if (localStorage.getItem("MERCHANTIDFOUND") == 0) {
-            document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-            return (false);
-        }
-        else {
-            document.getElementById("MerchantId_error").innerHTML = "";
-        }
-
-        return true;
+        
+        return ret;
     }
     </script>
