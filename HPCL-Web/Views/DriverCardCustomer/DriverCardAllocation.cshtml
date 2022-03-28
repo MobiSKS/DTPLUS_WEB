@@ -128,7 +128,7 @@
 </div>
 
 <script type="text/javascript">
-           
+
             $("#btnUnallocatedCards").click(function () {
                 debugger;
 
@@ -229,13 +229,13 @@
         }
 
         if (document.getElementById("MerchantID").value.substring(0, 1) != "3") {
-            document.getElementById("MerchantID_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
+            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID. Min-Max 10 digits starting with 3";
             document.getElementById("MerchantID").focus();
             return (false);
         }
 
         if (document.getElementById("MerchantID").value.length < 10) {
-            document.getElementById("MerchantID_error").innerHTML = "Merchant ID should be 10 digit number";
+            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID. Min-Max 10 digits";
             document.getElementById("MerchantID").focus();
             return (false);
         }
@@ -245,50 +245,88 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("VerifyMerchantByMerchantidAndRegionalid", "DriverCardCustomer")',
-            data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
+            url: '@Url.Action("GetMerchantDetailsByMerchantId", "DriverCardCustomer")',
+            data: { MerchantID: merchantId },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
                 console.log(data);
                 console.log(status);
 
                 if (status == 'success') {
+                    document.getElementById("MerchantID_error").innerHTML = "";
 
-                    if (data.status == 0) {
+                    if (data == "Failed to load Merchant Details") {
+                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                         localStorage.setItem("MERCHANTAVAILABLE", "0");
-                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
-                        document.getElementById("MerchantID").value = "";
-                    }
-                    else if (data.status == 1) {
-                        localStorage.setItem("MERCHANTAVAILABLE", "1");
-                        document.getElementById("MerchantID_error").innerHTML = "";
                     }
                     else {
-                        localStorage.setItem("MERCHANTAVAILABLE", "0");
-                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
-                        document.getElementById("MerchantID").value = "";
-                    }
 
-                    //if (data == "Failed to load Customer Details")
-                    //    document.getElementById("MerchantID").value = "";
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("VerifyMerchantByMerchantidAndRegionalid", "DriverCardCustomer")',
+                            data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
+                            dataType: "json",
+                            success: function (result, status, xhr) {
+                                console.log('Nithya');
+                                console.log(result);
+                                console.log(status);
+
+                                if (status == 'success') {
+
+                                    if (result.status == 0) {
+                                        localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                        //document.getElementById("MerchantID").value = "";
+                                    }
+                                    else if (result.status == 1) {
+                                        localStorage.setItem("MERCHANTAVAILABLE", "1");
+                                        document.getElementById("MerchantID_error").innerHTML = "";
+                                    }
+                                    else {
+                                        localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                        //document.getElementById("MerchantID").value = "";
+                                    }
+
+                                    //if (result == "Failed to load Customer Details")
+                                    //    document.getElementById("MerchantID").value = "";
+                                }
+                                else {
+                                    localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                    //document.getElementById("MerchantID").value = "";
+
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                //document.getElementById("MerchantID").value = "";
+                            },
+                            statusCode: {
+                                1024: function () {
+                                    localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                    //document.getElementById("MerchantID").value = "";
+                                }
+                            }
+                        });
+
+                    }
                 }
                 else {
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                     localStorage.setItem("MERCHANTAVAILABLE", "0");
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
-                    document.getElementById("MerchantID").value = "";
-
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                 localStorage.setItem("MERCHANTAVAILABLE", "0");
-                document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
-                document.getElementById("MerchantID").value = "";
             },
             statusCode: {
                 1024: function () {
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                     localStorage.setItem("MERCHANTAVAILABLE", "0");
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
-                    document.getElementById("MerchantID").value = "";
                 }
             }
         });
@@ -296,16 +334,17 @@
 
     });
 
-            $("#CustomerRegionID").change(function () {
-                var id = this.value;
-                if (id != 0) {
-                    $("#CustomerRegionID_error").html("");
-                    document.getElementById("MerchantID").value = "";
-                    document.getElementById("dvCards").innerHTML = "";
-                    document.getElementById("NoOfUnallocatedCards").value = "";
-                }
+    $("#CustomerRegionID").change(function () {
+        var id = this.value;
+        if (id != 0) {
+            $("#CustomerRegionID_error").html("");
+            document.getElementById("MerchantID").value = "";
+            document.getElementById("dvCards").innerHTML = "";
+            document.getElementById("NoOfUnallocatedCards").value = "";
+            $("#MerchantID_error").html("");
+        }
 
-            });
+    });
 
             $("#checkAll").change(function () {
                 //alert(checkAll.checked);
