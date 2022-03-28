@@ -10,6 +10,11 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
 {
     public class CustomerTransactionViewModel:BaseEntity
     {
+        public CustomerTransactionViewModel()
+        {
+            FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+            ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+        }
         [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
