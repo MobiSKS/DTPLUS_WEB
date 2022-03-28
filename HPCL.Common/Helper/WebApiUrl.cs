@@ -187,6 +187,7 @@
         #region TatkalCardCustomer
         public static string insertTatkalCardRequest = "api/dtplus/tatkal/insert_tatkal_card_request";
         public static string insertTatkalCardCustomer = "api/dtplus/tatkal/insert_tatkal_card_customer";
+        public static string viewRequestedTatkalCard = "api/dtplus/tatkal/view_requested_tatkal_card";
         #endregion
 
         #region Terminal

@@ -154,7 +154,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CustomerType", cust.CustomerTypeID.ToString()},
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
@@ -224,7 +224,6 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerTypeForms), Encoding.UTF8, "application/json");
 
-            //
             var contentString = await _requestService.CommonRequestService(content, WebApiUrl.insertCustomer);
             CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(contentString);
             cust.Internel_Status_Code = customerResponse.Internel_Status_Code;
