@@ -125,7 +125,7 @@
 </div>
 <script type="text/javascript">
 
-   
+
     function showEntity() {
         var id = $('#EntityTypeId :selected').val();
         if (id > 0) {
@@ -146,7 +146,7 @@
                 $(".terminal").attr("style", "display:none");
                 $(".cardNo").attr("style", "display:none");
             }
-            else if ($('#EntityTypeId :selected').text() == "Card") {
+            else if ($('#EntityTypeId :selected').text() == "Card") {       
                 $(".customer").attr("style", "display:none");
                 $(".merchant").attr("style", "display:none");
                 $(".terminal").attr("style", "display:none");
@@ -181,11 +181,11 @@
         $("#remarks_error").html("");
         $("#divReasonDetails").attr("style", "display:none");
         $('#ReasonId').empty();
-        $('<option>',
-            {
-                value: 0,
-                text: "--Select--"
-            }).html("--Select--").appendTo("#ReasonId");
+        //$('<option>',
+        //    {
+        //        value: 0,
+        //        text: "--Select--"
+        //    }).html("--Select--").appendTo("#ReasonId");
     }
     function getActionList() {
         var id = $('#EntityTypeId :selected').val();
@@ -275,13 +275,13 @@
                             }
                         });
                     }
-                    else {
-                        $('<option>',
-                            {
-                                value: 0,
-                                text: "--Select--"
-                            }).html("--Select--").appendTo("#ReasonId");
-                    }
+                    //else {
+                    //    $('<option>',
+                    //        {
+                    //            value: 0,
+                    //            text: "--Select--"
+                    //        }).html("--Select--").appendTo("#ReasonId");
+                    //}
 
                 }
                 else {
@@ -323,7 +323,7 @@
             if (customerId != "") {
                 if (!customerId.match(mappedCustomerId)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Please enter valid ID");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
                     flag = "N";
                 }
                 else {
@@ -338,7 +338,7 @@
             if (merchantId != "") {
                 if (!merchantId.match(mappedMerchantID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Please enter valid ID");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
                     flag = "N";
                 }
                 else {
@@ -353,7 +353,7 @@
             if (cardNo != "") {
                 if (cardNo.length!=16) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Please enter valid ID");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
                     flag = "N";
                 }
                 else {
@@ -369,7 +369,7 @@
             if (terminalId != "") {
                 if (!terminalId.match(mappedterminalID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Please enter valid ID");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
                     flag = "N";
                 }
                 else {
@@ -384,7 +384,7 @@
             $("#entityid_error").html("Enter Entity ID");
             flag = "N";
         }
-        
+
         var actionId = $('#ActionId :selected').val();
         if (actionId == "0" ) {
             $("#action_error").attr("style", "display:block");
@@ -429,31 +429,49 @@
                 $("#reason_error").html("");
             }
         }
-       
         if (flag == "N")
             e.preventDefault();
-
         else {
-
+            var actionText = $('#ActionId :selected').text();
             var entityTypeId = $('#EntityTypeId :selected').val();
             var remarks = $('#Remarks').val();
             var model = { EntityTypeId: entityTypeId, EntityIdVal: entityIdVal, ActionId: actionId, ReasonId: reasonId, ReasonDetails: reasonDetails, Remarks: remarks };
+            if (actionText == "Permanent Hotlisted" || actionId == "7") {
+                if (confirm("Entity Once Permanent Hotlisted cannot be reactived.Are you sure you want to continue?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(model),
+                        success: function (data) {
+                            $("#reason").html(data);
+                            $(".toBeHiddenOnSuccess").hide();
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                data: JSON.stringify(model),
-                success: function (data) {
-                    $("#reason").html(data);
-                    $(".toBeHiddenOnSuccess").hide();
-
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
                 }
-            });
+            }
+            else {
+                 $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(model),
+                        success: function (data) {
+                            $("#reason").html(data);
+                            $(".toBeHiddenOnSuccess").hide();
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+            }
         }
     });
 

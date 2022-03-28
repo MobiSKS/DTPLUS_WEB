@@ -11,7 +11,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "MyHpOTCCardCustomer")" class="text_primary">My HP (OTC) Card Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">My HP (OTC) Card Customer Creation </li>
         </ul>
-        <form name="OTCCustomerCardCreationForm" method="post" asp-action="CustomerCardCreation" class="w-100" autocomplete="off">
+        <form name="OTCCustomerCardCreationForm" id="OTCCustomerCardCreationForm" method="post" asp-action="CustomerCardCreation" class="w-100" autocomplete="off">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -531,6 +531,15 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#OTCCustomerCardCreationForm").on("keypress", function (event) {
+            var keyPressed = event.keyCode || event.which;
+            if (keyPressed === 13) {
+                console.log("You pressed the Enter key!!");
+                event.preventDefault();
+                return false;
+            }
+        });
+
         if (document.getElementById("LoggedInAs").value == "MERCHANT")
         {
             $('#MerchantId').attr('readonly', 'true');
@@ -634,6 +643,11 @@
         }
     });
 
+    $('#MerchantId').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            $('#btnSearch').click();
+        }
+    });
 
     $("#btnSearch").click(function () {
         //debugger;
