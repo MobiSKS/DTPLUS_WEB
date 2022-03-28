@@ -24,7 +24,7 @@
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Merchant Id <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
@@ -81,7 +81,7 @@
 
             var merchantId = document.getElementById("MerchantId").value.trim();
             if (merchantId == "") {
-                document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant Id";
+                document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant ID";
                 $("#merchantId").focus;
                 return (false);
             }
@@ -90,21 +90,20 @@
             }
                         
             if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
-                document.getElementById("MerchantId_error").innerHTML = "Merchant Id should be 10 digit number starting with 3";
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
                 document.getElementById("MerchantId").focus();
                 return (false);
             }
 
             if (document.getElementById("MerchantId").value.length < 10) {
-                document.getElementById("MerchantId_error").innerHTML = "Merchant Id should be 10 digit number";
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number";
                 document.getElementById("MerchantId").focus();
                 return (false);
             }
 
-            var MerchantIDFormat = /^(?=(3))[0-9]{10}$/;
 
-            if (!document.getElementById("MerchantId").value.match(MerchantIDFormat)) {
-                document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+            if (!document.getElementById("MerchantId").value.match(mappedMerchantID)) {
+                document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
                 document.getElementById("MerchantId").focus();
                 return (false);
             }
@@ -124,22 +123,22 @@
                         localStorage.setItem("MERCHANTIDFOUND", "1");
 
                         if (data == "Failed to load Merchant Details") {
-                            document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                            document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                             localStorage.setItem("MERCHANTIDFOUND", "0");
                         }
                     }
                     else {
-                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                         localStorage.setItem("MERCHANTIDFOUND", "0");
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                    document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                     localStorage.setItem("MERCHANTIDFOUND", "0");
                 },
                 statusCode: {
                     1024: function () {
-                        document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                         localStorage.setItem("MERCHANTIDFOUND", "0");
                     }
                 }
@@ -152,42 +151,56 @@
     function CheckValidations() {
         debugger;
 
-        var ret = false;
+        var ret = true;
 
-        if (document.getElementById('MerchantId').value == "") {
-            document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant Id";
-            document.getElementById('MerchantId').focus();
-            return ret;
+        if (document.getElementById('MerchantId').value.trim() == "") {
+            document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant ID";
+            //document.getElementById('MerchantId').focus();
+            ret = false;
         }
         else {
-            document.getElementById("MerchantId_error").innerHTML = "";
+
+            if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number starting with 3";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
+
+            if (document.getElementById("MerchantId").value.length < 10) {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID should be 10 digit number";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
+
+            if (localStorage.getItem("MERCHANTIDFOUND") == 0) {
+                document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
+                ret = false;
+            }
+            else {
+                document.getElementById("MerchantId_error").innerHTML = "";
+            }
         }
 
-
-        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") {
+        if (document.getElementById('NoofCards').value.trim() == "" || document.getElementById('NoofCards').value.trim() == "0") {
             document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
-            document.getElementById('NoofCards').focus();
-            return ret;
+            //document.getElementById('NoofCards').focus();
+            ret = false;
         }
         else {
             if (Number(document.getElementById('NoofCards').value) < 10 || Number(document.getElementById('NoofCards').value) > 999) {
                 document.getElementById("NoofCards_error").innerHTML = "No. Of OTC Cards should be 10 to 999";
-                document.getElementById('NoofCards').focus();
-                return ret;
+                //document.getElementById('NoofCards').focus();
+                ret = false;
             }
             else {
                 document.getElementById("NoofCards_error").innerHTML = "";
             }
         }
-
-        if (localStorage.getItem("MERCHANTIDFOUND") == 0) {
-            document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant Id";
-            return (false);
-        }
-        else {
-            document.getElementById("MerchantId_error").innerHTML = "";
-        }
-
-        return true;
+        
+        return ret;
     }
     </script>

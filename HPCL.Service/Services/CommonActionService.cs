@@ -276,7 +276,9 @@ namespace HPCL.Service.Services
             var officeStateJarr = officeStateObj["Data"].Value<JArray>();
             List<StateResponseModal> stateLst = officeStateJarr.ToObject<List<StateResponseModal>>();
 
-            return stateLst;
+            var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
+
+            return sortedtList;
         }
 
         public async Task<List<ZonalOfficeResponseModal>> GetZonalOfficeList()
@@ -323,50 +325,7 @@ namespace HPCL.Service.Services
 
             return validateUserNameLst.First().Status.ToString();
         }
-
-        //public async Task<List<RegionModel>> GetRegionList()
-        //{
-        //    var CustomerRegion = new Dictionary<string, string>
-        //    {
-        //        {"Useragent", CommonBase.useragent},
-        //        {"Userip", CommonBase.userip},
-        //        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-        //        {"ZonalID",  "0" }
-        //    };
-
-        //    StringContent customerRegionContent = new StringContent(JsonConvert.SerializeObject(CustomerRegion), Encoding.UTF8, "application/json");
-
-        //    var customerRegionResponse = await _requestService.CommonRequestService(customerRegionContent, WebApiUrl.regionalOffice);
-
-        //    JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
-        //    var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
-        //    List<RegionModel> customerRegionLst = customerRegionJarr.ToObject<List<RegionModel>>();
-
-        //    return customerRegionLst;
-        //}
-
-        public async Task<List<CustomerStateModel>> GetCustStateList()
-        {
-            var requestData = new GetStatesRequestModel()
-            {
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
-                CountryID = "0"
-            };
-
-            StringContent Statecontent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
-            var responseState = await _requestService.CommonRequestService(Statecontent, WebApiUrl.getState);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerStateModel> stateLst = jarr.ToObject<List<CustomerStateModel>>();
-
-            var sortedtList = stateLst.OrderBy(x => x.StateName).ToList();
-
-            return sortedtList;
-        }
-
+                
         public async Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber)
         {
             var request = new CheckformNumberDuplicationRequest()
@@ -1085,6 +1044,84 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<GetCityResponse> cityList = jarr.ToObject<List<GetCityResponse>>();
             return cityList;
+        }
+        public async Task<CustomerInserCardResponseData> CheckVechileNoUsed(string VechileNo)
+        {
+            //Request info
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                VechileNo = VechileNo
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkVechileNo);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
+        public async Task<List<HotlistStatus>> GetActionList(string EntityTypeId)
+        {
+            var forms = new HotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getactionlist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistStatus> HotlistStatus = jarr.ToObject<List<HotlistStatus>>();
+            var sortedtList = HotlistStatus.OrderBy(x => x.StatusId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<HotlistEntity>> GetEntityTypeList()
+        {
+            var forms = new BaseEntity
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getentitytypelist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistEntity> HotlistEntity = jarr.ToObject<List<HotlistEntity>>();
+            var sortedtList = HotlistEntity.OrderBy(x => x.EntityId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<HotlistReason>> GetReasonListForEntities(string EntityTypeId,string Actionid)
+        {
+            var forms = new HotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
+                Actionid= Actionid != "" ? Convert.ToInt32(Actionid) : 0,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getreasonlistforentities);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HotlistReason> HotlistReason = jarr.ToObject<List<HotlistReason>>();
+            var sortedtList = HotlistReason.OrderBy(x => x.StatusId).ToList();
+            return sortedtList;
         }
     }
 }

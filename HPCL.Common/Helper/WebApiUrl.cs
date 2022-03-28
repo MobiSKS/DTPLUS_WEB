@@ -95,7 +95,8 @@
         public static string searchMerchant = "api/dtplus/merchant/search_merchant";
         public static string searchTerminal = "api/dtplus/terminal/search_terminal";
         public static string getMerchantStatusList = "api/dtplus/merchant/get_merchant_status";
-        
+        public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
+        public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
         #endregion
 
         #region customer
@@ -141,6 +142,7 @@
         public static string gettransactionssummary = "api/dtplus/customer/get_transactions_summary";
         public static string updateCustomer = "api/dtplus/customer/update_customer";
         public static string checkPanCardByDistrictIdAndCustomerReferenceno = "api/dtplus/customer/check_pan_card_by_district_id_and_customer_reference_no";
+        public static string checkVechileNo = "api/dtplus/card/check_vechile_no";
         #endregion
 
         #region Login
@@ -241,8 +243,17 @@
       
         #endregion
 
-        public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
-        public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
+        
 
+       
+
+        #region Admin Hotlist
+        public static string getactionlist = "api/dtplus/hotlist/get_action_list";
+        public static string getentitytypelist = "api/dtplus/hotlist/get_entity_type_list";
+        public static string getreasonlistforentities = "api/dtplus/hotlist/get_reason_list_for_entities";
+        public static string updatehotlistorreactivate = "api/dtplus/hotlist/update_hotlist_or_reactivate";
+        public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
+
+        #endregion
     }
 }

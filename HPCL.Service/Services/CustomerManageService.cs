@@ -100,30 +100,6 @@ namespace HPCL.Service.Services
 
 
         }
-
-        public async Task<List<CustomerStateModel>> GetCustomerState()
-        {
-
-            var CustomerStateForms = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-                };
-
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerStateForms), Encoding.UTF8, "application/json");
-
-            var responseState = await _requestService.CommonRequestService(content, WebApiUrl.getState);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseState).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<CustomerStateModel> lstState = jarr.ToObject<List<CustomerStateModel>>();
-
-            return lstState;
-
-
-        }
         public async Task<List<CustomerSecretQueModel>> GetCustomerSecretQue()
         {
 

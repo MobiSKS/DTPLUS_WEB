@@ -331,7 +331,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Vehicle Number</label>
                                             <div class="col-md-6 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control", maxlength = "10", @style = "text-transform:uppercase" })
+                                                    @Html.TextBoxFor(m => m.VehicleNo1, new { @class = "form-control", maxlength = "10", @style = "text-transform:uppercase", @onchange = "ValidateVehicleNo(this,1)" })
                                                     <span class="error" id="VehicleNo1_error"></span>
                                                 </div>
 
@@ -373,7 +373,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Vehicle Number </label>
                                             <div class="col-md-6 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control", @style = "text-transform:uppercase", maxlength = "10" })
+                                                    @Html.TextBoxFor(m => m.VehicleNo2, new { @class = "form-control", @style = "text-transform:uppercase", maxlength = "10", @onchange = "ValidateVehicleNo(this,2)" })
                                                     <span class="error" id="VehicleNo2_error"></span>
                                                 </div>
 
@@ -407,7 +407,7 @@
                                 <div class="d-flex align-items-center flex-wrap mt-3">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-1">
-                                            <label class="font-weight-normal col-md-5 col-12">Copy of Driver License <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12">Received Copy of Driver License? <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="d-flex align-items-center justify-content-start flex-wrap">
                                                     <div class="d-flex align-items-center mr-3">
@@ -426,8 +426,8 @@
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-1">
-                                            <label class="font-weight-normal col-md-6 col-12">Copy of Vehicle Registration Certificate <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-6 col-12">
+                                            <label class="font-weight-normal col-md-7 col-12">Received Copy of Vehicle Registration Certificate? <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-5 col-12">
                                                 <div class="d-flex align-items-center justify-content-start flex-wrap">
                                                     <div class="d-flex align-items-center mr-3">
                                                         @Html.RadioButtonFor(m => m.CopyofVehicleRegistrationCertificate, "Yes", new { @id = "rbtnVehicleRegistrationYes" })
@@ -476,7 +476,7 @@
                                 @*style="display: none"*@
                                 <thead>
                                     <tr>
-                                        <th>Serial No</th>
+                                        <th>S.No</th>
                                         <th>Card Number</th>
                                     </tr>
                                 </thead>
@@ -506,7 +506,7 @@
                                 @*style="display: none"*@
                                 <thead>
                                     <tr>
-                                        <th>Serial No</th>
+                                        <th>S.No</th>
                                         <th>Card Number</th>
                                     </tr>
                                 </thead>
@@ -535,6 +535,36 @@
         {
             $('#MerchantId').attr('readonly', 'true');
         }
+
+        var dlYesChecked = true;
+        var rcYesChecked = true;
+
+        if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
+            dlYesChecked = false;
+        }
+        else {
+            if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
+                dlYesChecked = false;
+            }
+        }
+
+        if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
+            rcYesChecked = false;
+        }
+        else {
+            if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
+                rcYesChecked = false;
+            }
+        }
+        //alert(dlYesChecked);
+        //alert(rcYesChecked);
+        if (dlYesChecked && rcYesChecked) {
+            $(":submit").removeAttr("disabled");
+        }
+        else {
+            $(":submit").attr("disabled", true);
+        }
+
     });
 
 
@@ -749,7 +779,7 @@
                     //    document.getElementById("RBEName").value = "";
                     if (data.status == "0") {
                         formNumberUsed = true;
-                        document.getElementById("formNumber_error").innerHTML = "Form Number is already used";
+                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
                         localStorage.setItem("FORMNOALREADYUSED", "0");
                     }
                     else {
@@ -774,7 +804,7 @@
 
         //console.log(fromNumberUsed);
         if (formNumberUsed == true) {
-            document.getElementById("formNumber_error").innerHTML = "Form Number is already used";
+            document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
             //return (false);
         }
         else {
@@ -995,13 +1025,13 @@
         }
 
         var panNumberUsed = false;
-        
+
 
         if ($('#IncomeTaxPan').val().match(pancard)) {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
         }
         else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
             document.getElementById("IncomeTaxPan").value = "";
             return (false);
         }
@@ -1011,7 +1041,7 @@
         console.log(forthdigitPan);
         if (forthdigitPan != 'P') {
             document.getElementById("IncomeTaxPan").value = "";
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
             return;
         }
         else {
@@ -1031,7 +1061,7 @@
 
                     if (data.status == "0") {
                         panNumberUsed = true;
-                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
                         localStorage.setItem("PANNOALREADYUSED", "0");
                     }
                     else {
@@ -1056,7 +1086,7 @@
 
         console.log(panNumberUsed);
         if (panNumberUsed == true) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No already exists";
             //return (false);
         }
         else {
@@ -1147,7 +1177,7 @@
         }
         else {
             if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
-                document.getElementById("formNumber_error").innerHTML = "Form Number is already used";
+                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
                 ret = false;
             }
             else {
@@ -1373,7 +1403,7 @@
         }
 
         //if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
         //    ret = false;
         //}
         //else {
@@ -1381,7 +1411,7 @@
         //}
 
         //if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-        //    document.getElementById("comm_email_error").innerHTML = "Email is already used";
+        //    document.getElementById("comm_email_error").innerHTML = "Email already exists";
         //    return (false);
         //}
         //else {
@@ -1422,9 +1452,9 @@
                 document.getElementById("comm_address2_error").innerHTML = "";
             }
         }
-        
+
         if (document.getElementById("CardNumber1").value == "" && document.getElementById("CardNumber2").value == "") {
-            document.getElementById("CardNumber1_error").innerHTML = "Map at least one card with this Customer!";
+            document.getElementById("CardNumber1_error").innerHTML = "Card Details Required";
             //document.getElementById("CardNumber1").focus();
             document.getElementById("CardNumber2_error").innerHTML = "";
             ret = false;
@@ -1443,7 +1473,7 @@
             }
         }
 
-        
+
         //if (document.getElementById("CardNumber1").value != "") {
         //    if (document.getElementById("VehicleNo1").value == "") {
         //        document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No1 cannot be left blank";
@@ -1470,7 +1500,7 @@
 
         if (document.getElementById("VehicleNo1").value != "") { //Vehicle length min-6 max 10
             if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) {
-                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No length is not valid";
+                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                 //document.getElementById("VehicleNo1").focus();
                 ret = false;
             }
@@ -1524,7 +1554,7 @@
 
         if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
             if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
-                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No length is not valid";
+                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                 //document.getElementById("VehicleNo2").focus();
                 ret = false;
             }
@@ -1551,10 +1581,10 @@
             document.getElementById("CardNumber2_error").innerHTML = "";
         }
 
-        
+
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
-            document.getElementById("CopyofDriverLicense_error").innerHTML = "Please select Copy of Driver License";
+            document.getElementById("CopyofDriverLicense_error").innerHTML = "Please select Received Copy of Driver License?";
             ret = false;
         }
         else {
@@ -1566,9 +1596,9 @@
                 document.getElementById("CopyofDriverLicense_error").innerHTML = "";
             }
         }
-                
+
         if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
-            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Please select Copy of Vehicle Registration Certificate";
+            document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Please select Received Copy of Vehicle Registration Certificate?";
             ret = false;
         }
         else {
@@ -1584,7 +1614,7 @@
         console.log('Testing');
 
         if (localStorage.getItem("PANNOALREADYUSED") == 0) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
             ret = false;
         }
         else {
@@ -1705,7 +1735,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         mobileNoUsed = true;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
                         localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
@@ -1714,16 +1744,16 @@
                     }
                 }
                 else {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
                     mobileNoUsed = true;
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
             },
             statusCode: {
                 1024: function () {
-                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
                 }
             }
         });*@
@@ -1771,7 +1801,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         emailUsed = true;
-                        document.getElementById("comm_email_error").innerHTML = "Email is already used";
+                        document.getElementById("comm_email_error").innerHTML = "Email already exists";
                         localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
@@ -1781,16 +1811,16 @@
                 }
                 else {
                     //console.log(v);
-                    document.getElementById("comm_email_error").innerHTML = "Email is already used";
+                    document.getElementById("comm_email_error").innerHTML = "Email already exists";
                     emailUsed = true;
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("comm_email_error").innerHTML = "Email is already used";
+                document.getElementById("comm_email_error").innerHTML = "Email already exists";
             },
             statusCode: {
                 1024: function () {
-                    document.getElementById("comm_email_error").innerHTML = "Email is already used";
+                    document.getElementById("comm_email_error").innerHTML = "Email already exists";
                 }
             }
         });*@
@@ -2144,7 +2174,7 @@
         //    document.getElementById("CommunicationAddress2").focus();
         //    return (false);
         //}
-                
+
     });
 
     $("#IndividualOrgName").on("blur", function () {
@@ -2209,6 +2239,127 @@
         else {
             document.getElementById("nameOnCard_error").innerHTML = "";
         }
+    });
+
+    function ValidateVehicleNo(o, rowSelected) {
+        debugger;
+        var vehicleNo = o.value.trim();
+        console.log(vehicleNo);
+
+        if (vehicleNo == '') {
+            if (rowSelected == "1") {
+                VehicleNo1_error.innerHTML = "Please Enter Vehicle Number";
+                return;
+            }
+            else {
+                VehicleNo2_error.innerHTML = "Please Enter Vehicle Number";
+            }
+        }
+        else {
+            if (rowSelected == "1") {
+                VehicleNo1_error.innerHTML = "";
+            }
+            else {
+                VehicleNo2_error.innerHTML = "";
+            }
+        }
+
+        var result = false;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: "CheckVehicleRegistrationValid/Common",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    if (rowSelected == "1") {
+                        VehicleNo1_error.innerHTML = "Vehicle Number is valid";
+                    }
+                    else {
+                        VehicleNo2_error.innerHTML = "Vehicle Number is valid";
+                    }
+                    console.log(jsonData);
+                }
+                else {
+                    if (rowSelected == "1") {
+                        VehicleNo1_error.innerHTML = "Invalid Vehicle Number";
+                    }
+                    else {
+                        VehicleNo2_error.innerHTML = "Invalid Vehicle Number";
+                    }
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                if (rowSelected == "1") {
+                    VehicleNo1_error.innerHTML = "Invalid Vehicle Number";
+                }
+                else {
+                    VehicleNo2_error.innerHTML = "Invalid Vehicle Number";
+                }
+
+            }
+        });
+
+    }
+
+    $('input[type=radio][name=CopyofDriverLicense]').change(function () {
+
+        var rcYesChecked = true;
+        if (this.value == "Yes") {
+
+            if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
+                rcYesChecked = false;
+            }
+            else {
+                if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
+                    rcYesChecked = false;
+                }
+            }
+
+            if (rcYesChecked) {
+                $(":submit").removeAttr("disabled");
+            }
+            else {
+                $(":submit").attr("disabled", true);
+            }
+
+        } else if (this.value == "No") {
+
+            $(":submit").attr("disabled", true);
+        }
+
+    });
+
+    $('input[type=radio][name=CopyofVehicleRegistrationCertificate]').change(function () {
+
+        var dlYesChecked = true;
+        if (this.value == "Yes") {
+
+            if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
+                dlYesChecked = false;
+            }
+            else {
+                if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
+                    dlYesChecked = false;
+                }
+            }
+
+            if (dlYesChecked) {
+                $(":submit").removeAttr("disabled");
+            }
+            else {
+                $(":submit").attr("disabled", true);
+            }
+
+        } else if (this.value == "No") {
+
+            $(":submit").attr("disabled", true);
+        }
+
     });
 
 </script>

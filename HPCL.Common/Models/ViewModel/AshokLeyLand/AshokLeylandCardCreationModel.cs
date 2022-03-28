@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Officers;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         {
             ObjALCardEntryDetail = new List<ALCardEntryDetails>();
 
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -30,7 +31,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
             VehicleTypeMdl = new List<VehicleTypeModel>();
         }
 
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
 

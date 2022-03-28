@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ViewModel.Customer;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 
 namespace HPCL.Common.Models
 {
@@ -39,8 +40,8 @@ namespace HPCL.Common.Models
                 RegionalOfficeID = 0,
                 RegionalOfficeName = "Select Region"
             });
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -87,14 +88,14 @@ namespace HPCL.Common.Models
             CommunicationDistrictMdl.Add(new OfficerDistrictModel
             {
                 districtID = 0,
-                districtName = "Select Communication District"
+                districtName = "Select District"
             });
 
             PerOrRegAddressDistrictMdl = new List<OfficerDistrictModel>();
             PerOrRegAddressDistrictMdl.Add(new OfficerDistrictModel
             {
                 districtID = 0,
-                districtName = "Select Permanent District"
+                districtName = "Select District"
             });
 
         }
@@ -104,8 +105,7 @@ namespace HPCL.Common.Models
         public virtual List<CustomerSubTypeModel> CustomerSubTypeMdl { get; set; }
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }
         public virtual List<CustomerRegionModel> CustomerRegionMdl { get; set; }
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
-        //public virtual List<CustomerDistrictModel> CustomerDistrictMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<CustomerTbentityModel> CustomerTbentityMdl { get; set; }
         public virtual List<CustomerTypeOfFleetModel> CustomerTypeOfFleetMdl { get; set; }
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }

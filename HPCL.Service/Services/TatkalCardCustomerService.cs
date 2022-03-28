@@ -77,7 +77,7 @@ namespace HPCL.Service.Services
             TatkalCardCustomerModel custModel = new TatkalCardCustomerModel();
             custModel.Remarks = "";
             custModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
-            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
 
             return custModel;
@@ -195,7 +195,7 @@ namespace HPCL.Service.Services
                 else
                     customerModel.Remarks = customerResponse.Message;
 
-                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
                 customerModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
                 customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(customerModel.ZonalOffice));

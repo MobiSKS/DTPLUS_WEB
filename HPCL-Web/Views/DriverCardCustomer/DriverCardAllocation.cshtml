@@ -8,7 +8,7 @@
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Driver Card Customer</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "DriverCardCustomer")" class="text_primary">Driver Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">Cards Allocation to Merchant via Web</li>
         </ul>
         <form name="addRequestForOTCCardForm" method="post" asp-action="RequestForOTCCard" class="w-100">
@@ -51,8 +51,8 @@
                                     <button class="btn btn_primary" type="button" id="btnUnallocatedCards">Get Unallocated Cards</button>
                                 </div>
                                 @*<div class="px-2">
-                                        <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
-                                    </div>*@
+                                    <button class="btn btn_primary" type="button" onclick="ResetFields();">Reset</button>
+                                </div>*@
 
                             </div>
                             <div id="dvDetails" class="mt-3" style="display:none;">
@@ -113,7 +113,9 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord" style="display:none">
+                                Cards not found for selected Region
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -153,13 +155,16 @@
                         //debugger;
                         console.log(data);
                         //var jsonData = JSON.parse(data);
-                        //console.log('Ravi');
                         console.log(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards);
                         document.getElementById("NoOfUnallocatedCards").value = data.noOfUnAllocatedCard[0].noOfUnAllocatedCards;
-                        if (Number(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards)>0)
+                        if (Number(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards) > 0) {
                             dvDetails.style.display = 'block';
-                        else
+                            NoRecord.style.display = 'none';
+                        }
+                        else {
                             dvDetails.style.display = 'none';
+                            NoRecord.style.display = 'block';
+                        }
                         //if (status == 'success' && jsonData['statusCode'] == '101') {
                         //    result = true;
                         //    document.getElementById("VehicleNo_error").innerHTML = "";
@@ -215,7 +220,7 @@
 
         var merchantId = document.getElementById("MerchantID").value;
         if (merchantId == "") {
-            document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
+            document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
             //$("#MerchantID").focus;
             return (false);
         }
@@ -251,7 +256,7 @@
 
                     if (data.status == 0) {
                         localStorage.setItem("MERCHANTAVAILABLE", "0");
-                        document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
                         document.getElementById("MerchantID").value = "";
                     }
                     else if (data.status == 1) {
@@ -260,7 +265,7 @@
                     }
                     else {
                         localStorage.setItem("MERCHANTAVAILABLE", "0");
-                        document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
                         document.getElementById("MerchantID").value = "";
                     }
 
@@ -269,20 +274,20 @@
                 }
                 else {
                     localStorage.setItem("MERCHANTAVAILABLE", "0");
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
                     document.getElementById("MerchantID").value = "";
 
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 localStorage.setItem("MERCHANTAVAILABLE", "0");
-                document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
                 document.getElementById("MerchantID").value = "";
             },
             statusCode: {
                 1024: function () {
                     localStorage.setItem("MERCHANTAVAILABLE", "0");
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant not found";
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID not found";
                     document.getElementById("MerchantID").value = "";
                 }
             }
@@ -323,7 +328,7 @@
                 var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
                 var merchantId = document.getElementById("MerchantID").value;
                 if (merchantId == "") {
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant Id is required";
+                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
                     //$("#MerchantID").focus;
                     return (false);
                 }

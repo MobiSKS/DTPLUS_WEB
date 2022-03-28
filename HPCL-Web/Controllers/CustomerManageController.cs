@@ -15,6 +15,7 @@ using HPCL.Common.Models;
 using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 
 namespace HPCL_Web.Controllers
 {
@@ -22,9 +23,11 @@ namespace HPCL_Web.Controllers
     public class CustomerManageController : Controller
     {
         private readonly ICustomerManageService _customerManageService;
-        public CustomerManageController(ICustomerManageService customerManageService)
+        private readonly ICommonActionService _commonActionService;
+        public CustomerManageController(ICustomerManageService customerManageService, ICommonActionService commonActionService)
         {
             _customerManageService = customerManageService;
+            _commonActionService = commonActionService;
         }
        
         HelperAPI _api = new HelperAPI();
@@ -70,8 +73,8 @@ namespace HPCL_Web.Controllers
             lstTbentity = await _customerManageService.GetCustomerTbentityModel();
             custMdl.CustomerTbentityMdl.AddRange(lstTbentity);
 
-            List<CustomerStateModel> lstState = new List<CustomerStateModel>();
-            lstState = await _customerManageService.GetCustomerState();
+            List<StateResponseModal> lstState = new List<StateResponseModal>();
+            lstState = await _commonActionService.GetStateList();
             custMdl.CustomerStateMdl.AddRange(lstState);
 
 

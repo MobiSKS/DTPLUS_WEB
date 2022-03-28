@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using Microsoft.AspNetCore.Http;
 
 namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
@@ -13,8 +14,8 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public DriverCardCustomerModel()
         {
 
-            CustomerStateMdl = new List<CustomerStateModel>();
-            CustomerStateMdl.Add(new CustomerStateModel
+            CustomerStateMdl = new List<StateResponseModal>();
+            CustomerStateMdl.Add(new StateResponseModal
             {
                 CountryID = 0,
                 StateID = 0,
@@ -77,7 +78,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         [Required(ErrorMessage = "File Name is Required")]
         public string AddressProofDocumentNo { get; set; }
 
-        public virtual List<CustomerStateModel> CustomerStateMdl { get; set; }
+        public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<ProofType> DocumentTypeMdl { get; set; }
 
         public int RegionalOfficeId { get; set; }

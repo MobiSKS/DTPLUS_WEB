@@ -181,8 +181,8 @@
                                             <span class="error" id="tierOfCustomer_error"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap d-none d-md-none d-lg-none" id="lblPanCardRemarks">
-                                        <label class="font-weight-normal col-md-5 col-12">Pan Card Remarks <sup class="text-danger">*</sup></label>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks</label>
                                         <div class="col-md-8 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
@@ -190,6 +190,15 @@
                                             <span class="error" id="PanCardRemarks_error"></span>
                                         </div>
                                     </div>
+                                    @*<div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-8 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
+                                        </div>
+                                        <span class="error" id="PanCardRemarks_error"></span>
+                                    </div>
+                                </div>*@
                                 </div>
                             </div>
                         </div>
@@ -338,9 +347,9 @@
                         </div>
                     </div>
                     <div class="border-1 rounded border-grey h-100 mt-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address <label class="text-danger">(if different from Communication Address)</label></p>
                         <div class="py-2 p-md-4">
-                            <label class="d-flex align-items-center justify-content-start px-3">
+                            <label class="d-flex align-items-center justify-content-start px-3 mb-3">
                                 <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2" onclick="sameAddressAsCommunication()">
                                 <p class="m-0">Same as Communication Address</p>
                             </label>
@@ -423,7 +432,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Home) </label> @*<sup class="text-danger">*</sup>*@
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label> @*<sup class="text-danger">*</sup>*@
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
@@ -853,7 +862,7 @@
             document.getElementById("PanCardRemarks").style.display = "none";
             $("#PanCardRemarks").prop('readonly', true);
         }
-        
+
     });
 
     function setDates() {
@@ -1275,7 +1284,7 @@
             // sameas = false;
         }
     }
-    
+
     $("#CustomerTbentityID").change(function () {
             var id = this.value;
          if (id != 0) {
@@ -1328,7 +1337,7 @@
 
     });
 
-    
+
     $("#CommunicationEmail").on("blur", function () {
         //debugger;
         var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
@@ -1371,7 +1380,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         emailUsed = true;
-                        document.getElementById("comm_email_error").innerHTML = "Communication Email is already used";
+                        document.getElementById("comm_email_error").innerHTML = "Email already exists";
                         localStorage.setItem("EMAILIDALREADYUSED", "0");
                     }
                     else {
@@ -1442,7 +1451,7 @@
                     //console.log(data.reason);
                     if (data.status == "0") {
                         mobileNoUsed = true;
-                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number is already used";
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
                         localStorage.setItem("MOBILENUMBERREADYUSED", "0");
                     }
                     else {
@@ -1482,7 +1491,7 @@
             localStorage.setItem("IsDuplicatePanNo", "1");
             return;
         }
-                
+
         if (panNumber == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             return (false);
@@ -1496,7 +1505,7 @@
             console.log(forthdigitPan);
             if (forthdigitPan != 'P') {
                 document.getElementById("CustomerIncomeTaxPan").value = "";
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is not valid";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
                 return;
             }
             else {
@@ -1528,11 +1537,12 @@
                         console.log(data.status);
                         console.log(data.reason);
                         if (data.status == "0") {
-                            //document.getElementById("comm_district_error").innerHTML = "Pan already used";
+                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
                             document.getElementById("lblPanCardRemarks").style.display = "block";
                             document.getElementById("PanCardRemarks").style.display = "block";
+                            $("#PanCardRemarks").prop('readonly', false);
                         }
                         else {
                             localStorage.setItem("DUPLICATEPANUSED", "1");
@@ -1541,18 +1551,21 @@
                             document.getElementById("lblPanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").value = "";
+                            $("#PanCardRemarks").prop('readonly', true);
                         }
                     }
                     else {
                         document.getElementById("lblPanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").value = "";
+                        $("#PanCardRemarks").prop('readonly', true);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     document.getElementById("lblPanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").value = "";
+                    $("#PanCardRemarks").prop('readonly', true);
                 },
                 statusCode: {
                     1024: function () {
@@ -1574,7 +1587,7 @@
 
                     if (data.status == "0") {
                         panNumberUsed = true;
-                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN No is already used";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
                         localStorage.setItem("PANNOALREADYUSED", "0");
                     }
                     else {
@@ -1765,7 +1778,7 @@
                         console.log(data.status);
                         console.log(data.reason);
                         if (data.status == "0") {
-                            //document.getElementById("comm_district_error").innerHTML = "Pan already used";
+                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
                         }

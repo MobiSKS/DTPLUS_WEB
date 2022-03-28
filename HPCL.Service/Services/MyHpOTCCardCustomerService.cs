@@ -82,7 +82,7 @@ namespace HPCL.Service.Services
             MyHPOTCCardCustomerModel custModel = new MyHPOTCCardCustomerModel();
             custModel.Remarks = "";
 
-            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             custModel.LoggedInAs = "";
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
@@ -190,7 +190,7 @@ namespace HPCL.Service.Services
                 else
                     customerModel.Remarks = customerResponse.Message;
 
-                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetCustStateList());
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 customerModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(customerModel.CommunicationStateId.ToString()));
             }
 

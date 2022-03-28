@@ -100,7 +100,11 @@
 
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
-    };
+
+        if ($('#ViewCustomerCard_wrapper').length) {
+            document.getElementById('ViewCustomerCard_wrapper').style.display = 'none';
+        }
+    }
 
     function showGrid() {
         if ($("input:text").val() == "") {
@@ -110,7 +114,6 @@
             document.getElementById('ViewCustomerCard').style.display = 'inline-table';
         }
     }
-
 
 
     $("#CustomerRegionID").change(function () {
@@ -145,33 +148,59 @@
             success: function (res) {
                 console.log(res, "res");
 
+                $("#ViewCustomerCard td").parent().remove();
+
+                $('#ViewCustomerCard').DataTable().clear().destroy();
+
+                var tbll = $('#ViewCustomerCard').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "bDestroy": true,
+                    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
 
                 if (res.searchList.length > 0) {
 
+                    $("#ViewCustomerCard").show();
+                    $("#NoRecord").attr("style", "display:none");
 
                     for (var i = 0; i < res.searchList.length; i++) {
-                        $("#ViewCustomerCard").show();
-                        $("#NoRecord").attr("style", "display:none");
 
-                        var rows = "<tbody><tr>"
-                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerId || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].cardNo || '') + "</td>"
-                            + "<td>" + (res.searchList[i].createdDate || '') + "</td>"
-                            + "<td>" + ('') + "</td>"
-                            + "<td>" + (res.searchList[i].createdBy || '') + "</td>"
-                            + "</tr ></tbody > ";
+                        var zonalOfficeName = (res.searchList[i].zonalOfficeName || '');
+                        var regionalOfficeName = (res.searchList[i].regionalOfficeName || '');
+                        var customerId = (res.searchList[i].customerId || '');
+                        var customerName = (res.searchList[i].customerName || '');
+                        var cardNo = (res.searchList[i].cardNo || '');
+                        var createdDate = (res.searchList[i].createdDate || '');
+                        var IssueDate = ('');
+                        var createdBy = (res.searchList[i].createdBy || '');
 
-                        $("#ViewCustomerCard").append(rows);
 
+                        tbll.row.add([
+                            zonalOfficeName,
+                            regionalOfficeName,
+                            customerId,
+                            customerName,
+                            cardNo,
+                            createdDate,
+                            IssueDate,
+                            createdBy
+                        ]).draw();
 
                     }
                 }
                 else {
                     $("#ViewCustomerCard").hide();
                     $("#NoRecord").attr("style", "display:block");
+                    if ($('#ViewCustomerCard_wrapper').length) {
+                        document.getElementById('ViewCustomerCard_wrapper').style.display = 'none';
+                    }
                 }
 
             },

@@ -25,8 +25,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SbuTypeResponseModal>> GetSbuTypeList();
         Task<List<SalesAreaResponseModal>> GetSalesAreaList(string regionId);
         Task<string> ValidateUserName(string userName);
-        //Task<List<RegionModel>> GetRegionList();
-        Task<List<CustomerStateModel>> GetCustStateList();
         Task<CustomerInserCardResponseData> CheckformNumberDuplication(string FormNumber);
         Task<List<OfficerDistrictModel>> GetDistrictDetails(string Stateid);
         Task<CustomerInserCardResponseData> CheckPanNoDuplication(string PanNo);
@@ -58,5 +56,9 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo);
         Task<List<GetCountryRegionResponse>> GetCountryRegion();
         Task<List<GetCityResponse>> GetCity();
+        Task<CustomerInserCardResponseData> CheckVechileNoUsed(string VechileNo);
+        Task<List<HotlistStatus>> GetActionList(string EntityTypeId);
+        Task<List<HotlistEntity>> GetEntityTypeList();
+        Task<List<HotlistReason>> GetReasonListForEntities(string EntityTypeId, string Actionid);
     }
 }
