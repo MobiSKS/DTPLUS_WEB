@@ -77,13 +77,13 @@
                                                     <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" id="=btnCancel" name="cancel" style="background-color:#084693;color:white;" onclick="ResetFields()">@Label.Reset</button>
+                                                    <button class="btn btn_primary" id="=btnCancel" style="background-color:#084693;color:white;" onclick="return ResetFields()">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="table-responsive" id="tblResponse">
+                                    <div class="table-responsive" id="tblResponse" style="display:none">
                                         <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                                             <thead>
                                                 <tr>
@@ -128,7 +128,9 @@
                                             </thead>
                                         </table>
                                     </div>
-
+                                    <div class="col-12 text-center alert-danger p-2" id="NoRecord" style="display:none">
+                                        No Data Found
+                                    </div>
                                 </div>
 
                                 <div id="BasicInformation" class="tab-pane" role="tabpanel">
@@ -1034,43 +1036,49 @@
                          }
                      });
 
-                     for (var i = 0; i < data.updatedSearchList.length; i++) {
+                     if (data.updatedSearchList.length > 0) {
+                         document.getElementById('NoRecord').style.display = 'none';
+                         document.getElementById('tblResponse').style.display = 'block';
 
-                         var srNumber = (i + 1);
-                         var s = data.updatedSearchList[i].customerReferenceNo;
-                         var frmno = data.updatedSearchList[i].formNumber;
-                         var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                         var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                         var customerName = (data.updatedSearchList[i].customerName || '')
-                         var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                         var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                         var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                         var totalCards = (data.updatedSearchList[i].totalCards || '');
-                         var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                         var createdBy = (data.updatedSearchList[i].createdBy || '');
-                         var createdDate = (data.updatedSearchList[i].createdDate || '');
-                         var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+                         for (var i = 0; i < data.updatedSearchList.length; i++) {
 
-                         tbll.row.add([
-                             srNumber,
-                             formNo,
-                             custRefNo,
-                             customerName,
-                             customerAddress,
-                             phoneNo,
-                             mobileNo,
-                             totalCards,
-                             createdRoleName,
-                             createdBy,
-                             createdDate,
-                             validate
-                         ]).draw();
+                             var srNumber = (i + 1);
+                             var s = data.updatedSearchList[i].customerReferenceNo;
+                             var frmno = data.updatedSearchList[i].formNumber;
+                             var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
+                             var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
+                             var customerName = (data.updatedSearchList[i].customerName || '')
+                             var customerAddress = (data.updatedSearchList[i].customerAddress || '');
+                             var phoneNo = (data.updatedSearchList[i].phoneNo || '');
+                             var mobileNo = (data.updatedSearchList[i].mobileNo || '');
+                             var totalCards = (data.updatedSearchList[i].totalCards || '');
+                             var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
+                             var createdBy = (data.updatedSearchList[i].createdBy || '');
+                             var createdDate = (data.updatedSearchList[i].createdDate || '');
+                             var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                         document.getElementById('CustomerSearch').style.display = 'block';
+                             tbll.row.add([
+                                 srNumber,
+                                 formNo,
+                                 custRefNo,
+                                 customerName,
+                                 customerAddress,
+                                 phoneNo,
+                                 mobileNo,
+                                 totalCards,
+                                 createdRoleName,
+                                 createdBy,
+                                 createdDate,
+                                 validate
+                             ]).draw();
+
+                             document.getElementById('CustomerSearch').style.display = 'block';
+                         }
                      }
-                     //    else {
-                     //    document.getElementById('CustomerSearch').style.display = 'none';
-                     //}
+                     else {
+                         document.getElementById('tblResponse').style.display = 'none';
+                         document.getElementById('NoRecord').style.display = 'block';
+                     }
 
                      sessionStorage.removeItem('tableCustData');
                      sessionStorage.removeItem('cusmId');
@@ -1096,7 +1104,7 @@
     function OnSuccess(data) {
         $("#CustomerSearch td").parent().remove();
         debugger;
-        
+
         $("#CustomerSearch td").parent().remove();
 
         $('#CustomerSearch').DataTable().clear().destroy();
@@ -1114,39 +1122,49 @@
             }
         });
 
-        for (var i = 0; i < data.searchList.length; i++) {
+        if (data.searchList.length > 0) {
+            document.getElementById('NoRecord').style.display = 'none';
+            document.getElementById('tblResponse').style.display = 'block';
 
-            var srNumber = (i + 1);
-            var s = data.searchList[i].customerReferenceNo;
-            var frmno = data.searchList[i].formNumber;
-            var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.searchList[i].formNumber || '') + "</span></a>"
-            var custRefNo = (data.searchList[i].customerReferenceNo || '');
-            var customerName = (data.searchList[i].customerName || '')
-            var customerAddress = (data.searchList[i].customerAddress || '');
-            var phoneNo = (data.searchList[i].phoneNo || '');
-            var mobileNo = (data.searchList[i].mobileNo || '');
-            var totalCards = (data.searchList[i].totalCards || '');
-            var createdRoleName = (data.searchList[i].createdRoleName || '');
-            var createdBy = (data.searchList[i].createdBy || '');
-            var createdDate = (data.searchList[i].createdDate || '');
-            var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+            for (var i = 0; i < data.searchList.length; i++) {
 
-            tbll.row.add([
-                srNumber,
-                formNo,
-                custRefNo,
-                customerName,
-                customerAddress,
-                phoneNo,
-                mobileNo,
-                totalCards,
-                createdRoleName,
-                createdBy,
-                createdDate,
-                validate
-            ]).draw();
+                var srNumber = (i + 1);
+                var s = data.searchList[i].customerReferenceNo;
+                var frmno = data.searchList[i].formNumber;
+                var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.searchList[i].formNumber || '') + "</span></a>"
+                var custRefNo = (data.searchList[i].customerReferenceNo || '');
+                var customerName = (data.searchList[i].customerName || '')
+                var customerAddress = (data.searchList[i].customerAddress || '');
+                var phoneNo = (data.searchList[i].phoneNo || '');
+                var mobileNo = (data.searchList[i].mobileNo || '');
+                var totalCards = (data.searchList[i].totalCards || '');
+                var createdRoleName = (data.searchList[i].createdRoleName || '');
+                var createdBy = (data.searchList[i].createdBy || '');
+                var createdDate = (data.searchList[i].createdDate || '');
+                var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-            document.getElementById('CustomerSearch').style.display = 'block';
+                tbll.row.add([
+                    srNumber,
+                    formNo,
+                    custRefNo,
+                    customerName,
+                    customerAddress,
+                    phoneNo,
+                    mobileNo,
+                    totalCards,
+                    createdRoleName,
+                    createdBy,
+                    createdDate,
+                    validate
+                ]).draw();
+
+                document.getElementById('CustomerSearch').style.display = 'block';
+
+            }
+        }
+        else {
+            document.getElementById('tblResponse').style.display = 'none';
+            document.getElementById('NoRecord').style.display = 'block';
         }
 
         let tableCustData = $('#CustomerSearch').html();
@@ -1429,20 +1447,14 @@
         });
     };
 
-    //$("#btnCancel").on('click', function (e) {
-    //    debugger;
-    //    $("#FormNumber").val('');
-    //    $("#CustomerDateOfApplication").val('');
-    //    $("#OfficerTypeID").val('0');
-    //});
-
     function ResetFields() {
         debugger;
         $("#FormNumber").val('');
         $("#CustomerDateOfApplication").val('');
         $("#OfficerTypeID").val('0');
-
-        //$("#CustomerSearch").html("");
+        document.getElementById('NoRecord').style.display = 'none';
+        document.getElementById('tblResponse').style.display = 'none';
+        return false;
     };
 
 </script>
@@ -1520,46 +1532,51 @@
                                 }
                             });
 
-                            for (var i = 0; i < data.updatedSearchList.length; i++) {
+                            if (data.updatedSearchList.length > 0) {
+                                document.getElementById('NoRecord').style.display = 'none';
+                                document.getElementById('tblResponse').style.display = 'block';
 
-                                var srNumber = (i + 1);
-                                var s = data.updatedSearchList[i].customerReferenceNo;
-                                var frmno = data.updatedSearchList[i].formNumber;
-                                var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                                var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                                var customerName = (data.updatedSearchList[i].customerName || '')
-                                var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                                var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                                var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                                var totalCards = (data.updatedSearchList[i].totalCards || '');
-                                var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                                var createdBy = (data.updatedSearchList[i].createdBy || '');
-                                var createdDate = (data.updatedSearchList[i].createdDate || '');
-                                var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+                                for (var i = 0; i < data.updatedSearchList.length; i++) {
 
-                                tbll.row.add([
-                                    srNumber,
-                                    formNo,
-                                    custRefNo,
-                                    customerName,
-                                    customerAddress,
-                                    phoneNo,
-                                    mobileNo,
-                                    totalCards,
-                                    createdRoleName,
-                                    createdBy,
-                                    createdDate,
-                                    validate
-                                ]).draw();
+                                    var srNumber = (i + 1);
+                                    var s = data.updatedSearchList[i].customerReferenceNo;
+                                    var frmno = data.updatedSearchList[i].formNumber;
+                                    var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
+                                    var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
+                                    var customerName = (data.updatedSearchList[i].customerName || '')
+                                    var customerAddress = (data.updatedSearchList[i].customerAddress || '');
+                                    var phoneNo = (data.updatedSearchList[i].phoneNo || '');
+                                    var mobileNo = (data.updatedSearchList[i].mobileNo || '');
+                                    var totalCards = (data.updatedSearchList[i].totalCards || '');
+                                    var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
+                                    var createdBy = (data.updatedSearchList[i].createdBy || '');
+                                    var createdDate = (data.updatedSearchList[i].createdDate || '');
+                                    var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                                document.getElementById('CustomerSearch').style.display = 'block';
+                                    tbll.row.add([
+                                        srNumber,
+                                        formNo,
+                                        custRefNo,
+                                        customerName,
+                                        customerAddress,
+                                        phoneNo,
+                                        mobileNo,
+                                        totalCards,
+                                        createdRoleName,
+                                        createdBy,
+                                        createdDate,
+                                        validate
+                                    ]).draw();
+
+                                    document.getElementById('CustomerSearch').style.display = 'block';
+                                }
                             }
-                            //    else {
-                            //    document.getElementById('CustomerSearch').style.display = 'none';
-                            //}
+                            else {
+                                document.getElementById('tblResponse').style.display = 'none';
+                                document.getElementById('NoRecord').style.display = 'block';
+                            }
 
                             sessionStorage.removeItem('tableCustData');
-                            sessionStorage.removeItem('cusmId');
 
                         },
                         error: function (ex) {
@@ -1614,7 +1631,6 @@
                 //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
                 //}
 
-                ///////////////////////////
                 let tableCustData = sessionStorage.getItem("tableCustData");
                 let getCusId = sessionStorage.getItem("cusmId");
 
@@ -1647,43 +1663,49 @@
                                 }
                             });
 
-                            for (var i = 0; i < data.updatedSearchList.length; i++) {
+                            if (data.updatedSearchList.length > 0) {
+                                document.getElementById('NoRecord').style.display = 'none';
+                                document.getElementById('tblResponse').style.display = 'block';
 
-                                var srNumber = (i + 1);
-                                var s = data.updatedSearchList[i].customerReferenceNo;
-                                var frmno = data.updatedSearchList[i].formNumber;
-                                var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                                var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                                var customerName = (data.updatedSearchList[i].customerName || '')
-                                var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                                var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                                var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                                var totalCards = (data.updatedSearchList[i].totalCards || '');
-                                var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                                var createdBy = (data.updatedSearchList[i].createdBy || '');
-                                var createdDate = (data.updatedSearchList[i].createdDate || '');
-                                var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+                                for (var i = 0; i < data.updatedSearchList.length; i++) {
 
-                                tbll.row.add([
-                                    srNumber,
-                                    formNo,
-                                    custRefNo,
-                                    customerName,
-                                    customerAddress,
-                                    phoneNo,
-                                    mobileNo,
-                                    totalCards,
-                                    createdRoleName,
-                                    createdBy,
-                                    createdDate,
-                                    validate
-                                ]).draw();
+                                    var srNumber = (i + 1);
+                                    var s = data.updatedSearchList[i].customerReferenceNo;
+                                    var frmno = data.updatedSearchList[i].formNumber;
+                                    var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
+                                    var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
+                                    var customerName = (data.updatedSearchList[i].customerName || '')
+                                    var customerAddress = (data.updatedSearchList[i].customerAddress || '');
+                                    var phoneNo = (data.updatedSearchList[i].phoneNo || '');
+                                    var mobileNo = (data.updatedSearchList[i].mobileNo || '');
+                                    var totalCards = (data.updatedSearchList[i].totalCards || '');
+                                    var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
+                                    var createdBy = (data.updatedSearchList[i].createdBy || '');
+                                    var createdDate = (data.updatedSearchList[i].createdDate || '');
+                                    var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                                document.getElementById('CustomerSearch').style.display = 'block';
+                                    tbll.row.add([
+                                        srNumber,
+                                        formNo,
+                                        custRefNo,
+                                        customerName,
+                                        customerAddress,
+                                        phoneNo,
+                                        mobileNo,
+                                        totalCards,
+                                        createdRoleName,
+                                        createdBy,
+                                        createdDate,
+                                        validate
+                                    ]).draw();
+
+                                    document.getElementById('CustomerSearch').style.display = 'block';
+                                }
                             }
-                            //    else {
-                            //    document.getElementById('CustomerSearch').style.display = 'none';
-                            //}
+                            else {
+                                document.getElementById('tblResponse').style.display = 'none';
+                                document.getElementById('NoRecord').style.display = 'block';
+                            }
 
                             sessionStorage.removeItem('tableCustData');
                             sessionStorage.removeItem('cusmId');
@@ -1694,7 +1716,6 @@
                         }
                     });
                 }
-                //////////////////////////
 
                 $("#reason").html(res);
                 $(".toBeHiddenOnSuccess").hide();
