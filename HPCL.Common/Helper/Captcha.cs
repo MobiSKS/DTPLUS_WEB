@@ -20,7 +20,8 @@ namespace HPCL.Common.Helper
 
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < 4; i++)
+            //for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
             {
                 int index = rand.Next(maxRand);
                 sb.Append(Letters[index]);
