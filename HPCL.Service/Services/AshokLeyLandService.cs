@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
                 Pin = arrs[0].Pin,
                 MobileNo = arrs[0].MobileNo,
                 EmailId = arrs[0].EmailId,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
@@ -108,7 +108,7 @@ namespace HPCL.Service.Services
                 Pin =  arrs[0].Pin,
                 MobileNo =  arrs[0].MobileNo,
                 EmailId =  arrs[0].EmailId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");

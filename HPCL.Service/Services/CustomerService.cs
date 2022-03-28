@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
         {
             var searchBody = new UploadDoc
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerReferenceNo = entity.CustomerReferenceNo
@@ -66,7 +66,7 @@ namespace HPCL.Service.Services
             form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
             form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "Userid");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
             form.Add(new StringContent(CommonBase.userip), "Userip");
 
@@ -273,7 +273,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
@@ -293,7 +293,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
@@ -323,7 +323,7 @@ namespace HPCL.Service.Services
                     {
                         {"Useragent", CommonBase.useragent},
                         {"Userip", CommonBase.userip},
-                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                         {"CustomerReferenceNo", customerReferenceNo}
                     };
 
@@ -394,7 +394,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerReferenceNo = customerReferenceNo
             };
 
@@ -459,7 +459,7 @@ namespace HPCL.Service.Services
             {
                 {"Useragent", CommonBase.useragent},
                 {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                 {"RBEId", RBEId}
             };
 
@@ -510,7 +510,7 @@ namespace HPCL.Service.Services
             insertInfo.RBEName = customerCardInfo.RBEName;
             insertInfo.Useragent = CommonBase.useragent;
             insertInfo.Userip = CommonBase.userip;
-            insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
 
@@ -569,7 +569,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
 
@@ -601,7 +601,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CreatedBy = entity.OfficerTypeID > 0 ? entity.OfficerTypeID.ToString() : null,
                 Createdon = customerDateOfApplication,
                 FormNumber = entity.FormNumber,
@@ -632,7 +632,7 @@ namespace HPCL.Service.Services
             {
                {"Useragent", CommonBase.useragent},
                 {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                 {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
                 {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
                 {"FormNumber", vGrid.FormNumber},
@@ -659,7 +659,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber
             };
 
@@ -676,7 +676,7 @@ namespace HPCL.Service.Services
             {
                 {"Useragent", CommonBase.useragent},
                 {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                 {"CustomerReferenceNo" , CustomerReferenceNo},
                 {"Comments" , Comments},
                 {"Approvalstatus" , Approvalstatus},
@@ -699,7 +699,7 @@ namespace HPCL.Service.Services
              {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"RegionID", RegionID.ToString() }
 
             };
@@ -734,7 +734,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
 
@@ -754,7 +754,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
 
@@ -772,7 +772,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
 
@@ -790,7 +790,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
 
@@ -808,7 +808,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
@@ -1135,7 +1135,7 @@ namespace HPCL.Service.Services
 
             var CustomerTypeForms = new Dictionary<string, string>
                 {
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
                     {"CustomerReferenceNo", cust.CustomerReferenceNo},

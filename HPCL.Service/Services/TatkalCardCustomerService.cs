@@ -45,7 +45,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"RegionalId", tatkalCustomerCardRequestInfo.CustomerRegionID.ToString()},
                     {"NoofCards", tatkalCustomerCardRequestInfo.NoofCards.ToString()},
                     {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
