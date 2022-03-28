@@ -952,12 +952,12 @@
                                             <a id="btnUpdateKYCDocuments" class="btn btn_primary py-2 px-4" onclick="updateKYCDocuments()">UPDATE KYC Documents</a>
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer()" href="#">VALIDATE</a>@*href="#CustomerCardsSection"*@
+                                            <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(4)" href="#">@Label.Validate</a>@*href="#CustomerCardsSection"*@
                                             @*<button class="btn" id="=btnApprove" name="btnApprove" style="background-color:#084693;color:white;" onclick="ApproveCustomer()">VALIDATE</button>*@
                                             <span class="error" id="Referenceno_error"></span>
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnReject" class="btn btn_primary py-2 px-4" onclick="RejectCustomer()" href="#">REJECT</a>
+                                            <a id="btnReject" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(13)" href="#">@Label.Reject</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1462,9 +1462,9 @@
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
 
-    function ApproveCustomer() {
+    function ApproveCustomer(approveReject) {
         debugger;
-        console.log('btnApprove');
+        console.log(approveReject);
         var custRefNo = document.getElementById("CustomerReferenceNoForSearch").value;
         if (custRefNo == "") {
             document.getElementById("Remarks_error").innerHTML = "Select Customer To Approve/Reject";
@@ -1476,7 +1476,7 @@
 
         var remarks = document.getElementById("Remarks").value;
         if (remarks == "") {
-            document.getElementById("Remarks_error").innerHTML = "Remarks is required";
+            document.getElementById("Remarks_error").innerHTML = "Please enter Remarks";
             $("#Remarks").focus;
             return (false);
         }
@@ -1488,136 +1488,7 @@
             url: "@Url.Action("AproveCustomer", "Customer")",
             type: "POST",
             dataType: "JSON",
-            data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: 4 },
-            success: function (res) {
-                //if (serviceId.checked == true) {
-                //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
-                //}
-
-                let tableCustData = sessionStorage.getItem("tableCustData");
-
-                console.log(tableCustData, "tbl");
-
-                if (tableCustData != null) {
-                    debugger;
-                    $('#CustomerSearch').html(tableCustData);
-                    $.ajax({
-                        url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
-                        type: "POST",
-                        dataType: "JSON",
-                        success: function (data) {
-                            console.log(data, "updated");
-                            $("#CustomerSearch td").parent().remove();
-
-                            $('#CustomerSearch').DataTable().clear().destroy();
-
-                            var tbll = $('#CustomerSearch').DataTable({
-                                paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                }
-                            });
-
-                            if (data.updatedSearchList.length > 0) {
-                                document.getElementById('NoRecord').style.display = 'none';
-                                document.getElementById('tblResponse').style.display = 'block';
-
-                                for (var i = 0; i < data.updatedSearchList.length; i++) {
-
-                                    var srNumber = (i + 1);
-                                    var s = data.updatedSearchList[i].customerReferenceNo;
-                                    var frmno = data.updatedSearchList[i].formNumber;
-                                    var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                                    var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                                    var customerName = (data.updatedSearchList[i].customerName || '')
-                                    var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                                    var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                                    var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                                    var totalCards = (data.updatedSearchList[i].totalCards || '');
-                                    var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                                    var createdBy = (data.updatedSearchList[i].createdBy || '');
-                                    var createdDate = (data.updatedSearchList[i].createdDate || '');
-                                    var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
-
-                                    tbll.row.add([
-                                        srNumber,
-                                        formNo,
-                                        custRefNo,
-                                        customerName,
-                                        customerAddress,
-                                        phoneNo,
-                                        mobileNo,
-                                        totalCards,
-                                        createdRoleName,
-                                        createdBy,
-                                        createdDate,
-                                        validate
-                                    ]).draw();
-
-                                    document.getElementById('CustomerSearch').style.display = 'block';
-                                }
-                            }
-                            else {
-                                document.getElementById('tblResponse').style.display = 'none';
-                                document.getElementById('NoRecord').style.display = 'block';
-                            }
-
-                            sessionStorage.removeItem('tableCustData');
-
-                        },
-                        error: function (ex) {
-                            alert('Failed' + ex);
-                        }
-                    });
-                }
-                //////////////////////////
-
-                $("#reason").html(res);
-                $(".toBeHiddenOnSuccess").hide();
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
-
-
-        return true;
-    };
-
-
-    function RejectCustomer() {
-        debugger;
-        console.log('btnReject');
-        var custRefNo = document.getElementById("CustomerReferenceNoForSearch").value;
-        if (custRefNo == "") {
-            document.getElementById("Remarks_error").innerHTML = "Select Customer To Approve/Reject";
-            return (false);
-        }
-        else {
-            document.getElementById("Remarks_error").innerHTML = "";
-        }
-
-        var remarks = document.getElementById("Remarks").value;
-        if (remarks == "") {
-            document.getElementById("Remarks_error").innerHTML = "Remarks is required";
-            $("#Remarks").focus;
-            return (false);
-        }
-        else {
-            document.getElementById("Remarks_error").innerHTML = "";
-        }
-
-        $.ajax({
-            url: "@Url.Action("AproveCustomer", "Customer")",
-            type: "POST",
-            dataType: "JSON",
-            data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: 13 },
+            data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: approveReject },
             success: function (res) {
                 //if (serviceId.checked == true) {
                 //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
@@ -1717,6 +1588,7 @@
 
         return true;
     };
+
 
     $("#FormNumber").on("blur", function () {
         //debugger;

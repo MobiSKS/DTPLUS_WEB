@@ -69,7 +69,8 @@
         public const string GetUnallocatedCards = "GET UNALLOCATED CARDS";
         public const string DownloadUnallocatedCards = "DOWNLOAD UNALLOCATED CARDS";
         public const string Verify = "VERIFY";
-        
+        public const string Validate = "VALIDATE";
+        public const string Reject = "REJECT";
         #endregion
 
         #region "Common Fields"
