@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "DriverCardCustomer")" class="text_primary">Driver Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">Create Driver Card Customer </li>
         </ul>
-        <form name="DriverCardCustomerCreationForm" method="post" asp-action="CreateDriverCardCustomer" class="w-100" autocomplete="off" enctype="multipart/form-data">
+        <form name="DriverCardCustomerCreationForm" id="DriverCardCustomerCreationForm" method="post" asp-action="CreateDriverCardCustomer" class="w-100" autocomplete="off" enctype="multipart/form-data">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -131,7 +131,7 @@
                                                     </div>
                                                     <div class="col-8 pl-0">
                                                         @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "80" })
-                                                        <span class="error" id="customername_error"></span>
+                                                        <span class="error" id="IndividualOrgName_error"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -471,6 +471,15 @@
     var dlFormat = /(?=[a-zA-Z0-9]{4,9}$)(?=^..[0-9]{2})(?=(.*[0-9]){4})(?=(.*[A-Za-z]){0,2})(^(?!0{9}))/;
 
     $(document).ready(function () {
+        $("#DriverCardCustomerCreationForm").on("keypress", function (event) {
+            var keyPressed = event.keyCode || event.which;
+            if (keyPressed === 13) {
+                console.log("You pressed the Enter key!!");
+                event.preventDefault();
+                return false;
+            }
+        });
+
         if (document.getElementById("LoggedInAs").value == "MERCHANT") {
             $('#MerchantId').attr('readonly', 'true');
         }
@@ -524,88 +533,18 @@
             $("#MerchantId").prop('readonly', false);
             document.getElementById("MerchantId").value = "";
         }
+        ClearFields();
     });
 
     $("#btnFooterReset").click(function () {
-
-        document.getElementById("MerchantId_error").innerHTML = "";
-
-        document.getElementById("FormNumber").value = "";
-        document.getElementById("formNumber_error").innerHTML = "";
-
-        document.getElementById("CardNo").value = "";
-        document.getElementById("CardNo_error").innerHTML = "";
-
-
-        document.getElementById("IndividualOrgNameTitle").value = "0";
-        document.getElementById("salutaion_error").innerHTML = "";
-
-        document.getElementById("IndividualOrgName").value = "";
-        document.getElementById("customername_error").innerHTML = "";
-
-        document.getElementById("CommunicationCityName").value = "";
-        document.getElementById("communicationCityName_error").innerHTML = "";
-
-        document.getElementById("CommunicationPincode").value = "";
-        document.getElementById("communicationPincode_error").innerHTML = "";
-
-        document.getElementById("CommunicationStateId").value = "0";
-        document.getElementById("comm_states_error").innerHTML = "";
-
-        document.getElementById("CommunicationEmailid").value = "";
-        document.getElementById("comm_email_error").innerHTML = "";
-
-        document.getElementById("CommunicationMobileNo").value = "";
-        document.getElementById("comm_mobileNumber_error").innerHTML = "";
-
-        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
-        document.getElementById("comm_mobileNumber_error").innerHTML = "";
-
-        localStorage.setItem("EMAILIDALREADYUSED", "1");
-        document.getElementById("comm_email_error").innerHTML = "";
-
-        document.getElementById("DrivingLicence").value = "";
-        document.getElementById("DrivingLicence_error").innerHTML = "";
-
-        document.getElementById("CommunicationAddress1").value = "";
-        document.getElementById("comm_address1_error").innerHTML = "";
-
-        document.getElementById("AddressProofType").value = "0"
-        document.getElementById("AddressProofType_error").innerHTML = "";
-
-
-        document.getElementById("AddressProof").value = ""
-        document.getElementById("AddressProof_error").innerHTML = "";
-
-        document.getElementById("AddressProofDocumentNo").value = "";
-        document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
-
-        document.getElementById("ExistingCustomerId").value = "";
-        document.getElementById("CustomerId_error").innerHTML = "";
-
-        document.getElementById("IncomeTaxPan").value = "";
-        document.getElementById("incomeTaxPan_error").innerHTML = "";
-
-        document.getElementById("BeneficiaryName").value = "";
-        document.getElementById("BeneficiaryName_error").innerHTML = "";
-
-        document.getElementById("RelationWithBeneficiary").value = "";
-        document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
-
-        document.getElementById("BeneficiaryMobile").value = "";
-        document.getElementById("BeneficiaryMobile_error").innerHTML = "";
-
-        localStorage.setItem("FORMNOALREADYUSED", "1");
-        document.getElementById("formNumber_error").innerHTML = "";
-
-        localStorage.setItem("PANNOALREADYUSED", "1");
-        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
-
-        document.getElementById("incomeTaxPan_error").innerHTML = "";
-        document.getElementById("IncomeTaxPan").value = "";
-
+        ClearFields();
     });
 
+    $('#MerchantId').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            $('#btnSearch').click();
+        }
+    });
 
     $("#btnSearch").click(function () {
         //debugger;
@@ -716,14 +655,14 @@
         if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
             document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
+            //document.getElementById("FormNumber").focus();
             return false;
         }
 
         if (document.getElementById("FormNumber").value.length < 10) {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
             document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
+            //document.getElementById("FormNumber").focus();
             return false;
         }
 
@@ -769,13 +708,13 @@
         });
 
         //console.log(fromNumberUsed);
-        if (formNumberUsed == true) {
-            document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-            //return (false);
-        }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
-        }
+        //if (formNumberUsed == true) {
+        //    document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+        //    //return (false);
+        //}
+        //else {
+        //    document.getElementById("formNumber_error").innerHTML = "";
+        //}
 
     });
 
@@ -872,7 +811,7 @@
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
             document.getElementById("CommunicationEmailid").value = "";
-            document.getElementById("CommunicationEmailid").focus();
+            //document.getElementById("CommunicationEmailid").focus();
             return (false);
         }
 
@@ -988,28 +927,28 @@
 
 
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
-            document.getElementById("customername_error").innerHTML = "Driver Name field cannot be left blank";
+            document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name field cannot be left blank";
             //document.getElementById("IndividualOrgName").focus();
             ret = false;
         }
         else {
 
             if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
-                document.getElementById("customername_error").innerHTML = "Driver Name field is not valid";
+                document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name field is not valid";
                 //document.getElementById("IndividualOrgName").focus();
                 ret = false;
             }
             else {
-                document.getElementById("customername_error").innerHTML = "";
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
             }
 
             if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
-                document.getElementById("customername_error").innerHTML = "Driver Name field is not valid";
+                document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name field is not valid";
                 //document.getElementById("IndividualOrgName").focus();
                 ret = false;
             }
             else {
-                document.getElementById("customername_error").innerHTML = "";
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
             }
         }
 
@@ -1303,7 +1242,7 @@
             if (document.getElementById("ExistingCustomerId").value.substring(0, 1) != "2") {
                 document.getElementById("CustomerId_error").innerHTML = "Customer ID should start with 2. min-max 10 digits";
                 document.getElementById("CustomerName").value = "";
-                document.getElementById("ExistingCustomerId").focus();
+                //document.getElementById("ExistingCustomerId").focus();
                 return (false);
             }
             else {
@@ -1313,7 +1252,7 @@
             if (document.getElementById("ExistingCustomerId").value.length < 10) {
                 document.getElementById("CustomerId_error").innerHTML = "Customer ID should start with 2. min-max 10 digits";
                 document.getElementById("CustomerName").value = "";
-                document.getElementById("ExistingCustomerId").focus();
+                //document.getElementById("ExistingCustomerId").focus();
                 return false;
             }
             else {
@@ -1459,14 +1398,14 @@
         if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
             document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin code";
             document.getElementById("CommunicationPincode").value = "";
-            document.getElementById("CommunicationPincode").focus();
+            //document.getElementById("CommunicationPincode").focus();
             return false;
         }
 
         if (document.getElementById("CommunicationPincode").value.length < 6) {
             document.getElementById("communicationPincode_error").innerHTML = "Pin code length must be 6 digit";
             document.getElementById("CommunicationPincode").value = "";
-            document.getElementById("CommunicationPincode").focus();
+            //document.getElementById("CommunicationPincode").focus();
             return false;
         }
 
@@ -1493,7 +1432,7 @@
             if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
                 //document.getElementById("CommunicationMobileNo").value = "";
-                document.getElementById("CommunicationMobileNo").focus();
+                //document.getElementById("CommunicationMobileNo").focus();
                 return false;
             }
             else {
@@ -1503,7 +1442,7 @@
             if (document.getElementById("CommunicationMobileNo").value.length < 10) {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number length must be min-max 10 digits";
                 document.getElementById("CommunicationMobileNo").value = "";
-                document.getElementById("CommunicationMobileNo").focus();
+                //document.getElementById("CommunicationMobileNo").focus();
                 return false;
             }
             else {
@@ -1572,7 +1511,7 @@
         if (document.getElementById("BeneficiaryMobile").value.substring(0, 1) == "0") {
             document.getElementById("BeneficiaryMobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
             document.getElementById("BeneficiaryMobile").value = "";
-            document.getElementById("BeneficiaryMobile").focus();
+            //document.getElementById("BeneficiaryMobile").focus();
             return false;
         }
         else {
@@ -1582,7 +1521,7 @@
         if (document.getElementById("BeneficiaryMobile").value.length < 10) {
             document.getElementById("BeneficiaryMobile_error").innerHTML = "Mobile Number length must be min-max 10 digits";
             document.getElementById("BeneficiaryMobile").value = "";
-            document.getElementById("BeneficiaryMobile").focus();
+            //document.getElementById("BeneficiaryMobile").focus();
             return false;
         }
         else {
@@ -1620,7 +1559,7 @@
             if (!isNaN(document.getElementById("BeneficiaryName").value.trim())) {
                 document.getElementById("BeneficiaryName_error").innerHTML = "Invalid Beneficiary Name";
                 document.getElementById("BeneficiaryName").value = "";
-                document.getElementById("BeneficiaryName").focus();
+                //document.getElementById("BeneficiaryName").focus();
                 return false;
             }
             else {
@@ -1630,7 +1569,7 @@
             if (!document.getElementById("BeneficiaryName").value.match(nameWithSpaceCheck)) {
                 document.getElementById("BeneficiaryName_error").innerHTML = "Invalid Beneficiary Name";
                 document.getElementById("BeneficiaryName").value = "";
-                document.getElementById("BeneficiaryName").focus();
+                //document.getElementById("BeneficiaryName").focus();
                 return false;
             }
             else {
@@ -1651,7 +1590,7 @@
             if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
                 document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
                 document.getElementById("CommunicationCityName").value = "";
-                document.getElementById("CommunicationCityName").focus();
+                //document.getElementById("CommunicationCityName").focus();
                 return false;
             }
             else {
@@ -1661,7 +1600,7 @@
             if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
                 document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
                 document.getElementById("CommunicationCityName").value = "";
-                document.getElementById("CommunicationCityName").focus();
+                //document.getElementById("CommunicationCityName").focus();
                 return false;
             }
             else {
@@ -1706,7 +1645,7 @@
             if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
                 document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
                 document.getElementById("CommunicationAddress1").value = "";
-                document.getElementById("CommunicationAddress1").focus();
+                //document.getElementById("CommunicationAddress1").focus();
                 return false;
             }
             else {
@@ -1735,9 +1674,9 @@
         }
         else {
             if (!isNaN(document.getElementById("RelationWithBeneficiary").value.trim())) {
-                document.getElementById("RelationWithBeneficiary_error").innerHTML = "Invalid Relation With Beneficiary field";
+                document.getElementById("RelationWithBeneficiary_error").innerHTML = "Invalid Relation With Beneficiary";
                 document.getElementById("RelationWithBeneficiary").value = "";
-                document.getElementById("RelationWithBeneficiary").focus();
+                //document.getElementById("RelationWithBeneficiary").focus();
                 return false;
             }
             else {
@@ -1745,9 +1684,9 @@
             }
 
             if (!document.getElementById("RelationWithBeneficiary").value.match(nameWithSpaceCheck)) {
-                document.getElementById("RelationWithBeneficiary_error").innerHTML = "Invalid Relation With Beneficiary field";
+                document.getElementById("RelationWithBeneficiary_error").innerHTML = "Invalid Relation With Beneficiary";
                 document.getElementById("RelationWithBeneficiary").value = "";
-                document.getElementById("RelationWithBeneficiary").focus();
+                //document.getElementById("RelationWithBeneficiary").focus();
                 return false;
             }
             else {
@@ -1755,6 +1694,115 @@
             }
         }
                 
+    });
+
+    function ClearFields() {
+        document.getElementById("MerchantId_error").innerHTML = "";
+
+        document.getElementById("FormNumber").value = "";
+        document.getElementById("formNumber_error").innerHTML = "";
+
+        document.getElementById("CardNo").value = "";
+        document.getElementById("CardNo_error").innerHTML = "";
+
+
+        document.getElementById("IndividualOrgNameTitle").value = "0";
+        document.getElementById("salutaion_error").innerHTML = "";
+
+        document.getElementById("IndividualOrgName").value = "";
+        document.getElementById("IndividualOrgName_error").innerHTML = "";
+
+        document.getElementById("CommunicationCityName").value = "";
+        document.getElementById("communicationCityName_error").innerHTML = "";
+
+        document.getElementById("CommunicationPincode").value = "";
+        document.getElementById("communicationPincode_error").innerHTML = "";
+
+        document.getElementById("CommunicationStateId").value = "0";
+        document.getElementById("comm_states_error").innerHTML = "";
+
+        document.getElementById("CommunicationEmailid").value = "";
+        document.getElementById("comm_email_error").innerHTML = "";
+
+        document.getElementById("CommunicationMobileNo").value = "";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+        document.getElementById("comm_email_error").innerHTML = "";
+
+        document.getElementById("DrivingLicence").value = "";
+        document.getElementById("DrivingLicence_error").innerHTML = "";
+
+        document.getElementById("CommunicationAddress1").value = "";
+        document.getElementById("comm_address1_error").innerHTML = "";
+
+        document.getElementById("AddressProofType").value = "0"
+        document.getElementById("AddressProofType_error").innerHTML = "";
+
+
+        document.getElementById("AddressProof").value = ""
+        document.getElementById("AddressProof_error").innerHTML = "";
+
+        document.getElementById("AddressProofDocumentNo").value = "";
+        document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
+
+        document.getElementById("ExistingCustomerId").value = "";
+        document.getElementById("CustomerId_error").innerHTML = "";
+
+        document.getElementById("IncomeTaxPan").value = "";
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+
+        document.getElementById("BeneficiaryName").value = "";
+        document.getElementById("BeneficiaryName_error").innerHTML = "";
+
+        document.getElementById("RelationWithBeneficiary").value = "";
+        document.getElementById("RelationWithBeneficiary_error").innerHTML = "";
+
+        document.getElementById("BeneficiaryMobile").value = "";
+        document.getElementById("BeneficiaryMobile_error").innerHTML = "";
+
+        localStorage.setItem("FORMNOALREADYUSED", "1");
+        document.getElementById("formNumber_error").innerHTML = "";
+
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+
+        document.getElementById("incomeTaxPan_error").innerHTML = "";
+        document.getElementById("IncomeTaxPan").value = "";
+    }
+
+    $("#IndividualOrgName").on("blur", function () {
+        //debugger;
+        var driverName = document.getElementById("IndividualOrgName").value.trim();
+        if (driverName == "") {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+                document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Driver Name";
+                document.getElementById("IndividualOrgName").value = "";
+                //document.getElementById("IndividualOrgName").focus();
+                return false;
+            }
+            else {
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
+                document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Driver Name";
+                document.getElementById("IndividualOrgName").value = "";
+                //document.getElementById("IndividualOrgName").focus();
+                return false;
+            }
+            else {
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
+            }
+        }
+
     });
 
 </script>
