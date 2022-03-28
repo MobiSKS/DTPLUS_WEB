@@ -56,10 +56,12 @@ namespace HPCL_Web.Controllers
             var searchList = await _customerFinancialService.SearchCardToCCMSTransfer(entity);
             return Json(new { searchList = searchList });
         }
+
         public IActionResult CustomerTransactionDetails()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<JsonResult> GetCustomerTransactionDetails(string CustomerID, string CardNo,string MobileNo,string FromDate,string ToDate)
         {
@@ -69,5 +71,16 @@ namespace HPCL_Web.Controllers
             return Json(models);
         }
 
+        public IActionResult ViewAccountStatement()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ViewAccountStatement(GetViewAccountStatement entity)
+        {
+            var searchList = await _customerFinancialService.ViewAccountStatement(entity);
+            return Json(new { searchList = searchList});
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace HPCL.Service.Interfaces
         Task<CCMSToCardBalanceTransferSearchResponse> SearchCCMSToCardTransfer(BalanceTransferSearchModel entity);
         Task<CardToCardBalanceTransferSearchResponse> SearchCardToCardTransfer(BalanceTransferSearchModel entity);
         Task<CustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
+        Task<GetViewAccountStatementResponse> ViewAccountStatement(GetViewAccountStatement entity);
     }
 }

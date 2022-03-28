@@ -58,9 +58,9 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
-                                            <span class="error" id="fromDate"></span>
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
                                         </div>
                                     </div>
                                 </div>
@@ -71,9 +71,9 @@
                                         <label class="font-weight-normal col-md-4 col-12"> To Date </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
-                                            <span class="error" id="toDate"></span>
+                                            @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
                                         </div>
                                     </div>
                                 </div>
@@ -130,8 +130,13 @@
         location.reload();
     }
 
-    $(document).ready(function () {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
 
+    $(document).ready(function () {
 
         if ($('input[name=SearchType]:checked').val() == "Merchant") {
             console.log($('input[name=SearchType]:checked').val());
@@ -154,143 +159,163 @@
                 document.getElementById("terminalSec").style.display = "block";
             }
         });
-
-
-
-    var fromdate = $("#FromDate").val();
-    var todate = $("#ToDate").val();
-    var notFoundError = "@ViewBag.NotFoundError";
-
-
-        if (notFoundError == "") {
-            if (fromdate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'yy-mm-dd',
-                    onSelect: function (selected) {
-                        $("#ToDate").datepicker("option", "minDate", selected)
-                    }
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'yy-mm-dd' });
-            }
-
-            if (todate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'yy-mm-dd',
-                    maxDate: '+30d',
-                    onSelect: function (selected) {
-                        $("#FromDate").datepicker("option", "maxDate", selected)
-                    }
-                });
-                setDates();
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'yy-mm-dd' });
-            }
-        }
-        else {
-            alert("Details not found");
-        }
-
-
-        $("#fromDateId").datepicker("setDate", new Date());
-        $("#toDateId").datepicker("setDate", new Date());
-
-
+        setDates();
     });
 
     function setDates() {
-        var d = new Date();
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth());
+        fromd.setDate(fromd.getDate());
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
 
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        //var output = (day < 10 ? '0' : '') + day + '-' +
-        //    (month < 10 ? '0' : '') + month + '-' + d.getFullYear();
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
 
-        var output = d.getFullYear() + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
-
-        $("#FromDate").val(output);
-        $("#ToDate").val(output);
-        $("#CategoryID").val(1);
-
-        $("#show_Table").html("");
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
     };
+
+    $(".date").on('change', function (e) {
+        var fromD = "";
+        var toD = "";
+        fromD = $("#FromDate").val();
+        toD = $("#ToDate").val();
+        checkDates(fromD, toD);
+        $("#show_Table").html("");
+    });
+
+    function checkDates(fromD, toD) {
+        var dateflag = "Y";
+        var d1 = new Date(fromD);
+        var d2 = new Date(toD);
+
+        if (fromD != "" && toD != "") {
+            var aday = 24 * 60 * 60 * 1000;
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = "N";
+            }
+            else if ((Math.abs(d2 - d1) / aday) > 31) {
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
+                dateflag = "N";
+            }
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+
+        }
+        return dateflag;
+    }
 
     function searchMerchant() {
 
-        if ($("#formValid").valid()) {
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("SettlementDetails", "MerchantFinancials")',
-                data: $('#formValid').serialize(),  // data to submit
-                success: function (res, status, xhr) {
+        var flag = "Y";
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates(fromdate, todate);
+        }
 
-                    if (res.searchList.success == true) {
+        if (flag == "N")
+            e.preventDefault();
 
-                        var girdList = res.searchList.data;
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
 
-                        document.getElementById("noRecord").style.display = "none";
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("SettlementDetails", "MerchantFinancials")',
+                    data: $('#formValid').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
 
-                        var girdList = res.searchList.data;
+                        if (res.searchList.success == true) {
 
-                        document.getElementById("noRecord").style.display = "none";
+                            var girdList = res.searchList.data;
 
-                        $("#MerchantSearchTbl td").parent().remove();
+                            document.getElementById("noRecord").style.display = "none";
 
-                        $('#MerchantSearchTbl').DataTable().clear().destroy();
+                            var girdList = res.searchList.data;
 
-                        var tbl = $('#MerchantSearchTbl').DataTable({
-                            paging: true,
-                            searching: false,
-                            stateSave: true,
-                            "bDestroy": true,
-                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                            "autoWidth": false,
-                            "oLanguage": {
-                                "sLengthMenu": "Display _MENU_ Records",
-                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $("#MerchantSearchTbl td").parent().remove();
+
+                            $('#MerchantSearchTbl').DataTable().clear().destroy();
+
+                            var tbl = $('#MerchantSearchTbl').DataTable({
+                                paging: true,
+                                searching: false,
+                                stateSave: true,
+                                "bDestroy": true,
+                                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < girdList.length; i++) {
+
+                                var srNumber = (i + 1);
+                                var terminalId = "<a class='terminalVal' href='#aaa'>" + (girdList[i].terminalId || '') + "</a>";
+                                var batchId = "<a class='batchClick' href='#aaa'>" + (girdList[i].batchId || '') + "</a>";
+                                var status = (girdList[i].status || '');
+                                var settlementDate = (girdList[i].settlementDate || '');
+                                var noOfTransactions = (girdList[i].noofTransactions || '');
+
+                                tbl.row.add([
+                                    srNumber,
+                                    terminalId,
+                                    batchId,
+                                    status,
+                                    settlementDate,
+                                    noOfTransactions
+                                ]).draw();
                             }
-                        });
-
-                        for (var i = 0; i < girdList.length; i++) {
-
-                            var srNumber = (i+1);
-                            var terminalId = "<a class='terminalVal' href='#aaa'>" + (girdList[i].terminalId || '') + "</a>";
-                            var batchId = "<a class='batchClick' href='#aaa'>" + (girdList[i].batchId || '') + "</a>";
-                            var status = (girdList[i].status || '');
-                            var settlementDate = (girdList[i].settlementDate || '');
-                            var noOfTransactions = (girdList[i].noofTransactions || '');
-
-                            tbl.row.add([
-                                srNumber,
-                                terminalId,
-                                batchId,
-                                status,
-                                settlementDate,
-                                noOfTransactions
-                            ]).draw();
+                            document.getElementById('tblResponse').style.display = 'block';
+                        } else {
+                            document.getElementById("tblResponse").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
                         }
-                        document.getElementById('tblResponse').style.display = 'block';
-                    } else {
-                        document.getElementById("tblResponse").style.display = "none";
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
-                    }
 
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("Error");
-                }
-            });
-        } else {
-            return false;
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
         }
     }
 

@@ -177,8 +177,42 @@ namespace HPCL.Service.Services
             transactionResponse.GetTransactionsSaleSummary.AddRange(CustomerTransactionSummary);
             transactionResponse.GetTransactionsDetailSummary.AddRange(CustomerTransactionDetails);
             return transactionResponse;
+        }
 
-     
+        public async Task<GetViewAccountStatementResponse> ViewAccountStatement(GetViewAccountStatement entity)
+        {
+            var reqBody = new GetViewAccountStatement();
+
+            if (entity.CustomerID != null)
+            {
+                reqBody = new GetViewAccountStatement
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = entity.CustomerID,
+                    FromDate = entity.FromDate,
+                    ToDate = entity.ToDate
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                reqBody = new GetViewAccountStatement
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    FromDate = entity.FromDate,
+                    ToDate = entity.ToDate
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetViewAccountStatementUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetViewAccountStatementResponse searchList = obj.ToObject<GetViewAccountStatementResponse>();
+            return searchList;
         }
     }
 }
