@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 
 namespace HPCL.Service.Services
 {
@@ -44,7 +45,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"RegionalId", tatkalCustomerCardRequestInfo.CustomerRegionID.ToString()},
                     {"NoofCards", tatkalCustomerCardRequestInfo.NoofCards.ToString()},
                     {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
@@ -203,6 +204,33 @@ namespace HPCL.Service.Services
 
             return customerModel;
         }
+        public async Task<ViewRequestedTatkalCardModel> ViewRequestedTatkalCard()
+        {
+            ViewRequestedTatkalCardModel custModel = new ViewRequestedTatkalCardModel();
+            custModel.Remarks = "";
+            custModel.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            return custModel;
+        }
+        public async Task<List<ViewRequestedTatkalCardResponse>> GetViewRequestedTatkalCard(int RegionalId)
+        {
+            var requestBody = new GetAllUnAllocatedOTCCardsRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                RegionalId = RegionalId.ToString(),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.viewRequestedTatkalCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<ViewRequestedTatkalCardResponse> searchList = jarr.ToObject<List<ViewRequestedTatkalCardResponse>>();
+            return searchList;
+        }
+
 
     }
 
