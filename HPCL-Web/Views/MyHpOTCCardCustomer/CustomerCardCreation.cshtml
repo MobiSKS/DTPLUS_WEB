@@ -939,6 +939,7 @@
         console.log(cardNo);
 
         $('#CardNumber1').val(cardNo);
+        document.getElementById("CardNumber1_error").innerHTML = "";
         $('#txt_searchCard1').val('');
         $('#myModalCard1').modal('hide');
     }
@@ -1022,6 +1023,7 @@
 
         $('#CardNumber2').val(cardNo);
         $('#txt_searchCard2').val('');
+        document.getElementById("CardNumber2_error").innerHTML = "";
         $('#myModalCard2').modal('hide');
     }
 
@@ -1040,6 +1042,7 @@
 
         var panNumberUsed = false;
 
+        document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
 
         if ($('#IncomeTaxPan').val().match(pancard)) {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
@@ -1476,9 +1479,13 @@
         else {
             if (document.getElementById("CardNumber1").value != "" && document.getElementById("CardNumber2").value != "") {
                 if (document.getElementById("CardNumber1").value == document.getElementById("CardNumber2").value) {
-                    document.getElementById("CardNumber1_error").innerHTML = "Both cards details can not be same";
-                    document.getElementById("CardNumber2").focus();
+                    document.getElementById("CardNumber1_error").innerHTML = "Both Card Numbers are same";
+                    //document.getElementById("CardNumber2").focus();
                     ret = false;
+                }
+                else {
+                    document.getElementById("CardNumber1_error").innerHTML = "";
+                    document.getElementById("CardNumber2_error").innerHTML = "";
                 }
             }
             else {
@@ -1487,116 +1494,155 @@
             }
         }
 
-
-        //if (document.getElementById("CardNumber1").value != "") {
-        //    if (document.getElementById("VehicleNo1").value == "") {
-        //        document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No1 cannot be left blank";
-        //        document.getElementById("VehicleNo1").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("VehicleNo1_error").innerHTML = "";
-        //    }
-        //    if (document.getElementById("MobileNo1").value == "") {
-        //        document.getElementById("MobileNo1_error").innerHTML = "Mobile1 cannot be left blank";
-        //        document.getElementById("MobileNo1").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("MobileNo1_error").innerHTML = "";
-        //    }
-        //}
-        //else {
-        //    document.getElementById("VehicleNo1_error").innerHTML = "";
-        //    document.getElementById("MobileNo1_error").innerHTML = "";
-        //    document.getElementById("CardNumber1_error").innerHTML = "";
-        //}
-
-        if (document.getElementById("VehicleNo1").value != "") { //Vehicle length min-6 max 10
-            if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) {
-                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-                //document.getElementById("VehicleNo1").focus();
-                ret = false;
-            }
-            else {
-                document.getElementById("VehicleNo1_error").innerHTML = "";
-            }
-        }
-        else {
+        if (document.getElementById("VehicleNo1").value.trim() == "" && document.getElementById("VehicleNo2").value.trim() == "") {
             document.getElementById("VehicleNo1_error").innerHTML = "";
-        }
+            //document.getElementById("VehicleNo1").focus();
+            document.getElementById("VehicleNo2_error").innerHTML = "";
 
-        if (document.getElementById("MobileNo1").value.trim() == "") {
-            document.getElementById("MobileNo1_error").innerHTML = "Mobile field cannot be left blank";
-            //document.getElementById("MobileNo1").focus();
+            if (document.getElementById("CardNumber2").value.trim() != "") {
+                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number Required";
+            }
+
+            if (document.getElementById("CardNumber1").value.trim() != "") {
+                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number Required";
+            }
+
             ret = false;
         }
         else {
-            if ($("#MobileNo1").val().length < 10) {
-                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
-                //document.getElementById("MobileNo1").focus();
-                ret = false;
-            }
-            else {
-                document.getElementById("MobileNo1_error").innerHTML = "";
+            if (document.getElementById("VehicleNo1").value.trim() != "" && document.getElementById("VehicleNo2").value.trim() != "") {
+                if (document.getElementById("VehicleNo1").value == document.getElementById("VehicleNo2").value) {
+                    document.getElementById("VehicleNo1_error").innerHTML = "Both Vehicle Numbers are same";
+                    //document.getElementById("VehicleNo1").focus();
+                    ret = false;
+                }
+                else {
+                    if (document.getElementById("VehicleNo1").value != "") { //Vehicle length min-6 max 10
+                        if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) {
+                            document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                            //document.getElementById("VehicleNo1").focus();
+                            ret = false;
+                        }
+                        else {
+                            document.getElementById("VehicleNo1_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        document.getElementById("VehicleNo1_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
+                        if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
+                            document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                            //document.getElementById("VehicleNo2").focus();
+                            ret = false;
+                        }
+                        else {
+                            document.getElementById("VehicleNo2_error").innerHTML = "";
+                        }
+                    }
+                    else {
+                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CardNumber2").value != "") {
+                        if (document.getElementById("VehicleNo2").value.trim() == "") {
+                            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number field cannot be left blank";
+                            //document.getElementById("VehicleNo2").focus();
+                            ret = false;
+                        }
+                        else {
+                            if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
+                                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                                //document.getElementById("MobileNo2").focus();
+                                ret = false;
+                            }
+                            else {
+                                document.getElementById("VehicleNo2_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else {
+                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                    }
+
+                }
             }
         }
 
-        //if (document.getElementById("CardNumber2").value != "") {
-        //    if (document.getElementById("VehicleNo2").value == "") {
-        //        document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No2 cannot be left blank";
-        //        document.getElementById("VehicleNo2").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("VehicleNo2_error").innerHTML = "";
-        //    }
-        //    if (document.getElementById("MobileNo2").value == "") {
-        //        document.getElementById("MobileNo2_error").innerHTML = "Mobile2 cannot be left blank";
-        //        document.getElementById("MobileNo2").focus();
-        //        return ret;
-        //    }
-        //    else {
-        //        document.getElementById("MobileNo2_error").innerHTML = "";
-        //    }
-        //}
-        //else {
-        //    document.getElementById("VehicleNo2_error").innerHTML = "";
-        //    document.getElementById("MobileNo2_error").innerHTML = "";
-        //    document.getElementById("CardNumber2_error").innerHTML = "";
-        //}
-
-        if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
-            if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
-                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                //document.getElementById("VehicleNo2").focus();
-                ret = false;
-            }
-            else {
-                document.getElementById("VehicleNo2_error").innerHTML = "";
-            }
-        }
-        else {
-            document.getElementById("VehicleNo2_error").innerHTML = "";
-        }
-
-        if (document.getElementById("CardNumber2").value != "") {
-            if (document.getElementById("MobileNo2").value == "") {
-                document.getElementById("MobileNo2_error").innerHTML = "Mobile field cannot be left blank";
-                //document.getElementById("MobileNo2").focus();
-                ret = false;
-            }
-            else {
-                document.getElementById("MobileNo2_error").innerHTML = "";
-            }
-        }
-        else {
+        if (document.getElementById("MobileNo1").value.trim() == "" && document.getElementById("MobileNo2").value.trim() == "") {
+            document.getElementById("MobileNo1_error").innerHTML = "";
+            //document.getElementById("MobileNo1").focus();
             document.getElementById("MobileNo2_error").innerHTML = "";
-            document.getElementById("CardNumber2_error").innerHTML = "";
+
+            if (document.getElementById("CardNumber2").value.trim() != "") {
+                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number Required";
+            }
+
+            if (document.getElementById("CardNumber1").value.trim() != "") {
+                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number Required";
+            }
+
+            ret = false;
         }
+        else {
+            if (document.getElementById("MobileNo1").value.trim() != "" && document.getElementById("MobileNo2").value.trim() != "") {
+                if (document.getElementById("MobileNo1").value == document.getElementById("MobileNo2").value) {
+                    document.getElementById("MobileNo1_error").innerHTML = "Both Mobile Numbers are same";
+                    //document.getElementById("MobileNo1").focus();
+                    ret = false;
+                }
+                else {
 
+                    if (document.getElementById("CardNumber1").value != "") {
+                        if (document.getElementById("MobileNo1").value == "") {
+                            document.getElementById("MobileNo1_error").innerHTML = "Mobile field cannot be left blank";
+                            //document.getElementById("MobileNo1").focus();
+                            ret = false;
+                        }
+                        else {
+                            if ($("#MobileNo1").val().length < 10) {
+                                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
+                                //document.getElementById("MobileNo1").focus();
+                                ret = false;
+                            }
+                            else {
+                                document.getElementById("MobileNo1_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else {
+                        document.getElementById("MobileNo1_error").innerHTML = "";
+                        document.getElementById("CardNumber1_error").innerHTML = "";
+                    }
 
+                    if (document.getElementById("CardNumber2").value != "") {
+                        if (document.getElementById("MobileNo2").value == "") {
+                            document.getElementById("MobileNo2_error").innerHTML = "Mobile field cannot be left blank";
+                            //document.getElementById("MobileNo2").focus();
+                            ret = false;
+                        }
+                        else {
+                            if ($("#MobileNo2").val().length < 10) {
+                                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number length must be 10 digit";
+                                //document.getElementById("MobileNo2").focus();
+                                ret = false;
+                            }
+                            else {
+                                document.getElementById("MobileNo2_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else {
+                        document.getElementById("MobileNo2_error").innerHTML = "";
+                        document.getElementById("CardNumber2_error").innerHTML = "";
+                    }
 
+                }
+            }
+        }
+                
+        
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Please select Received Copy of Driver License?";
             ret = false;
@@ -1700,7 +1746,6 @@
 
         //if (ret == false)
         //    return ret;
-        console.log('ABC');
         console.log(ret);
         return ret;
     }
@@ -2000,35 +2045,46 @@
 
     $("#MobileNo1").on("blur", function () {
         //debugger;
-        var communicationMobile = document.getElementById("MobileNo1").value.trim();
-        if (communicationMobile == "") {
-            document.getElementById("MobileNo1_error").innerHTML = "Mobile Number cannot be left blank";
-            return (false);
+        var mobile = document.getElementById("MobileNo1").value.trim();
+        //if (mobile == "") {
+        //    document.getElementById("MobileNo1_error").innerHTML = "Mobile Number cannot be left blank";
+        //    return (false);
+        //}
+        //else {
+        //    document.getElementById("MobileNo1_error").innerHTML = "";
+        //}
+
+        if (mobile != "") {
+            if (document.getElementById("MobileNo1").value.substring(0, 1) == "0") {
+                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                document.getElementById("MobileNo1").value = "";
+                //document.getElementById("MobileNo1").focus();
+                return false;
+            }
+            else {
+                document.getElementById("MobileNo1_error").innerHTML = "";
+            }
+
+            if (document.getElementById("MobileNo1").value.length < 10) {
+                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
+                document.getElementById("MobileNo1").value = "";
+                //document.getElementById("MobileNo1").focus();
+                return false;
+            }
+            else {
+                document.getElementById("MobileNo1_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("MobileNo1_error").innerHTML = "";
-        }
-
-        if (document.getElementById("MobileNo1").value.substring(0, 1) == "0") {
-            document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            document.getElementById("MobileNo1").value = "";
-            document.getElementById("MobileNo1").focus();
-            return false;
-        }
-
-        if (document.getElementById("MobileNo1").value.length < 10) {
-            document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
-            document.getElementById("MobileNo1").value = "";
-            document.getElementById("MobileNo1").focus();
-            return false;
         }
 
     });
 
     $("#MobileNo2").on("blur", function () {
         //debugger;
-        var communicationMobile = document.getElementById("MobileNo2").value.trim();
-        //if (communicationMobile == "") {
+        var mobile = document.getElementById("MobileNo2").value.trim();
+        //if (mobile == "") {
         //    document.getElementById("MobileNo2_error").innerHTML = "Mobile Number cannot be left blank";
         //    return (false);
         //}
@@ -2036,20 +2092,31 @@
         //    document.getElementById("MobileNo2_error").innerHTML = "";
         //}
 
-        if (document.getElementById("MobileNo2").value.substring(0, 1) == "0") {
-            document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            document.getElementById("MobileNo2").value = "";
-            document.getElementById("MobileNo2").focus();
-            return false;
-        }
 
-        if (communicationMobile != "") {
+
+        if (mobile != "") {
+            if (document.getElementById("MobileNo2").value.substring(0, 1) == "0") {
+                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                document.getElementById("MobileNo2").value = "";
+                //document.getElementById("MobileNo2").focus();
+                return false;
+            }
+            else {
+                document.getElementById("MobileNo2_error").innerHTML = "";
+            }
+
             if (document.getElementById("MobileNo2").value.length < 10) {
                 document.getElementById("MobileNo2_error").innerHTML = "Mobile Number length must be 10 digit";
                 document.getElementById("MobileNo2").value = "";
-                document.getElementById("MobileNo2").focus();
+                //document.getElementById("MobileNo2").focus();
                 return false;
             }
+            else {
+                document.getElementById("MobileNo2_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("MobileNo2_error").innerHTML = "";
         }
 
     });
@@ -2374,6 +2441,22 @@
             $(":submit").attr("disabled", true);
         }
 
+    });
+
+    $("#CommunicationDistrictId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_district_error").html("");
+        }
+    });
+
+    $("#IndividualOrgNameTitle").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#salutaion_error").html("");
+        }
     });
 
 </script>

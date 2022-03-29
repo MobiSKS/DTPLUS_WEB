@@ -240,7 +240,7 @@
             return (false);
         }
 
-        localStorage.setItem("MERCHANTAVAILABLE", "0");
+        localStorage.setItem("MERCHANTAVAILABLE", "1");
 
 
         $.ajax({
@@ -267,7 +267,6 @@
                             data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
                             dataType: "json",
                             success: function (result, status, xhr) {
-                                console.log('Nithya');
                                 console.log(result);
                                 console.log(status);
 
@@ -357,71 +356,82 @@
                 }
             });
 
-            $("#btnSave").click(function () {
-                debugger;
-                if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0")
-                {
-                    alert("Enter No of Cards Allocated");
-                    return;
+    $("#btnSave").click(function () {
+        debugger;
+        if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0") {
+            alert("Enter No of Cards Allocated");
+            return;
+        }
+        var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
+        var merchantId = document.getElementById("MerchantID").value;
+        if (merchantId == "") {
+            document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
+            //$("#MerchantID").focus;
+            return (false);
+        }
+        else {
+            var msg = "Invalid Merchant ID";
+            if (document.getElementById("MerchantID_error").innerHTML != "") {
+                msg = document.getElementById("MerchantID_error").innerHTML;
+            }
+
+            if (localStorage.getItem("MERCHANTAVAILABLE") == 0) {
+                alert(msg);
+                return (false);
+            }
+            else {
+                document.getElementById("MerchantID_error").innerHTML = "";
+            }
+        }
+
+        var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
+        var selectedCards = 0;
+        ObjOTCCardModel = [];
+
+        $("input:checkbox[name=card]:checked").each(function () {
+            //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+            selectedCards = selectedCards + 1;
+            ObjOTCCardModel.push({ CardNo: $(this).val() });
+        });
+        //alert(selectedCards);
+
+        if (NoofCardsAllocated != selectedCards) {
+            alert("No of Cards Allocated and No of cards selected is not matching");
+            return;
+        }
+
+        if (ObjOTCCardModel.length > 0) {
+            var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
+            console.log(model);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDriverCardsAllocation", "DriverCardCustomer")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(model),
+                success: function (data) {
+                    //alert(data.message);
+                    console.log(data);
+                    console.log(data.commonResponseData.internel_Status_Code);
+                    if (data.commonResponseData.internel_Status_Code == 1000) {
+                        window.location.href = '@Html.Raw(@Url.Action("SuccessDriverCardsAllocation", "DriverCardCustomer"))';
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
                 }
-                var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
-                var merchantId = document.getElementById("MerchantID").value;
-                if (merchantId == "") {
-                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
-                    //$("#MerchantID").focus;
-                    return (false);
-                }
-                else {
-                    document.getElementById("MerchantID_error").innerHTML = "";
-                }
-
-               var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
-                var selectedCards = 0;
-                ObjOTCCardModel = [];
-
-               $("input:checkbox[name=card]:checked").each(function () {
-                    //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
-                   selectedCards = selectedCards + 1;
-                   ObjOTCCardModel.push({ CardNo: $(this).val() });
-               });
-                //alert(selectedCards);
-
-                if (NoofCardsAllocated != selectedCards) {
-                    alert("No of Cards Allocated and No of cards selected is not matching");
-                    return;
-                }
-
-                if (ObjOTCCardModel.length > 0) {
-                    var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
-                    console.log(model);
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("SaveDriverCardsAllocation", "DriverCardCustomer")',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: 'json',
-                        data: JSON.stringify(model),
-                            success: function (data) {
-                                //alert(data.message);
-                                console.log(data);
-                                console.log(data.commonResponseData.internel_Status_Code);
-                                if (data.commonResponseData.internel_Status_Code == 1000) {
-                                     window.location.href = '@Html.Raw(@Url.Action("SuccessDriverCardsAllocation", "DriverCardCustomer"))';
-                                }
-                            },
-                            error: function (ex) {
-                                alert('Error.' + ex);
-                            }
-                        });
-                }
-
-
             });
+        }
 
-            $("#btnReset").click(function () {
-                dvDetails.style.display = 'none';
-                document.getElementById("MerchantID").value = "";
-                document.getElementById("NoOfUnallocatedCards").value = "";
-                $('#CustomerRegionID').val('0');
-            });
+
+    });
+
+    $("#btnReset").click(function () {
+        dvDetails.style.display = 'none';
+        document.getElementById("MerchantID").value = "";
+        document.getElementById("NoOfUnallocatedCards").value = "";
+        document.getElementById("NoofAllocatedCards").value = "";
+        $('#CustomerRegionID').val('0');
+    });
 
 </script>

@@ -29,6 +29,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerFinancialService, CustomerFinancialService>();
             services.AddTransient<IMerchantFinancialService, MerchantFinancialService>();
             services.AddTransient<IHotlistingService, HotlistingService>();
+            services.AddTransient<IManageRbeService, ManageRbeService>();
             services.AddTransient<IInterfaceService, InterfaceService>();
             return services;
         }

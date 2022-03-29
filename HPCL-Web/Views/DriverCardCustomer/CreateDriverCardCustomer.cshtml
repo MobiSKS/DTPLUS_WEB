@@ -790,6 +790,7 @@
 
         $('#CardNo').val(cardNo);
         $('#txt_searchCard').val('');
+        document.getElementById("CardNo_error").innerHTML = "";
         $('#myModalCard1').modal('hide');
     }
 
@@ -1333,6 +1334,8 @@
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
+        document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+
         if ($('#IncomeTaxPan').val().match(pancard)) {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
         }
@@ -1430,7 +1433,7 @@
         }
         else {
             if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-max 10 digits";
                 //document.getElementById("CommunicationMobileNo").value = "";
                 //document.getElementById("CommunicationMobileNo").focus();
                 return false;
@@ -1440,7 +1443,7 @@
             }
 
             if (document.getElementById("CommunicationMobileNo").value.length < 10) {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number length must be min-max 10 digits";
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-max 10 digits";
                 document.getElementById("CommunicationMobileNo").value = "";
                 //document.getElementById("CommunicationMobileNo").focus();
                 return false;
@@ -1801,6 +1804,63 @@
             else {
                 document.getElementById("IndividualOrgName_error").innerHTML = "";
             }
+        }
+
+    });
+
+    $("#CommunicationStateId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_states_error").html("");
+        }
+    });
+
+    $("#IndividualOrgNameTitle").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#salutaion_error").html("");
+        }
+    });
+
+    $("#AddressProofType").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#AddressProofType_error").html("");
+        }
+    });
+
+    $("#AddressProofDocumentNo").on("blur", function () {
+        //debugger;
+        var addressProofDocumentNo = document.getElementById("AddressProofDocumentNo").value.trim();
+        if (addressProofDocumentNo == "") {
+            document.getElementById("AddressProofDocumentNo_error").innerHTML = "File Name field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("AddressProofDocumentNo").value.trim())) {
+                document.getElementById("AddressProofDocumentNo_error").innerHTML = "Invalid File Name";
+                document.getElementById("AddressProofDocumentNo").value = "";
+                //document.getElementById("AddressProofDocumentNo").focus();
+                return false;
+            }
+            else {
+                document.getElementById("AddressProofDocumentNo_error").innerHTML = "";
+            }
+        }
+    });
+
+    $("#AddressProof").on("blur", function () {
+        //debugger;
+        var addressProof = document.getElementById("AddressProof").value.trim();
+        if (addressProof == "") {
+            document.getElementById("AddressProof_error").innerHTML = "Address Proof field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("AddressProof_error").innerHTML = "";
         }
 
     });

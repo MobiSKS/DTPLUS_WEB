@@ -135,5 +135,22 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ViewRequestedTatkalCard()
+        {
+            ViewRequestedTatkalCardModel custMdl = new ViewRequestedTatkalCardModel();
+            custMdl = await _tatkalCardCustomerService.ViewRequestedTatkalCard();
+
+            return View(custMdl);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetViewRequestedTatkalCard(int RegionalId)
+        {
+            var searchList = await _tatkalCardCustomerService.GetViewRequestedTatkalCard(RegionalId);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
     }
 }

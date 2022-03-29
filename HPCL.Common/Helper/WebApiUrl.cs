@@ -187,6 +187,7 @@
         #region TatkalCardCustomer
         public static string insertTatkalCardRequest = "api/dtplus/tatkal/insert_tatkal_card_request";
         public static string insertTatkalCardCustomer = "api/dtplus/tatkal/insert_tatkal_card_customer";
+        public static string viewRequestedTatkalCard = "api/dtplus/tatkal/view_requested_tatkal_card";
         #endregion
 
         #region Terminal
@@ -257,6 +258,11 @@
         public static string updatehotlistorreactivate = "api/dtplus/hotlist/update_hotlist_or_reactivate";
         public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
 
+        #endregion
+
+        #region "Manage RBE"
+        public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
+        public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
         #endregion
     }
 }

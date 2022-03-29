@@ -1,7 +1,7 @@
-﻿@model HPCL.Common.Models.ViewModel.DriverCardCustomer.RequestForDriverCardModel
-@using HPCL.Common.Resources;
+﻿@model HPCL.Common.Models.ViewModel.TatkalCardCustomer.ViewRequestedTatkalCardModel
+@using HPCL.Common.Resources
 @{
-    ViewData["Title"] = "View Requested Driver Cards";
+    ViewData["Title"] = "View Requested Tatkal Card";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
@@ -9,14 +9,14 @@
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "DriverCardCustomer")" class="text_primary">Driver Card Customer</a> </li>
-            <li class="breadcrumb-item font-weight-light">View Requested Driver Cards</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "TatkalCardCustomer")" class="text_primary">Tatkal Card Customer </a> </li>
+            <li class="breadcrumb-item font-weight-light">View Requested Tatkal Card</li>
         </ul>
-        <form method="post" data-ajax="true" data-ajax-controller="DriverCardCustomer" data-ajax-action="ViewRequestDriverCard" data-ajax-method="POST" data-ajax-failure="OnFailure">
+        <form method="post" data-ajax="true" data-ajax-controller="TatkalCardCustomer" data-ajax-action="ViewRequestedTatkalCard" data-ajax-method="POST" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Requested Driver Cards</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Requested Tatkal Card</p>
                         <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
                             @Html.DisplayFor(m => m.Remarks)
                         </div>
@@ -47,17 +47,18 @@
                         <div class="clearfix"></div>
                         <div>
                             <div class="px-3">
-                                <table id="ViewCustomerCard" class="table table-bordered" style="display:none;">
+                                <table id="ViewTatkal" class="table table-bordered" style="display:none;">
                                     <thead>
                                         <tr>
                                             <th>
                                                 @Html.DisplayName("Zone")
                                             </th>
+
                                             <th>
                                                 @Html.DisplayName("Region")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("Dummy Customer ID")
+                                                @Html.DisplayName("Customer ID")
                                             </th>
                                             <th>
                                                 @Html.DisplayName("Customer Number")
@@ -69,11 +70,9 @@
                                                 @Html.DisplayName("Created Date")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("Issue Date")
-                                            </th>
-                                            <th>
                                                 @Html.DisplayName("Created By")
                                             </th>
+
                                         </tr>
                                     </thead>
                                 </table>
@@ -91,29 +90,22 @@
 </div>
 <script type="text/javascript">
     function ResetFields() {
+
         $("#NoRecord").attr("style", "display:none");
         $("input:text").each(function () {
             $(this).val("");
         });
-        $("#ViewCustomerCard td").parent().remove();
-        document.getElementById('ViewCustomerCard').style.display = 'none';
+        $("#ViewTatkal td").parent().remove();
+        document.getElementById('ViewTatkal').style.display = 'none';
 
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
 
-        if ($('#ViewCustomerCard_wrapper').length) {
-            document.getElementById('ViewCustomerCard_wrapper').style.display = 'none';
+        if ($('#ViewTatkal_wrapper').length) {
+            document.getElementById('ViewTatkal_wrapper').style.display = 'none';
         }
-    }
+    };
 
-    function showGrid() {
-        if ($("input:text").val() == "") {
-            document.getElementById('ViewCustomerCard').style.display = 'none';
-        }
-        if (($("input:text").val() != "")) {
-            document.getElementById('ViewCustomerCard').style.display = 'inline-table';
-        }
-    }
 
 
     $("#CustomerRegionID").change(function () {
@@ -129,7 +121,7 @@
         console.log(RegionID);
         if (RegionID == '' || RegionID == "0") {
             //alert('Enter Vehicle No');
-            document.getElementById("CustomerRegionID_error").innerHTML = "Select Region Name";
+            document.getElementById("CustomerRegionID_error").innerHTML = "Please Select Region Name";
             return;
         }
         else {
@@ -138,21 +130,21 @@
 
         var result = false;
 
-        $("#ViewCustomerCard td").parent().remove();
+        $("#ViewTatkal td").parent().remove();
 
         $.ajax({
             type: 'POST',  // http method
-            url: " GetAllViewDriverCard/DriverCardCustomer",
+            url: "GetViewRequestedTatkalCard/TatkalCardCustomer",
             data: { RegionalId: RegionID },  // data to submit
             dataType: "json",
             success: function (res) {
                 console.log(res, "res");
 
-                $("#ViewCustomerCard td").parent().remove();
+                $("#ViewTatkal td").parent().remove();
 
-                $('#ViewCustomerCard').DataTable().clear().destroy();
+                $('#ViewTatkal').DataTable().clear().destroy();
 
-                var tbll = $('#ViewCustomerCard').DataTable({
+                var tbll = $('#ViewTatkal').DataTable({
                     paging: true,
                     searching: false,
                     stateSave: true,
@@ -166,8 +158,7 @@
                 });
 
                 if (res.searchList.length > 0) {
-
-                    $("#ViewCustomerCard").show();
+                    $("#ViewTatkal").show();
                     $("#NoRecord").attr("style", "display:none");
 
                     for (var i = 0; i < res.searchList.length; i++) {
@@ -176,11 +167,9 @@
                         var regionalOfficeName = (res.searchList[i].regionalOfficeName || '');
                         var customerId = (res.searchList[i].customerId || '');
                         var customerName = (res.searchList[i].customerName || '');
-                        var cardNo = (res.searchList[i].cardNo || '');
+                        var cardNo = (res.searchList[i].cardNo || '') ;
                         var createdDate = (res.searchList[i].createdDate || '');
-                        var IssueDate = ('');
                         var createdBy = (res.searchList[i].createdBy || '');
-
 
                         tbll.row.add([
                             zonalOfficeName,
@@ -189,17 +178,15 @@
                             customerName,
                             cardNo,
                             createdDate,
-                            IssueDate,
                             createdBy
                         ]).draw();
 
                     }
-                }
-                else {
-                    $("#ViewCustomerCard").hide();
+                } else {
+                    $("#ViewTatkal").hide();
                     $("#NoRecord").attr("style", "display:block");
-                    if ($('#ViewCustomerCard_wrapper').length) {
-                        document.getElementById('ViewCustomerCard_wrapper').style.display = 'none';
+                    if ($('#ViewTatkal_wrapper').length) {
+                        document.getElementById('ViewTatkal_wrapper').style.display = 'none';
                     }
                 }
 
