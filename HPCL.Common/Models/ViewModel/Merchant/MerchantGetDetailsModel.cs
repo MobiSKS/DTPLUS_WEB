@@ -79,6 +79,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string HighwayNo1 { get; set; }
         [StringLength(50)]
         public string HighwayNo2 { get; set; }
+        [StringLength(50)]
         public string HighwayName { get; set; }
         public string SBUTypeId { get; set; }
         public string SBUName { get; set; }

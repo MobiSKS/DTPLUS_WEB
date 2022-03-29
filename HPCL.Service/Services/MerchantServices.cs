@@ -257,18 +257,20 @@ namespace HPCL.Service.Services
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
-            string fromDate = "", toDate = "";
+            //string fromDate = "", toDate = "";
 
             if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
             {
                 string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
                 string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
 
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                //fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
+                //toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
             }
             else
             {
+                merchaApprovalMdl.FromDate = DateTime.Now.ToString();
+                merchaApprovalMdl.ToDate = DateTime.Now.ToString();
                 return merchaApprovalMdl;
             }
 
@@ -278,8 +280,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 Category = merchaApprovalMdl.CategoryID,
-                FromDate = fromDate,
-                ToDate = toDate
+                FromDate = merchaApprovalMdl.FromDate,
+                ToDate = merchaApprovalMdl.ToDate
             };
 
             StringContent merchantApprovalContent = new StringContent(JsonConvert.SerializeObject(merchantApprovalForms), Encoding.UTF8, "application/json");

@@ -241,8 +241,15 @@
         public static string DeleteCountryRegionUrl = "api/dtplus/countryregion/delete_country_region";
         public static string DeleteStateUrl = "api/dtplus/state/delete_state";
         public static string DeleteDistrictUrl = "api/dtplus/district/delete_district";
-      
+
         #endregion
+
+
+        #region Interfaces
+        public static string getrecordtype = "api/dtplus/settings/get_record_type";
+        public static string searchcustomerandcardform = "api/dtplus/customer/search_customer_and_card_form";
+        #endregion
+
 
         #region Admin Hotlist
         public static string getactionlist = "api/dtplus/hotlist/get_action_list";

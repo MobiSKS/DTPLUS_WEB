@@ -1123,5 +1123,23 @@ namespace HPCL.Service.Services
             var sortedtList = HotlistReason.OrderBy(x => x.StatusId).ToList();
             return sortedtList;
         }
+        public async Task<List<RecordTypeModel>> GetRecordType()
+        {
+            var forms = new BaseEntity
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getrecordtype);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<RecordTypeModel> RecordTypeList = jarr.ToObject<List<RecordTypeModel>>();
+            var sortedtList = RecordTypeList.OrderBy(x => x.entityId).ToList();
+            return sortedtList;
+        }
     }
 }

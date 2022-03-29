@@ -119,7 +119,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.MerchantType<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control, search_test" })
-                                            <span class="error displayNone" id="merchantType_error"></span>
+                                            <span class="error" id="merchantType_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -621,16 +621,16 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.TerminalTypeRequested<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
-                                                <div class="col-4">
+                                                @*<div class="col-4">
                                                     @Html.RadioButtonFor(m => m.TerminalTypeRequested, "GPRS Installation", new { @class = "form-control", @style = "width:20%;" })
                                                     <p class="m-0">GPRS Installation</p>
                                                 </div>
                                                 <div class="col-4">
                                                     @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Desktop Installation", new { @class = "form-control", @style = "width:20%;" })
                                                     <p class="m-0">Desktop Installation</p>
-                                                </div>
+                                                </div>*@
                                                 <div class="col-4">
-                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Wifi Installation", new { @class = "form-control", @style = "width:20%;" })
+                                                    @Html.RadioButtonFor(m => m.TerminalTypeRequested, "Wifi Installation", new { @class = "form-control", @style = "width:20%;", @checked="checked" })
                                                     <p class="m-0">Wifi Installation</p>
                                                 </div>
                                             </div>
@@ -889,11 +889,11 @@
                                                 <div class="col-md-7 col-12" id="SummaryHpPayCautionLimit">
                                                 </div>
                                             </div>
-                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                            @*<div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Branch Location :</label>
                                                 <div class="col-md-7 col-12" id="SummaryBranchLocation">
                                                 </div>
-                                            </div>
+                                            </div>*@
                                         </div>
                                     </div>
                                     <div class="col-6 float-left">
@@ -1163,7 +1163,6 @@
 
     function showMerchantCommAddress() {
         var ret = "Y";
-
         if (document.applicationForm.RetailOutletName.value == "") {
             $("#retailOutletName_error").removeClass("displayNone");
             document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet field cannot be left blank";
@@ -1289,6 +1288,25 @@
             else {
                 document.getElementById("highwayNum_error").innerHTML = "";
             }
+        }
+
+        if (document.applicationForm.HighwayName.value != "") {
+            if (!document.applicationForm.HighwayName.value.match(highwayName)) {
+                document.getElementById("highwayName_error").innerHTML = "Highway Name has invalid characters";
+                if (ret != "N") {
+                    document.applicationForm.HighwayName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("highwayName_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("highwayName_error").innerHTML = "";
         }
 
         if (document.applicationForm.SBUTypeId.value == "0") {
@@ -2313,6 +2331,12 @@
     $("#TerminalTypeRequested").on("blur", function () {
         if ($("#TerminalTypeRequested").val().length > 0) {
             document.getElementById("terminalTypeReq_error").innerHTML = "";
+        }
+    });
+
+    $("#HighwayName").on("blur", function () {
+        if ($("#HighwayName").val().length > 0) {
+            document.getElementById("highwayName_error").innerHTML = "";
         }
     });
 
