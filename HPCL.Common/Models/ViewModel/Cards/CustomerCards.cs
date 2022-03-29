@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
 
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
-        [Required(ErrorMessage = "CustomerId is Required")]
+        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         public string CustomerId { get; set; }
         [StringLength(16)]
         [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]

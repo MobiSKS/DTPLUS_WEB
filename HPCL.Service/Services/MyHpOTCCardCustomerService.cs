@@ -49,7 +49,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"RegionalId", requestForOTCCardModel.CustomerRegionID.ToString()},
                     {"NoofCards", requestForOTCCardModel.NoofCards.ToString()},
                     {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
@@ -113,7 +113,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = RegionalId,
                 MerchantId = MerchantID
             };
@@ -140,7 +140,7 @@ namespace HPCL.Service.Services
         {
             customerModel.UserAgent = CommonBase.useragent;
             customerModel.UserIp = CommonBase.userip;
-            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
             customerModel.CommunicationFax = (string.IsNullOrEmpty(customerModel.CommunicationFaxCode) ? "" : customerModel.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationFaxPart2) ? "" : customerModel.CommunicationFaxPart2);
@@ -205,7 +205,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = RegionalId
             };
 
@@ -339,7 +339,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 MerchantId = MerchantId,
                 CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
             };

@@ -59,7 +59,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult CustomerTransactionDetails()
         {
-            return View();
+            CustomerTransactionViewModel model = new CustomerTransactionViewModel();
+            return View(model);
         }
 
         [HttpPost]

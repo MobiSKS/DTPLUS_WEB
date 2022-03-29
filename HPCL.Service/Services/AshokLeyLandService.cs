@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
                 Pin = arrs[0].Pin,
                 MobileNo = arrs[0].MobileNo,
                 EmailId = arrs[0].EmailId,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
@@ -108,7 +108,7 @@ namespace HPCL.Service.Services
                 Pin =  arrs[0].Pin,
                 MobileNo =  arrs[0].MobileNo,
                 EmailId =  arrs[0].EmailId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
@@ -129,7 +129,7 @@ namespace HPCL.Service.Services
         {
             alOTCCardRequestModel.UserAgent = CommonBase.useragent;
             alOTCCardRequestModel.UserIp = CommonBase.userip;
-            alOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            alOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             alOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(alOTCCardRequestModel), Encoding.UTF8, "application/json");
@@ -167,7 +167,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
 
@@ -184,7 +184,7 @@ namespace HPCL.Service.Services
 
         public async Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel)
         {
-            ashokLeylandCardCreationModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             ashokLeylandCardCreationModel.UserAgent = CommonBase.useragent;
             ashokLeylandCardCreationModel.UserIp = CommonBase.userip;
             ashokLeylandCardCreationModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
@@ -230,7 +230,7 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode,
                 CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
             };

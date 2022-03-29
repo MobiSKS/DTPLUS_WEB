@@ -240,7 +240,7 @@
             return (false);
         }
 
-        localStorage.setItem("MERCHANTAVAILABLE", "0");
+        localStorage.setItem("MERCHANTAVAILABLE", "1");
 
         $.ajax({
             type: 'POST',  // http method
@@ -266,7 +266,6 @@
                             data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
                             dataType: "json",
                             success: function (result, status, xhr) {
-                                console.log('Nithya');
                                 console.log(result);
                                 console.log(status);
 
@@ -369,7 +368,18 @@
             return (false);
         }
         else {
-            document.getElementById("MerchantID_error").innerHTML = "";
+            var msg = "Invalid Merchant ID";
+            if (document.getElementById("MerchantID_error").innerHTML != "") {
+                msg = document.getElementById("MerchantID_error").innerHTML;
+            }
+
+            if (localStorage.getItem("MERCHANTAVAILABLE") == 0) {
+                alert(msg);
+                return (false);
+            }
+            else {
+                document.getElementById("MerchantID_error").innerHTML = "";
+            }
         }
 
         var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
@@ -385,8 +395,9 @@
 
         if (NoofCardsAllocated != selectedCards) {
             alert("No. of Cards Allocated and Selected Un-Allocated Card(s) do not match");
-            return;
+            return (false);;
         }
+
 
         if (ObjOTCCardModel.length > 0) {
             var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
@@ -418,6 +429,7 @@
         dvDetails.style.display = 'none';
         document.getElementById("MerchantID").value = "";
         document.getElementById("NoOfUnallocatedCards").value = "";
+        document.getElementById("NoofAllocatedCards").value = "";
         $('#CustomerRegionID').val('0');
         document.getElementById("dvCards").innerHTML = "";
     });

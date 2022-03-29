@@ -22,8 +22,11 @@
         public const string ValidPinCode = @"^(?!(0))[0-9]{6}$";
         public const string ValidPinCodeErrMsg = "Enter a valid Pin";
 
-        public const string ValidName = @"^[a-zA-Z]{0,50}$";
-        public const string ValidNameErrMsg = "Enter Valid Name";
+        public const string ValidFirstName = @"^[a-zA-Z]{0,50}$";
+        public const string ValidFirstNameErrMsg = "Enter Valid First Name";
+
+        public const string ValidUserName = @"^[a-zA-Z]{0,50}$";
+        public const string ValidUserNameErrMsg = "Enter Valid First Name";
 
         public const string ValidEmail = @"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$";
         public const string ValidEmailErrMsg = "Enter a valid Email ID";
@@ -61,6 +64,7 @@
         public const string MerchantNotEmpty = "Merchant ID should not be Empty";
         public const string AmountNotEmpty = "Amount should not be Empty";
         public const string TerminalNotEmpty = "Terminal ID should not be Empty";
+
         #endregion
     }
 }

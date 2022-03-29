@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CTFlag",  "1" }
                 };
 
@@ -60,7 +60,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
 
@@ -84,7 +84,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
 
@@ -107,7 +107,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
 
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
                 {
                     {"Useragent", CommonBase.useragent},
                     {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
 

@@ -207,7 +207,6 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
         [HttpPost]
-        [HttpPost]
         public async Task<JsonResult> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
         {
             var searchList = await _myHpOTCCardCustomerService.GetAllViewCardsForOtcCard(entity);
