@@ -47,8 +47,8 @@ namespace HPCL.Service.Services
 
             customerandCardFormResponse = JsonConvert.DeserializeObject<GetCustomerandCardFormResponse>(Response);
             var customerReqObjJarr = ResponseObj["Data"].Value<JObject>();
-            var CustObjJarr = customerReqObjJarr["GetCcmsAccountSummary"].Value<JArray>();
-            var CardObjJarr = customerReqObjJarr["GetCardTransactionDetails"].Value<JArray>();
+            var CustObjJarr = customerReqObjJarr["GetCustomerSearchOutput"].Value<JArray>();
+            var CardObjJarr = customerReqObjJarr["GetCardSearchOutput"].Value<JArray>();
             List<GetCustomerFormDetails> customerFormDetails = CustObjJarr.ToObject<List<GetCustomerFormDetails>>();
             customerandCardFormResponse.CustomerFormDetails.AddRange(customerFormDetails);
             List<GetCardFormDetails> cardFormDetails = CardObjJarr.ToObject<List<GetCardFormDetails>>();
