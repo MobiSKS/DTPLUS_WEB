@@ -1163,7 +1163,6 @@
 
     function showMerchantCommAddress() {
         var ret = "Y";
-        debugger;
         if (document.applicationForm.RetailOutletName.value == "") {
             $("#retailOutletName_error").removeClass("displayNone");
             document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet field cannot be left blank";
@@ -1289,6 +1288,25 @@
             else {
                 document.getElementById("highwayNum_error").innerHTML = "";
             }
+        }
+
+        if (document.applicationForm.HighwayName.value != "") {
+            if (!document.applicationForm.HighwayName.value.match(highwayName)) {
+                document.getElementById("highwayName_error").innerHTML = "Highway Name has invalid characters";
+                if (ret != "N") {
+                    document.applicationForm.HighwayName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("highwayName_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("highwayName_error").innerHTML = "";
         }
 
         if (document.applicationForm.SBUTypeId.value == "0") {
@@ -2313,6 +2331,12 @@
     $("#TerminalTypeRequested").on("blur", function () {
         if ($("#TerminalTypeRequested").val().length > 0) {
             document.getElementById("terminalTypeReq_error").innerHTML = "";
+        }
+    });
+
+    $("#HighwayName").on("blur", function () {
+        if ($("#HighwayName").val().length > 0) {
+            document.getElementById("highwayName_error").innerHTML = "";
         }
     });
 
