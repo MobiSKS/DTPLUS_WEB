@@ -269,6 +269,8 @@ namespace HPCL.Service.Services
             }
             else
             {
+                merchaApprovalMdl.FromDate = DateTime.Now.ToString();
+                merchaApprovalMdl.ToDate = DateTime.Now.ToString();
                 return merchaApprovalMdl;
             }
 
