@@ -574,12 +574,12 @@ namespace HPCL.Service.Services
         {
             MerchantDetailsResponseOTCCardCustomer merchantDetails = new MerchantDetailsResponseOTCCardCustomer();
 
-            var requestinfo = new Dictionary<string, string>
+            var requestinfo = new VerifyMerchantRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"MerchantId", MerchantID}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                MerchantId = MerchantID
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
