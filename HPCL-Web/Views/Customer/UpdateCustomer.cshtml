@@ -506,6 +506,7 @@
                                         <div class="col-md-7 col-12">
                                             @*<input type="date" class="form-control">*@
                                             @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control", autocomplete = "off" })
+                                            <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -882,6 +883,19 @@
 
         $("#CustomerDateOfApplication").val(output);
         //$("#KeyOfficialDOB").val(output);
+
+    };
+
+    function setDOB() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            d.getFullYear();
+
+        $("#KeyOfficialDOB").val(output);
 
     };
 
@@ -2211,6 +2225,31 @@
             }
             else {
                 document.getElementById("official_designation_error").innerHTML = "";
+            }
+        }
+
+    });
+
+    $("#KeyOfficialDOB").on("change", function () {
+        //debugger;
+        var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
+        console.log(selectedDate);
+
+        if (selectedDate != "") {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const myArray = document.getElementById("KeyOfficialDOB").value.split("-");
+
+            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+            console.log(today);
+            console.log(varDate);
+            if (varDate > today) {
+                document.getElementById("KeyOfficialDOB_error").innerHTML = "Date of Birth cannot be a future date";
+                setDOB();
+            }
+            else {
+                document.getElementById("KeyOfficialDOB_error").innerHTML = "";
             }
         }
 
