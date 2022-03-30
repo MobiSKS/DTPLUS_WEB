@@ -46,7 +46,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> DeleteZonalOffice(int zonalOfficeID)
         {
-            var cityLists = await _locationServices.DeleteZonalOffice(zonalOfficeID);
+            await _locationServices.DeleteZonalOffice(zonalOfficeID);
             return RedirectToAction("ZonalOfficersList");
         }
         #endregion
