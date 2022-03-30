@@ -184,7 +184,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.TypeOfCustomerID.value == "0") {
-        document.getElementById("typeOfCustomer_error").innerHTML = "Customer Type field cannot be left blank";
+        document.getElementById("typeOfCustomer_error").innerHTML = "Type Of Customer field cannot be left blank";
         document.applicationForm.TypeOfCustomerID.focus();
         return ret;
     }
