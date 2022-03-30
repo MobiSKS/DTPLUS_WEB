@@ -37,7 +37,7 @@ namespace HPCL.Common.Models.ViewModel.Interface
         public string StateID { get; set; }
         public string CityId{ get; set; }
         public string StateName { get; set; }
-        public string City { get; set; }
+        public string CityName { get; set; }
         public virtual List<RecordTypeModel> RecordTypeList { get; set; }
         public virtual List<StateResponseModal> States { get; set; }
         //public virtual List<GetCityResponse> Cities { get; set; }

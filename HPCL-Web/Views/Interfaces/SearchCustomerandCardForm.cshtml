@@ -31,7 +31,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">Form Number</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -56,7 +56,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">City</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.CityName, new { @class = "form-control", maxlength = "20" })
                                             </div>
                                         </div>
 
@@ -101,7 +101,7 @@
             var entityId = $("#RecordTypeId :selected").val();
             var formNumber = $("#FormNumber").val();
             var stateID = $("#StateID :selected").val();
-            var cityName = $("#City").val();
+            var cityName = $("#CityName").val();
            // var model = { EntityId: entityId, FormNumber: formNumber, StateID: stateID, CityName: cityName };
             $.ajax({
                 type: 'GET',
@@ -127,4 +127,12 @@
             });
         }
     });
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
 </script>
