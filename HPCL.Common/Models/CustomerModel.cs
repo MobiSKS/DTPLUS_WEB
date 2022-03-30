@@ -303,7 +303,9 @@ namespace HPCL.Common.Models
         public string IsDuplicatePanNo { get; set; }
         public string AllowPanDuplication { get; set; }
         public string PanCardRemarks { get; set; }
-        
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+
     }
 
     
