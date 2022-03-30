@@ -257,5 +257,10 @@
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
         #endregion
+
+        #region "Application Form Data Entry"
+        public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
+        public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
+        #endregion
     }
 }
