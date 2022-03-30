@@ -212,14 +212,14 @@ function showregAddress() {
 
 
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
-        document.getElementById("individualName_error").innerHTML = "Individual/Org.Name is required";
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
         document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
     else {
 
         if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org.Name is not valid";
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is not valid";
             document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
@@ -228,7 +228,7 @@ function showregAddress() {
         }
 
         if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org.Name is not valid";
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is not valid";
             document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
