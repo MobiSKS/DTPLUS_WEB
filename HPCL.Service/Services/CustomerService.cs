@@ -672,15 +672,15 @@ namespace HPCL.Service.Services
         }
         public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
         {
-            var approvalBody = new Dictionary<string, string>
+            var approvalBody = new AproveCustomerRequest()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"CustomerReferenceNo" , CustomerReferenceNo},
-                {"Comments" , Comments},
-                {"Approvalstatus" , Approvalstatus},
-                {"ApprovedBy" , _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerReferenceNo = CustomerReferenceNo,
+                Comments = Comments,
+                Approvalstatus = Approvalstatus,
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
