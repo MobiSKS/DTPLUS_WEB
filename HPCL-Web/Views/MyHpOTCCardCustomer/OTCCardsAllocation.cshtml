@@ -58,7 +58,7 @@
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">No of Cards Allocated</label>
+                                            <label class="font-weight-normal col-md-4 col-12">No of Cards Allocated <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     @Html.TextBoxFor(m => m.NoofAllocatedCards, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
@@ -229,13 +229,13 @@
         }
 
         if (document.getElementById("MerchantID").value.substring(0, 1) != "3") {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID. Min-Max 10 digits starting with 3";
+            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
             document.getElementById("MerchantID").focus();
             return (false);
         }
 
         if (document.getElementById("MerchantID").value.length < 10) {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID. Min-Max 10 digits";
+            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
             document.getElementById("MerchantID").focus();
             return (false);
         }
@@ -339,6 +339,7 @@
             document.getElementById("MerchantID").value = "";
             document.getElementById("dvCards").innerHTML = "";
             document.getElementById("NoOfUnallocatedCards").value = "";
+            document.getElementById("NoofAllocatedCards").value = "";
             $("#MerchantID_error").html("");
         }
 
@@ -357,8 +358,11 @@
     $("#btnSave").click(function () {
         debugger;
         if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0") {
-            alert("Enter No of Cards Allocated");
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "No of Cards Allocated is required";
             return;
+        }
+        else {
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "";
         }
         var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
         var merchantId = document.getElementById("MerchantID").value;
@@ -432,6 +436,7 @@
         document.getElementById("NoofAllocatedCards").value = "";
         $('#CustomerRegionID').val('0');
         document.getElementById("dvCards").innerHTML = "";
+        document.getElementById("NoofAllocatedCards_error").innerHTML = "";
     });
 
     function tableToCSV() {
@@ -500,5 +505,18 @@
         temp_link.click();
         document.body.removeChild(temp_link);
     }
+
+    $("#NoofAllocatedCards").on("blur", function () {
+        //debugger;
+        var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value.trim();
+        if (noofAllocatedCards == "" || noofAllocatedCards == "0") {
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "No of Cards Allocated is required";
+            return (false);
+        }
+        else {
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "";
+        }
+
+    });
 
 </script>

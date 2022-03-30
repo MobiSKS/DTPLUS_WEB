@@ -184,7 +184,7 @@ function showregAddress() {
     }
 
     if (document.applicationForm.TypeOfCustomerID.value == "0") {
-        document.getElementById("typeOfCustomer_error").innerHTML = "Customer Type field cannot be left blank";
+        document.getElementById("typeOfCustomer_error").innerHTML = "Type Of Customer field cannot be left blank";
         document.applicationForm.TypeOfCustomerID.focus();
         return ret;
     }
@@ -192,8 +192,17 @@ function showregAddress() {
         document.getElementById("typeOfCustomer_error").innerHTML = "";
     }
 
+    if (document.applicationForm.TierOfCustomerID.value == "0") {
+        document.getElementById("tierOfCustomer_error").innerHTML = "Tier Of Customer field cannot be left blank";
+        document.applicationForm.TierOfCustomerID.focus();
+        return ret;
+    }
+    else {
+        document.getElementById("tierOfCustomer_error").innerHTML = "";
+    }
+
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
-        document.getElementById("individualName_error").innerHTML = "Select Title";
+        document.getElementById("salutaion_error").innerHTML = "Select Title";
         document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
@@ -203,14 +212,14 @@ function showregAddress() {
 
 
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
-        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field cannot be left blank";
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
         document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
     else {
 
         if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is not valid";
             document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
@@ -219,7 +228,7 @@ function showregAddress() {
         }
 
         if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name field is not valid";
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is not valid";
             document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
@@ -236,7 +245,7 @@ function showregAddress() {
     }
     else {
         if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
-            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field is not valid";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
@@ -245,7 +254,7 @@ function showregAddress() {
         }
 
         if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
-            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field is not valid";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
@@ -329,15 +338,7 @@ function showregAddress() {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
     }
-
-    if (document.applicationForm.TierOfCustomerID.value == "0") {
-        document.getElementById("tierOfCustomer_error").innerHTML = "Tier Of Customer field cannot be left blank";
-        document.applicationForm.TierOfCustomerID.focus();
-        return ret;
-    }
-    else {
-        document.getElementById("tierOfCustomer_error").innerHTML = "";
-    }
+       
 
     /*else {
         y = document.applicationForm.mobileno.value;
@@ -596,14 +597,14 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
-        document.getElementById("comm_pincode_error").innerHTML = "Pin Code field cannot be left blank";
+        document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
         document.applicationForm.CommunicationPinCode.focus()
         return (false);
     }
     else {
         var pin = document.applicationForm.CommunicationPinCode.value;
         if (pin.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Pincode, Must be six digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Pin code, Must be six digits";
             document.applicationForm.CommunicationPinCode.focus();
             return false;
         }
@@ -724,7 +725,7 @@ function showOfficialDetails() {
 
 
     if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
-        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile field cannot be left blank";
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
         document.applicationForm.CommunicationMobileNumber.focus();
         return false;
 
@@ -914,16 +915,16 @@ function showCardDetails() {
     debugger;
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
-        document.getElementById("official_fName_error").innerHTML = "Select Title";
+        document.getElementById("officialTitle_error").innerHTML = "Select Title";
         document.applicationForm.KeyOffTitle.focus();
         return false;
     }
     else {
-        document.getElementById("official_fName_error").innerHTML = "";
+        document.getElementById("officialTitle_error").innerHTML = "";
     }
 
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
-        document.getElementById("official_fName_error").innerHTML = "First Name field cannot be left blank";
+        document.getElementById("official_fName_error").innerHTML = "First Name is required";
         document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
@@ -932,7 +933,7 @@ function showCardDetails() {
     }
 
     if (!isNaN(document.applicationForm.KeyOffFirstName.value.trim())) {
-        document.getElementById("official_fName_error").innerHTML = "First Name cannot be a number";
+        document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
         document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
@@ -1068,21 +1069,27 @@ function showCardDetails() {
         }
     }
 
-
-    y = document.applicationForm.KeyOffMobileNumber.value.trim();
-    if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
-        document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
-        document.applicationForm.KeyOffMobileNumber.focus();
-        return false
-    }
-    else if (y.length < 10 || y.length > 10) {
-        document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile number (e.g.: 9999990000)";
+    if (document.applicationForm.KeyOffMobileNumber.value.trim() == "") {
+        document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
         document.applicationForm.KeyOffMobileNumber.focus();
         return false;
     }
-
     else {
-        document.getElementById("official_mobile_error").innerHTML = "";
+        y = document.applicationForm.KeyOffMobileNumber.value.trim();
+        if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
+            document.getElementById("official_mobile_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
+            document.applicationForm.KeyOffMobileNumber.focus();
+            return false
+        }
+        else if (y.length < 10 || y.length > 10) {
+            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile number (e.g.: 9999990000)";
+            document.applicationForm.KeyOffMobileNumber.focus();
+            return false;
+        }
+
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
     }
 
     if (document.applicationForm.KeyOffDesignation.value.trim() == "") {

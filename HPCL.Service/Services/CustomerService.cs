@@ -1015,26 +1015,33 @@ namespace HPCL.Service.Services
                     custMdl.KeyOfficialSecretQuestion = Customer.KeyOfficialSecretQuestionId;
                     custMdl.KeyOfficialSecretAnswer = Customer.KeyOfficialSecretAnswer;
 
+
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialDOA))
                     {
-                        //string[] subs = Customer.KeyOfficialDOA.Split('T');
-                        //string[] date = subs[0].Split('-');
-                        //custMdl.KeyOffDateOfAnniversary = date[2] + "-" + date[1] + "-" + date[0];
+                        if (!Customer.KeyOfficialDOA.Contains("1900"))
+                        {
+                            //string[] subs = Customer.KeyOfficialDOA.Split('T');
+                            //string[] date = subs[0].Split('-');
+                            //custMdl.KeyOffDateOfAnniversary = date[2] + "-" + date[1] + "-" + date[0];
 
-                        string[] subs = Customer.KeyOfficialDOA.Split(' ');
-                        string[] date = subs[0].Split('/');
-                        custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            string[] subs = Customer.KeyOfficialDOA.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialDOB))
                     {
-                        //string[] subs = Customer.KeyOfficialDOB.Split('T');
-                        //string[] date = subs[0].Split('-');
-                        //custMdl.KeyOfficialDOB = date[2] + "-" + date[1] + "-" + date[0];
+                        if (!Customer.KeyOfficialDOB.Contains("1900"))
+                        {
+                            //string[] subs = Customer.KeyOfficialDOB.Split('T');
+                            //string[] date = subs[0].Split('-');
+                            //custMdl.KeyOfficialDOB = date[2] + "-" + date[1] + "-" + date[0];
 
-                        string[] subs = Customer.KeyOfficialDOB.Split(' ');
-                        string[] date = subs[0].Split('/');
-                        custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            string[] subs = Customer.KeyOfficialDOB.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                        }
                     }
 
                     custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);
