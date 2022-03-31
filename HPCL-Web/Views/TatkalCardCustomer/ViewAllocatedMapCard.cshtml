@@ -49,7 +49,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span class="error" id="fromDate_error"></span>
                                         </div>
@@ -60,7 +60,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">To Date </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
                                             </div>
                                             <span class="error" id="toDate_error"></span>
                                         </div>
@@ -75,7 +75,7 @@
                                         @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
 
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.Status, new { @class = "form-control" })
+                                            @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusName, "StatusId", "StatusName"), new { @id = "CardType", @class = "form-control" })
 
                                         </div>
 
@@ -83,16 +83,33 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-6 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-4 col-12  mb-0"></label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="d-flex align-items-center justify-content-center mt-0">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
+                                            </div>
+                                        </div>
 
-                            <div class="clearfix"></div>
-                            <div class="d-flex align-items-center justify-content-center mt-0">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
+
+                                    </div>
                                 </div>
                             </div>
+
+                            @*<div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-0">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" id="btnSearch" type="submit">Search</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
+                                    </div>
+                                </div>*@
                         </div>
                         <div class="clearfix"></div>
 
@@ -143,16 +160,41 @@
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        setDates();
+
+    });
     //debugger;
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
     var zonalID = $("#ZonalOfficeId").val();
     var regionalID = $("#RegionalOfcIdVal").val();
-
-      var fromdate = $("#FromDate").val();
+    var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
-    var notFoundError = "";
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+
+    function setDates() {
+        var fromd = new Date();
+        fromd.setMonth(fromd.getMonth() - 1);
+        var dd = String(fromd.getDate()).padStart(2, '0');
+        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fromd.getFullYear();
+
+        fromd = yyyy + '-' + mm + '-' + dd;
+        $("#FromDate").val(fromd);
+        $("#ToDate").val(today);
+    };
+    $("#RegionalOfficeId").change(function () {
+        var id = this.value;
+        $("#RegionalOfcIdVal").val(id);
+    });
+
     @*"@ViewBag.NotFoundError";*@
 
     //$(document).ready(function () {
@@ -236,7 +278,8 @@
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
         setDates();
-
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
 
 
 
@@ -267,6 +310,22 @@
 
 
     $("#btnSearch").click(function () {
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates();
+        }
         var RegionID = document.getElementById("CustomerRegionID").value;
         console.log(RegionID);
         if (RegionID == '' || RegionID == "0") {
@@ -396,4 +455,41 @@
             }
         });
     };
+    $(".date").on('change', function (e) {
+
+        checkDates();
+        $("#show_Table").html("");
+    });
+
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
+        var dateflag = "Y";
+        if (fromD != "" && toD != "") {
+            if (fromD > toD) {
+
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = "N";
+            }
+            else {
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+            }
+        }
+
+        if (toD != "") {
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+            }
+        }
+
+        return dateflag;
+    }
 </script>

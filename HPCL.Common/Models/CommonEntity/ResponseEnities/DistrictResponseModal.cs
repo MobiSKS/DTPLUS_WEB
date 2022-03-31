@@ -10,5 +10,6 @@ namespace HPCL.Common.Models.CommonEntity.ResponseEnities
         public int stateID { get; set; }
         public int districtID { get; set; }
         public string districtName { get; set; }
+        public string stateName { get; set; }
     }
 }

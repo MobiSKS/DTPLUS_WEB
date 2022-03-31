@@ -564,46 +564,35 @@ namespace HPCL.Service.Services
         {
 
             CustomerModel customerModel = new CustomerModel();
+            customerModel.Remarks = "";
 
-            var request = new BaseEntity()
-            {
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
-            };
-
-
-            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
-            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getOfficerType);
-
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-
-            List<OfficerTypeModel> lst = jarr.ToObject<List<OfficerTypeModel>>();
-
-            customerModel.OfficerTypeMdl.AddRange(lst);
-
+            customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
             return customerModel;
         }
 
         public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
         {
-            string customerDateOfApplication = "";
-           
-            if (!string.IsNullOrEmpty(entity.CustomerDateOfApplication))
+            string fromDateOfApplication = "";
+            string toDateOfApplication = "";
+
+            if (!string.IsNullOrEmpty(entity.FromDate))
             {
-                string[] custDateOfApplication = entity.CustomerDateOfApplication.Split("-");
-                customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+                string[] frmDate = entity.FromDate.Split("-");
+                fromDateOfApplication = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+            }
+            if (!string.IsNullOrEmpty(entity.ToDate))
+            {
+                string[] toDate = entity.ToDate.Split("-");
+                toDateOfApplication = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
             }
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CreatedBy = entity.OfficerTypeID > 0 ? entity.OfficerTypeID.ToString() : null,
-                Createdon = customerDateOfApplication,
+                RegionalOfficeId = entity.CustomerRegionID > 0 ? entity.CustomerRegionID.ToString() : null,
+                FromDate = fromDateOfApplication,
+                ToDate = toDateOfApplication,
                 FormNumber = entity.FormNumber,
                 StateId = null,
                 CustomerName = null
@@ -628,16 +617,33 @@ namespace HPCL.Service.Services
 
             CustomerModel vGrid = JsonConvert.DeserializeObject<CustomerModel>(str);
 
-            var searchBody = new Dictionary<string, string>
+            string fromDateOfApplication = "";
+            string toDateOfApplication = "";
+
+            if (!string.IsNullOrEmpty(vGrid.FromDate))
             {
-               {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"OfficerTypeID", vGrid.OfficerTypeID > 0 ? vGrid.OfficerTypeID.ToString() : null},
-                {"CustomerDateOfApplication", vGrid.CustomerDateOfApplication},
-                {"FormNumber", vGrid.FormNumber},
-                {"StateId" , null},
-                {"CustomerName" , null}
+                //string[] frmDate = vGrid.FromDate.Split("-");
+                //fromDateOfApplication = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+                fromDateOfApplication = vGrid.FromDate;
+            }
+            if (!string.IsNullOrEmpty(vGrid.ToDate))
+            {
+                //string[] toDate = vGrid.ToDate.Split("-");
+                //toDateOfApplication = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
+                toDateOfApplication = vGrid.ToDate;
+            }
+
+            var searchBody = new GetValidateNewCustomerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionalOfficeId = vGrid.CustomerRegionID > 0 ? vGrid.CustomerRegionID.ToString() : null,
+                FromDate = fromDateOfApplication,
+                ToDate = toDateOfApplication,
+                FormNumber = vGrid.FormNumber,
+                StateId = null,
+                CustomerName = null
             };
 
 
@@ -672,15 +678,15 @@ namespace HPCL.Service.Services
         }
         public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
         {
-            var approvalBody = new Dictionary<string, string>
+            var approvalBody = new AproveCustomerRequest()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"CustomerReferenceNo" , CustomerReferenceNo},
-                {"Comments" , Comments},
-                {"Approvalstatus" , Approvalstatus},
-                {"ApprovedBy" , _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerReferenceNo = CustomerReferenceNo,
+                Comments = Comments,
+                Approvalstatus = Approvalstatus,
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
@@ -1015,26 +1021,33 @@ namespace HPCL.Service.Services
                     custMdl.KeyOfficialSecretQuestion = Customer.KeyOfficialSecretQuestionId;
                     custMdl.KeyOfficialSecretAnswer = Customer.KeyOfficialSecretAnswer;
 
+
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialDOA))
                     {
-                        //string[] subs = Customer.KeyOfficialDOA.Split('T');
-                        //string[] date = subs[0].Split('-');
-                        //custMdl.KeyOffDateOfAnniversary = date[2] + "-" + date[1] + "-" + date[0];
+                        if (!Customer.KeyOfficialDOA.Contains("1900"))
+                        {
+                            //string[] subs = Customer.KeyOfficialDOA.Split('T');
+                            //string[] date = subs[0].Split('-');
+                            //custMdl.KeyOffDateOfAnniversary = date[2] + "-" + date[1] + "-" + date[0];
 
-                        string[] subs = Customer.KeyOfficialDOA.Split(' ');
-                        string[] date = subs[0].Split('/');
-                        custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            string[] subs = Customer.KeyOfficialDOA.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialDOB))
                     {
-                        //string[] subs = Customer.KeyOfficialDOB.Split('T');
-                        //string[] date = subs[0].Split('-');
-                        //custMdl.KeyOfficialDOB = date[2] + "-" + date[1] + "-" + date[0];
+                        if (!Customer.KeyOfficialDOB.Contains("1900"))
+                        {
+                            //string[] subs = Customer.KeyOfficialDOB.Split('T');
+                            //string[] date = subs[0].Split('-');
+                            //custMdl.KeyOfficialDOB = date[2] + "-" + date[1] + "-" + date[0];
 
-                        string[] subs = Customer.KeyOfficialDOB.Split(' ');
-                        string[] date = subs[0].Split('/');
-                        custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            string[] subs = Customer.KeyOfficialDOB.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                        }
                     }
 
                     custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);

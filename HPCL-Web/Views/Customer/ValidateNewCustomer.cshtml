@@ -4,7 +4,10 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
-
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollments</a> </li>
+            <li class="breadcrumb-item font-weight-light">Validate New Customer</li>
+        </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
         <form method="post" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="Customer" data-ajax-action="ValidateNewCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
@@ -42,7 +45,15 @@
                                     <div class="d-flex align-items-center justify-content-between flex-wrap w-100">
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Region Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12 px-0">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", @id = "FormNumber", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                     <span class="error" id="formNumber_error"></span>
@@ -51,20 +62,21 @@
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Date</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">From Date</label>
                                                 <div class="col-md-7 col-12">
-                                                    @*@Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @type = "date", @class = "form-control date" })*@
-                                                    @*@Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", @Type = "Date" })*@
-                                                    @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", autocomplete = "off" })
-                                                    <span class="error" id="applicationDate_error"></span>
+                                                    @*@Html.TextBoxFor(m => m.FromDate, new { @type = "date", @class = "form-control date" })*@
+                                                    @*@Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @Type = "Date" })*@
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="FromDate_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Created By</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">To Date</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control", autocomplete = "off" })
+                                                    <span class="error" id="ToDate_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -74,7 +86,7 @@
                                         <div class="col-md-3 col-12 px-0">
                                             <div class="col-12 d-flex align-items-center justify-content-center">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">@Label.Search</button>
+                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="btnSave" style="background-color:#084693;color:white;">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
                                                     <button class="btn btn_primary" id="=btnCancel" style="background-color:#084693;color:white;" onclick="return ResetFields()">@Label.Reset</button>
@@ -163,8 +175,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Date of Application <sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
-                                                                @*@Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @type = "date", @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
-                                                                <input type="text" name="applicationDate" class="form-control" id="applicationDate" disabled>
+                                                                @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                             </div>
                                                         </div>
                                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -180,8 +191,8 @@
                                                             <label class="font-weight-normal col-md-5 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
                                                                 <div class="custom_select">
-                                                                    @*<select id="regionalOffice" class="form-control"></select>*@
-                                                                    @Html.DropDownListFor(m => m.CustomerRegionID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                    <select id="CustomerRegion_ID" class="form-control" disabled></select>
+                                                                    @*@Html.DropDownListFor(m => m.CustomerRegionID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })*@
                                                                 </div>
                                                                 <span class="error" id="regionalOffice_error"></span>
                                                             </div>
@@ -199,6 +210,15 @@
                                                             <div class="col-md-7 col-12">
                                                                 <div class="custom_select">
                                                                     @Html.DropDownListFor(x => x.TypeOfCustomerID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                                                </div>
+                                                                <span class="error" id="regionalOffice_error"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
+                                                            <div class="col-md-7 col-12">
+                                                                <div class="custom_select">
+                                                                    @Html.DropDownListFor(x => x.TierOfCustomerID, Enumerable.Empty<SelectListItem>(), null, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                 </div>
                                                                 <span class="error" id="regionalOffice_error"></span>
                                                             </div>
@@ -259,15 +279,6 @@
                                                             <div class="col-md-7 col-12">
                                                                 @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                 <span class="error" id="incomeTaxPan_error"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                                            <label class="font-weight-normal col-md-5 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                                            <div class="col-md-7 col-12">
-                                                                <div class="custom_select">
-                                                                    @Html.DropDownListFor(x => x.TierOfCustomerID, Enumerable.Empty<SelectListItem>(), null, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                                </div>
-                                                                <span class="error" id="regionalOffice_error"></span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -695,15 +706,15 @@
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @Html.TextBoxFor(m => m.AreaOfOperation, new { @class = "form-control", style = "width:242px;", @readonly = "readonly", disabled = "disabled" })
                                                                         @*@Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter State</p>*@
+                                                                        <p class="m-0">Inter State</p>*@
                                                                     </label>
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter City</p>*@
+                                                                        <p class="m-0">Inter City</p>*@
                                                                     </label>
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Intra City</p>*@
+                                                                        <p class="m-0">Intra City</p>*@
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -975,27 +986,33 @@
 
 <script type="text/javascript">
     var notFoundError = "@ViewBag.NotFoundError";
-    var applicationdate = $("#CustomerDateOfApplication").val();
+    var fromDate = $("#FromDate").val();
+    var toDate = $("#ToDate").val();
+    
 
     $(document).ready(function () {
-        //$('.table').DataTable({
-        //    "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
-        //    "oLanguage": {
-        //        "sLengthMenu": "Display _MENU_ Records",
-        //        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-        //    }
-        //});
 
         if (notFoundError == "") {
-            if (applicationdate == "") {
-                $("#CustomerDateOfApplication").datepicker({
+            if (fromDate == "") {
+                $("#FromDate").datepicker({
                     "setDate": new Date(),
                     "autoclose": true,
                     dateFormat: 'dd-mm-yy'
                 });
             }
             else {
-                $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
+                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
+            }
+
+            if (toDate == "") {
+                $("#ToDate").datepicker({
+                    "setDate": new Date(),
+                    "autoclose": true,
+                    dateFormat: 'dd-mm-yy'
+                });
+            }
+            else {
+                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
             }
             
         }
@@ -1229,7 +1246,7 @@
 
                 //$('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
                 const dateObj = new Date(res.customer.dateOfApplication);
-                //$('#applicationDate').val(dateObj.getDate());
+
                 console.log(dateObj);
                 var month = dateObj.getMonth() + 1; //months from 1-12
                 var day = dateObj.getDate();
@@ -1237,8 +1254,8 @@
 
                 var newdate = day + "/" + month + "/" + year;
                 console.log(dateObj.getDate());
-                //console.log($('#applicationDate'));
-                $('#applicationDate').val(newdate);
+
+                $('#CustomerDateOfApplication').val(newdate);
 
                 var CustomerSalesArea = $('<option value="' + res.customer.salesArea + '">' + res.customer.salesArea + '</option>');
                 $('#CustomerSalesAreaID').append(CustomerSalesArea);
@@ -1247,7 +1264,7 @@
                 $('#CustomerZonalOfficeID').append(CustomerZonalOffice);
 
                 var regionalOff = $('<option value="' + res.customer.regionalOfficeName + '">' + res.customer.regionalOfficeName + '</option>');
-                $('#CustomerRegionID').append(regionalOff);
+                $('#CustomerRegion_ID').append(regionalOff);
 
                 var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
                 $('#TypeOfCustomerID').append(TypeOfCustomer);
@@ -1359,7 +1376,7 @@
                 $('#CustomerReferenceNoForSearch').val(res.customer.customerReferenceNo);
 
                 const dateDOB = new Date(res.customer.keyOfficialDOB);
-                //$('#applicationDate').val(dateObj.getDate());
+
                 console.log(dateDOB);
                 var monthDOB = dateDOB.getMonth() + 1; //months from 1-12
                 var dayDOB = dateDOB.getDate();
@@ -1445,8 +1462,9 @@
     function ResetFields() {
         debugger;
         $("#FormNumber").val('');
-        $("#CustomerDateOfApplication").val('');
-        $("#OfficerTypeID").val('0');
+        $("#FromDate").val('');
+        $("#ToDate").val('');
+        $("#CustomerRegionID").val('0');
         document.getElementById('NoRecord').style.display = 'none';
         document.getElementById('tblResponse').style.display = 'none';
         return false;
@@ -1455,12 +1473,13 @@
 </script>
 
 <script type="text/javascript">
-    var todate = $("#CustomerDateOfApplication").val();
+    var todate = $("#FromDate").val();
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
+    //today = yyyy + '-' + mm + '-' + dd;
+    today = dd + '-' + mm + '-' + yyyy;
 
     function ApproveCustomer(approveReject) {
         debugger;
@@ -1637,50 +1656,75 @@
 
     $(".date").on('change', function (e) {
 
-        var applicationDate = $("#CustomerDateOfApplication").val();
+        var applicationDate = $("#FromDate").val();
         console.log(applicationDate);
         console.log(today);
         if (applicationDate != "") {
             if (applicationDate > today) {
                 console.log('true');
-                $("#CustomerDateOfApplication_error").attr("style", "display:block");
-                $("#CustomerDateOfApplication_error").html("Date selection should be less or equal to Today's date");
-                $("#CustomerDateOfApplication").val(today);
+                $("#FromDate_error").attr("style", "display:block");
+                $("#FromDate_error").html("Date selection should be less or equal to Today's date");
+                $("#FromDate").val(today);
             }
             else {
                 console.log('false');
-                $("#CustomerDateOfApplication_error").html("");
-                $("#CustomerDateOfApplication_error").attr("style", "display:none");
+                $("#FromDate_error").html("");
+                $("#FromDate_error").attr("style", "display:none");
             }
         }
     });
 
-    $("#CustomerDateOfApplication").on("change", function () {
+    $("#FromDate").on("change", function () {
         //debugger;
-        var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
+        var selectedDate = document.getElementById("FromDate").value.trim();
         console.log(selectedDate);
 
         if (selectedDate != "") {
             var today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
+            const myArray = document.getElementById("FromDate").value.split("-");
 
             var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
             console.log(today);
             console.log(varDate);
             if (varDate > today) {
-                document.getElementById("applicationDate_error").innerHTML = "Date of Application cannot be a future date";
-                setDates();
+                document.getElementById("FromDate_error").innerHTML = "From Date cannot be a future date";
+                setFromDate();
             }
             else {
-                document.getElementById("applicationDate_error").innerHTML = "";
+                document.getElementById("FromDate_error").innerHTML = "";
             }
         }
 
     });
 
-    function setDates() {
+    $("#ToDate").on("change", function () {
+        //debugger;
+        var selectedDate = document.getElementById("ToDate").value.trim();
+        console.log(selectedDate);
+
+        if (selectedDate != "") {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const myArray = document.getElementById("ToDate").value.split("-");
+
+            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+            console.log(today);
+            console.log(varDate);
+            if (varDate > today) {
+                document.getElementById("ToDate_error").innerHTML = "To Date cannot be a future date";
+                setToDate();
+            }
+            else {
+                document.getElementById("ToDate_error").innerHTML = "";
+            }
+        }
+
+    });
+
+    function setFromDate() {
         var d = new Date();
 
         var month = d.getMonth() + 1;
@@ -1689,10 +1733,67 @@
             (month < 10 ? '0' : '') + month + '-' +
             d.getFullYear();
 
-        $("#CustomerDateOfApplication").val(output);
-        //$("#KeyOfficialDOB").val(output);
+        $("#FromDate").val(output);
 
     };
+
+    function setToDate() {
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            d.getFullYear();
+
+        $("#ToDate").val(output);
+
+    };
+
+    $("#btnSave").on("click", (function (e) {
+        debugger;
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = true;
+
+        if (fromdate != "" && todate != "") {
+            flag = checkDates();
+        }
+
+        if (flag == false)
+            e.preventDefault();
+
+    }));
+
+    function checkDates() {
+        var fromD = $("#FromDate").val();
+        var toD = $("#ToDate").val();
+        var dateflag = true;
+        if (fromD != "" && toD != "") {
+            if (fromD > toD) {
+
+                $("#FromDate_error").html("'From Date' should be less or equal to 'To date'");
+                dateflag = false;
+            }
+            else {
+                $("#FromDate_error").html("");
+            }
+        }
+        console.log(toD);
+        console.log(today);
+        if (toD != "") {
+            if (toD > today) {
+                $("#ToDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = false;
+            }
+            else {
+                $("#ToDate_error").html("");
+            }
+        }
+
+        return dateflag;
+    }
 
 </script>
 <style>
