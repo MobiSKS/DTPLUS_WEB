@@ -85,7 +85,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string SBUName { get; set; }
         [StringLength(6)]
         public string LPGCNGSale { get; set; }
+        [StringLength(10)]
         public string PancardNumber { get; set; }
+        [StringLength(15)]
         public string GSTNumber { get; set; }
         [StringLength(50)]
         public string RetailOutletAddress1 { get; set; }
