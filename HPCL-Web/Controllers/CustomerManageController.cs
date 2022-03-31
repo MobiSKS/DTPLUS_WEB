@@ -37,7 +37,7 @@ namespace HPCL_Web.Controllers
         }
         #region Customer Manage Profile
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetails(String CustomerId)
+        public async Task<JsonResult> BindCustomerDetails(string CustomerId)
         {
             //List<CustomerProfileResponse> customerCardInfo = new List<CustomerProfileResponse>();
 
