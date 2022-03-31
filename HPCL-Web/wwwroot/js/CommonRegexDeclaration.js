@@ -14,4 +14,5 @@ var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
 var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
 var addressFormat = /^[a-zA-Z0-9\s,. '-]{3,}$/;//Dont Use,not working
-var highwayName = /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
+var highwayName = /^[a-z\d\-_\s]+$/i;
+///^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
