@@ -120,6 +120,7 @@ namespace HPCL.Service.Services
             merchantMdl.RegionalOfcIdVal = merchantMdl.RegionalOfficeId;
             merchantMdl.RetailDistrictIdVal = merchantMdl.RetailOutletDistrictId;
             merchantMdl.SalesAreaIdVal = merchantMdl.SalesAreaId;
+            merchantMdl.CommDistrictIdVal = merchantMdl.CommunicationDistrictId;
 
             merchantMdl.Action = actionFlow;
 
@@ -130,7 +131,7 @@ namespace HPCL.Service.Services
             string url;
             var merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal();
 
-            if (!String.IsNullOrEmpty(merchantMdl.ErpCode) && !String.IsNullOrEmpty(merchantMdl.RetailOutletName))
+            if (!String.IsNullOrEmpty(merchantMdl.MerchantId) && !String.IsNullOrEmpty(merchantMdl.RetailOutletName))
             {
                 url = WebApiUrl.updateMerchant;
                 merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal
@@ -263,15 +264,11 @@ namespace HPCL.Service.Services
             {
                 string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
                 string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
-
-                //fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                //toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
             }
             else
             {
                 merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
                 merchaApprovalMdl.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
-                return merchaApprovalMdl;
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal

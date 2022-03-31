@@ -104,7 +104,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string RetailOutletDistrictName { get; set; }
         [StringLength(6)]
         public string RetailOutletPinNumber { get; set; }
+        [StringLength(12)]
         public string RetailOutletPhoneNumber { get; set; }
+        [StringLength(12)]
         public string RetailOutletFax { get; set; }
         public string ZonalOfficeId { get; set; }
         public string ZonalOfficeName { get; set; }
@@ -138,7 +140,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string CommunicationDistrictName { get; set; }
         [StringLength(6)]
         public string CommunicationPinNumber { get; set; }
+        [StringLength(12)]
         public string CommunicationPhoneNumber { get; set; }
+        [StringLength(12)]
         public string CommunicationFax { get; set; }
         [StringLength(1)]
         public string NoofLiveTerminals { get; set; }

@@ -916,6 +916,7 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.SalesAreaIdVal)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.CommDistrictIdVal)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.Action)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.MerchantId)</div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
@@ -987,6 +988,11 @@
                 document.getElementById("viewProfile-tab").classList.remove("active");
                 document.getElementById("viewProfile-tab").classList.add("disable");
 
+                document.getElementById("basicInfo").classList.remove("active");
+                document.getElementById("basicInfo").classList.remove("show");
+                document.getElementById("basicInfo-tab").classList.remove("active");
+                document.getElementById("basicInfo-tab").classList.add("disable");
+
                 document.getElementById("summaryDetails").classList.add("active");
                 document.getElementById("summaryDetails").classList.add("show");
                 document.getElementById("summaryDetails-tab").classList.remove("disable");
@@ -1036,7 +1042,7 @@
             }
         }
 
-        if (action != "") {
+        if (action != "" && reason == "") {
             if (action == "View") {
                 document.getElementById("viewProfile").classList.remove("active");
                 document.getElementById("viewProfile").classList.remove("show");
@@ -1333,7 +1339,7 @@
             document.getElementById("lpgCngSale_error").innerHTML = "";
         }
 
-        if (document.applicationForm.PancardNumber.value == "") {
+        if (document.applicationForm.PancardNumber.value.trim() == "") {
             document.getElementById("panCardNum_error").innerHTML = "PAN Card field cannot be left blank";
             if (ret != "N") {
                 document.applicationForm.PancardNumber.focus();
@@ -1357,16 +1363,31 @@
             document.getElementById("panCardNum_error").innerHTML = "";
         }
 
-        if (!document.applicationForm.GSTNumber.value.match(gstNumber) && document.applicationForm.GSTNumber.value != "") {
-            document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
-            if (ret != "N") {
-                document.applicationForm.GSTNumber.focus();
+        if (document.applicationForm.GSTNumber.value.trim() != "") {
+            if (!document.applicationForm.GSTNumber.value.match(gstNumber))
+            {
+                document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.GSTNumber.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            else if ($('#GSTNumber').val().indexOf($("#PancardNumber").val().trim()) < 0)
+            {
+                document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.GSTNumber.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
         }
+
         else {
             document.getElementById("gstNum_error").innerHTML = "";
         }
@@ -1994,7 +2015,7 @@
 
     function getMerchantRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
-        
+
         if ($("#ZonalOfficeId").val().length > 0) {
             document.getElementById("zonal_office_error").innerHTML = "";
         }
@@ -2067,9 +2088,7 @@
     function getMerchantSalesArea() {
         var id = $('#RegionalOfficeId :selected').val();
 
-        if ($("#RegionalOfficeId").val().length > 0) {
-            document.getElementById("regionalOfc_error").innerHTML = "";
-        }
+        document.getElementById("regionalOfc_error").innerHTML = "";
 
         if (regionalID != "0" && regionalID != null && regionalID != "") {
             id = regionalID;
