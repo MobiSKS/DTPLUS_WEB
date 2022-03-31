@@ -37,7 +37,7 @@ namespace HPCL.Service.Services
                 EntityId= EntityId,
                 FormNumber=FormNumber,
                 StateID=StateID!="0"? StateID:"",
-                City=CityName
+                CityName= CityName
 
             };
 

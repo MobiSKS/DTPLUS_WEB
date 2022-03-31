@@ -7,9 +7,11 @@ namespace HPCL.Common.Models.RequestModel.Customer
 {
     public class GetValidateNewCustomerRequestModel : BaseEntity
     {
-        public string Createdon { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
         public string FormNumber { get; set; }
         public string StateId { get; set; }
         public string CustomerName { get; set; }
+        public string RegionalOfficeId { get; set; }
     }
 }
