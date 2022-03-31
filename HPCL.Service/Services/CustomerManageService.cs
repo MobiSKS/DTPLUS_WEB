@@ -159,7 +159,6 @@ namespace HPCL.Service.Services
                         UserAgent = CommonBase.useragent,
                         UserIp = CommonBase.userip,
                         CustomerId = CustomerId
-
                     };
                 }
                 else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -169,7 +168,7 @@ namespace HPCL.Service.Services
                         UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                         UserAgent = CommonBase.useragent,
                         UserIp = CommonBase.userip,
-                        CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                        CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                     };
                 }
                 //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));

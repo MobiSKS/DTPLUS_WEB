@@ -247,7 +247,7 @@
         </div>
     </div>
     @using Microsoft.AspNetCore.Http;
-    <script type="text/javascript">
+<script type="text/javascript">
     function showGrid() {
         if ($("input:text").val() == "") {
             document.getElementById('CardSearch').style.display = 'none';
@@ -476,6 +476,8 @@
 
                 console.log(res, "res");
                 $("#Card").show();
+                $('#Update').show();
+                $('#save').attr("style", "display:none");
                 $("#CardNo").show();
                 $("#Mob").show();
                 $("#MobileNo").show();
@@ -528,8 +530,44 @@
                     currentRow.find('input:text').attr("readonly", true);
                 }
             });
+      $("#Update").on('click', function () {
+        var cardNumber = "";
+        var mobileNo = "";
+        var fastagNo = "";
+          $('#Edit tr').each(function () {
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                cardNumber = row.find("td.cardNo").text();
+                mobileNo = row.find("td.mobileNo input[type='text']").val();
+                fastagNo = row.find("td.fastagNo input[type='text']").val();
+
+            }
+        });
+       var updateArray = new Array();
+       updateArray.push({
+           cardNo: cardNumber,
+           mobileNo: mobileNo,
+           fastagNo: fastagNo
+       });
+
+              $.ajax({
+                    url: "@Url.Action("EditCards", "ViewCard")",
+                    type: "POST",
+                    dataType: "JSON",
+                   data: { limitArray: updateArray},
+                    success: function (res) {
+                        alert(res);
+                        console.log("ObjUpdateMobileandFastagNoInCard", updateArray);
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+       });
 
      });
+
 
 
     function showMappTable() {
@@ -610,7 +648,7 @@
 
         });
 
-    </script>
+</script>
     <script type="text/javascript">
 
        $("#btnADD").on('click', function (e) {
@@ -792,9 +830,7 @@ $("#btnAdd").on('click', function (e) {
                 }
 
             },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
+            
 
         });
 
@@ -817,7 +853,7 @@ $("#btnAdd").on('click', function (e) {
         }
     });
 
-   $("#save").on('click', function () {
+       $("#save").on('click', function () {
         var cardNumber = "";
         var mobileNo = "";
         var fastagNo = "";
