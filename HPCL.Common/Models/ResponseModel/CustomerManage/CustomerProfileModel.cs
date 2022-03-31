@@ -214,115 +214,73 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string CustomerApplicationDate { get; set; }
         public string CustomerRegionalOfficeID { get; set; }
         [StringLength(10)]
-        [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
-        [Required(ErrorMessage = "CustomerId is Required")]
         public string CustomerId { get; set; }
         public string NameonCard { get; set; }
-
-
     }
+
+
     public class CustomerProfileResponse
     {
-              
         public string CustomerZonalOfficeID { get; set; }
         public string CustomerRegionID { get; set; }
         public string SalesArea { get; set; }
-
-
         public string CustomerIncomeTaxPan { get; set; }
-
         public string CustomerTbentityID { get; set; }
-
-        //[Required(ErrorMessage = "Date of application is Required")]
         public string CustomerDateOfApplication { get; set; }
-
         public string CustomerNameOnCard { get; set; }
         public string CustomerResidenceStatus { get; set; }
         public string IndividualOrgNameTitle { get; set; }
-
         public string IndividualOrgName { get; set; }
         public string CommunicationAddress1 { get; set; }
         public string CommunicationAddress2 { get; set; }
         public string CommunicationAddress3 { get; set; }
         public string CommunicationLocation { get; set; }
-
         public string CommunicationCity { get; set; }
-       // public string CommunicationPinCode { get; set; }
-        //public string CommunicationStateID { get; set; }
-
         public string CommunicationState { get; set; }
         public string CommunicationDistrictId { get; set; }
         public bool IsSameAsCommAddress { get; set; }
-
         public bool stringerState { get; set; }
         public bool stringerCity { get; set; }
         public bool stringraCity { get; set; }
-
         public string CommunicationDialCode { get; set; }
         public string CommunicationPhoneNo { get; set; }
         public string CommunicationFaxCode { get; set; }
         public string CommunicationFax { get; set; }
-
         public string CommunicationMobileNumber { get; set; }
-
-
         public string CommunicationEmail { get; set; }
-
-
         public string PerOrRegAddress1 { get; set; }
         public string PerOrRegAddress2 { get; set; }
         public string PerOrRegAddress3 { get; set; }
-
         public string PerOrRegAddressLocation { get; set; }
-
         public string PerOrRegAddressCity { get; set; }
         public string PerOrRegAddressPinCode { get; set; }
         public string PerOrRegAddressStateID { get; set; }
-
         public string PerOrRegAddressState { get; set; }
         public string PerOrRegAddressDistrict { get; set; }
-
         public string PermanentDistrictId { get; set; }
-
         public string PerOrRegAddressDialCode { get; set; }
-        //[Required(ErrorMessage = "Phone Number is Required under Permanent/Registered Address")]
-        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string PerOrRegAddressPhoneNumber { get; set; }
         public string PermanentFaxCode { get; set; }
         public string PermanentFax { get; set; }
 
 
-
-
-
         // Key Office Details
 
         public string KeyOffTitle { get; set; }
-
         public string KeyOffFirstName { get; set; }
-
         public string KeyOffIndividualInitials { get; set; }
         public string KeyOffLastName { get; set; }
         public string KeyOffMiddleName { get; set; }
         public string KeyOffDesignation { get; set; }
         public string KeyOffFaxCode { get; set; }
         public string KeyOffFax { get; set; }
-
         public string KeyOffDialCode { get; set; }
-
         public string KeyOffPhoneCode { get; set; }
-
-        //[Required(ErrorMessage = "Phone Number is Required under communication Address")]
-        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string KeyOffPhoneNumber { get; set; }
-
         public string KeyOffMobileNumber { get; set; }
-
         public string KeyOffEmail { get; set; }
         public string KeyOffDateOfAnniversary { get; set; }
         public string KeyOfficialDOB { get; set; }
-
-        //Other details in Key Official details Tab
         public string CustomerTypeOfFleetID { get; set; }
         public string KeyOfficialSecretQuestion { get; set; }
         public string KeyOfficialSecretQuestionName { get; set; }
@@ -333,25 +291,17 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string FleetSizeNoOfVechileOwnedMUVSUV { get; set; }
         public string FleetSizeNoOfVechileOwnedCarJeep { get; set; }
         public string KeyOfficialCardAppliedFor { get; set; }
-
         public decimal KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
         public decimal KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
         public string NoOfCards { get; set; }
-
         public string FeePaymentsCollectFeeWaiver { get; set; }
         public string FeePaymentsChequeNo { get; set; }
         public string FeePaymentsChequeDate { get; set; }
-
         public string TypeOfCustomerID { get; set; }
-
         public string TierOfCustomerID { get; set; }
-
         public string CustomerSalesAreaID { get; set; }
-
         public string FormNumber { get; set; }
-
         public string OfficerTypeID { get; set; }
-
         public string FormNumberForSearch { get; set; }
         public string CustomerReferenceNoForSearch { get; set; }
         public string Remarks { get; set; }
@@ -365,7 +315,6 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string RegionalOfficeID { get; set; }
         public string RegionalOfficeName { get; set; }
         public DateTime DateOfApplication { get; set; }
-
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public object ModifiedBy { get; set; }
@@ -413,7 +362,6 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string CustomerReferenceNo { get; set; }
         public string CustomerStatusId { get; set; }
         public string CustomerStatusName { get; set; }
-
         public DateTime Approvedon { get; set; }
         public object ApprovedBy { get; set; }
         public string CustomerStatusFeewaiverID { get; set; }
@@ -421,10 +369,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public object FeewaiverComments { get; set; }
         public DateTime FeewaiverApprovedOn { get; set; }
         public object FeewaiverApprovedBy { get; set; }
-
-
         public string CustomerSignedOn { get; set; }
-
         public string CustomerFormNumber { get; set; }
         public string CustomerApplicationDate { get; set; }
         public string CustomerRegionalOfficeID { get; set; }

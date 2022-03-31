@@ -120,6 +120,7 @@ namespace HPCL.Service.Services
             merchantMdl.RegionalOfcIdVal = merchantMdl.RegionalOfficeId;
             merchantMdl.RetailDistrictIdVal = merchantMdl.RetailOutletDistrictId;
             merchantMdl.SalesAreaIdVal = merchantMdl.SalesAreaId;
+            merchantMdl.CommDistrictIdVal = merchantMdl.CommunicationDistrictId;
 
             merchantMdl.Action = actionFlow;
 
@@ -263,15 +264,11 @@ namespace HPCL.Service.Services
             {
                 string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
                 string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
-
-                //fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                //toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
             }
             else
             {
-                merchaApprovalMdl.FromDate = DateTime.Now.ToString();
-                merchaApprovalMdl.ToDate = DateTime.Now.ToString();
-                return merchaApprovalMdl;
+                merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                merchaApprovalMdl.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal

@@ -23,7 +23,7 @@ namespace HPCL.Common.Models.RequestModel.Officer
         public string PhoneNo { get; set; }
         public string EmailId { get; set; }
         public string Fax { get; set; }
-        public string Createdby { get; set; }
+        //public string Createdby { get; set; }
         public string Password { get; set; }
     }
 }

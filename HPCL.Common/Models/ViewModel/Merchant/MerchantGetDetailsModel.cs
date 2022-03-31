@@ -85,7 +85,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string SBUName { get; set; }
         [StringLength(6)]
         public string LPGCNGSale { get; set; }
+        [StringLength(10)]
         public string PancardNumber { get; set; }
+        [StringLength(15)]
         public string GSTNumber { get; set; }
         [StringLength(50)]
         public string RetailOutletAddress1 { get; set; }
@@ -102,7 +104,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string RetailOutletDistrictName { get; set; }
         [StringLength(6)]
         public string RetailOutletPinNumber { get; set; }
+        [StringLength(12)]
         public string RetailOutletPhoneNumber { get; set; }
+        [StringLength(12)]
         public string RetailOutletFax { get; set; }
         public string ZonalOfficeId { get; set; }
         public string ZonalOfficeName { get; set; }
@@ -136,7 +140,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string CommunicationDistrictName { get; set; }
         [StringLength(6)]
         public string CommunicationPinNumber { get; set; }
+        [StringLength(12)]
         public string CommunicationPhoneNumber { get; set; }
+        [StringLength(12)]
         public string CommunicationFax { get; set; }
         [StringLength(1)]
         public string NoofLiveTerminals { get; set; }

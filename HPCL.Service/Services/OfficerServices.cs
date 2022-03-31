@@ -45,8 +45,6 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                ZonalId = CommonBase.zonalid,
-                RegionalId = CommonBase.regionalid,
                 FirstName = ofcrMdl.FirstName,
                 LastName = ofcrMdl.LastName,
                 UserName = ofcrMdl.UserName,
@@ -63,14 +61,15 @@ namespace HPCL.Service.Services
                 PhoneNo = string.IsNullOrEmpty(ofcrMdl.Phone) ? "" : ofcrMdl.Phone,
                 EmailId = string.IsNullOrEmpty(ofcrMdl.Email) ? "" : ofcrMdl.Email,
                 Fax = string.IsNullOrEmpty(ofcrMdl.Fax) ? "" : ofcrMdl.Fax,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                Password = ""
             };
 
             StringContent officerInsertContent = new StringContent(JsonConvert.SerializeObject(officerInsertForms), Encoding.UTF8, "application/json");
 
-            string url;
+            string url = "";
 
-            if (ofcrMdl.OfficerTypeName == "RBE")
+            if (ofcrMdl.OfficerTypeID == "4")
             {
                 url = WebApiUrl.insertRbeOfficer;
             }
