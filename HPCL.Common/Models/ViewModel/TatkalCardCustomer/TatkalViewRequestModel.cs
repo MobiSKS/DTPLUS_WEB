@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
 {
-  public  class TatkalViewRequestModel:BaseEntity
+    public class TatkalViewRequestModel : BaseEntity
     {
 
 
@@ -35,6 +35,26 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
             });
             TatkalViewRequest = new List<TatkalViewRequestDetailsModel>();
 
+            StatusName = new List<Status>();
+            StatusName.Add(new Status
+            {
+                StatusId = 1,
+                StatusName = "--All--"
+
+            });
+            StatusName.Add(new Status
+            {
+                StatusId = 1,
+                StatusName = "Pending"
+
+            });
+            StatusName.Add(new Status
+            {
+                StatusId = 1,
+                StatusName = "Mapped"
+
+            });
+
         }
 
         public string MerchantId { get; set; }
@@ -45,7 +65,9 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
         public string CloseRequestStatus { get; set; }
         public int CustomerRegionID { get; set; }
 
+
         public string Status { get; set; }
+        public int StatusId { get; set; }
 
         public int StatusFlag { get; set; }
         public string Reason { get; set; }
@@ -54,8 +76,15 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
         public virtual List<TerminalManagementCloseReasonModel> Reasons { get; set; }
         public virtual List<ZonalOfficeResponseModal> ZonalOffices { get; set; }
         public virtual List<CustomerRegionModel> RegionMdl { get; set; }
+        public virtual List<Status> StatusName { get; set; }
 
 
         public virtual List<TatkalViewRequestDetailsModel> TatkalViewRequest { get; set; }
+
+    }
+    public class Status
+    {
+        public int StatusId { get; set; }
+        public string StatusName { get; set; }
     }
 }

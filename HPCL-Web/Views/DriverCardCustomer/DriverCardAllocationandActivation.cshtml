@@ -4,14 +4,14 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "DriverCardCustomer")" class="text_primary">Driver Card Customer</a> </li>
-            <li class="breadcrumb-item font-weight-light">Drivar Card Allocation and Activation Details</li>
+            <li class="breadcrumb-item font-weight-light">Driver Card Allocation and Activation Details</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        <form>
+        <form id="formValid">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Drivar Card Allocation and Activation Details</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Driver Card Allocation and Activation Details</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -82,7 +82,7 @@
                                     <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnDownload" type="button">DOWNLOAD</button>
+                                    <button class="btn btn_primary" id="btnDownload" onclick="tableToCSVDwld()" type="button">DOWNLOAD</button>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </form>
-        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="cardActivationandAllocation">
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="cardActivationandAllocation" style="padding:1%">
 
         </div>
         
@@ -106,20 +106,11 @@
     var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
+
     $(document).ready(function () {
         $(".toBeHiddenOnSuccess").show();
-        //var inDate = document.querySelectorAll(".date");
-        //inDate.forEach(function (e) {
-        //    e.addEventListener("focusin", function (ev) {
-        //        e.type = 'date';
-        //    })
-        //});
-        //inDate.forEach(function (e) {
-        //    e.addEventListener("focusout", function (ev) {
-        //        e.type = 'text';
-        //    })
-        //});
     });
+
     $("#btnReset").click(function () {
         $("#ZonalOfficeId").val(0);
         getCustomerRegionalOfc();
@@ -133,8 +124,8 @@
         $("#cardActivationandAllocation").html("");
         $("#customerId_error").attr("style", "display:none");
         $("#customerId_error").html("");
-
     });
+
     function getCustomerRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
         $.ajax({
@@ -184,71 +175,112 @@
         $("#RegionalId").val(id);
     });
 
-    function searchCardActivationandAllocation() {
+
+    function setDates() {
+        $("#FromDate").val('');
+        $("#ToDate").val('');
+
+        $("#fromDate_error").html("");
+        $("#toDate_error").html("");
+    };
+
+    $(".date").on('change', function (e) {
         var fromD = "";
         var toD = "";
-        var customerId = $("#CustomerId").val();
-        if ($("#FromDate").val() != "")
-            fromD = $("#FromDate").val();
-        if ($("#ToDate").val() != "")
-            toD = $("#ToDate").val();
-        var flag = "Y";
-        flag = checkDates();
-        if ((fromD != "" && toD == "") || (fromD == "" && toD != "")) {
-            $("#toDate_error").attr("style", "display:block");
-            $("#toDate_error").html("Please Select Both From Date and To Date");
-            flag = "N";
-        }
-        if (customerId != "") {
-            if (!customerId.match(mappedCustomerId)) {
-                $("#customerId_error").attr("style", "display:block");
-                $("#customerId_error").html("Please enter valid Customer ID");
-                flag = "N";
+        fromD = $("#FromDate").val();
+        toD = $("#ToDate").val();
+        checkDates(fromD, toD);
+    });
+
+    function checkDates(fromD, toD) {
+        var dateflag = "Y";
+
+        if (fromD != "" && toD != "") {
+            if (toD > today) {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("To Date should be less or equal to Today's date");
+                dateflag = "N";
+            }
+            else {
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
             }
         }
-        if (flag == "N")
-            return;
-        if (flag == "Y") {
+        return dateflag;
+    }
+
+
+    function searchCardActivationandAllocation() {
+
+        var customerId = $("#CustomerId").val();
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        //if (fromdate == "") {
+        //    $("#fromDate_error").attr("style", "display:block");
+        //    $("#fromDate_error").html("Select From Date");
+        //    flag = "N";
+        //}
+        //if (todate == "") {
+        //    $("#toDate_error").attr("style", "display:block");
+        //    $("#toDate_error").html("Select To Date");
+        //    flag = "N";
+        //}
+        if (fromdate != "" && todate != "") {
+            flag = checkDates(fromdate, todate);
+            flag = "N";
+        } else {
             $("#toDate_error").html("");
             $("#toDate_error").attr("style", "display:none");
-            $("#fromDate_error").html("");
-            $("#fromDate_error").attr("style", "display:none");
-            $("#customerId_error").attr("style", "display:none");
-            $("#customerId_error").html("");
         }
-       
-        var zoID = $("#ZonalOfficeId").val();
-        var roID = $("#RegionalOfficeId").val();
-        var fromDate = $("#FromDate").val();
-        var toDate = $("#ToDate").val();
 
-       
-        //debugger;
-        $.ajax({
-            type: 'GET',  // http method
-            url: '@Url.Action("GetDriverCardActivationAllocationDetails", "DriverCardCustomer")',
-            contentType: "application/json; charset=utf-8",
-            data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, customerId: customerId},
-            dataType: "text",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                   
-                    $("#cardActivationandAllocation").html(data);
-                    $('html, body').animate({
-                        scrollTop: $("#cardActivationandAllocation").offset().top
-                    }, 2000);
-                }
-                else {
-                    console.log(v);
-                }
-               
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error");
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+                $("#toDate_error").html("");
+                $("#toDate_error").attr("style", "display:none");
+                $("#fromDate_error").html("");
+                $("#fromDate_error").attr("style", "display:none");
+                $("#customerId_error").attr("style", "display:none");
+                $("#customerId_error").html("");
+
+                var zoID = $("#ZonalOfficeId").val();
+                var roID = $("#RegionalOfficeId").val();
+                var fromDate = $("#FromDate").val();
+                var toDate = $("#ToDate").val();
+
+                $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetDriverCardActivationAllocationDetails", "DriverCardCustomer")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, customerId: customerId },
+                    dataType: "text",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+
+                            $("#cardActivationandAllocation").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#cardActivationandAllocation").offset().top
+                            }, 2000);
+                        }
+                        else {
+                            console.log(v);
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error");
+                    }
+                });
             }
-        });
-      
+        }
     }
     
     $(".date").on('change', function (e) {
@@ -293,5 +325,51 @@
         }
 
         return dateflag;
+    }
+
+    function tableToCSVDwld() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+
+        console.log("rows", rows);
+
+        if (rows.length > 0) {
+
+            for (var i = 0; i < rows.length; i++) {
+
+                var cols = rows[i].querySelectorAll('td,th');
+
+                console.log("cols", cols);
+
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    csvrow.push("'" + cols[j].innerHTML);
+                }
+                csv_data.push(csvrow.join(","));
+            }
+
+            csv_data = csv_data.join('\n');
+
+            downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+        var temp_link = document.createElement('a');
+        temp_link.download = "DriverCardAllocation.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+        temp_link.click();
+        document.body.removeChild(temp_link);
     }
 </script>

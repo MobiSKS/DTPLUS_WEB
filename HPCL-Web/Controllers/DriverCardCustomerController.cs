@@ -241,8 +241,6 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _driverCardCustomerService.GetDriverCardActivationAllocationDetails(zonalOfcID, regionalOfcID, fromDate, toDate, customerId);
             return PartialView("~/Views/DriverCardCustomer/_DriverCardActivAllocationTbl.cshtml", modals);
-            
-
         }
         public async Task<IActionResult> DriverCardAllocationandActivation()
         {
