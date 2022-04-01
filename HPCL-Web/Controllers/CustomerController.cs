@@ -145,138 +145,6 @@ namespace HPCL_Web.Controllers
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
 
-            //char flag = 'N';
-
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    //Fetching CustomerType
-            //    var CustType = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"CTFlag",  "1" }
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    //Fetching Type of Fleet
-            //    var CustomerTypeOfFleetForms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")}
-
-            //    };
-            //    StringContent TypeOfFleetcontent = new StringContent(JsonConvert.SerializeObject(CustomerTypeOfFleetForms), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getVehicleTpe, TypeOfFleetcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<VehicleTypeModel> lst = jarr.ToObject<List<VehicleTypeModel>>();
-
-            //            //var SortedtList = lst.OrderBy(x => x.VehicleTypeId).ToList();
-            //            //custMdl.VehicleTypeMdl.AddRange(SortedtList);
-            //            customerCardInfo.VehicleTypeMdl.AddRange(lst);
-            //        }
-            //        else
-            //        {
-            //            ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //        }
-            //    }
-
-
-            //    if (!string.IsNullOrEmpty(customerReferenceNo))
-            //    {
-
-            //        //fetching Customer info
-            //        var CustomerRefinfo = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"CustomerReferenceNo", customerReferenceNo}
-            //        };
-
-            //        CustomerResponseByReferenceNo customerResponseByReferenceNo;
-            //        StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-            //        using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
-            //        {
-            //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //            {
-            //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-
-            //                customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
-            //                if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
-            //                {
-            //                    customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-            //                    customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
-
-            //                    StringBuilder sb = new StringBuilder();
-            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-            //                        sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
-
-            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-            //                        sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
-
-            //                    if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-            //                        sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
-
-            //                    customerCardInfo.CustomerName = sb.ToString();
-
-            //                    customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-            //                    customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
-
-            //                    if (customerResponseByReferenceNo.Data != null)
-            //                    {
-            //                        customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
-            //                        customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
-            //                        customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-            //                        customerCardInfo.ReceivedAmount= string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
-            //                        customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-            //                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
-            //                        if (customerCardInfo.RBEId == "0")
-            //                            customerCardInfo.RBEId = "";
-            //                        if (customerCardInfo.NoOfCards == "0")
-            //                            customerCardInfo.NoOfCards = "";
-            //                        if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
-            //                        {
-            //                            customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
-            //                        }
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    ViewBag.Message = customerResponseByReferenceNo.Message;
-            //                }
-
-            //            }
-            //            else
-            //            {
-            //                ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //            }
-            //        }
-            //    }
-
-            //    if (flag == 'Y')
-            //    {
-            //        ModelState.Clear();
-            //        ModelState.AddModelError(string.Empty, "Error Loading Customer Type");
-            //        ViewBag.Login = "1";
-            //        return View("Index");
-            //    }
-            //    else
-            //    {
-            //        return View(customerCardInfo);
-            //    }
-            //}
             return View(customerCardInfo);
         }
 
@@ -487,6 +355,7 @@ namespace HPCL_Web.Controllers
             else
             {
                 ViewBag.Message = cardInfo.Message;
+                cardInfo.Remarks = cardInfo.Message;
             }
 
             return View(customerCardInfo);
