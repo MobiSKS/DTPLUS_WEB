@@ -434,7 +434,7 @@
                         </div>
                     </div>
                     <div class="py-2">
-                        <div class="border-1 rounded border-grey w-100">
+                        <div class="border-1 rounded border-grey w-100" id="PermanentOfcAddress">
                             <p class="text_primary px-3 py-2  m-0 font-weight-bold">Permanent/Registered Office Address</p>
                             <div class="py-3 px-2 px-md-4">
                                 <label class="d-flex align-items-center justify-content-start px-3">
@@ -567,8 +567,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix">
-                    </div>
+                    <div class="clearfix"></div>
                 </div>
 
                 <div class="tab-pane" id="OfficialDetails" role="tabpanel" aria-labelledby="OfficialDetails-tab">
@@ -808,9 +807,82 @@
         </div>
     </form>
 </div>
+
 @using Microsoft.AspNetCore.Http;
 
 <script type="text/javascript">
+
+    $(document).ready(function () {
+
+         var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (res) {
+
+                     console.log("res", res);
+
+                      if(res.length > 0){
+                          document.getElementById("noRecord").style.display = "none";
+
+                          $("#CustomerSearch td").parent().remove();
+                          $('#CustomerSearch table').DataTable().clear().destroy();
+
+                          var rows = "<tbody>"
+                          for (var i = 0; i < res.length; i++) {
+                              var ApplicationDate = new Date(res[i].dateOfApplication).toLocaleDateString("pt-PT");
+                              rows += "<tr>"
+                                  + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
+                                  + "<td width='400px'>" + res[i].nameOnCard + "</td>"
+                                  + "<td width='400px' class='getCustType'>" + res[i].customerTypeName + "</td>"
+                                  + "<td width='400px'>" + res[i].formNumber + "</td>"
+                                  + "<td width='400px'>" + ApplicationDate + "</td>"
+                                  + "<td width='400px'>" + res[i].customerStatusName + "</td>"
+                                  + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this)'>View</a></td>"
+                                  + "<td width='400px'><a href='#aaa' class='editNumber'>View</a></td>"
+                                  + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'>search </a></td>"
+                              "</tr >";
+
+                          }
+                          rows += "</tbody>"
+                          $('#CustomerSearch table').append(rows);
+
+                          //$('#CustomerSearch table').DataTable({
+                          //      paging: true,
+                          //      searching: false,
+                          //      stateSave: true,
+                          //      "bDestroy": true,
+                          //      "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                          //      "autoWidth": false,
+                          //      "oLanguage": {
+                          //          "sLengthMenu": "Display _MENU_ Records",
+                          //          "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                          //      }
+                          //});
+
+                          document.getElementById("CustomerSearch").style.display = "block";
+                      }else{
+                            document.getElementById("CustomerSearch").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>No Record Found</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                      }
+
+                    $("#CustomerId").val('@Context.Session.GetString("UserId")');
+                    $("#CustomerId").attr("readonly", true);
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+      
+    });
 
     function searchCards(){
 
@@ -857,7 +929,7 @@
                               rows += "<tr>"
                                   + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td width='400px'>" + res[i].nameOnCard + "</td>"
-                                  + "<td width='400px'>" + res[i].customerTypeName + "</td>"
+                                  + "<td width='400px' class='getCustType'>" + res[i].customerTypeName + "</td>"
                                   + "<td width='400px'>" + res[i].formNumber + "</td>"
                                   + "<td width='400px'>" + ApplicationDate + "</td>"
                                   + "<td width='400px'>" + res[i].customerStatusName + "</td>"
@@ -869,18 +941,20 @@
                           }
                           rows += "</tbody>"
                           $('#CustomerSearch table').append(rows);
-                          $('#CustomerSearch table').DataTable({
-                               paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                }
-                          });
+
+                          //$('#CustomerSearch table').DataTable({
+                          //      paging: true,
+                          //      searching: false,
+                          //      stateSave: true,
+                          //      "bDestroy": true,
+                          //      "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                          //      "autoWidth": false,
+                          //      "oLanguage": {
+                          //          "sLengthMenu": "Display _MENU_ Records",
+                          //          "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                          //      }
+                          //});
+
                           document.getElementById("CustomerSearch").style.display = "block";
                       }else{
                             document.getElementById("CustomerSearch").style.display = "none";
@@ -1093,6 +1167,9 @@
       function ViewBasicInfo(o) {
     
           var CustomerId = o.closest('tr').childNodes[0].innerText;
+
+          var customerType = o.closest('tr').childNodes[2].innerText;
+
           //var CustomerId = o.innerText;
           $.ajax({
               url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
@@ -1209,14 +1286,25 @@
                               }
 
                           }
+                      }
+                      
 
-
-                      }                  
-                    $("#CustomerProfile-tab").removeClass("disabled");
-                    $("#Address-tab").removeClass("disabled");
-                    $("#BasicInfo-tab").removeClass("disabled");
-                    $("#OfficialDetails-tab").removeClass("disabled");
-                    $('#BasicInfo-tab').tab('show');
+                      if(customerType == "OTC" || customerType == "Tatkal" || customerType == "Driver"){
+                        $("#CustomerProfile-tab").removeClass("disabled");
+                        $("#Address-tab").removeClass("disabled");
+                        $("#BasicInfo-tab").removeClass("disabled");
+                        $("#OfficialDetails-tab").removeClass("disabled");
+                        $('#BasicInfo-tab').tab('show');
+                        document.getElementById("OfficialDetails-tab").style.display = "none";
+                        document.getElementById("PermanentOfcAddress").style.display = "none";
+                        document.getElementById("OfficialDetails").style.display = "none";
+                      }else{
+                        $("#CustomerProfile-tab").removeClass("disabled");
+                        $("#Address-tab").removeClass("disabled");
+                        $("#BasicInfo-tab").removeClass("disabled");
+                        $("#OfficialDetails-tab").removeClass("disabled");
+                        $('#BasicInfo-tab').tab('show');
+                      }
                   }
 
               },
