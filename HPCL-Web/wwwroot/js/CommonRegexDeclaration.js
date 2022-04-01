@@ -1,5 +1,6 @@
 ﻿var phoneno = /^[6789]\d{9}$/;
-var email = /[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
+//var email = /[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/; //Not checking if .com is present
+var email = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 var number = /^\d+$/;
 var pincode = /^[1-9][0-9]{5}$/;
 var mappedMerchantID = /^(?=(3))[0-9]{10}$/;
@@ -13,6 +14,7 @@ var mappedterminalID = /^(?=(5))[0-9]{10}$/;
 var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
 var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
-var addressFormat = /^[a-zA-Z0-9\s,. '-]{3,}$/;//Dont Use,not working
 var highwayName = /^[a-z\d\-_\s]+$/i;
 ///^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
+var noSpecialChars = /^[A-Za-z0-9 ]+$/; //Regex for Valid Characters i.e. Alphabets, Numbers and Space 
+var atLeastOneAlphabet = /[a-zA-Z]/;   //To check if a string contains at least one letter 
