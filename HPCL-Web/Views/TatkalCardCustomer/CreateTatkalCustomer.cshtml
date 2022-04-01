@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Ph (Off) </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -444,6 +444,14 @@
             return false;
         }
          else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
@@ -744,13 +752,17 @@
              else {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "";
              }
+
+             if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                 ret = false;
+            }
+            else {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "";
+            }
         }
 
-        if (document.getElementById("CommunicationDialCode").value.trim() == "") {
-            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-            ret = false;
-        }
-        else {
+        if (document.getElementById("CommunicationDialCode").value.trim() != "") {
             var stdCode = document.getElementById("CommunicationDialCode").value.trim();
             if (stdCode != "") {
 
@@ -768,12 +780,8 @@
             }
         }
 
-        if (document.getElementById("CommunicationPhonePart2").value.trim() == "") {
-            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-            ret = false;
-        }
-        else {
-            var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
+             var phno = document.getElementById("CommunicationPhonePart2").value.trim();
             if (phno != "") {
                 if (phno.charAt(0) == "0") {
                     document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
@@ -797,9 +805,17 @@
             }
         }
 
-        if (document.getElementById("CommunicationDialCode").value.trim() == "" || document.getElementById("CommunicationPhonePart2").value.trim() == "") {
-            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-            ret = false;
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
+            if(document.getElementById("CommunicationDialCode").value.trim() == "")
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
+                ret = false;
+            }
         }
 
         if (document.getElementById("CommunicationEmailid").value.trim() == "") {
@@ -896,6 +912,7 @@
 
         //if (ret == false)
         //    return ret;
+        console.log('Ravi');
         console.log(ret);
         return ret;
     }
@@ -1231,36 +1248,28 @@
     $("#CommunicationPhonePart2").on("blur", function () {
         //debugger;
         var phoneno = document.getElementById("CommunicationPhonePart2").value.trim();
-        if (phoneno == "") {
-            document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-            return (false);
-        }
-        else 
-        {
-            var phno = document.getElementById("CommunicationPhonePart2").value.trim();
-            if (phno != "") {
+        if (phoneno != "") {
 
-                if (phno.charAt(0) == "0") {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
-                    return (false);
-                }
-                else {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
-                }
-
-                if (phno.length < 6 || phno.length > 8) {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number. Min 6 Max 8 digits";
-                    return (false);
-                }
-                else {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
-                }
-
+            if (phno.charAt(0) == "0") {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                return (false);
             }
             else {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
             }
-       }        
+
+            if (phno.length < 6 || phno.length > 8) {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number. Min 6 Max 8 digits";
+                return (false);
+            }
+            else {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+        }
+        else {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
 
     });
 
