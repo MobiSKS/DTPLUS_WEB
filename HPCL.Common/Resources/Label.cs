@@ -4,7 +4,7 @@
     {
         #region "Customer"
 
-        public const string CustomerId = "Customer Id";
+        public const string CustomerId = "Customer ID";
         public const string CardNumber = "Card Number";
         public const string MobileNumber = "Mobile Number";
         public const string SrNumber = "Sr. Number";
