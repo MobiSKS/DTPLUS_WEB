@@ -489,7 +489,7 @@ namespace HPCL_Web.Controllers
                 ViewBag.Message = cardInfo.Message;
             }
 
-            return Json(customerCardInfo);
+            return View(customerCardInfo);
         }
 
 
