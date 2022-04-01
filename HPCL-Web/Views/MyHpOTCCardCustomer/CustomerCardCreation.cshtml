@@ -284,7 +284,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "100" })
                                                     <span class="error" id="comm_address1_error"></span>
                                                 </div>
                                             </div>
@@ -295,7 +295,7 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "100" })
                                                     <span class="error" id="comm_address2_error"></span>
                                                 </div>
                                             </div>
@@ -574,6 +574,10 @@
             $(":submit").attr("disabled", true);
         }
 
+        if($("#dvRemarks").html().length > 0)
+        {
+             $("#btnSearch").click();
+        }
     });
 
 
@@ -633,6 +637,9 @@
         document.getElementById("CardNumber2_error").innerHTML = "";
         document.getElementById("VehicleNo2_error").innerHTML = "";
         document.getElementById("MobileNo2_error").innerHTML = "";
+        $("#Remarks").html('');
+        $("#dvRemarks").html('');
+        dvRemarks.style.display = 'none';
 
         if (document.getElementById("LoggedInAs").value == "MERCHANT") {
             $("#MerchantId").prop('readonly', true);
@@ -654,7 +661,6 @@
         var merchantId = document.getElementById("MerchantId").value;
         if (merchantId == "") {
             document.getElementById("MerchantId_error").innerHTML = "Please enter Merchant ID";
-             //$("#merchantId").focus;
             return (false);
         }
         else {
@@ -663,13 +669,11 @@
 
         if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
             document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantId").focus();
             return (false);
         }
 
         if (document.getElementById("MerchantId").value.length < 10) {
             document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantId").focus();
             return (false);
         }
 
@@ -762,16 +766,12 @@
 
 
         if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-            document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             return false;
         }
 
         if (document.getElementById("FormNumber").value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-            document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             return false;
         }
 
@@ -866,7 +866,6 @@
 
         if (document.getElementById("MerchantId").value == "") {
             document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant ID";
-            //$("#MerchantId").focus;
             return (false);
         }
         else {
@@ -950,7 +949,6 @@
 
         if (document.getElementById("MerchantId").value == "") {
             document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant ID";
-            //$("#MerchantId").focus;
             return (false);
         }
         else {
@@ -1045,26 +1043,24 @@
         document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
         panNumber = document.getElementById("IncomeTaxPan").value.trim();
 
+        let forthdigitPan = panNumber.substr(3, 1);
+        console.log(forthdigitPan);
+        if (forthdigitPan != 'P') {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            return (false);
+        }
+        else {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        }
+
         if ($('#IncomeTaxPan').val().match(pancard)) {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            document.getElementById("IncomeTaxPan").value = "";
             return (false);
         }
-
-
-        let forthdigitPan = panNumber.substr(3, 1);
-        console.log(forthdigitPan);
-        if (forthdigitPan != 'P') {
-            document.getElementById("IncomeTaxPan").value = "";
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            return;
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-        }
+               
 
         @*$.ajax({
             type: 'POST',
@@ -1149,13 +1145,11 @@
         //        }
         //        else {
         //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-        //            //document.getElementById("IncomeTaxPan").focus();
         //            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
         //        }
         //    },
         //    error: function (jqXhr, textStatus, errorMessage) {
         //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-        //        //document.getElementById("IncomeTaxPan").focus();
         //        localStorage.setItem("PANNOANDNAMEMATCHING", "0");
         //    }
         //});
@@ -1172,7 +1166,6 @@
 
         if (document.getElementById("MerchantId").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Please Enter Merchant ID";
-            //document.getElementById("MerchantId").focus();
             ret = false;
         }
         else {
@@ -1181,7 +1174,6 @@
 
         if (document.getElementById("Zone").value.trim() == "") {
             document.getElementById("MerchantId_error").innerHTML = "Click search button to load merchant details";
-            //document.getElementById("MerchantId").focus();
             ret = false;
         }
         else {
@@ -1190,7 +1182,6 @@
 
         if (document.getElementById("FormNumber").value.trim() == "") {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
-            //document.getElementById("FormNumber").focus();
             ret = false;
         }
         else {
@@ -1201,11 +1192,20 @@
             else {
                 document.getElementById("formNumber_error").innerHTML = "";
             }
+
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                ret = false;
+            }
+
+            if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                ret = false;
+            }
         }
 
         if (document.getElementById("IndividualOrgNameTitle").value == "0") {
             document.getElementById("salutaion_error").innerHTML = "Select Title";
-            //document.getElementById("IndividualOrgNameTitle").focus();
             ret = false;
         }
         else {
@@ -1214,22 +1214,20 @@
 
         if (document.getElementById("IndividualOrgName").value.trim() == "") {
             document.getElementById("individualName_error").innerHTML = "Customer/Org.Name field cannot be left blank";
-            //document.getElementById("IndividualOrgName").focus();
             ret = false;
         }
         else {
-            if (!document.getElementById("IndividualOrgName").value.trim().match(nameWithSpaceCheck)) {
+            
+            if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
                 document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name";
-                //document.getElementById("IndividualOrgName").focus();
                 ret = false;
             }
             else {
                 document.getElementById("individualName_error").innerHTML = "";
             }
 
-            if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+            if (!document.getElementById("IndividualOrgName").value.trim().match(nameWithSpaceCheck)) {
                 document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name";
-                //document.getElementById("IndividualOrgName").focus();
                 ret = false;
             }
             else {
@@ -1239,22 +1237,20 @@
 
         if (document.getElementById("NameOnCard").value.trim() == "") {
             document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
-            //document.getElementById("NameOnCard").focus();
             ret = false;
         }
         else {
-            if (!document.getElementById("NameOnCard").value.trim().match(nameWithSpaceCheck)) {
+            
+            if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
                 document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
-                //document.getElementById("NameOnCard").focus();
                 ret = false;
             }
             else {
                 document.getElementById("nameOnCard_error").innerHTML = "";
             }
 
-            if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
+            if (!document.getElementById("NameOnCard").value.trim().match(nameWithSpaceCheck)) {
                 document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
-                //document.getElementById("NameOnCard").focus();
                 ret = false;
             }
             else {
@@ -1264,20 +1260,20 @@
 
         if (document.getElementById("IncomeTaxPan").value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            //document.getElementById("IncomeTaxPan").focus();
             ret = false;
         }
         else {
-            document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
 
-            if (!$('#IncomeTaxPan').val().match(pancard)) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            if (localStorage.getItem("PANNOALREADYUSED") == 0) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
                 ret = false;
             }
-            else
-            {
+            else {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
             }
+
+            document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+
             var panNumber = document.getElementById("IncomeTaxPan").value.trim();
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
@@ -1289,15 +1285,22 @@
             {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
             }
+
+            if (!$('#IncomeTaxPan').val().match(pancard)) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
         }
 
         if (document.getElementById("CommunicationCityName").value.trim() == "") {
             document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
-            //document.getElementById("CommunicationCityName").focus();
             ret = false;
         }
         else {
-            document.getElementById("communicationCityName_error").innerHTML = "";
 
             if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
                 document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
@@ -1318,33 +1321,39 @@
 
         if (document.getElementById("CommunicationPincode").value.trim() == "") {
             document.getElementById("communicationPincode_error").innerHTML = "Pin Code field cannot be left blank";
-            //document.getElementById("CommunicationPincode").focus();
             ret = false;
         }
         else {
             var pin = document.getElementById("CommunicationPincode").value.trim();
-            if (pin.length < 6) {
-                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
-                //document.getElementById("CommunicationPincode").focus();
-                ret = false;
-            }
-            else {
-                document.getElementById("communicationPincode_error").innerHTML = "";
-            }
 
-             if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
+            if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
                     document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
                     ret = false;
              }
               else {
                 document.getElementById("communicationPincode_error").innerHTML = "";
             }
+
+            if (pin.length < 6) {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else {
+                document.getElementById("communicationPincode_error").innerHTML = "";
+            }
+
+            if (document.getElementById("CommunicationPincode").value.match(pincode)) {
+                document.getElementById("communicationPincode_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                ret = false;
+            }             
         }
 
 
         if (document.getElementById("CommunicationStateId").value.trim() == "0") {
             document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
-            //document.getElementById("CommunicationStateId").focus();
             ret = false;
         }
         else {
@@ -1353,7 +1362,6 @@
 
         if (document.getElementById("CommunicationDistrictId").value == "0") {
             document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-            //document.getElementById("CommunicationDistrictId").focus();
             ret = false;
         }
         else {
@@ -1365,7 +1373,6 @@
 
             if (stdCode.length < 2 || stdCode.length > 4) {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
-                //document.getElementById("CommunicationDialCode").focus();
                 ret = false;
             }
             else {
@@ -1381,7 +1388,6 @@
         if (phno != "") {
             if (phno.charAt(0) == "0") {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no cannot start with 0";
-                //document.getElementById("CommunicationPhonePart2").focus();
                 ret = false;
             }
             else {
@@ -1390,7 +1396,6 @@
 
             if (phno.length < 6 || phno.length > 8) {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
-                //document.getElementById("CommunicationPhonePart2").focus();
                 ret = false;
             }
             else {
@@ -1408,7 +1413,6 @@
 
             if (faxCode.length < 2 || faxCode.length > 4) {
                 document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
-                //document.getElementById("CommunicationFaxCode").focus();
                 ret = false;
             }
             else {
@@ -1424,7 +1428,6 @@
         if (faxphno != "") {
             if (phno.charAt(0) == "0") {
                 document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no can not start with 0";
-                //document.getElementById("CommunicationFaxPart2").focus();
                 ret = false;
             }
             else {
@@ -1433,7 +1436,6 @@
 
             if (faxphno.length < 6 || faxphno.length > 8) {
                 document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no length 6 to 8 digits";
-                //document.getElementById("CommunicationFaxPart2").focus();
                 ret = false;
             }
             else {
@@ -1448,39 +1450,26 @@
 
         if (document.getElementById("CommunicationMobileNo").value.trim() == "") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
-            //document.getElementById("CommunicationMobileNo").focus();
             ret = false;
         }
         else {
-            
-            if (document.getElementById("CommunicationMobileNo").value.length < 10) {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                return false;
-            }
-            else
-            {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "";
-            }
-
-            if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
-                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number";
                  ret = false;
             }
-            else
-            {
+            else {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "";
             }
         }
 
         if (document.getElementById("CommunicationEmailid").value.trim() == "") {
             document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
-            //document.getElementById("CommunicationEmailid").focus();
             ret = false;
         }
         else {
-                if (document.getElementById("CommunicationEmailid").value.match(email)) {
-                    document.getElementById("comm_email_error").innerHTML = "";
-                }
+            if (document.getElementById("CommunicationEmailid").value.match(email)) {
+                document.getElementById("comm_email_error").innerHTML = "";
+            }
             else {
                 document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
                 ret = false;
@@ -1505,7 +1494,6 @@
 
         if (document.getElementById("CommunicationAddress1").value.trim() == "") {
             document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
-            //document.getElementById("CommunicationAddress1").focus();
             ret = false;
         }
         else {
@@ -1529,7 +1517,6 @@
 
         if (document.getElementById("CommunicationAddress2").value.trim() == "") {
             document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
-            //document.getElementById("CommunicationAddress2").focus();
             ret = false;
         }
         else {
@@ -1552,7 +1539,6 @@
 
         if (document.getElementById("CardNumber1").value == "" && document.getElementById("CardNumber2").value == "") {
             document.getElementById("CardNumber1_error").innerHTML = "Card Details Required";
-            //document.getElementById("CardNumber1").focus();
             document.getElementById("CardNumber2_error").innerHTML = "";
             ret = false;
         }
@@ -1560,7 +1546,6 @@
             if (document.getElementById("CardNumber1").value != "" && document.getElementById("CardNumber2").value != "") {
                 if (document.getElementById("CardNumber1").value == document.getElementById("CardNumber2").value) {
                     document.getElementById("CardNumber1_error").innerHTML = "Both Card Numbers are same";
-                    //document.getElementById("CardNumber2").focus();
                     ret = false;
                 }
                 else {
@@ -1576,15 +1561,14 @@
 
         if (document.getElementById("VehicleNo1").value.trim() == "" && document.getElementById("VehicleNo2").value.trim() == "") {
             document.getElementById("VehicleNo1_error").innerHTML = "";
-            //document.getElementById("VehicleNo1").focus();
             document.getElementById("VehicleNo2_error").innerHTML = "";
 
             if (document.getElementById("CardNumber2").value.trim() != "") {
-                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number Required";
+                document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is Required";
             }
 
             if (document.getElementById("CardNumber1").value.trim() != "") {
-                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number Required";
+                document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is Required";
             }
 
             ret = false;
@@ -1593,14 +1577,12 @@
             if (document.getElementById("VehicleNo1").value.trim() != "" && document.getElementById("VehicleNo2").value.trim() != "") {
                 if (document.getElementById("VehicleNo1").value == document.getElementById("VehicleNo2").value) {
                     document.getElementById("VehicleNo1_error").innerHTML = "Both Vehicle Numbers are same";
-                    //document.getElementById("VehicleNo1").focus();
                     ret = false;
                 }
                 else {
                     if (document.getElementById("VehicleNo1").value != "") { //Vehicle length min-6 max 10
                         if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) {
                             document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-                            //document.getElementById("VehicleNo1").focus();
                             ret = false;
                         }
                         else {
@@ -1614,7 +1596,6 @@
                     if (document.getElementById("VehicleNo2").value != "") { //Vehicle length min-6 max 10
                         if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
                             document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                            //document.getElementById("VehicleNo2").focus();
                             ret = false;
                         }
                         else {
@@ -1628,14 +1609,12 @@
                     if (document.getElementById("CardNumber2").value != "") {
                         if (document.getElementById("VehicleNo2").value.trim() == "") {
                             document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number field cannot be left blank";
-                            //document.getElementById("VehicleNo2").focus();
                             ret = false;
                         }
                         else {
                             if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) {
                                 document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                                //document.getElementById("MobileNo2").focus();
-                                ret = false;
+                                 ret = false;
                             }
                             else {
                                 document.getElementById("VehicleNo2_error").innerHTML = "";
@@ -1652,7 +1631,6 @@
 
         if (document.getElementById("MobileNo1").value.trim() == "" && document.getElementById("MobileNo2").value.trim() == "") {
             document.getElementById("MobileNo1_error").innerHTML = "";
-            //document.getElementById("MobileNo1").focus();
             document.getElementById("MobileNo2_error").innerHTML = "";
 
             if (document.getElementById("CardNumber2").value.trim() != "") {
@@ -1669,7 +1647,6 @@
             if (document.getElementById("MobileNo1").value.trim() != "" && document.getElementById("MobileNo2").value.trim() != "") {
                 if (document.getElementById("MobileNo1").value == document.getElementById("MobileNo2").value) {
                     document.getElementById("MobileNo1_error").innerHTML = "Both Mobile Numbers are same";
-                    //document.getElementById("MobileNo1").focus();
                     ret = false;
                 }
                 else {
@@ -1677,18 +1654,25 @@
                     if (document.getElementById("CardNumber1").value != "") {
                         if (document.getElementById("MobileNo1").value == "") {
                             document.getElementById("MobileNo1_error").innerHTML = "Mobile Number is required";
-                            //document.getElementById("MobileNo1").focus();
                             ret = false;
                         }
                         else {
                             if ($("#MobileNo1").val().length < 10) {
-                                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
-                                //document.getElementById("MobileNo1").focus();
+                                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
                                 ret = false;
                             }
                             else {
                                 document.getElementById("MobileNo1_error").innerHTML = "";
                             }
+
+                            if(!document.getElementById("MobileNo1").value.match(phoneno)) {
+                                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+                                ret = false;
+                            }
+                            else {
+                                document.getElementById("MobileNo1_error").innerHTML = "";
+                            }
+
                         }
                     }
                     else {
@@ -1699,13 +1683,19 @@
                     if (document.getElementById("CardNumber2").value != "") {
                         if (document.getElementById("MobileNo2").value == "") {
                             document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
-                            //document.getElementById("MobileNo2").focus();
                             ret = false;
                         }
                         else {
                             if ($("#MobileNo2").val().length < 10) {
-                                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number length must be 10 digit";
-                                //document.getElementById("MobileNo2").focus();
+                                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                                ret = false;
+                            }
+                            else {
+                                document.getElementById("MobileNo2_error").innerHTML = "";
+                            }
+
+                            if(!document.getElementById("MobileNo2").value.match(phoneno)) {
+                                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
                                 ret = false;
                             }
                             else {
@@ -1720,6 +1710,63 @@
 
                 }
             }
+        }
+
+        if (document.getElementById("CardNumber1").value != "") {
+            if (document.getElementById("MobileNo1").value == "") {
+                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number is required";
+                ret = false;
+            }
+            else {
+                if ($("#MobileNo1").val().length < 10) {
+                    document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("MobileNo1_error").innerHTML = "";
+                }
+
+                if(!document.getElementById("MobileNo1").value.match(phoneno)) {
+                    document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("MobileNo1_error").innerHTML = "";
+                }
+
+            }
+        }
+        else {
+            document.getElementById("MobileNo1_error").innerHTML = "";
+            document.getElementById("CardNumber1_error").innerHTML = "";
+        }
+
+         if (document.getElementById("CardNumber2").value != "") {
+            if (document.getElementById("MobileNo2").value == "") {
+                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
+                ret = false;
+            }
+            else {
+                if ($("#MobileNo2").val().length < 10) {
+                    document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("MobileNo2_error").innerHTML = "";
+                }
+
+                if(!document.getElementById("MobileNo2").value.match(phoneno)) {
+                    document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("MobileNo2_error").innerHTML = "";
+                }
+            }
+        }
+        else {
+            document.getElementById("MobileNo2_error").innerHTML = "";
+            document.getElementById("CardNumber2_error").innerHTML = "";
         }
                 
         
@@ -1752,75 +1799,63 @@
         }
 
         console.log('Testing');
+        
+        //if (document.getElementById("IncomeTaxPan").value.trim() == "") {
+        //    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+        //    ret = false;
+        //}
+        //else {
+        //    var result = false;
 
-        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
-            ret = false;
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
+        //    if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
+        //        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+        //        ret = false;
+        //    }
+        //    else {
+        //        document.getElementById("incomeTaxPan_error").innerHTML = "";
+        //    }
 
+        //    //var panno = $('#IncomeTaxPan').val();
+        //    //var OrgName = $('#IndividualOrgName').val();
+        //    //var correctPANName = '';
 
-        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            document.getElementById("IncomeTaxPan").focus();
-            ret = false;
-        }
-        else {
-            var result = false;
+        //    //$.ajax({
+        //    //    type: 'POST',
+        //    //    url: "PANValidation/MyHpOTCCardCustomer",
+        //    //    data: { PANNumber: document.getElementById("IncomeTaxPan").value },
+        //    //    dataType: "json",
+        //    //    success: function (data, status, xhr) {
+        //    //        //debugger;
+        //    //        var jsonData = JSON.parse(data);
+        //    //        if (status == 'success' && jsonData['status-code'] == '101') {
+        //    //            result = true;
 
-            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-            }
+        //    //            console.log(jsonData);
+        //    //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+        //    //            correctPANName = jsonData["result"]["name"];
+        //    //            if (OrgName.toUpperCase() == correctPANName.toUpperCase()) {
+        //    //                localStorage.setItem("showregAddress", true)
+        //    //            }
+        //    //            else {
+        //    //                result = false;
+        //    //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+        //    //            }
+        //    //        }
+        //    //        else {
+        //    //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //    //        }
+        //    //    },
+        //    //    error: function (jqXhr, textStatus, errorMessage) {
+        //    //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+        //    //    }
+        //    //});
 
-            //var panno = $('#IncomeTaxPan').val();
-            //var OrgName = $('#IndividualOrgName').val();
-            //var correctPANName = '';
+        //    //ret = result;
 
-            //$.ajax({
-            //    type: 'POST',
-            //    url: "PANValidation/MyHpOTCCardCustomer",
-            //    data: { PANNumber: document.getElementById("IncomeTaxPan").value },
-            //    dataType: "json",
-            //    success: function (data, status, xhr) {
-            //        //debugger;
-            //        var jsonData = JSON.parse(data);
-            //        if (status == 'success' && jsonData['status-code'] == '101') {
-            //            result = true;
-
-            //            console.log(jsonData);
-            //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-            //            correctPANName = jsonData["result"]["name"];
-            //            if (OrgName.toUpperCase() == correctPANName.toUpperCase()) {
-            //                localStorage.setItem("showregAddress", true)
-            //            }
-            //            else {
-            //                result = false;
-            //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-            //            }
-            //        }
-            //        else {
-            //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //            document.getElementById("IncomeTaxPan").focus();
-            //        }
-            //    },
-            //    error: function (jqXhr, textStatus, errorMessage) {
-            //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //        document.getElementById("IncomeTaxPan").focus();
-            //    }
-            //});
-
-            //ret = result;
-
-            //console.log('Inside Loop Before');
-            //console.log(result);
-            //console.log('Inside Loop After');
-        }
+        //    //console.log('Inside Loop Before');
+        //    //console.log(result);
+        //    //console.log('Inside Loop After');
+        //}
 
         console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
 
@@ -1841,18 +1876,12 @@
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNo").value = "";
-            //document.getElementById("CommunicationMobileNumber").focus();
-            return false;
+       if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number";
+             return (false);
         }
-
-        if (document.getElementById("CommunicationMobileNo").value.length < 10) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNo").value = "";
-            //document.getElementById("CommunicationMobileNo").focus();
-            return false;
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
         var mobileNoUsed = false;
@@ -1915,12 +1944,9 @@
 
         if (communicationEmail.match(email)) {
             document.getElementById("comm_email_error").innerHTML = "";
-            //return true
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            //document.getElementById("CommunicationEmailid").value = "";
-            //document.getElementById("CommunicationEmailid").focus();
             return (false);
         }
 
@@ -1977,8 +2003,7 @@
         //debugger;
         var vehicleNo = document.getElementById("VehicleNo1").value;
         if (vehicleNo == "") {
-            document.getElementById("VehicleNo1_error").innerHTML = "Please Enter Vehicle Number";
-            $("#VehicleNo1").focus;
+            document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is Required";
             return (false);
         }
         else {
@@ -2018,8 +2043,7 @@
         //debugger;
         var vehicleNo = document.getElementById("VehicleNo2").value;
         if (vehicleNo == "") {
-            document.getElementById("VehicleNo2_error").innerHTML = "Please Enter Vehicle Number";
-            $("#VehicleNo2").focus;
+            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is Required";
             return (false);
         }
         else {
@@ -2106,25 +2130,29 @@
             document.getElementById("communicationPincode_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationPincode").value.length < 6) {
+        if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
             document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
-            //document.getElementById("CommunicationPincode").value = "";
-            //document.getElementById("CommunicationPincode").focus();
             return false;
         }
         else {
                 document.getElementById("communicationPincode_error").innerHTML = "";
         }
 
-        if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") {
+        if (document.getElementById("CommunicationPincode").value.length < 6) {
             document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
-            //document.getElementById("CommunicationPincode").value = "";
-            //document.getElementById("CommunicationPincode").focus();
             return false;
         }
         else {
                 document.getElementById("communicationPincode_error").innerHTML = "";
+        }        
+
+        if (document.getElementById("CommunicationPincode").value.match(pincode)) {
+                document.getElementById("communicationPincode_error").innerHTML = "";
         }
+        else {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            ret = false;
+        } 
                 
     });
 
@@ -2141,9 +2169,7 @@
 
         if (mobile != "") {
             if (document.getElementById("MobileNo1").value.substring(0, 1) == "0") {
-                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                document.getElementById("MobileNo1").value = "";
-                //document.getElementById("MobileNo1").focus();
+                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
                 return false;
             }
             else {
@@ -2151,10 +2177,16 @@
             }
 
             if (document.getElementById("MobileNo1").value.length < 10) {
-                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number length must be 10 digit";
-                document.getElementById("MobileNo1").value = "";
-                //document.getElementById("MobileNo1").focus();
+                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
                 return false;
+            }
+            else {
+                document.getElementById("MobileNo1_error").innerHTML = "";
+            }
+
+            if(!document.getElementById("MobileNo1").value.match(phoneno)) {
+                document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+               return false;
             }
             else {
                 document.getElementById("MobileNo1_error").innerHTML = "";
@@ -2179,9 +2211,7 @@
 
         if (mobile != "") {
             if (document.getElementById("MobileNo2").value.substring(0, 1) == "0") {
-                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                document.getElementById("MobileNo2").value = "";
-                //document.getElementById("MobileNo2").focus();
+                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
                 return false;
             }
             else {
@@ -2189,9 +2219,15 @@
             }
 
             if (document.getElementById("MobileNo2").value.length < 10) {
-                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number length must be 10 digit";
-                document.getElementById("MobileNo2").value = "";
-                //document.getElementById("MobileNo2").focus();
+                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                return false;
+            }
+            else {
+                document.getElementById("MobileNo2_error").innerHTML = "";
+            }
+
+            if(!document.getElementById("MobileNo2").value.match(phoneno)) {
+                document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
                 return false;
             }
             else {
@@ -2255,8 +2291,6 @@
 
         if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
             document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
-            //document.getElementById("CommunicationCityName").value = "";
-            //document.getElementById("CommunicationCityName").focus();
             return false;
         }
         else {
@@ -2265,8 +2299,6 @@
 
         if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
             document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
-            //document.getElementById("CommunicationCityName").value = "";
-            //document.getElementById("CommunicationCityName").focus();
             return false;
         }
         else {
@@ -2285,8 +2317,6 @@
         else {
             if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
                 document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
-                //document.getElementById("CommunicationAddress1").value = "";
-                //document.getElementById("CommunicationAddress1").focus();
                 return false;
             }
             else {
@@ -2298,8 +2328,6 @@
             }
             else {
                 document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
-                //document.getElementById("CommunicationAddress1").value = "";
-                //document.getElementById("CommunicationAddress1").focus();
                 return (false);
             }
         }     
@@ -2316,8 +2344,6 @@
         else {
             if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
                 document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
-                //document.getElementById("CommunicationAddress2").value = "";
-                //document.getElementById("CommunicationAddress2").focus();
                 return false;
             }
             else {
@@ -2329,8 +2355,6 @@
             }
             else {
                 document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
-                //document.getElementById("CommunicationAddress2").value = "";
-                //document.getElementById("CommunicationAddress2").focus();
                 return (false);
             }
         }       
@@ -2350,8 +2374,6 @@
 
          if (!isNaN(individualOrgName)) {
                 document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name";
-                //document.getElementById("IndividualOrgName").value = "";
-                //document.getElementById("IndividualOrgName").focus();
                 return false;
              }
             else {
@@ -2360,8 +2382,6 @@
 
         if (!individualOrgName.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org.Name";
-            //document.getElementById("IndividualOrgName").value = "";
-            //document.getElementById("IndividualOrgName").focus();
             return false;
         }
         else {
@@ -2382,8 +2402,6 @@
 
         if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
-            //document.getElementById("NameOnCard").value = "";
-            //document.getElementById("NameOnCard").focus();
             return false;
         }
         else {
@@ -2392,8 +2410,6 @@
 
         if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
-            //document.getElementById("NameOnCard").value = "";
-            //document.getElementById("NameOnCard").focus();
             return false;
         }
         else {
@@ -2408,11 +2424,11 @@
 
         if (vehicleNo == '') {
             if (rowSelected == "1") {
-                VehicleNo1_error.innerHTML = "Please Enter Vehicle Number";
+                VehicleNo1_error.innerHTML = "Vehicle Number is Required";
                 return;
             }
             else {
-                VehicleNo2_error.innerHTML = "Please Enter Vehicle Number";
+                VehicleNo2_error.innerHTML = "Vehicle Number is Required";
             }
         }
         else {
