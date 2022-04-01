@@ -218,7 +218,8 @@ namespace HPCL.Service.Services
                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
                     {"FormNumber", cust.FormNumber.ToString()},
-                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)}
+                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)},
+                    {"RBEId", ""}
 
             };
 
@@ -289,22 +290,13 @@ namespace HPCL.Service.Services
 
         public async Task<List<VehicleTypeModel>> GetVehicleTypeDetails()
         {
-            var request = new BaseEntity()
-            {
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
-            };
+            List<VehicleTypeModel> lstVehicleTypeModel = new List<VehicleTypeModel>();
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getVehicleTpe);
-
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<VehicleTypeModel> lstVehicleTypeModel = jarr.ToObject<List<VehicleTypeModel>>();
+            lstVehicleTypeModel = await _commonActionService.GetVehicleTypeDropdown();
 
             var SortedtList = lstVehicleTypeModel.OrderBy(x => x.VehicleTypeId).ToList();
+            SortedtList.Insert(0, new VehicleTypeModel() { VehicleTypeId = 0, VehicleTypeName = "--Select--" });
+
             return SortedtList;
         }
 
@@ -435,6 +427,10 @@ namespace HPCL.Service.Services
                     customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
                     customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                    if (customerCardInfo.RBEId == "null")
+                    {
+                        customerCardInfo.RBEId = "";
+                    }
                     if (customerCardInfo.RBEId == "0")
                         customerCardInfo.RBEId = "";
                     if (customerCardInfo.NoOfCards == "0")

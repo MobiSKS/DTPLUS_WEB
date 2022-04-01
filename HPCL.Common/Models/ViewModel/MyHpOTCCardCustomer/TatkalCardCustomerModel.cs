@@ -53,8 +53,6 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         [Required(ErrorMessage = "Communication Address is Required")]
         public string CommunicationAddress1 { get; set; }
-
-        [Required(ErrorMessage = "Address Proof is required")]
         public string CommunicationDialCode { get; set; }
         public string CommunicationPhonePart2 { get; set; }
         public string CommunicationPhoneNo { get; set; }
