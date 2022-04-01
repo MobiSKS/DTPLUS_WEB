@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
 
 namespace HPCL.Service.Interfaces
 {
@@ -20,5 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel customerModel);
         Task<ViewRequestedTatkalCardModel> ViewRequestedTatkalCard();
         Task<List<ViewRequestedTatkalCardResponse>> GetViewRequestedTatkalCard(int RegionalId);
+        Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer();
+        Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails);
     }
 }

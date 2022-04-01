@@ -15,6 +15,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
+using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
+using System.Linq;
 
 namespace HPCL.Service.Services
 {
@@ -230,7 +233,52 @@ namespace HPCL.Service.Services
             List<ViewRequestedTatkalCardResponse> searchList = jarr.ToObject<List<ViewRequestedTatkalCardResponse>>();
             return searchList;
         }
+        public async Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer()
+        {
+            GetTatkalCardsResponseModel GetTatkalCardsResponseModel = new GetTatkalCardsResponseModel();
+            var requestBody = new MapTatkalCardtoCustomerModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                //RegionalId = _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
+            };
 
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.maptatkalcardstotatkalcustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetTatkalCardsResponseModel = JsonConvert.DeserializeObject<GetTatkalCardsResponseModel>(response);
+     
+            return GetTatkalCardsResponseModel;
+        }
+        public async Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
+        {
+            var RequestForms = new MapTatkalCardtoCustomerUpdateModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = UpdateDetails.CustomerId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjCardMap = UpdateDetails.ObjCardMap
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForms), Encoding.UTF8, "application/json");
+            var mapResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatemaptatkalcardstotatkalcustomer);
+            JObject mapResponseObj = JObject.Parse(JsonConvert.DeserializeObject(mapResponse).ToString());
+
+            if (mapResponseObj["Status_Code"].ToString() == "200")
+            {
+                var mapResponseJarr = mapResponseObj["Data"].Value<JArray>();
+                List<SuccessResponse> mapResponseList = mapResponseJarr.ToObject<List<SuccessResponse>>();
+                return mapResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return mapResponseObj["Message"].ToString();
+            }
+        }
 
     }
 

@@ -1,5 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.CustomerFinancial.CustomerTransactionViewModel
 @using Microsoft.AspNetCore.Http;
+
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
@@ -38,7 +39,7 @@
 
                                             </div>
                                             <div class="custom_select" id="cardNoDiv" style="display:none">
-                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
 
                                             </div>
                                             <div class="custom_select" id="mobileNoDiv" style="display:none">
@@ -168,11 +169,12 @@
 </div>
 <script type="text/javascript">
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
+    var today = '@Context.Session.GetString("Today")';
+   // var today = new Date();
+    //var dd = String(today.getDate()).padStart(2, '0');
+    //var mm = String(today.getMonth() + 1).padStart(2, '0');
+    //var yyyy = today.getFullYear();
+    //today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
        //setDates();
         if ($("#rbCardNo").is(":checked")) {
@@ -239,6 +241,8 @@
             $("#lblCardNo").attr("style", "display:none");
             $("#lblMobileNo").attr("style", "display:block");
         }
+        $("#customerId_error").attr("style", "display:none");
+        $("#customerId_error").html("");
 
     });
     function isNumberKey(evt) {
@@ -329,14 +333,9 @@
         }
         else {
             if (customerId != "") {
-                if (customerId.substring(0, 1) != "2") {
+                if (!customerId.match(mappedCustomerId)){
                     $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("Customer ID should be 10 digit number starting with 2");
-                    flag = "N";
-                }
-                else if (customerId.length < 10) {
-                    $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("Customer ID should be 10 digit number");
+                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
                     flag = "N";
                 }
                 else {
@@ -348,7 +347,18 @@
             if (mobileNo != "") {
                 if (mobileNo.length < 10) {
                     $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("Invalid Mobile Number");
+                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+                    flag = "N";
+                }
+                else {
+                    $("#customerId_error").attr("style", "display:none");
+                    $("#customerId_error").html("");
+                }
+            }
+            if (cardNo != "") {
+                if (cardNo.length < 16) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
                     flag = "N";
                 }
                 else {

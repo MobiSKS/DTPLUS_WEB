@@ -13,6 +13,7 @@ using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.ResponseModel.Login;
 using System.IO;
+using System;
 
 namespace HPCL_Web.Controllers
 {
@@ -104,11 +105,13 @@ namespace HPCL_Web.Controllers
                         {
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
                             HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
+                            HttpContext.Session.SetString("RegionalId", loginRes[0].RegionalOfficeID);
                             if (loginRes[0].LoginType == "Merchant")
                             {
                                 HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
                             }
                             HttpContext.Session.SetString("UserId", loginRes[0].UserId);
+                            HttpContext.Session.SetString("Today", DateTime.Now.ToString("yyyy-MM-dd"));
                             return RedirectToAction("Profile");
                         }
 

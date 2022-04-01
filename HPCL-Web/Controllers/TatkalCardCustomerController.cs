@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.TatkalCardCustomer;
@@ -151,6 +152,23 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
-
+        public async Task<IActionResult> MapTatkalCardtoTatkalCustomer()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetMapTatkalCardtoCustomer()
+        {
+            var searchList = await _tatkalCardCustomerService.GetMapTatkalCardtoCustomer();
+            ModelState.Clear();
+            return Json(searchList);
+            //return PartialView("~/Views/TatkalCardCustomer/_TatkalCardsView.cshtml", searchList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
+        {
+            var result = await _tatkalCardCustomerService.UpdateTatkalCardtoCustomer(UpdateDetails);
+            return Json(result);
+        }
     }
 }
