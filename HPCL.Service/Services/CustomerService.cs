@@ -218,7 +218,8 @@ namespace HPCL.Service.Services
                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
                     {"FormNumber", cust.FormNumber.ToString()},
-                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)}
+                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)},
+                    {"RBEId", ""}
 
             };
 
