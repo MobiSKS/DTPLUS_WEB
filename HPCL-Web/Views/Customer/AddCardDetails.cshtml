@@ -541,6 +541,9 @@
         //    document.getElementById("RBEName_error").innerHTML = "";
         //}
 
+         //var images =JSON.parse('@Html.Raw(Json.Serialize(@Model.ObjCardDetail))');  
+         //console.log(images);
+
         var noOfCards = document.getElementById("NoOfCards").value;
         if (noOfCards == "0" || noOfCards == "") {
             document.getElementById("NoOfCards_error").innerHTML = "No Of Cards cannot be left blank";
@@ -1450,27 +1453,23 @@
 
         var result = false;
 
+
         $.ajax({
             type: 'POST',  // http method
-            url: "CheckVehicleRegistrationValid/Customer",
-            data: { RegistrationNumber: vehicleNo },  // data to submit
+            url: "CheckVechileNoUsed/Customer",
+            data: { VechileNo: vehicleNo },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') {
-                    result = true;
-                    //mycel.innerHTML = "Vehicle Registration Number is valid";
-                    mycel.innerHTML = "";
-                    console.log(jsonData);
-                    console.log(mycel.innerHTML);
+                console.log(data);
+                if (data.status == "0") {
+                    mycel.innerHTML = "Vechile No already exits";
                 }
                 else {
-                    mycel.innerHTML = "Invalid Vehicle Registration Number";
+                    mycel.innerHTML = "";
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                mycel.innerHTML = "Invalid Vehicle Registration Number";
+                mycel.innerHTML = "Vechile No already exits";
 
             }
         });
@@ -1629,20 +1628,25 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: "CheckVechileNoUsed/Customer",
-            data: { VechileNo: vehicleNo },  // data to submit
+            url: "CheckVehicleRegistrationValid/Customer",
+            data: { RegistrationNumber: vehicleNo },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
-                console.log(data);
-                if (data.status == "0") {
-                    mycel.innerHTML = "Vechile No is already exits";
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['statusCode'] == '101') {
+                    result = true;
+                    //mycel.innerHTML = "Vehicle Registration Number is valid";
+                    mycel.innerHTML = "";
+                    console.log(jsonData);
+                    console.log(mycel.innerHTML);
                 }
                 else {
-                    mycel.innerHTML = "Vechile No is avalilabe";
+                    mycel.innerHTML = "Invalid Vehicle Registration Number";
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                mycel.innerHTML = "Vechile No is already exits";
+                mycel.innerHTML = "Invalid Vehicle Registration Number";
 
             }
         });
