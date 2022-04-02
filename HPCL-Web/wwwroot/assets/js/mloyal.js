@@ -106,21 +106,17 @@ function showregAddress() {
 
     if (document.applicationForm.FormNumber.value.trim() == "") {
         document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
-        document.applicationForm.FormNumber.focus();
         return ret;
     }
     else {
 
         if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-            //document.getElementById("FormNumber").value = "";
-            document.getElementById("FormNumber").focus();
             return ret;
         }
 
         if (document.applicationForm.FormNumber.value.length < 10) {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-            document.applicationForm.FormNumber.focus();
             return ret;
         }
         else {
@@ -130,7 +126,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerTypeID.value == "0") {
         document.getElementById("customerType_error").innerHTML = "Customer Type field cannot be left blank";
-        document.applicationForm.CustomerTypeID.focus();
         return ret;
     }
     else {
@@ -139,7 +134,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerSubTypeID.value == "0" || document.applicationForm.CustomerSubTypeID.value == "") {
         document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type field cannot be left blank";
-        document.applicationForm.CustomerSubTypeID.focus();
         return ret;
     }
     else {
@@ -148,7 +142,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerDateOfApplication.value == "") {
         document.getElementById("applicationDate_error").innerHTML = "Date of Application field cannot be left blank";
-        document.applicationForm.CustomerDateOfApplication.focus();
         return ret;
     }
     else {
@@ -158,7 +151,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
         document.getElementById("zonalOffice_error").innerHTML = "Zonal Office field cannot be left blank";
-        document.applicationForm.CustomerZonalOfficeID.focus();
         return ret;
     }
     else {
@@ -167,7 +159,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerRegionID.value == "0") {
         document.getElementById("regionalOffice_error").innerHTML = "Regional Office field cannot be left blank";
-        document.applicationForm.CustomerRegionID.focus();
         return ret;
     }
     else {
@@ -176,7 +167,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerSalesAreaID.value == "0") {
         document.getElementById("salesArea_error").innerHTML = "Sales Area field cannot be left blank";
-        document.applicationForm.CustomerSalesAreaID.focus();
         return ret;
     }
     else {
@@ -185,7 +175,6 @@ function showregAddress() {
 
     if (document.applicationForm.TypeOfCustomerID.value == "0") {
         document.getElementById("typeOfCustomer_error").innerHTML = "Type Of Customer field cannot be left blank";
-        document.applicationForm.TypeOfCustomerID.focus();
         return ret;
     }
     else {
@@ -194,7 +183,6 @@ function showregAddress() {
 
     if (document.applicationForm.TierOfCustomerID.value == "0") {
         document.getElementById("tierOfCustomer_error").innerHTML = "Tier Of Customer field cannot be left blank";
-        document.applicationForm.TierOfCustomerID.focus();
         return ret;
     }
     else {
@@ -203,7 +191,6 @@ function showregAddress() {
 
     if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
         document.getElementById("salutaion_error").innerHTML = "Select Title";
-        document.applicationForm.IndividualOrgNameTitle.focus();
         return ret;
     }
     else {
@@ -213,14 +200,12 @@ function showregAddress() {
 
     if (document.applicationForm.IndividualOrgName.value.trim() == "") {
         document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
-        document.applicationForm.IndividualOrgName.focus();
         return ret;
     }
     else {
 
         if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
         else {
@@ -229,7 +214,6 @@ function showregAddress() {
 
         if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.applicationForm.IndividualOrgName.focus();
             return ret;
         }
         else {
@@ -240,13 +224,11 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
         document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
-        document.applicationForm.CustomerNameOnCard.focus();
         return ret;
     }
     else {
         if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
         else {
@@ -255,7 +237,6 @@ function showregAddress() {
 
         if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.applicationForm.CustomerNameOnCard.focus();
             return ret;
         }
         else {
@@ -266,7 +247,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerTbentityID.value == "0") {
         document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
-        document.applicationForm.CustomerTbentityID.focus();
         return ret;
     }
     else {
@@ -275,7 +255,6 @@ function showregAddress() {
 
     if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
         document.getElementById("residenceStatus_error").innerHTML = "Residential Status field cannot be left blank";
-        document.applicationForm.CustomerResidenceStatus.focus();
         return ret;
     }
     else {
@@ -312,7 +291,6 @@ function showregAddress() {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
         else {
@@ -321,7 +299,6 @@ function showregAddress() {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value.length < 10) {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN length must be 10 digit";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
         else {
@@ -331,7 +308,6 @@ function showregAddress() {
     else {
         if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
         else {
@@ -345,13 +321,11 @@ function showregAddress() {
         if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
         {
             document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
-            document.applicationForm.mobileno.focus();
             return false
         }
         else if (y.length<10)
         {
             document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
-            document.applicationForm.mobileno.focus();
             return false;
         }
         
@@ -373,7 +347,6 @@ function showregAddress() {
         if (pin.length<6)
        {
            document.getElementById("picode_error").innerHTML="Invalid Pincode, Must be six digits";
-           document.applicationForm.pincode.focus();
            return false;
        }
        else {
@@ -394,7 +367,6 @@ function showregAddress() {
     console.log(varDate);
     if (varDate > today) {
         document.getElementById("applicationDate_error").innerHTML = "Date of Application cannot be a future date";
-        //document.applicationForm.CustomerDateOfApplication.focus();
         return ret;
     }
 
@@ -403,7 +375,6 @@ function showregAddress() {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
 
@@ -430,7 +401,6 @@ function showregAddress() {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
         else {
@@ -466,12 +436,10 @@ function showregAddress() {
             //            }
             //            else {
             //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //                document.applicationForm.CustomerIncomeTaxPan.focus();
             //            }
             //        },
             //        error: function (jqXhr, textStatus, errorMessage) {
             //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //            document.applicationForm.CustomerIncomeTaxPan.focus();
             //        }
             //    });
 
@@ -481,7 +449,6 @@ function showregAddress() {
     else {
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
-            document.applicationForm.CustomerIncomeTaxPan.focus();
             return ret;
         }
         else {
@@ -571,7 +538,6 @@ function showOfficialDetails() {
 
     if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
         document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
-        document.applicationForm.CommunicationAddress1.focus();
         return false;
     }
     else {
@@ -586,7 +552,6 @@ function showOfficialDetails() {
 
     if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
         document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
-        document.applicationForm.CommunicationAddress2.focus();
         return false;
     }
     else {
@@ -601,7 +566,6 @@ function showOfficialDetails() {
 
     if (document.applicationForm.CommunicationCity.value.trim() == "") {
         document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
-        document.applicationForm.CommunicationCity.focus();
         return false;
     }
     else {
@@ -616,48 +580,53 @@ function showOfficialDetails() {
 
     if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
         document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
-        document.applicationForm.CommunicationPinCode.focus()
         return (false);
     }
     else {
-        if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+        if (document.applicationForm.CommunicationPinCode.value.substring(0, 1) == "0") {
             document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            return false;
-        }
-
-        var pin = document.applicationForm.CommunicationPinCode.value;
-        if (pin.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            document.applicationForm.CommunicationPinCode.focus();
             return false;
         }
         else {
             document.getElementById("comm_pincode_error").innerHTML = "";
         }
+
+        if (document.applicationForm.CommunicationPinCode.value.length < 6) {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
     }
 
     if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
         document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
-        document.applicationForm.CommunicationStateID.focus();
         return false;
     }
     else {
         document.getElementById("comm_states_error").innerHTML = "";
     }
-
+    console.log('Before District');
     if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
         document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-        document.applicationForm.CommunicationDistrictId.focus();
         return false;
     }
     else {
         document.getElementById("comm_district_error").innerHTML = "";
     }
-
+    console.log('After District');
 
     //if (document.applicationForm.CommunicationDialCode.value == "") {
     //    document.getElementById("comm_officePhone_error").innerHTML = "Dial Code is required";
-    //    document.applicationForm.CommunicationDialCode.focus();
     //    return false;
     //}
 
@@ -666,7 +635,6 @@ function showOfficialDetails() {
 
         if (stdCode.length < 2 || stdCode.length > 4) {
             document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.CommunicationDialCode.focus();
             return false;
         }
         else {
@@ -682,7 +650,6 @@ function showOfficialDetails() {
     if (phno != "") {
         if (phno.charAt(0) == "0") {
             document.getElementById("comm_officePhone_error").innerHTML = "Phone no cannot start with 0";
-            document.applicationForm.CommunicationPhoneNo.focus();
             return false;
         }
         else {
@@ -691,7 +658,6 @@ function showOfficialDetails() {
 
         if (phno.length < 6 || phno.length > 8) {
             document.getElementById("comm_officePhone_error").innerHTML = "Phone no length 6 to 8 digits";
-            document.applicationForm.CommunicationPhoneNo.focus();
             return false;
         }
         else {
@@ -709,7 +675,6 @@ function showOfficialDetails() {
 
         if (faxCode.length < 2 || faxCode.length > 4) {
             document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.CommunicationFaxCode.focus();
             return false;
         }
         else {
@@ -725,7 +690,6 @@ function showOfficialDetails() {
     if (faxphno != "") {
         if (phno.charAt(0) == "0") {
             document.getElementById("CommunicationFax_error").innerHTML = "Fax no cannot start with 0";
-            document.applicationForm.CommunicationFax.focus();
             return false;
         }
         else {
@@ -734,7 +698,6 @@ function showOfficialDetails() {
 
         if (faxphno.length < 6 || faxphno.length > 8) {
             document.getElementById("CommunicationFax_error").innerHTML = "Fax no length 6 to 8 digits";
-            document.applicationForm.CommunicationFax.focus();
             return false;
         }
         else {
@@ -746,10 +709,9 @@ function showOfficialDetails() {
         document.getElementById("CommunicationFax_error").innerHTML = "";
     }
 
-
+    console.log('Before CommunicationMobileNumber check');
     if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
         document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
-        document.applicationForm.CommunicationMobileNumber.focus();
         return false;
 
     }
@@ -759,16 +721,30 @@ function showOfficialDetails() {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
 
         if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
     }
+    console.log('After CommunicationMobileNumber check');
 
     if (document.applicationForm.CommunicationEmail.value.trim() == "") {
         document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
-        document.applicationForm.CommunicationEmail.focus();
         return (false);
     }
     else {
@@ -778,7 +754,6 @@ function showOfficialDetails() {
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            document.applicationForm.CommunicationEmail.focus();
             return (false);
         }
     }
@@ -804,7 +779,6 @@ function showOfficialDetails() {
 
         if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
             document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
-            document.getElementById("PerOrRegAddress1").focus();
             return false;
         }
         else {
@@ -819,7 +793,6 @@ function showOfficialDetails() {
 
         if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
             document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
-            document.getElementById("PerOrRegAddress2").focus();
             return false;
         }
         else {
@@ -835,7 +808,6 @@ function showOfficialDetails() {
 
         if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
             document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
-            document.getElementById("PerOrRegAddressCity").focus();
             return false;
         }
         else {
@@ -851,25 +823,37 @@ function showOfficialDetails() {
 
         if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
             document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
-            document.getElementById("PerOrRegAddressPinCode").focus()
             return (false);
         }
         else {
-            var pin = document.getElementById("PerOrRegAddressPinCode").value;
-            if (pin.length < 6) {
+            if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
                 document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-                document.getElementById("PerOrRegAddressPinCode").focus();
                 return false;
             }
             else {
                 document.getElementById("perma_pincode_error").innerHTML = "";
+            }
+
+            if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
+                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                return false;
+            }
+            else {
+                document.getElementById("perma_pincode_error").innerHTML = "";
+            }
+
+            if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+                document.getElementById("perma_pincode_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                return false;
             }
         }
 
 
         if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
             document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-            document.getElementById("CommunicationDistrictId").focus();
             return false;
         }
         else {
@@ -879,7 +863,6 @@ function showOfficialDetails() {
 
         if (document.getElementById("PerOrRegAddressStateID").value == "0") {
             document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
-            document.getElementById("PerOrRegAddressStateID").focus();
             return false;
         }
         else {
@@ -889,7 +872,6 @@ function showOfficialDetails() {
 
         if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
             document.getElementById("perma_district_error").innerHTML = "District field cannot be left blank";
-            document.getElementById("PermanentDistrictId").focus();
             return false;
         }
         else {
@@ -900,13 +882,11 @@ function showOfficialDetails() {
         ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
         //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
         //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
-        //    document.applicationForm.PerOrRegAddressDialCode.focus();
         //    return false;
         //}
         ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
         //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
         //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
-        //    document.applicationForm.PerOrRegAddressPhoneNumber.focus();
         //    return false;
         //}
         //else {
@@ -952,7 +932,6 @@ function showCardDetails() {
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
         document.getElementById("officialTitle_error").innerHTML = "Select Title";
-        document.applicationForm.KeyOffTitle.focus();
         return false;
     }
     else {
@@ -961,7 +940,6 @@ function showCardDetails() {
 
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
         document.getElementById("official_fName_error").innerHTML = "First Name is required";
-        document.applicationForm.KeyOffFirstName.focus();
         return false;
     }
     else {
@@ -985,7 +963,6 @@ function showCardDetails() {
     if (document.applicationForm.KeyOffLastName.value.trim() != "") {
         if (!isNaN(document.applicationForm.KeyOffLastName.value.trim())) {
             document.getElementById("KeyOffLastName_error").innerHTML = "Last Name cannot be a number";
-            document.applicationForm.KeyOffLastName.focus();
             return false;
         }
         else {
@@ -999,7 +976,6 @@ function showCardDetails() {
     if (document.applicationForm.KeyOffMiddleName.value.trim() != "") {
         if (!isNaN(document.applicationForm.KeyOffMiddleName.value.trim())) {
             document.getElementById("KeyOffMiddleName_error").innerHTML = "Middle Name cannot be a number";
-            document.applicationForm.KeyOffMiddleName.focus();
             return false;
         }
         else {
@@ -1017,7 +993,6 @@ function showCardDetails() {
 
         if (faxCode.length < 2 || faxCode.length > 4) {
             document.getElementById("KeyOffFaxCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.KeyOffFaxCode.focus();
             return false;
         }
         else {
@@ -1033,7 +1008,6 @@ function showCardDetails() {
     if (faxno != "") {
         if (faxno.charAt(0) == "0") {
             document.getElementById("KeyOffFax_error").innerHTML = "Fax no cannot start with 0";
-            document.applicationForm.KeyOffFax.focus();
             return false;
         }
         else {
@@ -1042,7 +1016,6 @@ function showCardDetails() {
 
         if (faxno.length < 6 || faxno.length > 8) {
             document.getElementById("KeyOffFax_error").innerHTML = "Fax no length 6 to 8 digits";
-            document.applicationForm.PermanentFax.focus();
             return false;
         }
         else {
@@ -1060,7 +1033,6 @@ function showCardDetails() {
 
         if (stdCode.length < 2 || stdCode.length > 4) {
             document.getElementById("KeyOffPhoneCode_error").innerHTML = "Length 2 to 4 digits";
-            document.applicationForm.KeyOffPhoneCode.focus();
             return false;
         }
         else {
@@ -1076,7 +1048,6 @@ function showCardDetails() {
     if (phno != "") {
         if (phno.charAt(0) == "0") {
             document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no cannot start with 0";
-            document.applicationForm.KeyOffPhoneNumber.focus();
             return false;
         }
         else {
@@ -1085,7 +1056,6 @@ function showCardDetails() {
 
         if (phno.length < 6 || phno.length > 8) {
             document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no length 6 to 8 digits";
-            document.applicationForm.KeyOffPhoneNumber.focus();
             return false;
         }
         else {
@@ -1104,14 +1074,12 @@ function showCardDetails() {
         }
         else {
             document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            document.applicationForm.KeyOffEmail.focus();
             return (false);
         }
     }
 
     if (document.applicationForm.KeyOffMobileNumber.value.trim() == "") {
         document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
-        document.applicationForm.KeyOffMobileNumber.focus();
         return false;
     }
     else {
@@ -1119,16 +1087,30 @@ function showCardDetails() {
             document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
 
         if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
             document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOffMobileNumber").value.match(phoneno)) {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+
     }
 
     if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
         document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
-        document.applicationForm.KeyOffDesignation.focus();
         return false;
     }
     else {
