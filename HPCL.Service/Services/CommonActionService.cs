@@ -1141,5 +1141,15 @@ namespace HPCL.Service.Services
             var sortedtList = RecordTypeList.OrderBy(x => x.entityId).ToList();
             return sortedtList;
         }
+
+        public async Task<string> changeDateFormat(string date)
+        {
+            string modifedDate = "";
+
+            string[] DateArr = date.Split("-");
+            modifedDate = DateArr[2] + '-' + DateArr[1] + '-' + DateArr[0];
+
+            return modifedDate;
+        }
     }
 }
