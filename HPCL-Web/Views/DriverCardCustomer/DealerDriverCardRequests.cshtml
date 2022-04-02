@@ -82,7 +82,6 @@
         var merchantId = document.getElementById("MerchantId").value;
         if (merchantId == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
-            $("#merchantId").focus;
             return (false);
         }
         else {
@@ -91,13 +90,11 @@
 
         if (document.getElementById("MerchantId").value.substring(0, 1) != "3") {
             document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantId").focus();
             return (false);
         }
 
         if (document.getElementById("MerchantId").value.length < 10) {
             document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantId").focus();
             return (false);
         }
 
@@ -117,25 +114,21 @@
 
                     if (data == "Failed to load Merchant Details") {
                         document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-                        document.getElementById("MerchantId").value = "";
                         localStorage.setItem("MERCHANTIDFOUND", "0");
                     }
                 }
                 else {
                     document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-                    document.getElementById("MerchantId").value = "";
                     localStorage.setItem("MERCHANTIDFOUND", "0");
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-                document.getElementById("MerchantId").value = "";
                 localStorage.setItem("MERCHANTIDFOUND", "0");
             },
             statusCode: {
                 1024: function () {
                     document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-                    document.getElementById("MerchantId").value = "";
                     localStorage.setItem("MERCHANTIDFOUND", "0");
                 }
             }
@@ -152,36 +145,72 @@
 
         if (document.getElementById('MerchantId').value == "") {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
-            document.getElementById('MerchantId').focus();
             ret = false;
         }
-        else {
-            if (localStorage.getItem("MERCHANTIDFOUND") == 0) {
-                document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
+        else 
+        {
+            if (document.getElementById("MerchantId").value.substring(0, 1) != "3") 
+            {
+                document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
                 ret = false;
             }
-            else {
-                document.getElementById("MerchantId_error").innerHTML = "";
+            else 
+            {
+                if (document.getElementById("MerchantId").value.length < 10) 
+                {
+                   document.getElementById("MerchantId_error").innerHTML = "Invalid Merchant ID";
+                   ret = false;
+                }
+                else 
+                {
+                    if (localStorage.getItem("MERCHANTIDFOUND") == 0) 
+                    {
+                        document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("MerchantId_error").innerHTML = "";
+                    }
+                }
             }
-        }
+
+         }
 
 
-        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") {
+        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") 
+        {
             document.getElementById("NoofCards_error").innerHTML = "No of Cards cannot be left blank";
-            document.getElementById('NoofCards').focus();
             ret = false;
         }
-        else {
+        else 
+        {
             if (Number(document.getElementById('NoofCards').value) < 10 || Number(document.getElementById('NoofCards').value) > 999) {
                 document.getElementById("NoofCards_error").innerHTML = "No. Of Driver Cards should be 10 to 999";
-                document.getElementById('NoofCards').focus();
                 ret = false;
             }
-            else {
+            else 
+            {
                 document.getElementById("NoofCards_error").innerHTML = "";
             }
         }
 
         return ret;
     }
+
+    $("#NoofCards").on("blur", function () {
+        //debugger;
+        if (document.getElementById('NoofCards').value == "" || document.getElementById('NoofCards').value == "0") {
+            document.getElementById("NoofCards_error").innerHTML = "No of Cards cannot be left blank";
+        }
+        else {
+            if (Number(document.getElementById('NoofCards').value) < 10 || Number(document.getElementById('NoofCards').value) > 999) {
+                document.getElementById("NoofCards_error").innerHTML = "No. Of Driver Cards should be 10 to 999";
+            }
+            else {
+                document.getElementById("NoofCards_error").innerHTML = "";
+            }
+        }
+
+    });
 </script>
