@@ -1122,7 +1122,6 @@
 
             if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
                 document.getElementById("comm_address1_error").innerHTML = "Address1 field cannot be left blank";
-                document.applicationForm.CommunicationAddress1.focus();
                 return false;
             }
             else {
@@ -1131,7 +1130,6 @@
 
             if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
                 document.getElementById("comm_address2_error").innerHTML = "Address2 field cannot be left blank";
-                document.applicationForm.CommunicationAddress2.focus();
                 return false;
             }
             else {
@@ -1140,7 +1138,6 @@
 
             if (document.applicationForm.CommunicationCity.value.trim() == "") {
                 document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
-                document.applicationForm.CommunicationCity.focus();
                 return false;
             }
             else {
@@ -1149,24 +1146,36 @@
 
             if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
                 document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
-                document.applicationForm.CommunicationPinCode.focus()
                 return (false);
             }
             else {
-                var pin = document.applicationForm.CommunicationPinCode.value;
-                if (pin.length < 6) {
-                    document.getElementById("comm_pincode_error").innerHTML = "Pin code, Must be six digits";
-                    document.applicationForm.CommunicationPinCode.focus();
+                if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+                    document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
                     return false;
                 }
                 else {
                     document.getElementById("comm_pincode_error").innerHTML = "";
                 }
+
+                if (document.getElementById("CommunicationPinCode").value.length < 6) {
+                    document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                    return false;
+                }
+                else {
+                    document.getElementById("comm_pincode_error").innerHTML = "";
+                }
+
+                if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
+                    document.getElementById("comm_pincode_error").innerHTML = "";
+                }
+                else {
+                    document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                    return false;
+                }
             }
 
             if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
                 document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
-                document.applicationForm.CommunicationStateID.focus();
                 return false;
             }
             else {
@@ -1175,7 +1184,6 @@
 
             if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
                 document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-                document.applicationForm.CommunicationDistrictId.focus();
                 return false;
             }
             else {
@@ -1186,44 +1194,40 @@
 
             if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
-                document.applicationForm.CommunicationMobileNumber.focus();
                 return false;
 
             }
             else {
-                //y = document.applicationForm.CommunicationMobileNumber.value.trim();
-                //if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
-                //    document.applicationForm.CommunicationMobileNumber.focus();
-                //    return false
-                //}
-                //else if (y.length < 10 || y.length > 10) {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
-                //    document.applicationForm.CommunicationMobileNumber.focus();
-                //    return false;
-                //}
-
-                //else {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                //}
+                
                 if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
                     document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                    //document.getElementById("CommunicationMobileNumber").value = "";
-                    //document.getElementById("CommunicationMobileNumber").focus();
                     return false;
+                }
+                else
+                {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
                 }
 
                 if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
                     document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                    //document.getElementById("CommunicationMobileNumber").value = "";
-                    //document.getElementById("CommunicationMobileNumber").focus();
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                }
+
+                if (document.applicationForm.CommunicationMobileNumber.value.match(phoneno)) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                }
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                     return false;
                 }
             }
 
             if (document.applicationForm.CommunicationEmail.value.trim() == "") {
                 document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
-                document.applicationForm.CommunicationEmail.focus();
                 return (false);
             }
             else {
@@ -1233,7 +1237,6 @@
                 }
                 else {
                     document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-                    document.applicationForm.CommunicationEmail.focus();
                     return (false);
                 }
             }
@@ -1373,8 +1376,6 @@
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            //document.getElementById("CommunicationEmail").value = "";
-            //document.getElementById("CommunicationEmail").focus();
             return (false);
         }
 
@@ -1437,15 +1438,25 @@
 
         if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNumber").value = "";
-            //document.getElementById("CommunicationMobileNumber").focus();
             return false;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
         if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNumber").value = "";
-            //document.getElementById("CommunicationMobileNumber").focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
 
@@ -1660,8 +1671,7 @@
 
     $("#CommunicationPinCode").on("blur", function () {
         //debugger;
-        var communicationPinCode = document.getElementById("CommunicationPinCode").value;
-        if (communicationPinCode == "") {
+        if (document.getElementById("CommunicationPinCode").value == "") {
             document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
             return (false);
         }
@@ -1671,23 +1681,32 @@
 
         if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
             document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            document.getElementById("CommunicationPinCode").value = "";
-            document.getElementById("CommunicationPinCode").focus();
             return false;
+        }
+        else {
+             document.getElementById("comm_pincode_error").innerHTML = "";
         }
 
         if (document.getElementById("CommunicationPinCode").value.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Pin code length must be 6 digit";
-            document.getElementById("CommunicationPinCode").value = "";
-            document.getElementById("CommunicationPinCode").focus();
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+             document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
             return false;
         }
     });
 
     $("#PerOrRegAddressPinCode").on("blur", function () {
         //debugger;
-        var PinCode = document.getElementById("PerOrRegAddressPinCode").value;
-        if (PinCode == "") {
+        if (document.getElementById("PerOrRegAddressPinCode").value == "") {
             document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
             return (false);
         }
@@ -1697,17 +1716,28 @@
 
         if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
             document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            document.getElementById("PerOrRegAddressPinCode").value = "";
-            document.getElementById("PerOrRegAddressPinCode").focus();
             return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
         }
 
         if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
             document.getElementById("perma_pincode_error").innerHTML = "Pin code length must be 6 digit";
-            document.getElementById("PerOrRegAddressPinCode").value = "";
-            document.getElementById("PerOrRegAddressPinCode").focus();
             return false;
         }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+
     });
 
     $("#KeyOffMobileNumber").on("blur", function () {
@@ -1723,15 +1753,25 @@
 
         if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0") {
             document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            document.getElementById("KeyOffMobileNumber").value = "";
-            document.getElementById("KeyOffMobileNumber").focus();
             return false;
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
         }
 
         if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
             document.getElementById("official_mobile_error").innerHTML = "Mobile Number length must be 10 digit";
-            document.getElementById("KeyOffMobileNumber").value = "";
-            document.getElementById("KeyOffMobileNumber").focus();
+            return false;
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOffMobileNumber").value.match(phoneno)) {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
     });
@@ -1748,7 +1788,6 @@
             }
             else {
                 document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-                document.getElementById("KeyOffEmail").focus();
                 return (false);
             }
         }
@@ -1849,8 +1888,6 @@
 
         if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.getElementById("IndividualOrgName").value = "";
-            document.getElementById("IndividualOrgName").focus();
             return false;
         }
         else {
@@ -1859,8 +1896,6 @@
 
         if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.getElementById("IndividualOrgName").value = "";
-            document.getElementById("IndividualOrgName").focus();
             return false;
         }
         else {
@@ -1881,8 +1916,6 @@
 
         if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.getElementById("CustomerNameOnCard").value = "";
-            document.getElementById("CustomerNameOnCard").focus();
             return false;
         }
         else {
@@ -1891,8 +1924,6 @@
 
         if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.getElementById("CustomerNameOnCard").value = "";
-            document.getElementById("CustomerNameOnCard").focus();
             return false;
         }
         else {
@@ -1998,8 +2029,6 @@
         else {
             if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
                 document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress1").value = "";
-                //document.getElementById("CommunicationAddress1").focus();
                 return false;
             }
             else {
@@ -2018,8 +2047,6 @@
         else {
             if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
                 document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress2").value = "";
-                //document.getElementById("CommunicationAddress2").focus();
                 return false;
             }
             else {
@@ -2033,8 +2060,6 @@
         if (document.getElementById("CommunicationAddress3").value.trim() != "") {
             if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) {
                 document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress3").value = "";
-                //document.getElementById("CommunicationAddress3").focus();
                 return false;
             }
             else {
@@ -2056,8 +2081,6 @@
         else {
             if (!isNaN(document.getElementById("CommunicationCity").value.trim())) {
                 document.getElementById("comm_city_error").innerHTML = "Invalid City";
-                document.getElementById("CommunicationCity").value = "";
-                //document.getElementById("CommunicationCity").focus();
                 return false;
             }
             else {
@@ -2076,8 +2099,6 @@
         else {
             if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim())) {
                 document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress1").value = "";
-                //document.getElementById("PerOrRegAddress1").focus();
                 return false;
             }
             else {
@@ -2096,8 +2117,6 @@
         else {
             if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim())) {
                 document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress2").value = "";
-                //document.getElementById("PerOrRegAddress2").focus();
                 return false;
             }
             else {
@@ -2111,8 +2130,6 @@
         if (document.getElementById("PerOrRegAddress3").value.trim() != "") {
             if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim())) {
                 document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress3").value = "";
-                //document.getElementById("PerOrRegAddress3").focus();
                 return false;
             }
             else {
@@ -2135,8 +2152,6 @@
         else {
             if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim())) {
                 document.getElementById("perma_city_error").innerHTML = "Invalid City";
-                document.getElementById("PerOrRegAddressCity").value = "";
-                //document.getElementById("PerOrRegAddressCity").focus();
                 return false;
             }
             else {
@@ -2150,8 +2165,6 @@
         if (document.getElementById("CommunicationLocation").value.trim() != "") {
             if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) {
                 document.getElementById("comm_location_error").innerHTML = "Invalid Location";
-                document.getElementById("CommunicationLocation").value = "";
-                //document.getElementById("CommunicationLocation").focus();
                 return false;
             }
             else {
@@ -2168,8 +2181,6 @@
         if (document.getElementById("PerOrRegAddressLocation").value.trim() != "") {
             if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim())) {
                 document.getElementById("perma_location_error").innerHTML = "Invalid Location";
-                document.getElementById("PerOrRegAddressLocation").value = "";
-                //document.getElementById("PerOrRegAddressLocation").focus();
                 return false;
             }
             else {
@@ -2191,8 +2202,6 @@
         else {
             if (!isNaN(document.getElementById("KeyOffFirstName").value.trim())) {
                 document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
-                document.getElementById("KeyOffFirstName").value = "";
-                document.getElementById("KeyOffFirstName").focus();
                 return false;
             }
             else {
@@ -2201,8 +2210,6 @@
 
             if (!document.getElementById("KeyOffFirstName").value.match(nameWithSpaceCheck)) {
                 document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
-                document.getElementById("KeyOffFirstName").value = "";
-                document.getElementById("KeyOffFirstName").focus();
                 return false;
             }
             else {
@@ -2222,8 +2229,6 @@
         else {
             if (!isNaN(document.getElementById("KeyOffDesignation").value.trim())) {
                 document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
-                document.getElementById("KeyOffDesignation").value = "";
-                document.getElementById("KeyOffDesignation").focus();
                 return false;
             }
             else {
@@ -2232,8 +2237,6 @@
 
             if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck)) {
                 document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
-                document.getElementById("KeyOffDesignation").value = "";
-                document.getElementById("KeyOffDesignation").focus();
                 return false;
             }
             else {
