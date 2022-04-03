@@ -233,19 +233,17 @@ namespace HPCL.Service.Services
             return custModel;
         }
 
-
-        public async Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
+        public async Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(string RegionalId)
         {
             var searchBody = new GetAllUnAllocatedOTCCardsRequestModel();
-            if (entity.RegionalId != null)
+            if (!string.IsNullOrEmpty(RegionalId))
             {
                 searchBody = new GetAllUnAllocatedOTCCardsRequestModel
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    RegionalId = entity.RegionalId,
-
+                    RegionalId = RegionalId
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
