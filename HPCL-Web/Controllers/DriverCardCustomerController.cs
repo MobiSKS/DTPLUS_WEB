@@ -209,7 +209,7 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> GetAllViewDriverCard(RequestForViewDriverCard entity)
         {
             var modals = await _driverCardCustomerService.GetAllViewDriverCard(entity);
-            return PartialView("~/Views/MyHpOTCCardCustomer/_ViewOTCCardsTable.cshtml", modals);
+            return PartialView("~/Views/DriverCardCustomer/_ViewRequestDriverCardTable.cshtml", modals);
         }
 
         public async Task<IActionResult> ViewRequestDriverCard()
