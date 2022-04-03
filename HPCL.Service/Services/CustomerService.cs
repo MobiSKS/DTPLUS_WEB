@@ -489,6 +489,13 @@ namespace HPCL.Service.Services
 
             feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
 
+            foreach (HPCL.Common.Models.ViewModel.Customer.CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                {
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                }
+            }
 
             #region Create Request Info
 
