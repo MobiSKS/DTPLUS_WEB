@@ -258,12 +258,10 @@ namespace HPCL.Service.Services
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
-            //string fromDate = "", toDate = "";
-
             if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
             {
-                string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
-                string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
+                merchaApprovalMdl.FromDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
+                merchaApprovalMdl.ToDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
             }
             else
             {

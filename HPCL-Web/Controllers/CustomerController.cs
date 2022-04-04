@@ -615,7 +615,7 @@ namespace HPCL_Web.Controllers
             //}
         }
 
-        public async Task<IActionResult> SuccessUploadRedirect(int customerReferenceNo)
+        public async Task<IActionResult> SuccessUploadRedirect(string customerReferenceNo)
         {
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
@@ -700,7 +700,7 @@ namespace HPCL_Web.Controllers
             return Json(new { customer = Customer });
         }
 
-        public async Task<IActionResult> SuccessAddCardRedirect(int customerReferenceNo)
+        public async Task<IActionResult> SuccessAddCardRedirect(string customerReferenceNo)
         {
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();

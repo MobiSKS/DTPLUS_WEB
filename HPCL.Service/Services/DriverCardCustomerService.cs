@@ -310,7 +310,7 @@ namespace HPCL.Service.Services
 
         }
 
-        public async Task<List<ViewDriverCardResponse>> GetAllViewDriverCard(RequestForViewDriverCard entity)
+        public async Task<ViewDriverCardResponse> GetAllViewDriverCard(RequestForViewDriverCard entity)
         {
             var searchBody = new RequestForViewDriverCard();
             if (entity.RegionalId != null)
@@ -337,10 +337,9 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewRequestDriverCard);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewDriverCardResponse> searchList = jarr.ToObject<List<ViewDriverCardResponse>>();
-            return searchList;
+            ViewDriverCardResponse viewDriverCardResponse = JsonConvert.DeserializeObject<ViewDriverCardResponse>(response);
+
+            return viewDriverCardResponse;
         }
 
         public async Task<RequestForDriverCardModel> ViewRequestDriverCard()

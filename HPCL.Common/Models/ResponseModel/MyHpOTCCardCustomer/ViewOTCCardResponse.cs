@@ -9,11 +9,11 @@ namespace HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer
     {
         public ViewOTCCardResponse()
         {
-            Data = new List<ViewOTCCardResponseDetails>();
+            Data = new List<ViewOTCCardResponseData>();
         }
-        public List<ViewOTCCardResponseDetails> Data { get; set; }
+        public List<ViewOTCCardResponseData> Data { get; set; }
     }
-    public class ViewOTCCardResponseDetails
+    public class ViewOTCCardResponseData
     {
         public string ZonalOfficeName { get; set; }
 

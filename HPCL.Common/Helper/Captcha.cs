@@ -69,19 +69,22 @@ namespace HPCL.Common.Helper
 
                 Color GetRandomDeepColor()
                 {
-                    int redlow = 160, greenLow = 100, blueLow = 160;
-                    return Color.FromArgb(rand.Next(redlow), rand.Next(greenLow), rand.Next(blueLow));
+                    //int redlow = 160, greenLow = 100, blueLow = 160;
+                    //return Color.FromArgb(rand.Next(redlow), rand.Next(greenLow), rand.Next(blueLow));
+                    return Color.FromArgb(0, 0, 0);
                 }
 
                 Color GetRandomLightColor()
                 {
                     int low = 180, high = 255;
 
-                    int nRend = rand.Next(high) % (high - low) + low;
-                    int nGreen = rand.Next(high) % (high - low) + low;
-                    int nBlue = rand.Next(high) % (high - low) + low;
+                    //int nRend = rand.Next(high) % (high - low) + low;
+                    //int nGreen = rand.Next(high) % (high - low) + low;
+                    //int nBlue = rand.Next(high) % (high - low) + low;
 
-                    return Color.FromArgb(nRend, nGreen, nBlue);
+                    //return Color.FromArgb(nRend, nGreen, nBlue);
+
+                    return Color.FromArgb(255, 255, 255);
                 }
 
                 void DrawCaptchaCode()
