@@ -112,7 +112,7 @@
         public static string getVehicleTpe = "api/dtplus/customer/get_vehicle_type";
         public static string uplaodCustomerKyc = "api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
-        public static string getCustomerRbeId = "api/dtplus/customer/get_rbe_id";
+        
         public static string searchCustRefUrl = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "api/dtplus/customer/upload_customer_kyc";
@@ -262,9 +262,10 @@
 
         #endregion
 
-        #region "Manage RBE"
+        #region RBE
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
+        public static string getCustomerRbeId = "api/dtplus/RBE/get_rbe_id";
         #endregion
 
         #region "Application Form Data Entry"
