@@ -1810,7 +1810,7 @@
             }
         }
 
-        if (document.getElementById("VehicleNo1").value.trim() != "" && document.getElementById("VehicleNo2").value.trim() != "") 
+        if (document.getElementById("VehicleNo1").value.trim() != "" || document.getElementById("VehicleNo2").value.trim() != "") 
         {
             if (document.getElementById("VehicleNo1").value == document.getElementById("VehicleNo2").value) 
             {
@@ -1828,7 +1828,15 @@
                     }
                     else 
                     {
-                        document.getElementById("VehicleNo1_error").innerHTML = "";
+                        if (localStorage.getItem("VEHICLEADYUSED1") == 0) 
+                        {
+                            document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No already exists";
+                            ret = false;
+                        }
+                        else 
+                        {
+                            document.getElementById("VehicleNo1_error").innerHTML = "";
+                        }
                     }
                 }
                 else 
@@ -1845,7 +1853,15 @@
                     }
                     else 
                     {
-                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                        if (localStorage.getItem("VEHICLEADYUSED2") == 0) 
+                        {
+                            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No already exists";
+                            ret = false;
+                        }
+                        else 
+                        {
+                            document.getElementById("VehicleNo2_error").innerHTML = "";
+                        }
                     }
                 }
                 else 
@@ -2594,21 +2610,60 @@
         {
             localStorage.setItem("VEHICLEADYUSED2", "1");
         }
-
-        if (vehicleNo == '') 
+            
+        if (vehicleNo != '') 
         {
-            if (rowSelected == "1") 
-            {
-                VehicleNo1_error.innerHTML = "Vehicle Number is Required";
-                return;
-            }
-            else 
-            {
-                VehicleNo2_error.innerHTML = "Vehicle Number is Required";
-                return;
-            }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: "CheckVechileNoUsed/MyHpOTCCardCustomer",
+                data: { VechileNo: vehicleNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) 
+                {
+                    console.log(data);
+                    if (data.status == "0") 
+                    {
+                        if (rowSelected == "1") 
+                        {
+                            VehicleNo1_error.innerHTML = "Vechile No already exists";
+                            localStorage.setItem("VEHICLEADYUSED1", "0");
+                        }
+                        else 
+                        {
+                            VehicleNo2_error.innerHTML = "Vechile No already exists";
+                            localStorage.setItem("VEHICLEADYUSED2", "0");
+                        }
+                    }
+                    else 
+                    {
+                        if (rowSelected == "1") 
+                        {
+                            VehicleNo1_error.innerHTML = "";
+                        }
+                        else 
+                        {
+                            VehicleNo2_error.innerHTML = "";
+                        }
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
+                {
+                    if (rowSelected == "1") 
+                    {
+                        VehicleNo1_error.innerHTML = "Vechile No already exists";
+                    }
+                    else 
+                    {
+                        VehicleNo2_error.innerHTML = "Vechile No already exists";
+                    }
+
+                }
+            });
+
         }
-        else {
+        else
+        {
             if (rowSelected == "1") {
                 VehicleNo1_error.innerHTML = "";
             }
@@ -2616,52 +2671,6 @@
                 VehicleNo2_error.innerHTML = "";
             }
         }
-
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: "CheckVechileNoUsed/MyHpOTCCardCustomer",
-            data: { VechileNo: vehicleNo },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) 
-            {
-                console.log(data);
-                if (data.status == "0") 
-                {
-                    if (rowSelected == "1") 
-                    {
-                        VehicleNo1_error.innerHTML = "Vechile No already exits";
-                    }
-                    else 
-                    {
-                        VehicleNo2_error.innerHTML = "Vechile No already exits";
-                    }
-                }
-                else 
-                {
-                    if (rowSelected == "1") 
-                    {
-                        VehicleNo1_error.innerHTML = "";
-                    }
-                    else 
-                    {
-                        VehicleNo2_error.innerHTML = "";
-                    }
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                if (rowSelected == "1") 
-                {
-                    VehicleNo1_error.innerHTML = "Vechile No already exits";
-                }
-                else 
-                {
-                    VehicleNo2_error.innerHTML = "Vechile No already exits";
-                }
-
-            }
-        });
 
     }
 
