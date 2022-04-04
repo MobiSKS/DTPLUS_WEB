@@ -233,7 +233,7 @@ namespace HPCL.Service.Services
             return custModel;
         }
 
-        public async Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(string RegionalId)
+        public async Task<ViewOTCCardResponse> GetAllViewCardsForOtcCard(string RegionalId)
         {
             var searchBody = new GetAllUnAllocatedOTCCardsRequestModel();
             if (!string.IsNullOrEmpty(RegionalId))
@@ -259,10 +259,8 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewOTCCardRequest);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewOTCCardResponse> searchList = jarr.ToObject<List<ViewOTCCardResponse>>();
-            return searchList;
+            ViewOTCCardResponse viewOTCCardResponse = JsonConvert.DeserializeObject<ViewOTCCardResponse>(response);
+            return viewOTCCardResponse;
         }
 
 

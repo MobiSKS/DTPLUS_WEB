@@ -5,7 +5,15 @@ using System.Text;
 
 namespace HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer
 {
-    public class ViewOTCCardResponse
+    public class ViewOTCCardResponse : CommonResponseBase
+    {
+        public ViewOTCCardResponse()
+        {
+            Data = new List<ViewOTCCardResponseDetails>();
+        }
+        public List<ViewOTCCardResponseDetails> Data { get; set; }
+    }
+    public class ViewOTCCardResponseDetails
     {
         public string ZonalOfficeName { get; set; }
 
