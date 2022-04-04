@@ -272,6 +272,10 @@
             document.getElementById("rbtnCardless").checked = false;
         }
        
+        if($("#dvRemarks").html().trim()!="")
+        {
+          LoadCardDeatils();
+        }
     });
 
     function setDates() {
@@ -710,6 +714,56 @@
         //$('#FeePaymentDate').attr("disabled", true);
         //$('#FeePaymentNo').attr("disabled", true);
         //$('#FeePaymentDate').attr("disabled", true);
+
+        if($("#dvRemarks").html().trim()!="")
+        {
+             @{
+                int htmlcount = -1;
+                string VehicleNo = "";
+             };
+        if (customerTypeId == "901" || customerTypeId == "906") 
+        {
+
+            $('#NoOfCardsTbl td:nth-child(2) input').filter(function() {
+                 @{htmlcount=htmlcount+1;}
+                //var VehicleNo = $(this).val().trim();
+
+                @for (var i = 0; i < Model.ObjCardDetail.Count; i++)
+                {
+                    if(htmlcount==i)
+                    {
+                        VehicleNo = Model.ObjCardDetail[i].VechileNo;
+                    }
+                }
+
+                $(this).val(VehicleNo);
+
+             });
+
+        }
+        else if (customerTypeId == "905" || customerTypeId == "909") 
+        {
+
+            $('#NoOfCardsTbl td:nth-child(3) input').filter(function() {
+                 @{htmlcount=htmlcount+1;}
+                 var VNo = "";
+
+                @for (var i = 0; i < Model.ObjCardDetail.Count; i++)
+                {
+                    if(htmlcount==i)
+                    {
+                        VehicleNo = Model.ObjCardDetail[i].VechileNo;
+                    }
+                }
+
+                console.log(@VehicleNo);
+                $(this).val(@VehicleNo);
+
+             });
+
+          }
+      }
+
     }
 
     function ClearCardDeatils() {
