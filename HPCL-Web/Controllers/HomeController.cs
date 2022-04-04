@@ -105,7 +105,7 @@ namespace HPCL_Web.Controllers
                         {
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
                             HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
-                            HttpContext.Session.SetString("RegionalId", loginRes[0].RegionalOfficeID);
+                            HttpContext.Session.SetString("RegionalId", string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "": loginRes[0].RegionalOfficeID);
                             if (loginRes[0].LoginType == "Merchant")
                             {
                                 HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
