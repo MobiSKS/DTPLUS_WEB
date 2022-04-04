@@ -44,7 +44,7 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo });
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
             }
 
             return View(modals);
@@ -133,9 +133,10 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
-        public async Task<IActionResult> SuccessRedirect(int customerReferenceNo)
+        public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message)
         {
             ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.Message = Message;
             return View();
         }
 

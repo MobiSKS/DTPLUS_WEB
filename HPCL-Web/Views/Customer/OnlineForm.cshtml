@@ -487,7 +487,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                            @*<input type="text" class="form-control">*@
+                                            <span class="error" id="KeyOffIndividualInitials_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -619,7 +619,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
-                                            @* <input type="text" class="form-control">*@
+                                            <span class="error" id="KeyOfficialSecretAnswer_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1633,7 +1633,7 @@
             if (forthdigitPan != 'P') {
                 document.getElementById("CustomerIncomeTaxPan").value = "";
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                return;
+                return (false);
             }
             else {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
@@ -2061,15 +2061,7 @@
             $("#tierOfCustomer_error").html("");
         }
     });
-
-    $("#CustomerTbentityID").change(function () {
-        var id = this.value;
-
-        if (id != 0) {
-            $("#typeOfbusiness_error").html("");
-        }
-    });
-
+       
     $("#CustomerResidenceStatus").change(function () {
         var id = this.value;
 
@@ -2083,14 +2075,6 @@
 
         if (id != -1) {
             $("#salutaion_error").html("");
-        }
-    });
-
-    $("#CustomerTbentityID").change(function () {
-        var id = this.value;
-
-        if (id != 0) {
-            $("#typeOfbusiness_error").html("");
         }
     });
 
@@ -2369,8 +2353,7 @@
 
     $("#KeyOffFirstName").on("blur", function () {
         //debugger;
-        var firstName = document.getElementById("KeyOffFirstName").value.trim();
-        if (firstName == "") {
+        if (document.getElementById("KeyOffFirstName").value.trim() == "") {
             document.getElementById("official_fName_error").innerHTML = "First Name is required";
             return (false);
         }
@@ -2444,6 +2427,69 @@
             }
         }
 
+    });
+
+    $("#KeyOffLastName").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOffLastName").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOffLastName_error").innerHTML = "";
+        }
+        
+    });
+
+    $("#KeyOffMiddleName").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOffMiddleName").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOffMiddleName").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+        }
+        
+    });
+        
+    $("#KeyOfficialSecretAnswer").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOfficialSecretAnswer").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        }
+        
     });
 
 </script>
