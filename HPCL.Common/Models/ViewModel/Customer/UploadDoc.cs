@@ -60,13 +60,11 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
     public class UploadDocData
     {
-        public string Title { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
+        public string CustomerName { get; set; }
         public string FormNumber { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
-
 
     public class UpdateKycResponse
     {

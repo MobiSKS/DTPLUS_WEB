@@ -18,7 +18,7 @@
         public static string getDistrict = "api/dtplus/district/get_district";
         public static string validateUserName = "api/dtplus/officer/check_username";
         public static string insertOfficer = "api/dtplus/officer/insert_officer";
-        public static string insertRbeOfficer = "api/dtplus/officer/insert_rbe_officer";
+        public static string insertRbeOfficer = "api/dtplus/RBE/insert_rbe";
         public static string getSalesArea = "api/dtplus/settings/get_sales_area";
         public static string updateOfficer = "api/dtplus/officer/update_officer";
         public static string getOfficerDetails = "api/dtplus/officer/get_officer_detail";
@@ -112,7 +112,7 @@
         public static string getVehicleTpe = "api/dtplus/customer/get_vehicle_type";
         public static string uplaodCustomerKyc = "api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
-        public static string getCustomerRbeId = "api/dtplus/customer/get_rbe_id";
+        
         public static string searchCustRefUrl = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "api/dtplus/customer/upload_customer_kyc";
@@ -152,9 +152,9 @@
 
         #region Security
 
-        public static string BindRbeDetailsUrl = "api/dtplus/officer/bind_rbe_detail";
+        public static string BindRbeDetailsUrl = "api/dtplus/RBE/bind_rbe_detail";
         public static string ViewRbeDataUrl = "api/dtplus/officer/get_rbe_detail_by_user_name";
-        public static string ApproveRejectRbeUserUrl = "api/dtplus/officer/approve_reject_rbe";
+        public static string ApproveRejectRbeUserUrl = "api/dtplus/RBE/approve_reject_rbe";
         #endregion
 
         #region DriverCard
@@ -263,12 +263,13 @@
 
         #endregion
 
-        #region "Manage RBE"
+        #region RBE
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
+        public static string getCustomerRbeId = "api/dtplus/RBE/get_rbe_id";
         #endregion
 
-        #region "Application Form Data Entry"
+        #region Application Form Data Entry
         public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
         public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
         #endregion
