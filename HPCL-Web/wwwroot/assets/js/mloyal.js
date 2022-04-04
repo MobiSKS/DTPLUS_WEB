@@ -1010,6 +1010,14 @@ function showCardDetails() {
     }
     else {
 
+        if (!isNaN(document.getElementById("KeyOffFirstName").value.trim())) {
+            document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+            return false;
+        }
+        else {
+            document.getElementById("official_fName_error").innerHTML = "";
+        }
+
         if (!document.getElementById("KeyOffFirstName").value.match(nameWithSpaceCheck)) {
             document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
             return false;
@@ -1019,7 +1027,16 @@ function showCardDetails() {
         }
     }
 
-    if (document.getElementById("KeyOffMiddleName").value.trim() != "") {
+    if (document.getElementById("KeyOffMiddleName").value.trim() != "")
+    {
+        if (!isNaN(document.getElementById("KeyOffMiddleName").value.trim())) {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+        }
+
         if (!document.getElementById("KeyOffMiddleName").value.match(nameWithSpaceCheck)) {
             document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
             return false;
@@ -1032,7 +1049,16 @@ function showCardDetails() {
         document.getElementById("KeyOffMiddleName_error").innerHTML = "";
     }
 
-    if (document.getElementById("KeyOffLastName").value.trim() != "") {
+    if (document.getElementById("KeyOffLastName").value.trim() != "")
+    {
+        if (!isNaN(document.getElementById("KeyOffLastName").value.trim())) {
+            document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffLastName_error").innerHTML = "";
+        }
+
         if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck)) {
             document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
             return false;
