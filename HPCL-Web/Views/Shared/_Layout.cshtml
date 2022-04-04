@@ -42,6 +42,7 @@
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
     <script src="~/js/CommonRegexDeclaration.js"></script>
     <script src="~/js/CommonValidations.js"></script>
+
     <script>
         $(document).ready(function(){
 
@@ -577,7 +578,7 @@
 <script>
 
     var today = '@Context.Session.GetString("Today")';
-
+    var dateflag = "N";
     $(document).ready(function () {
         //setTimeout(function(){
         $('.datatable').DataTable({
@@ -591,51 +592,102 @@
 
         $('.search_test').SumoSelect({ search: true, searchText: 'Enter here.' });
 
+        if ($('.fromDate').val() != undefined){
+            setFromDateFormat();
+        }
 
+        if ($('.toDate').val() != undefined){
+            setToDateFormat();
+        }
 
-        $('.fromDate').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            maxDate: new Date(today)
-        });
-
-        $('.toDate').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            maxDate: new Date(today)
-        });
-
-        var d = new Date($('.fromDate').val());
-        var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-        var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-        var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-        $('.fromDate').val(`${da}-${mo}-${ye}`);
-
-        var d1 = new Date($('.toDate').val());
-        var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-        var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-        var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-        $('.toDate').val(`${da1}-${mo1}-${ye1}`);
         //$(".error").addClass("displayNone");
         // },3000)
 
     });
 
-    $('.fromDate').on('change',function(){
+    function setFromDateFormat(){
+        
+        $('.fromDate').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date(today),
+            autoclose: "true"
+        });
+
         var d = new Date($('.fromDate').val());
         var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
         var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
         var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
         $('.fromDate').val(`${da}-${mo}-${ye}`);
-    });
+    }
 
-    $('.toDate').on('change',function(){
+    function setToDateFormat(){
+        
+        $('.toDate').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date(today),
+            autoclose: "true"
+        });
+
         var d1 = new Date($('.toDate').val());
         var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
         var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
         var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
         $('.toDate').val(`${da1}-${mo1}-${ye1}`);
-    });
+    }
+
+    function checkDates(dateId) {
+
+        if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined)){
+            var d = new Date($('.fromDate').val());
+            var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+            var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+            var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+            $('.fromDate').val(`${mo}-${da}-${ye}`);
+
+            var d1 = new Date($('.toDate').val());
+            var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+            var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+            var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+            $('.toDate').val(`${mo1}-${da1}-${ye1}`);
+            
+            var fromD =new Date(`${da}-${mo}-${ye}`);
+            var toD =  new Date(`${da1}-${mo1}-${ye1}`);            
+
+            if (fromD != "" && toD != "") {
+                if (fromD > toD) {
+                    $("#" + dateId + "").attr("style", "display:block");
+                    $("#" + dateId + "").html("'From Date' should be less or equal to 'To date'");
+                    dateflag = "Y";
+                }
+                else {
+                    $("#" + dateId + "").html("");
+                    $("#" + dateId + "").attr("style", "display:none");
+                }
+            }
+        }
+
+        return dateflag;
+    }
+
+    //$('.fromDate').on('change',function(){
+    //    var d = new Date($('.fromDate').val());
+    //    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+    //    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+    //    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+    //    $('.fromDate').val(`${da}-${mo}-${ye}`);
+    //});
+
+    //$('.toDate').on('change',function(){
+    //    var d1 = new Date($('.toDate').val());
+    //    var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+    //    var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+    //    var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+    //    $('.toDate').val(`${da1}-${mo1}-${ye1}`);
+    //});
 
 </script>
 
