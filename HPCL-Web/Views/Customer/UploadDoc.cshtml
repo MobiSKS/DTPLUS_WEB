@@ -389,37 +389,6 @@
      });
 
 
-     //function formCheck() {
-
-         //console.log(idFront + " " + idBack + " " + addFront + " " + addBack);
-
-         //if (idFront == "unnamed5.jpg") {
-         //    $("#idFrontErr").text("Please use different Image Document");
-         //    return false;
-         //}
-
-
-         //if (idFront == idBack || idFront == addFront || idFront == addBack) {
-         //    $("#idFrontErr").text("Please use different Image Document");
-         //    return false;
-         //}
-
-         //if (idBack == idFront || idBack == addFront || idBack == addBack) {
-         //    $("#idBackErr").text("Please use different Image Document");
-         //    return false;
-         //}
-
-         //if (addFront == idFront || addFront == idBack || addFront == addBack) {
-         //    $("#addFrontErr").text("Please use different Image Document");
-         //    return false;
-         //}
-
-         //if (addBack == idFront || addBack == idBack || addBack == addFront) {
-         //    $("#addBackErr").text("Please use different Image Document");
-         //    return false;
-         //}
-  /*   }*/
-
     /* docUpdateId*/
      function openSearchGrid() {
          if ($("#CustomerReferenceNoId").val() == "") {
@@ -439,12 +408,21 @@
 
             //$("#resSearch div").parent().remove();
 
-            document.getElementById("CustomerName").value = res.searchCustomer.result.data[0].title + ' ' + res.searchCustomer.result.data[0].firstName + ' ' + res.searchCustomer.result.data[0].middleName + ' ' + res.searchCustomer.result.data[0].lastName;
+            document.getElementById("CustomerName").value = res.searchCustomer.result.data[0].customerName;
             document.getElementById("FormNumber").value = res.searchCustomer.result.data[0].formNumber;
 
-            document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('resSearch').style.display = 'block';
-            $("#CustomerReferenceNoId").prop('readonly', true);
+            if(res.searchCustomer.result.data[0].status != 0){
+                document.getElementById('uploadSection').style.display = 'block';
+                document.getElementById('resSearch').style.display = 'block';
+                $("#CustomerReferenceNoId").prop('readonly', true);
+            }else{
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchCustomer.result.data[0].reason + "</span>");
+                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('resSearch').style.display = 'block';
+                $("#CustomerReferenceNoId").prop('readonly', true);
+                document.getElementById("noRecord").style.display = "block";
+            }
         } else {
             document.getElementById('uploadSection').style.display = 'none';
             document.getElementById('resSearch').style.display = 'none';
