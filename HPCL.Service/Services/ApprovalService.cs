@@ -73,7 +73,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 Action = approvalRejectionMdl.Action,
                 Remark = approvalRejectionMdl.Remark,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjTerminalDeInstallationInsertInput = approvalRejectionMdl.ObjTerminalDeInstallationInsertInput
             };
 
@@ -135,7 +135,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 Action = approvalRejectionMdl.Action,
                 Remark = approvalRejectionMdl.Remark,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjTerminalDeInstallationAuthorizationInput = approvalRejectionMdl.ObjTerminalDeInstallationAuthorizationInput
             };
 

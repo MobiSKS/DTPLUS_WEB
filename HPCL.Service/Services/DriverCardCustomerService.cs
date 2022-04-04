@@ -47,14 +47,14 @@ namespace HPCL.Service.Services
         public async Task<RequestForDriverCardModel> RequestForDriverCard(RequestForDriverCardModel requestForDriverCardModel)
         {
 
-            var driversRequestData = new Dictionary<string, string>
+            var driversRequestData = new DealerWiseDriverCardRequestModel()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"RegionalId", requestForDriverCardModel.CustomerRegionID.ToString()},
-                {"NoofCards", requestForDriverCardModel.NoofCards.ToString()},
-                {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionalId = requestForDriverCardModel.CustomerRegionID.ToString(),
+                NoofCards = requestForDriverCardModel.NoofCards.ToString(),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(driversRequestData), Encoding.UTF8, "application/json");
@@ -155,7 +155,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 NoOfCardsAllocated = linkCardsToMerchantModel.NoOfCardsAllocated,
                 MerchantId = linkCardsToMerchantModel.MerchantId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjAllocatedCardsToMerchant = linkCardsToMerchantModel.ObjAllocatedCardsToMerchant
             };
 
@@ -216,7 +216,7 @@ namespace HPCL.Service.Services
             customerModel.UserAgent = CommonBase.useragent;
             customerModel.UserIp = CommonBase.userip;
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
             if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
             {
@@ -228,7 +228,7 @@ namespace HPCL.Service.Services
             int DTPCustomerStatus = customerModel.IfDTPCustomer.ToUpper() == "YES" ? 1 : 0;
 
             form.Add(new StringContent(customerModel.CardNo), "CardNo");
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(customerModel.IndividualOrgName), "IndividualOrgName");
             form.Add(new StringContent(customerModel.IndividualOrgNameTitle), "IndividualOrgNameTitle");
             form.Add(new StringContent(customerModel.IncomeTaxPan), "IncomeTaxPan");
@@ -427,7 +427,7 @@ namespace HPCL.Service.Services
             dealerWiseDriverCardRequestModel.UserIp = CommonBase.userip;
             dealerWiseDriverCardRequestModel.UserId = CommonBase.userid;
             dealerWiseDriverCardRequestModel.UserAgent = CommonBase.useragent;
-            dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseDriverCardRequestModel), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseDriverCardRequest);

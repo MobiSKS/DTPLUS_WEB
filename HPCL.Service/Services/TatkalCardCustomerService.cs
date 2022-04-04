@@ -51,7 +51,7 @@ namespace HPCL.Service.Services
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"RegionalId", tatkalCustomerCardRequestInfo.CustomerRegionID.ToString()},
                     {"NoofCards", tatkalCustomerCardRequestInfo.NoofCards.ToString()},
-                    {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
+                    {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(driversRequestData), Encoding.UTF8, "application/json");
@@ -156,10 +156,10 @@ namespace HPCL.Service.Services
 
         public async Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel customerModel)
         {
-            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.UserAgent = CommonBase.useragent;
             customerModel.UserIp = CommonBase.userip;
-            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
 
             string customerDateOfApplication = "";

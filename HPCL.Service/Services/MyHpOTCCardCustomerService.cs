@@ -16,7 +16,7 @@ using HPCL.Common.Models;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-
+using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
 
 namespace HPCL.Service.Services
 {
@@ -45,15 +45,15 @@ namespace HPCL.Service.Services
 
         public async Task<RequestForOTCCardModel> RequestForOTCCard(RequestForOTCCardModel requestForOTCCardModel)
         {
-            var driversRequestData = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"RegionalId", requestForOTCCardModel.CustomerRegionID.ToString()},
-                    {"NoofCards", requestForOTCCardModel.NoofCards.ToString()},
-                    {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")}
-                };
+            var driversRequestData = new RequestForTatkalCardModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionalId = requestForOTCCardModel.CustomerRegionID.ToString(),
+                NoofCards = requestForOTCCardModel.NoofCards.ToString(),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(driversRequestData), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertOTCCardRequest);
@@ -141,7 +141,7 @@ namespace HPCL.Service.Services
             customerModel.UserAgent = CommonBase.useragent;
             customerModel.UserIp = CommonBase.userip;
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
             customerModel.CommunicationFax = (string.IsNullOrEmpty(customerModel.CommunicationFaxCode) ? "" : customerModel.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationFaxPart2) ? "" : customerModel.CommunicationFaxPart2);
             if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
@@ -284,9 +284,9 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 NoOfCardsAllocated = linkCardsToMerchantModel.NoOfCardsAllocated,
                 MerchantId = linkCardsToMerchantModel.MerchantId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjAllocatedCardsToMerchant = linkCardsToMerchantModel.ObjAllocatedCardsToMerchant,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalId="1",
                 ZonalId="1"
             };
@@ -398,7 +398,7 @@ namespace HPCL.Service.Services
             dealerWiseMyHPOTCCardRequestModel.UserIp = CommonBase.userip;
             dealerWiseMyHPOTCCardRequestModel.UserId = CommonBase.userid;
             dealerWiseMyHPOTCCardRequestModel.UserAgent = CommonBase.useragent;
-            dealerWiseMyHPOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            dealerWiseMyHPOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(dealerWiseMyHPOTCCardRequestModel), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseOtcCardRequest);
