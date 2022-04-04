@@ -61,5 +61,6 @@ namespace HPCL.Service.Interfaces
         Task<List<HotlistEntity>> GetEntityTypeList();
         Task<List<HotlistReason>> GetReasonListForEntities(string EntityTypeId, string Actionid);
         Task<List<RecordTypeModel>> GetRecordType();
+        Task<string> changeDateFormat(string date);
     }
 }
