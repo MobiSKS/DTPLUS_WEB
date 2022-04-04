@@ -72,7 +72,7 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", autocomplete = "off", onkeypress = "return isNumberKey(event)" })
                                                     <span class="error" id="MerchantID_error"></span>
                                                 </div>
                                             </div>
@@ -219,7 +219,7 @@
 
         var merchantId = document.getElementById("MerchantID").value;
         if (merchantId == "") {
-            document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
+            document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
             return (false);
         }
         else {
@@ -353,47 +353,57 @@
 
     $("#btnSave").click(function () {
         debugger;
+        var ret=true;
+
         if (document.getElementById("NoofAllocatedCards").value == "" || document.getElementById("NoofAllocatedCards").value == "0") {
-            document.getElementById("NoofAllocatedCards_error").innerHTML = "No of Cards Allocated is required";
-            return;
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "Enter No of Cards";
+            ret=false;
         }
         else {
             document.getElementById("NoofAllocatedCards_error").innerHTML = "";
         }
         var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
         var merchantId = document.getElementById("MerchantID").value;
-        if (merchantId == "") {
-            document.getElementById("MerchantID_error").innerHTML = "Merchant ID cannot be left blank";
-            return (false);
+        if (merchantId == "") 
+        {
+            document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
+            ret=false;
         }
-        else {
+        else 
+        {
             
             if (document.getElementById("MerchantID").value.substring(0, 1) != "3") 
             {
                 document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-                return (false);
+                ret=false;
             }
             else
             {
                 if (document.getElementById("MerchantID").value.length < 10) 
                 {
                     document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-                    return (false);
+                    ret=false;
+                }
+                else
+                {
+                    var msg = "Invalid Merchant ID";
+                    if (document.getElementById("MerchantID_error").innerHTML != "") 
+                    {
+                        msg = document.getElementById("MerchantID_error").innerHTML;
+                    }
+
+                    if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
+                    {
+                        alert(msg);
+                        ret=false;
+                    }
+                    else 
+                    {
+                        document.getElementById("MerchantID_error").innerHTML = "";
+                    }
                 }
             }    
             
-            var msg = "Invalid Merchant ID";
-            if (document.getElementById("MerchantID_error").innerHTML != "") {
-                msg = document.getElementById("MerchantID_error").innerHTML;
-            }
-
-            if (localStorage.getItem("MERCHANTAVAILABLE") == 0) {
-                alert(msg);
-                return (false);
-            }
-            else {
-                document.getElementById("MerchantID_error").innerHTML = "";
-            }
         }
 
         var NoofCardsAllocated = Number(document.getElementById("NoofAllocatedCards").value);
@@ -409,9 +419,13 @@
 
         if (NoofCardsAllocated != selectedCards) {
             alert("No. of Cards Allocated and Selected Un-Allocated Card(s) do not match");
-            return (false);;
+            ret=false;
         }
 
+        if(ret==false)
+        {
+            return false;
+        }
 
         if (ObjOTCCardModel.length > 0) {
             var model = { NoOfCardsAllocated: noofAllocatedCards, MerchantId: merchantId, ObjAllocatedCardsToMerchant: ObjOTCCardModel, };
@@ -520,7 +534,7 @@
         //debugger;
         var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value.trim();
         if (noofAllocatedCards == "" || noofAllocatedCards == "0") {
-            document.getElementById("NoofAllocatedCards_error").innerHTML = "No of Cards Allocated is required";
+            document.getElementById("NoofAllocatedCards_error").innerHTML = "Enter No of Cards";
             return (false);
         }
         else {
