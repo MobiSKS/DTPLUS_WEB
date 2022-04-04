@@ -299,5 +299,21 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckMobilNoAlreadyUsedForOTCCard(string MobileNo)
+        {
+            var Model = await _myHpOTCCardCustomerService.CheckMobilNoAlreadyUsedForOTCCard(MobileNo);
+
+            return Json(Model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckVechileNoUsed(string VechileNo)
+        {
+            var Model = await _commonActionService.CheckVechileNoUsed(VechileNo);
+
+            return Json(Model);
+        }
+
     }
 }
