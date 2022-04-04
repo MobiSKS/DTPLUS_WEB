@@ -9,11 +9,11 @@ namespace HPCL.Common.Models.ResponseModel.DriverCardCustomer
     {
         public ViewDriverCardResponse()
         {
-            Data = new List<ViewDriverCardResponseDetails>();
+            Data = new List<ViewDriverCardResponseData>();
         }
-        public List<ViewDriverCardResponseDetails> Data { get; set; }
+        public List<ViewDriverCardResponseData> Data { get; set; }
     }
-    public class ViewDriverCardResponseDetails
+    public class ViewDriverCardResponseData
     {
 
         public string ZonalOfficeName { get; set; }
