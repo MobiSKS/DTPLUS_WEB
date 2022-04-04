@@ -65,7 +65,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
             form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
             form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserName")), "CreatedBy");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
             form.Add(new StringContent(CommonBase.userip), "Userip");
@@ -214,7 +214,7 @@ namespace HPCL.Service.Services
                     {"FleetSizeNoOfVechileOwnedCarJeep", cust.FleetSizeNoOfVechileOwnedCarJeep.ToString()},
                     {"NoOfCards", cust.NoOfCards.ToString()},
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
-                    {"Createdby", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"Createdby", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
                     {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
                     {"FormNumber", cust.FormNumber.ToString()},
@@ -399,6 +399,10 @@ namespace HPCL.Service.Services
 
             customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
 
+            if(string.IsNullOrEmpty(customerCardInfo.FormNumber))
+            {
+                customerCardInfo.FormNumber = "";
+            }
 
             if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
             {
@@ -442,6 +446,10 @@ namespace HPCL.Service.Services
                         customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
                     }
                 }
+            }
+            else
+            {
+                customerCardInfo.Remarks = customerResponseByReferenceNo.Message;
             }
             return customerCardInfo;
         }
@@ -514,7 +522,7 @@ namespace HPCL.Service.Services
             insertInfo.Useragent = CommonBase.useragent;
             insertInfo.Userip = CommonBase.userip;
             insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
 
             if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
@@ -1159,7 +1167,7 @@ namespace HPCL.Service.Services
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
                     {"DateOfApplication", customerDateOfApplication},
                     {"SalesArea", cust.CustomerSalesAreaID.ToString()},
-                    {"ModifiedBy", _httpContextAccessor.HttpContext.Session.GetString("UserName")},
+                    {"ModifiedBy", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
                     {"IndividualOrgName", cust.IndividualOrgName},
                     {"NameOnCard", (String.IsNullOrEmpty(cust.CustomerNameOnCard)?"":cust.CustomerNameOnCard)},
