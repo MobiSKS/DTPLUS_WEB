@@ -1,10 +1,19 @@
-﻿using System;
+﻿using HPCL.Common.Helper;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.ResponseModel.DriverCardCustomer
 {
-   public class ViewDriverCardResponse
+    public class ViewDriverCardResponse : CommonResponseBase
+    {
+        public ViewDriverCardResponse()
+        {
+            Data = new List<ViewDriverCardResponseDetails>();
+        }
+        public List<ViewDriverCardResponseDetails> Data { get; set; }
+    }
+    public class ViewDriverCardResponseDetails
     {
 
         public string ZonalOfficeName { get; set; }
