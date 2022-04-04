@@ -56,66 +56,22 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
-                        <div>
-                            <div class="px-3">
-                                <table id="ViewOTC" class="table table-bordered" style="display:none;">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No</th>
-                                            <th>
-                                                @Html.DisplayName("Zone")
-                                            </th>
-
-                                            <th>
-                                                @Html.DisplayName("Region")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Customer ID")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Customer Number")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Card Number")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Created Date")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Created By")
-                                            </th>
-
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="col-12 text-center alert-danger p-2" id="NoRecord" style="display:none">
-                                Dummy Customer Not found for Selected Region !!  
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
         </form>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="ViewRequestedMyHPOTCCardTbl">
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>
 <script type="text/javascript">
     function ResetFields() {
 
-        $("#NoRecord").attr("style", "display:none");
-        $("input:text").each(function () {
-            $(this).val("");
-        });
-        $("#ViewOTC td").parent().remove();
-        document.getElementById('ViewOTC').style.display = 'none';
-
+        ViewRequestedMyHPOTCCardTbl.style.display = "none";
         $("#CustomerRegionID").val(0);
         document.getElementById("CustomerRegionID_error").innerHTML = "";
-
-        if ($('#ViewOTC_wrapper').length) {
-            document.getElementById('ViewOTC_wrapper').style.display = 'none';
-        }
     };
 
 
@@ -142,72 +98,30 @@
 
         var result = false;
 
-        $("#ViewOTC td").parent().remove();
+       ViewRequestedMyHPOTCCardTbl.style.display = "block";
 
         $.ajax({
-            type: 'POST',  // http method
-            url: "GetAllViewCardsForOtcCard/MyHpOTCCardCustomer",
+            type: 'GET',  // http method
+            url: '@Url.Action("GetAllViewCardsForOtcCard", "MyHpOTCCardCustomer")',
+            contentType: "application/json; charset=utf-8",
             data: { RegionalId: RegionID },  // data to submit
-            dataType: "json",
-            success: function (res) {
-                console.log(res, "res");
-
-                $("#ViewOTC td").parent().remove();
-
-                $('#ViewOTC').DataTable().clear().destroy();
-
-                var tbll = $('#ViewOTC').DataTable({
-                    paging: true,
-                    searching: false,
-                    stateSave: true,
-                    "bDestroy": true,
-                    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                    "autoWidth": false,
-                    "oLanguage": {
-                        "sLengthMenu": "Display _MENU_ Records",
-                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            dataType: "text",
+            success: function (data, status, xhr) {
+                    var v = data;
+                    //console.log(data);
+                    if (status == 'success') {
+                        $("#ViewRequestedMyHPOTCCardTbl").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#ViewRequestedMyHPOTCCardTbl").offset().top
+                        }, 2000);
                     }
-                });
-
-                if (res.searchList.length > 0) {
-                    $("#ViewOTC").show();
-                    $("#NoRecord").attr("style", "display:none");
-                     var j = 0;
-
-                    for (var i = 0; i < res.searchList.length; i++) {
-                        var j = i + 1;
-                        var slno = j;
-                        var zonalOfficeName = (res.searchList[i].zonalOfficeName || '');
-                        var regionalOfficeName = (res.searchList[i].regionalOfficeName || '');
-                        var customerId = (res.searchList[i].customerId || '');
-                        var customerName = (res.searchList[i].customerName || '');
-                        var cardNo = (res.searchList[i].cardNo || '') ;
-                        var createdDate = (res.searchList[i].createdDate || '');
-                        var createdBy = (res.searchList[i].createdBy || '');
-
-                        tbll.row.add([
-                            slno,
-                            zonalOfficeName,
-                            regionalOfficeName,
-                            customerId,
-                            customerName,
-                            cardNo,
-                            createdDate,
-                            createdBy
-                        ]).draw();
-
+                    else {
+                        console.log(v);
                     }
-                } else {
-                    $("#ViewOTC").hide();
-                    $("#NoRecord").attr("style", "display:block");
-                    if ($('#ViewOTC_wrapper').length) {
-                        document.getElementById('ViewOTC_wrapper').style.display = 'none';
-                    }
-                }
-
-            },
+                },
             error: function (jqXhr, textStatus, errorMessage) {
                 document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                ViewRequestedMyHPOTCCardTbl.style.display = "none";
 
             }
         });

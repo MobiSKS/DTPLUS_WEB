@@ -564,6 +564,40 @@ function showOfficialDetails() {
         }
     }
 
+    if (document.applicationForm.CommunicationAddress3.value.trim() != "")
+    {
+        if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet))
+        {
+            document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else
+        {
+            document.getElementById("comm_address3_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("comm_address3_error").innerHTML = "";
+    }
+
+    if (document.getElementById("CommunicationLocation").value.trim() != "")
+    {
+        if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet))
+        {
+            document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+            return false;
+        }
+        else
+        {
+            document.getElementById("comm_location_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("comm_location_error").innerHTML = "";
+    }
+
     if (document.applicationForm.CommunicationCity.value.trim() == "") {
         document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
         return false;
@@ -805,6 +839,38 @@ function showOfficialDetails() {
             }
         }
 
+        if (document.getElementById("PerOrRegAddress3").value.trim() != "")
+        {
+            if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet))
+            {
+                document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else
+            {
+                document.getElementById("perma_address3_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("perma_address3_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressLocation").value.trim() != "")
+        {
+            if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet)) {
+                document.getElementById("perma_location_error").innerHTML = "Invalid Location";
+                return false;
+            }
+            else
+            {
+                document.getElementById("perma_location_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("perma_location_error").innerHTML = "";
+        }
 
         if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
             document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
@@ -937,19 +1003,12 @@ function showCardDetails() {
     else {
         document.getElementById("officialTitle_error").innerHTML = "";
     }
-
+    
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
         document.getElementById("official_fName_error").innerHTML = "First Name is required";
         return false;
     }
     else {
-        if (!isNaN(document.getElementById("KeyOffFirstName").value.trim())) {
-            document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
-            return false;
-        }
-        else {
-            document.getElementById("official_fName_error").innerHTML = "";
-        }
 
         if (!document.getElementById("KeyOffFirstName").value.match(nameWithSpaceCheck)) {
             document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
@@ -960,22 +1019,9 @@ function showCardDetails() {
         }
     }
 
-    if (document.applicationForm.KeyOffLastName.value.trim() != "") {
-        if (!isNaN(document.applicationForm.KeyOffLastName.value.trim())) {
-            document.getElementById("KeyOffLastName_error").innerHTML = "Last Name cannot be a number";
-            return false;
-        }
-        else {
-            document.getElementById("KeyOffLastName_error").innerHTML = "";
-        }
-    }
-    else {
-        document.getElementById("KeyOffLastName_error").innerHTML = "";
-    }
-
-    if (document.applicationForm.KeyOffMiddleName.value.trim() != "") {
-        if (!isNaN(document.applicationForm.KeyOffMiddleName.value.trim())) {
-            document.getElementById("KeyOffMiddleName_error").innerHTML = "Middle Name cannot be a number";
+    if (document.getElementById("KeyOffMiddleName").value.trim() != "") {
+        if (!document.getElementById("KeyOffMiddleName").value.match(nameWithSpaceCheck)) {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
             return false;
         }
         else {
@@ -986,7 +1032,18 @@ function showCardDetails() {
         document.getElementById("KeyOffMiddleName_error").innerHTML = "";
     }
 
-       
+    if (document.getElementById("KeyOffLastName").value.trim() != "") {
+        if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck)) {
+            document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+            return false;
+        }
+        else {
+            document.getElementById("KeyOffLastName_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("KeyOffLastName_error").innerHTML = "";
+    }
 
     var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
     if (faxCode != "") {
@@ -1113,7 +1170,8 @@ function showCardDetails() {
         document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
         return false;
     }
-    else {
+    else
+    {
         if (!isNaN(document.getElementById("KeyOffDesignation").value.trim())) {
             document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
             return false;
@@ -1129,6 +1187,22 @@ function showCardDetails() {
         else {
             document.getElementById("official_designation_error").innerHTML = "";
         }
+    }
+
+    if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
+    {
+        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(nameWithSpaceCheck)) {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+            return false;
+        }
+        else
+        {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
     }
 
     if (localStorage.getItem("DUPLICATEPANUSED") == 0) {

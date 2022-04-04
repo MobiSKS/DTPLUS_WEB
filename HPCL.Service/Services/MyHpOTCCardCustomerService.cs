@@ -233,19 +233,17 @@ namespace HPCL.Service.Services
             return custModel;
         }
 
-
-        public async Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
+        public async Task<ViewOTCCardResponse> GetAllViewCardsForOtcCard(string RegionalId)
         {
             var searchBody = new GetAllUnAllocatedOTCCardsRequestModel();
-            if (entity.RegionalId != null)
+            if (!string.IsNullOrEmpty(RegionalId))
             {
                 searchBody = new GetAllUnAllocatedOTCCardsRequestModel
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    RegionalId = entity.RegionalId,
-
+                    RegionalId = RegionalId
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -261,10 +259,8 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewOTCCardRequest);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewOTCCardResponse> searchList = jarr.ToObject<List<ViewOTCCardResponse>>();
-            return searchList;
+            ViewOTCCardResponse viewOTCCardResponse = JsonConvert.DeserializeObject<ViewOTCCardResponse>(response);
+            return viewOTCCardResponse;
         }
 
 

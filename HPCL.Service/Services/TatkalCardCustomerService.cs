@@ -215,7 +215,7 @@ namespace HPCL.Service.Services
 
             return custModel;
         }
-        public async Task<List<ViewRequestedTatkalCardResponse>> GetViewRequestedTatkalCard(int RegionalId)
+        public async Task<ViewRequestedTatkalCardResponse> GetViewRequestedTatkalCard(int RegionalId)
         {
             var requestBody = new GetAllUnAllocatedOTCCardsRequestModel
             {
@@ -228,10 +228,9 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.viewRequestedTatkalCard);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewRequestedTatkalCardResponse> searchList = jarr.ToObject<List<ViewRequestedTatkalCardResponse>>();
-            return searchList;
+            ViewRequestedTatkalCardResponse viewRequestedTatkalCardResponse = JsonConvert.DeserializeObject<ViewRequestedTatkalCardResponse>(response);
+
+            return viewRequestedTatkalCardResponse;
         }
         public async Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer()
         {

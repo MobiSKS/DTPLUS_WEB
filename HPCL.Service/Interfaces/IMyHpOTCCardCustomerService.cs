@@ -22,7 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId);
         Task<MIDAllocationOfCardsModel> OTCCardsAllocation();
         Task<CommonResponseData> SaveOTCCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
-        Task<List<ViewOTCCardResponse>> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity);
+        Task<ViewOTCCardResponse> GetAllViewCardsForOtcCard(string RegionalId);
         Task<MIDAllocationOfCardsModel> ViewOTCCards();
 
         Task<GetCardAllocationActivation> GetCardAllocationActivation();

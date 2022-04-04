@@ -21,7 +21,7 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerRegionModel>> GetRegionalDetailsDropDown(int ZonalOfficeID);
         Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel customerModel);
         Task<ViewRequestedTatkalCardModel> ViewRequestedTatkalCard();
-        Task<List<ViewRequestedTatkalCardResponse>> GetViewRequestedTatkalCard(int RegionalId);
+        Task<ViewRequestedTatkalCardResponse> GetViewRequestedTatkalCard(int RegionalId);
         Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer();
         Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails);
     }

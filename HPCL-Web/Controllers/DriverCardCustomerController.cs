@@ -206,14 +206,10 @@ namespace HPCL_Web.Controllers
 
             return Json(customerInfo);
         }
-
-        [HttpPost]
-        public async Task<JsonResult> GetAllViewDriverCard(RequestForViewDriverCard entity)
+        public async Task<IActionResult> GetAllViewDriverCard(RequestForViewDriverCard entity)
         {
-            var searchList = await _driverCardCustomerService.GetAllViewDriverCard(entity);
-
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
+            var modals = await _driverCardCustomerService.GetAllViewDriverCard(entity);
+            return PartialView("~/Views/DriverCardCustomer/_ViewRequestDriverCardTable.cshtml", modals);
         }
 
         public async Task<IActionResult> ViewRequestDriverCard()

@@ -491,7 +491,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
-                                            @*<input type="text" class="form-control">*@
+                                            <span class="error" id="KeyOffIndividualInitials_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -624,7 +624,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
-                                            @* <input type="text" class="form-control">*@
+                                            <span class="error" id="KeyOfficialSecretAnswer_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1121,42 +1121,62 @@
         if (document.getElementById("sameAddressCheck").checked == true) {
 
             if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
-                document.getElementById("comm_address1_error").innerHTML = "Address1 field cannot be left blank";
-                document.applicationForm.CommunicationAddress1.focus();
+                document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
                 return false;
             }
             else {
-                document.getElementById("comm_address1_error").innerHTML = "";
+                    if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) {
+                        document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                        return false;
+                    }
+                else {
+                    document.getElementById("comm_address1_error").innerHTML = "";
+                }
             }
 
             if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
-                document.getElementById("comm_address2_error").innerHTML = "Address2 field cannot be left blank";
-                document.applicationForm.CommunicationAddress2.focus();
+                document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
                 return false;
             }
             else {
-                document.getElementById("comm_address2_error").innerHTML = "";
+                if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) {
+                        document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                        return false;
+                    }
+                else {
+                    document.getElementById("comm_address2_error").innerHTML = "";
+                }
             }
 
             if (document.applicationForm.CommunicationCity.value.trim() == "") {
                 document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
-                document.applicationForm.CommunicationCity.focus();
                 return false;
             }
             else {
-                document.getElementById("comm_city_error").innerHTML = "";
+                if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) {
+                    document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                    return false;
+                }
+                else {
+                    document.getElementById("comm_city_error").innerHTML = "";
+                }
             }
 
             if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
                 document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
-                document.applicationForm.CommunicationPinCode.focus()
                 return (false);
             }
             else {
-                var pin = document.applicationForm.CommunicationPinCode.value;
-                if (pin.length < 6) {
-                    document.getElementById("comm_pincode_error").innerHTML = "Pin code, Must be six digits";
-                    document.applicationForm.CommunicationPinCode.focus();
+                 if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+                    document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                    return false;
+                }
+                else {
+                    document.getElementById("comm_pincode_error").innerHTML = "";
+                }
+
+                if (document.getElementById("CommunicationPinCode").value.length < 6) {
+                    document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
                     return false;
                 }
                 else {
@@ -1166,7 +1186,6 @@
 
             if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
                 document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
-                document.applicationForm.CommunicationStateID.focus();
                 return false;
             }
             else {
@@ -1175,7 +1194,6 @@
 
             if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
                 document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-                document.applicationForm.CommunicationDistrictId.focus();
                 return false;
             }
             else {
@@ -1186,44 +1204,39 @@
 
             if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
                 document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
-                document.applicationForm.CommunicationMobileNumber.focus();
                 return false;
-
             }
             else {
-                //y = document.applicationForm.CommunicationMobileNumber.value.trim();
-                //if ((y.charAt(0) != "9") && (y.charAt(0) != "8") && (y.charAt(0) != "7") && (y.charAt(0) != "6")) {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number should start with 6, 7, 8, 9";
-                //    document.applicationForm.CommunicationMobileNumber.focus();
-                //    return false
-                //}
-                //else if (y.length < 10 || y.length > 10) {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number (e.g.: 9999990000)";
-                //    document.applicationForm.CommunicationMobileNumber.focus();
-                //    return false;
-                //}
 
-                //else {
-                //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-                //}
                 if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
                     document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                    //document.getElementById("CommunicationMobileNumber").value = "";
-                    //document.getElementById("CommunicationMobileNumber").focus();
                     return false;
+                }
+                else
+                {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
                 }
 
                 if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
                     document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-                    //document.getElementById("CommunicationMobileNumber").value = "";
-                    //document.getElementById("CommunicationMobileNumber").focus();
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                }
+
+                if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                }
+                else {
+                    document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                     return false;
                 }
             }
 
             if (document.applicationForm.CommunicationEmail.value.trim() == "") {
                 document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
-                document.applicationForm.CommunicationEmail.focus();
                 return (false);
             }
             else {
@@ -1233,7 +1246,6 @@
                 }
                 else {
                     document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-                    document.applicationForm.CommunicationEmail.focus();
                     return (false);
                 }
             }
@@ -1373,8 +1385,6 @@
         }
         else {
             document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            //document.getElementById("CommunicationEmail").value = "";
-            //document.getElementById("CommunicationEmail").focus();
             return (false);
         }
 
@@ -1437,15 +1447,25 @@
 
         if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNumber").value = "";
-            //document.getElementById("CommunicationMobileNumber").focus();
             return false;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
         }
 
         if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            //document.getElementById("CommunicationMobileNumber").value = "";
-            //document.getElementById("CommunicationMobileNumber").focus();
+            return false;
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
 
@@ -1508,7 +1528,14 @@
             document.getElementById("IsDuplicatePanNo").value = "1";
             $('#AllowPanDuplication').val('N');
             localStorage.setItem("IsDuplicatePanNo", "1");
-            return;
+            if (panNumber == "") {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                return (false);
+            }
+            else {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+            return (false);
         }
 
         if (panNumber == "") {
@@ -1522,7 +1549,7 @@
         document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
 
         if ($('#CustomerIncomeTaxPan').val().match(pancard)) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
@@ -1539,7 +1566,7 @@
                 return;
             }
             else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
             }
         }
 
@@ -1660,8 +1687,7 @@
 
     $("#CommunicationPinCode").on("blur", function () {
         //debugger;
-        var communicationPinCode = document.getElementById("CommunicationPinCode").value;
-        if (communicationPinCode == "") {
+        if (document.getElementById("CommunicationPinCode").value == "") {
             document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
             return (false);
         }
@@ -1671,23 +1697,32 @@
 
         if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
             document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            document.getElementById("CommunicationPinCode").value = "";
-            document.getElementById("CommunicationPinCode").focus();
             return false;
+        }
+        else {
+             document.getElementById("comm_pincode_error").innerHTML = "";
         }
 
         if (document.getElementById("CommunicationPinCode").value.length < 6) {
-            document.getElementById("comm_pincode_error").innerHTML = "Pin code length must be 6 digit";
-            document.getElementById("CommunicationPinCode").value = "";
-            document.getElementById("CommunicationPinCode").focus();
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+             document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
+            document.getElementById("comm_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
             return false;
         }
     });
 
     $("#PerOrRegAddressPinCode").on("blur", function () {
         //debugger;
-        var PinCode = document.getElementById("PerOrRegAddressPinCode").value;
-        if (PinCode == "") {
+        if (document.getElementById("PerOrRegAddressPinCode").value == "") {
             document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
             return (false);
         }
@@ -1697,17 +1732,28 @@
 
         if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
             document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-            document.getElementById("PerOrRegAddressPinCode").value = "";
-            document.getElementById("PerOrRegAddressPinCode").focus();
             return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
         }
 
         if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
             document.getElementById("perma_pincode_error").innerHTML = "Pin code length must be 6 digit";
-            document.getElementById("PerOrRegAddressPinCode").value = "";
-            document.getElementById("PerOrRegAddressPinCode").focus();
             return false;
         }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+
     });
 
     $("#KeyOffMobileNumber").on("blur", function () {
@@ -1723,15 +1769,25 @@
 
         if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0") {
             document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            document.getElementById("KeyOffMobileNumber").value = "";
-            document.getElementById("KeyOffMobileNumber").focus();
             return false;
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
         }
 
         if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
             document.getElementById("official_mobile_error").innerHTML = "Mobile Number length must be 10 digit";
-            document.getElementById("KeyOffMobileNumber").value = "";
-            document.getElementById("KeyOffMobileNumber").focus();
+            return false;
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOffMobileNumber").value.match(phoneno)) {
+            document.getElementById("official_mobile_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
     });
@@ -1748,7 +1804,6 @@
             }
             else {
                 document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-                document.getElementById("KeyOffEmail").focus();
                 return (false);
             }
         }
@@ -1849,8 +1904,6 @@
 
         if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.getElementById("IndividualOrgName").value = "";
-            document.getElementById("IndividualOrgName").focus();
             return false;
         }
         else {
@@ -1859,8 +1912,6 @@
 
         if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
-            document.getElementById("IndividualOrgName").value = "";
-            document.getElementById("IndividualOrgName").focus();
             return false;
         }
         else {
@@ -1881,8 +1932,6 @@
 
         if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.getElementById("CustomerNameOnCard").value = "";
-            document.getElementById("CustomerNameOnCard").focus();
             return false;
         }
         else {
@@ -1891,8 +1940,6 @@
 
         if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
-            document.getElementById("CustomerNameOnCard").value = "";
-            document.getElementById("CustomerNameOnCard").focus();
             return false;
         }
         else {
@@ -1940,14 +1987,6 @@
         }
     });
 
-    $("#CustomerTbentityID").change(function () {
-        var id = this.value;
-
-        if (id != 0) {
-            $("#typeOfbusiness_error").html("");
-        }
-    });
-
     $("#CustomerResidenceStatus").change(function () {
         var id = this.value;
 
@@ -1961,14 +2000,6 @@
 
         if (id != -1) {
             $("#salutaion_error").html("");
-        }
-    });
-
-    $("#CustomerTbentityID").change(function () {
-        var id = this.value;
-
-        if (id != 0) {
-            $("#typeOfbusiness_error").html("");
         }
     });
 
@@ -1990,19 +2021,29 @@
 
     $("#CommunicationAddress1").on("blur", function () {
         //debugger;
-        var Address = document.getElementById("CommunicationAddress1").value.trim();
-        if (Address == "") {
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") 
+        {
             document.getElementById("comm_address1_error").innerHTML = "Address1 field cannot be left blank";
             return (false);
         }
-        else {
-            if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
+        else 
+        {
+            if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) 
+            {
                 document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress1").value = "";
-                //document.getElementById("CommunicationAddress1").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+            if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("comm_address1_error").innerHTML = "";
             }
         }
@@ -2010,19 +2051,29 @@
 
     $("#CommunicationAddress2").on("blur", function () {
         //debugger;
-        var Address = document.getElementById("CommunicationAddress2").value.trim();
-        if (Address == "") {
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") 
+        {
             document.getElementById("comm_address2_error").innerHTML = "Address2 field cannot be left blank";
             return (false);
         }
-        else {
-            if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
+        else 
+        {
+            if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) 
+            {
                 document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress2").value = "";
-                //document.getElementById("CommunicationAddress2").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+            if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("comm_address2_error").innerHTML = "";
             }
         }
@@ -2030,37 +2081,56 @@
 
     $("#CommunicationAddress3").on("blur", function () {
         //debugger;
-        if (document.getElementById("CommunicationAddress3").value.trim() != "") {
+        if (document.getElementById("CommunicationAddress3").value.trim() != "") 
+        {
             if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) {
                 document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
-                document.getElementById("CommunicationAddress3").value = "";
-                //document.getElementById("CommunicationAddress3").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("comm_address3_error").innerHTML = "";
+            }
+            if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("comm_address3_error").innerHTML = "";
             }
         }
-        else {
+        else 
+        {
             document.getElementById("comm_address3_error").innerHTML = "";
         }
     });
 
     $("#CommunicationCity").on("blur", function () {
         //debugger;
-        var city = document.getElementById("CommunicationCity").value.trim();
-        if (city == "") {
+        if (document.getElementById("CommunicationCity").value.trim() == "") 
+        {
             document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
             return (false);
         }
         else {
-            if (!isNaN(document.getElementById("CommunicationCity").value.trim())) {
+            if (!isNaN(document.getElementById("CommunicationCity").value.trim())) 
+            {
                 document.getElementById("comm_city_error").innerHTML = "Invalid City";
-                document.getElementById("CommunicationCity").value = "";
-                //document.getElementById("CommunicationCity").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("comm_city_error").innerHTML = "";
+            }
+            if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("comm_city_error").innerHTML = "";
             }
         }
@@ -2068,16 +2138,25 @@
 
     $("#PerOrRegAddress1").on("blur", function () {
         //debugger;
-        var Address = document.getElementById("PerOrRegAddress1").value.trim();
-        if (Address == "") {
+        if (document.getElementById("PerOrRegAddress1").value.trim() == "") 
+        {
             document.getElementById("perma_address1_error").innerHTML = "Address1 field cannot be left blank";
             return (false);
         }
-        else {
-            if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim())) {
+        else 
+        {
+            if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim())) 
+            {
                 document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress1").value = "";
-                //document.getElementById("PerOrRegAddress1").focus();
+                return false;
+            }
+            else 
+            {
+                document.getElementById("perma_address1_error").innerHTML = "";
+            }
+            if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
                 return false;
             }
             else {
@@ -2088,19 +2167,30 @@
 
     $("#PerOrRegAddress2").on("blur", function () {
         //debugger;
-        var Address = document.getElementById("PerOrRegAddress2").value.trim();
-        if (Address == "") {
+        if (document.getElementById("PerOrRegAddress2").value.trim() == "") 
+        {
             document.getElementById("perma_address2_error").innerHTML = "Address2 field cannot be left blank";
             return (false);
         }
-        else {
-            if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim())) {
+        else 
+        {
+            if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim())) 
+            {
                 document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress2").value = "";
-                //document.getElementById("PerOrRegAddress2").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("perma_address2_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("perma_address2_error").innerHTML = "";
             }
         }
@@ -2108,18 +2198,30 @@
 
     $("#PerOrRegAddress3").on("blur", function () {
         //debugger;
-        if (document.getElementById("PerOrRegAddress3").value.trim() != "") {
-            if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim())) {
+        if (document.getElementById("PerOrRegAddress3").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim())) 
+            {
                 document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
-                document.getElementById("PerOrRegAddress3").value = "";
-                //document.getElementById("PerOrRegAddress3").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("perma_address3_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("perma_address3_error").innerHTML = "";
             }
         }
-        else {
+        else 
+        {
             document.getElementById("perma_address3_error").innerHTML = "";
         }
 
@@ -2127,19 +2229,30 @@
 
     $("#PerOrRegAddressCity").on("blur", function () {
         //debugger;
-        var city = document.getElementById("PerOrRegAddressCity").value.trim();
-        if (city == "") {
+        if (document.getElementById("PerOrRegAddressCity").value.trim() == "") 
+        {
             document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
             return (false);
         }
-        else {
-            if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim())) {
+        else 
+        {
+            if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim())) 
+            {
                 document.getElementById("perma_city_error").innerHTML = "Invalid City";
-                document.getElementById("PerOrRegAddressCity").value = "";
-                //document.getElementById("PerOrRegAddressCity").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("perma_city_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("perma_city_error").innerHTML = "Invalid City";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("perma_city_error").innerHTML = "";
             }
         }
@@ -2147,62 +2260,73 @@
 
     $("#CommunicationLocation").on("blur", function () {
         //debugger;
-        if (document.getElementById("CommunicationLocation").value.trim() != "") {
-            if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) {
+        if (document.getElementById("CommunicationLocation").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) 
+            {
                 document.getElementById("comm_location_error").innerHTML = "Invalid Location";
-                document.getElementById("CommunicationLocation").value = "";
-                //document.getElementById("CommunicationLocation").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("comm_location_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("comm_location_error").innerHTML = "";
             }
         }
-        else {
+        else 
+        {
             document.getElementById("comm_location_error").innerHTML = "";
         }
     });
 
     $("#PerOrRegAddressLocation").on("blur", function () {
         //debugger;
-        if (document.getElementById("PerOrRegAddressLocation").value.trim() != "") {
-            if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim())) {
+        if (document.getElementById("PerOrRegAddressLocation").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim())) 
+            {
                 document.getElementById("perma_location_error").innerHTML = "Invalid Location";
-                document.getElementById("PerOrRegAddressLocation").value = "";
-                //document.getElementById("PerOrRegAddressLocation").focus();
                 return false;
             }
-            else {
+            else 
+            {
+                document.getElementById("perma_location_error").innerHTML = "";
+            }
+
+            if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("perma_location_error").innerHTML = "Invalid Location";
+                return false;
+            }
+            else 
+            {
                 document.getElementById("perma_location_error").innerHTML = "";
             }
         }
-        else {
+        else 
+        {
             document.getElementById("perma_location_error").innerHTML = "";
         }
     });
 
     $("#KeyOffFirstName").on("blur", function () {
         //debugger;
-        var firstName = document.getElementById("KeyOffFirstName").value.trim();
-        if (firstName == "") {
+        if (document.getElementById("KeyOffFirstName").value.trim() == "") {
             document.getElementById("official_fName_error").innerHTML = "First Name is required";
             return (false);
         }
         else {
-            if (!isNaN(document.getElementById("KeyOffFirstName").value.trim())) {
-                document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
-                document.getElementById("KeyOffFirstName").value = "";
-                document.getElementById("KeyOffFirstName").focus();
-                return false;
-            }
-            else {
-                document.getElementById("official_fName_error").innerHTML = "";
-            }
-
             if (!document.getElementById("KeyOffFirstName").value.match(nameWithSpaceCheck)) {
                 document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
-                document.getElementById("KeyOffFirstName").value = "";
-                document.getElementById("KeyOffFirstName").focus();
                 return false;
             }
             else {
@@ -2220,20 +2344,8 @@
             return (false);
         }
         else {
-            if (!isNaN(document.getElementById("KeyOffDesignation").value.trim())) {
-                document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
-                document.getElementById("KeyOffDesignation").value = "";
-                document.getElementById("KeyOffDesignation").focus();
-                return false;
-            }
-            else {
-                document.getElementById("official_designation_error").innerHTML = "";
-            }
-
             if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck)) {
                 document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
-                document.getElementById("KeyOffDesignation").value = "";
-                document.getElementById("KeyOffDesignation").focus();
                 return false;
             }
             else {
@@ -2266,6 +2378,69 @@
             }
         }
 
+    });
+
+    $("#KeyOffLastName").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOffLastName").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOffLastName_error").innerHTML = "";
+        }
+        
+    });
+
+    $("#KeyOffMiddleName").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOffMiddleName").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOffMiddleName").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+        }
+        
+    });
+    
+    $("#KeyOfficialSecretAnswer").on("blur", function () {
+        //debugger;
+        if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "") 
+        {
+            if (!document.getElementById("KeyOfficialSecretAnswer").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        }
+        
     });
 
 </script>

@@ -206,13 +206,11 @@ namespace HPCL_Web.Controllers
 
             return View(custMdl);
         }
-        [HttpPost]
-        public async Task<JsonResult> GetAllViewCardsForOtcCard(GetAllUnAllocatedOTCCardsRequestModel entity)
-        {
-            var searchList = await _myHpOTCCardCustomerService.GetAllViewCardsForOtcCard(entity);
 
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
+        public async Task<IActionResult> GetAllViewCardsForOtcCard(string RegionalId)
+        {
+            var modals = await _myHpOTCCardCustomerService.GetAllViewCardsForOtcCard(RegionalId);
+            return PartialView("~/Views/MyHpOTCCardCustomer/_ViewOTCCardsTable.cshtml", modals);
         }
 
         public async Task<IActionResult> ViewOTCCards()
