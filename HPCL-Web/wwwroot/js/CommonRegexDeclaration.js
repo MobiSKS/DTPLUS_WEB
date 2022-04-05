@@ -18,3 +18,4 @@ var highwayName = /^[a-z\d\-_\s]+$/i;
 ///^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
 var noSpecialChars = /^[A-Za-z0-9 ]+$/; //Regex for Valid Characters i.e. Alphabets, Numbers and Space 
 var atLeastOneAlphabet = /[a-zA-Z]/;   //To check if a string contains at least one letter 
+var secretQuestion = /[0-9a-zA-Z /-]/

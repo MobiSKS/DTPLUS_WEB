@@ -1217,7 +1217,7 @@ function showCardDetails() {
 
     if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
     {
-        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(nameWithSpaceCheck)) {
+        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion)) {
             document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
             return false;
         }

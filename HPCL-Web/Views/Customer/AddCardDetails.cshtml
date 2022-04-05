@@ -310,80 +310,90 @@
                 data: { customerReferenceNo: custRefNo },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
-                    console.log(data);
+                   
                     var v = data;
-                    if (status == 'success') {
-                        //$("#userNamediv").addClass("btmMargin");
-                        //$("#userName_error").html("User Name Exists");
-                        document.getElementById("CustomerName").value = data.customerName;
-                        document.getElementById("FormNumber").value = data.formNumber;
-                        document.getElementById("CustomerTypeId").value = data.customerTypeId;
-                        document.getElementById("NoOfCardsTbl").deleteTHead();
-                        $("#NoOfCardsTbl td").parent().remove();
-                        var customerTypeId = document.getElementById("CustomerTypeId").value;
-                        $("#CustomerReferenceNo").prop('readonly', true);
-                        console.log(customerTypeId);
-                        if (customerTypeId == "905" || customerTypeId == "909") {
-                            $('#lblNoOfVehicles').show();
-                            $('#NoOfVehiclesAllCards').show();
-                            $('#NoOfVehiclesAllCards').attr("readonly", false);
+                    if (status == 'success') 
+                    {
+                        if(data.formNumber=="")
+                        {
+                            alert(data.remarks);
                         }
-                        else {
-                            $('#lblNoOfVehicles').hide();
-                            $('#NoOfVehiclesAllCards').hide();
-                        }
-                        console.log(data.paymentType);
+                        else
+                        {
+                       
+                            document.getElementById("CustomerName").value = data.customerName;
+                            document.getElementById("FormNumber").value = data.formNumber;
+                            document.getElementById("CustomerTypeId").value = data.customerTypeId;
+                            document.getElementById("NoOfCardsTbl").deleteTHead();
+                            $("#NoOfCardsTbl td").parent().remove();
+                            var customerTypeId = document.getElementById("CustomerTypeId").value;
+                            $("#CustomerReferenceNo").prop('readonly', true);
+                            console.log(customerTypeId);
+                            if (customerTypeId == "905" || customerTypeId == "909") {
+                                $('#lblNoOfVehicles').show();
+                                $('#NoOfVehiclesAllCards').show();
+                                $('#NoOfVehiclesAllCards').attr("readonly", false);
+                            }
+                            else {
+                                $('#lblNoOfVehicles').hide();
+                                $('#NoOfVehiclesAllCards').hide();
+                            }
+                            console.log(data.paymentType);
 
-                        if (data.rbeId != "") {
-                            document.getElementById("RBEId").value = data.rbeId;
-                            document.getElementById("RBEName").value = data.rbeName;
-                            $("#RBEId").prop('readonly', true);
-                        }
-                        else {
-                            document.getElementById("RBEId").value = "";
-                            document.getElementById("RBEName").value = "";
-                            $("#RBEId").prop('readonly', false);
-                        }
+                            if (data.rbeId != "") {
+                                document.getElementById("RBEId").value = data.rbeId;
+                                document.getElementById("RBEName").value = data.rbeName;
+                                $("#RBEId").prop('readonly', true);
+                            }
+                            else {
+                                document.getElementById("RBEId").value = "";
+                                document.getElementById("RBEName").value = "";
+                                $("#RBEId").prop('readonly', false);
+                            }
 
-                        if (data.paymentType != "") {
-                            document.getElementById("FeePaymentNo").value = data.paymentType;
-                            document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
-                            $("#FeePaymentNo").prop('readonly', true);
-                            $("#FeePaymentDate").prop('readonly', true);
+                            if (data.paymentType != "") 
+                            {
+                                document.getElementById("FeePaymentNo").value = data.paymentType;
+                                document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
+                                $("#FeePaymentNo").prop('readonly', true);
+                                $("#FeePaymentDate").prop('readonly', true);
 
-                            document.getElementById("rbtnCard").checked = true;
-                            document.getElementById("rbtnCard").disabled = true;
-                            document.getElementById("CardPreference").value = document.getElementById("rbtnCard").value;
+                                document.getElementById("rbtnCard").checked = true;
+                                document.getElementById("rbtnCard").disabled = true;
+                                document.getElementById("CardPreference").value = document.getElementById("rbtnCard").value;
 
-                            document.getElementById("rbtnCardless").checked = false;
-                            document.getElementById("rbtnCardless").disabled = true;
+                                document.getElementById("rbtnCardless").checked = false;
+                                document.getElementById("rbtnCardless").disabled = true;
 
-                            document.getElementById("rbtnOnline").checked = true;
-                            document.getElementById("rbtnOnline").disabled = true;
+                                document.getElementById("rbtnOnline").checked = true;
+                                document.getElementById("rbtnOnline").disabled = true;
 
-                            document.getElementById("rbtnFeeWaiver").checked = false;
-                            document.getElementById("rbtnFeeWaiver").disabled = true;
+                                document.getElementById("rbtnFeeWaiver").checked = false;
+                                document.getElementById("rbtnFeeWaiver").disabled = true;
 
-                            $('#lblChequeNo').text("Payment Source");
-                            $('#lblChequeDate').text("Payment Date");
-                            document.getElementById("NoOfCards").value = data.noOfCards;
-                            $("#NoOfCards").prop('readonly', true);
-                            document.getElementById("ReceivedAmount").value = data.receivedAmount;
+                                $('#lblChequeNo').text("Payment Source");
+                                $('#lblChequeDate').text("Payment Date");
+                                document.getElementById("NoOfCards").value = data.noOfCards;
+                                $("#NoOfCards").prop('readonly', true);
+                                document.getElementById("ReceivedAmount").value = data.receivedAmount;
 
-                        }
-                        else {
-                            $("#rbtnOnline").prop('disabled', true);
-                            document.getElementById("rbtnOnline").checked = false;
-                            document.getElementById("rbtnCard").checked = false;
-                            $("#rbtnCard").prop('disabled', false);
-                            $("#FeePaymentNo").prop('readonly', false);
-                            $("#FeePaymentDate").prop('readonly', false);
-                            $('#lblChequeNo').text("Approval Email From");
-                            $('#lblChequeDate').text("Approval Email Date");
-                            document.getElementById("NoOfCards").value = "";
-                            $("#NoOfCards").prop('readonly', false);
-                            document.getElementById("ReceivedAmount").value = "";
-                        }
+                            }
+                            else 
+                            {
+                                $("#rbtnOnline").prop('disabled', true);
+                                document.getElementById("rbtnOnline").checked = false;
+                                document.getElementById("rbtnCard").checked = false;
+                                $("#rbtnCard").prop('disabled', false);
+                                $("#FeePaymentNo").prop('readonly', false);
+                                $("#FeePaymentDate").prop('readonly', false);
+                                $('#lblChequeNo').text("Approval Email From");
+                                $('#lblChequeDate').text("Approval Email Date");
+                                document.getElementById("NoOfCards").value = "";
+                                $("#NoOfCards").prop('readonly', false);
+                                document.getElementById("ReceivedAmount").value = "";
+                            }
+
+                       }
                     }
                     else {
                         $("#CustomerReferenceNo_error").html("");

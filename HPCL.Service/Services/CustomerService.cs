@@ -409,18 +409,19 @@ namespace HPCL.Service.Services
                 customerCardInfo.CustomerReferenceNo = customerReferenceNo;
                 customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
 
-                StringBuilder sb = new StringBuilder();
-                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-                    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
+                //StringBuilder sb = new StringBuilder();
+                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
+                //    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
 
-                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-                    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
+                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
+                //    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
 
-                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-                    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
+                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
+                //    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
 
 
-                customerCardInfo.CustomerName = sb.ToString();
+                //customerCardInfo.CustomerName = sb.ToString();
+                customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
 
                 customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
                 customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
