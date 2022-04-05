@@ -8,6 +8,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
     {
         public MerchantGetDetailsModel()
         {
+            CreatedMerchant = "";
             MerchantTypes = new List<MerchantTypeResponseModal>();
             OutletCategories = new List<OutletCategoryResponseModal>();
             SBUTypes = new List<SbuTypeResponseModal>();
@@ -66,6 +67,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string MerchantId { get; set; }
         [StringLength(8)]
         public string ErpCode { get; set; }
+        [StringLength(50)]
         public string RetailOutletName { get; set; }
         public string MerchantTypeId { get; set; }
         public string MerchantTypeName { get; set; }
@@ -167,6 +169,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string Error { get; set; }
         public string Success { get; set; }
         public string Search { get; set; }
+        public string CreatedMerchant { get; set; }
         public virtual List<MerchantTypeResponseModal> MerchantTypes { get; set; }
         public virtual List<OutletCategoryResponseModal> OutletCategories { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
