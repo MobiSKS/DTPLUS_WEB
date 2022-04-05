@@ -1,12 +1,12 @@
 ﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
-
+@using Microsoft.AspNetCore.Http;
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "TerminalManagement")" class="text_primary">Terminal Management</a> </li>
             <li class="breadcrumb-item font-weight-light">View Terminal DeInstallation Request Status</li>
         </ul>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1" }))
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
@@ -44,7 +44,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span class="error" id="fromDate_error"></span>
                                         </div>
@@ -55,7 +55,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span class="error" id="toDate_error"></span>
                                         </div>
@@ -85,7 +85,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
@@ -100,261 +100,168 @@
             <div class="clearfix"></div>
         }
         <div class="clearfix"></div>
-        <div id="show_Table">
-            @if (Model.TerminalDeinstallationRequestDetails.Count() > 0)
-            {
-                <div class="table-responsive">
-                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
-                        <thead style="background-color:lightgray;">
-                            <tr>
-
-                                <th style="width:5%;">Merchant ID</th>
-                                <th style="width:10%;">Terminal ID</th>
-                                <th style="width:10%;">Requested Date</th>
-                                <th style="width:10%;">Requested By</th>
-                                <th style="width:10%;">Modified Date</th>
-                                <th style="width:10%;">Modified By</th>
-                                <th style="width:10%;">Remarks</th>
-                                <th style="width:20%;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="searchTableBody">
-                            @{
-                                int i = 0;
-                            }
-                            @foreach (var item in Model.TerminalDeinstallationRequestDetails)
-                            {
-                                i = i + 1;
-
-                                <tr>
-                                    <td>@item.MerchantID</td>
-                                    <td>@item.TerminalID</td>
-                                    <td>@item.RequestedDate</td>
-                                    <td>@item.RequestedBy</td>
-                                    <td>@item.ModifiedDate</td>
-                                    <td>@item.ModifiedBy</td>
-                                    <td>@item.Remarks</td>
-                                    <td>@item.StatusName</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="clearfix"></div>
-
-            }
-            else
-            {
-                <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
-                    @Model.Message
-                </div>
-            }
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
         </div>
+        <div class="clearfix"></div>
 
     </div>
 </div>
 <script type="text/javascript">
-    //debugger;
+      //debugger;
 
-    var zonalID = $("#ZonalOfficeId").val();
-    var regionalID = $("#RegionalOfcIdVal").val();
+      var zonalID = $("#ZonalOfficeId").val();
 
-      var fromdate = $("#FromDate").val();
-    var todate = $("#ToDate").val();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-
-    $(document).ready(function () {
-
-        setDates();
-        getMerchantRegionalOfc();
-    });
-    $("#btnReset").click(function () {
-
-        setDates();
-        $("#ZonalOfficeId").val(0);
-        $("#RegionalOfcIdVal").val("");
-        getMerchantRegionalOfc();
-        $("#MerchantId").val("");
-        $("#TerminalId").val("");
-        $("#show_Table").html("");
-        $("#fromDate_error").html("");
-        $("#toDate_error").html("");
-        $("#merchantId_error").html("");
-        $("#terminalId_error").html("");
-    });
-    $("#btnSearch").on("click", (function (e) {
         var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
-        var merchantId = $("#MerchantId").val();
-        var terminalId = $("#TerminalId").val();
-        var flag = "Y";
-        if (fromdate == "") {
-            $("#fromDate_error").attr("style", "display:block");
-            $("#fromDate_error").html("Select From Date");
-            flag = "N";
-        }
+      var todate = $("#ToDate").val();
 
-        if (todate == "") {
-            $("#toDate_error").attr("style", "display:block");
-            $("#toDate_error").html("Select To Date");
-            flag = "N";
-        }
-        if (fromdate != "" && todate != "") {
-            flag = checkDates();
-        }
-        if (merchantId != "") {
-            if (!merchantId.match(mappedMerchantID)) {
-                $("#merchantId_error").attr("style", "display:block");
-                $("#merchantId_error").html("Please enter valid Merchant ID");
-                flag = "N";
-            }
-        }
-        if (terminalId != "") {
-            if (!terminalId.match(mappedterminalID)) {
-                $("#terminalId_error").attr("style", "display:block");
-                $("#terminalId_error").html("Please enter valid Terminal ID");
-                flag = "N";
-            }
-        }
-        if (flag == "Y") {
-            $("#toDate_error").attr("style", "display:none");
-            $("#toDate_error").html("");
-            $("#fromDate_error").attr("style", "display:none");
-            $("#fromDate_error").html("");
-            $("#merchantId_error").attr("style", "display:none");
-            $("#merchantId_error").html("");
-        }
-        if (flag == "N")
-            e.preventDefault();
+      $(document).ready(function () {
 
-    })
-    );
-    function setDates() {
-        var fromd = new Date();
-        fromd.setMonth(fromd.getMonth() - 1);
-        var dd = String(fromd.getDate()).padStart(2, '0');
-        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); 
-        var yyyy = fromd.getFullYear();
+          //setDates();
+          getMerchantRegionalOfc();
+      });
+      $("#btnReset").click(function () {
+          location.reload();
+      });
+      $("#btnSearch").on("click", (function (e) {
+          var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+          var merchantId = $("#MerchantId").val();
+          var terminalId = $("#TerminalId").val();
+          var flag = "Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
 
-        fromd = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(fromd);
-        $("#ToDate").val(today);
-        
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+          }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error");
+          }
+          if (merchantId != "") {
+              if (!merchantId.match(mappedMerchantID)) {
+                  $("#merchantId_error").attr("style", "display:block");
+                  $("#merchantId_error").html("Please enter valid Merchant ID");
+                  flag = "N";
+              }
+          }
+          if (terminalId != "") {
+              if (!terminalId.match(mappedterminalID)) {
+                  $("#terminalId_error").attr("style", "display:block");
+                  $("#terminalId_error").html("Please enter valid Terminal ID");
+                  flag = "N";
+              }
+          }
+          if (flag == "Y") {
+              $("#toDate_error").attr("style", "display:none");
+              $("#toDate_error").html("");
+              $("#fromDate_error").attr("style", "display:none");
+              $("#fromDate_error").html("");
+              $("#merchantId_error").attr("style", "display:none");
+              $("#merchantId_error").html("");
+          }
+          if (flag == "N")
+              e.preventDefault();
+           else{
+                var zoID = $("#ZonalOfficeId").val();
+                var roID = $("#RegionalOfficeId").val();
 
-    };
-    $("#RegionalOfficeId").change(function () {
-        var id = this.value;
-        $("#RegionalOfcIdVal").val(id);
-    });
-   function getMerchantRegionalOfc() {
-       var id = $('#ZonalOfficeId :selected').val();
-       var regionalID = $("#RegionalOfcIdVal").val();
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#RegionalOfficeId").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "--All--"
-                                }).html("--All--").appendTo("#RegionalOfficeId");
-                            if (data.regionalOfficeID == regionalID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                            }
-                        }
-                        else if (data.regionalOfficeID == regionalID) {
-                            $('<option selected = "selected">',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
-                    });
-                }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
-            }
-        });
-    };
+               $.ajax({
+               type: 'GET',  // http method
+               url: '@Url.Action("SearchTerminalDeinstallationRequestStatus", "TerminalManagement")',
+               contentType: "application/json; charset=utf-8",
+               dataType: 'text',
+               data: { ZonalOfficeId: zoID, RegionalOfficeId: roID, FromDate: fromdate, ToDate: todate, MerchantId: merchantId,TerminalId:terminalId},
+               success: function (data, status, xhr) {
+                   var v = data;
+                   if (status == 'success') {
+                       $("#show_Table").html(data);
+                       $('html, body').animate({
+                           scrollTop: $("#show_Table").offset().top
+                       }, 2000);
+                   }
+                   else {
+                       console.log(v);
+                   }
+               },
+               error: function (jqXhr, textStatus, errorMessage) {
+                   alert(data);
+                   alert("Error"+ errorMessage);
+               }
+           });
+               }
+      })
+      );
 
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
-        if (charCode != 46 && charCode > 31
-            && (charCode < 48 || charCode > 57))
-            return false;
+      $("#RegionalOfficeId").change(function () {
+          var id = this.value;
+          $("#RegionalOfcIdVal").val(id);
+      });
+     function getMerchantRegionalOfc() {
+         var id = $('#ZonalOfficeId :selected').val();
+         var regionalID = $("#RegionalOfcIdVal").val();
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+              data: { ZonalOfcID: id },  // data to submit
+              dataType: "json",
+              success: function (data, status, xhr) {
+                  var v = data;
+                  if (status == 'success') {
+                      $("#RegionalOfficeId").html("");
+                      $.each(data, function (i, data) { // bind the dropdown list using json result
+                          if (i == 0) {
+                              $('<option>',
+                                  {
+                                      value: 0,
+                                      text: "--All--"
+                                  }).html("--All--").appendTo("#RegionalOfficeId");
+                              if (data.regionalOfficeID == regionalID) {
+                                  $('<option selected = "selected">',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                              else {
+                                  $('<option>',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                          }
+                          else if (data.regionalOfficeID == regionalID) {
+                              $('<option selected = "selected">',
+                                  {
+                                      value: data.regionalOfficeID,
+                                      text: data.regionalOfficeName
+                                  }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                          }
+                          else {
+                              $('<option>',
+                                  {
+                                      value: data.regionalOfficeID,
+                                      text: data.regionalOfficeName
+                                  }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                          }
+                      });
+                  }
+                  else {
+                      console.log(v);
+                  }
+              },
+              error: function (jqXhr, textStatus, errorMessage) {
+                  alert("Error Populating Regional Office Data");
+              }
+          });
+      };
 
-        return true;
-    }
-    $(".date").on('change', function (e) {
+
     
-        checkDates();
-        $("#show_Table").html("");
-    });
-    function checkDates() {
-        var fromD = $("#FromDate").val();
-        var toD = $("#ToDate").val();
-        var dateflag = "Y";
-        if (fromD != "" && toD != "") {
-            if (fromD > toD) {
-
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = "N";
-            }
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-        }
-
-        if (toD != "") {
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-        }
-
-        return dateflag;
-    }
-
 
 </script>

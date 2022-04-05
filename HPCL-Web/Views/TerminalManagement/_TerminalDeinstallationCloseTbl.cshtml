@@ -1,0 +1,191 @@
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
+@using HPCL.Common.Resources
+  @if (Model.TerminalDeinstallationRequestDetails.Count() > 0)
+            {
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-4 col-12">Status</label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    <input type="radio" id="deinstall" name="Status" value="De-Installed" class="rbDeinstall" checked>
+                                    <span style="margin:0 10px">De-Installed</span>
+                                    <input type="radio" id="pblminstall" name="Status" value="Problematic De-Install" class="rbDeinstall">
+                                    <span style="margin:0 10px">Problematic De-Install</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-6 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-3">
+                            <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                    @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control", style = "display:none" })
+                                    <textarea rows="4" class="form-control" id="txtComments" cols="50"></textarea>
+                                    <span class="error" id="reason_error"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+                        <thead style="background-color:lightgray;">
+                            <tr>
+                                <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                                <th style="width:5%;">Merchant ID</th>
+                                <th style="width:10%;">Terminal ID</th>
+                                <th style="width:10%;">Retail Outlet Name</th>
+                                <th style="width:10%;">Zonal Office</th>
+                                <th style="width:10%;">Regional Office</th>
+                                <th style="width:20%;">Status</th>
+                                <th style="width:10%;">Requested By</th>
+                                <th style="width:10%;">Requested Date</th>
+                                <th style="width:10%;">Authorized By</th>
+                                <th style="width:10%;">Authorization Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var item in Model.TerminalDeinstallationRequestDetails)
+                            {
+                                i = i + 1;
+
+                                <tr>
+                                    <td><input type="checkbox" id="check_@i" /></td>
+                                    <td>@item.MerchantID</td>
+                                    <td>@item.TerminalID</td>
+                                    <td>@item.RetailOutletName</td>
+                                    <td>@item.ZonalOfficeName</td>
+                                    <td>@item.RegionalOfficeName</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.RequestedBy</td>
+                                    <td>@item.RequestedDate</td>
+                                    <td>@item.AuthorizedBy</td>
+                                    <td>@item.AuthorizedDate</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" onclick="submitDeinstallationRequestClose();">Submit</button>
+                    </div>
+
+                </div>
+            }
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+      $(".rbDeinstall").change(function () {
+
+        if ($("#deinstall").is(":checked")) {
+            $("#Reason").attr("style", "display:none");
+            $("#txtComments").attr("style", "display:block");
+
+        }
+        if ($("#pblminstall").is(":checked")) {
+            $("#Reason").attr("style", "display:block");
+            $("#txtComments").attr("style", "display:none");
+        }
+        $("#reason_error").html("");
+    });
+     function submitDeinstallationRequestClose() {
+        //alert("inside submit");
+        merchantDetail = [];
+         $("#TerminalRequestDetails tbody tr").each(function () {
+             //debugger;
+
+             var row = $(this);
+             if (row.find('input[type="checkbox"]').is(":checked")) {
+
+                 var merchantId = row[0].cells[1].textContent;
+                 var terminalId = row[0].cells[2].textContent;
+                 merchantDetail.push({ MerchantId: merchantId, TerminalID: terminalId });
+
+            }
+         });
+        var flag = "Y";
+        //debugger;
+        var comments = "";
+        var ReasonId = $('#Reason :selected').val();
+        var Status = $("input[name='Status']:checked").val();
+        if ($("#deinstall").is(":checked"))
+            comments = $('#txtComments').val();
+        else if ($("#pblminstall").is(":checked"))
+            comments = $('#Reason :selected').val();
+        if ($("#deinstall").is(":checked") && comments == "") {
+            flag = "N";
+            $("#reason_error").html("Please add comments");
+            return;
+        }
+        if ($("#pblminstall").is(":checked") && ReasonId == "0")  {
+            flag = "N";
+            $("#reason_error").html("Please select reason");
+            return;
+        }
+        if (merchantDetail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+
+
+        if (merchantDetail.length > 0 && flag == "Y") {
+            if (confirm('Are you sure! You want to close this request')) {
+                $("#reason_error").html("");
+                var terminationReqmodel = { Status: Status, Comments: comments, ObjMerchantTerminalMapInput: merchantDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitDeinstallationRequestClose", "TerminalManagement")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(terminationReqmodel),
+                    success: function (data) {
+                        //setDates();
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
+    
+</script>
+

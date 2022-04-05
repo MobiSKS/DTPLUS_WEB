@@ -1,0 +1,161 @@
+﻿@model HPCL.Common.Models.ViewModel.TerminalManagementRequestViewModel
+@using HPCL.Common.Resources
+@if (Model.TerminalManagementRequestDetails.Count() > 0)
+{
+    <div class="table-responsive">
+        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+            <thead style="background-color:lightgray;">
+                <tr>
+                    <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                    <th style="width:5%;">Merchant ID</th>
+                    <th style="width:10%;">Terminal ID</th>
+                    <th style="width:10%;">Zonal Office</th>
+                    <th style="width:10%;">Regional Office</th>
+
+                    <th style="width:20%;">Status</th>
+                    <th style="width:10%;">Terminal Type Requested</th>
+                    <th style="width:10%;">Created By</th>
+                    <th style="width:10%;">Created Date</th>
+                </tr>
+            </thead>
+            <tbody id="searchTableBody">
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in Model.TerminalManagementRequestDetails)
+                {
+                    i = i + 1;
+
+                    <tr>
+                        <td><input type="checkbox" id="check_@i" /></td>
+                        <td>@item.MerchantID</td>
+                        <td>@item.TerminalID</td>
+                        <td>@item.ZonalOfficeName</td>
+                        <td>@item.RegionalOfficeName</td>
+                        <td>@item.Status</td>
+                        <td>@item.TerminalTypeRequested</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.CreatedDate</td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="border-1 rounded border-grey mt-3">
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="col-lg-6 col-12">
+                <div class="d-flex align-items-center flex-wrap mb-3 mt-3">
+                    <label class="font-weight-normal col-md-4 col-12 ">Status <sup class="text-danger">*</sup></label>
+                    <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                            <input class="mr-2 form-check-input" type="radio" name="Status" style="margin-top: 0.1rem;" value="Problematic-Installation" disabled checked>
+                            <span>Problematic-Installation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="col-lg-6 col-12">
+                <div class="d-flex align-items-center flex-wrap mb-3">
+                    <label class="font-weight-normal col-md-4 col-12  ">Reason<sup class="text-danger">*</sup></label>
+                    <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                            @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control" })
+                            <span class="error" id="reason_error"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+        <div class="d-flex align-items-center justify-content-center mb-3">
+            <div class="px-2">
+                <button class="btn btn_primary" type="button" onclick="submitTerminalrequestClose();">Submit</button>
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    
+    function submitTerminalrequestClose() {
+        //alert("inside submit");
+        merchantDetail = [];
+         $("#TerminalRequestDetails tbody tr").each(function () {
+             //debugger;
+
+             var row = $(this);
+             if (row.find('input[type="checkbox"]').is(":checked")) {
+
+                 var merchantId = row[0].cells[1].textContent;
+                 var terminalId = row[0].cells[2].textContent;
+                 merchantDetail.push({ MerchantId: merchantId, TerminalId: terminalId });
+
+            }
+         });
+        var flag = "Y";
+        //debugger;
+        var reason = $('#Reason :selected').text();
+        var reasonId = $('#Reason :selected').val();
+        if (merchantDetail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+        if (reasonId == "0") {
+             flag = "N";
+             $("#reason_error").html("Please select reason");
+        }
+        if (merchantDetail.length > 0 && flag == "Y") {
+            if (confirm("Are you sure, you want to close these installation requests as Problematic installations ?")) {
+                $("#reason_error").html("");
+                var terminationReqmodel = { ReasonId: reasonId, ReasonName: reason, ObjMerchantTerminalInstallationRequestCloseDetail: merchantDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitTerminalRequestClose", "TerminalManagement")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(terminationReqmodel),
+                    success: function (data) {
+                        //setDates();
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
+</script>
+

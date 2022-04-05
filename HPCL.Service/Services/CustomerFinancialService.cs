@@ -5,6 +5,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -16,11 +17,12 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
-
-        public CustomerFinancialService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        private readonly ICommonActionService _commonActionService;
+        public CustomerFinancialService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<CardToCCMSBalanceTransferSearchResponse> SearchCardToCCMSTransfer(BalanceTransferSearchModel entity)
@@ -133,19 +135,15 @@ namespace HPCL.Service.Services
         public async Task<CustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID,string CardNo,string MobileNo,string FromDate,string ToDate)
         {
             CustomerTransactionResponseModel transactionResponse = new CustomerTransactionResponseModel();
-            string fromDate = "", toDate = "";
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = FromDate.Split("-");
-                string[] toDateArr = ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {
-                return transactionResponse;
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var Request = new CustomerTransactionViewModel()
             {
@@ -155,8 +153,8 @@ namespace HPCL.Service.Services
                 CustomerID = CustomerID,
                 CardNo=CardNo,
                 MobileNo=MobileNo,
-                FromDate= fromDate,
-                ToDate=toDate
+                FromDate= FromDate,
+                ToDate=ToDate
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
