@@ -97,6 +97,7 @@
         public static string getMerchantStatusList = "api/dtplus/merchant/get_merchant_status";
         public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
         public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
+        public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         #endregion
 
         #region customer
