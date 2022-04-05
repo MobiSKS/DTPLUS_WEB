@@ -1,10 +1,10 @@
 ﻿@model HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.AddAddOnCard
-    @using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Application Form Data Entry</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollment</a> </li>
             <li class="breadcrumb-item font-weight-light">Add Add-On Cards</li>
         </ul>
         <form id="formValid">
@@ -66,7 +66,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">No of Cards<sup class="text-danger">*</sup> </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.NoOfCards, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.NoOfCards, new {@id="noofCardVal", @class = "form-control" })
                                             </div>
                                             @Html.ValidationMessageFor(m => m.NoOfCards, "", new { @class = "text-danger" })
                                         </div>
@@ -199,7 +199,7 @@
                             <fieldset class="border-1 rounded border-grey">
                                 <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Details</legend>
                                 <div class="table-responsive" id="tblResponse">
-                                    <table id="MerchantSearchTbl" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                    <table id="cardsRow" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                                         <thead>
                                             <tr>
                                                 <th>S No.</th>
@@ -223,6 +223,7 @@
 
                         </div>
                         <div class="clearfix"></div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -339,5 +340,39 @@
 
     function AddCardTbl() {
 
+        var cardsCount = $("#noofCardVal").val();
+
+         $("#cardsRow td").parent().remove();
+
+        for(var i = 0; i < cardsCount; i++){
+
+              var rows = "<tbody><tr>"
+                    + "<td>" + (i+1) + "</td>"
+                    + "<td><input class='form-control mobn' name='' type='text'></td>"
+                    + "<td><select class='form-control vls'><option>Select</option></select></td>"
+                    + "<td><input class='form-control amt' name='' type='text'></td>"
+                     + "<td><input class='form-control amt' name='' type='text'></td>"
+                    + "</tr></tbody>";
+
+                $('#cardsRow').append(rows);
+        }
+
+         $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetVehicleTypeDetails", "Common")',
+                dataType: "json",
+                success: function (data, status, xhr) {
+  
+                console.log(data);
+
+                $.each(data.sortedtList, function (i, option) {
+                    $("<option/>").val(option.vehicleTypeId).text(option.vehicleTypeName).appendTo(".vls");
+                });
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Region");
+                }
+            });
     }
 </script>
