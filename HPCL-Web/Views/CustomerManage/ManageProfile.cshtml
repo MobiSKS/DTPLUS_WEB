@@ -838,6 +838,7 @@
                           for (var i = 0; i < res.length; i++) {
                               var ApplicationDate = new Date(res[i].dateOfApplication).toLocaleDateString("pt-PT");
                               rows += "<tr>"
+                                  + "<td>"+ (i+1) +"</td>"
                                   + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td width='400px'>" + res[i].nameOnCard + "</td>"
                                   + "<td width='400px' class='getCustType'>" + res[i].customerTypeName + "</td>"
@@ -846,7 +847,7 @@
                                   + "<td width='400px'>" + res[i].customerStatusName + "</td>"
                                   + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this)'>View</a></td>"
                                   + "<td width='400px'><a href='#aaa' class='editNumber'>View</a></td>"
-                                  + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'>search </a></td>"
+                                  + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><img src='~/assets/images/search_icon2.png' /> </a></td>"
                               "</tr >";
 
                           }
@@ -945,19 +946,6 @@
                           rows += "</tbody>"
                           $('#CustomerSearch table').append(rows);
 
-                          //$('#CustomerSearch table').DataTable({
-                          //      paging: true,
-                          //      searching: false,
-                          //      stateSave: true,
-                          //      "bDestroy": true,
-                          //      "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                          //      "autoWidth": false,
-                          //      "oLanguage": {
-                          //          "sLengthMenu": "Display _MENU_ Records",
-                          //          "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                          //      }
-                          //});
-
                           document.getElementById("CustomerSearch").style.display = "block";
                       }else{
                             document.getElementById("CustomerSearch").style.display = "none";
@@ -984,9 +972,8 @@
     });
 
 
-      function GetCardSearch(o)
-      {
-          var Id = o.closest('tr').childNodes[0].innerText;
+      function GetCardSearch(o){
+          var Id = o.closest('tr').childNodes[1].innerText;
           $.ajax({
               url: "@Url.Action("CardDetails", "CustomerManage")",
               type: "POST",
@@ -1170,9 +1157,11 @@
 
       function ViewBasicInfo(o) {
     
-          var CustomerId = o.closest('tr').childNodes[0].innerText;
+          var CustomerId = o.closest('tr').childNodes[1].innerText;
 
           var customerType = o.closest('tr').childNodes[2].innerText;
+
+          console.log(CustomerId+"     "+customerType);
 
           //var CustomerId = o.innerText;
           $.ajax({
