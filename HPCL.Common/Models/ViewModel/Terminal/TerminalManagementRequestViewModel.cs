@@ -2,6 +2,7 @@
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Terminal;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel
@@ -24,6 +25,8 @@ namespace HPCL.Common.Models.ViewModel
                 ReasonName="--Select--"
             }) ;
             TerminalManagementRequestDetails = new List<TerminalManagementRequestDetailsModel>();
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public string MerchantId { get; set; }

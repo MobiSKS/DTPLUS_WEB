@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.MerchantFinancial;
 using HPCL.Common.Models.ViewModel.MerchantFinancials;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,8 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> MerchantDeltaReport()
         {
-            return View();
+            MerchantDeltaReportModel merchantDeltaReportModel = new MerchantDeltaReportModel();
+            return View(merchantDeltaReportModel);
         }
         public async Task<IActionResult> ReFuelCardPaymentConfirmation()
         {

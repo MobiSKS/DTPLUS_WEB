@@ -12,8 +12,8 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
     {
         public CustomerTransactionViewModel()
         {
-            FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-            ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         [StringLength(10)]

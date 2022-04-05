@@ -12,7 +12,7 @@ namespace HPCL.Common.Models.RequestModel.TatkalCardCustomer
             ObjCardMap = new List<MapTatkalCardtoCustomerUpdateDetails>();
         }
         public string CustomerId { get; set; }
-        
+        public string RegionalOfcId { get; set; }
         public List<MapTatkalCardtoCustomerUpdateDetails> ObjCardMap { get; set; }
     }
     public class MapTatkalCardtoCustomerUpdateDetails
