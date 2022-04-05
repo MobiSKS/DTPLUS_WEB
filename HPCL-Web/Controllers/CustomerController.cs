@@ -58,40 +58,6 @@ namespace HPCL_Web.Controllers
             List<CustomerTypeModel> lstCustomerType = new List<CustomerTypeModel>();
             lstCustomerType = await _customerService.GetCustomerType();
             return Json(lstCustomerType);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var CustType = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")}
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(CustType), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getOfficerType, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<CustomerTypeModel> lst = jarr.ToObject<List<CustomerTypeModel>>();
-            //            return Json(lst);
-            //        }
-            //        else
-            //        {
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //            // ViewBag.Message = "Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString();
-            //        }
-            //    }
-
-            //}
-
         }
 
         [HttpPost]
@@ -162,108 +128,6 @@ namespace HPCL_Web.Controllers
             customerCardInfo = await _customerService.GetCustomerDetails(customerReferenceNo);
 
             return Json(customerCardInfo);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"ZonalID", "0" }
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-
-
-            //    //fetching Customer info
-            //    var CustomerRefinfo = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"CustomerReferenceNo", customerReferenceNo}
-            //        };
-
-            //    CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-
-            //    CustomerResponseByReferenceNo customerResponseByReferenceNo;
-            //    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerByReferenceno, custRefcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(ResponseContent);
-            //            if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
-            //            {
-            //                customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-            //                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
-
-            //                StringBuilder sb = new StringBuilder();
-            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-            //                    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
-
-            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-            //                    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
-
-            //                if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-            //                    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
-
-
-            //                customerCardInfo.CustomerName = sb.ToString();
-
-            //                customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-            //                customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
-            //                if (customerResponseByReferenceNo.Data != null)
-            //                {
-            //                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
-            //                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
-            //                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
-            //                    customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
-            //                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-            //                    if (customerCardInfo.RBEId == "0")
-            //                        customerCardInfo.RBEId = "";
-            //                    if (customerCardInfo.NoOfCards == "0")
-            //                        customerCardInfo.NoOfCards = "";
-            //                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
-
-            //                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
-            //                    {
-            //                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
-            //                    }
-            //                }
-
-            //                return Json(customerCardInfo);
-            //            }
-            //            else
-            //            {
-            //                ModelState.Clear();
-            //                ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //                var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //                return Json("Failed to load Customer Details");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Customer Details");
-            //        }
-            //    }
-
-
-            //}
         }
 
         [HttpPost]
@@ -274,74 +138,6 @@ namespace HPCL_Web.Controllers
             customerCardInfo = await _customerService.GetCustomerRBEName(RBEId);
 
             return Json(customerCardInfo);
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-            //    var forms = new Dictionary<string, string>
-            //    {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"ZonalID", "0" }
-            //    };
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
-
-
-
-            //    //fetching Customer info
-            //    var CustomerRefinfo = new Dictionary<string, string>
-            //        {
-            //            {"Useragent", CommonBase.useragent},
-            //            {"Userip", CommonBase.userip},
-            //            {"Userid", HttpContext.Session.GetString("UserName")},
-            //            {"RBEId", RBEId}
-            //        };
-
-            //    CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-
-            //    CustomerRBE customerRBE;
-            //    StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
-            //    using (var Response = await client.PostAsync(WebApiUrl.getCustomerRbeId, custRefcontent))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-            //            customerRBE = JsonConvert.DeserializeObject<CustomerRBE>(ResponseContent);
-            //            if (customerRBE.Internel_Status_Code == 1000)
-            //            {
-            //                customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
-            //                customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
-
-            //                return Json(customerCardInfo);
-            //            }
-            //            else
-            //            {
-            //                ModelState.Clear();
-            //                ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //                var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //                return Json("Failed to load Customer Details");
-            //            }
-
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading Customer Details");
-            //            var Response_Content = Response.Content.ReadAsStringAsync().Result;
-
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(Response_Content).ToString());
-            //            var Message = obj["errorMessage"].ToString();
-            //            return Json("Failed to load Customer Details");
-            //        }
-            //    }
-            //}
-
         }
 
         [HttpPost]
@@ -576,48 +372,6 @@ namespace HPCL_Web.Controllers
         {
             List<SalesAreaModel> lst = await _customerService.GetsalesAreaDetails(RegionID);
             return Json(lst);
-
-            //var customerRegion = new Dictionary<string, string>
-            // {
-            //        {"Useragent", CommonBase.useragent},
-            //        {"Userip", CommonBase.userip},
-            //        {"Userid", HttpContext.Session.GetString("UserName")},
-            //        {"RegionID", RegionID.ToString() }
-
-            //};
-
-            //using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-            //{
-
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //    StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
-
-            //    using (var Response = await client.PostAsync(WebApiUrl.getSalesArea, content))
-            //    {
-            //        if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-            //        {
-            //            var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-            //            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-            //            var jarr = obj["Data"].Value<JArray>();
-            //            List<SalesAreaModel> lst = jarr.ToObject<List<SalesAreaModel>>();
-            //            lst.Add(new SalesAreaModel
-            //            {
-            //                SalesAreaID = 0,
-            //                SalesAreaName = "Select Sales Area",
-
-            //            });
-            //            var SortedtList = lst.OrderBy(x => x.SalesAreaID).ToList();
-            //            return Json(SortedtList);
-            //        }
-            //        else
-            //        {
-            //            ModelState.Clear();
-            //            ModelState.AddModelError(string.Empty, "Error Loading sales Area Details");
-            //            return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-            //        }
-            //    }
-            //}
         }
 
         public async Task<IActionResult> SuccessUploadRedirect(string customerReferenceNo)

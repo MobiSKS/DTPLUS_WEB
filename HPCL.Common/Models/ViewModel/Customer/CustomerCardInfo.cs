@@ -37,6 +37,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string ReceivedAmount { get; set; }
         public string Message { get; set; }
         public string Remarks { get; set; }
+        public bool VehicleNoVerifiedManually { get; set; }
     }
 
     public class CardDetails

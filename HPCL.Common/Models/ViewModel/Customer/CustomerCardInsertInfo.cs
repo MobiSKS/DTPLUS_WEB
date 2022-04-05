@@ -23,6 +23,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string UserId { get; set; }
 
         public string Createdby { get; set; }
+        public string VehicleNoVerifiedManually { get; set; }
 
         public List<CardDetails> ObjCardDetail { get; set; }
     }
