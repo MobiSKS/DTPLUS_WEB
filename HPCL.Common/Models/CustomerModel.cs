@@ -38,7 +38,7 @@ namespace HPCL.Common.Models
             CustomerRegionMdl.Add(new CustomerRegionModel
             {
                 RegionalOfficeID = 0,
-                RegionalOfficeName = "Select Region"
+                RegionalOfficeName = "Select Regional Office"
             });
             CustomerStateMdl = new List<StateResponseModal>();
             CustomerStateMdl.Add(new StateResponseModal

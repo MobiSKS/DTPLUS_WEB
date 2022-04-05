@@ -182,6 +182,7 @@
         public static string viewOtcCardMerchantAllocation = "api/dtplus/otc/view_otc_card_merchant_allocation";
         public static string getotccardallocationactivation = "api/dtplus/otc/get_otc_card_allocation_activation";
         public static string insertDealerWiseOtcCardRequest = "api/dtplus/otc/insert_dealer_wise_otc_card_request";
+        public static string checkMobileNo = "api/dtplus/card/check_mobile_no";
         #endregion
 
         #region TatkalCardCustomer

@@ -419,5 +419,25 @@ namespace HPCL.Service.Services
             return dealerWiseMyHPOTCCardRequestModel;
         }
 
+        public async Task<CustomerInserCardResponseData> CheckMobilNoAlreadyUsedForOTCCard(string MobileNo)
+        {
+            var requestInfo = new CheckMobilNoDuplicationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                Mobileno = MobileNo
+            };
+
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkMobileNo);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
+
     }
 }

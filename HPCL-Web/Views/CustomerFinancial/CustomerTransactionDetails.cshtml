@@ -62,7 +62,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error','31');"  })
                                             </div>
 
                                         </div>
@@ -79,7 +79,7 @@
                                         <label class="font-weight-normal col-md-3 col-12">To Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate" , @onchange = "checkDates('fromDate_error','31');" })
                                             </div>
 
                                         </div>
@@ -169,14 +169,12 @@
 </div>
 <script type="text/javascript">
 
-    var today = '@Context.Session.GetString("Today")';
    // var today = new Date();
     //var dd = String(today.getDate()).padStart(2, '0');
     //var mm = String(today.getMonth() + 1).padStart(2, '0');
     //var yyyy = today.getFullYear();
     //today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
-       //setDates();
         if ($("#rbCardNo").is(":checked")) {
             $("#lblCustomerId").attr("style", "display:none");
             $("#lblCardNo").attr("style", "display:block");
@@ -194,26 +192,7 @@
         }
 
     });
-    function setDates() {
-        //debugger;
-        //var fromd = new Date();
-        //fromd.setMonth(fromd.getMonth());
-        //fromd.setDate(fromd.getDate() - 1);
-        //var dd = String(fromd.getDate()).padStart(2, '0');
-        //var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-        //var yyyy = fromd.getFullYear();
 
-        //fromd = yyyy + '-' + mm + '-' + dd;
-        //$("#FromDate").val(fromd);
-        //$("#ToDate").val(today);
-
-        //$("#CustomerID").val("");
-        //$("#CardNo").val("");
-        //$("#MobileNo").val("");
-
-        //$("#fromDate_error").html("");
-        //$("#toDate_error").html("");
-    };
     $(".rbTransactionType").change(function () {
 
         if ($("#rbCustomerID").is(":checked")) {
@@ -245,59 +224,52 @@
         $("#customerId_error").html("");
 
     });
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
-        if (charCode != 46 && charCode > 31
-            && (charCode < 48 || charCode > 57))
-            return false;
+   
+    //$(".date").on('change', function (e) {
+    //    var fromD = "";
+    //    var toD = "";
+    //    fromD = $("#FromDate").val();
+    //    toD = $("#ToDate").val();
+    //    checkDates(fromD, toD);
+    //    $("#show_Table").html("");
+    //});
 
-        return true;
-    }
-    $(".date").on('change', function (e) {
-        var fromD = "";
-        var toD = "";
-        fromD = $("#FromDate").val();
-        toD = $("#ToDate").val();
-        checkDates(fromD, toD);
-        $("#show_Table").html("");
-    });
+    //function checkDates(fromD, toD) {
+    //    var dateflag = "Y";
+    //    var d1 = new Date(fromD);
+    //    var d2 = new Date(toD);
 
-    function checkDates(fromD, toD) {
-        var dateflag = "Y";
-        var d1 = new Date(fromD);
-        var d2 = new Date(toD);
+    //    if (fromD != "" && toD != "") {
+    //        var aday = 24 * 60 * 60 * 1000;
+    //        if (fromD > toD) {
 
-        if (fromD != "" && toD != "") {
-            var aday = 24 * 60 * 60 * 1000;
-            if (fromD > toD) {
+    //            $("#fromDate_error").attr("style", "display:block");
+    //            $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
+    //            dateflag = "N";
+    //        }
+    //        else if ((Math.abs(d2-d1) / aday) > 31)
+    //        {
+    //            $("#fromDate_error").attr("style", "display:block");
+    //            $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
+    //            dateflag = "N";
+    //        }
+    //        else {
+    //            $("#fromDate_error").html("");
+    //            $("#fromDate_error").attr("style", "display:none");
+    //        }
+    //        if (toD > today) {
+    //            $("#toDate_error").attr("style", "display:block");
+    //            $("#toDate_error").html("To Date should be less or equal to Today's date");
+    //            dateflag = "N";
+    //        }
+    //        else {
+    //            $("#toDate_error").html("");
+    //            $("#toDate_error").attr("style", "display:none");
+    //        }
 
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = "N";
-            }
-            else if ((Math.abs(d2-d1) / aday) > 31)
-            {
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
-                dateflag = "N";
-            }
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-
-        }
-        return dateflag;
-    }
+    //    }
+    //    return dateflag;
+    //}
 
     $("#btnSearch").on("click", (function (e) {
          var fromdate = $("#FromDate").val();
@@ -324,7 +296,7 @@
              flag = "N";
         }
          if (fromdate != "" && todate != "") {
-             flag = checkDates(fromdate, todate);
+             flag = checkDates("fromDate_error","31");
          }
         if (customerId == "" && mobileNo == "" && cardNo == "") {
             $("#customerId_error").attr("style", "display:block");

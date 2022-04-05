@@ -107,6 +107,11 @@ namespace HPCL_Web.Controllers
         {
             List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
             lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(ZonalOfficeID);
+            if (lstCustomerRegion.Count > 0)
+            {
+                if (lstCustomerRegion[0].RegionalOfficeName == "--Select--")
+                    lstCustomerRegion[0].RegionalOfficeName = "Select Regional Office";
+            }
             return Json(lstCustomerRegion);
         }
 

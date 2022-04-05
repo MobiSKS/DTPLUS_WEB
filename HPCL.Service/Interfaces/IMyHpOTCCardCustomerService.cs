@@ -7,6 +7,7 @@ using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ResponseModel.Customer;
 
 namespace HPCL.Service.Interfaces
 {
@@ -32,5 +33,6 @@ namespace HPCL.Service.Interfaces
         Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation();
         Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests();
         Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel);
+        Task<CustomerInserCardResponseData> CheckMobilNoAlreadyUsedForOTCCard(string MobileNo);
     }
 }
