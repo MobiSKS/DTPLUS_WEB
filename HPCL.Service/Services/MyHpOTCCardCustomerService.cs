@@ -357,7 +357,7 @@ namespace HPCL.Service.Services
             GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return GetCardAllocationActivation;
         }
-        public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(GetCardAllocationActivation entity)
         {
             MyCardAllocationandActivationModel getMyCardAllocationandActivation = new MyCardAllocationandActivationModel();
 
@@ -366,11 +366,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
-                RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
-                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate,
+                ZonalOfficeId = string.IsNullOrEmpty(entity.ZonalOfficeId) || entity.ZonalOfficeId == "0" ? "" : entity.ZonalOfficeId,
+                RegionalOfficeId = string.IsNullOrEmpty(entity.RegionalOfficeId) || entity.RegionalOfficeId == "0" ? "" : entity.RegionalOfficeId,
+                CustomerId = string.IsNullOrEmpty(entity.CustomerId) ? "" : entity.CustomerId,
             };
 
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");

@@ -59,7 +59,6 @@ namespace HPCL.Service.Services
         public async Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category,string ERPCode, string actionFlow)
         {
             MerchantGetDetailsModel merchantMdl = new MerchantGetDetailsModel();
-
             if (!string.IsNullOrEmpty(merchantIdValue))
             {
                 var merchantDetailsForms = new GetMerchantDetailsFromMerchantIDRequestModal
@@ -87,7 +86,7 @@ namespace HPCL.Service.Services
                     List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
                     merchantMdl = merchantDetailsLst.First();
                 }
-
+                merchantMdl.CreatedMerchant = "Y";
             }
 
             if (!string.IsNullOrEmpty(ERPCode))
@@ -108,6 +107,7 @@ namespace HPCL.Service.Services
                 var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
                 List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
                 merchantMdl = merchantDetailsLst.First();
+                merchantMdl.CreatedMerchant = "Y";
             }
 
             merchantMdl.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
@@ -265,8 +265,8 @@ namespace HPCL.Service.Services
             }
             else
             {
-                merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-                merchaApprovalMdl.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+                merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
+                merchaApprovalMdl.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal

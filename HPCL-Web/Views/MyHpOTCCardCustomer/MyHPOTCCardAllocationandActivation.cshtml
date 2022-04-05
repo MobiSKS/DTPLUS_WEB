@@ -8,7 +8,7 @@
             <li class="breadcrumb-item font-weight-light">My HP (OTC) Card Allocation & Activation</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        <form >
+        <form id="formSubmit">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -42,7 +42,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span style="display:none" class="error" id="fromDate_error"></span>
                                         </div>
@@ -53,7 +53,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">To Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span style="display:none" class="error" id="toDate_error"></span>
                                         </div>
@@ -209,12 +209,11 @@
         
         
         $.ajax({
-            type: 'GET',  // http method
+            type: 'POST',  // http method
             url: '@Url.Action("SearchCardActivationandAllocation", "MyHpOTCCardCustomer")',
-            contentType: "application/json; charset=utf-8",
-            data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, customerId: customerId},
-            dataType: "text",
+            data: $('#formSubmit').serialize(),
             success: function (data, status, xhr) {
+                console.log(data);
                 var v = data;
                 if (status == 'success') {
                     $("#cardActivationandAllocation").html(data);
@@ -231,8 +230,6 @@
             }
         });
     }
-    
-   
-  
+
 </script>
 

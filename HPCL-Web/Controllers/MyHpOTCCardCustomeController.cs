@@ -261,9 +261,9 @@ namespace HPCL_Web.Controllers
             var modals = await _myHpOTCCardCustomerService.ViewOTCCardMerchantAllocation(MerchantId, CardNo);
             return PartialView("~/Views/MyHpOTCCardCustomer/_OTCCardMerchantAllocationTable.cshtml", modals);
         }
-        public async Task<IActionResult> SearchCardActivationandAllocation(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId)
+        public async Task<IActionResult> SearchCardActivationandAllocation(GetCardAllocationActivation entity)
         {
-            var modals = await _myHpOTCCardCustomerService.SearchCardActivationandAllocation(zonalOfcID, regionalOfcID, fromDate, toDate, customerId);
+            var modals = await _myHpOTCCardCustomerService.SearchCardActivationandAllocation(entity);
             return PartialView("~/Views/MyHpOTCCardCustomer/_MyCardActivationandAllocationTable.cshtml", modals);
         }
         public async Task<IActionResult> MyHPOTCCardAllocationandActivation()
