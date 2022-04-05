@@ -291,23 +291,19 @@ namespace HPCL.Service.Services
         }
 
         #region Rejected Merchants
-        public async Task<MerchantApprovalModel> RejectedMerchant(MerchantApprovalModel merchaApprovalMdl)
+        public async Task<MerchantRejectedModel> RejectedMerchant(MerchantRejectedModel merchantRejectedMdl)
         {
             string fromDate = "", toDate = "";
 
-            if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
+            if (!string.IsNullOrEmpty(merchantRejectedMdl.FromDate) && !string.IsNullOrEmpty(merchantRejectedMdl.FromDate))
             {
-                string[] fromDateArr = merchaApprovalMdl.FromDate.Split("-");
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                if (!string.IsNullOrEmpty(merchaApprovalMdl.ToDate) && !string.IsNullOrEmpty(merchaApprovalMdl.ToDate))
-                {
-                    string[] toDateArr = merchaApprovalMdl.ToDate.Split("-");
-                    toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-                }
+                merchantRejectedMdl.FromDate = await _commonActionService.changeDateFormat(merchantRejectedMdl.FromDate);
+                merchantRejectedMdl.ToDate = await _commonActionService.changeDateFormat(merchantRejectedMdl.ToDate);
             }
             else
             {
-                return merchaApprovalMdl;
+                merchantRejectedMdl.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                merchantRejectedMdl.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
@@ -315,19 +311,19 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate
+                FromDate = merchantRejectedMdl.FromDate,
+                ToDate = merchantRejectedMdl.ToDate
             };
             StringContent MerchantRejectedContent = new StringContent(JsonConvert.SerializeObject(merchantApprovalForms), Encoding.UTF8, "application/json");
 
             var merchantRejectedResponse = await _requestService.CommonRequestService(MerchantRejectedContent, WebApiUrl.getRejectedMerchant);
 
             JObject merchantRejectedObj = JObject.Parse(JsonConvert.DeserializeObject(merchantRejectedResponse).ToString());
-            merchaApprovalMdl = JsonConvert.DeserializeObject<MerchantApprovalModel>(merchantRejectedResponse);
+            merchantRejectedMdl = JsonConvert.DeserializeObject<MerchantRejectedModel>(merchantRejectedResponse);
             var merchantRejectedJarr = merchantRejectedObj["Data"].Value<JArray>();
             List<MerchantApprovalTableModel> merchantApprovalLst = merchantRejectedJarr.ToObject<List<MerchantApprovalTableModel>>();
-            merchaApprovalMdl.MerchantApprovalTableDetails.AddRange(merchantApprovalLst);
-            return merchaApprovalMdl;
+            merchantRejectedMdl.MerchantApprovalTableDetails.AddRange(merchantApprovalLst);
+            return merchantRejectedMdl;
 
         }
         public async Task<MerchantModel> MerchantSummary(string ERPCode, string fromDate, string toDate)

@@ -1,4 +1,5 @@
-﻿@model HPCL.Common.Models.ViewModel.Merchant.MerchantApprovalModel
+﻿@model HPCL.Common.Models.ViewModel.Merchant.MerchantRejectedModel
+@using Microsoft.AspNetCore.Http;
 @{
     ViewData["Title"] = "Details";
     PagerModel pager = new PagerModel();
@@ -33,7 +34,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">From Date</label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date"})
+                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');" })
                                                     </div>
                                                     <span style="display:none" class="error" id="fromDate_error"></span>
                                                 </div>
@@ -44,7 +45,7 @@
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');" })
                                                     </div>
                                                     <span style="display:none" class="error" id="toDate_error"></span>
                                                 </div>
@@ -134,11 +135,6 @@
     var fromdate = $("#FromDate").val();
     var todate = $("#ToDate").val();
     var notFoundError = "@ViewBag.NotFoundError";
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
     $(document).ready(function () {
         $('#merchantRejectedDetails table').DataTable({
             "paging": true,
@@ -149,71 +145,16 @@
                 "info": "Showing _START_ to _END_ of _TOTAL_ Records",
             }
         });
-        setDates();
     });
     $("#btnSearch").on("click", (function (e) {
        
-        var dateflag = checkDates();
+        var dateflag = checkDates("fromDate_error");
         if (dateflag == "N") {
             $("#show_Table").html("");
             e.preventDefault();
         }
     })
     );
-    $(".date").on('change', function (e) {
-        checkDates();
-        $("#show_Table").html("");
-    });
-
-    function checkDates() {
-        var fromD = $("#FromDate").val();
-        var toD = $("#ToDate").val();
-        var dateflag = "Y";
-        if (fromD != "" && toD != "") {
-            if (fromD > toD) {
-
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("From Date should be less or equal to To date");
-                dateflag = "N";
-            }
-        }
-        else {
-            $("#fromDate_error").html("");
-            $("#fromDate_error").attr("style", "display:none");
-            $("#toDate_error").html("");
-            $("#toDate_error").attr("style", "display:none");
-        }
-        if (toD != "") {
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-        }
-
-        return dateflag;
-    }
-
-    function setDates() {
-        var fromd = new Date();
-        fromd.setMonth(fromd.getMonth() - 1);
-        var dd = String(fromd.getDate()).padStart(2, '0');
-        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = fromd.getFullYear();
-
-        fromd = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(fromd);
-        $("#ToDate").val(today);
-        $("#fromDate_error").html("");
-        $("#toDate_error").html("");
-        $("#toDate_error").attr("style", "display:none");
-        $("#fromDate_error").attr("style", "display:none");
-        $("#show_Table").html("");
-    };
 
 
 

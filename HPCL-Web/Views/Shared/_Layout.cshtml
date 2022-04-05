@@ -296,7 +296,7 @@
                                                             <li><a href="@Url.Action("RequestForOTCCard", "MyHpOTCCardCustomer")">Request for My HP (OTC) Card</a></li>
                                                             <li><a href="@Url.Action("ViewOTCCards", "MyHpOTCCardCustomer")">View Requested My HP (OTC) Card</a></li>
                                                             <li><a href="@Url.Action("OTCCardsAllocation", "MyHpOTCCardCustomer")">MID Allocation of Cards</a></li>
-                                                            <li><a href="@Url.Action("CustomerCardCreation", "MyHpOTCCardCustomer")">Customer/Card Creation</a></li>
+                                                            <li><a href="@Url.Action("CustomerCardCreation", "MyHpOTCCardCustomer")">MY HP(OTC) Customer Creation</a></li>
                                                             <li><a href="@Url.Action("ViewOTCCardsMerchatMapping", "MyHpOTCCardCustomer")">View MY HP (OTC) Card Merchant Allocation</a></li>
                                                             <li><a href="@Url.Action("MyHPOTCCardAllocationandActivation", "MyHpOTCCardCustomer")">My HP(OTC)Card Allocation & Activation</a></li>
                                                             <li><a href="@Url.Action("DealerOTCCardRequests", "MyHpOTCCardCustomer")">My HP (OTC) Dealer Card Requests</a></li>
@@ -614,12 +614,13 @@
             maxDate: new Date(today),
             autoclose: "true"
         });
-
-        var d = new Date($('.fromDate').val());
-        var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-        var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-        var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-        $('.fromDate').val(`${da}-${mo}-${ye}`);
+         if (($('.fromDate').val() != undefined)  && ($('.fromDate').val() != "") ){
+            var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
+            var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+            var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+            var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+            $('.fromDate').val(`${da}-${mo}-${ye}`);
+         }
     }
 
     function setToDateFormat(){
@@ -631,37 +632,53 @@
             maxDate: new Date(today),
             autoclose: "true"
         });
-
-        var d1 = new Date($('.toDate').val());
-        var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-        var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-        var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-        $('.toDate').val(`${da1}-${mo1}-${ye1}`);
-    }
-
-    function checkDates(dateId) {
-
-        if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined)){
-            var d = new Date($('.fromDate').val());
-            var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-            var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-            var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-            $('.fromDate').val(`${mo}-${da}-${ye}`);
-
-            var d1 = new Date($('.toDate').val());
+        if (($('.toDate').val() != undefined)  && ($('.toDate').val() != "") ){
+            var d1 = stringToDate($('.toDate').val(),"dd-mm-yyyy");
             var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
             var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
             var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-            $('.toDate').val(`${mo1}-${da1}-${ye1}`);
-            
-            var fromD =new Date(`${da}-${mo}-${ye}`);
-            var toD =  new Date(`${da1}-${mo1}-${ye1}`);            
+            $('.toDate').val(`${da1}-${mo1}-${ye1}`);
+        }
+    }
 
+    function checkDates(dateId,n) {
+
+        if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined) && ($('.fromDate').val() != "") && ($('.toDate').val() != "")){
+
+            var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
+            var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+            var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+            var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+            //$('.fromDate').val(`${mo}-${da}-${ye}`);
+
+            var d1 = stringToDate($('.toDate').val(),"dd-mm-yyyy");
+            var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+            var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+            var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+            //$('.toDate').val(`${mo1}-${da1}-${ye1}`);
+            
+            var fromD =d;
+            var toD =  d1;           
+            var dateflag="Y";
             if (fromD != "" && toD != "") {
                 if (fromD > toD) {
                     $("#" + dateId + "").attr("style", "display:block");
                     $("#" + dateId + "").html("'From Date' should be less or equal to 'To date'");
-                    dateflag = "Y";
+                    dateflag = "N";
+                }
+                else if(n>0)
+                {
+                    var aday = 24 * 60 * 60 * 1000;
+                    if ((Math.abs(toD-fromD) / aday) > n)
+                    {
+                        $("#" + dateId + "").attr("style", "display:block");
+                        $("#" + dateId + "").html("Difference between From Date and To Date should not be more than " + n + " days");
+                        dateflag = "N";
+                    }
+                    else {
+                        $("#" + dateId + "").html("");
+                        $("#" + dateId + "").attr("style", "display:none");
+                    }
                 }
                 else {
                     $("#" + dateId + "").html("");
@@ -673,22 +690,18 @@
         return dateflag;
     }
 
-    //$('.fromDate').on('change',function(){
-    //    var d = new Date($('.fromDate').val());
-    //    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-    //    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-    //    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-    //    $('.fromDate').val(`${da}-${mo}-${ye}`);
-    //});
-
-    //$('.toDate').on('change',function(){
-    //    var d1 = new Date($('.toDate').val());
-    //    var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-    //    var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-    //    var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-    //    $('.toDate').val(`${da1}-${mo1}-${ye1}`);
-    //});
-
+ 
+     function stringToDate(date, format) {
+        var formatArr = format.split("-");
+        var dateArr = date.split("-");
+        var monthIndex = formatArr.indexOf("mm");
+        var dayIndex = formatArr.indexOf("dd");
+        var yearIndex = formatArr.indexOf("yyyy");
+        var month = parseInt(dateArr[monthIndex]);
+        month -= 1;
+        var outputDate = new Date(dateArr[yearIndex], month, dateArr[dayIndex]);
+        return outputDate;
+    }
 </script>
 
 <script>

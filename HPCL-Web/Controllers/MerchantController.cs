@@ -93,9 +93,9 @@ namespace HPCL_Web.Controllers
             var reason = await _merchantServices.ActionOnMerchantID(approvalRejectionMdl);
             return Json(reason);
         }
-        public async Task<IActionResult> RejectedMerchant(MerchantApprovalModel merchaApprovalMdl)
+        public async Task<IActionResult> RejectedMerchant(MerchantRejectedModel merchantRejectedModel)
         {
-            var modals = await _merchantServices.RejectedMerchant(merchaApprovalMdl);
+            var modals = await _merchantServices.RejectedMerchant(merchantRejectedModel);
             return View(modals);
         }
         public async Task<IActionResult> MerchantSummary(string ERPCode, string fromDate, string toDate)

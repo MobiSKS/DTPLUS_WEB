@@ -10,6 +10,8 @@ namespace HPCL.Common.Models.ResponseModel.MerchantFinancial
         public MerchantDeltaReportModel()
         {
             MerchantDeltaReportDetails = new List<MerchantDeltaReportDetails>();
+            FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
         }
         public virtual List<MerchantDeltaReportDetails> MerchantDeltaReportDetails { get; set; }
         public string MerchantId { get; set; }

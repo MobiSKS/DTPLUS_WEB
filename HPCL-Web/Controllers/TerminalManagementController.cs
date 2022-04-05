@@ -14,10 +14,12 @@ namespace HPCL_Web.Controllers
     {
 
         private readonly ITerminalManagement _TerminalService;
+        private readonly ICommonActionService _commonActionService;
 
-        public TerminalManagementController(ITerminalManagement ViewServices)
+        public TerminalManagementController(ITerminalManagement ViewServices, ICommonActionService commonActionService)
         {
             _TerminalService = ViewServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<IActionResult> Index()
@@ -78,11 +80,17 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> TerminalInstallationRequestClose(TerminalManagementRequestViewModel terminalReq)
+        public async Task<IActionResult> TerminalInstallationRequestClose()
         {
-            var modals = await _TerminalService.TerminalInstallationRequestClose(terminalReq);
-            return View(modals);
+            TerminalManagementRequestViewModel terminalManagementRequestViewModel = new TerminalManagementRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalManagementRequestViewModel.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalManagementRequestViewModel);
+        }
+        public async Task<IActionResult> SearchTerminalInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        {
+            var modals = await _TerminalService.TerminalInstallationRequestClose(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, MerchantId, TerminalId);
+            return PartialView("~/Views/TerminalManagement/_TerminalInstallationRequestClosetbl.cshtml", modals);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel TerminalManagementRequestModel)
@@ -91,18 +99,33 @@ namespace HPCL_Web.Controllers
             return Json(result);
         }
 
-
-        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<IActionResult> ViewTerminalDeinstallationRequestStatus()
         {
-            var modals = await _TerminalService.ViewTerminalDeinstallationRequestStatus(terminalReq);
-            return View(modals);
+            TerminalDeinstallationRequestViewModel terminalDeinstallationRequestViewModel = new TerminalDeinstallationRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalDeinstallationRequestViewModel.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalDeinstallationRequestViewModel);
         }
 
-
-        public async Task<IActionResult> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
+        
+        public async Task<IActionResult> SearchTerminalDeinstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            var modals = await _TerminalService.ViewTerminalInstallationRequestStatus(terminalReq);
-            return View(modals);
+            var modals = await _TerminalService.ViewTerminalDeinstallationRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, MerchantId, TerminalId);
+            return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationStatusTbl.cshtml", modals);
+        }
+
+        public async Task<IActionResult> ViewTerminalInstallationRequestStatus()
+        {
+            TerminalManagementRequestViewModel terminalManagementRequestViewModel = new TerminalManagementRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalManagementRequestViewModel.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalManagementRequestViewModel);
+        }
+        
+        public async Task<IActionResult> SeacrhTerminalInstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        {
+            var modals = await _TerminalService.ViewTerminalInstallationRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, MerchantId, TerminalId);
+            return PartialView("~/Views/TerminalManagement/_TerminalInstallationStatusTbl.cshtml", modals);
         }
 
         public async Task<IActionResult> ViewTerminalMerchantMappingStatus()
@@ -114,12 +137,19 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> ProblematicDeInstalledToDeInstalled(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<IActionResult> ProblematicDeInstalledToDeInstalled()
         {
-
-            var modals = await _TerminalService.ProblematicDeInstalledToDeInstalled(terminalReq);
-            return View(modals);
+            TerminalDeinstallationRequestViewModel terminalDeinstallationRequestViewModel=new TerminalDeinstallationRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalDeinstallationRequestViewModel.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalDeinstallationRequestViewModel);
+        }
+        
+        public async Task<IActionResult> SearchProblematicDeInstalledToDeInstalled(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        {
+            
+            var modals = await _TerminalService.ProblematicDeInstalledToDeInstalled(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, MerchantId, TerminalId);
+            return PartialView("~/Views/TerminalManagement/_ProblematicDeinstalledTbl.cshtml", modals);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel deInstall)
@@ -139,11 +169,19 @@ namespace HPCL_Web.Controllers
             var result = await _TerminalService.SubmitDeinstallRequest(TerminalDeinstallationRequestUpdate);
             return Json(result);
         }
-
-        public async Task<IActionResult> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<IActionResult> TerminalDeInstallationRequestClose()
         {
-            var modals = await _TerminalService.TerminalDeInstallationRequestClose(terminalReq);
-            return View(modals);
+            TerminalDeinstallationRequestViewModel terminalDeinstallationRequestViewModel = new TerminalDeinstallationRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalDeinstallationRequestViewModel.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalDeinstallationRequestViewModel);
+        }
+        
+        public async Task<IActionResult> SearchTerminalDeInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        {
+            
+               var modals = await _TerminalService.TerminalDeInstallationRequestClose(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, MerchantId, TerminalId);
+            return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationCloseTbl.cshtml", modals);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)

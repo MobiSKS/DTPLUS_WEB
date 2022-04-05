@@ -1,0 +1,120 @@
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
+@using HPCL.Common.Resources
+@if (Model.TerminalDeinstallationRequestDetails.Count() > 0)
+{
+    <div class="table-responsive">
+        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
+            <thead style="background-color:lightgray;">
+                <tr>
+
+                    <th style="width:5%;">Merchant ID</th>
+                    <th style="width:10%;">Terminal ID</th>
+                    <th style="width:10%;">Requested Date</th>
+                    <th style="width:10%;">Requested By</th>
+                    <th style="width:10%;">Modified Date</th>
+                    <th style="width:10%;">Modified By</th>
+                    <th style="width:10%;">Remarks</th>
+                    <th style="width:20%;">Status</th>
+                </tr>
+            </thead>
+            <tbody id="searchTableBody">
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in Model.TerminalDeinstallationRequestDetails)
+                {
+                    i = i + 1;
+
+                    <tr>
+                        <td>@item.MerchantID</td>
+                        <td>@item.TerminalID</td>
+                        <td>@item.RequestedDate</td>
+                        <td>@item.RequestedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.StatusName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="clearfix"></div>
+
+}
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+    function submitTerminalrequestClose() {
+        //alert("inside submit");
+        merchantDetail = [];
+         $("#TerminalRequestDetails tbody tr").each(function () {
+             //debugger;
+
+             var row = $(this);
+             if (row.find('input[type="checkbox"]').is(":checked")) {
+
+                 var merchantId = row[0].cells[1].textContent;
+                 var terminalId = row[0].cells[2].textContent;
+                 merchantDetail.push({ MerchantId: merchantId, TerminalId: terminalId });
+
+            }
+         });
+        var flag = "Y";
+        //debugger;
+        var reason = $('#Reason :selected').text();
+        var reasonId = $('#Reason :selected').val();
+        if (merchantDetail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+        if (reasonId == "0") {
+             flag = "N";
+             $("#reason_error").html("Please select reason");
+        }
+        if (merchantDetail.length > 0 && flag == "Y") {
+            if (confirm("Are you sure, you want to close these installation requests as Problematic installations ?")) {
+                $("#reason_error").html("");
+                var terminationReqmodel = { ReasonId: reasonId, ReasonName: reason, ObjMerchantTerminalInstallationRequestCloseDetail: merchantDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitTerminalRequestClose", "TerminalManagement")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(terminationReqmodel),
+                    success: function (data) {
+                        //setDates();
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
+</script>
+
