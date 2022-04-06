@@ -154,12 +154,11 @@ namespace HPCL_Web.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> GetMapTatkalCardtoCustomer()
+        public async Task<JsonResult> GetMapTatkalCardtoCustomer(string customerId)
         {
-            var searchList = await _tatkalCardCustomerService.GetMapTatkalCardtoCustomer();
+            var searchList = await _tatkalCardCustomerService.GetMapTatkalCardtoCustomer(customerId);
             ModelState.Clear();
             return Json(searchList);
-            //return PartialView("~/Views/TatkalCardCustomer/_TatkalCardsView.cshtml", searchList);
         }
         [HttpPost]
         public async Task<IActionResult> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)

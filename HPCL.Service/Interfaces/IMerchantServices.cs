@@ -14,7 +14,7 @@ namespace HPCL.Service.Interfaces
         Task<Tuple<string, string>> CreateMerchant(MerchantGetDetailsModel merchantMdl);
         Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl);
         Task<string> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal erpnmodel);
-        Task<MerchantRejectedModel> RejectedMerchant(MerchantRejectedModel merchaApprovalMdl);
+        Task<MerchantRejectedModel> RejectedMerchant(string FromDate, string ToDate);
         Task<MerchantModel> MerchantSummary(string ERPCode, string fromDate, string toDate);
         Task<SearchMerchantModel> SearchMerchant();
         Task<List<SearchDetailsTableModel>> SearchMerchantDetails(string merchantId, string erpCode, string retailOutletName, string city, string highwayNo, string status);
