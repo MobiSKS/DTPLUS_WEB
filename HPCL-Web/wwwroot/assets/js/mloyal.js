@@ -114,13 +114,25 @@ function showregAddress() {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
             return ret;
         }
-
-        if (document.applicationForm.FormNumber.value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-            return ret;
-        }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
+        else
+        {
+            if (document.applicationForm.FormNumber.value.length < 10)
+            {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
+                return ret;
+            }
+            else
+            {
+                if (localStorage.getItem("FORMNOALREADYUSED") == 0)
+                {
+                    document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                    return ret;
+                }
+                else
+                {
+                    document.getElementById("formNumber_error").innerHTML = "";
+                }
+            }
         }
     }
 
@@ -262,35 +274,13 @@ function showregAddress() {
     }
 
 
-
-    var formNumber = document.getElementById("FormNumber").value.trim();
-    if (formNumber == "") {
-        document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
-        return ret;
-    }
-    else {
-        document.getElementById("formNumber_error").innerHTML = "";
-    }
-
-    var fromNumberUsed = false;
-
-
-
-    if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
-        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-        return ret;
-    }
-    else {
-        document.getElementById("formNumber_error").innerHTML = "";
-    }
-
-
     var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
 
     if (TypeofBusinessEntityId != 10) {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -298,7 +288,8 @@ function showregAddress() {
         }
 
         if (document.applicationForm.CustomerIncomeTaxPan.value.length < 10) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN length must be 10 digit";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -308,6 +299,7 @@ function showregAddress() {
     else {
         if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -315,27 +307,6 @@ function showregAddress() {
         }
     }
        
-
-    /*else {
-        y = document.applicationForm.mobileno.value;
-        if((y.charAt(0)!="9") && (y.charAt(0)!="8") && (y.charAt(0)!="7") && (y.charAt(0)!="6"))
-        {
-            document.getElementById("phone_error").innerHTML="Mobile Number should start with 6, 7, 8, 9";
-            return false
-        }
-        else if (y.length<10)
-        {
-            document.getElementById("phone_error").innerHTML="Invalid phone number (e.g.: 9999990000)";
-            return false;
-        }
-        
-            else {
-                document.getElementById("phone_error").innerHTML="";
-            }
-    }*/
-
-
-
 
 
     /*if (document.applicationForm.pincode.value == "") {
@@ -375,11 +346,13 @@ function showregAddress() {
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
 
         if (localStorage.getItem("PANNOALREADYUSED") == 0) {
             document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -395,12 +368,14 @@ function showregAddress() {
             if (forthdigitPan != 'P') {
                 console.log('Inside');
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").className = "error";
                 return ret;
             }
         }
 
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -449,6 +424,7 @@ function showregAddress() {
     else {
         if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return ret;
         }
         else {
@@ -476,6 +452,7 @@ function showregAddress() {
     document.getElementById("address-tab").click();
     document.getElementById("address-tab").classList.remove("disable");
     localStorage.setItem("showregAddress", true)
+    document.getElementById("basicInfo-tab").classList.add("disable");
 
 
     /*if (!document.applicationForm.tc.checked) {
@@ -494,14 +471,26 @@ function showregAddress() {
     //}
 }
 
-function showBasicInfo() {
-document.getElementById("basicInfo-tab").click();
+function showBasicInfo()
+{
+    document.getElementById("basicInfo-tab").click();
+    document.getElementById("basicInfo-tab").classList.remove("disable");
+    document.getElementById("address-tab").classList.add("disable");
+    document.getElementById("officialDetails-tab").classList.add("disable");
 }
-function showregAddressInfo() {
-document.getElementById("address-tab").click();
+function showregAddressInfo()
+{
+    document.getElementById("address-tab").click();
+    document.getElementById("address-tab").classList.remove("disable");
+    document.getElementById("basicInfo-tab").classList.add("disable");
+    document.getElementById("officialDetails-tab").classList.add("disable");
 }
-function showkeyOfficialInfo() {
-document.getElementById("officialDetails-tab").click();
+function showkeyOfficialInfo()
+{
+    document.getElementById("officialDetails-tab").click();
+    document.getElementById("officialDetails-tab").classList.remove("disable");
+    document.getElementById("basicInfo-tab").classList.add("disable");
+    document.getElementById("address-tab").classList.add("disable");
 }
 function showCardInfo() {
 document.getElementById("cardDetails-tab").click();
@@ -809,171 +798,152 @@ function showOfficialDetails() {
         document.getElementById("comm_email_error").innerHTML = "";
     }
 
-    if (document.getElementById("sameAddressCheck").checked != true) {
-
-        if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
-            document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
-            return false;
-        }
-        else {
-            if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet)) {
-                document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
-                return false;
-            }
-            else {
-                document.getElementById("perma_address1_error").innerHTML = "";
-            }
-        }
-
-        if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
-            document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
-            return false;
-        }
-        else {
-            if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet)) {
-                document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
-                return false;
-            }
-            else {
-                document.getElementById("perma_address2_error").innerHTML = "";
-            }
-        }
-
-        if (document.getElementById("PerOrRegAddress3").value.trim() != "")
-        {
-            if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet))
-            {
-                document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
-                return false;
-            }
-            else
-            {
-                document.getElementById("perma_address3_error").innerHTML = "";
-            }
-        }
-        else
-        {
-            document.getElementById("perma_address3_error").innerHTML = "";
-        }
-
-        if (document.getElementById("PerOrRegAddressLocation").value.trim() != "")
-        {
-            if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet)) {
-                document.getElementById("perma_location_error").innerHTML = "Invalid Location";
-                return false;
-            }
-            else
-            {
-                document.getElementById("perma_location_error").innerHTML = "";
-            }
-        }
-        else
-        {
-            document.getElementById("perma_location_error").innerHTML = "";
-        }
-
-        if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
-            document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
-            return false;
-        }
-        else {
-            if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet)) {
-                document.getElementById("perma_city_error").innerHTML = "Invalid City";
-                return false;
-            }
-            else {
-                document.getElementById("perma_city_error").innerHTML = "";
-            }
-        }
-
-
-        if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
-            document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
-            return (false);
-        }
-        else {
-            if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
-                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-                return false;
-            }
-            else {
-                document.getElementById("perma_pincode_error").innerHTML = "";
-            }
-
-            if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
-                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-                return false;
-            }
-            else {
-                document.getElementById("perma_pincode_error").innerHTML = "";
-            }
-
-            if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
-                document.getElementById("perma_pincode_error").innerHTML = "";
-            }
-            else {
-                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
-                return false;
-            }
-        }
-
-
-        if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
-            document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
-            return false;
-        }
-        else {
-            document.getElementById("comm_district_error").innerHTML = "";
-        }
-
-
-        if (document.getElementById("PerOrRegAddressStateID").value == "0") {
-            document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
-            return false;
-        }
-        else {
-            document.getElementById("perma_state_error").innerHTML = "";
-        }
-
-
-        if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
-            document.getElementById("perma_district_error").innerHTML = "District field cannot be left blank";
-            return false;
-        }
-        else {
-            document.getElementById("perma_district_error").innerHTML = "";
-        }
-
-
-        ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
-        //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
-        //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
-        //    return false;
-        //}
-        ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
-        //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
-        //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
-        //    return false;
-        //}
-        //else {
-        //    document.getElementById("perma_officePhone_error").innerHTML = "";
-        //    //console.log("dfgdf");				
-        //    //document.getElementById("officialDetails-tab").click();
-        //    //document.getElementById("officialDetails-tab").classList.remove("disable");
-        //    //return true;
-        //}
-
-
+    if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
+        document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
+        return false;
     }
     else {
-
-        permanent_add.querySelectorAll(".error").forEach(function (i) {
-            i.innerHTML = '';
-        })
-
-
-        //    //$("#officialDetails-tab").click();
+        if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else {
+            document.getElementById("perma_address1_error").innerHTML = "";
+        }
     }
+
+    if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
+        document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
+        return false;
+    }
+    else {
+        if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else {
+            document.getElementById("perma_address2_error").innerHTML = "";
+        }
+    }
+
+    if (document.getElementById("PerOrRegAddress3").value.trim() != "") {
+        if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else {
+            document.getElementById("perma_address3_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("perma_address3_error").innerHTML = "";
+    }
+
+    if (document.getElementById("PerOrRegAddressLocation").value.trim() != "") {
+        if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_location_error").innerHTML = "Invalid Location";
+            return false;
+        }
+        else {
+            document.getElementById("perma_location_error").innerHTML = "";
+        }
+    }
+    else {
+        document.getElementById("perma_location_error").innerHTML = "";
+    }
+
+    if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
+        document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
+        return false;
+    }
+    else {
+        if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_city_error").innerHTML = "Invalid City";
+            return false;
+        }
+        else {
+            document.getElementById("perma_city_error").innerHTML = "";
+        }
+    }
+
+
+    if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
+        document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
+        return (false);
+    }
+    else {
+        if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+    }
+
+
+    if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
+        document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("comm_district_error").innerHTML = "";
+    }
+
+
+    if (document.getElementById("PerOrRegAddressStateID").value == "0") {
+        document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("perma_state_error").innerHTML = "";
+    }
+
+
+    if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
+        document.getElementById("perma_district_error").innerHTML = "District field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("perma_district_error").innerHTML = "";
+    }
+
+
+    ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
+    //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
+    //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
+    //    return false;
+    //}
+    ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
+    //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
+    //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
+    //    return false;
+    //}
+    //else {
+    //    document.getElementById("perma_officePhone_error").innerHTML = "";
+    //    //console.log("dfgdf");				
+    //    //document.getElementById("officialDetails-tab").click();
+    //    //document.getElementById("officialDetails-tab").classList.remove("disable");
+    //    //return true;
+    //}
+
+        
 
     if (document.getElementById("IsDuplicatePanNo").value == "0") {
         if (document.getElementById("AllowPanDuplication").value != "Y") {
@@ -991,10 +961,41 @@ function showOfficialDetails() {
     document.getElementById("officialDetails-tab").classList.remove("disable");
     localStorage.setItem("keyOfficial", true);
     localStorage.removeItem("showregAddress");
+    document.getElementById("basicInfo-tab").classList.add("disable");
+    document.getElementById("address-tab").classList.add("disable");
 }
 
 function showCardDetails() {
     debugger;
+
+    if (document.getElementById("PerOrRegAddress1").value.trim() == "") {
+        document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
+        return false;
+    }
+    else {
+        if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else {
+            document.getElementById("perma_address1_error").innerHTML = "";
+        }
+    }
+
+    if (document.getElementById("PerOrRegAddress2").value.trim() == "") {
+        document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
+        return false;
+    }
+    else
+    {
+        if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else {
+            document.getElementById("perma_address2_error").innerHTML = "";
+        }
+    }
 
     if (document.applicationForm.KeyOffTitle.value == "-1") {
         document.getElementById("officialTitle_error").innerHTML = "Select Title";
@@ -1768,10 +1769,6 @@ function GetClientConfirmation(o) {
         $("#PanCardRemarks").prop('readonly', false);
         document.getElementById("lblPanCardRemarks").style.display = "block";
         document.getElementById("PanCardRemarks").style.display = "block";
-        //document.getElementById("officialDetails-tab").click();
-        //document.getElementById("officialDetails-tab").classList.remove("disable");
-        //localStorage.setItem("keyOfficial", true);
-        //localStorage.removeItem("showregAddress");
         showBasicInfo();
     }
     else {
@@ -1779,8 +1776,9 @@ function GetClientConfirmation(o) {
         $("#PanCardRemarks").prop('readonly', true);
         document.getElementById("lblPanCardRemarks").style.display = "none";
         document.getElementById("PanCardRemarks").style.display = "none";
-        document.getElementById("address-tab").click();
-        document.getElementById("address-tab").classList.remove("disable");
+        //document.getElementById("address-tab").click();
+        //document.getElementById("address-tab").classList.remove("disable");
+        showregAddressInfo();
         localStorage.setItem("showregAddress", true)
     }
     console.log($('#AllowPanDuplication').val());
@@ -1796,15 +1794,18 @@ function ValidatePAN() {
 
     if (panno == '') {
         document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-        return;
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
     }
 
 
     if ($('#CustomerIncomeTaxPan').val().match(pancard)) {
         document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        document.getElementById("incomeTaxPan_error").className = "text-success";
     }
     else {
         document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+        document.getElementById("incomeTaxPan_error").className = "error";
         return (false);
     }
 
@@ -1819,11 +1820,13 @@ function ValidatePAN() {
         if (forthdigitPan != 'P') {
             console.log('Inside');
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            alert('Please Enter Valid Pan Number');
+            document.getElementById("incomeTaxPan_error").className = "error";
+            alert('Please Enter Valid Income Tax PAN');
             return;
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            document.getElementById("incomeTaxPan_error").className = "text-success";
         }
     }
 
@@ -1877,4 +1880,5 @@ function ValidatePAN() {
     //    }
     //});
 
+    
 }
