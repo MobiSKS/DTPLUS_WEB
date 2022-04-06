@@ -71,16 +71,26 @@ namespace HPCL_Web.Controllers
                 merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
                 merchantMdl.Error = tuple.Item2;
                 merchantMdl.Success = "";
+                ViewBag.Reason = tuple.Item2;
+                ViewBag.Status = tuple.Item1;
+                return View(merchantMdl);
             }
             else
             {
-                merchantMdl.Error = "";
-                merchantMdl.Success = tuple.Item2;
+                MerchantGetDetailsModel merchantMdl2 = new MerchantGetDetailsModel();
+                merchantMdl2.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
+                merchantMdl2.OutletCategories.AddRange(await _commonActionService.GetOutletCategoryList());
+                merchantMdl2.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+                merchantMdl2.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
+                merchantMdl2.CommStates.AddRange(await _commonActionService.GetStateList());
+                merchantMdl2.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+                merchantMdl2.Error = "";
+                merchantMdl2.Success = tuple.Item2;
+                ModelState.Clear();
+                ViewBag.Reason = tuple.Item2;
+                ViewBag.Status = tuple.Item1;
+                return View(merchantMdl2);
             }
-
-            ViewBag.Reason = tuple.Item2;
-            ViewBag.Status = tuple.Item1;
-            return View(merchantMdl);
         }
         public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
