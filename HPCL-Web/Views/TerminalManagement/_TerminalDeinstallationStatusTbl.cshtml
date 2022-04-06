@@ -60,61 +60,6 @@ else
             }
         });
     });
-    $("#checkAll").click(function () {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-    });
-
-    function submitTerminalrequestClose() {
-        //alert("inside submit");
-        merchantDetail = [];
-         $("#TerminalRequestDetails tbody tr").each(function () {
-             //debugger;
-
-             var row = $(this);
-             if (row.find('input[type="checkbox"]').is(":checked")) {
-
-                 var merchantId = row[0].cells[1].textContent;
-                 var terminalId = row[0].cells[2].textContent;
-                 merchantDetail.push({ MerchantId: merchantId, TerminalId: terminalId });
-
-            }
-         });
-        var flag = "Y";
-        //debugger;
-        var reason = $('#Reason :selected').text();
-        var reasonId = $('#Reason :selected').val();
-        if (merchantDetail.length == 0) {
-            alert("Please select at least one request to process.");
-            return;
-        }
-        if (reasonId == "0") {
-             flag = "N";
-             $("#reason_error").html("Please select reason");
-        }
-        if (merchantDetail.length > 0 && flag == "Y") {
-            if (confirm("Are you sure, you want to close these installation requests as Problematic installations ?")) {
-                $("#reason_error").html("");
-                var terminationReqmodel = { ReasonId: reasonId, ReasonName: reason, ObjMerchantTerminalInstallationRequestCloseDetail: merchantDetail };
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("SubmitTerminalRequestClose", "TerminalManagement")',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    data: JSON.stringify(terminationReqmodel),
-                    success: function (data) {
-                        //setDates();
-                        $("#reason").html(data);
-                        $(".toBeHiddenOnSuccess").hide();
-
-                    },
-                    error: function (ex) {
-                        alert('Error.' + ex);
-                    }
-                });
-            }
-        }
-
-
-    };
+   
 </script>
 

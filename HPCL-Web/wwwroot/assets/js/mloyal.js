@@ -997,6 +997,77 @@ function showCardDetails() {
         }
     }
 
+    if (document.getElementById("PerOrRegAddressCity").value.trim() == "") {
+        document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
+        return false;
+    }
+    else {
+        if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet)) {
+            document.getElementById("perma_city_error").innerHTML = "Invalid City";
+            return false;
+        }
+        else {
+            document.getElementById("perma_city_error").innerHTML = "";
+        }
+    }
+
+    if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
+        document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
+        return (false);
+    }
+    else {
+        if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            return false;
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+
+        if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+            document.getElementById("perma_pincode_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+    }
+
+
+    if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "-1") {
+        document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("comm_district_error").innerHTML = "";
+    }
+
+
+    if (document.getElementById("PerOrRegAddressStateID").value == "0") {
+        document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("perma_state_error").innerHTML = "";
+    }
+
+
+    if (document.getElementById("PermanentDistrictId").value == "-1" || document.getElementById("PermanentDistrictId").value == "0") {
+        document.getElementById("perma_district_error").innerHTML = "District field cannot be left blank";
+        return false;
+    }
+    else {
+        document.getElementById("perma_district_error").innerHTML = "";
+    }
+
     if (document.applicationForm.KeyOffTitle.value == "-1") {
         document.getElementById("officialTitle_error").innerHTML = "Select Title";
         return false;
@@ -1801,7 +1872,7 @@ function ValidatePAN() {
 
     if ($('#CustomerIncomeTaxPan').val().match(pancard)) {
         document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-        document.getElementById("incomeTaxPan_error").className = "text-success";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
     }
     else {
         document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
@@ -1826,7 +1897,7 @@ function ValidatePAN() {
         }
         else {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-            document.getElementById("incomeTaxPan_error").className = "text-success";
+            document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
     }
 

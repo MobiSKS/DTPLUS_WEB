@@ -90,7 +90,7 @@
                         <div class="clearfix"></div>
                         <div class="col-md-3 col-12">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button" id="btnUpload">Upload</button>
+                                <button  class="btn btn_primary" type="button" id="btnUpload">Upload</button>
                             </div>
                         </div>
                     </div>
@@ -103,57 +103,94 @@
 </div>
 <script type="text/javascript">
 
-
     $("#btnSearch").click(function () {
 
         var customerId = $("#CustomerId").val();
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("GetMapTatkalCardtoCustomer", "TatkalCardCustomer")',
-                //data: { CustomerID: customerId},
-                //dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    if (status == 'success') {
-                         $("#message").attr("style", "display:none");
-                         $("#CardDetailsTbl td").parent().remove();
-                         if (data.data.length > 0) {
-                               var count = data.data.length;
-                                var rowcount = Math.ceil((count) / 6);
-                                  var cnt = 0;
-                               var rows = "<tbody>";
-                               for (var i = 0; i <= rowcount; i++){
-                               rows += "<tr>";
-                                   for (var j = 0; j < 6; j++){
-                                       if (cnt < data.data.length){
-                                           rows += "<td><label><input type='checkbox' name='' value='" + data.data[cnt].cardNo + "'/>"+ data.data[cnt].cardNo +"</label></td>";
-                                           cnt = cnt + 1;
-                                       }
-                                   }
-                                   rows += "</tr>";
-                                   }
-                                   rows += "</tbody>";
-                                   $('#CardDetailsTbl').append(rows);
-                                     $("#message").attr("style", "display:none");
-                             $("#divtable").attr("style", "display:block");
-
-                         }
-                          else {
-                             $("#message").html("");
-                             $("#message").append(data.message);
-
-                             $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
-                             $("#divtable").attr("style", "display:none");
-
-                         }
-
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    debugger;
-                    alert("Error " + textStatus +errorMessage);
+         var flag="Y";
+           if(customerId=="")
+           {
+               $("#customerId_error").attr("style", "display:block");
+               $("#customerId_error").html("Enter Customer Id");
+               $("#CustomerId").focus();
+               flag="N";
+           }
+           else
+           {
+                $("#customerId_error").attr("style", "display:none");
+                flag="Y";
+                if (!customerId.match(mappedCustomerId))
+                {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Invalid Customer ID");
+                    $("#CustomerId").focus();
+                     flag="N";
                 }
-            });
+                else
+                {
+                    $("#customerId_error").attr("style", "display:none");
+                     flag="Y";
+                }
+           }
+           if(flag=="Y"){
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetMapTatkalCardtoCustomer", "TatkalCardCustomer")',
+                    data: { CustomerID: customerId},
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                        if (status == 'success') {
+                            if(data.objGetStatusTatkalCardsToTatkalCustomer.length > 0) {
+                                if(data.objGetStatusTatkalCardsToTatkalCustomer[0].status=="0")
+                                {
+                                    $("#customerId_error").attr("style", "display:block");
+                                    $("#customerId_error").html(data.objGetStatusTatkalCardsToTatkalCustomer[0].reason);
+                                    $("#CustomerId").focus();
+                                }
+                                else
+                                {
+                             
+                                 $("#message").attr("style", "display:none");
+                                 $("#CardDetailsTbl td").parent().remove();
+                                 if (data.objGetCardDetailsTatkalCardsToTatkalCustomer.length > 0) {
+                                       var count = data.objGetCardDetailsTatkalCardsToTatkalCustomer.length;
+                                        var rowcount = Math.ceil((count) / 6);
+                                          var cnt = 0;
+                                       var rows = "<tbody>";
+                                       for (var i = 0; i <= rowcount; i++){
+                                       rows += "<tr>";
+                                           for (var j = 0; j < 6; j++){
+                                               if (cnt < data.objGetCardDetailsTatkalCardsToTatkalCustomer.length){
+                                                   rows += "<td><label><input type='checkbox' name='' value='" + data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo + "'/>"+ data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo +"</label></td>";
+                                                   cnt = cnt + 1;
+                                               }
+                                           }
+                                           rows += "</tr>";
+                                           }
+                                           rows += "</tbody>";
+                                           $('#CardDetailsTbl').append(rows);
+                                           $("#message").attr("style", "display:none");
+                                           $("#divtable").attr("style", "display:block");
+
+                                 }
+                                 
+                                  else {
+                                     $("#message").html("");
+                                     $("#message").append(data.message);
+
+                                     $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
+                                     $("#divtable").attr("style", "display:none");
+
+                                 }
+                             }
+                           }
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error " + textStatus +errorMessage);
+                    }
+                });
+            }
 
     });
 
@@ -217,8 +254,8 @@
                 }
            }
 
-        if (CardDetails.length > 2 && CardDetails.length<100  && flag=="Y") {
-            if (confirm("Are you sure ?")) {
+        if (CardDetails.length >= 2 && CardDetails.length<=100  && flag=="Y") {
+            //if (confirm("Are you sure ?")) {
 
                 var model = { Customerid: customerId,  ObjCardMap: CardDetails };
                 $.ajax({
@@ -237,7 +274,7 @@
                 }
                 });
             }
-            }
+            //}
          });
 
 </script>

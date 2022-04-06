@@ -291,14 +291,14 @@ namespace HPCL.Service.Services
         }
 
         #region Rejected Merchants
-        public async Task<MerchantRejectedModel> RejectedMerchant(MerchantRejectedModel merchantRejectedMdl)
+        public async Task<MerchantRejectedModel> RejectedMerchant(string FromDate, string ToDate)
         {
             string fromDate = "", toDate = "";
-
-            if (!string.IsNullOrEmpty(merchantRejectedMdl.FromDate) && !string.IsNullOrEmpty(merchantRejectedMdl.FromDate))
+            MerchantRejectedModel merchantRejectedMdl = new MerchantRejectedModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                merchantRejectedMdl.FromDate = await _commonActionService.changeDateFormat(merchantRejectedMdl.FromDate);
-                merchantRejectedMdl.ToDate = await _commonActionService.changeDateFormat(merchantRejectedMdl.ToDate);
+                merchantRejectedMdl.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                merchantRejectedMdl.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {

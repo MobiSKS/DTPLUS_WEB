@@ -1,0 +1,72 @@
+﻿@model HPCL.Common.Models.ViewModel.Merchant.MerchantRejectedModel
+
+@if (Model.MerchantApprovalTableDetails.Count() > 0)
+{
+    <div class="table-responsive">
+        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="merchantRejectedDetails">
+            <thead style="background-color:lightgray;">
+                <tr>
+
+                    <th style="width:10%;">ERP Code</th>
+                    <th style="width:10%;">RO</th>
+                    <th style="width:20%;">Retail Outlet Name</th>
+                    <th style="width:10%;">City</th>
+                    <th>Type</th>
+                    <th style="width:10%;">Created Date</th>
+                    <th style="width:10%;">Rejected Date</th>
+                    <th style="width:10%;">Comments</th>
+                    <th style="width:10%;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="searchMerchantTableBody">
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in Model.MerchantApprovalTableDetails)
+                {
+                    i = i + 1;
+                    string MerchantIDVal = "";// "30" + @item.ErpCode;
+                                              //asp-route-ERPCode="@item.ErpCode"
+                                              //asp - route - MerchantIDValue = "@MerchantIDVal" asp - route - fromDate = "@Model.FromDate" asp - route - toDate = "@Model.ToDate" asp - route - category = "@Model.CategoryID"
+                    <tr>
+                        <td>@item.ErpCode</td>
+                        <td>@item.RegionalOfficeName</td>
+                        <td>@item.RetailOutletName</td>
+                        <td>@item.RetailOutletCity</td>
+                        <td>@item.MerchantTypeName</td>
+                        <td>@item.CreatedDate</td>
+                        <td>@item.RejectedDate</td>
+                        @*asp-route-category="@Model.CategoryID" asp-route-ERPCode="@item.ErpCode"*@
+                        <td><input class="form-control" type="text" id="comments_@i" value="@item.Comments" /><span class="comment_error"></span></td>
+                        <td>
+                            <a class="erp_code text_primary" asp-action="MerchantSummary" asp-route-ERPCode="@item.ErpCode" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate">View</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="@MerchantIDVal" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="" asp-route-ERPCode="@item.ErpCode">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+   
+</script>
+
+
