@@ -86,7 +86,7 @@ namespace HPCL.Service.Services
                     List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
                     merchantMdl = merchantDetailsLst.First();
                 }
-                //merchantMdl.CreatedMerchant = "Y";
+                merchantMdl.CreatedMerchant = "Y";
                 merchantMdl.UpdateFlag = "Y";
             }
             else if (!string.IsNullOrEmpty(ERPCode))
@@ -107,7 +107,7 @@ namespace HPCL.Service.Services
                 var merchantDetailsJarr = merchantDetailsObj["Data"].Value<JArray>();
                 List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
                 merchantMdl = merchantDetailsLst.First();
-                //merchantMdl.CreatedMerchant = "Y";
+                merchantMdl.CreatedMerchant = "Y";
                 merchantMdl.UpdateFlag = "Y";
             }
 
