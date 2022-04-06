@@ -113,7 +113,8 @@
         public static string getVehicleTpe = "api/dtplus/customer/get_vehicle_type";
         public static string uplaodCustomerKyc = "api/dtplus/customer/upload_customer_kyc";
         public static string getCustomerByReferenceno = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
-        
+        public static string getNameAndFormNumberByReferenceNoForAddCard = "api/dtplus/customer/get_name_and_form_number_by_reference_no_for_add_card";
+
         public static string searchCustRefUrl = "api/dtplus/customer/get_name_and_form_number_by_reference_no";
         public static string GetProofTyleUrl = "api/dtplus/settings/get_proof_type";
         public static string UploadKycUrl = "api/dtplus/customer/upload_customer_kyc";

@@ -35,5 +35,6 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string RBEName { get; set; }
         public string CustomerName { get; set; }
         public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }

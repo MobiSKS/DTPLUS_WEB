@@ -320,21 +320,24 @@ namespace HPCL.Service.Services
                 CustomerResponseByReferenceNo customerResponseByReferenceNo;
                 StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
 
-                var responseCustomer = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getCustomerByReferenceno);
+                var responseCustomer = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getNameAndFormNumberByReferenceNoForAddCard);
 
                 customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
                 if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
                 {
                     customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-                    customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
-
-                    customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
-
-                    customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
-                    customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
 
                     if (customerResponseByReferenceNo.Data != null)
                     {
+                        customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+
+                        customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
+
+                        customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+                        customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+                        customerCardInfo.Status= customerResponseByReferenceNo.Data[0].Status;
+                        //customerCardInfo.Status = 1;
+
                         customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
                         customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
                         customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
@@ -387,18 +390,6 @@ namespace HPCL.Service.Services
                 customerCardInfo.CustomerReferenceNo = customerReferenceNo;
                 customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
 
-                //StringBuilder sb = new StringBuilder();
-                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].FirstName.ToString()))
-                //    sb.Append(customerResponseByReferenceNo.Data[0].FirstName.ToString());
-
-                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].MiddleName))
-                //    sb.Append(" " + customerResponseByReferenceNo.Data[0].MiddleName);
-
-                //if (!string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].LastName))
-                //    sb.Append(" " + customerResponseByReferenceNo.Data[0].LastName);
-
-
-                //customerCardInfo.CustomerName = sb.ToString();
                 customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
 
                 customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
@@ -410,6 +401,8 @@ namespace HPCL.Service.Services
                     customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
                     customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                    customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
+                    //customerCardInfo.Status = 1;
                     if (customerCardInfo.RBEId == "null")
                     {
                         customerCardInfo.RBEId = "";
@@ -503,6 +496,7 @@ namespace HPCL.Service.Services
             insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+            insertInfo.VehicleNoVerifiedManually = (customerCardInfo.VehicleNoVerifiedManually ? "1" : "0");
 
             if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
             {
@@ -531,20 +525,6 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.Message = customerInserCardResponse.Message;
             }
-
-            //if (customerInserCardResponse.Internel_Status_Code == 1000)
-            //{
-            //    ViewBag.Message = "Customer card details saved Successfully";
-            //    //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = customerResponse.Data[0].CustomerReferenceNo });
-            //    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
-            //    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-            //    ModelState.Clear();
-            //}
-            //else
-            //{
-            //    ViewBag.Message = customerInserCardResponse.Message;
-            //}
-
 
             return customerCardInfo;
         }
@@ -861,7 +841,16 @@ namespace HPCL.Service.Services
                     custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
                     custMdl.CustomerZonalOfficeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.ZonalOfficeID) ? "0" : Customer.ZonalOfficeID);
 
-                    custMdl.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(custMdl.CustomerZonalOfficeID));
+                    List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
+                    lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(custMdl.CustomerZonalOfficeID);
+                    if (lstCustomerRegion.Count > 0)
+                    {
+                        if (lstCustomerRegion[0].RegionalOfficeName == "--Select--")
+                            lstCustomerRegion[0].RegionalOfficeName = "Select Regional Office";
+                    }
+
+                    custMdl.CustomerRegionMdl.Clear();
+                    custMdl.CustomerRegionMdl.AddRange(lstCustomerRegion);
 
                     custMdl.CustomerRegionID = Convert.ToInt32(string.IsNullOrEmpty(Customer.RegionalOfficeID) ? "0" : Customer.RegionalOfficeID);
 
@@ -1272,6 +1261,73 @@ namespace HPCL.Service.Services
             }
 
             return UploadDocResponseBody;
+        }
+
+        public async Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo)
+        {
+            //fetching Customer info
+            var CustomerRefinfo = new CustomerModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerReferenceNo = customerReferenceNo
+            };
+
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            CustomerResponseByReferenceNo customerResponseByReferenceNo;
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+
+            var responseCustomer = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getNameAndFormNumberByReferenceNoForAddCard);
+
+            customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
+
+            if (string.IsNullOrEmpty(customerCardInfo.FormNumber))
+            {
+                customerCardInfo.FormNumber = "";
+            }
+
+            if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
+            {
+                customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+
+                customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
+
+                customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
+                customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
+                if (customerResponseByReferenceNo.Data != null)
+                {
+                    customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
+                    customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
+                    customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
+                    customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
+                    customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
+                    customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
+                    customerCardInfo.Reason = customerResponseByReferenceNo.Data[0].Reason;
+                    //customerCardInfo.Status = 1;
+                    if (customerCardInfo.RBEId == "null")
+                    {
+                        customerCardInfo.RBEId = "";
+                    }
+                    if (customerCardInfo.RBEId == "0")
+                        customerCardInfo.RBEId = "";
+                    if (customerCardInfo.NoOfCards == "0")
+                        customerCardInfo.NoOfCards = "";
+                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+
+                    if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
+                    {
+                        customerCardInfo.NoOfVehiclesAllCards = customerCardInfo.NoOfCards;
+                    }
+                }
+            }
+            else
+            {
+                customerCardInfo.Remarks = customerResponseByReferenceNo.Message;
+            }
+            return customerCardInfo;
         }
 
     }
