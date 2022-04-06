@@ -131,6 +131,16 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> GetCustomerDetailsForAddCard(string customerReferenceNo)
+        {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            customerCardInfo = await _customerService.GetCustomerDetailsForAddCard(customerReferenceNo);
+
+            return Json(customerCardInfo);
+        }
+
+        [HttpPost]
         public async Task<JsonResult> GetCustomerRBEName(string RBEId)
         {
 

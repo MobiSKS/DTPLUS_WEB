@@ -38,6 +38,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string Message { get; set; }
         public string Remarks { get; set; }
         public bool VehicleNoVerifiedManually { get; set; }
+        public string Reason { get; set; }
     }
 
     public class CardDetails
