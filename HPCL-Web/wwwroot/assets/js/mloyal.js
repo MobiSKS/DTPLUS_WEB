@@ -111,14 +111,14 @@ function showregAddress() {
     else {
 
         if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             return ret;
         }
         else
         {
             if (document.applicationForm.FormNumber.value.length < 10)
             {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
                 return ret;
             }
             else
