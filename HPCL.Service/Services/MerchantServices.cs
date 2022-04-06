@@ -258,20 +258,8 @@ namespace HPCL.Service.Services
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
-            string fDate = "";
-            string tDate = "";
-            if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
-            {
-                fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
-                tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
-            }
-            else
-            {
-                merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
-                merchaApprovalMdl.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
-                fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
-                tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
-            }
+            string fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
+            string tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
             {
