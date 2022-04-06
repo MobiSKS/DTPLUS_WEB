@@ -269,8 +269,8 @@ namespace HPCL.Service.Services
             {
                 merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
                 merchaApprovalMdl.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
-                fDate = merchaApprovalMdl.FromDate;
-                tDate = merchaApprovalMdl.ToDate;
+                fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
+                tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
