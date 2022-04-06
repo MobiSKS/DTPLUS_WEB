@@ -42,7 +42,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate" , @onchange = "checkDates('fromDate_error');" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate" ,@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span style="display:none" class="error" id="fromDate_error"></span>
                                         </div>
@@ -53,7 +53,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">To Date</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             <span style="display:none" class="error" id="toDate_error"></span>
                                         </div>
@@ -194,12 +194,24 @@
         if (fromdate != "" && todate != "") {
             flag = checkDates("fromDate_error");
            
-        } else {
+        }
+        else if ((fromD != "" && toD == "") || (fromD == "" && toD != "")) {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Please Select Both From Date and To Date");
+            flag = "N";
+        }
+        else {
             $("#toDate_error").html("");
             $("#toDate_error").attr("style", "display:none");
         }
 
-
+        if (customerId != "") {
+            if (!customerId.match(mappedCustomerId)) {
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("Invalid Customer ID");
+                flag = "N";
+            }
+        }
         if (flag == "N")
             e.preventDefault();
 

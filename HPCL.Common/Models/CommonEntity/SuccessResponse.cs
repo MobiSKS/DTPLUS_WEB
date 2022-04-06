@@ -4,5 +4,6 @@
     {
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string ActionName { get; set; }
     }
 }
