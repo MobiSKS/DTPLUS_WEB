@@ -258,15 +258,19 @@ namespace HPCL.Service.Services
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
+            string fDate = "";
+            string tDate = "";
             if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
             {
-                merchaApprovalMdl.FromDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
-                merchaApprovalMdl.ToDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
+                fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
+                tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
             }
             else
             {
                 merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
                 merchaApprovalMdl.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+                fDate = merchaApprovalMdl.FromDate;
+                tDate = merchaApprovalMdl.ToDate;
             }
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
@@ -274,9 +278,9 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Category = merchaApprovalMdl.CategoryID,
-                FromDate = merchaApprovalMdl.FromDate,
-                ToDate = merchaApprovalMdl.ToDate
+                Category = string.IsNullOrEmpty(merchaApprovalMdl.CategoryID) ? "1": merchaApprovalMdl.CategoryID,
+                FromDate = fDate,
+                ToDate = tDate
             };
 
             StringContent merchantApprovalContent = new StringContent(JsonConvert.SerializeObject(merchantApprovalForms), Encoding.UTF8, "application/json");
