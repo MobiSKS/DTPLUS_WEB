@@ -384,7 +384,12 @@ namespace HPCL.Service.Services
         public async Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
         {
             DriverCardAllocationanadActivationViewModel getDrtiverAllocationandActivation = new DriverCardAllocationanadActivationViewModel();
-
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(fromDate);
+                toDate = await _commonActionService.changeDateFormat(toDate);
+            }
+            
             var cardAllocationforms = new GetCardAllocationActivation
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),

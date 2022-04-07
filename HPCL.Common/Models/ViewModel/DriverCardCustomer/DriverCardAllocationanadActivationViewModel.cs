@@ -24,6 +24,8 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
                 RegionalOfficeID = 0,
                 RegionalOfficeName = "--All--"
             });
+            FromDate = DateTime.Now.ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public List<DriverCardAllocationandActivationDetails> DriverCardAllocationandActivationDetails { get; set; }
