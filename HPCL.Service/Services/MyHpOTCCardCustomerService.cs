@@ -365,11 +365,7 @@ namespace HPCL.Service.Services
                 entity.FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
                 entity.ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
             }
-            else
-            {
-                entity.FromDate = DateTime.Now.ToString("yyyy-MM-dd");
-                entity.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
-            }
+            
             var cardAllocationforms = new GetCardAllocationActivation
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),

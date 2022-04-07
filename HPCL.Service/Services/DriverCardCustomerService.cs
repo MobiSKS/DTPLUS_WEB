@@ -389,12 +389,7 @@ namespace HPCL.Service.Services
                 fromDate = await _commonActionService.changeDateFormat(fromDate);
                 toDate = await _commonActionService.changeDateFormat(toDate);
             }
-            else
-            {
-                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
-                toDate = DateTime.Now.ToString("yyyy-MM-dd");
-            }
-
+            
             var cardAllocationforms = new GetCardAllocationActivation
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
