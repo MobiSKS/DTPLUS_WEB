@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.CommonResponse;
+using HPCL.Common.Resources;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
     public class UploadDoc : BaseEntity
     {
         [Required(ErrorMessage = "Customer Reference No is required")]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidCustomerReferenceNo, ErrorMessage = FieldValidation.ValidCustomerReferenceNoErrMsg)]
         public string CustomerReferenceNo { get; set; }
 
         [Display(Name = "IdProofType")]

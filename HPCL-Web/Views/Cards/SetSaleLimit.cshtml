@@ -47,11 +47,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0 offset-md-1">Card Status</label>
                                         <div class="col-md-7 col-12">
-                                            @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
-
                                             <select name="Statusflag" id="" class="form-control statusVal">
                                             </select>
-
                                             @Html.ValidationMessageFor(m => m.Statusflag, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -85,44 +82,46 @@
 
                     <div id="UpdateGrid" style="display:none;" class="w-100 mt-3">
                         <div class="table-responsive">
-                            <table id="CardSearch" class="table table-striped table-bordered text-nowrap" style="display:inline-table">
-                                <tr>
-                                    <th>@Html.DisplayName("Sr No")</th>
-                                    <th>
-                                        @Html.DisplayName("Select")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Card Number")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Vehicle No/User Name")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Mobile Number")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Status")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Issue Date")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Expiry Date")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Cash Purse Limit")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Sale Txn limit")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Daily Sale Limit")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Monthly Sale limit")
-                                    </th>
+                            <table id="CardSearchSaleLimit" class="datatable table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Sr. No</th>
+                                        <th>
+                                            @Html.DisplayName("Select")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Card Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Vehicle No/User Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Mobile Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Status")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Issue Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Expiry Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Cash Purse Limit")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Sale Txn limit")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Daily Sale Limit")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Monthly Sale limit")
+                                        </th>
 
-                                </tr>
+                                    </tr>
+                                </thead>
                             </table>
                         </div>
 
@@ -203,31 +202,55 @@
 
             document.getElementById("noRecord").style.display = "none";
 
-            $("#CardSearch td").parent().remove();
-
             var searchGrid = res.searchList.data;
 
-            for (var i = 0; i < searchGrid.length; i++) {
+            $('#CardSearchSaleLimit').DataTable().clear().destroy();
 
-                var rows = "<tbody><tr>"
-                    + "<td>" + (searchGrid[i].srNumber || '') + "</td>"
-                    + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
-                    + "<td><span class='getCard'>" + (searchGrid[i].cardNumber || '') + "</span></a></td>"
-                    + "<td>" + (searchGrid[i].vechileNo || '') + "</td>"
-                    + "<td>" + (searchGrid[i].mobileNumber || '') + "</td>"
-                    + "<td>" + (searchGrid[i].status || '') + "</td>"
-                    + "<td>" + (searchGrid[i].issueDate || '') + "</td>"
-                    + "<td>" + (searchGrid[i].expiryDate || '') + "</td>"
+                var tbl = $('#CardSearchSaleLimit').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "bDestroy": true,
+                    "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
 
-                    + "<td><input class='form-control cgl cpl' name='" + (searchGrid[i].cashPurseLimit || '') + "' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'></td>"
-                    + "<td><input class='form-control cgl stl' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'></td>"
-                    + "<td><input class='form-control cgl dsl' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'></td>"
-                    + "<td><input class='form-control cgl msl' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'></td></tr></tbody>";
+                for (var i = 0; i < searchGrid.length; i++) {
 
-                $('#CardSearch').append(rows);
+                    var srNumber = (searchGrid[i].srNumber || '');
+                    var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    var cardNumber = "<span class='getCard'>" + (searchGrid[i].cardNumber || '') + "</span>";
+                    var vechileNo = (searchGrid[i].vechileNo || '');
+                    var mobileNumber = (searchGrid[i].mobileNumber || '');
+                    var status = (searchGrid[i].status || '');
+                    var issueDate = (searchGrid[i].issueDate || '');
+                    var expiryDate = (searchGrid[i].expiryDate || '');
+                    var cashPurseLimit = "<input class='form-control cgl cpl' name='" + (searchGrid[i].cashPurseLimit || '') + "' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'>";
+                    var saleTxnLimit = "<input class='form-control cgl stl' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'>";
+                    var dailySaleLimit = "<input class='form-control cgl dsl' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'>";
+                    var monthlySaleLimit = "<input class='form-control cgl msl' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'>";
+
+                    tbl.row.add([
+                        srNumber,
+                        pressCheck,
+                        cardNumber,
+                        vechileNo,
+                        mobileNumber,
+                        status,
+                        issueDate,
+                        expiryDate,
+                        cashPurseLimit,
+                        saleTxnLimit,
+                        dailySaleLimit,
+                        monthlySaleLimit
+                    ]).draw();
+                }
 
                 document.getElementById("UpdateGrid").style.display = "block";
-            }
         } else {
             document.getElementById("UpdateGrid").style.display = "none";
             $("#noRecord").html("");
@@ -244,7 +267,7 @@
     var monthlySale;
     var currentRow;
 
-    $("#CardSearch").on('click', '.checkEnable', function (e) {
+    $("#CardSearchSaleLimit").on('click', '.checkEnable', function (e) {
 
         currentRow = $(this).closest("tr");
 
@@ -269,7 +292,7 @@
 
         var updateArray = new Array();
 
-        $("#CardSearch input[type=checkbox]:checked").each(function () {
+        $("#CardSearchSaleLimit input[type=checkbox]:checked").each(function () {
             var row = $(this).closest("tr");
 
             cardNo = row.find('.getCard').text();
