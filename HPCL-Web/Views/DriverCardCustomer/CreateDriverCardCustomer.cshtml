@@ -878,37 +878,41 @@
             document.getElementById("MerchantId_error").innerHTML = "";
         }
 
-        if (document.getElementById("FormNumber").value.trim() == "") {
+        if (document.getElementById("FormNumber").value.trim() == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
             ret = false;
         }
-        else {
-
-            if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
-                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-                ret = false;
-            }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
-            }
-
-            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+        else 
+        {
+            
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+            {
                 document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
                 ret = false;
             }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
+            else 
+            {
+                if (document.getElementById("FormNumber").value.length < 10) 
+                {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                    ret = false;
+                }
+                else 
+                {
+                    if (localStorage.getItem("FORMNOALREADYUSED") == 0) 
+                    {
+                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("formNumber_error").innerHTML = "";
+                    }
+                }
             }
-
-            if (document.getElementById("FormNumber").value.length < 10) {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                ret = false;
-            }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
-            }
-        }
-                       
+                        
+        }                       
 
         if (document.getElementById("CardNo").value.trim() == "") {
             document.getElementById("CardNo_error").innerHTML = "Card Number field cannot be left blank";
@@ -938,45 +942,69 @@
                 ret = false;
             }
             else {
-                document.getElementById("IndividualOrgName_error").innerHTML = "";
-            }
-
-            if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
-                document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name is not valid";
-                ret = false;
-            }
-            else {
-                document.getElementById("IndividualOrgName_error").innerHTML = "";
-            }
+                if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
+                    document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name is not valid";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("IndividualOrgName_error").innerHTML = "";
+                }
+            }            
         }
 
 
-        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else {
+        else 
+        {
              document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
 
-              let forthdigitPan = document.getElementById("IncomeTaxPan").value.substr(3, 1);
+             let forthdigitPan = document.getElementById("IncomeTaxPan").value.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') {
+            if (forthdigitPan != 'P') 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            else 
+            {
+               if ($('#IncomeTaxPan').val().match(pancard)) 
+               {
+                    if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            ret = false;
+                        }
+                        else 
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                            document.getElementById("incomeTaxPan_error").className = "error text-success";
+                        }
+                    }
+                }
+                else 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
             }
 
-            if ($('#IncomeTaxPan').val().match(pancard)) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                ret = false;
-            }
-                       
-        }
+         }
 
         if (document.getElementById("CommunicationCityName").value.trim() == "") {
             document.getElementById("communicationCityName_error").innerHTML = "The City field cannot be left blank";
@@ -988,16 +1016,14 @@
                 ret = false;
             }
             else {
-                document.getElementById("communicationCityName_error").innerHTML = "";
-            }
-
-            if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
-                document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
-                ret = false;
-            }
-            else {
-                document.getElementById("communicationCityName_error").innerHTML = "";
-            }
+                if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
+                    document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+                    ret = false;
+                }
+                else {
+                    document.getElementById("communicationCityName_error").innerHTML = "";
+                }
+            }            
         }
 
         if (document.getElementById("CommunicationPincode").value.trim() == "") {
@@ -1286,34 +1312,7 @@
                 document.getElementById("BeneficiaryMobile_error").innerHTML = "";
             }
         }
-               
-        if (localStorage.getItem("PANNOALREADYUSED") == 0) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
-            ret = false;
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "";
-        }
-
-
-        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            //document.getElementById("IncomeTaxPan").focus();
-            ret = false;
-        }
-        else {
-            var result = false;
-
-            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-            }
-
-        }
-
+        
 
         return ret;
     }
@@ -1408,9 +1407,9 @@
         //debugger;
         var panNumber = document.getElementById("IncomeTaxPan").value.trim();
 
-
         if (panNumber == "") {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return (false);
         }
         else {
@@ -1418,23 +1417,28 @@
         }
 
         document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
-
-        if ($('#IncomeTaxPan').val().match(pancard)) {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
-        }
-        else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            return (false);
-        }
+               
 
         let forthdigitPan = document.getElementById("IncomeTaxPan").value.substr(3, 1);
         console.log(forthdigitPan);
         if (forthdigitPan != 'P') {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").className = "error";
             return;
         }
         else {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            
+            if ($('#IncomeTaxPan').val().match(pancard)) 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                document.getElementById("incomeTaxPan_error").className = "error text-success";
+            }
+            else 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                return (false);
+            }
         }
 
         var panNumberUsed = false;

@@ -87,9 +87,9 @@ namespace HPCL.Service.Services
                     merchantMdl = merchantDetailsLst.First();
                 }
                 merchantMdl.CreatedMerchant = "Y";
+                merchantMdl.UpdateFlag = "Y";
             }
-
-            if (!string.IsNullOrEmpty(ERPCode))
+            else if (!string.IsNullOrEmpty(ERPCode))
             {
                 var merchantDetailsForms = new GetMerchantDetailsFromMerchantIDRequestModal
                 {
@@ -108,6 +108,7 @@ namespace HPCL.Service.Services
                 List<MerchantGetDetailsModel> merchantDetailsLst = merchantDetailsJarr.ToObject<List<MerchantGetDetailsModel>>();
                 merchantMdl = merchantDetailsLst.First();
                 merchantMdl.CreatedMerchant = "Y";
+                merchantMdl.UpdateFlag = "Y";
             }
 
             merchantMdl.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
@@ -131,7 +132,7 @@ namespace HPCL.Service.Services
             string url;
             var merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal();
 
-            if (!String.IsNullOrEmpty(merchantMdl.MerchantId) && !String.IsNullOrEmpty(merchantMdl.RetailOutletName))
+            if (merchantMdl.UpdateFlag == "Y")
             {
                 url = WebApiUrl.updateMerchant;
                 merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal
@@ -258,25 +259,17 @@ namespace HPCL.Service.Services
 
         public async Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
         {
-            if (!string.IsNullOrEmpty(merchaApprovalMdl.FromDate) && !string.IsNullOrEmpty(merchaApprovalMdl.FromDate))
-            {
-                merchaApprovalMdl.FromDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
-                merchaApprovalMdl.ToDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
-            }
-            else
-            {
-                merchaApprovalMdl.FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
-                merchaApprovalMdl.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
-            }
+            string fDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.FromDate);
+            string tDate = await _commonActionService.changeDateFormat(merchaApprovalMdl.ToDate);
 
             var merchantApprovalForms = new GetVerifyMerchantListRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Category = merchaApprovalMdl.CategoryID,
-                FromDate = merchaApprovalMdl.FromDate,
-                ToDate = merchaApprovalMdl.ToDate
+                Category = string.IsNullOrEmpty(merchaApprovalMdl.CategoryID) ? "1": merchaApprovalMdl.CategoryID,
+                FromDate = fDate,
+                ToDate = tDate
             };
 
             StringContent merchantApprovalContent = new StringContent(JsonConvert.SerializeObject(merchantApprovalForms), Encoding.UTF8, "application/json");
