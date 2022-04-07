@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +8,11 @@ namespace HPCL.Common.Models.ViewModel.MerchantFinancials
 {
     public class GetTransactionDetails : BaseEntity
     {
+        public GetTransactionDetails()
+        {
+            FromDate = DateTime.Now.AddDays(-7).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+        }
         [Required(ErrorMessage = FieldValidation.MerchantNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMerchantId, ErrorMessage = FieldValidation.ValidMerchantIdErrMsg)]

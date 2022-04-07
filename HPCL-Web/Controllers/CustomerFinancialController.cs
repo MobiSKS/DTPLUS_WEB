@@ -74,7 +74,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult ViewAccountStatement()
         {
-            return View();
+            GetViewAccountStatement getViewAccountStatement=new GetViewAccountStatement();
+            return View(getViewAccountStatement);
         }
 
         [HttpPost]

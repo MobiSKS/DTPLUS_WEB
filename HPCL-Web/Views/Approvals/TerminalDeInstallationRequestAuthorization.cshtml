@@ -42,8 +42,9 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
+                                            <span class="error" id="fromDate_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +53,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                         </div>
                                     </div>
@@ -106,14 +107,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(".toBeHiddenOnSuccessAuth").show();
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-
-        today = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(today);
-        $("#ToDate").val(today);
+       
     });
     function getTerminalRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
@@ -165,35 +159,38 @@
     });
 
     function searchTerminalDeInstallAuthDetailsTbl() {
+        var flag="Y";
         var zoID = $("#ZonalOfficeId").val();
         var roID = $("#RegionalOfficeId").val();
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
+        flag=checkDates("fromDate_error");
         var merchantID = $("#MerchantID").val();
         var terminalID = $("#TerminalID").val();
-
-        $.ajax({
-            type: 'GET',  // http method
-            url: '@Url.Action("GetTerminalsForAuthorization", "Approvals")',
-            contentType: "application/json; charset=utf-8",
-            data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, merchantId: merchantID, terminalId: terminalID},
-            dataType: "text",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#terminalDeInstallAuthorizationDetailsTbl").html(data);
-                    $('html, body').animate({
-                        scrollTop: $("#terminalDeInstallAuthorizationDetailsTbl").offset().top
-                    }, 2000);
+        if(flag=="Y"){
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetTerminalsForAuthorization", "Approvals")',
+                contentType: "application/json; charset=utf-8",
+                data: { zonalOfcID: zoID, regionalOfcID: roID, fromDate: fromDate, toDate: toDate, merchantId: merchantID, terminalId: terminalID},
+                dataType: "text",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#terminalDeInstallAuthorizationDetailsTbl").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#terminalDeInstallAuthorizationDetailsTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error");
-            }
-        });
+            });
+        }
     }
     function resetFields() {
         $("#terminalDeInstallAuthorizationDetailsTbl").html("");

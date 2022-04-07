@@ -97,7 +97,7 @@ namespace HPCL.Common.Models
                 districtID = 0,
                 districtName = "Select District"
             });
-
+            CustomerDateOfApplication= DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }

@@ -9,7 +9,8 @@
             <li class="breadcrumb-item font-weight-light">Terminal Installation Request</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        <form method="POST" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        @*<form id="formValid" method="POST" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">*@
+          <form id="formValid" >
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey pb-3">
@@ -43,9 +44,9 @@
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "merchantIdVal", @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger",@id="MerchantID"})
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "MerchantId", @class = "form-control" })
                                             </div>
+                                            <span class="error" style="display:none" id="Merchant_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +68,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center justify-content- mt-0 mb-3">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" @*onclick="showGrid()"*@>Search</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSearch" name="submit">Search</button>
 
                                                 </div>
                                             </div>
@@ -78,7 +79,7 @@
 
                             <div class="clearfix"></div>
 
-                            <div class="alert alert-warning mt-3" role="alert" style="display:none;" id="noRecord">
+                            <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;display:none;" id="noRecord">
 
                             </div>
 
@@ -295,7 +296,7 @@
             });
     });
 
-    $('#merchantIdVal').on("input", function (evt) {
+    $('#MerchantId').on("input", function (evt) {
         var self = $(this);
         self.val(self.val().replace(/\D/g, ""));
         if ((evt.which < 48 || evt.which > 57)) {
@@ -313,22 +314,15 @@
         }
     }
 
-    function OnSuccess(res, status, xhr) {
+    function OnSuccess(data) {
 
-        console.log("response",res);
+ 
+        console.log(data.searchList.data);
 
-        console.log(status,"status");
+        var objMerchantLst = data.searchList.data.objMerchantDetail;
+        var objTerminalLst = data.searchList.data.objTerminalDetail;
 
-        var MerchantId = $("#MerchantId").val();
-
-        console.log(MerchantId);
-
-        var objMerchantLst = res.searchList.data.objMerchantDetail;
-        var objTerminalLst = res.searchList.data.objTerminalDetail;
-
-        console.log(res);
-
-        if (res.searchList.success == true) {
+        if (objMerchantLst.length>0 && objTerminalLst.length>0) {
 
             document.getElementById("noRecord").style.display = "none";
 
@@ -368,7 +362,7 @@
             $("#label").hide();
             $("#Just").hide();
             $("#noRecord").html("");
-            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            $("#noRecord").append("<span>" + data.searchList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
         }
 
@@ -386,7 +380,7 @@
         var TerminalIssuanceType = $('input[name="terminalIssurenceType"]:checked').val();
         var TerminalTypeRequested = $('input[name="terminalTypeRequest"]:checked').val();
         var Justification = $("#justificationId").val();
-        var MerchantId = $("#merchantIdVal").val();
+        var MerchantId = $("#MerchantId").val();
 
         console.log("Submit");
         console.log(TerminalIssuanceType);
@@ -466,7 +460,53 @@
             document.getElementById("terminalIssurenceType_error").innerHTML = "";
         }
     });
+   
+     $("#btnSearch").click(function () {
+         var flag="Y";
+         var merchantID = $("#MerchantId").val();
+        
+        var flag = "Y";
+        if (merchantID == "") {
+            $("#Merchant_error").attr("style", "display:block");
+            $("#Merchant_error").html("Merchant ID is required");
+            flag = "N";
+        }
+        else {
+            if (!merchantID.match(mappedMerchantID)) {
+                $("#Merchant_error").attr("style", "display:block");
+                $("#Merchant_error").html("Please enter valid Merchant ID");
+                flag = "N";
+            }
+            else {
+                $("#Merchant_error").attr("style", "display:none");
+                $("#Merchant_error").html("");
+            }
+        }
+        if (flag=="Y") {
+            var zoID = $("#ZonalOfficeId :selected").val();
+            var roID = $("#RegionalOfficeId :selected").val();
+            
+            var model = { ZonalOfficeId: zoID, RegionalOfficeId: roID, MerchantId: merchantID };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("TerminalInstallationRequest", "TerminalManagement")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(model),
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    if (status == 'success') {
+                       OnSuccess(data);
 
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error " + errorMessage);
+                }
+            });
+        }
+    });
+     
     //$("#justificationId").on("blur", function () {
     //    if ($("#justificationId").val().length > 0) {
     //        document.getElementById("justification_error").innerHTML = "";

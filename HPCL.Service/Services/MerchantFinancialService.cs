@@ -7,6 +7,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -18,17 +19,27 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
-
-        public MerchantFinancialService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        private readonly ICommonActionService _commonActionService;
+        public MerchantFinancialService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<UploadMerchantCautionLimitResponse> ViewUploadMerchantCautionLimit(GetUploadMerchantCautionLimit entity)
         {
             var reqBody = new GetUploadMerchantCautionLimit();
-
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                entity.FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                entity.ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                entity.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                entity.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             if (entity.FromDate != null && entity.ToDate != null)
             {
                 reqBody = new GetUploadMerchantCautionLimit
@@ -70,7 +81,17 @@ namespace HPCL.Service.Services
         public async Task<MerchantSettlementDetailsResponse> SettlementDetails(GetMerchantSettlementDetails entity)
         {
             var reqBody = new GetMerchantSettlementDetails();
-
+            string FromDate = "", ToDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             if (entity.FromDate != null && entity.ToDate != null)
             {
                 reqBody = new GetMerchantSettlementDetails
@@ -80,8 +101,8 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     MerchantId = entity.MerchantId,
                     TerminalId = entity.TerminalId,
-                    FromDate = entity.FromDate,
-                    ToDate = entity.ToDate
+                    FromDate = FromDate,
+                    ToDate = ToDate
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
@@ -93,8 +114,8 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     TerminalId = entity.TerminalId,
-                    FromDate = entity.FromDate,
-                    ToDate = entity.ToDate
+                    FromDate = FromDate,
+                    ToDate = ToDate
                 };
             }
 
@@ -156,7 +177,17 @@ namespace HPCL.Service.Services
         public async Task<TransactionlDetailsResponse> GetTransactionlDetails(GetTransactionDetails entity)
         {
             var reqBody = new GetTransactionDetails();
-
+            string FromDate = "", ToDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             if (entity.FromDate != null && entity.ToDate != null)
             {
                 reqBody = new GetTransactionDetails
@@ -167,8 +198,8 @@ namespace HPCL.Service.Services
                     MerchantId = entity.MerchantId,
                     TerminalId = entity.TerminalId,
                     TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
-                    FromDate = entity.FromDate,
-                    ToDate = entity.ToDate
+                    FromDate = FromDate,
+                    ToDate = ToDate
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
@@ -181,8 +212,8 @@ namespace HPCL.Service.Services
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     TerminalId = entity.TerminalId,
                     TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
-                    FromDate = entity.FromDate,
-                    ToDate = entity.ToDate
+                    FromDate = FromDate,
+                    ToDate = ToDate
                 };
             }
 
@@ -198,11 +229,9 @@ namespace HPCL.Service.Services
             string fromDate = "", toDate = "";
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = FromDate.Split("-");
-                string[] toDateArr = ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
+                
+                fromDate = await _commonActionService.changeDateFormat(FromDate);
+                toDate = await _commonActionService.changeDateFormat(ToDate);
 
             }
             var reqBody = new GetDeltaReport
@@ -236,21 +265,18 @@ namespace HPCL.Service.Services
 
             Model.SaleEarningDetails = new List<MerchantERPReloadSaleEarningDetails>();
             Model.Message = "";
-
+            
             if (!string.IsNullOrEmpty(Model.FromDate) && !string.IsNullOrEmpty(Model.ToDate))
             {
-                string[] fromDateArr = Model.FromDate.Split("-");
-                string[] toDateArr = Model.ToDate.Split("-");
-
-                //fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                //toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-                fromDate = fromDateArr[0] + "-" + fromDateArr[1] + "-" + fromDateArr[2];
-                toDate = toDateArr[0] + "-" + toDateArr[1] + "-" + toDateArr[2];
+                fromDate = await _commonActionService.changeDateFormat(Model.FromDate);
+                toDate = await _commonActionService.changeDateFormat(Model.ToDate);
             }
             else
             {
                 if (string.IsNullOrEmpty(Model.TerminalOrMerchant))
                     Model.TerminalOrMerchant = "Merchant";
+                Model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                Model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
                 return Model;
             }
             var requestData = new MerchantERPReloadSaleEarningRequest
@@ -284,16 +310,16 @@ namespace HPCL.Service.Services
 
             if (!string.IsNullOrEmpty(Model.FromDate) && !string.IsNullOrEmpty(Model.ToDate))
             {
-                string[] fromDateArr = Model.FromDate.Split("-");
-                string[] toDateArr = Model.ToDate.Split("-");
 
-                fromDate = fromDateArr[0] + "-" + fromDateArr[1] + "-" + fromDateArr[2];
-                toDate = toDateArr[0] + "-" + toDateArr[1] + "-" + toDateArr[2];
+                fromDate = await _commonActionService.changeDateFormat(Model.FromDate);
+                toDate = await _commonActionService.changeDateFormat(Model.ToDate);
             }
             else
             {
                 if (string.IsNullOrEmpty(Model.TerminalOrMerchant))
                     Model.TerminalOrMerchant = "Merchant";
+                Model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                Model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
                 return Model;
             }
             var requestData = new MerchantERPReloadSaleEarningRequest

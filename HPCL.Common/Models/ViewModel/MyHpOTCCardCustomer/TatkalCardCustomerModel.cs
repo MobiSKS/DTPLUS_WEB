@@ -40,6 +40,8 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
                 SecretQuestionId = 0,
                 SecretQuestionName = "--Select--"
             });
+            DateOfApplication= DateTime.Now.ToString("dd-MM-yyyy");
+            SignedOn = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         [Required(ErrorMessage = "Driver Title is Required")]

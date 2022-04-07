@@ -55,6 +55,9 @@
         public const string ValidTerminalId = @"^(?=(5))[0-9]{10}$";
         public const string ValidTerminalIdErrMsg = "start with 5 and contains 10 digits";
 
+        public const string ValidCustomerReferenceNo = @"^(?!(0))[0-9]{10}$";
+        public const string ValidCustomerReferenceNoErrMsg = "Should not start with 0 and contains 10 digits";
+
         #endregion
 
         #region "Not Empty Validation"

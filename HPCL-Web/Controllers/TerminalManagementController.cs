@@ -51,7 +51,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> TerminalInstallationRequest(TerminalManagement entity)
+        public async Task<JsonResult> TerminalInstallationRequest([FromBody] TerminalManagement entity)
         {
             var searchList = await _TerminalService.TerminalInstallationRequest(entity);
 
@@ -211,7 +211,8 @@ namespace HPCL_Web.Controllers
         }
         public IActionResult TerminalInstallationRequestApproval()
         {
-            return View();
+            TerminalApprovalReq terminalApprovalReq = new TerminalApprovalReq();
+            return View(terminalApprovalReq);
         }
 
         public IActionResult Approval()
