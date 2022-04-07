@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
                 Pin = arrs[0].Pin,
                 MobileNo = arrs[0].MobileNo,
                 EmailId = arrs[0].EmailId,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
@@ -108,7 +108,7 @@ namespace HPCL.Service.Services
                 Pin =  arrs[0].Pin,
                 MobileNo =  arrs[0].MobileNo,
                 EmailId =  arrs[0].EmailId,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
             alOTCCardRequestModel.UserAgent = CommonBase.useragent;
             alOTCCardRequestModel.UserIp = CommonBase.userip;
             alOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            alOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            alOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(alOTCCardRequestModel), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseAlOtcCardRequest);
@@ -187,7 +187,7 @@ namespace HPCL.Service.Services
             ashokLeylandCardCreationModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             ashokLeylandCardCreationModel.UserAgent = CommonBase.useragent;
             ashokLeylandCardCreationModel.UserIp = CommonBase.userip;
-            ashokLeylandCardCreationModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName");
+            ashokLeylandCardCreationModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             ashokLeylandCardCreationModel.CommunicationPhoneNo = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationDialCode) ? "" : ashokLeylandCardCreationModel.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationPhonePart2) ? "" : ashokLeylandCardCreationModel.CommunicationPhonePart2);
             ashokLeylandCardCreationModel.CommunicationFax = (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxCode) ? "" : ashokLeylandCardCreationModel.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationFaxPart2) ? "" : ashokLeylandCardCreationModel.CommunicationFaxPart2);
             if (!string.IsNullOrEmpty(ashokLeylandCardCreationModel.CommunicationEmailid))

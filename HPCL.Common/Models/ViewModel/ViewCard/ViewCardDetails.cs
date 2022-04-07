@@ -6,7 +6,6 @@ namespace HPCL.Common.Models.ViewModel.ViewCard
 {
     public class ViewCardDetails : BaseEntity
     {
-
         [Required(ErrorMessage = "Invalid CustomerId")]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         [StringLength(10)]
@@ -19,6 +18,5 @@ namespace HPCL.Common.Models.ViewModel.ViewCard
         public string MobileNo { get; set; }
         public string VechileNo { get; set; }
         public string FastagNo { get; set; }
-
     }
 }

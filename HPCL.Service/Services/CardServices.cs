@@ -125,7 +125,7 @@ namespace HPCL.Service.Services
                 CardNo = _httpContextAccessor.HttpContext.Session.GetString("CardIdSession"),
                 ServiceId = Convert.ToInt32(serviceId),
                 Flag = Convert.ToInt32(flag),
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
@@ -160,7 +160,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 CardNo = entity.CardNumber,
                 MobileNo = entity.MobileNumber,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
             StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateMobileUrl);
