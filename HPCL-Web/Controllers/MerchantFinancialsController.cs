@@ -47,7 +47,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult ViewUploadMerchantCautionLimit()
         {
-            return View();
+            GetUploadMerchantCautionLimit getUploadMerchantCautionLimit=new GetUploadMerchantCautionLimit();
+            return View(getUploadMerchantCautionLimit);
         }
 
         [HttpPost]
