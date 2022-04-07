@@ -193,6 +193,7 @@
         public static string viewRequestedTatkalCard = "api/dtplus/tatkal/view_requested_tatkal_card";
         public static string maptatkalcardstotatkalcustomer = "api/dtplus/tatkal/map_tatkal_cards_to_tatkal_customer";
         public static string updatemaptatkalcardstotatkalcustomer = "api/dtplus/tatkal/update_map_tatkal_cards_to_tatkal_customer";
+        public static string viewtatkalcards = "api/dtplus/tatkal/view_tatkal_cards";
         #endregion
 
         #region Terminal

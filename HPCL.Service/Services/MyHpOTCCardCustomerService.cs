@@ -360,7 +360,16 @@ namespace HPCL.Service.Services
         public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(GetCardAllocationActivation entity)
         {
             MyCardAllocationandActivationModel getMyCardAllocationandActivation = new MyCardAllocationandActivationModel();
-
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                entity.FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                entity.ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                entity.FromDate = DateTime.Now.ToString("yyyy-MM-dd");
+                entity.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             var cardAllocationforms = new GetCardAllocationActivation
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
