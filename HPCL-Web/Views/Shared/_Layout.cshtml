@@ -569,13 +569,14 @@
         AOS.init({
             easing: 'ease-in-out-sine'
         });
-
     </script>
     </body>
 </html>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
 <script>
+
+    var today = '@Context.Session.GetString("Today")';
 
     $(document).ready(function () {
         //setTimeout(function(){
@@ -590,16 +591,18 @@
 
         $('.search_test').SumoSelect({ search: true, searchText: 'Enter here.' });
 
+
+
         $('.fromDate').datepicker({
             changeMonth: true,
             changeYear: true,
-            maxDate: '0'
+            maxDate: new Date(today)
         });
 
         $('.toDate').datepicker({
             changeMonth: true,
             changeYear: true,
-            maxDate: '0'
+            maxDate: new Date(today)
         });
 
         var d = new Date($('.fromDate').val());
@@ -617,6 +620,23 @@
         // },3000)
 
     });
+
+    $('.fromDate').on('change',function(){
+        var d = new Date($('.fromDate').val());
+        var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+        var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+        var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+        $('.fromDate').val(`${da}-${mo}-${ye}`);
+    });
+
+    $('.toDate').on('change',function(){
+        var d1 = new Date($('.toDate').val());
+        var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+        var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+        var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+        $('.toDate').val(`${da1}-${mo1}-${ye1}`);
+    });
+
 </script>
 
 <script>
