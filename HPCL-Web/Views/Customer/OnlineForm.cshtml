@@ -57,7 +57,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
                                         <div class="col-md-8 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                             <span class="error" id="applicationDate_error"></span>
                                         </div>
                                     </div>
@@ -501,7 +501,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
                                             @*<input type="date" class="form-control">*@
-                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control", autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
@@ -570,7 +570,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
                                             @*<input type="date" class="form-control">*@
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", autocomplete = "off" ,@placeholder="dd-mm-yyyy"})
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -812,41 +812,55 @@
 
 
         if (notFoundError == "") {
-            if (custDateOfApplication == "") {
-                $("#CustomerDateOfApplication").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                setDates();
-            }
-            else {
-                $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
+            //if (custDateOfApplication == "") {
+            //    $("#CustomerDateOfApplication").datepicker({
+            //        "setDate": new Date(),
+            //        "autoclose": true,
+            //        dateFormat: 'dd-mm-yy'
+            //    });
+            //    setDates();
+            //}
+            //else {
+            //    $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
+            //}
 
-            if (OfficialDOB == "") {
-                $("#KeyOfficialDOB").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                //setDates();
-            }
-            else {
-                $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-
-            if (OffDateOfAnniversary == "") {
-                $("#KeyOffDateOfAnniversary").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                //setDates();
-            }
-            else {
-                $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
+            //if (OfficialDOB == "") {
+            //    $("#KeyOfficialDOB").datepicker({
+            //        "setDate": new Date(),
+            //        "autoclose": true,
+            //        dateFormat: 'dd-mm-yy'
+            //    });
+            //    //setDates();
+            //}
+            //else {
+            //    $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
+            //}
+              
+            $('#KeyOffDateOfAnniversary').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+            
+                autoclose: "true"
+            });
+             if (($('#KeyOffDateOfAnniversary').val() != undefined)  && ($('#KeyOffDateOfAnniversary').val() != "") ){
+                var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
+                var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+                var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+                var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+                $('#KeyOffDateOfAnniversary').val(`${da}-${mo}-${ye}`);
+             }
+            //if (OffDateOfAnniversary == "") {
+            //    $("#KeyOffDateOfAnniversary").datepicker({
+            //        "setDate": new Date(),
+            //        "autoclose": true,
+            //        dateFormat: 'dd-mm-yy'
+            //    });
+            //    //setDates();
+            //}
+            //else {
+            //    $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
+            //}
         }
 
         if ($('#AllowPanDuplication').val() == "Y") {
@@ -861,33 +875,33 @@
         }
     });
 
-    function setDates() {
-        var d = new Date();
+    //function setDates() {
+    //    var d = new Date();
 
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
+    //    var month = d.getMonth() + 1;
+    //    var day = d.getDate();
+    //    var output = (day < 10 ? '0' : '') + day + '-' +
+    //        (month < 10 ? '0' : '') + month + '-' +
+    //        d.getFullYear();
 
-        $("#CustomerDateOfApplication").val(output);
-        //$("#KeyOfficialDOB").val(output);
+    //    $("#CustomerDateOfApplication").val(output);
+    //    //$("#KeyOfficialDOB").val(output);
 
-    };
+    //};
 
-    function setDOB() {
-        var d = new Date();
+    //function setDOB() {
+    //    var d = new Date();
 
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
+    //    var month = d.getMonth() + 1;
+    //    var day = d.getDate();
+    //    var output = (day < 10 ? '0' : '') + day + '-' +
+    //        (month < 10 ? '0' : '') + month + '-' +
+    //        d.getFullYear();
 
-        $("#KeyOfficialDOB").val(output);
-        //$("#KeyOfficialDOB").val(output);
+    //    $("#KeyOfficialDOB").val(output);
+    //    //$("#KeyOfficialDOB").val(output);
 
-    };
+    //};
 
     $("#btnAdd").click(function () {
         let flag = 'Y';
@@ -1892,30 +1906,30 @@
         }
     });
 
-    $("#CustomerDateOfApplication").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
-        console.log(selectedDate);
+    //$("#CustomerDateOfApplication").on("change", function () {
+    //    //debugger;
+    //    var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
+    //    console.log(selectedDate);
 
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
+    //    if (selectedDate != "") {
+    //        var today = new Date();
+    //        today.setHours(0, 0, 0, 0);
 
-            const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
+    //        const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
 
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("applicationDate_error").innerHTML = "Date of Application cannot be a future date";
-                setDates();
-            }
-            else {
-                document.getElementById("applicationDate_error").innerHTML = "";
-            }
-        }
+    //        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+    //        console.log(today);
+    //        console.log(varDate);
+    //        if (varDate > today) {
+    //            document.getElementById("applicationDate_error").innerHTML = "Date of Application cannot be a future date";
+    //            setDates();
+    //        }
+    //        else {
+    //            document.getElementById("applicationDate_error").innerHTML = "";
+    //        }
+    //    }
 
-    });
+    //});
 
     $("#CommunicationDistrictId").change(function () {
         debugger;
@@ -2413,30 +2427,30 @@
 
     });
 
-    $("#KeyOfficialDOB").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
-        console.log(selectedDate);
+    //$("#KeyOfficialDOB").on("change", function () {
+    //    //debugger;
+    //    var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
+    //    console.log(selectedDate);
 
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
+    //    if (selectedDate != "") {
+    //        var today = new Date();
+    //        today.setHours(0, 0, 0, 0);
 
-            const myArray = document.getElementById("KeyOfficialDOB").value.split("-");
+    //        const myArray = document.getElementById("KeyOfficialDOB").value.split("-");
 
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("KeyOfficialDOB_error").innerHTML = "Date of Birth cannot be a future date";
-                setDOB();
-            }
-            else {
-                document.getElementById("KeyOfficialDOB_error").innerHTML = "";
-            }
-        }
+    //        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+    //        console.log(today);
+    //        console.log(varDate);
+    //        if (varDate > today) {
+    //            document.getElementById("KeyOfficialDOB_error").innerHTML = "Date of Birth cannot be a future date";
+    //            setDOB();
+    //        }
+    //        else {
+    //            document.getElementById("KeyOfficialDOB_error").innerHTML = "";
+    //        }
+    //    }
 
-    });
+    //});
 
     $("#KeyOffLastName").on("blur", function () {
         //debugger;

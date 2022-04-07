@@ -180,7 +180,16 @@ namespace HPCL.Service.Services
         public async Task<GetViewAccountStatementResponse> ViewAccountStatement(GetViewAccountStatement entity)
         {
             var reqBody = new GetViewAccountStatement();
-
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                entity.FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                entity.ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                entity.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                entity.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             if (entity.CustomerID != null)
             {
                 reqBody = new GetViewAccountStatement

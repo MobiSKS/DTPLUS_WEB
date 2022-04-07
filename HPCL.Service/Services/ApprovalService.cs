@@ -39,6 +39,16 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeInstallationRequestApprovalWithRemark> GetTerminalsForApproval(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
         {
             TerminalDeInstallationRequestApprovalWithRemark getTerminalDeInstallationRequestApprovalReponseModals = new TerminalDeInstallationRequestApprovalWithRemark();
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(fromDate);
+                toDate = await _commonActionService.changeDateFormat(toDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             var terminalDetailsForDeInstallationApprovalForms = new GetTerminalDeInstallationRequestApprovalRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -102,6 +112,16 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
         {
             TerminalDeInstallationRequestAuthorizationWithRemark getTerminalDeInstallationRequestAuthorizationReponseModals = new TerminalDeInstallationRequestAuthorizationWithRemark();
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(fromDate);
+                toDate = await _commonActionService.changeDateFormat(toDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             var terminalDetailsForDeInstallationAuthorizationForms = new GetTerminalDeInstallationRequestAuthorizationRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),

@@ -66,7 +66,7 @@
                                                 <div class="col-md-7 col-12">
                                                     @*@Html.TextBoxFor(m => m.FromDate, new { @type = "date", @class = "form-control date" })*@
                                                     @*@Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @Type = "Date" })*@
-                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
                                                     <span class="error" id="FromDate_error"></span>
                                                 </div>
                                             </div>
@@ -75,7 +75,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">To Date</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
                                                     <span class="error" id="ToDate_error"></span>
                                                 </div>
                                             </div>
@@ -992,33 +992,7 @@
 
     $(document).ready(function () {
 
-        if (notFoundError == "") {
-            if (fromDate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-
-            if (toDate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-            
-        }
-        else {
-            alert("Details not found");
-        }
+      
 
         let tableCustData = sessionStorage.getItem("tableCustData");
 
@@ -1654,146 +1628,23 @@
         window.location.href = link;
     };
 
-    $(".date").on('change', function (e) {
-
-        var applicationDate = $("#FromDate").val();
-        console.log(applicationDate);
-        console.log(today);
-        if (applicationDate != "") {
-            if (applicationDate > today) {
-                console.log('true');
-                $("#FromDate_error").attr("style", "display:block");
-                $("#FromDate_error").html("Date selection should be less or equal to Today's date");
-                $("#FromDate").val(today);
-            }
-            else {
-                console.log('false');
-                $("#FromDate_error").html("");
-                $("#FromDate_error").attr("style", "display:none");
-            }
-        }
-    });
-
-    $("#FromDate").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("FromDate").value.trim();
-        console.log(selectedDate);
-
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("FromDate").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("FromDate_error").innerHTML = "From Date cannot be a future date";
-                setFromDate();
-            }
-            else {
-                document.getElementById("FromDate_error").innerHTML = "";
-            }
-        }
-
-    });
-
-    $("#ToDate").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("ToDate").value.trim();
-        console.log(selectedDate);
-
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("ToDate").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("ToDate_error").innerHTML = "To Date cannot be a future date";
-                setToDate();
-            }
-            else {
-                document.getElementById("ToDate_error").innerHTML = "";
-            }
-        }
-
-    });
-
-    function setFromDate() {
-        var d = new Date();
-
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-        $("#FromDate").val(output);
-
-    };
-
-    function setToDate() {
-        var d = new Date();
-
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-        $("#ToDate").val(output);
-
-    };
 
     $("#btnSave").on("click", (function (e) {
-        debugger;
         var fromdate = $("#FromDate").val();
         var todate = $("#ToDate").val();
 
-        var flag = true;
+        var flag = "Y";
 
         if (fromdate != "" && todate != "") {
-            flag = checkDates();
+            flag = checkDates("FromDate_error");
         }
 
-        if (flag == false)
+        if (flag == "N")
             e.preventDefault();
 
     }));
 
-    function checkDates() {
-        var fromD = $("#FromDate").val();
-        var toD = $("#ToDate").val();
-        var dateflag = true;
-        if (fromD != "" && toD != "") {
-            if (fromD > toD) {
-
-                $("#FromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = false;
-            }
-            else {
-                $("#FromDate_error").html("");
-            }
-        }
-        console.log(toD);
-        console.log(today);
-        if (toD != "") {
-            if (toD > today) {
-                $("#ToDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = false;
-            }
-            else {
-                $("#ToDate_error").html("");
-            }
-        }
-
-        return dateflag;
-    }
+  
 
 </script>
 <style>

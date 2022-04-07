@@ -59,7 +59,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','7');" })
                                             </div>
                                             @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
                                         </div>
@@ -73,7 +73,7 @@
                                         <label class="font-weight-normal col-md-4 col-12"> To Date </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','7');" })
                                             </div>
                                             @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
                                         </div>
@@ -160,11 +160,6 @@
         location.reload();
     }
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
 
      $(document).ready(function () {
 
@@ -209,69 +204,10 @@
              }
          });
 
-         setDates();
+         //setDates();
     });
 
-    function setDates() {
-        var fromd = new Date();
-        fromd.setMonth(fromd.getMonth());
-        fromd.setDate(fromd.getDate());
-        var dd = String(fromd.getDate()).padStart(2, '0');
-        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = fromd.getFullYear();
-
-        fromd = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(fromd);
-        $("#ToDate").val(today);
-
-        $("#fromDate_error").html("");
-        $("#toDate_error").html("");
-    };
-
-    $(".date").on('change', function (e) {
-        var fromD = "";
-        var toD = "";
-        fromD = $("#FromDate").val();
-        toD = $("#ToDate").val();
-        checkDates(fromD, toD);
-        $("#show_Table").html("");
-    });
-
-    function checkDates(fromD, toD) {
-        var dateflag = "Y";
-        var d1 = new Date(fromD);
-        var d2 = new Date(toD);
-
-        if (fromD != "" && toD != "") {
-            var aday = 24 * 60 * 60 * 1000;
-            if (fromD > toD) {
-
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = "N";
-            }
-            else if ((Math.abs(d2 - d1) / aday) > 7) {
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("Difference between From Date and To Date should not be more than 7 days");
-                dateflag = "N";
-            }
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-
-        }
-        return dateflag;
-    }
+   
 
     function GetTransList() {
 
@@ -290,7 +226,7 @@
             flag = "N";
         }
         if (fromdate != "" && todate != "") {
-            flag = checkDates(fromdate, todate);
+            flag =  checkDates("fromDate_error","7");
         }
 
         if (flag == "N")

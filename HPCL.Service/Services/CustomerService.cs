@@ -133,20 +133,23 @@ namespace HPCL.Service.Services
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
 
-            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
-
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+            
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            customerDateOfApplication = await _commonActionService.changeDateFormat(customerDateOfApplication);
 
             if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
             {
-                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
-                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                //string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                //KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(KeyOffDateOfAnniversary);
             }
 
             if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
             {
-                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
-                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                //string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                //KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(KeyOfficialDOB);
             }
 
 

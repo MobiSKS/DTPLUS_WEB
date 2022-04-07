@@ -1,11 +1,17 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.MerchantFinancials
 {
     public class GetMerchantSettlementDetails : BaseEntity
     {
+        public GetMerchantSettlementDetails()
+        {
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+        }
         [Required(ErrorMessage = FieldValidation.MerchantNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMerchantId, ErrorMessage = FieldValidation.ValidMerchantIdErrMsg)]

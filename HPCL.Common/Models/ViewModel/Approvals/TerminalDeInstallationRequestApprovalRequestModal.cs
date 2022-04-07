@@ -22,6 +22,8 @@ namespace HPCL.Common.Models.ViewModel.Approvals
                 RegionalOfficeID = 0,
                 RegionalOfficeName = "--All--"
             });
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         public string ZonalOfficeId { get; set; }
         public string RegionalOfficeId { get; set; }

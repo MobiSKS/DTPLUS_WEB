@@ -165,14 +165,15 @@ namespace HPCL.Service.Services
             string customerDateOfApplication = "";
             string signedOn = "";
 
-            string[] custDateOfApplication = customerModel.DateOfApplication.Split("-");
+            //string[] custDateOfApplication = customerModel.DateOfApplication.Split("-");
 
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
-
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            customerDateOfApplication = await _commonActionService.changeDateFormat(customerDateOfApplication);
             if (!string.IsNullOrEmpty(customerModel.SignedOn))
             {
-                string[] dateSignedOn = customerModel.SignedOn.Split("-");
-                signedOn = dateSignedOn[2] + "-" + dateSignedOn[1] + "-" + dateSignedOn[0];
+                //string[] dateSignedOn = customerModel.SignedOn.Split("-");
+                //signedOn = dateSignedOn[2] + "-" + dateSignedOn[1] + "-" + dateSignedOn[0];
+                signedOn = await _commonActionService.changeDateFormat(signedOn);
             }
 
             customerModel.DateOfApplication = customerDateOfApplication;
