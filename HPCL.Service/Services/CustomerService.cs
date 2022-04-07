@@ -15,6 +15,7 @@ using System.Linq;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HPCL.Service.Services
 {
@@ -456,7 +457,80 @@ namespace HPCL.Service.Services
             return customerCardInfo;
         }
 
-        public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
+        //public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
+        //{
+
+        //    string feePaymentDate = "";
+
+        //    if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
+        //    {
+        //        string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+        //        feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+        //    }
+
+        //    feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
+
+        //    foreach (HPCL.Common.Models.ViewModel.Customer.CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+        //    {
+        //        if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+        //        {
+        //            cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+        //        }
+        //    }
+
+        //    #region Create Request Info
+
+        //    CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
+
+        //    insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
+        //    insertInfo.CustomerName = customerCardInfo.CustomerName;
+        //    insertInfo.FormNumber = customerCardInfo.FormNumber;
+        //    insertInfo.NoOfCards = customerCardInfo.NoOfCards;
+        //    insertInfo.RBEId = customerCardInfo.RBEId;
+        //    insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
+        //    insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
+        //    insertInfo.FeePaymentDate = feePaymentDate;
+        //    insertInfo.CardPreference = customerCardInfo.CardPreference;
+        //    insertInfo.RBEName = customerCardInfo.RBEName;
+        //    insertInfo.Useragent = CommonBase.useragent;
+        //    insertInfo.Userip = CommonBase.userip;
+        //    insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+        //    insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+        //    insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
+        //    insertInfo.VehicleNoVerifiedManually = (customerCardInfo.VehicleNoVerifiedManually ? "1" : "0");
+
+        //    if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
+        //    {
+        //        insertInfo.FeePaymentsCollectFeeWaiver = 0;
+        //    }
+
+        //    #endregion
+
+
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
+
+        //    CustomerInserCardResponse customerInserCardResponse;
+
+        //    var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.insertCustomerCard);
+
+
+        //    customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+        //    if (customerInserCardResponse.Internel_Status_Code == 1000)
+        //    {
+        //        customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+        //        customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+        //        customerCardInfo.Message = customerInserCardResponse.Message;
+        //    }
+        //    else
+        //    {
+        //        customerCardInfo.Message = customerInserCardResponse.Message;
+        //    }
+
+        //    return customerCardInfo;
+        //}
+
+        public async Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo)
         {
 
             string feePaymentDate = "";
@@ -520,10 +594,12 @@ namespace HPCL.Service.Services
                 customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
                 customerCardInfo.Message = customerInserCardResponse.Message;
+                customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
             }
             else
             {
                 customerCardInfo.Message = customerInserCardResponse.Message;
+                customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
             }
 
             return customerCardInfo;
