@@ -1560,7 +1560,7 @@
             document.getElementById("salesArea_error").innerHTML = "";
         }
 
-        if (document.applicationForm.ErpCode.value == "") {
+        if (document.applicationForm.ErpCode.value.trim() == "") {
             document.getElementById("erpCode_error").innerHTML = "ERP Code field cannot be left blank";
             if (ret != "N") {
                 document.applicationForm.ErpCode.focus();
@@ -1579,6 +1579,32 @@
                 e.preventDefault();
             });
             ret = "N";
+        }
+        else if (document.applicationForm.ErpCode.value.match(erpCodeCheck)){
+            var erpCode = document.applicationForm.ErpCode.value;
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ValidateErpCode", "Common")',
+                data: { erpCode: erpCode },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success' && v == '0') {
+                        document.getElementById("erpCode_error").innerHTML = "ERP Code already exists";
+                        if (ret != "N") {
+                            document.applicationForm.ErpCode.focus();
+                        }
+                        $("#applicationForm").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        ret = "N";
+                    }
+                    else {
+                        document.getElementById("erpCode_error").innerHTML = "";
+                        console.log(v);
+                    }
+                }
+            });
         }
         else {
             document.getElementById("erpCode_error").innerHTML = "";
@@ -2328,7 +2354,30 @@
     });
     $("#ErpCode").on("blur", function () {
         if ($("#ErpCode").val().length > 0) {
-            document.getElementById("erpCode_error").innerHTML = "";
+            
+            var erpCode = this.value;
+
+            if (!erpCode.match(erpCodeCheck)) {
+                document.getElementById("erpCode_error").innerHTML = "Start with 1 and Only 8 Digits are allowed";
+            }
+            else{
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateErpCode", "Common")',
+                    data: { erpCode: erpCode },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            document.getElementById("erpCode_error").innerHTML = "ERP Code already exists";
+                        }
+                        else {
+                            document.getElementById("erpCode_error").innerHTML = "";
+                            console.log(v);
+                        }
+                    }
+                });
+            }
         }
     });
     $("#ContactPersonNameFirstName").on("blur", function () {

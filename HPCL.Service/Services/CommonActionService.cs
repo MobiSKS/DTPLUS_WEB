@@ -1151,5 +1151,26 @@ namespace HPCL.Service.Services
 
             return modifedDate;
         }
+
+        public async Task<string> ValidateErpCode(string erpCode)
+        {
+            var validateErpCodeForms = new ValidateErpCodeRequestModalInput
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ErpCode = string.IsNullOrEmpty(erpCode) ? "" : erpCode
+            };
+
+            StringContent validateErpCodeContent = new StringContent(JsonConvert.SerializeObject(validateErpCodeForms), Encoding.UTF8, "application/json");
+
+            var validateErpCodeResponse = await _requestService.CommonRequestService(validateErpCodeContent, WebApiUrl.validateErpCode);
+
+            JObject validateErpCodeObj = JObject.Parse(JsonConvert.DeserializeObject(validateErpCodeResponse).ToString());
+            var validateErpCodeJarr = validateErpCodeObj["Data"].Value<JArray>();
+            List<ValidateErpCodeRequestModalOutput> validateErpCodeModels = validateErpCodeJarr.ToObject<List<ValidateErpCodeRequestModalOutput>>();
+            
+            return validateErpCodeModels.First().Status.ToString();
+        }
     }
 }

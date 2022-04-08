@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Interfaces
 {
@@ -62,5 +63,6 @@ namespace HPCL.Service.Interfaces
         Task<List<HotlistReason>> GetReasonListForEntities(string EntityTypeId, string Actionid);
         Task<List<RecordTypeModel>> GetRecordType();
         Task<string> changeDateFormat(string date);
+        Task<string> ValidateErpCode(string erpCode);
     }
 }

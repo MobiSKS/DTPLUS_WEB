@@ -217,5 +217,13 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
+        public async Task<JsonResult> ValidateErpCode(string erpCode)
+        {
+            var check = await _commonActionService.ValidateErpCode(erpCode);
+
+            ModelState.Clear();
+            return Json(check);
+        }
+
     }
 }
