@@ -570,7 +570,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
                                             @*<input type="date" class="form-control">*@
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control", autocomplete = "off" ,@placeholder="dd-mm-yyyy"})
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -836,20 +836,20 @@
             //    $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
             //}
               
-            $('#KeyOffDateOfAnniversary').datepicker({
-                dateFormat: 'dd-mm-yy',
-                changeMonth: true,
-                changeYear: true,
+            //$('#KeyOffDateOfAnniversary').datepicker({
+            //    dateFormat: 'dd-mm-yy',
+            //    changeMonth: true,
+            //    changeYear: true,
             
-                autoclose: "true"
-            });
-             if (($('#KeyOffDateOfAnniversary').val() != undefined)  && ($('#KeyOffDateOfAnniversary').val() != "") ){
-                var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-                var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-                var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-                var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-                $('#KeyOffDateOfAnniversary').val(`${da}-${mo}-${ye}`);
-             }
+            //    autoclose: "true"
+            //});
+            // if (($('#KeyOffDateOfAnniversary').val() != undefined)  && ($('#KeyOffDateOfAnniversary').val() != "") ){
+            //    var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
+            //    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+            //    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+            //    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+            //    $('#KeyOffDateOfAnniversary').val(`${da}-${mo}-${ye}`);
+            // }
             //if (OffDateOfAnniversary == "") {
             //    $("#KeyOffDateOfAnniversary").datepicker({
             //        "setDate": new Date(),
@@ -1906,30 +1906,19 @@
         }
     });
 
-    //$("#CustomerDateOfApplication").on("change", function () {
-    //    //debugger;
-    //    var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
-    //    console.log(selectedDate);
+    $("#CustomerDateOfApplication").on("change", function () {
+       
+        var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
+       
+        if (selectedDate == "") {
+           document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
+        }
+        else {
+            document.getElementById("applicationDate_error").innerHTML = "";
+        }
+        
 
-    //    if (selectedDate != "") {
-    //        var today = new Date();
-    //        today.setHours(0, 0, 0, 0);
-
-    //        const myArray = document.getElementById("CustomerDateOfApplication").value.split("-");
-
-    //        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-    //        console.log(today);
-    //        console.log(varDate);
-    //        if (varDate > today) {
-    //            document.getElementById("applicationDate_error").innerHTML = "Date of Application cannot be a future date";
-    //            setDates();
-    //        }
-    //        else {
-    //            document.getElementById("applicationDate_error").innerHTML = "";
-    //        }
-    //    }
-
-    //});
+    });
 
     $("#CommunicationDistrictId").change(function () {
         debugger;
@@ -2430,8 +2419,7 @@
     //$("#KeyOfficialDOB").on("change", function () {
     //    //debugger;
     //    var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
-    //    console.log(selectedDate);
-
+        
     //    if (selectedDate != "") {
     //        var today = new Date();
     //        today.setHours(0, 0, 0, 0);
