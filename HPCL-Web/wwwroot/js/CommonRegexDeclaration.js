@@ -13,8 +13,9 @@ var noOfTerminalsCheck = /^[1-2]{1}$/;
 var mappedterminalID = /^(?=(5))[0-9]{10}$/;
 var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
-var nameWithSpaceCheck = /[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/;
+var nameWithSpaceCheck = /^[a-zA-Z0-9\s]*$/;
 var highwayName = /^[a-z\d\-_\s]+$/i;
 ///^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
 var noSpecialChars = /^[A-Za-z0-9 ]+$/; //Regex for Valid Characters i.e. Alphabets, Numbers and Space 
 var atLeastOneAlphabet = /[a-zA-Z]/;   //To check if a string contains at least one letter 
+var secretQuestion = /[0-9a-zA-Z /-]/

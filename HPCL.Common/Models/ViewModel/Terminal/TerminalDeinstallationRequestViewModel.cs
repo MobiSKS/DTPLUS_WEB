@@ -43,6 +43,8 @@ namespace HPCL.Common.Models.ViewModel.Terminal
                 DeinstallationTypeID = 2,
                 DeinstallationType = "Individual Terminal"
             });
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public string MerchantId { get; set; }

@@ -101,35 +101,31 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
-        public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(TerminalManagementRequestViewModel terminalReq)
+        public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            string fromDate = "", toDate = "";
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            //string fromDate = "", toDate = "";
+            TerminalManagementRequestViewModel terminalReq = new TerminalManagementRequestViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = terminalReq.FromDate.Split("-");
-                string[] toDateArr = terminalReq.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                terminalReq.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                terminalReq.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
-            {
-
-                return terminalReq;
+            {   
+                terminalReq.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                terminalReq.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                MerchantId = terminalReq.MerchantId,
-                TerminalId = terminalReq.TerminalId,
-                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                FromDate = terminalReq.FromDate,
+                ToDate = terminalReq.ToDate,
+                MerchantId = MerchantId,
+                TerminalId = TerminalId,
+                ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -140,6 +136,7 @@ namespace HPCL.Service.Services
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalManagementRequestDetailsModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalManagementRequestDetailsModel>>();
             terminalReq.TerminalManagementRequestDetails.AddRange(TerminalInstallReqList);
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
@@ -170,55 +167,49 @@ namespace HPCL.Service.Services
                 return closeRequestResponseObj["Message"].ToString();
             }
         }
-        public async Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(TerminalManagementRequestViewModel terminalReq)
+        public async Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            TerminalManagementRequestViewModel ResponseModel = new TerminalManagementRequestViewModel();
-            string fromDate = "", toDate = "";
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            TerminalManagementRequestViewModel terminalReq = new TerminalManagementRequestViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = terminalReq.FromDate.Split("-");
-                string[] toDateArr = terminalReq.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                terminalReq.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                terminalReq.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {
-
-                return terminalReq;
+                terminalReq.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                terminalReq.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                MerchantId = terminalReq.MerchantId,
-                TerminalId = terminalReq.TerminalId,
-                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                FromDate = terminalReq.FromDate,
+                ToDate = terminalReq.ToDate,
+                MerchantId = MerchantId,
+                TerminalId = TerminalId,
+                ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
             var TerminalRequestResponse = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.viewterminalinstallationrequeststatus);
 
             JObject TerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(TerminalRequestResponse).ToString());
-            ResponseModel = JsonConvert.DeserializeObject<TerminalManagementRequestViewModel>(TerminalRequestResponse);
+            terminalReq = JsonConvert.DeserializeObject<TerminalManagementRequestViewModel>(TerminalRequestResponse);
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalManagementRequestDetailsModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalManagementRequestDetailsModel>>();
             terminalReq.TerminalManagementRequestDetails.AddRange(TerminalInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
-            terminalReq.Message = ResponseModel.Message;
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalReq;
         }
         public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
         {
 
             TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            
 
             var TerminalManagementRequest = new TerminalManagementModel
             {
@@ -246,6 +237,7 @@ namespace HPCL.Service.Services
             terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
             terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
             terminalReq.Message = ResponseModel.Message;
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
@@ -280,34 +272,31 @@ namespace HPCL.Service.Services
             }
         }
 
-        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            string fromDate = "", toDate = "";
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            //string fromDate = "", toDate = "";
+            TerminalDeinstallationRequestViewModel terminalReq=new TerminalDeinstallationRequestViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = terminalReq.FromDate.Split("-");
-                string[] toDateArr = terminalReq.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                terminalReq.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                terminalReq.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {
-                return terminalReq;
+                terminalReq.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                terminalReq.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                MerchantId = terminalReq.MerchantId,
-                TerminalId = terminalReq.TerminalId,
-                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                FromDate = terminalReq.FromDate,
+                ToDate = terminalReq.ToDate,
+                MerchantId = MerchantId,
+                TerminalId = TerminalId,
+                ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -319,6 +308,7 @@ namespace HPCL.Service.Services
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalReq;
         }
 
@@ -352,35 +342,31 @@ namespace HPCL.Service.Services
             }
         }
 
-        public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            string fromDate = "", toDate = "";
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            //string fromDate = "", toDate = "";
+            TerminalDeinstallationRequestViewModel terminalReq=new TerminalDeinstallationRequestViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = terminalReq.FromDate.Split("-");
-                string[] toDateArr = terminalReq.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                terminalReq.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                terminalReq.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {
-
-                return terminalReq;
+                terminalReq.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                terminalReq.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                MerchantId = terminalReq.MerchantId,
-                TerminalId = terminalReq.TerminalId,
-                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                FromDate = terminalReq.FromDate,
+                ToDate = terminalReq.ToDate,
+                MerchantId = MerchantId,
+                TerminalId = TerminalId,
+                ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -391,7 +377,8 @@ namespace HPCL.Service.Services
             var TerminalReqObjJarr = TerminalReqObj["Data"].Value<JArray>();
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalInstallReqList = TerminalReqObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalInstallReqList);
-            terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason()); 
+            terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalReq;
         }
 
@@ -486,34 +473,31 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg[0].Reason;
         }
-        public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
         {
-            string fromDate = "", toDate = "";
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-            if (!string.IsNullOrEmpty(terminalReq.FromDate) && !string.IsNullOrEmpty(terminalReq.FromDate))
+            //string fromDate = "", toDate = "";
+            TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
             {
-                string[] fromDateArr = terminalReq.FromDate.Split("-");
-                string[] toDateArr = terminalReq.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                terminalReq.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                terminalReq.ToDate = await _commonActionService.changeDateFormat(ToDate);
             }
             else
             {
-                return terminalReq;
+                terminalReq.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                terminalReq.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var deInstallForms = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FromDate = fromDate,
-                ToDate = toDate,
-                MerchantId = terminalReq.MerchantId,
-                TerminalId = terminalReq.TerminalId,
-                ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                FromDate = terminalReq.FromDate,
+                ToDate = terminalReq.ToDate,
+                MerchantId = MerchantId,
+                TerminalId = TerminalId,
+                ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(deInstallForms), Encoding.UTF8, "application/json");
 
@@ -525,6 +509,7 @@ namespace HPCL.Service.Services
             List<TerminalDeinstallationRequestDetailsViewModel> TerminalDeInstallReqList = deInstallObjJarr.ToObject<List<TerminalDeinstallationRequestDetailsViewModel>>();
             terminalReq.TerminalDeinstallationRequestDetails.AddRange(TerminalDeInstallReqList);
             terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
+            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalReq;
         }
 
