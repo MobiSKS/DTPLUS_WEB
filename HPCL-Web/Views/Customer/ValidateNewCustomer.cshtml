@@ -1434,13 +1434,16 @@
     };
 
     function ResetFields() {
-        debugger;
+        //debugger;
         $("#FormNumber").val('');
         $("#FromDate").val('');
         $("#ToDate").val('');
         $("#CustomerRegionID").val('0');
         document.getElementById('NoRecord').style.display = 'none';
         document.getElementById('tblResponse').style.display = 'none';
+        document.getElementById("formNumber_error").innerHTML = "";
+        document.getElementById("FromDate_error").innerHTML = "";
+        
         return false;
     };
 
@@ -1589,23 +1592,28 @@
 
             if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
                 document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").value = "";
                 //document.getElementById("FormNumber").focus();
                 return false;
             }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
-            }
-
-            if (document.getElementById("FormNumber").value.length < 10) {
+            else if (document.getElementById("FormNumber").value.length < 10) {
                 document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
                 //document.getElementById("FormNumber").focus();
                 return false;
             }
             else {
                 document.getElementById("formNumber_error").innerHTML = "";
             }
+        }
+        else{
+            document.getElementById("formNumber_error").innerHTML = "";
         }
     });
 
@@ -1634,11 +1642,31 @@
         var todate = $("#ToDate").val();
 
         var flag = "Y";
-
+        debugger;
         if (fromdate != "" && todate != "") {
             flag = checkDates("FromDate_error");
         }
+        if (document.getElementById("FormNumber").value.trim() != "") {
 
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
         if (flag == "N")
             e.preventDefault();
 
