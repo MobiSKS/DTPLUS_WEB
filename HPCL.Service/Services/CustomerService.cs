@@ -137,20 +137,20 @@ namespace HPCL.Service.Services
             //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
             
             //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
-            customerDateOfApplication = await _commonActionService.changeDateFormat(customerDateOfApplication);
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
 
             if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
             {
                 //string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
                 //KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
-                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(KeyOffDateOfAnniversary);
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
             }
 
             if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
             {
                 //string[] officialDOB = cust.KeyOfficialDOB.Split("-");
                 //KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
-                KeyOfficialDOB = await _commonActionService.changeDateFormat(KeyOfficialDOB);
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
 
@@ -459,80 +459,7 @@ namespace HPCL.Service.Services
 
             return customerCardInfo;
         }
-
-        //public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
-        //{
-
-        //    string feePaymentDate = "";
-
-        //    if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
-        //    {
-        //        string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-        //        feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
-        //    }
-
-        //    feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
-
-        //    foreach (HPCL.Common.Models.ViewModel.Customer.CardDetails cardDetails in customerCardInfo.ObjCardDetail)
-        //    {
-        //        if (!string.IsNullOrEmpty(cardDetails.VechileNo))
-        //        {
-        //            cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
-        //        }
-        //    }
-
-        //    #region Create Request Info
-
-        //    CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
-
-        //    insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
-        //    insertInfo.CustomerName = customerCardInfo.CustomerName;
-        //    insertInfo.FormNumber = customerCardInfo.FormNumber;
-        //    insertInfo.NoOfCards = customerCardInfo.NoOfCards;
-        //    insertInfo.RBEId = customerCardInfo.RBEId;
-        //    insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
-        //    insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
-        //    insertInfo.FeePaymentDate = feePaymentDate;
-        //    insertInfo.CardPreference = customerCardInfo.CardPreference;
-        //    insertInfo.RBEName = customerCardInfo.RBEName;
-        //    insertInfo.Useragent = CommonBase.useragent;
-        //    insertInfo.Userip = CommonBase.userip;
-        //    insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-        //    insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-        //    insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
-        //    insertInfo.VehicleNoVerifiedManually = (customerCardInfo.VehicleNoVerifiedManually ? "1" : "0");
-
-        //    if (insertInfo.CardPreference.ToUpper() == "CARDLESS")
-        //    {
-        //        insertInfo.FeePaymentsCollectFeeWaiver = 0;
-        //    }
-
-        //    #endregion
-
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
-
-        //    CustomerInserCardResponse customerInserCardResponse;
-
-        //    var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.insertCustomerCard);
-
-
-        //    customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
-
-        //    if (customerInserCardResponse.Internel_Status_Code == 1000)
-        //    {
-        //        customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
-        //        customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-        //        customerCardInfo.Message = customerInserCardResponse.Message;
-        //    }
-        //    else
-        //    {
-        //        customerCardInfo.Message = customerInserCardResponse.Message;
-        //    }
-
-        //    return customerCardInfo;
-        //}
-
+        
         public async Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo)
         {
 
@@ -540,8 +467,9 @@ namespace HPCL.Service.Services
 
             if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
             {
-                string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-                feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                //string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+                //feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                feePaymentDate = await _commonActionService.changeDateFormat(customerCardInfo.FeePaymentDate);
             }
 
             feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
@@ -1059,7 +987,6 @@ namespace HPCL.Service.Services
                     }
                     custMdl.KeyOffDesignation = Customer.KeyOfficialDesignation;
                     custMdl.KeyOffEmail = Customer.KeyOfficialEmail;
-                    custMdl.KeyOffEmail = Customer.KeyOfficialEmail;
 
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
                     {
@@ -1187,20 +1114,36 @@ namespace HPCL.Service.Services
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
 
-            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+            //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
 
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+
+            //if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            //{
+            //    string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+            //    KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+            //}
+
+            //if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            //{
+            //    string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+            //    KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+            //}
+
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
 
             if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
             {
-                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
-                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                //string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                //KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
             }
 
             if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
             {
-                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
-                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                //string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                //KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
 

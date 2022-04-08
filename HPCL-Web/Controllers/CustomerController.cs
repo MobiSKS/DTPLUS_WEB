@@ -113,7 +113,6 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
         {
-
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
 
@@ -149,30 +148,7 @@ namespace HPCL_Web.Controllers
 
             return Json(customerCardInfo);
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
-        //{
-        //    CustomerCardInfo cardInfo = new CustomerCardInfo();
-        //    cardInfo = await _customerService.AddCardDetails(customerCardInfo);
-
-        //    if (cardInfo.StatusCode == 1000)
-        //    {
-        //        ViewBag.Message = "Customer card details saved Successfully";
-        //        customerCardInfo.Status = cardInfo.Status;
-        //        customerCardInfo.StatusCode = cardInfo.StatusCode;
-        //        return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = cardInfo.CustomerReferenceNo });
-        //        //ModelState.Clear();
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Message = cardInfo.Message;
-        //        cardInfo.Remarks = cardInfo.Message;
-        //    }
-
-        //    return View(customerCardInfo);
-        //}
-
+        
         [HttpPost]
         public async Task<IActionResult> AddCardDetails([FromBody]CustomerCardInfo customerCardInfo)
         {
