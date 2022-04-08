@@ -403,15 +403,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control" })
-                                            <span class="error" id="erpCode_error"></span>
+                                @if (Model.CreatedMerchant == "Y")
+                                {
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control", @disabled="disabled", @id="ErpCodeNoCheck" })
+                                                <span class="error" id="erpCode_error"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control" })
+                                                <span class="error" id="erpCode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
                             </div>
                         </div>
                     </div>
@@ -476,7 +492,7 @@
                 </div>
                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
                     <div class="border-1 rounded border-grey h-100">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address<br />(if different from Retail Outlet Address)</p>
                         <div class="py-2 p-md-4">
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-md-6 col-12">
@@ -2354,7 +2370,7 @@
     });
     $("#ErpCode").on("blur", function () {
         if ($("#ErpCode").val().length > 0) {
-            
+
             var erpCode = this.value;
 
             if (!erpCode.match(erpCodeCheck)) {
