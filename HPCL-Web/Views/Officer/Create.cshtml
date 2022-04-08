@@ -316,7 +316,7 @@
         var ret = "Y";
 
         //$("#OfficerTypeName").val($('#OfficerTypeID :selected').text());
-        if (document.form1.FirstName.value == "") {
+        if (document.form1.FirstName.value.trim() == "") {
             document.getElementById("firstName_error").innerHTML = "First Name is required";
             document.form1.FirstName.focus();
             $("#form1").submit(function (e) {
@@ -339,7 +339,17 @@
         }
 
         if (document.form1.LastName.value != "") {
-            if (!document.form1.LastName.value.match(nameCheck)) {
+            if (document.form1.LastName.value.trim() == ""){
+                document.getElementById("lastName_error").innerHTML = "Spaces are not allowed in Last Name";
+                if (ret != "N") {
+                    document.form1.LastName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (!document.form1.LastName.value.match(nameCheck)) {
                 document.getElementById("lastName_error").innerHTML = "Last Name has invalid characters";
                 if (ret != "N") {
                     document.form1.LastName.focus();
