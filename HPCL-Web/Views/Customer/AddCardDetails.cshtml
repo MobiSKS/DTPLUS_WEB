@@ -268,20 +268,20 @@
 
     $(document).ready(function () {
 
-        if (notFoundError == "") {
-            if (feePaymentDate == "") {
-                $("#FeePaymentDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                //setDates();
-            }
-            else {
-                $("#FeePaymentDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
+        //if (notFoundError == "") {
+        //    if (feePaymentDate == "") {
+        //        $("#FeePaymentDate").datepicker({
+        //            "setDate": new Date(),
+        //            "autoclose": true,
+        //            dateFormat: 'dd-mm-yy'
+        //        });
+        //        //setDates();
+        //    }
+        //    else {
+        //        $("#FeePaymentDate").datepicker({ dateFormat: 'dd-mm-yy' });
+        //    }
 
-        }
+        //}
 
         if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
             document.getElementById("rbtnCard").checked = true;
@@ -518,6 +518,17 @@
                     if (status == 'success') {
                         document.getElementById("RBEName").value = data.rbeName;
                         //found = true;
+                        if(data.statusCode==1000)
+                        {
+                            document.getElementById("RBEName").value = data.rbeName;
+                            document.getElementById("RBEId_error").innerHTML ="";
+                        }
+                        else
+                        {
+                            //document.getElementById("RBEId_error").innerHTML = data.reason;
+                            document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
+                            document.getElementById("RBEName").value = "";
+                        }
 
                         if (data == "Failed to load Customer Details")
                             document.getElementById("RBEName").value = "";
@@ -586,7 +597,7 @@
         }
 
         if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
-            alert("Card Preference Not Selected");
+            alert("Please select Card Preference");
             return;
         }
 
@@ -699,7 +710,7 @@
                 }
                 else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
                     if (selected.toUpperCase() == "CARDLESS") {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th><th></th> <th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
+                        $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th> <th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
                     }
                     else {
                         $('#NoOfCardsTbl').append('<thead><tr><th>S No.</th><th>Vehicle No</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
@@ -861,10 +872,15 @@
         }
     }
 
-       $("#btnsubmit").on("click", (function (e) {
+ $("#btnsubmit").on("click", (function (e) {
 
         var i=0;
         var j=0;
+        var emptyVehicleNo=false;
+        var emptyVehicleMake=false;
+        var emptyYearOfReg=false;
+        var emptyVehicleType=false;
+        var emptyMobile=false;
         var table = document.getElementById("NoOfCardsTbl");
 
         if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") 
@@ -905,6 +921,19 @@
         else 
         {
             document.getElementById("NoOfCards_error").innerHTML = "";
+        }
+
+        if (document.getElementById("RBEId").value != "") 
+        {
+            if(document.getElementById("RBEId").value=="")
+            {
+              document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
+              return false;
+            }
+        }
+        else 
+        {
+            document.getElementById("RBEId_error").innerHTML = "";
         }
 
         var customerTypeId = document.getElementById("CustomerTypeId").value;
@@ -976,7 +1005,7 @@
         }
 
         if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
-            alert("Card Preference Not Selected");
+            alert("Please select Card Preference");
             return;
         }
 
@@ -1016,19 +1045,19 @@
         {
 
             document.getElementById("Common_error").innerHTML = "";
+            emptyVehicleNo=false;
 
             $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
                 var VehicleNo = $(this).val().trim();
                 if (VehicleNo == "") {
                     //document.getElementById("Common_error").innerHTML = "Plese Enter Vehicle Number for all the rows";
-                    alert("Plese Enter Vehicle Number for all the rows");
-                    DetailsNotFound = true;
-                    return false;
+                    emptyVehicleNo=true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyVehicleNo)
             {
+                alert("Plese Enter Vehicle Number for all the rows");
                 return false;
             }
 
@@ -1068,33 +1097,47 @@
                 return false;
             }
 
-            $('#NoOfCardsTbl td:nth-child(5) input').filter(function () {
-                var vehicleMake = $(this).val().trim();
-                if (vehicleMake == "") {
-                    //document.getElementById("Common_error").innerHTML = "Please Enter Vehicle Make for all the rows";
-                    alert("Please Enter Vehicle Make for all the rows");
-                    DetailsNotFound = true;
+            emptyVehicleType=false;
+            $('#NoOfCardsTbl td:nth-child(4) select').filter(function () {
+                var VehicleType = $(this).val().trim();
+                console.log(VehicleType);
+                if (VehicleType == "--Select--") {
+                    emptyVehicleType = true;
                     return false;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyVehicleType)
             {
+                alert("Please select vehicle Type for all the rows");
                 return false;
             }
 
-            $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
-                var yearReg = $(this).val().trim();
-                if (yearReg == "") {
-                    //document.getElementById("Common_error").innerHTML = "Please Enter Year Of Reg. for all the rows";
-                    alert("Please Enter Year Of Reg. for all the rows");
-                    DetailsNotFound = true;
-                    return false;
+            emptyVehicleMake=false;
+            $('#NoOfCardsTbl td:nth-child(5) input').filter(function () {
+                var vehicleMake = $(this).val().trim();
+                if (vehicleMake == "") {
+                    emptyVehicleMake = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyVehicleMake)
             {
+                alert("Please Enter Vehicle Make for all the rows");
+                return false;
+            }
+
+            emptyYearOfReg=false;
+            $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
+                var yearReg = $(this).val().trim();
+                if (yearReg == "") {
+                    emptyYearOfReg = true;
+                }
+            });
+
+            if (emptyYearOfReg)
+            {
+                alert("Please Enter Year Of Reg. for all the rows");
                 return false;
             }
 
@@ -1130,27 +1173,24 @@
             {
                 return false;
             }
-
-            var VehicleTypeNotSelected=false;
-
-            $('#NoOfCardsTbl td:nth-child(4) select').filter(function () {
-                var VehicleType = $(this).val().trim();
-                console.log(VehicleType);
-                if (VehicleType == "--Select--") {
-                    //document.getElementById("Common_error").innerHTML = "Please select vehicle Type for all the rows";
-                    alert("Please select vehicle Type for all the rows");
-                    VehicleTypeNotSelected = true;
-                    return false;
-                }
-            });
-
-            if (VehicleTypeNotSelected)
-            {
-                return false;
-            }
+                                    
 
             if (selected.toUpperCase() == "CARDLESS")
             {
+
+                emptyMobile=false;
+                $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
+                    var mobileno = $(this).val().trim();
+                    if (mobileno == "") {
+                        emptyMobile = true;
+                    }
+                });
+
+                if (emptyMobile)
+                {
+                    alert("Please Enter Mobile Number for all the rows");
+                    return false;
+                }
 
                 console.log('Before Checking For Invalid Mobile Number');
                 i=0;j=0;
@@ -1349,19 +1389,18 @@
             {
                 return false;
             }
-
+            emptyVehicleNo=false;
             $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
                 var VehicleNo = $(this).val().trim();
                 if (VehicleNo == "") {
                     //document.getElementById("Common_error").innerHTML = "Please Enter Vehicle Number for all the rows";
-                    alert("Please Enter Vehicle Number for all the rows");
-                    DetailsNotFound = true;
-                    return false;
+                    emptyVehicleNo = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyVehicleNo)
             {
+                alert("Plese Enter Vehicle Number for all the rows");
                 return false;
             }
 
@@ -1403,48 +1442,46 @@
                 return false;
             }
 
-            var VehicleTypeNotSelected=false;
-
+            emptyVehicleType=false;
             $('#NoOfCardsTbl td:nth-child(5) select').filter(function () {
                 var VehicleType = $(this).val().trim();
                 console.log(VehicleType);
                 if (VehicleType == "--Select--") {
-                    document.getElementById("Common_error").innerHTML = "Please select vehicle Type for all the rows";
-                    VehicleTypeNotSelected = true;
-                    return false;
+                    emptyVehicleType = true;
                 }
             });
 
-            if (VehicleTypeNotSelected)
+            if (emptyVehicleType)
             {
+                alert("Please select vehicle Type for all the rows");
                 return false;
             }
 
+            emptyVehicleMake=false;
             $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
                 var vehicleMake = $(this).val().trim();
                 if (vehicleMake == "") {
-                    document.getElementById("Common_error").innerHTML = "Please Enter Vehicle Make for all the rows";
-                    DetailsNotFound = true;
-                    return false;
+                    emptyVehicleMake = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyVehicleMake)
             {
+                alert("Please Enter Vehicle Make for all the rows");
                 return false;
             }
 
+            emptyYearOfReg=false;
             $('#NoOfCardsTbl td:nth-child(7) input').filter(function () {
                 var yearReg = $(this).val().trim();
                 if (yearReg == "") {
-                    document.getElementById("Common_error").innerHTML = "Please Enter Year Of Reg. for all the rows";
-                    DetailsNotFound = true;
-                    return false;
+                    emptyYearOfReg = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyYearOfReg)
             {
+                alert("Please Enter Year Of Reg. for all the rows");
                 return false;
             }
 
@@ -1481,6 +1518,19 @@
 
             if (selected.toUpperCase() == "CARDLESS")
             {
+                emptyMobile=false;
+                $('#NoOfCardsTbl td:nth-child(8) input').filter(function () {
+                    var mobileno = $(this).val().trim();
+                    if (mobileno == "") {
+                        emptyMobile = true;
+                    }
+                });
+
+                if (emptyMobile)
+                {
+                    alert("Please Enter Mobile Number for all the rows");
+                    return false;
+                }
 
                 console.log('Before Checking For Invalid Mobile Number');
                 i=0;j=0;
@@ -1681,23 +1731,20 @@
             if (selected.toUpperCase() == "CARDLESS")
             {
 
-                document.getElementById("Common_error").innerHTML = "";
-
-                $('#NoOfCardsTbl td:nth-child(3) input').filter(function () 
-                {
-                    var mobile = $(this).val().trim();
-                    if (mobile == "") 
-                    {
-                        document.getElementById("Common_error").innerHTML = "Please Enter Mobile Numbers for all the rows";
-                        DetailsNotFound = true;
-                        return false;
+                emptyMobile=false;
+                $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
+                    var mobileno = $(this).val().trim();
+                    if (mobileno == "") {
+                        emptyMobile = true;
                     }
                 });
 
-                if (DetailsNotFound)
+                if (emptyMobile)
                 {
+                    alert("Please Enter Mobile Number for all the rows");
                     return false;
                 }
+                               
 
                 console.log('Before Checking For Invalid Mobile Number');
                 i=0;j=0;
@@ -2276,6 +2323,12 @@
             }
        }
         
+    });
+
+    $('#CustomerReferenceNo').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            $('#btnSearch').click();
+        }
     });
 
 </script>

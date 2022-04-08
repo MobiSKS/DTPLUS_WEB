@@ -434,17 +434,16 @@ namespace HPCL.Service.Services
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
-            //fetching Customer info
-            var CustomerRefinfo = new Dictionary<string, string>
+            var requestInfo = new GetCustomerRBENameRquest()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"RBEId", RBEId}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RBEId = RBEId
             };
 
             CustomerRBE customerRBE;
-            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var responseCustomer = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getCustomerRbeId);
 
@@ -455,8 +454,13 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
                 customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
+                customerCardInfo.StatusCode = customerRBE.Internel_Status_Code;
             }
-
+            else
+            {
+                customerCardInfo.Reason = customerRBE.Data[0].Reason;
+                customerCardInfo.StatusCode = customerRBE.Internel_Status_Code;
+            }
             return customerCardInfo;
         }
         
