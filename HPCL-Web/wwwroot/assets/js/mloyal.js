@@ -123,15 +123,20 @@ function showregAddress() {
             }
             else
             {
-                if (localStorage.getItem("FORMNOALREADYUSED") == 0)
-                {
-                    document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                if (!(document.getElementById("FormNumber").value.match(number))) {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
                     return ret;
                 }
-                else
-                {
-                    document.getElementById("formNumber_error").innerHTML = "";
+                else{
+                    if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                        return ret;
+                    }
+                    else {
+                        document.getElementById("formNumber_error").innerHTML = "";
+                    }
                 }
+               
             }
         }
     }

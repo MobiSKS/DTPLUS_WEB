@@ -15,7 +15,7 @@
                 <li class="breadcrumb-item font-weight-light">Add Card</li>
             </ul>
             <h5>Add Card</h5>
-            <div id="divSuccess" class="mb-3 text-center" style="background-color: #a0f1d6;display:none"></div>
+            <div id="divSuccess" class="mb-3 text-center" style="display:none"></div> @*background-color:#a0f1d6;*@
             <form name="addCustomerCardsForm" class="toBeHiddenOnSuccess"> @*class="w-100" method="post" asp-action="AddCardDetails" *@
                 <div class="w-100">
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
@@ -183,7 +183,6 @@
                                                 <label class="font-weight-normal col-md-5 col-12" id="lblReceivedAmount">Received Amount<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.ReceivedAmount, new { @id = "ReceivedAmount", @class = "form-control", @readonly = "readonly" })
-                                                    <span class="error" id="FeePaymentNo_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,12 +340,30 @@
         debugger;
 
         var custRefNo = document.getElementById("CustomerReferenceNo").value;
-        if (custRefNo == "") {
+        if (custRefNo == "") 
+        {
             document.getElementById("CustomerReferenceNo_error").innerHTML = "Customer Reference Number cannot be left blank";
             return (false);
         }
-        else {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        else 
+        {
+            if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
+            {
+              document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+              return false;
+            }
+            else if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+            {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+                return false;
+            }
+            else if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
+            {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+                return false;
+            }
+            else
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
         }
 
             $.ajax({
@@ -578,14 +595,15 @@
          //var images =JSON.parse('@Html.Raw(Json.Serialize(@Model.ObjCardDetail))');
          //console.log(images);
 
-        var noOfCards = document.getElementById("NoOfCards").value;
-        if (noOfCards == "0" || noOfCards == "") {
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "") 
+        {
             document.getElementById("NoOfCards_error").innerHTML = "No of Cards cannot be left blank";
             return (false);
         }
         else
         {
-            if (noOfCards >10)
+            if (Number(noOfCards) <=0 || Number(noOfCards) >10)
             {
                 document.getElementById("NoOfCards_error").innerHTML = "No of Cards may be 1 to 10";
                 return (false);
@@ -881,6 +899,7 @@
         var emptyYearOfReg=false;
         var emptyVehicleType=false;
         var emptyMobile=false;
+        var emptyIdentifier=false;
         var table = document.getElementById("NoOfCardsTbl");
 
         if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") 
@@ -925,7 +944,7 @@
 
         if (document.getElementById("RBEId").value != "") 
         {
-            if(document.getElementById("RBEId").value=="")
+            if(document.getElementById("RBEName").value=="")
             {
               document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
               return false;
@@ -956,49 +975,49 @@
 
             if (document.getElementById("rbtnFeeWaiver").checked) 
             {
-                if (document.getElementById("FeePaymentNo").value == "") 
+                if (document.getElementById("FeePaymentNo").value.trim() == "") 
                 {
                     document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
                     return false;
                 }
-                else {
-
-                    if (document.getElementById("FeePaymentNo").value.match(email)) {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "";
-                        //return true
-                    }
-                    else {
-                        document.getElementById("FeePaymentNo_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-                        return (false);
-                    }
+                else 
+                {
+                  document.getElementById("FeePaymentNo_error").innerHTML = "";
                 }
 
-                if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
+                if (document.getElementById("FeePaymentDate").value.trim() == "") 
+                {
                     document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
                     return false;
                 }
-                else {
+                else 
+                {
                     document.getElementById("FeePaymentDate_error").innerHTML = "";
                 }
             }
         }
 
-        if (document.getElementById("rbtnCard").checked) {
-
-            if (document.getElementById("rbtnOnline").checked) {
-                if (document.getElementById("FeePaymentNo").value == "0" || document.getElementById("FeePaymentNo").value == "") {
+        if (document.getElementById("rbtnCard").checked) 
+        {
+            if (document.getElementById("rbtnOnline").checked) 
+            {
+                if (document.getElementById("FeePaymentNo").value.trim() == "") 
+                {
                     document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
                     return false;
                 }
-                else {
+                else 
+                {
                     document.getElementById("FeePaymentNo_error").innerHTML = "";
                 }
 
-                if (document.getElementById("FeePaymentDate").value == "0" || document.getElementById("FeePaymentDate").value == "") {
+                if (document.getElementById("FeePaymentDate").value.trim() == "") 
+                {
                     document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
                     return false;
                 }
-                else {
+                else 
+                {
                     document.getElementById("FeePaymentDate_error").innerHTML = "";
                 }
             }
@@ -1338,18 +1357,17 @@
 
             document.getElementById("Common_error").innerHTML = "";
 
+            emptyIdentifier=false;
             $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
                 var cardIdentifier = $(this).val().trim();
                 if (cardIdentifier == "") {
-                    //document.getElementById("Common_error").innerHTML = "Please Enter Card Identifier for all the rows";
-                    alert("Please Enter Card Identifier for all the rows");
-                    DetailsNotFound = true;
-                    return false;
-                }
+                   emptyIdentifier = true;
+               }
             });
 
-            if (DetailsNotFound)
+            if (emptyIdentifier)
             {
+                alert("Please Enter Card Identifier for all the rows");
                 return false;
             }
 
@@ -1677,17 +1695,17 @@
 
             document.getElementById("Common_error").innerHTML = "";
 
+            emptyIdentifier=false;
             $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
                 var cardIdentifier = $(this).val().trim();
                 if (cardIdentifier == "") {
-                    document.getElementById("Common_error").innerHTML = "Please Enter Card Identifier for all the rows";
-                    DetailsNotFound = true;
-                    return false;
+                    emptyIdentifier = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyIdentifier)
             {
+                alert("Please Enter Card Identifier for all the rows");
                 return false;
             }
 
@@ -1912,12 +1930,14 @@
                           $(".toBeHiddenOnSuccess").hide();
                           document.getElementById("divSuccess").style.display = "block";
                           document.getElementById("divSuccess").className = "mb-3 text-center";
+                          //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
                         }
                         else
                         {
                             $("#divSuccess").html(data.message);
                             document.getElementById("divSuccess").style.display = "block";
                             document.getElementById("divSuccess").className = "alert alert-danger alert-cust-success";
+                            //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
                         }
                         console.log('success');
                     },
@@ -2272,14 +2292,14 @@
    $("#NoOfCards").on("blur", function () 
    {
     //debugger;
-       if (document.getElementById('NoOfCards').value.trim() == "" || document.getElementById('NoOfCards').value == "0") 
+       if (document.getElementById('NoOfCards').value.trim() == "") 
        {
             document.getElementById("NoOfCards_error").innerHTML = "No of Cards cannot be left blank";
             return false;
        }
        else 
        {
-            if (Number(document.getElementById('NoOfCards').value) < 1 || Number(document.getElementById('NoOfCards').value) > 10) 
+            if (Number(document.getElementById('NoOfCards').value) <= 0 || Number(document.getElementById('NoOfCards').value) > 10) 
             {
                 document.getElementById("NoOfCards_error").innerHTML = "No of Cards may be 1 to 10";
                 return false;
@@ -2297,14 +2317,14 @@
     //debugger;
        var noofCards = document.getElementById('NoOfCards').value.trim();
        if(noofCards=="") noofCards = 0;
-       if (document.getElementById('NoOfVehiclesAllCards').value.trim() == "" || document.getElementById('NoOfVehiclesAllCards').value == "0") 
+       if (document.getElementById('NoOfVehiclesAllCards').value.trim() == "") 
        {
             document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No of Vehicles (For All Cards) cannot be left blank";
             return false;
        }
        else 
        {
-            if (Number(document.getElementById('NoOfVehiclesAllCards').value) < 1 || Number(document.getElementById('NoOfVehiclesAllCards').value) > 10) 
+            if (Number(document.getElementById('NoOfVehiclesAllCards').value) <= 0 || Number(document.getElementById('NoOfVehiclesAllCards').value) > 10) 
             {
                 document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No of Cards may be 1 to 10";
                 return false;
@@ -2313,7 +2333,7 @@
             {
                 if (Number(document.getElementById('NoOfVehiclesAllCards').value) < noofCards) 
                 {
-                     document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No Of Vehicles (For All Cards) cannnot be less than No of Cards";
+                     document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No Of Vehicles cannnot be less than No of Cards";
                 }
                 else
                 {
@@ -2329,6 +2349,46 @@
         if (e.keyCode == 13) {  // detect the enter key
             $('#btnSearch').click();
         }
+    });
+
+    $("#CustomerReferenceNo").on("blur", function () 
+    {
+        debugger;
+        var custRefNo = document.getElementById("CustomerReferenceNo").value;
+        if (custRefNo == "") 
+        {
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customer Reference Number cannot be left blank";
+            return (false);
+        }
+        else 
+        {
+            if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
+            {
+              document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+              return false;
+            }
+            else if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+            {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+                return false;
+            }
+            else if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
+            {
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+                return false;
+            }
+            else
+                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        }
+
+   });
+
+   $('#NoOfCards').on("cut copy paste",function(e) {
+      e.preventDefault();
+    });
+
+   $('#NoOfVehiclesAllCards').on("cut copy paste",function(e) {
+      e.preventDefault();
     });
 
 </script>
