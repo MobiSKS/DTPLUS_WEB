@@ -19,6 +19,9 @@
                         <thead>
                             <tr>
                                 <th>
+                                    S.No
+                                </th>
+                                <th>
                                     @Html.DisplayName("Zonal Office Name")
                                 </th>
 
@@ -57,9 +60,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @{
+                                int Sno =1;
+                            }
                             @foreach (var item in Model.CustomerViewModalOutputs)
                             {
                                 <tr>
+                                    <td>@Sno</td>
                                     <td>@item.ZonalOfficeName</td>
                                     <td>@item.RegionalOfficeName</td>
                                     <td>@item.FormNumber</td>
@@ -72,6 +79,7 @@
                                     <td>@item.StatusName</td>
                                     <td>@item.KYCStatus</td>
                                 </tr>
+                                Sno++;
                             }
                         </tbody>
                     </table>
@@ -83,115 +91,115 @@
 
 </div>
 @*<script type="text/javascript">
-        function showGrid() {
-            if ($("input:text").val() == "") {
-                document.getElementById('ViewCustomerSearch').style.display = 'none';
-            }
-            if (($("input:text").val() != "")) {
-                document.getElementById('ViewCustomerSearch').style.display = 'inline-table';
-            }
-        }
+    function showGrid() {
+    if ($("input:text").val() == "") {
+    document.getElementById('ViewCustomerSearch').style.display = 'none';
+    }
+    if (($("input:text").val() != "")) {
+    document.getElementById('ViewCustomerSearch').style.display = 'inline-table';
+    }
+    }
 
-        function resetFields() {
-            $("input:text").each(function () {
-                $(this).val("");
-            });
-            $("#ViewCustomerSearch td").parent().remove();
-            document.getElementById('ViewCustomerSearch').style.display = 'none';
-        }
-
-
-        function OnSuccess(data) {
-
-            console.log(data);
-
-            $("#ViewCustomerSearch td").parent().remove();
-
-            for (var i = 0; i < data.searchList.length; i++) {
-
-                var rows = "<tbody><tr>"
-                                    + "<td>" + (res.searchList[i].ZonalOfficeName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].RegionalOfficeName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].FormNumber || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerReferenceNo || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerID || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CreatedDate || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].monthlySaleBal || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CreatedBy || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].StatusName || '') + "</td>"
-                                    + "</tr></tbody > ";
-
-                $('#ViewCustomerSearch').append(rows);
+    function resetFields() {
+    $("input:text").each(function () {
+    $(this).val("");
+    });
+    $("#ViewCustomerSearch td").parent().remove();
+    document.getElementById('ViewCustomerSearch').style.display = 'none';
+    }
 
 
-            }
-        }
+    function OnSuccess(data) {
 
-        function OnFailure(data) {
-            alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
-        }
+    console.log(data);
 
-        $("#ViewCustomerSearch").on('click', '.updateStatus', function (e) {
+    $("#ViewCustomerSearch td").parent().remove();
 
-            var currentRow = $(this).closest("tr");
+    for (var i = 0; i < data.searchList.length; i++) {
 
-            var cardNumber = currentRow.find(".crdNo").text();
+    var rows = "<tbody><tr>"
+    + "<td>" + (res.searchList[i].ZonalOfficeName || '') + "</td>"
+    + "<td>" + (res.searchList[i].RegionalOfficeName || '') + "</td>"
+    + "<td>" + (res.searchList[i].FormNumber || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerReferenceNo || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerID || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerName || '') + "</td>"
+    + "<td>" + (res.searchList[i].CreatedDate || '') + "</td>"
+    + "<td>" + (res.searchList[i].monthlySaleBal || '') + "</td>"
+    + "<td>" + (res.searchList[i].CreatedBy || '') + "</td>"
+    + "<td>" + (res.searchList[i].StatusName || '') + "</td>"
+    + "</tr></tbody > ";
 
-
-            console.log(customerid, "customerID");
-
-
-
-            $.ajax({
-                url: "@Url.Action("UpdateStatus","ViewCustomerSearch")",
-                type: "POST",
-                dataType: "JSON",
-                data: { customerId: customerid },
-                success: function (res) {
-
-                    console.log(res,"res");
-
-                    $.ajax({
-                        url: "@Url.Action("RefreshGrid", "ViewCustomerSearch")",
-                        type: "POST",
-                        dataType: "JSON",
-                        success: function (res) {
+    $('#ViewCustomerSearch').append(rows);
 
 
-                            $("#ViewCustomerSearch td").parent().remove();
+    }
+    }
 
-                            for (var i = 0; i < res.searchList.length; i++) {
+    function OnFailure(data) {
+    alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
 
-                                var rows = "<tbody><tr>"
-                                    + "<td>" + (res.searchList[i].ZonalOfficeName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].RegionalOfficeName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].FormNumber || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerReferenceNo || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerID || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CustomerName || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CreatedDate || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].monthlySaleBal || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].CreatedBy || '') + "</td>"
-                                    + "<td>" + (res.searchList[i].StatusName || '') + "</td>"
-                                    + "</tr></tbody > ";
+    $("#ViewCustomerSearch").on('click', '.updateStatus', function (e) {
 
-                                $('#ViewCustomerSearch').append(rows);
+    var currentRow = $(this).closest("tr");
+
+    var cardNumber = currentRow.find(".crdNo").text();
 
 
-                            }
+    console.log(customerid, "customerID");
 
-                        },
-                        error: function (ex) {
-                            alert('Failed' + ex);
-                        }
-                    });
 
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-        });
+
+    $.ajax({
+    url: "@Url.Action("UpdateStatus","ViewCustomerSearch")",
+    type: "POST",
+    dataType: "JSON",
+    data: { customerId: customerid },
+    success: function (res) {
+
+    console.log(res,"res");
+
+    $.ajax({
+    url: "@Url.Action("RefreshGrid", "ViewCustomerSearch")",
+    type: "POST",
+    dataType: "JSON",
+    success: function (res) {
+
+
+    $("#ViewCustomerSearch td").parent().remove();
+
+    for (var i = 0; i < res.searchList.length; i++) {
+
+    var rows = "<tbody><tr>"
+    + "<td>" + (res.searchList[i].ZonalOfficeName || '') + "</td>"
+    + "<td>" + (res.searchList[i].RegionalOfficeName || '') + "</td>"
+    + "<td>" + (res.searchList[i].FormNumber || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerReferenceNo || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerID || '') + "</td>"
+    + "<td>" + (res.searchList[i].CustomerName || '') + "</td>"
+    + "<td>" + (res.searchList[i].CreatedDate || '') + "</td>"
+    + "<td>" + (res.searchList[i].monthlySaleBal || '') + "</td>"
+    + "<td>" + (res.searchList[i].CreatedBy || '') + "</td>"
+    + "<td>" + (res.searchList[i].StatusName || '') + "</td>"
+    + "</tr></tbody > ";
+
+    $('#ViewCustomerSearch').append(rows);
+
+
+    }
+
+    },
+    error: function (ex) {
+    alert('Failed' + ex);
+    }
+    });
+
+    },
+    error: function (ex) {
+    alert('Failed' + ex);
+    }
+    });
+    });
 
     </script>*@
