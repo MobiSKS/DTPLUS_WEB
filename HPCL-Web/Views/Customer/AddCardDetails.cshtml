@@ -15,7 +15,7 @@
                 <li class="breadcrumb-item font-weight-light">Add Card</li>
             </ul>
             <h5>Add Card</h5>
-            <div id="divSuccess" class="mb-3 text-center" style="background-color: #a0f1d6;display:none"></div>
+            <div id="divSuccess" class="mb-3 text-center" style="display:none"></div> @*background-color:#a0f1d6;*@
             <form name="addCustomerCardsForm" class="toBeHiddenOnSuccess"> @*class="w-100" method="post" asp-action="AddCardDetails" *@
                 <div class="w-100">
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
@@ -881,6 +881,7 @@
         var emptyYearOfReg=false;
         var emptyVehicleType=false;
         var emptyMobile=false;
+        var emptyIdentifier=false;
         var table = document.getElementById("NoOfCardsTbl");
 
         if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") 
@@ -925,7 +926,7 @@
 
         if (document.getElementById("RBEId").value != "") 
         {
-            if(document.getElementById("RBEId").value=="")
+            if(document.getElementById("RBEName").value=="")
             {
               document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
               return false;
@@ -1338,18 +1339,17 @@
 
             document.getElementById("Common_error").innerHTML = "";
 
+            emptyIdentifier=false;
             $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
                 var cardIdentifier = $(this).val().trim();
                 if (cardIdentifier == "") {
-                    //document.getElementById("Common_error").innerHTML = "Please Enter Card Identifier for all the rows";
-                    alert("Please Enter Card Identifier for all the rows");
-                    DetailsNotFound = true;
-                    return false;
-                }
+                   emptyIdentifier = true;
+               }
             });
 
-            if (DetailsNotFound)
+            if (emptyIdentifier)
             {
+                alert("Please Enter Card Identifier for all the rows");
                 return false;
             }
 
@@ -1677,17 +1677,17 @@
 
             document.getElementById("Common_error").innerHTML = "";
 
+            emptyIdentifier=false;
             $('#NoOfCardsTbl td:nth-child(2) input').filter(function () {
                 var cardIdentifier = $(this).val().trim();
                 if (cardIdentifier == "") {
-                    document.getElementById("Common_error").innerHTML = "Please Enter Card Identifier for all the rows";
-                    DetailsNotFound = true;
-                    return false;
+                    emptyIdentifier = true;
                 }
             });
 
-            if (DetailsNotFound)
+            if (emptyIdentifier)
             {
+                alert("Please Enter Card Identifier for all the rows");
                 return false;
             }
 
@@ -1912,12 +1912,14 @@
                           $(".toBeHiddenOnSuccess").hide();
                           document.getElementById("divSuccess").style.display = "block";
                           document.getElementById("divSuccess").className = "mb-3 text-center";
+                          //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
                         }
                         else
                         {
                             $("#divSuccess").html(data.message);
                             document.getElementById("divSuccess").style.display = "block";
                             document.getElementById("divSuccess").className = "alert alert-danger alert-cust-success";
+                            //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
                         }
                         console.log('success');
                     },
