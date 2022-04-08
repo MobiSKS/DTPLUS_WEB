@@ -66,6 +66,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string MerchantId { get; set; }
         [StringLength(8)]
         public string ErpCode { get; set; }
+        [StringLength(50)]
         public string RetailOutletName { get; set; }
         public string MerchantTypeId { get; set; }
         public string MerchantTypeName { get; set; }
