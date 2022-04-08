@@ -8,10 +8,6 @@ namespace HPCL.Common.Models.ViewModel.Cards
 {
     public class CustomerCards : BaseEntity
     {
-        //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
-        //[StringLength(10)]
-        //[RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
-
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
@@ -22,6 +18,9 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
+        [MinLength(6)]
+        [MaxLength(10)]
+        [RegularExpression(FieldValidation.ValidVachileNumber, ErrorMessage = FieldValidation.ValidVachileNumberErrMsg)]
         public string VehicleNumber { get; set; }
         public int StatusFlag { get; set; }
         public string CardCategory { get; set; }
