@@ -761,26 +761,42 @@
 
     $("#FormNumber").on("blur", function () {
         //debugger;
-        var formNumber = document.getElementById("FormNumber").value;
-        if (formNumber == "") {
+        var formNumber = document.getElementById("FormNumber").value.trim();
+        if (formNumber == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
             return (false);
         }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
+        else 
+        {
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+            {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                return false;
+            }
+            else
+            {
+                if (document.getElementById("FormNumber").value.length < 10) 
+                {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                    return false;
+                }
+                else
+                {
+                    if (!(document.getElementById("FormNumber").value.match(number))) 
+                    {
+                        document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("formNumber_error").innerHTML = "";
+                    }
+                }
+            }
+
         }
-
-
-        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-
-        if (document.getElementById("FormNumber").value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-
+        
         var formNumberUsed = false;
         localStorage.setItem("FORMNOALREADYUSED", "1");
 
@@ -1214,7 +1230,6 @@
         }
         else 
         {
-            
             if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
             {
                 document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
@@ -1229,15 +1244,24 @@
                 }
                 else
                 {
-                    if (localStorage.getItem("FORMNOALREADYUSED") == 0) 
+                    if (!(document.getElementById("FormNumber").value.match(number))) 
                     {
-                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                        document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
                         ret = false;
                     }
-                    else 
+                    else
                     {
-                        document.getElementById("formNumber_error").innerHTML = "";
+                        if (localStorage.getItem("FORMNOALREADYUSED") == 0) 
+                        {
+                            document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                            ret = false;
+                        }
+                        else 
+                        {
+                            document.getElementById("formNumber_error").innerHTML = "";
+                        }
                     }
+                    
                 }
             }
 
@@ -1640,9 +1664,9 @@
             {
                 document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
             }
-            else if (document.getElementById("CardNumber1").value.trim() == "" && document.getElementById("CardNumber2").value.trim()=="") 
+            else
             {
-                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
+                document.getElementById("MobileNo2_error").innerHTML = "";
             }
 
             if (document.getElementById("CardNumber1").value.trim() != "") 
@@ -1658,11 +1682,18 @@
         }
         else if (document.getElementById("MobileNo1").value.trim() != "" && document.getElementById("MobileNo2").value.trim() != "") 
         {
-            if (document.getElementById("MobileNo1").value.trim() != "" && document.getElementById("MobileNo2").value.trim() != "") 
+            
+            if (document.getElementById("MobileNo1").value == document.getElementById("MobileNo2").value) 
             {
-                if (document.getElementById("MobileNo1").value == document.getElementById("MobileNo2").value) 
+                var valid=true;
+                if ($("#MobileNo1").val().length < 10) 
                 {
-                    var valid=true;
+                    document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                    valid=false;
+                }
+                else 
+                {
                     if(!document.getElementById("MobileNo1").value.match(phoneno)) 
                     {
                         document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
@@ -1672,6 +1703,16 @@
                     {
                         document.getElementById("MobileNo1_error").innerHTML = "";
                     }
+                }
+
+                if ($("#MobileNo2").val().length < 10) 
+                {
+                    document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                    valid=false;
+                }
+                else 
+                {
                     if(!document.getElementById("MobileNo2").value.match(phoneno)) 
                     {
                         document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
@@ -1681,76 +1722,78 @@
                     {
                         document.getElementById("MobileNo2_error").innerHTML = "";
                     }
-                    if(valid)
-                    {
-                       document.getElementById("MobileNo2_error").innerHTML = "Both Mobile Numbers are same";
-                    }
+                }
+
+                if(valid)
+                {
+                    document.getElementById("MobileNo2_error").innerHTML = "Both Mobile Numbers are same";
+                }
+                ret = false;
+            }
+            else 
+            {
+
+                if ($("#MobileNo1").val().length < 10) 
+                {
+                    document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
                     ret = false;
                 }
                 else 
                 {
-
-                    if ($("#MobileNo1").val().length < 10) 
+                    if(!document.getElementById("MobileNo1").value.match(phoneno)) 
                     {
                         document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
                         ret = false;
                     }
                     else 
                     {
-                        if(!document.getElementById("MobileNo1").value.match(phoneno)) 
+                        if (localStorage.getItem("MOBILENUMBERREADYUSED1") == 0) 
                         {
-                            document.getElementById("MobileNo1_error").innerHTML = "Invalid Mobile Number";
+                            document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
                             ret = false;
                         }
                         else 
                         {
-                            if (localStorage.getItem("MOBILENUMBERREADYUSED1") == 0) 
-                            {
-                              document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
-                              ret = false;
-                            }
-                            else 
-                            {
-                               document.getElementById("MobileNo1_error").innerHTML = "";
-                            }
-
+                            document.getElementById("MobileNo1_error").innerHTML = "";
                         }
-                                 
+
                     }
+                                 
+                }
 
 
-                    if ($("#MobileNo2").val().length < 10) 
+                if ($("#MobileNo2").val().length < 10) 
+                {
+                    document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                    ret = false;
+                }
+                else 
+                {
+                    if(!document.getElementById("MobileNo2").value.match(phoneno)) 
                     {
                         document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
                         ret = false;
                     }
                     else 
                     {
-                        if(!document.getElementById("MobileNo2").value.match(phoneno)) 
+                        if (localStorage.getItem("MOBILENUMBERREADYUSED2") == 0) 
                         {
-                            document.getElementById("MobileNo2_error").innerHTML = "Invalid Mobile Number";
+                            document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
                             ret = false;
                         }
                         else 
                         {
-                            if (localStorage.getItem("MOBILENUMBERREADYUSED2") == 0) 
-                            {
-                                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
-                                ret = false;
-                            }
-                            else 
-                            {
-                                document.getElementById("MobileNo2_error").innerHTML = "";
-                            }
-
+                            document.getElementById("MobileNo2_error").innerHTML = "";
                         }
 
                     }
 
-
-
                 }
+
+
+
             }
+            
         }
         else
         {
@@ -1842,30 +1885,78 @@
 
         if (document.getElementById("VehicleNo1").value.trim() != "" || document.getElementById("VehicleNo2").value.trim() != "") 
         {
-            if (document.getElementById("VehicleNo1").value == document.getElementById("VehicleNo2").value) 
+            var VehicleValid=true;
+            if (document.getElementById("VehicleNo1").value.trim() == document.getElementById("VehicleNo2").value.trim()) 
             {
-                document.getElementById("VehicleNo2_error").innerHTML = "Both Vehicle Nos are same";
+
+                if (!(document.getElementById("VehicleNo1").value.match(forVehicleNo))) 
+                {
+                    document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                    VehicleValid=false;
+                }
+                else
+                {
+                    if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) 
+                    {
+                        document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                        VehicleValid=false;
+                    }
+                    else 
+                    {
+                        if (!(document.getElementById("VehicleNo1").value.substring(0, 2).match(onlyAlphabets))) 
+                        {
+                            document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                            VehicleValid=false;
+                        }
+                        else
+                        {
+                           document.getElementById("VehicleNo1_error").innerHTML = "";
+                        }
+                    }
+                }
+
+                if(VehicleValid)
+                {
+                  document.getElementById("VehicleNo2_error").innerHTML = "Both Vehicle Nos are same";
+                }
+
                 ret = false;
             }
             else 
             {
                 if (document.getElementById("VehicleNo1").value != "") //Vehicle length min-6 max 10
                 { 
-                    if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) 
+                    if (!(document.getElementById("VehicleNo1").value.match(forVehicleNo))) 
                     {
                         document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                         ret = false;
                     }
-                    else 
+                    else
                     {
-                        if (localStorage.getItem("VEHICLEADYUSED1") == 0) 
+                        if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) 
                         {
-                            document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No already exists";
+                            document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                             ret = false;
                         }
                         else 
                         {
-                            document.getElementById("VehicleNo1_error").innerHTML = "";
+                            if (!(document.getElementById("VehicleNo1").value.substring(0, 2).match(onlyAlphabets))) 
+                            {
+                                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                                 ret = false;
+                            }
+                            else
+                            {
+                                if (localStorage.getItem("VEHICLEADYUSED1") == 0) 
+                                {
+                                    document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No already exists";
+                                    ret = false;
+                                }
+                                else 
+                                {
+                                    document.getElementById("VehicleNo1_error").innerHTML = "";
+                                }
+                            }
                         }
                     }
                 }
@@ -1876,21 +1967,37 @@
 
                 if (document.getElementById("VehicleNo2").value != "")  //Vehicle length min-6 max 10
                 {
-                    if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) 
+                    if (!(document.getElementById("VehicleNo2").value.match(forVehicleNo))) 
                     {
                         document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                         ret = false;
                     }
-                    else 
+                    else
                     {
-                        if (localStorage.getItem("VEHICLEADYUSED2") == 0) 
+                        if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) 
                         {
-                            document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No already exists";
+                            document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                             ret = false;
                         }
                         else 
                         {
-                            document.getElementById("VehicleNo2_error").innerHTML = "";
+                            if (!(document.getElementById("VehicleNo2").value.substring(0, 2).match(onlyAlphabets))) 
+                            {
+                                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                                 ret = false;
+                            }
+                            else
+                            {
+                                if (localStorage.getItem("VEHICLEADYUSED2") == 0) 
+                                {
+                                    document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No already exists";
+                                    ret = false;
+                                }
+                                else 
+                                {
+                                    document.getElementById("VehicleNo2_error").innerHTML = "";
+                                }
+                            }
                         }
                     }
                 }
@@ -2003,19 +2110,19 @@
             document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
             return (false);
         }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        else 
+        {
+            if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) 
+            {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number";
+                return (false);
+            }
+            else 
+            {
+                document.getElementById("comm_mobileNumber_error").innerHTML = "";
+            }
         }
-
-       if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number";
-             return (false);
-        }
-        else {
-            document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        }
-
-
+        
         localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
         @*$.ajax({
@@ -2247,6 +2354,7 @@
             k >= 96 && k <= 105 || // a-z
             k >= 35 && k <= 40 || // arrows
             k == 8 || // Backspaces
+            k == 46 || //Delete
             (!e.shiftKey && k >= 48 && k <= 57); // 0-9
 
         if (!ok) {
@@ -2260,6 +2368,7 @@
             k >= 96 && k <= 105 || // a-z
             k >= 35 && k <= 40 || // arrows
             k == 8 || // Backspaces
+            k == 46 || //Delete
             (!e.shiftKey && k >= 48 && k <= 57); // 0-9
 
         if (!ok) {
@@ -2325,10 +2434,27 @@
 
         var mobileNo2 = document.getElementById("MobileNo2").value.trim();
         var mobileNo1 = document.getElementById("MobileNo1").value.trim();
+        var cardNumber2 = document.getElementById("CardNumber2").value.trim();
+        var cardNumber1 = document.getElementById("CardNumber1").value.trim();
         if (mobileNo1 == "") 
         {
-            document.getElementById("MobileNo1_error").innerHTML = "Mobile Number is required";
-            return (false);
+            if(cardNumber2=="")
+            {
+              document.getElementById("MobileNo1_error").innerHTML = "Mobile Number is required";
+              return (false);
+            }
+            else
+            {
+                 if(cardNumber1!="")
+                 {
+                   document.getElementById("MobileNo1_error").innerHTML = "Mobile Number is required";
+                   return (false);
+                 }
+                 else
+                 {
+                      document.getElementById("MobileNo1_error").innerHTML = "";
+                 }
+            }
         }
         else 
         {
@@ -2371,46 +2497,51 @@
             
             
         }
-         
-        $.ajax({
-            type: 'POST',   
-            url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
-            data: { MobileNo: mobileNo1 }, 
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
 
-                if (status == 'success') 
-                {
-                    console.log('Test');
-                    console.log(data.status);
-                    console.log(data.reason);
-                    if (data.status == "0") 
+        if(mobileNo1!="")
+        {
+         
+            $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
+                data: { MobileNo: mobileNo1 }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') 
                     {
-                        document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
-                        localStorage.setItem("MOBILENUMBERREADYUSED1", "0");
+                        console.log('Test');
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") 
+                        {
+                            document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
+                            localStorage.setItem("MOBILENUMBERREADYUSED1", "0");
+                        }
+                        else 
+                        {
+                            document.getElementById("MobileNo1_error").innerHTML = "";
+                        }
                     }
                     else 
                     {
-                        document.getElementById("MobileNo1_error").innerHTML = "";
+                        document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
                     }
-                }
-                else 
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
                 {
                     document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
+                    }
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) 
-            {
-                document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("MobileNo1_error").innerHTML = "Mobile Number already exists";
-                }
-            }
-        });
+            });
+
+        }
 
     });
 
@@ -2422,8 +2553,15 @@
         var mobileNo2 = document.getElementById("MobileNo2").value.trim();
         if (mobileNo2 == "") 
         {
-            document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
-            return (false);
+            if(document.getElementById("CardNumber2").value.trim()!="")
+            {
+               document.getElementById("MobileNo2_error").innerHTML = "Mobile Number is required";
+               return (false);
+            }
+            else
+            {
+                document.getElementById("MobileNo2_error").innerHTML = "";
+            }
         }
         else 
         {
@@ -2464,45 +2602,49 @@
                 }
             }
 
-            
-            
+           
         }
-         
-        $.ajax({
-            type: 'POST',   
-            url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
-            data: { MobileNo: mobileNo2 }, 
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
+        
+        if(mobileNo2!="")
+        {
 
-                if (status == 'success') {
+            $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
+                data: { MobileNo: mobileNo2 }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
 
-                    console.log('Test');
-                    console.log(data.status);
-                    console.log(data.reason);
-                    if (data.status == "0") {
-                        document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
-                        localStorage.setItem("MOBILENUMBERREADYUSED2", "0");
+                    if (status == 'success') {
+
+                        console.log('Test');
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") {
+                            document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
+                            localStorage.setItem("MOBILENUMBERREADYUSED2", "0");
+                        }
+                        else {
+                            document.getElementById("MobileNo2_error").innerHTML = "";
+                        }
                     }
                     else {
-                        document.getElementById("MobileNo2_error").innerHTML = "";
+                        document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
+                },
+                statusCode: {
+                    1024: function () {
+                        document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
                     }
                 }
-                else {
-                    document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("MobileNo2_error").innerHTML = "Mobile Number already exists";
-                }
-            }
-        });
+            });
+
+        }
 
     });
 
@@ -2763,28 +2905,52 @@
         var vehicleNo1 = document.getElementById("VehicleNo1").value.trim();
         if (vehicleNo1!= "") 
         {
-            if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) 
+            if (!(document.getElementById("VehicleNo1").value.match(forVehicleNo))) 
             {
                 document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-                ret = false;
+                return false;
             }
-            else 
+            else
             {
-                if(vehicleNo2!="")
+                if ($("#VehicleNo1").val().length < 6 || $("#VehicleNo1").val().length > 10) 
                 {
-                    if(vehicleNo1==vehicleNo2)
+                    document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                    return false;
+                }
+                else 
+                {
+                    if (!(document.getElementById("VehicleNo1").value.substring(0, 2).match(onlyAlphabets))) 
                     {
-                        document.getElementById("VehicleNo1_error").innerHTML = "Both Vehicle Nos are same";
+                        document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                         return false;
                     }
                     else
                     {
-                        document.getElementById("VehicleNo1_error").innerHTML = "";
+                        if(vehicleNo2!="")
+                        {
+                            if(vehicleNo1==vehicleNo2)
+                            {
+                                if(document.getElementById("VehicleNo2_error").innerHTML!="Invalid Vehicle Number")
+                                {
+                                  document.getElementById("VehicleNo1_error").innerHTML = "Both Vehicle Nos are same";
+                                  return false;
+                                }
+                                else
+                                {
+                                    document.getElementById("VehicleNo1_error").innerHTML = "";
+                                }
+
+                            }
+                            else
+                            {
+                                document.getElementById("VehicleNo1_error").innerHTML = "";
+                            }
+                        }
+                        else
+                        {
+                            document.getElementById("VehicleNo1_error").innerHTML = "";
+                        }
                     }
-                }
-                else
-                {
-                    document.getElementById("VehicleNo1_error").innerHTML = "";
                 }
             }
             
@@ -2815,39 +2981,68 @@
                 });
 
          }
+         else
+         {
+             document.getElementById("VehicleNo1_error").innerHTML = "";
+         }
 
     });
 
     $("#VehicleNo2").on("blur", function () {
         //debugger;
-        localStorage.setItem("VEHICLEADYUSED1", "1");
+        localStorage.setItem("VEHICLEADYUSED2", "1");
 
         var vehicleNo2 = document.getElementById("VehicleNo2").value.trim();
         var vehicleNo1 = document.getElementById("VehicleNo1").value.trim();
-        if (vehicleNo2!= "") 
+
+        if(vehicleNo2!="")
         {
-            if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) 
+            if (!(document.getElementById("VehicleNo2").value.match(forVehicleNo))) 
             {
                 document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                ret = false;
+                return false;
             }
-            else 
+            else
             {
-                if(vehicleNo1!="")
+                if ($("#VehicleNo2").val().length < 6 || $("#VehicleNo2").val().length > 10) 
                 {
-                    if(vehicleNo1==vehicleNo2)
+                    document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                    return false;
+                }
+                else 
+                {
+                    if (!(document.getElementById("VehicleNo2").value.substring(0, 2).match(onlyAlphabets))) 
                     {
-                        document.getElementById("VehicleNo2_error").innerHTML = "Both Vehicle Nos are same";
+                        document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                         return false;
                     }
                     else
                     {
-                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                        if(vehicleNo1!="")
+                        {
+                            if(vehicleNo1==vehicleNo2)
+                            {
+                                if(document.getElementById("VehicleNo1_error").innerHTML!="Invalid Vehicle Number")
+                                {
+                                    document.getElementById("VehicleNo2_error").innerHTML = "Both Vehicle Nos are same";
+                                    return false;
+                                }
+                                else
+                                {
+                                    document.getElementById("VehicleNo2_error").innerHTML = "";
+                                }
+
+                            }
+                            else
+                            {
+                                document.getElementById("VehicleNo2_error").innerHTML = "";
+                            }
+                        }
+                        else
+                        {
+                            document.getElementById("VehicleNo2_error").innerHTML = "";
+                        }
                     }
-                }
-                else
-                {
-                    document.getElementById("VehicleNo2_error").innerHTML = "";
                 }
             }
             
@@ -2863,7 +3058,7 @@
                         if (data.status == "0") 
                         {
                             document.getElementById("VehicleNo2_error").innerHTML = "Vechile No already exists";
-                            localStorage.setItem("VEHICLEADYUSED1", "0");
+                            localStorage.setItem("VEHICLEADYUSED2", "0");
                         }
                         else 
                         {
@@ -2878,6 +3073,11 @@
                 });
 
          }
+         else
+         {
+             document.getElementById("VehicleNo2_error").innerHTML = "";
+         }
+
 
     });
 
