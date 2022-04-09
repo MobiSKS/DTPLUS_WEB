@@ -93,10 +93,15 @@ namespace HPCL_Web.Controllers
             var reason = await _merchantServices.ActionOnMerchantID(approvalRejectionMdl);
             return Json(reason);
         }
-        public async Task<IActionResult> RejectedMerchant(MerchantRejectedModel merchantRejectedModel)
+        public async Task<IActionResult> RejectedMerchant()
         {
-            var modals = await _merchantServices.RejectedMerchant(merchantRejectedModel);
+            MerchantRejectedModel modals = new MerchantRejectedModel();
             return View(modals);
+        }
+        public async Task<IActionResult> SearchRejectedMerchants(string FromDate, string ToDate)
+        {
+            var modals = await _merchantServices.RejectedMerchant(FromDate,ToDate);
+            return PartialView("~/Views/Merchant/_RejectedMerchantsViewTbl.cshtml", modals);
         }
         public async Task<IActionResult> MerchantSummary(string ERPCode, string fromDate, string toDate)
         {

@@ -22,7 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<TatkalCardCustomerModel> CreateTatkalCustomer(TatkalCardCustomerModel customerModel);
         Task<ViewRequestedTatkalCardModel> ViewRequestedTatkalCard();
         Task<ViewRequestedTatkalCardResponse> GetViewRequestedTatkalCard(int RegionalId);
-        Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer();
+        Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer(string customerId);
         Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails);
     }
 }

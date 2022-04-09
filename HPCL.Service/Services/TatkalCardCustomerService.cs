@@ -232,7 +232,7 @@ namespace HPCL.Service.Services
 
             return viewRequestedTatkalCardResponse;
         }
-        public async Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer()
+        public async Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer(string customerId)
         {
             GetTatkalCardsResponseModel GetTatkalCardsResponseModel = new GetTatkalCardsResponseModel();
             var requestBody = new MapTatkalCardtoCustomerModel
@@ -240,7 +240,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                //RegionalId = _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
+                RegionalId = _httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Admin" ? "": _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
+                CustomerId=customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
@@ -248,8 +249,25 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetTatkalCardsResponseModel = JsonConvert.DeserializeObject<GetTatkalCardsResponseModel>(response);
-     
+
+            var JObj = obj["Data"].Value<JObject>();
+            var cardjArr = JObj["ObjGetCardDetailsTatkalCardsToTatkalCustomer"].Value<JArray>();
+            var customerjArr = JObj["ObjGetStatusTatkalCardsToTatkalCustomer"].Value<JArray>();
+
+            List<TatkalCardDetails> cardList =
+                cardjArr.ToObject<List<TatkalCardDetails>>();
+
+            List<TatkalCardCustomerDetails> customerList =
+                customerjArr.ToObject<List<TatkalCardCustomerDetails>>();
+
+            GetTatkalCardsResponseModel.ObjGetCardDetailsTatkalCardsToTatkalCustomer.AddRange(cardList);
+            GetTatkalCardsResponseModel.ObjGetStatusTatkalCardsToTatkalCustomer.AddRange(customerList);
+
             return GetTatkalCardsResponseModel;
+
+
+
+            
         }
         public async Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
         {
@@ -271,7 +289,7 @@ namespace HPCL.Service.Services
             {
                 var mapResponseJarr = mapResponseObj["Data"].Value<JArray>();
                 List<SuccessResponse> mapResponseList = mapResponseJarr.ToObject<List<SuccessResponse>>();
-                return mapResponseList.First().Reason.ToString();
+                return mapResponseList.First().ActionName.ToString();
             }
             else
             {
