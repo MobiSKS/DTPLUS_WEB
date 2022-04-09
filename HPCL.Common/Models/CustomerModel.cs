@@ -145,8 +145,10 @@ namespace HPCL.Common.Models
         [Required(ErrorMessage = "Individual Organisation Name is Required")]
 
         public string IndividualOrgName { get; set; }
-        [Required(ErrorMessage = "Communication Address 1 is Required")]
+        [Required(ErrorMessage = "Address field cannot be left blank")]
         public string CommunicationAddress1 { get; set; }
+
+        [Required(ErrorMessage = "Address field cannot be left blank")]
         public string CommunicationAddress2 { get; set; }
         public string CommunicationAddress3 { get; set; }
         public string CommunicationLocation { get; set; }
@@ -168,9 +170,9 @@ namespace HPCL.Common.Models
         public bool InterCity { get; set; }
         public bool IntraCity { get; set; }
 
-        [Required(ErrorMessage = "Dial code is Required under communication Address")]
+        //[Required(ErrorMessage = "Dial code is Required under communication Address")]
         public string CommunicationDialCode { get; set; }
-        [Required(ErrorMessage = "Phone Number is Required under communication Address")]
+        //[Required(ErrorMessage = "Phone Number is Required under communication Address")]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string CommunicationPhoneNo { get; set; }
         public string CommunicationFaxCode { get; set; }
@@ -186,11 +188,11 @@ namespace HPCL.Common.Models
         public string CommunicationEmail { get; set; }
 
 
-        [Required(ErrorMessage = "Address 1 is Required in Permanent/Registered  Address")]
+        [Required(ErrorMessage = "Address field cannot be left blank")]
         public string PerOrRegAddress1 { get; set; }
-        [Required(ErrorMessage = "Address 2 is Required in Permanent/Registered  Address")]
+        [Required(ErrorMessage = "Address field cannot be left blank")]
         public string PerOrRegAddress2 { get; set; }
-        [Required(ErrorMessage = "Address 3 is Required in Permanent/Registered  Address")]
+        //[Required(ErrorMessage = "Address 3 is Required in Permanent/Registered  Address")]
         public string PerOrRegAddress3 { get; set; }
 
         public string PerOrRegAddressLocation { get; set; }
@@ -209,7 +211,7 @@ namespace HPCL.Common.Models
 
         public int PermanentDistrictId { get; set; }
 
-        [Required(ErrorMessage = "Dial code is Required under Permanent/Registered Address")]
+        //[Required(ErrorMessage = "Dial code is Required under Permanent/Registered Address")]
         public string PerOrRegAddressDialCode { get; set; }
         //[Required(ErrorMessage = "Phone Number is Required under Permanent/Registered Address")]
         //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
@@ -260,14 +262,14 @@ namespace HPCL.Common.Models
         public string KeyOfficialSecretQuestionName { get; set; }
         public string KeyOfficialSecretAnswer { get; set; }
         public string AreaOfOperation { get; set; }
-        public int FleetSizeNoOfVechileOwnedHCV { get; set; }
-        public int FleetSizeNoOfVechileOwnedLCV { get; set; }
-        public int FleetSizeNoOfVechileOwnedMUVSUV { get; set; }
-        public int FleetSizeNoOfVechileOwnedCarJeep { get; set; }
+        public string FleetSizeNoOfVechileOwnedHCV { get; set; }
+        public string FleetSizeNoOfVechileOwnedLCV { get; set; }
+        public string FleetSizeNoOfVechileOwnedMUVSUV { get; set; }
+        public string FleetSizeNoOfVechileOwnedCarJeep { get; set; }
         public string KeyOfficialCardAppliedFor { get; set; }
 
-        public decimal KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
-        public decimal KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
         public int NoOfCards { get; set; }
 
         public int FeePaymentsCollectFeeWaiver { get; set; }

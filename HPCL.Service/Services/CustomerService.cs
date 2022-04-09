@@ -1041,12 +1041,12 @@ namespace HPCL.Service.Services
 
                     custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);
                     custMdl.KeyOfficialCardAppliedFor = Customer.KeyOfficialCardAppliedFor;
-                    custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = Convert.ToDecimal(string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "0" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
-                    custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = Convert.ToDecimal(string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "0" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
-                    custMdl.FleetSizeNoOfVechileOwnedHCV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "0" : Customer.FleetSizeNoOfVechileOwnedHCV);
-                    custMdl.FleetSizeNoOfVechileOwnedLCV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "0" : Customer.FleetSizeNoOfVechileOwnedLCV);
-                    custMdl.FleetSizeNoOfVechileOwnedMUVSUV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "0" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
-                    custMdl.FleetSizeNoOfVechileOwnedCarJeep = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "0" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
+                    custMdl.FleetSizeNoOfVechileOwnedHCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "" : Customer.FleetSizeNoOfVechileOwnedHCV);
+                    custMdl.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "" : Customer.FleetSizeNoOfVechileOwnedLCV);
+                    custMdl.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
+                    custMdl.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.TierOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TierOfCustomerId) ? "0" : Customer.TierOfCustomerId);
                     custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);

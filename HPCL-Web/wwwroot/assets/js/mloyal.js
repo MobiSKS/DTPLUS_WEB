@@ -1128,102 +1128,149 @@ function showCardDetails() {
 
     if (document.getElementById("KeyOffLastName").value.trim() != "")
     {
-        if (!isNaN(document.getElementById("KeyOffLastName").value.trim())) {
+        if (!isNaN(document.getElementById("KeyOffLastName").value.trim()))
+        {
             document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
             return false;
         }
-        else {
-            document.getElementById("KeyOffLastName_error").innerHTML = "";
-        }
-
-        if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck)) {
-            document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
-            return false;
-        }
-        else {
-            document.getElementById("KeyOffLastName_error").innerHTML = "";
-        }
+        else
+        {
+            if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck))
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                return false;
+            }
+            else
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "";
+            }
+        }        
     }
-    else {
+    else
+    {
         document.getElementById("KeyOffLastName_error").innerHTML = "";
     }
 
     var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
-    if (faxCode != "") {
-
+    if (faxCode != "")
+    {
         if (faxCode.length < 2 || faxCode.length > 4) {
-            document.getElementById("KeyOffFaxCode_error").innerHTML = "Length 2 to 4 digits";
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Fax Code";
             return false;
         }
-        else {
-            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+        else
+        {
+            if (isNaN(faxCode))
+            {
+                document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Fax Code";
+                return false;
+            }
+            else
+            {
+                document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+            }
         }
 
     }
-    else {
+    else
+    {
         document.getElementById("KeyOffFaxCode_error").innerHTML = "";
     }
 
     var faxno = document.applicationForm.KeyOffFax.value.trim();
-    if (faxno != "") {
-        if (faxno.charAt(0) == "0") {
-            document.getElementById("KeyOffFax_error").innerHTML = "Fax no cannot start with 0";
+    if (faxno != "")
+    {
+        if (faxno.charAt(0) == "0")
+        {
+            document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
             return false;
         }
-        else {
-            document.getElementById("KeyOffFax_error").innerHTML = "";
+        else
+        {
+            if (faxno.length < 6 || faxno.length > 8)
+            {
+                document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+                return false;
+            }
+            else
+            {
+                if (isNaN(faxno))
+                {
+                    document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+                }
+            }
         }
-
-        if (faxno.length < 6 || faxno.length > 8) {
-            document.getElementById("KeyOffFax_error").innerHTML = "Fax no length 6 to 8 digits";
-            return false;
-        }
-        else {
-            document.getElementById("KeyOffFax_error").innerHTML = "";
-        }
-
     }
-    else {
+    else
+    {
         document.getElementById("KeyOffFax_error").innerHTML = "";
     }
 
 
     var stdCode = document.applicationForm.KeyOffPhoneCode.value.trim();
-    if (stdCode != "") {
+    if (stdCode != "")
+    {
 
-        if (stdCode.length < 2 || stdCode.length > 4) {
-            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Length 2 to 4 digits";
+        if (stdCode.length < 2 || stdCode.length > 4)
+        {
+            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid STD Code";
             return false;
         }
-        else {
-            document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+        else
+        {
+            if (isNaN(stdCode))
+            {
+                document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid STD Code";
+                return false;
+            }
+            else
+            {
+                document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+            }
         }
 
     }
-    else {
+    else
+    {
         document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
     }
 
     var phno = document.applicationForm.KeyOffPhoneNumber.value.trim();
-    if (phno != "") {
-        if (phno.charAt(0) == "0") {
-            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no cannot start with 0";
+    if (phno != "")
+    {
+        if (phno.charAt(0) == "0")
+        {
+            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
             return false;
         }
-        else {
-            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+        else
+        {
+            if (phno.length < 6 || phno.length > 8)
+            {
+                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+                return false;
+            }
+            else
+            {
+                if (isNaN(phno))
+                {
+                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+                }
+            }
         }
-
-        if (phno.length < 6 || phno.length > 8) {
-            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Phone no length 6 to 8 digits";
-            return false;
-        }
-        else {
-            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
-        }
-
     }
-    else {
+    else
+    {
         document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
     }
 
@@ -1238,58 +1285,66 @@ function showCardDetails() {
         }
     }
 
-    if (document.applicationForm.KeyOffMobileNumber.value.trim() == "") {
+    if (document.applicationForm.KeyOffMobileNumber.value.trim() == "")
+    {
         document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
         return false;
     }
-    else {
-        if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0") {
+    else
+    {
+        if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0")
+        {
             document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
-        else {
-            document.getElementById("official_mobile_error").innerHTML = "";
-        }
-
-        if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
-            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            return false;
-        }
-        else {
-            document.getElementById("official_mobile_error").innerHTML = "";
-        }
-
-        if (document.getElementById("KeyOffMobileNumber").value.match(phoneno)) {
-            document.getElementById("official_mobile_error").innerHTML = "";
-        }
-        else {
-            document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            return false;
+        else
+        {
+            if (document.getElementById("KeyOffMobileNumber").value.length < 10)
+            {
+                document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                return false;
+            }
+            else
+            {
+                if (document.getElementById("KeyOffMobileNumber").value.match(phoneno))
+                {
+                    document.getElementById("official_mobile_error").innerHTML = "";
+                }
+                else
+                {
+                    document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                    return false;
+                }
+            }
         }
 
     }
 
-    if (document.applicationForm.KeyOffDesignation.value.trim() == "") {
+    if (document.applicationForm.KeyOffDesignation.value.trim() == "")
+    {
         document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
         return false;
     }
     else
     {
-        if (!isNaN(document.getElementById("KeyOffDesignation").value.trim())) {
+        if (!isNaN(document.getElementById("KeyOffDesignation").value.trim()))
+        {
             document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
             return false;
         }
-        else {
-            document.getElementById("official_designation_error").innerHTML = "";
+        else
+        {
+            if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck))
+            {
+                document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
+                return false;
+            }
+            else
+            {
+                document.getElementById("official_designation_error").innerHTML = "";
+            }
         }
-
-        if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck)) {
-            document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
-            return false;
-        }
-        else {
-            document.getElementById("official_designation_error").innerHTML = "";
-        }
+        
     }
 
     if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
@@ -1308,17 +1363,123 @@ function showCardDetails() {
         document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
     }
 
-    if (localStorage.getItem("DUPLICATEPANUSED") == 0) {
-        if (document.getElementById("PanCardRemarks").value.trim() == "") {
+    if (localStorage.getItem("DUPLICATEPANUSED") == 0)
+    {
+        if (document.getElementById("PanCardRemarks").value.trim() == "")
+        {
             document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
             return (false);
         }
-        else {
+        else
+        {
             document.getElementById("PanCardRemarks_error").innerHTML = "";
         }
     }
-    else {
+    else
+    {
         document.getElementById("PanCardRemarks_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim()))
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim()))
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim()))
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim()))
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile1.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile1.value.trim()))
+        {
+            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile2.value.trim() != "")
+    {
+        if (isNaN(document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile2.value.trim()))
+        {
+            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "Invalid No.";
+            return false;
+        }
+        else
+        {
+            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "";
     }
 
     return true;
