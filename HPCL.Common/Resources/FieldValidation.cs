@@ -56,7 +56,7 @@
         public const string ValidTerminalIdErrMsg = "start with 5 and contains 10 digits";
 
         public const string ValidCustomerReferenceNo = @"^(?!(0))[0-9]{10}$";
-        public const string ValidCustomerReferenceNoErrMsg = "Should not start with 0 and contains 10 digits";
+        public const string ValidCustomerReferenceNoErrMsg = "Please enter 10 digits Customer Reference No.";
 
         public const string ValidVachileNumber = @"^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$";
         public const string ValidVachileNumberErrMsg = "Invalid Vachile Number";

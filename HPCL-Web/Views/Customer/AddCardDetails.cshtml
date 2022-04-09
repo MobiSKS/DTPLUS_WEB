@@ -15,15 +15,12 @@
                 <li class="breadcrumb-item font-weight-light">Add Card</li>
             </ul>
             <h5>Add Card</h5>
-            <div id="divSuccess" class="mb-3 text-center" style="display:none"></div> @*background-color:#a0f1d6;*@
-            <form name="addCustomerCardsForm" class="toBeHiddenOnSuccess"> @*class="w-100" method="post" asp-action="AddCardDetails" *@
+            <div id="divSuccess" class="mb-3 text-center" style="display:none;background-color:#a0f1d6;"></div>
+            <form name="addCustomerCardsForm" class="toBeHiddenOnSuccess">
                 <div class="w-100">
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                         <div class="border-1 rounded border-grey">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add New Card</p>
-                            @*<div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
-                                @Html.DisplayFor(m => m.Remarks)
-                            </div>*@
                             <div class="py-3 px-0 px-md-2">
 
                                 <div class="d-flex align-items-center flex-wrap">
@@ -111,7 +108,9 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @*<div class="ml-4 mr-4" style="display:none;" id="divNoRecord">
+                                    <div class="alert alert-danger" role="alert" style="display:none;" id="noRecord">
+                                </div>*@
                                 <div id="divDetails" style="display:none">
                                     <div class="px-2 px-md-4">
                                         <fieldset class="border-1 rounded border-grey mb-3">
@@ -339,31 +338,39 @@
     $("#btnSearch").click(function () {
         debugger;
 
-        var custRefNo = document.getElementById("CustomerReferenceNo").value;
+        var custRefNo = document.getElementById("CustomerReferenceNo").value.trim();
         if (custRefNo == "") 
         {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customer Reference Number cannot be left blank";
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
             return (false);
         }
         else 
         {
             if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
             {
-              document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+              document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
               return false;
             }
-            else if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+            else 
             {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
-                return false;
+                if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+                {
+                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                    return false;
+                }
+                else 
+                {
+                    if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                    }
+                }
             }
-            else if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
-            {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
-                return false;
-            }
-            else
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
         }
 
             $.ajax({
@@ -388,11 +395,18 @@
                                 document.getElementById("divDetails").style.display = "none";
                                 document.getElementById("divSubmit").style.display = "none";
                                 alert(data.reason);
+                                //$("#noRecord").html("");
+                                //$("#noRecord").append("<span>" + data.reason + "</span>");
+                                //document.getElementById("noRecord").style.display = "block";
+                                //document.getElementById("divNoRecord").style.display = "block";
+                                
                             }
                             else
                             {
                                 document.getElementById("divDetails").style.display = "block";
                                 document.getElementById("divSubmit").style.display = "none";
+                                //document.getElementById("noRecord").style.display = "none";
+                                //document.getElementById("divNoRecord").style.display = "none";
                             }
                             document.getElementById("CustomerName").value = data.customerName;
                             document.getElementById("FormNumber").value = data.formNumber;
@@ -904,17 +918,41 @@
         var invalidVehicleNo=false;
         var table = document.getElementById("NoOfCardsTbl");
 
-        if (document.getElementById("CustomerReferenceNo").value == "0" || document.getElementById("CustomerReferenceNo").value == "") 
+        if (document.getElementById("CustomerReferenceNo").value.trim() == "") 
         {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customre Ref No cannot be left blank";
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
             return false;
         }
         else 
         {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+            if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
+            {
+              document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+              return false;
+            }
+            else 
+            {
+                if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+                {
+                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                    return false;
+                }
+                else 
+                {
+                    if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                    }
+                }
+            }
         }
 
-        if (document.getElementById("CustomerName").value == "0" || document.getElementById("CustomerName").value == "") 
+        if (document.getElementById("CustomerName").value == "") 
         {
             document.getElementById("CustomerName_error").innerHTML = "Customer Name cannot be left blank";
             return false;
@@ -2064,7 +2102,7 @@
                         {
                             $("#divSuccess").html(data.message);
                             document.getElementById("divSuccess").style.display = "block";
-                            document.getElementById("divSuccess").className = "alert alert-danger alert-cust-success";
+                            document.getElementById("divSuccess").className = "alert alert-danger";
                             //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
                         }
                         console.log('success');
@@ -2485,29 +2523,37 @@
         var custRefNo = document.getElementById("CustomerReferenceNo").value;
         if (custRefNo == "") 
         {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "Customer Reference Number cannot be left blank";
+            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
             return (false);
         }
         else 
         {
             if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
             {
-              document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
+              document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
               return false;
             }
-            else if (document.getElementById("CustomerReferenceNo").value.length < 10) 
-            {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
-                return false;
-            }
-            else if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
-            {
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "Invalid Customer Reference Number.";
-                return false;
-            }
             else
-                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
-        }
+            {
+                if (document.getElementById("CustomerReferenceNo").value.length < 10) 
+                {
+                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                    return false;
+                }
+                else
+                {
+                    if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                    }
+                }
+           }
+       }
 
    });
 

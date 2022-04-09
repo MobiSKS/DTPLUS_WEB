@@ -9,7 +9,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
 {
     public class UploadDoc : BaseEntity
     {
-        [Required(ErrorMessage = "Customer Reference No is required")]
+        [Required(ErrorMessage = "Please enter 10 digits Customer Reference No.")]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerReferenceNo, ErrorMessage = FieldValidation.ValidCustomerReferenceNoErrMsg)]
         public string CustomerReferenceNo { get; set; }
