@@ -38,7 +38,7 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
             StatusName = new List<Status>();
             StatusName.Add(new Status
             {
-                StatusId = 1,
+                StatusId = 0,
                 StatusName = "--All--"
 
             });
@@ -50,7 +50,7 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
             });
             StatusName.Add(new Status
             {
-                StatusId = 1,
+                StatusId = 2 ,
                 StatusName = "Mapped"
 
             });
