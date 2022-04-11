@@ -340,16 +340,24 @@
 
     $("#FormNumber").on("blur", function () {
         //debugger;
-        var formNumber = document.getElementById("FormNumber").value;
-        if (formNumber == "") {
+        var formNumber = document.getElementById("FormNumber").value.trim();
+        if (formNumber == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
             return (false);
         }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
+        else if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            return false;
         }
-
-        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+        else if (document.getElementById("FormNumber").value.length < 10) 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (!(document.getElementById("FormNumber").value.match(number))) 
+        {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             return false;
         }
@@ -357,23 +365,6 @@
         {
             document.getElementById("formNumber_error").innerHTML = "";
         }
-
-        if (document.getElementById("FormNumber").value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-       else 
-       {
-            document.getElementById("formNumber_error").innerHTML = "";
-       }
-        if (!(document.getElementById("FormNumber").value.match(number))) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-       else 
-       {
-            document.getElementById("formNumber_error").innerHTML = "";
-       }
 
         var formNumberUsed = false;
         localStorage.setItem("FORMNOALREADYUSED", "1");
@@ -582,47 +573,40 @@
         else {
             document.getElementById("regionalOffice_error").innerHTML = "";
         }
-        console.log('Test');
-        if (document.getElementById("FormNumber").value == "") {
+
+        if (document.getElementById("FormNumber").value.trim() == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
+            ret = false;
+        }
+        else if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (document.getElementById("FormNumber").value.length < 10)
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (!(document.getElementById("FormNumber").value.match(number))) 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             ret = false;
         }
         else 
         {
-
-            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-               ret = false;
+            if (localStorage.getItem("FORMNOALREADYUSED") == 0)
+            {
+                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                ret = false;
             }
             else
             {
-                if (document.getElementById("FormNumber").value.length < 10)
-                {
-                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                    ret = false;
-                }
-                else
-                {
-                    if (!(document.getElementById("FormNumber").value.match(number))) {
-                        document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                        ret = false;
-                    }
-                    else 
-                    {
-          
-                        if (localStorage.getItem("FORMNOALREADYUSED") == 0)
-                        {
-                            document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-                            ret = false;
-                        }
-                        else
-                        {
-                            document.getElementById("formNumber_error").innerHTML = "";
-                        }
-                    }
-                }
+                document.getElementById("formNumber_error").innerHTML = "";
             }
         }
+                
 
         if (document.getElementById("DateOfApplication").value == "") {
             document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
@@ -779,50 +763,70 @@
             }
         }
 
-        if (document.getElementById("CommunicationDialCode").value.trim() != "") {
+        if (document.getElementById("CommunicationDialCode").value.trim() != "") 
+        {
             var stdCode = document.getElementById("CommunicationDialCode").value.trim();
-            if (stdCode != "") {
+            if (stdCode != "") 
+            {
 
-                if (stdCode.length < 2 || stdCode.length > 4) {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "STD Code length 2 to 4 digits";
+                if (stdCode.length < 2 || stdCode.length > 4) 
+                {
+                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
                     ret = false;
                 }
-                else {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                else 
+                {
+                    if (isNaN(stdCode))
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                    }
                 }
-
             }
-            else {
+            else 
+            {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "";
             }
         }
 
-        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
-             var phno = document.getElementById("CommunicationPhonePart2").value.trim();
-            if (phno != "") {
-                if (phno.charAt(0) == "0") {
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") 
+        {
+            var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+            if (phno != "") 
+            {
+                if (phno.charAt(0) == "0") 
+                {
                     document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
                     ret = false;
                 }
-                else {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
-                }
-
-                if (phno.length < 6 || phno.length > 8) {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number. Min 6 Max 8 digits";
+                else if (phno.length < 6 || phno.length > 8) 
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
                     ret = false;
                 }
-                else {
+                else if (isNaN(phno))
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                    ret = false;
+                }
+                else 
+                {
                     document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
                 }
 
             }
-            else {
+            else 
+            {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
             }
         }
 
-        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") 
+        {
             if(document.getElementById("CommunicationDialCode").value.trim() == "")
             {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
@@ -830,8 +834,29 @@
             }
             else
             {
-                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-                ret = false;
+                var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+                if (phno != "") 
+                {
+                    if (phno.charAt(0) == "0") 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else if (phno.length < 6 || phno.length > 8) 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else if (isNaN(phno))
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+                    }
+                }                             
             }
         }
 
