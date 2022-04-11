@@ -551,10 +551,12 @@ namespace HPCL.Service.Services
             return customerModel;
         }
 
-        public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
+        public async Task<CustomerValidate> ValidateNewCustomer(CustomerValidate entity)
         {
             string fromDateOfApplication = "";
             string toDateOfApplication = "";
+
+            entity.CustomerRegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             if (!string.IsNullOrEmpty(entity.FromDate))
             {
@@ -590,7 +592,9 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
 
-            return searchList;
+            entity.SearchCustomerResponseGridLst = searchList;
+            entity.Message = obj["Message"].ToString();
+            return entity;
         }
         public async Task<List<SearchCustomerResponseGrid>> ReloadUpdatedGrid()
         {
@@ -1042,11 +1046,23 @@ namespace HPCL.Service.Services
                     custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);
                     custMdl.KeyOfficialCardAppliedFor = Customer.KeyOfficialCardAppliedFor;
                     custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile1 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = "";
                     custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile2 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = "";
                     custMdl.FleetSizeNoOfVechileOwnedHCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "" : Customer.FleetSizeNoOfVechileOwnedHCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedHCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedHCV = "";
                     custMdl.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "" : Customer.FleetSizeNoOfVechileOwnedLCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedLCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedLCV = "";
                     custMdl.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedMUVSUV = "";
                     custMdl.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
+                    if (custMdl.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedCarJeep = "";
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.TierOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TierOfCustomerId) ? "0" : Customer.TierOfCustomerId);
                     custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);

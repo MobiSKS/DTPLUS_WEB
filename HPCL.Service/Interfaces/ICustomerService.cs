@@ -23,7 +23,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> GetCustomerRBEName(string RBEId);
         Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo);
         Task<CustomerModel> ValidateNewCustomer();
-        Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity);
+        Task<CustomerValidate> ValidateNewCustomer(CustomerValidate entity);
         Task<List<SearchCustomerResponseGrid>> ReloadUpdatedGrid();
         Task<JObject> ViewCustomerDetails(string FormNumber);
         Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus);
