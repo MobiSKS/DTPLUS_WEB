@@ -294,11 +294,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                ZonalOfficeID = entity.ZonalOfficeID=="0"?"":entity.ZonalOfficeID,
-                RegionalOfficeID = entity.RegionalOfficeID=="0"?"":entity.RegionalOfficeID,
+                ZonalOfficeID = entity.ZonalOfficeID == "0" ? "" : entity.ZonalOfficeID,
+                RegionalOfficeID = entity.RegionalOfficeID == "0" ? "" : entity.RegionalOfficeID,
                 FromDate = entity.FromDate,
                 ToDate = entity.ToDate,
-                StatusId =entity.StatusId
+                StatusId = entity.StatusId == "-1" ? "" : entity.StatusId
 
             };
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
