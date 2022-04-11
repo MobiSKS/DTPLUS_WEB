@@ -15,6 +15,7 @@ using System.Linq;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HPCL.Service.Services
 {
@@ -133,20 +134,23 @@ namespace HPCL.Service.Services
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
 
-            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
-
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+            
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
 
             if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
             {
-                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
-                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                //string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                //KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
             }
 
             if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
             {
-                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
-                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                //string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                //KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
 
@@ -205,13 +209,13 @@ namespace HPCL.Service.Services
                     {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
                     {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
-                    {"KeyOfficialApproxMonthlySpendsonVechile1", cust.KeyOfficialApproxMonthlySpendsonVechile1.ToString()},
-                    {"KeyOfficialApproxMonthlySpendsonVechile2", cust.KeyOfficialApproxMonthlySpendsonVechile2.ToString()},
+                    {"KeyOfficialApproxMonthlySpendsonVechile1", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile1)},
+                    {"KeyOfficialApproxMonthlySpendsonVechile2", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile2)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile2)},
                     {"AreaOfOperation", cust.AreaOfOperation},
-                    {"FleetSizeNoOfVechileOwnedHCV", cust.FleetSizeNoOfVechileOwnedHCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedLCV", cust.FleetSizeNoOfVechileOwnedLCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedMUVSUV", cust.FleetSizeNoOfVechileOwnedMUVSUV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedCarJeep", cust.FleetSizeNoOfVechileOwnedCarJeep.ToString()},
+                    {"FleetSizeNoOfVechileOwnedHCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedHCV)?"0":cust.FleetSizeNoOfVechileOwnedHCV)},
+                    {"FleetSizeNoOfVechileOwnedLCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedLCV)?"0":cust.FleetSizeNoOfVechileOwnedLCV)},
+                    {"FleetSizeNoOfVechileOwnedMUVSUV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedMUVSUV)?"0":cust.FleetSizeNoOfVechileOwnedMUVSUV)},
+                    {"FleetSizeNoOfVechileOwnedCarJeep", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedCarJeep)?"0":cust.FleetSizeNoOfVechileOwnedCarJeep)},
                     {"NoOfCards", cust.NoOfCards.ToString()},
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     {"Createdby", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
@@ -430,17 +434,16 @@ namespace HPCL.Service.Services
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
 
-            //fetching Customer info
-            var CustomerRefinfo = new Dictionary<string, string>
+            var requestInfo = new GetCustomerRBENameRquest()
             {
-                {"Useragent", CommonBase.useragent},
-                {"Userip", CommonBase.userip},
-                {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"RBEId", RBEId}
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RBEId = RBEId
             };
 
             CustomerRBE customerRBE;
-            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(CustomerRefinfo), Encoding.UTF8, "application/json");
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var responseCustomer = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getCustomerRbeId);
 
@@ -451,20 +454,26 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.RBEName = customerRBE.Data[0].RBEName;
                 customerCardInfo.RBEId = customerRBE.Data[0].RBEId.ToString();
+                customerCardInfo.StatusCode = customerRBE.Internel_Status_Code;
             }
-
+            else
+            {
+                customerCardInfo.Reason = customerRBE.Data[0].Reason;
+                customerCardInfo.StatusCode = customerRBE.Internel_Status_Code;
+            }
             return customerCardInfo;
         }
-
-        public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
+        
+        public async Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo)
         {
 
             string feePaymentDate = "";
 
             if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
             {
-                string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-                feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                //string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
+                //feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
+                feePaymentDate = await _commonActionService.changeDateFormat(customerCardInfo.FeePaymentDate);
             }
 
             feePaymentDate = (string.IsNullOrEmpty(feePaymentDate) ? "1900-01-01" : feePaymentDate);
@@ -520,10 +529,12 @@ namespace HPCL.Service.Services
                 customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
                 customerCardInfo.Message = customerInserCardResponse.Message;
+                customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
             }
             else
             {
                 customerCardInfo.Message = customerInserCardResponse.Message;
+                customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
             }
 
             return customerCardInfo;
@@ -540,10 +551,12 @@ namespace HPCL.Service.Services
             return customerModel;
         }
 
-        public async Task<List<SearchCustomerResponseGrid>> ValidateNewCustomer(CustomerModel entity)
+        public async Task<CustomerValidate> ValidateNewCustomer(CustomerValidate entity)
         {
             string fromDateOfApplication = "";
             string toDateOfApplication = "";
+
+            entity.CustomerRegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
 
             if (!string.IsNullOrEmpty(entity.FromDate))
             {
@@ -579,7 +592,9 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
 
-            return searchList;
+            entity.SearchCustomerResponseGridLst = searchList;
+            entity.Message = obj["Message"].ToString();
+            return entity;
         }
         public async Task<List<SearchCustomerResponseGrid>> ReloadUpdatedGrid()
         {
@@ -980,7 +995,6 @@ namespace HPCL.Service.Services
                     }
                     custMdl.KeyOffDesignation = Customer.KeyOfficialDesignation;
                     custMdl.KeyOffEmail = Customer.KeyOfficialEmail;
-                    custMdl.KeyOffEmail = Customer.KeyOfficialEmail;
 
                     if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
                     {
@@ -1031,12 +1045,24 @@ namespace HPCL.Service.Services
 
                     custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);
                     custMdl.KeyOfficialCardAppliedFor = Customer.KeyOfficialCardAppliedFor;
-                    custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = Convert.ToDecimal(string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "0" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
-                    custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = Convert.ToDecimal(string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "0" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
-                    custMdl.FleetSizeNoOfVechileOwnedHCV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "0" : Customer.FleetSizeNoOfVechileOwnedHCV);
-                    custMdl.FleetSizeNoOfVechileOwnedLCV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "0" : Customer.FleetSizeNoOfVechileOwnedLCV);
-                    custMdl.FleetSizeNoOfVechileOwnedMUVSUV = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "0" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
-                    custMdl.FleetSizeNoOfVechileOwnedCarJeep = Convert.ToInt32(string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "0" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile1 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = "";
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile2 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = "";
+                    custMdl.FleetSizeNoOfVechileOwnedHCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "" : Customer.FleetSizeNoOfVechileOwnedHCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedHCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedHCV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "" : Customer.FleetSizeNoOfVechileOwnedLCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedLCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedLCV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
+                    if (custMdl.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedCarJeep = "";
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.TierOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TierOfCustomerId) ? "0" : Customer.TierOfCustomerId);
                     custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);
@@ -1108,20 +1134,36 @@ namespace HPCL.Service.Services
             string KeyOffDateOfAnniversary = "";
             string KeyOfficialDOB = "";
 
-            string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
+            //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
 
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+
+            //if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            //{
+            //    string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+            //    KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+            //}
+
+            //if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            //{
+            //    string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+            //    KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+            //}
+
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
 
             if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
             {
-                string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
-                KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                //string[] dateOfAnniversary = cust.KeyOffDateOfAnniversary.Split("-");
+                //KeyOffDateOfAnniversary = dateOfAnniversary[2] + "-" + dateOfAnniversary[1] + "-" + dateOfAnniversary[0];
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
             }
 
             if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
             {
-                string[] officialDOB = cust.KeyOfficialDOB.Split("-");
-                KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                //string[] officialDOB = cust.KeyOfficialDOB.Split("-");
+                //KeyOfficialDOB = officialDOB[2] + "-" + officialDOB[1] + "-" + officialDOB[0];
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
 
@@ -1180,13 +1222,13 @@ namespace HPCL.Service.Services
                     {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
                     {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
-                    {"KeyOfficialApproxMonthlySpendsonVechile1", cust.KeyOfficialApproxMonthlySpendsonVechile1.ToString()},
-                    {"KeyOfficialApproxMonthlySpendsonVechile2", cust.KeyOfficialApproxMonthlySpendsonVechile2.ToString()},
+                    {"KeyOfficialApproxMonthlySpendsonVechile1", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile1)},
+                    {"KeyOfficialApproxMonthlySpendsonVechile2", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile2)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile2)},
                     {"AreaOfOperation", cust.AreaOfOperation},
-                    {"FleetSizeNoOfVechileOwnedHCV", cust.FleetSizeNoOfVechileOwnedHCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedLCV", cust.FleetSizeNoOfVechileOwnedLCV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedMUVSUV", cust.FleetSizeNoOfVechileOwnedMUVSUV.ToString()},
-                    {"FleetSizeNoOfVechileOwnedCarJeep", cust.FleetSizeNoOfVechileOwnedCarJeep.ToString()},
+                    {"FleetSizeNoOfVechileOwnedHCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedHCV)?"0":cust.FleetSizeNoOfVechileOwnedHCV)},
+                    {"FleetSizeNoOfVechileOwnedLCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedLCV)?"0":cust.FleetSizeNoOfVechileOwnedLCV)},
+                    {"FleetSizeNoOfVechileOwnedMUVSUV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedMUVSUV)?"0":cust.FleetSizeNoOfVechileOwnedMUVSUV)},
+                    {"FleetSizeNoOfVechileOwnedCarJeep", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedCarJeep)?"0":cust.FleetSizeNoOfVechileOwnedCarJeep)},
                     {"CustomerType", cust.CustomerTypeID.ToString()},
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
                     {"TierOfCustomer", cust.TierOfCustomerID.ToString()},

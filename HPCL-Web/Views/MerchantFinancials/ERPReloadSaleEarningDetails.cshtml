@@ -50,7 +50,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
                                             </div>
                                             <span class="error" id="fromDate_error"></span>
                                         </div>
@@ -63,7 +63,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
                                             </div>
                                             <span class="error" id="toDate_error"></span>
                                         </div>
@@ -142,18 +142,10 @@
 <script type="text/javascript">
     //debugger;
 
-    var fromdate = $("#FromDate").val();
-    var todate = $("#ToDate").val();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
+   
 
     $(document).ready(function () {
-        if (fromdate == "") {
-            setDates();
-        }
+       
         if ($('input[name=TerminalOrMerchant]:checked').val() == "Merchant") {
             document.getElementById("lblMerchant").innerHTML = "Merchant";
         } else {
@@ -179,7 +171,7 @@
             flag = "N";
         }
         if (fromdate != "" && todate != "") {
-            flag = checkDates();
+            flag = checkDates("fromDate_error","31");
         }
         if (merchantId == "") {
             if ($('input[name=TerminalOrMerchant]:checked').val() == "Merchant") {
@@ -215,19 +207,7 @@
             }
         }
 
-        var fromDateArray = fromdate.split("-");
-        var fromDateStr = fromDateArray[0] + "/" + fromDateArray[1] + "/" + fromDateArray[2];
-
-        var toDateArray = todate.split("-");
-        var toDateStr = toDateArray[0] + "/" + toDateArray[1] + "/" + toDateArray[2];
-        var NoOfDays = getNumberOfDays(fromDateStr, toDateArray);
-        console.log(NoOfDays);
-
-        if (NoOfDays > 31) {
-            $("#fromDate_error").attr("style", "display:block");
-            $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
-            flag = "N";
-        }
+      
 
         if (flag == "Y") {
             $("#toDate_error").attr("style", "display:none");
@@ -244,63 +224,15 @@
     );
 
     $("#btnReset").click(function () {
-        setDates();
-        $("#show_Table").html("");
-        $("#MerchantId").val("");
-        $("#fromDate_error").html("");
-        $("#toDate_error").html("");
-        $("#MerchantId_error").html("");
+        ////setDates();
+        //$("#show_Table").html("");
+        //$("#MerchantId").val("");
+        //$("#fromDate_error").html("");
+        //$("#toDate_error").html("");
+        //$("#MerchantId_error").html("");
+        location.reload();
     });
-    function setDates() {
-        var fromd = new Date();
-        fromd.setMonth(fromd.getMonth() - 1);
-        var dd = String(fromd.getDate()).padStart(2, '0');
-        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = fromd.getFullYear();
-
-        fromd = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(fromd);
-        $("#ToDate").val(today);
-    };
-            
-    $(".date").on('change', function (e) {
-
-        checkDates();
-        $("#show_Table").html("");
-    });
-
-    function checkDates() {
-        var fromD = $("#FromDate").val();
-        var toD = $("#ToDate").val();
-        var dateflag = "Y";
-        if (fromD != "" && toD != "") {
-            if (fromD > toD) {
-
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = "N";
-            }
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-        }
-
-        if (toD != "") {
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-        }
-
-        return dateflag;
-    }
-
+    
     $('input[name=TerminalOrMerchant]').click(function () {
         if ($('input[name=TerminalOrMerchant]:checked').val() == "Merchant") {
             document.getElementById("lblMerchant").innerHTML = "Merchant";           

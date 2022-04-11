@@ -65,9 +65,9 @@
                             @Html.HiddenFor(model => Model.IdProofFrontSRC)
                         </form>
                     </div>
-                    <div>
+                    <div class="ml-4 mr-4">
+                        <div class="alert alert-danger" role="alert" style="display:none;" id="noRecord">
                     </div>
-                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -140,12 +140,6 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-
-                            @*<div class="form-group d-flex align-items-center flex-wrap">
-                            </div>
-                            <div class="form-group d-flex align-items-center flex-wrap">
-                            </div>
-                            *@
 
                             <div class="border-1 rounded border-grey mb-4 pt-0">
                                 <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Address Proof</p>
@@ -227,15 +221,8 @@
 <script>
 
      function resetClick() {
-         //$("input:text").each(function () {
-         //    $(this).val("");
-         //});
-         //$("#CardSearch td").parent().remove();
-         //document.getElementById('resSearch').style.display = 'none';
-         //document.getElementById('uploadSection').style.display = 'none';
          document.getElementById('CustomerReferenceNoId').value = '';
          $("#CustomerReferenceNoId").prop('readonly', false);
-         //location.reload();
           window.location.href = '@Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "" })';
      };
 
@@ -275,41 +262,25 @@
          });
 
          $("#IdProofFront").change(function () {
+              $("#idFrontErr").text("");
              $("#idPfrontImg").html("");
-
-           
 
              //var rv = true;
              idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
-
-             //console.log(idFront);
-             //console.log(idBack);
-
-             //if (idBack == idFront) {
-             //    $('#IdProofFront').val('');
-             //    $("#idFrontErr").text("Please use different Image Document");
-             //    return false;
-             //} 
-             //else if (idFront == addFront) {
-             //    $('#IdProofFront').val('');
-             //    $("#idFrontErr").text("Please use different Image Document");
-             //    return rv = false;
-             //} else if (idFront == addBack) {
-             //    $('#IdProofFront').val('');
-             //    $("#idFrontErr").text("Please use different Image Document");
-             //    return rv = false;
-             //}
 
              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
              if (regex.test($(this).val().toLowerCase())) {
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 10485760){
+                         var valueSize = (this.files[0].size) / 1024;
                          $("#idPfrontImg").show();
+                         //$("#idPfrontImg").append("<p>File Size: "+valueSize+"KB</p>");
                          $("#idPfrontImg").append("<img />");
                          var reader = new FileReader();
                          reader.onload = function (e) {
                              $("#idPfrontImg img").attr("src", e.target.result);
                              $("#idPfrontImg img").attr("style", "width: 100%");
+                             $("#idPfrontImg img").attr("style", "height: 100px");
                          }
                          reader.readAsDataURL($(this)[0].files[0]);
                      }else{
@@ -328,6 +299,7 @@
          });
 
          $("#IdProofBack").change(function () {
+             $("#idBackErr").text("");
              $("#idPbackImg").html("");
 
              idBack = $(this).val().replace(/C:\\Fakepath\\/i, '');
@@ -341,6 +313,7 @@
                          reader.onload = function (e) {
                              $("#idPbackImg img").attr("src", e.target.result);
                              $("#idPbackImg img").attr("style", "width: 200px");
+                             $("#idPfrontImg img").attr("style", "height: 100px");
                          }
                          reader.readAsDataURL($(this)[0].files[0]);
                      }else{
@@ -358,6 +331,7 @@
          });
 
          $("#AddressProofFront").change(function () {
+             $("#addFrontErr").html("");
              $("#idAfrontImg").html("");
 
              addFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
@@ -371,6 +345,7 @@
                          reader.onload = function (e) {
                              $("#idAfrontImg img").attr("src", e.target.result);
                              $("#idAfrontImg img").attr("style", "width: 200px");
+                             $("#idPfrontImg img").attr("style", "height: 100px");
                          }
                          reader.readAsDataURL($(this)[0].files[0]);
                       }else{
@@ -388,7 +363,9 @@
          });
 
          $("#AddressProofBack").change(function () {
+             $("#addBackErr").html("");
              $("#idAbackImg").html("");
+
              addBack = $("#AddressProofBack").val().replace(/C:\\Fakepath\\/i, '');
              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
              if (regex.test($(this).val().toLowerCase())) {
@@ -400,6 +377,7 @@
                          reader.onload = function (e) {
                              $("#idAbackImg img").attr("src", e.target.result);
                              $("#idAbackImg img").attr("style", "width: 200px");
+                             $("#idPfrontImg img").attr("style", "height: 100px");
                          }
                          reader.readAsDataURL($(this)[0].files[0]);
                     }else{

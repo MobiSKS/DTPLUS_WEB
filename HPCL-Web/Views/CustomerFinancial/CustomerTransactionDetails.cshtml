@@ -220,61 +220,21 @@
             $("#lblCardNo").attr("style", "display:none");
             $("#lblMobileNo").attr("style", "display:block");
         }
+        $("#CardNo").val("");
+        $("#CustomerID").val("");
+        $("#MobileNo").val("");
         $("#customerId_error").attr("style", "display:none");
         $("#customerId_error").html("");
 
     });
    
-    //$(".date").on('change', function (e) {
-    //    var fromD = "";
-    //    var toD = "";
-    //    fromD = $("#FromDate").val();
-    //    toD = $("#ToDate").val();
-    //    checkDates(fromD, toD);
-    //    $("#show_Table").html("");
-    //});
-
-    //function checkDates(fromD, toD) {
-    //    var dateflag = "Y";
-    //    var d1 = new Date(fromD);
-    //    var d2 = new Date(toD);
-
-    //    if (fromD != "" && toD != "") {
-    //        var aday = 24 * 60 * 60 * 1000;
-    //        if (fromD > toD) {
-
-    //            $("#fromDate_error").attr("style", "display:block");
-    //            $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-    //            dateflag = "N";
-    //        }
-    //        else if ((Math.abs(d2-d1) / aday) > 31)
-    //        {
-    //            $("#fromDate_error").attr("style", "display:block");
-    //            $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
-    //            dateflag = "N";
-    //        }
-    //        else {
-    //            $("#fromDate_error").html("");
-    //            $("#fromDate_error").attr("style", "display:none");
-    //        }
-    //        if (toD > today) {
-    //            $("#toDate_error").attr("style", "display:block");
-    //            $("#toDate_error").html("To Date should be less or equal to Today's date");
-    //            dateflag = "N";
-    //        }
-    //        else {
-    //            $("#toDate_error").html("");
-    //            $("#toDate_error").attr("style", "display:none");
-    //        }
-
-    //    }
-    //    return dateflag;
-    //}
+    
 
     $("#btnSearch").on("click", (function (e) {
          var fromdate = $("#FromDate").val();
          var todate = $("#ToDate").val();
          var customerId = "", cardNo = "", mobileNo = "";
+       
          if ($("#rbCardNo").is(":checked")) {
              cardNo = $("#CardNo").val();
          }
@@ -317,7 +277,7 @@
 
             }
             if (mobileNo != "") {
-                if (mobileNo.length < 10) {
+                if (!mobileNo.match(phoneno)) {
                     $("#customerId_error").attr("style", "display:block");
                     $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
                     flag = "N";
@@ -433,4 +393,56 @@
         location.reload();
 
     });
+     $("#CustomerID").on("blur", function () {
+         var customerId = $("#CustomerID").val();
+         if (customerId != "") {
+            if (!customerId.match(mappedCustomerId)) {
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+                
+            }
+            else{
+                $("#customerId_error").attr("style", "display:none");
+                $("#customerId_error").html("");
+            }
+         }
+         else{
+             $("#customerId_error").attr("style", "display:block");
+             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+         }
+     });
+     $("#MobileNo").on("blur", function () {
+         var mobileNo = $("#MobileNo").val();
+         if (mobileNo != "") {
+             if (!mobileNo.match(phoneno)) {
+                 $("#customerId_error").attr("style", "display:block");
+                 $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+             }
+             else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+             }
+         }
+         else{
+             $("#customerId_error").attr("style", "display:block");
+             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+         }
+     });
+     $("#CardNo").on("blur", function () {
+         var cardNo = $("#CardNo").val();
+         if (cardNo != "") {
+             if (cardNo.length < 16) {
+                 $("#customerId_error").attr("style", "display:block");
+                 $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+             }
+             else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+             }
+         }
+         else{
+             $("#customerId_error").attr("style", "display:block");
+             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+         }
+     });
 </script>

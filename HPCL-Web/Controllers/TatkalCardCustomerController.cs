@@ -166,5 +166,11 @@ namespace HPCL_Web.Controllers
             var result = await _tatkalCardCustomerService.UpdateTatkalCardtoCustomer(UpdateDetails);
             return Json(result);
         }
+        [HttpPost]
+        public async Task<IActionResult> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity)
+        {
+            var modals = await _tatkalCardCustomerService.GetViewTatkalCards(entity);
+            return PartialView("~/Views/TatkalCardCustomer/_ViewTatkalCardsTbl.cshtml", modals);
+        }
     }
 }

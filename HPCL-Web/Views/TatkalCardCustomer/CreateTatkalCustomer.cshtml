@@ -62,7 +62,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Application Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-8 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.DateOfApplication, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                                @Html.TextBoxFor(m => m.DateOfApplication, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                                 <span class="error" id="applicationDate_error"></span>
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Signed On<sup class="text-danger">*</sup></label>
                                         <div class="col-md-8 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.SignedOn, new { @class = "form-control", autocomplete = "off" })  @*@type = "date"*@
+                                                @Html.TextBoxFor(m => m.SignedOn, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                                 <span class="error" id="SignedOn_error"></span>
                                             </div>
                                         </div>
@@ -261,48 +261,48 @@
 
         localStorage.setItem("PANNOALREADYUSED", "1");
 
-        if (notFoundError == "") {
-            if (custDateOfApplication == "") {
-                $("#DateOfApplication").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                setDates();
-            }
-            else {
-                $("#DateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
+        //if (notFoundError == "") {
+        //    if (custDateOfApplication == "") {
+        //        $("#DateOfApplication").datepicker({
+        //            "setDate": new Date(),
+        //            "autoclose": true,
+        //            dateFormat: 'dd-mm-yy'
+        //        });
+        //        setDates();
+        //    }
+        //    else {
+        //        $("#DateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
+        //    }
 
-            if (OfficialDOB == "") {
-                $("#SignedOn").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-                //setDates();
-            }
-            else {
-                $("#SignedOn").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
+        //    if (OfficialDOB == "") {
+        //        $("#SignedOn").datepicker({
+        //            "setDate": new Date(),
+        //            "autoclose": true,
+        //            dateFormat: 'dd-mm-yy'
+        //        });
+        //        //setDates();
+        //    }
+        //    else {
+        //        $("#SignedOn").datepicker({ dateFormat: 'dd-mm-yy' });
+        //    }
 
 
-        }
+        //}
     });
 
-    function setDates() {
-        var d = new Date();
+    //function setDates() {
+    //    var d = new Date();
 
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
+    //    var month = d.getMonth() + 1;
+    //    var day = d.getDate();
+    //    var output = (day < 10 ? '0' : '') + day + '-' +
+    //        (month < 10 ? '0' : '') + month + '-' +
+    //        d.getFullYear();
 
-        $("#DateOfApplication").val(output);
-        $("#SignedOn").val(output);
+    //    $("#DateOfApplication").val(output);
+    //    $("#SignedOn").val(output);
 
-    };
+    //};
 
     // on Zone selection Change
     $("#ZonalOffice").change(function () {
@@ -340,16 +340,24 @@
 
     $("#FormNumber").on("blur", function () {
         //debugger;
-        var formNumber = document.getElementById("FormNumber").value;
-        if (formNumber == "") {
+        var formNumber = document.getElementById("FormNumber").value.trim();
+        if (formNumber == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
             return (false);
         }
-        else {
-            document.getElementById("formNumber_error").innerHTML = "";
+        else if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            return false;
         }
-
-        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+        else if (document.getElementById("FormNumber").value.length < 10) 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (!(document.getElementById("FormNumber").value.match(number))) 
+        {
             document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             return false;
         }
@@ -357,15 +365,6 @@
         {
             document.getElementById("formNumber_error").innerHTML = "";
         }
-
-        if (document.getElementById("FormNumber").value.length < 10) {
-            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-       else 
-       {
-            document.getElementById("formNumber_error").innerHTML = "";
-       }
 
         var formNumberUsed = false;
         localStorage.setItem("FORMNOALREADYUSED", "1");
@@ -574,39 +573,40 @@
         else {
             document.getElementById("regionalOffice_error").innerHTML = "";
         }
-        console.log('Test');
-        if (document.getElementById("FormNumber").value == "") {
+
+        if (document.getElementById("FormNumber").value.trim() == "") 
+        {
             document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
+            ret = false;
+        }
+        else if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (document.getElementById("FormNumber").value.length < 10)
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (!(document.getElementById("FormNumber").value.match(number))) 
+        {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
             ret = false;
         }
         else 
         {
-
-            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-               ret = false;
+            if (localStorage.getItem("FORMNOALREADYUSED") == 0)
+            {
+                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                ret = false;
             }
             else
             {
-                if (document.getElementById("FormNumber").value.length < 10)
-                {
-                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                    ret = false;
-                }
-                else
-                {
-                    if (localStorage.getItem("FORMNOALREADYUSED") == 0)
-                    {
-                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-                        ret = false;
-                    }
-                    else
-                    {
-                        document.getElementById("formNumber_error").innerHTML = "";
-                    }
-                }
+                document.getElementById("formNumber_error").innerHTML = "";
             }
         }
+                
 
         if (document.getElementById("DateOfApplication").value == "") {
             document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
@@ -616,18 +616,18 @@
             document.getElementById("applicationDate_error").innerHTML = "";
         }
 
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
+        //var today = new Date();
+        //today.setHours(0, 0, 0, 0);
 
-        const myArray = document.getElementById("DateOfApplication").value.split("-");
+        //const myArray = document.getElementById("DateOfApplication").value.split("-");
 
-        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-        console.log(today);
-        console.log(varDate);
-        if (varDate > today) {
-            document.getElementById("applicationDate_error").innerHTML = "Application Date: should be less or equal to Today's Date";
-            ret = false;
-        }
+        //var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+        //console.log(today);
+        //console.log(varDate);
+        //if (varDate > today) {
+        //    document.getElementById("applicationDate_error").innerHTML = "Application Date: should be less or equal to Today's Date";
+        //    ret = false;
+        //}
 
         if (document.getElementById("SignedOn").value == "") {
             document.getElementById("SignedOn_error").innerHTML = "Signed On field cannot be left blank";
@@ -637,14 +637,14 @@
             document.getElementById("SignedOn_error").innerHTML = "";
         }
 
-        const myArray1 = document.getElementById("SignedOn").value.split("-");
+        //const myArray1 = document.getElementById("SignedOn").value.split("-");
 
-        var varDate1 = new Date(myArray1[2], (myArray1[1] - 1), myArray1[0], 0, 0, 0, 0);
+        //var varDate1 = new Date(myArray1[2], (myArray1[1] - 1), myArray1[0], 0, 0, 0, 0);
 
-        if (varDate1 > today) {
-            document.getElementById("SignedOn_error").innerHTML = "Signed On: should be less or equal to Today's Date";
-            ret = false;
-        }
+        //if (varDate1 > today) {
+        //    document.getElementById("SignedOn_error").innerHTML = "Signed On: should be less or equal to Today's Date";
+        //    ret = false;
+        //}
 
         if (document.getElementById("CommunicationStateId").value == "0") {
             document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
@@ -763,50 +763,70 @@
             }
         }
 
-        if (document.getElementById("CommunicationDialCode").value.trim() != "") {
+        if (document.getElementById("CommunicationDialCode").value.trim() != "") 
+        {
             var stdCode = document.getElementById("CommunicationDialCode").value.trim();
-            if (stdCode != "") {
+            if (stdCode != "") 
+            {
 
-                if (stdCode.length < 2 || stdCode.length > 4) {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "STD Code length 2 to 4 digits";
+                if (stdCode.length < 2 || stdCode.length > 4) 
+                {
+                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
                     ret = false;
                 }
-                else {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                else 
+                {
+                    if (isNaN(stdCode))
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                    }
                 }
-
             }
-            else {
+            else 
+            {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "";
             }
         }
 
-        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
-             var phno = document.getElementById("CommunicationPhonePart2").value.trim();
-            if (phno != "") {
-                if (phno.charAt(0) == "0") {
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") 
+        {
+            var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+            if (phno != "") 
+            {
+                if (phno.charAt(0) == "0") 
+                {
                     document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
                     ret = false;
                 }
-                else {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
-                }
-
-                if (phno.length < 6 || phno.length > 8) {
-                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number. Min 6 Max 8 digits";
+                else if (phno.length < 6 || phno.length > 8) 
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
                     ret = false;
                 }
-                else {
+                else if (isNaN(phno))
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                    ret = false;
+                }
+                else 
+                {
                     document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
                 }
 
             }
-            else {
+            else 
+            {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
             }
         }
 
-        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") {
+        if (document.getElementById("CommunicationPhonePart2").value.trim() != "") 
+        {
             if(document.getElementById("CommunicationDialCode").value.trim() == "")
             {
                 document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
@@ -814,8 +834,29 @@
             }
             else
             {
-                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Please Enter STD code and Phone number";
-                ret = false;
+                var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+                if (phno != "") 
+                {
+                    if (phno.charAt(0) == "0") 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else if (phno.length < 6 || phno.length > 8) 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else if (isNaN(phno))
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone number";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+                    }
+                }                             
             }
         }
 
@@ -961,7 +1002,7 @@
         document.getElementById("CommunicationPhonePart2").value = "";
         document.getElementById("CommunicationDialCode_error").innerHTML = "";
         document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
-        setDates();
+        //setDates();
         $("#Remarks").html('');
         $("#dvRemarks").html('');
         dvRemarks.style.display = 'none';
@@ -1063,48 +1104,26 @@
         var selectedDate = document.getElementById("DateOfApplication").value.trim();
         console.log(selectedDate);
 
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("DateOfApplication").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("applicationDate_error").innerHTML = "Application Date: should be less or equal to Today's Date";
-                setDates();
-            }
-            else {
-                document.getElementById("applicationDate_error").innerHTML = "";
-            }
+        if (selectedDate == "") {
+            document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
         }
+        else {
+            document.getElementById("applicationDate_error").innerHTML = "";
+        }
+        
 
     });
 
     $("#SignedOn").on("change", function () {
         //debugger;
         var selectedDate = document.getElementById("SignedOn").value.trim();
-        console.log(selectedDate);
-
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("SignedOn").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("SignedOn_error").innerHTML = "Signed On: should be less or equal to Today's Date";
-                setDates();
-            }
-            else {
-                document.getElementById("SignedOn_error").innerHTML = "";
-            }
+        if (selectedDate == "") {
+             document.getElementById("SignedOn_error").innerHTML = "Signed On field cannot be left blank";
         }
+        else {
+            document.getElementById("SignedOn_error").innerHTML = "";
+        }
+        
 
     });
 

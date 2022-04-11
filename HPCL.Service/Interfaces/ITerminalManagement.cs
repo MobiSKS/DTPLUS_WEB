@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
 {
     public  interface ITerminalManagement
     {
-        Task<TerminalInstallationRequestResponse> TerminalInstallationRequest(TerminalManagement entity);
+        Task<TerminalInstallationRequestResponse> TerminalInstallationRequest([FromBody] TerminalManagement entity);
         Task<string> AddJustification(string objInsertTerminal);
         Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId);
         Task<string> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel TerminalManagementRequestModel);

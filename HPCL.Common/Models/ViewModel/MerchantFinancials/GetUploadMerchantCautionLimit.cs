@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.MerchantFinancials
@@ -16,5 +17,10 @@ namespace HPCL.Common.Models.ViewModel.MerchantFinancials
         public string RegionalOffice { get; set; }
         public string SalesArea { get; set; }
         public string ZonalOffice { get; set; }
+        public GetUploadMerchantCautionLimit()
+        {
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+        }
     }
 }

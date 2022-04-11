@@ -89,7 +89,7 @@
 
                                 <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
                                     <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                        <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="document.getElementById('CardSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
+                                        <button class="btn btn_primary" type="submit" id="btnSave" name="submit" style="background-color:#084693;color:white;">SEARCH</button>
                                     </div>
                                     <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                         <button class="btn btn_primary" id="btnCancel" name="cancel" style="background-color:#084693;color:white;">VIEW GENERIC / ATTACHED VEHICLE</button>
@@ -107,7 +107,7 @@
                                     <table id="CardSearchTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>
+                                                 <th>
                                                     Sr. Number
                                                 </th>
                                                 <th>
@@ -582,8 +582,6 @@
 
             document.getElementById("noRecord").style.display = "none";
 
-            $("#CardSearchTbl td").parent().remove();
-
             $('#CardSearchTbl').DataTable().clear().destroy();
 
             var tbl = $('#CardSearchTbl').DataTable({
@@ -602,6 +600,28 @@
 
             for (var i = 0; i < searchGrid.length; i++) {
 
+                var isDts;
+                var expDts;
+                var yrOfReg;
+
+                if(((searchGrid[i].issueDate) == "01/01/0001 00:00:00") || ((searchGrid[i].issueDate) == "01/01/1900 00:00:00")){
+                    isDts = "";
+                }else{
+                    isDts = moment(new Date(searchGrid[i].issueDate)).format('YYYY-MM-DD');
+                }
+
+                if(((searchGrid[i].expiryDate) == "01/01/0001 00:00:00") || ((searchGrid[i].expiryDate) == "01/01/1900 00:00:00")){
+                    expDts = "";
+                }else{
+                    expDts = moment(new Date(searchGrid[i].expiryDate)).format('YYYY-MM-DD');
+                }
+
+                if((searchGrid[i].yearOfRegistration) == '0'){
+                    yrOfReg = '';
+                }else{
+                    yrOfReg = searchGrid[i].yearOfRegistration;
+                }
+
                 var srNumber = "<span class='rowData'>" + (searchGrid[i].srNumber || '') + "</span>";
                 var cardNumber = "<a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (searchGrid[i].cardNumber || '') + "</span></a>";
                 var customerID = "<span class='rowData cusId'>" + (searchGrid[i].customerID || '') + "</span>";
@@ -609,10 +629,10 @@
                 var cardIssueType = (searchGrid[i].cardIssueType || '');
                 var vechileNo = (searchGrid[i].vechileNo || '');
                 var vehicleType = (searchGrid[i].vehicleType || '');
-                var issueDate = (searchGrid[i].issueDate || '');
-                var expiryDate = (searchGrid[i].expiryDate || '');
+                var issueDate = isDts;
+                var expiryDate = expDts;
                 var status = (searchGrid[i].status || '');
-                var yearOfRegistration = (searchGrid[i].yearOfRegistration || '');
+                var yearOfRegistration = yrOfReg;
                 var manufacturer = (searchGrid[i].manufacturer || '');
                 var ownershipType = (searchGrid[i].ownershipType || '');
                 var mobileNumber = "<span class='rowMobNo'>" + (searchGrid[i].mobileNumber || '') + "</span>";
@@ -643,7 +663,7 @@
                 ]).draw();
             }
 
-            $('td:nth-child(17), th:nth-child(17), td:nth-child(18), th:nth-child(18)').hide();
+            tbl.columns([16,17]).visible(false);
 
             document.getElementById('CardSearch').style.display = 'block';
         } else {

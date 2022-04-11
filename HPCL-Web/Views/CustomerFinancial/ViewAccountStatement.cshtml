@@ -17,7 +17,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id="custIdVal" })
@@ -34,7 +34,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Statement Period From<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
                                         </div>
@@ -48,7 +48,7 @@
                                         <label class="font-weight-normal col-md-4 col-12"> Statement Period To </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control date", @type = "date" })
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
                                             @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
                                         </div>
@@ -143,11 +143,7 @@
 <div class="clearfix"></div>
 
 <script>
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
+   
 
     $(document).ready(function () {
          var loginType = '@Context.Session.GetString("LoginType")';
@@ -159,69 +155,10 @@
             $("#custIdVal").attr("readonly", true);
         }
 
-        setDates();
+       // setDates();
     });
 
-    function setDates() {
-        var fromd = new Date();
-        fromd.setMonth(fromd.getMonth());
-        fromd.setDate(fromd.getDate() - 1);
-        var dd = String(fromd.getDate()).padStart(2, '0');
-        var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = fromd.getFullYear();
-
-        fromd = yyyy + '-' + mm + '-' + dd;
-        $("#FromDate").val(fromd);
-        $("#ToDate").val(today);
-
-        $("#fromDate_error").html("");
-        $("#toDate_error").html("");
-    };
-
-    $(".date").on('change', function (e) {
-        var fromD = "";
-        var toD = "";
-        fromD = $("#FromDate").val();
-        toD = $("#ToDate").val();
-        checkDates(fromD, toD);
-        $("#show_Table").html("");
-    });
-
-    function checkDates(fromD, toD) {
-        var dateflag = "Y";
-        var d1 = new Date(fromD);
-        var d2 = new Date(toD);
-
-        if (fromD != "" && toD != "") {
-            var aday = 24 * 60 * 60 * 1000;
-            if (fromD > toD) {
-
-                $("#fromDate_error").attr("style", "display:block");
-                $("#fromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = "N";
-            }
-            //else if ((Math.abs(d2 - d1) / aday) > 31) {
-            //    $("#fromDate_error").attr("style", "display:block");
-            //    $("#fromDate_error").html("Difference between From Date and To Date should not be more than 31 days");
-            //    dateflag = "N";
-            //}
-            else {
-                $("#fromDate_error").html("");
-                $("#fromDate_error").attr("style", "display:none");
-            }
-            if (toD > today) {
-                $("#toDate_error").attr("style", "display:block");
-                $("#toDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = "N";
-            }
-            else {
-                $("#toDate_error").html("");
-                $("#toDate_error").attr("style", "display:none");
-            }
-
-        }
-        return dateflag;
-    }
+  
 
     function resetClick() {
         location.reload();
@@ -243,7 +180,7 @@
             flag = "N";
         }
         if (fromdate != "" && todate != "") {
-            flag = checkDates(fromdate, todate);
+            flag = checkDates("fromDate_error");
         }
 
         if (flag == "N")

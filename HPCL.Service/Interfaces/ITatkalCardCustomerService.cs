@@ -24,5 +24,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewRequestedTatkalCardResponse> GetViewRequestedTatkalCard(int RegionalId);
         Task<GetTatkalCardsResponseModel> GetMapTatkalCardtoCustomer(string customerId);
         Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails);
+        Task<ViewTatkalCardsResponseModel> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity);
     }
 }

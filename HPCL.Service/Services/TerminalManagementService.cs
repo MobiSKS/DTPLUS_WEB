@@ -32,7 +32,7 @@ namespace HPCL.Service.Services
             _commonActionService = commonActionService;
         }
 
-        public async Task<TerminalInstallationRequestResponse> TerminalInstallationRequest(TerminalManagement entity)
+        public async Task<TerminalInstallationRequestResponse> TerminalInstallationRequest([FromBody] TerminalManagement entity)
         {
             var searchBody = new TerminalManagement();
 
@@ -43,6 +43,8 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
+                    ZonalOfficeId = entity.ZonalOfficeId,
+                    RegionalOfficeId = entity.RegionalOfficeId,
                     MerchantId = entity.MerchantId,
                 };
             }
@@ -53,6 +55,8 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
+                    ZonalOfficeId = entity.ZonalOfficeId,
+                    RegionalOfficeId = entity.RegionalOfficeId,
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                 };
             }
@@ -388,17 +392,13 @@ namespace HPCL.Service.Services
             string fromDate = "", toDate = "";
             if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
             {
-                string[] fromDateArr = entity.FromDate.Split("-");
-                string[] toDateArr = entity.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
+                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
             }
             else
             {
-
-                return TerminalApprovalReqResponse;
+                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var reqBody = new TerminalApprovalReq
             {

@@ -211,34 +211,44 @@
         if (regionalId == "" || regionalId == "0") {
             document.getElementById("CustomerRegionID_error").innerHTML = "Region Name is required";
             document.getElementById("MerchantID").value = "";
-            //$("#MerchantID").focus;
             return (false);
         }
         else {
             document.getElementById("CustomerRegionID_error").innerHTML = "";
         }
 
-        var merchantId = document.getElementById("MerchantID").value;
-        if (merchantId == "") {
+        var merchantId = document.getElementById("MerchantID").value.trim();
+        if (merchantId == "") 
+        {
             document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
-            //$("#MerchantID").focus;
             return (false);
         }
-        else {
-            document.getElementById("MerchantID_error").innerHTML = "";
+        else 
+        {
+             if (document.getElementById("MerchantID").value.substring(0, 1) != "3") 
+             {
+                document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                return (false);
+             }
+             else if (document.getElementById("MerchantID").value.length < 10) 
+             {
+                document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                return (false);
+             }
+             else
+             {
+                if(!(document.getElementById('MerchantID').value).match(number))
+                {
+                    document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("MerchantID_error").innerHTML = "";
+                }
+             }
         }
-
-        if (document.getElementById("MerchantID").value.substring(0, 1) != "3") {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantID").focus();
-            return (false);
-        }
-
-        if (document.getElementById("MerchantID").value.length < 10) {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-            document.getElementById("MerchantID").focus();
-            return (false);
-        }
+                     
 
         localStorage.setItem("MERCHANTAVAILABLE", "1");
 
@@ -345,16 +355,16 @@
 
     });
 
-            $("#checkAll").change(function () {
-                //alert(checkAll.checked);
-                //if (!$('input:checkbox').is('checked')) {
-                if (checkAll.checked)
-                {
-                    $('input:checkbox').attr('checked', checkAll.checked);
-                } else {
-                $('input:checkbox').attr('checked', checkAll.checked);
-                }
-            });
+    $("#checkAll").change(function () {
+        //alert(checkAll.checked);
+        //if (!$('input:checkbox').is('checked')) {
+        if (checkAll.checked)
+        {
+            $('input:checkbox').attr('checked', checkAll.checked);
+        } else {
+        $('input:checkbox').attr('checked', checkAll.checked);
+        }
+    });
 
     $("#btnSave").click(function () {
         debugger;
@@ -362,28 +372,55 @@
             document.getElementById("NoofAllocatedCards_error").innerHTML = "Enter No of Cards";
             return false;
         }
-        else {
+        else 
+        {
             document.getElementById("NoofAllocatedCards_error").innerHTML = "";
         }
         var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
-        var merchantId = document.getElementById("MerchantID").value;
+
+        var merchantId = document.getElementById("MerchantID").value.trim();
         if (merchantId == "") {
             document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
-            //$("#MerchantID").focus;
             return (false);
         }
-        else {
-            var msg = "Invalid Merchant ID";
-            if (document.getElementById("MerchantID_error").innerHTML != "") {
-                msg = document.getElementById("MerchantID_error").innerHTML;
+        else 
+        {
+            
+            if (document.getElementById("MerchantID").value.substring(0, 1) != "3") 
+            {
+               document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+               return (false);
             }
+            else if (document.getElementById("MerchantID").value.length < 10) 
+            {
+               document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+               return (false);
+            }
+            else
+            {
+                if(!(document.getElementById('MerchantID').value).match(number))
+                {
+                    document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                    return (false);
+                }
+                else
+                {
+                     var msg = "Invalid Merchant ID";
+                    if (document.getElementById("MerchantID_error").innerHTML != "") 
+                    {
+                        msg = document.getElementById("MerchantID_error").innerHTML;
+                    }
 
-            if (localStorage.getItem("MERCHANTAVAILABLE") == 0) {
-                alert(msg);
-                return (false);
-            }
-            else {
-                document.getElementById("MerchantID_error").innerHTML = "";
+                    if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
+                    {
+                        alert(msg);
+                        return (false);
+                    }
+                    else 
+                    {
+                        document.getElementById("MerchantID_error").innerHTML = "";
+                    }
+                }
             }
         }
 
@@ -450,6 +487,10 @@
             document.getElementById("NoofAllocatedCards_error").innerHTML = "";
         }
 
+    });
+
+     $('#NoofAllocatedCards').on("cut copy paste",function(e) {
+       e.preventDefault();
     });
 
 </script>

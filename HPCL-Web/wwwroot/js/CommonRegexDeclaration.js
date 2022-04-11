@@ -23,4 +23,6 @@ var noSpecialChars = /^[A-Za-z0-9 ]+$/; //Regex for Valid Characters i.e. Alphab
 var atLeastOneAlphabet = /[a-zA-Z]/;   //To check if a string contains at least one letter 
 var secretQuestion = /[0-9a-zA-Z /-]/;
 var mappedDealerName = /^.*\D+.*$/;
+var forVehicleNo = /^[a-zA-Z0-9]*$/;
+var onlyAlphabets = /^[a-zA-Z]+$/
 var notOnlySpecialChars = /^[A-Za-z0-9]{1,50}$/;

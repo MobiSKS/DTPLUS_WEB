@@ -218,23 +218,36 @@
         }
 
         var merchantId = document.getElementById("MerchantID").value;
-        if (merchantId == "") {
+        if (merchantId == "") 
+        {
             document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
             return (false);
         }
-        else {
-            document.getElementById("MerchantID_error").innerHTML = "";
-        }
-
-        if (document.getElementById("MerchantID").value.substring(0, 1) != "3") {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-            return (false);
-        }
-
-        if (document.getElementById("MerchantID").value.length < 10) {
-            document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
-            return (false);
-        }
+        else 
+        {
+            if (document.getElementById("MerchantID").value.substring(0, 1) != "3") 
+            {
+                document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                return (false);
+            }
+            else if (document.getElementById("MerchantID").value.length < 10) 
+            {
+                document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                return (false);
+            }
+            else
+            {
+                if(!(document.getElementById('MerchantID').value).match(number))
+                {
+                    document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("MerchantID_error").innerHTML = "";
+                }
+            }
+        }               
 
         localStorage.setItem("MERCHANTAVAILABLE", "1");
 
@@ -386,20 +399,28 @@
                 }
                 else
                 {
-                    var msg = "Invalid Merchant ID";
-                    if (document.getElementById("MerchantID_error").innerHTML != "") 
+                    if(!(document.getElementById('MerchantID').value).match(number))
                     {
-                        msg = document.getElementById("MerchantID_error").innerHTML;
+                        document.getElementById("MerchantID_error").innerHTML = "Invalid Merchant ID";
+                        return (false);
                     }
+                    else
+                    {
+                        var msg = "Invalid Merchant ID";
+                        if (document.getElementById("MerchantID_error").innerHTML != "") 
+                        {
+                            msg = document.getElementById("MerchantID_error").innerHTML;
+                        }
 
-                    if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
-                    {
-                        alert(msg);
-                        ret=false;
-                    }
-                    else 
-                    {
-                        document.getElementById("MerchantID_error").innerHTML = "";
+                        if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
+                        {
+                            alert(msg);
+                            ret=false;
+                        }
+                        else 
+                        {
+                            document.getElementById("MerchantID_error").innerHTML = "";
+                        }
                     }
                 }
             }    
@@ -461,6 +482,10 @@
         $('#CustomerRegionID').val('0');
         document.getElementById("dvCards").innerHTML = "";
         document.getElementById("NoofAllocatedCards_error").innerHTML = "";
+    });
+
+    $('#NoofAllocatedCards').on("cut copy paste",function(e) {
+      e.preventDefault();
     });
 
     function tableToCSV() {

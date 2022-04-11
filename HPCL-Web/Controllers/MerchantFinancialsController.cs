@@ -47,7 +47,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult ViewUploadMerchantCautionLimit()
         {
-            return View();
+            GetUploadMerchantCautionLimit getUploadMerchantCautionLimit=new GetUploadMerchantCautionLimit();
+            return View(getUploadMerchantCautionLimit);
         }
 
         [HttpPost]
@@ -59,7 +60,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult SettlementDetails()
         {
-            return View();
+            GetMerchantSettlementDetails getMerchantSettlementDetails = new GetMerchantSettlementDetails();
+            return View(getMerchantSettlementDetails);
         }
 
         [HttpPost]
@@ -87,7 +89,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult TransactionDetails()
         {
-            return View();
+            GetTransactionDetails getTransactionDetails = new GetTransactionDetails();
+            return View(getTransactionDetails);
         }
 
         [HttpPost]

@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.CustomerModel
+﻿@model HPCL.Common.Models.ViewModel.Customer.CustomerValidate
 @using HPCL.Common.Resources
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -10,8 +10,9 @@
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        <form method="post" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="Customer" data-ajax-action="ValidateNewCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
-
+        @*<form method="post" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="Customer" data-ajax-action="ValidateNewCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">*@
+         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+         {
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
 
@@ -66,7 +67,7 @@
                                                 <div class="col-md-7 col-12">
                                                     @*@Html.TextBoxFor(m => m.FromDate, new { @type = "date", @class = "form-control date" })*@
                                                     @*@Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @Type = "Date" })*@
-                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
                                                     <span class="error" id="FromDate_error"></span>
                                                 </div>
                                             </div>
@@ -75,7 +76,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">To Date</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control", autocomplete = "off" })
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
                                                     <span class="error" id="ToDate_error"></span>
                                                 </div>
                                             </div>
@@ -89,59 +90,88 @@
                                                     <button class="btn btn_primary" type="submit" id="btnSave" name="btnSave" style="background-color:#084693;color:white;">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" id="=btnCancel" style="background-color:#084693;color:white;" onclick="return ResetFields()">@Label.Reset</button>
+                                                    <button class="btn btn_primary" type="button" id="=btnCancel" style="background-color:#084693;color:white;" onclick="return ResetFields()">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="table-responsive" id="tblResponse" style="display:none">
-                                        <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        S.NO
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Form No")
-                                                    </th>
-                                                    <th>
-                                                        Customer Ref No
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Customer Name")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Customer Address")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Phone No")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Mobile No")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Total Cards")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Created Role Name")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Created By")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Created Date")
-                                                    </th>
-                                                    <th>
-                                                        @Html.DisplayName("Action")
-                                                    </th>
+                                    <div class="table-responsive" id="tblResponse"> @*style="display:none"*@
+                                        @if (Model.SearchCustomerResponseGridLst.Count() > 0)
+                                        {
+                                            <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            S.NO
+                                                        </th>
+                                                        <th>
+                                                            Form No
+                                                        </th>
+                                                        <th>
+                                                            Customer Ref No
+                                                        </th>
+                                                        <th>
+                                                            Customer Name
+                                                        </th>
+                                                        <th>
+                                                            Customer Address
+                                                        </th>
+                                                        <th>
+                                                            Phone No
+                                                        </th>
+                                                        <th>
+                                                            Mobile No
+                                                        </th>
+                                                        <th>
+                                                            Total Cards
+                                                        </th>
+                                                        <th>
+                                                            Created Role Name
+                                                        </th>
+                                                        <th>
+                                                            Created By
+                                                        </th>
+                                                        <th>
+                                                            Created Date
+                                                        </th>
+                                                        <th>
+                                                            Action
+                                                        </th>
 
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                    <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord" style="display:none">
-                                        No Data Found
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="searchMerchantTableBody">
+                                                    @{
+                                                        int y = 0;
+                                                    }
+                                                    @foreach (var item in Model.SearchCustomerResponseGridLst)
+                                                    {
+                                                        y = y + 1;
+                                                        <tr>
+                                                            <td>@y</td>
+                                                            <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber ")' role='tab'><span class='rowCardNo'> @item.FormNumber </span></a></td>
+                                                            <td>@item.CustomerReferenceNo</td>
+                                                            <td>@item.CustomerName</td>
+                                                           <td>@item.CustomerAddress</td>
+                                                            <td>@item.PhoneNo</td>
+                                                            <td>@item.MobileNo</td>
+                                                            <td>@item.TotalCards</td>
+                                                            <td>@item.CreatedRoleName</td>
+                                                            <td>@item.CreatedBy</td>
+                                                            <td>@item.CreatedDate</td>
+                                                            <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Validate</span></a></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord" style="display:none">
+                                                @Model.Message
+                                            </div>
+                                        }
                                     </div>
                                 </div>
 
@@ -958,6 +988,7 @@
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnUpdateCustomer" class="btn btn_primary py-2 px-4" onclick="updateCustomer()">UPDATE CUSTOMER</a>
+                                            @*<button class="btn btn_primary" type="button" id="=btnUpdateCustomer" style="background-color:#084693;color:white;" onclick="return updateCustomer()">UPDATE CUSTOMER</button>*@
                                         </div>
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnUpdateKYCDocuments" class="btn btn_primary py-2 px-4" onclick="updateKYCDocuments()">UPDATE KYC Documents</a>
@@ -979,7 +1010,8 @@
             </div>
             <div style="display:none;">@Html.TextBoxFor(m => m.FormNumberForSearch)</div>
             <div style="display:none;">@Html.TextBoxFor(m => m.CustomerReferenceNoForSearch)</div>
-        </form>
+         }
+        @*</form>*@
     </div>
 </div>
 
@@ -992,119 +1024,93 @@
 
     $(document).ready(function () {
 
-        if (notFoundError == "") {
-            if (fromDate == "") {
-                $("#FromDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#FromDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-
-            if (toDate == "") {
-                $("#ToDate").datepicker({
-                    "setDate": new Date(),
-                    "autoclose": true,
-                    dateFormat: 'dd-mm-yy'
-                });
-            }
-            else {
-                $("#ToDate").datepicker({ dateFormat: 'dd-mm-yy' });
-            }
-            
-        }
-        else {
-            alert("Details not found");
-        }
+      
 
         let tableCustData = sessionStorage.getItem("tableCustData");
 
         console.log(tableCustData, "tbl");
 
-        if (tableCustData != null) {
-            debugger;
-            $('#CustomerSearch').html(tableCustData);
-             $.ajax({
-                url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
-                type: "POST",
-                dataType: "JSON",
-                 success: function (data) {
-                     console.log(data, "updated");
+        //if (tableCustData != null) {
+        //    debugger;
+        //    $('#CustomerSearch').html(tableCustData);
+        //     $.ajax({
+        //        url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
+        //        type: "POST",
+        //        dataType: "JSON",
+        //         success: function (data) {
+        //             console.log(data, "updated");
 
-                     $("#CustomerSearch td").parent().remove();
+        //             $("#CustomerSearch td").parent().remove();
 
-                     $('#CustomerSearch').DataTable().clear().destroy();
+        //             $('#CustomerSearch').DataTable().clear().destroy();
 
-                     var tbll = $('#CustomerSearch').DataTable({
-                         paging: true,
-                         searching: false,
-                         stateSave: true,
-                         "bDestroy": true,
-                         "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                         "autoWidth": false,
-                         "oLanguage": {
-                             "sLengthMenu": "Display _MENU_ Records",
-                             "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                         }
-                     });
+        //             var tbll = $('#CustomerSearch').DataTable({
+        //                 paging: true,
+        //                 searching: false,
+        //                 stateSave: true,
+        //                 "bDestroy": true,
+        //                 "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+        //                 "autoWidth": false,
+        //                 "oLanguage": {
+        //                     "sLengthMenu": "Display _MENU_ Records",
+        //                     "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+        //                 }
+        //             });
 
-                     if (data.updatedSearchList.length > 0) {
-                         document.getElementById('NoRecord').style.display = 'none';
-                         document.getElementById('tblResponse').style.display = 'block';
+        //             if (data.updatedSearchList.length > 0) {
+        //                 document.getElementById('NoRecord').style.display = 'none';
+        //                 document.getElementById('tblResponse').style.display = 'block';
 
-                         for (var i = 0; i < data.updatedSearchList.length; i++) {
+        //                 for (var i = 0; i < data.updatedSearchList.length; i++) {
 
-                             var srNumber = (i + 1);
-                             var s = data.updatedSearchList[i].customerReferenceNo;
-                             var frmno = data.updatedSearchList[i].formNumber;
-                             var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                             var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                             var customerName = (data.updatedSearchList[i].customerName || '')
-                             var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                             var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                             var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                             var totalCards = (data.updatedSearchList[i].totalCards || '');
-                             var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                             var createdBy = (data.updatedSearchList[i].createdBy || '');
-                             var createdDate = (data.updatedSearchList[i].createdDate || '');
-                             var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+        //                     var srNumber = (i + 1);
+        //                     var s = data.updatedSearchList[i].customerReferenceNo;
+        //                     var frmno = data.updatedSearchList[i].formNumber;
+        //                     var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
+        //                     var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
+        //                     var customerName = (data.updatedSearchList[i].customerName || '')
+        //                     var customerAddress = (data.updatedSearchList[i].customerAddress || '');
+        //                     var phoneNo = (data.updatedSearchList[i].phoneNo || '');
+        //                     var mobileNo = (data.updatedSearchList[i].mobileNo || '');
+        //                     var totalCards = (data.updatedSearchList[i].totalCards || '');
+        //                     var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
+        //                     var createdBy = (data.updatedSearchList[i].createdBy || '');
+        //                     var createdDate = (data.updatedSearchList[i].createdDate || '');
+        //                     var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                             tbll.row.add([
-                                 srNumber,
-                                 formNo,
-                                 custRefNo,
-                                 customerName,
-                                 customerAddress,
-                                 phoneNo,
-                                 mobileNo,
-                                 totalCards,
-                                 createdRoleName,
-                                 createdBy,
-                                 createdDate,
-                                 validate
-                             ]).draw();
+        //                     tbll.row.add([
+        //                         srNumber,
+        //                         formNo,
+        //                         custRefNo,
+        //                         customerName,
+        //                         customerAddress,
+        //                         phoneNo,
+        //                         mobileNo,
+        //                         totalCards,
+        //                         createdRoleName,
+        //                         createdBy,
+        //                         createdDate,
+        //                         validate
+        //                     ]).draw();
 
-                             document.getElementById('CustomerSearch').style.display = 'block';
-                         }
-                     }
-                     else {
-                         document.getElementById('tblResponse').style.display = 'none';
-                         document.getElementById('NoRecord').style.display = 'block';
-                     }
+        //                     document.getElementById('CustomerSearch').style.display = 'block';
+        //                 }
+        //             }
+        //             else {
+        //                 document.getElementById('tblResponse').style.display = 'none';
+        //                 document.getElementById('NoRecord').style.display = 'block';
+        //             }
 
-                     sessionStorage.removeItem('tableCustData');
+        //             sessionStorage.removeItem('tableCustData');
 
-                 },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-             });
+        //         },
+        //        error: function (ex) {
+        //            alert('Failed' + ex);
+        //        }
+        //     });
 
 
-        }
+        //}
 
 
     });
@@ -1115,76 +1121,76 @@
     //    $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards</p>");
     //});
 
-    function OnSuccess(data) {
-        $("#CustomerSearch td").parent().remove();
-        debugger;
+    //function OnSuccess(data) {
+    //    $("#CustomerSearch td").parent().remove();
+    //    debugger;
 
-        $("#CustomerSearch td").parent().remove();
+    //    $("#CustomerSearch td").parent().remove();
 
-        $('#CustomerSearch').DataTable().clear().destroy();
+    //    $('#CustomerSearch').DataTable().clear().destroy();
 
-        var tbll = $('#CustomerSearch').DataTable({
-            paging: true,
-            searching: false,
-            stateSave: true,
-            "bDestroy": true,
-            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-            "autoWidth": false,
-            "oLanguage": {
-                "sLengthMenu": "Display _MENU_ Records",
-                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-            }
-        });
+    //    var tbll = $('#CustomerSearch').DataTable({
+    //        paging: true,
+    //        searching: false,
+    //        stateSave: true,
+    //        "bDestroy": true,
+    //        "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+    //        "autoWidth": false,
+    //        "oLanguage": {
+    //            "sLengthMenu": "Display _MENU_ Records",
+    //            "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+    //        }
+    //    });
 
-        if (data.searchList.length > 0) {
-            document.getElementById('NoRecord').style.display = 'none';
-            document.getElementById('tblResponse').style.display = 'block';
+    //    if (data.searchList.length > 0) {
+    //        document.getElementById('NoRecord').style.display = 'none';
+    //        document.getElementById('tblResponse').style.display = 'block';
 
-            for (var i = 0; i < data.searchList.length; i++) {
+    //        for (var i = 0; i < data.searchList.length; i++) {
 
-                var srNumber = (i + 1);
-                var s = data.searchList[i].customerReferenceNo;
-                var frmno = data.searchList[i].formNumber;
-                var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.searchList[i].formNumber || '') + "</span></a>"
-                var custRefNo = (data.searchList[i].customerReferenceNo || '');
-                var customerName = (data.searchList[i].customerName || '')
-                var customerAddress = (data.searchList[i].customerAddress || '');
-                var phoneNo = (data.searchList[i].phoneNo || '');
-                var mobileNo = (data.searchList[i].mobileNo || '');
-                var totalCards = (data.searchList[i].totalCards || '');
-                var createdRoleName = (data.searchList[i].createdRoleName || '');
-                var createdBy = (data.searchList[i].createdBy || '');
-                var createdDate = (data.searchList[i].createdDate || '');
-                var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+    //            var srNumber = (i + 1);
+    //            var s = data.searchList[i].customerReferenceNo;
+    //            var frmno = data.searchList[i].formNumber;
+    //            var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.searchList[i].formNumber || '') + "</span></a>"
+    //            var custRefNo = (data.searchList[i].customerReferenceNo || '');
+    //            var customerName = (data.searchList[i].customerName || '')
+    //            var customerAddress = (data.searchList[i].customerAddress || '');
+    //            var phoneNo = (data.searchList[i].phoneNo || '');
+    //            var mobileNo = (data.searchList[i].mobileNo || '');
+    //            var totalCards = (data.searchList[i].totalCards || '');
+    //            var createdRoleName = (data.searchList[i].createdRoleName || '');
+    //            var createdBy = (data.searchList[i].createdBy || '');
+    //            var createdDate = (data.searchList[i].createdDate || '');
+    //            var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                tbll.row.add([
-                    srNumber,
-                    formNo,
-                    custRefNo,
-                    customerName,
-                    customerAddress,
-                    phoneNo,
-                    mobileNo,
-                    totalCards,
-                    createdRoleName,
-                    createdBy,
-                    createdDate,
-                    validate
-                ]).draw();
+    //            tbll.row.add([
+    //                srNumber,
+    //                formNo,
+    //                custRefNo,
+    //                customerName,
+    //                customerAddress,
+    //                phoneNo,
+    //                mobileNo,
+    //                totalCards,
+    //                createdRoleName,
+    //                createdBy,
+    //                createdDate,
+    //                validate
+    //            ]).draw();
 
-                document.getElementById('CustomerSearch').style.display = 'block';
+    //            document.getElementById('CustomerSearch').style.display = 'block';
 
-            }
-        }
-        else {
-            document.getElementById('tblResponse').style.display = 'none';
-            document.getElementById('NoRecord').style.display = 'block';
-        }
+    //        }
+    //    }
+    //    else {
+    //        document.getElementById('tblResponse').style.display = 'none';
+    //        document.getElementById('NoRecord').style.display = 'block';
+    //    }
 
-        let tableCustData = $('#CustomerSearch').html();
-        sessionStorage.setItem("tableCustData", tableCustData);
+    //    let tableCustData = $('#CustomerSearch').html();
+    //    sessionStorage.setItem("tableCustData", tableCustData);
 
-    }
+    //}
 
     $("#CustomerSearch").on('click', '.editNumber', function (e) {
 
@@ -1214,7 +1220,8 @@
 
     function ViewCustomerDetails(o, referenceNo, frmNumber) {
         debugger;
-        var FormNumber = frmNumber;
+        var FormNumber = frmNumber.trim();
+        referenceNo=referenceNo.trim();
         console.log('Ravi');
         //console.log(row);
         //console.log(col1);
@@ -1233,10 +1240,7 @@
             data: { FormNumber: FormNumber },
             success: function (res) {
                 console.log("customer", res.customer);
-                console.log("servicelist", res.kycDetailsResult);
-
-                //$('#CustomerTypeID').val(res.customer.customerTypeId);
-                //$('#customerSubType').val(res.customer.customerSubtypeId);
+                console.log("kycDetailsResult", res.kycDetailsResult);
 
                 var CustomerType = $('<option value="' + res.customer.customerTypeName + '">' + res.customer.customerTypeName + '</option>');
                 $('#CustomerTypeID').append(CustomerType);
@@ -1408,7 +1412,6 @@
 
                 res.kycDetailsResult
                 //KYC
-                console.log('Ravi');
                 console.log(res.kycDetailsResult);
 
                 if (res.kycDetailsResult.length > 0) {
@@ -1444,8 +1447,9 @@
 
 
 
-                $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Customer Details With Form Number: ( " + FormNumber + ") </p>");
-
+                //$("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Customer Details With Form Number: ( " + FormNumber + ") </p>");
+                var t="Customer Details With Form Number: ( " + FormNumber + ")";
+                $('#ManageCardHeader').text(t);
                 $("#BasicInformationTab").removeClass("disabled");
                 $('#BasicInformationTab').tab('show');
                 $("#AddressTab").removeClass("disabled");
@@ -1460,13 +1464,138 @@
     };
 
     function ResetFields() {
-        debugger;
+        //debugger;
         $("#FormNumber").val('');
         $("#FromDate").val('');
         $("#ToDate").val('');
         $("#CustomerRegionID").val('0');
-        document.getElementById('NoRecord').style.display = 'none';
+        //document.getElementById('NoRecord').style.display = 'none';
         document.getElementById('tblResponse').style.display = 'none';
+        document.getElementById("formNumber_error").innerHTML = "";
+        document.getElementById("FromDate_error").innerHTML = "";
+        $("#ManageCardHeader").text("Validate New Customer");
+        sessionStorage.removeItem("tableCustData");
+        //location.reload();
+        $("#FormNumberForSearch").val('');
+        $("#CustomerReferenceNoForSearch").val('');
+
+        $("#CustomerTypeID").empty();
+        $("#CustomerSubTypeID").empty();
+
+        $('#CustomerDateOfApplication').val('');
+
+        $('#CustomerSalesAreaID').empty();
+
+        $('#CustomerZonalOfficeID').empty();
+
+        $('#CustomerRegion_ID').empty();
+
+        $('#TypeOfCustomerID').empty();
+
+        $('#TierOfCustomerID').empty();
+
+
+        $('#IndividualOrgNameTitle').empty();
+
+        $('#IndividualOrgName').val('');
+
+        $('#CustomerNameOnCard').val('');
+
+        $('#CustomerTbentityID').empty();
+
+        $('#CustomerResidenceStatus').empty();
+
+        $('#CustomerIncomeTaxPan').val('');
+        $('#PanCardRemarks').val('');
+
+        //Address Tab
+        $('#CommunicationAddress1').val('');
+        $('#CommunicationAddress2').val('');
+        $('#CommunicationAddress3').val('');
+        $('#CommunicationLocation').val('');
+        $('#CommunicationCity').val('');
+        $('#CommunicationPinCode').val('');
+
+        $('#CommunicationStateID').empty();
+
+        $('#CommunicationDistrictId').empty();
+
+        $('#CommunicationDialCode').val('');
+        $('#CommunicationPhoneNo').val('');
+        $('#CommunicationFaxCode').val('');
+        $('#CommunicationFax').val('');
+        $('#CommunicationMobileNumber').val('');
+        $('#CommunicationEmail').val('');
+
+
+        $('#PerOrRegAddress1').val('');
+        $('#PerOrRegAddress2').val('');
+        $('#PerOrRegAddress3').val('');
+        $('#PerOrRegAddressLocation').val('');
+        $('#PerOrRegAddressCity').val('');
+        $('#PerOrRegAddressPinCode').val('');
+
+        $('#PerOrRegAddressStateID').empty();
+
+        $('#PerOrRegAddressDistrict').empty();
+
+        $('#PerOrRegAddressDialCode').val('');
+        $('#PerOrRegAddressPhoneNumber').val('');
+        $('#PermanentFaxCode').val('');
+        $('#PermanentFax').val('');
+
+        //Official Details Tab
+        $('#KeyOffTitle').empty();
+
+        $('#KeyOffFirstName').val('');
+        $('#KeyOffLastName').val('');
+        $('#KeyOffDesignation').val('');
+        $('#KeyOffPhoneCode').val('');
+        $('#KeyOffPhoneNumber').val('');
+        $('#KeyOffMobileNumber').val('');
+        $('#KeyOffIndividualInitials').val('');
+        $('#KeyOffMiddleName').val('');
+        $('#KeyOffFaxCode').val('');
+        $('#KeyOffFax').val('');
+        $('#KeyOffEmail').val('');
+
+               
+        $('#KeyOfficialSecretQuestion').empty();
+        $('#KeyOfficialSecretAnswer').val('');
+        $('#FleetSizeNoOfVechileOwnedHCV').val('');
+        $('#FleetSizeNoOfVechileOwnedLCV').val('');
+        $('#FleetSizeNoOfVechileOwnedMUVSUV').val('');
+        $('#FleetSizeNoOfVechileOwnedCarJeep').val('');
+        $('#CustomerTypeOfFleetID').empty();
+
+
+        $('#KeyOfficialCardAppliedFor').val('');
+        $('#KeyOfficialApproxMonthlySpendsonVechile1').val('');
+        $('#KeyOfficialApproxMonthlySpendsonVechile2').val('');
+        $('#AreaOfOperation').val('');
+        $('#KeyOfficialDOB').val('');
+        $('#KeyOffDateOfAnniversary').val('');
+        $('#CustomerReferenceNoForSearch').val('');
+            
+        //KYC
+        $('#IdProofType').empty();
+        $('#IdProofDocumentNo').val("");
+
+        $('#IdProofFront').attr('src', null);
+        $('#IdProofBack').attr('src', null);
+        $('#AddressProofBack').attr('src', null);
+        $('#AddressProofFront').attr('src', null);
+
+        $('#AddressProofType').empty();
+        $('#AddressProofDocumentNo').val("");
+        $('#Remarks').val("");
+        document.getElementById('Remarks_error').innerHTML='';
+
+        $("#BasicInformationTab").addClass("disabled");
+        $("#AddressTab").addClass("disabled");
+        $("#OfficialDetailsTab").addClass("disabled");
+        $("#KYCDetailsTab").addClass("disabled");
+
         return false;
     };
 
@@ -1486,13 +1615,10 @@
         console.log(approveReject);
         var custRefNo = document.getElementById("CustomerReferenceNoForSearch").value;
         if (custRefNo == "") {
-            document.getElementById("Remarks_error").innerHTML = "Select Customer To Approve/Reject";
+            alert("Please select Customer To Approve/Reject");
             return (false);
         }
-        else {
-            document.getElementById("Remarks_error").innerHTML = "";
-        }
-
+        
         var remarks = document.getElementById("Remarks").value;
         if (remarks == "") {
             document.getElementById("Remarks_error").innerHTML = "Please enter Remarks";
@@ -1517,84 +1643,84 @@
 
                 console.log(tableCustData, "tbl");
 
-                if (tableCustData != null) {
-                    debugger;
-                    $('#CustomerSearch').html(tableCustData);
-                    $.ajax({
-                        url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
-                        type: "POST",
-                        dataType: "JSON",
-                        success: function (data) {
-                            console.log(data, "updated");
-                            $("#CustomerSearch td").parent().remove();
+                //if (tableCustData != null) {
+                //    debugger;
+                //    $('#CustomerSearch').html(tableCustData);
+                //    $.ajax({
+                //        url: "@Url.Action("ReloadUpdatedGrid", "Customer")",
+                //        type: "POST",
+                //        dataType: "JSON",
+                //        success: function (data) {
+                //            console.log(data, "updated");
+                //            $("#CustomerSearch td").parent().remove();
 
-                            $('#CustomerSearch').DataTable().clear().destroy();
+                //            $('#CustomerSearch').DataTable().clear().destroy();
 
-                            var tbll = $('#CustomerSearch').DataTable({
-                                paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                }
-                            });
+                //            var tbll = $('#CustomerSearch').DataTable({
+                //                paging: true,
+                //                searching: false,
+                //                stateSave: true,
+                //                "bDestroy": true,
+                //                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                //                "autoWidth": false,
+                //                "oLanguage": {
+                //                    "sLengthMenu": "Display _MENU_ Records",
+                //                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                //                }
+                //            });
 
-                            if (data.updatedSearchList.length > 0) {
-                                document.getElementById('NoRecord').style.display = 'none';
-                                document.getElementById('tblResponse').style.display = 'block';
+                //            if (data.updatedSearchList.length > 0) {
+                //                document.getElementById('NoRecord').style.display = 'none';
+                //                document.getElementById('tblResponse').style.display = 'block';
 
-                                for (var i = 0; i < data.updatedSearchList.length; i++) {
+                //                for (var i = 0; i < data.updatedSearchList.length; i++) {
 
-                                    var srNumber = (i + 1);
-                                    var s = data.updatedSearchList[i].customerReferenceNo;
-                                    var frmno = data.updatedSearchList[i].formNumber;
-                                    var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
-                                    var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
-                                    var customerName = (data.updatedSearchList[i].customerName || '')
-                                    var customerAddress = (data.updatedSearchList[i].customerAddress || '');
-                                    var phoneNo = (data.updatedSearchList[i].phoneNo || '');
-                                    var mobileNo = (data.updatedSearchList[i].mobileNo || '');
-                                    var totalCards = (data.updatedSearchList[i].totalCards || '');
-                                    var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
-                                    var createdBy = (data.updatedSearchList[i].createdBy || '');
-                                    var createdDate = (data.updatedSearchList[i].createdDate || '');
-                                    var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
+                //                    var srNumber = (i + 1);
+                //                    var s = data.updatedSearchList[i].customerReferenceNo;
+                //                    var frmno = data.updatedSearchList[i].formNumber;
+                //                    var formNo = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>" + (data.updatedSearchList[i].formNumber || '') + "</span></a>"
+                //                    var custRefNo = (data.updatedSearchList[i].customerReferenceNo || '');
+                //                    var customerName = (data.updatedSearchList[i].customerName || '')
+                //                    var customerAddress = (data.updatedSearchList[i].customerAddress || '');
+                //                    var phoneNo = (data.updatedSearchList[i].phoneNo || '');
+                //                    var mobileNo = (data.updatedSearchList[i].mobileNo || '');
+                //                    var totalCards = (data.updatedSearchList[i].totalCards || '');
+                //                    var createdRoleName = (data.updatedSearchList[i].createdRoleName || '');
+                //                    var createdBy = (data.updatedSearchList[i].createdBy || '');
+                //                    var createdDate = (data.updatedSearchList[i].createdDate || '');
+                //                    var validate = "<a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," + s + "," + frmno + ")' role='tab'><span class='rowCardNo'>Validate</span></a>"
 
-                                    tbll.row.add([
-                                        srNumber,
-                                        formNo,
-                                        custRefNo,
-                                        customerName,
-                                        customerAddress,
-                                        phoneNo,
-                                        mobileNo,
-                                        totalCards,
-                                        createdRoleName,
-                                        createdBy,
-                                        createdDate,
-                                        validate
-                                    ]).draw();
+                //                    tbll.row.add([
+                //                        srNumber,
+                //                        formNo,
+                //                        custRefNo,
+                //                        customerName,
+                //                        customerAddress,
+                //                        phoneNo,
+                //                        mobileNo,
+                //                        totalCards,
+                //                        createdRoleName,
+                //                        createdBy,
+                //                        createdDate,
+                //                        validate
+                //                    ]).draw();
 
-                                    document.getElementById('CustomerSearch').style.display = 'block';
-                                }
-                            }
-                            else {
-                                document.getElementById('tblResponse').style.display = 'none';
-                                document.getElementById('NoRecord').style.display = 'block';
-                            }
+                //                    document.getElementById('CustomerSearch').style.display = 'block';
+                //                }
+                //            }
+                //            else {
+                //                document.getElementById('tblResponse').style.display = 'none';
+                //                document.getElementById('NoRecord').style.display = 'block';
+                //            }
 
-                            sessionStorage.removeItem('tableCustData');
+                //            sessionStorage.removeItem('tableCustData');
 
-                        },
-                        error: function (ex) {
-                            alert('Failed' + ex);
-                        }
-                    });
-                }
+                //        },
+                //        error: function (ex) {
+                //            alert('Failed' + ex);
+                //        }
+                //    });
+                //}
 
                 $("#reason").html(res);
                 $(".toBeHiddenOnSuccess").hide();
@@ -1614,18 +1740,20 @@
         if (document.getElementById("FormNumber").value.trim() != "") {
 
             if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-                document.getElementById("FormNumber").value = "";
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
                 //document.getElementById("FormNumber").focus();
                 return false;
             }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
+            else if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
             }
-
-            if (document.getElementById("FormNumber").value.length < 10) {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Form Number limit Min-Max 10 digits";
-                document.getElementById("FormNumber").value = "";
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
                 //document.getElementById("FormNumber").focus();
                 return false;
             }
@@ -1633,167 +1761,88 @@
                 document.getElementById("formNumber_error").innerHTML = "";
             }
         }
+        else{
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
     });
 
-    function updateCustomer() {
+    function updateCustomer() 
+    {
         console.log($('#FormNumberForSearch').val());
         var formNo = $('#FormNumberForSearch').val();
-        var link = '@Url.Action("UpdateCustomer", "Customer", new { FormNumber = "-1" })';
-        link = link.replace("-1", formNo);
-        window.location.href = link;
+        console.log('Inside updateCustomer()');
+        console.log(formNo);
+        if(formNo!="")
+        {
+            var link = '@Url.Action("UpdateCustomer", "Customer", new { FormNumber = "-1" })';
+            link = link.replace("-1", formNo);
+            window.location.href = link;
+            return true;
+        }
+        else
+        {
+            alert("Please select customer");
+            return false;
+        }
     };
-    function updateKYCDocuments() {
+    function updateKYCDocuments() 
+    {
         console.log($('#FormNumberForSearch').val());
         var formNo = $('#FormNumberForSearch').val();
         var customerReferenceNoForSearch = $('#CustomerReferenceNoForSearch').val();
-
-        var link = '@Html.Raw(Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "-1", FormNumber="-2" }))';
-        link = link.replace("-1", customerReferenceNoForSearch);
-        link = link.replace("-2", formNo);
-        console.log(link);
-        window.location.href = link;
+        console.log('Inside updateKYCDocuments()');
+        console.log(formNo);
+        if(formNo!="")
+        {
+            var link = '@Html.Raw(Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "-1", FormNumber="-2" }))';
+            link = link.replace("-1", customerReferenceNoForSearch);
+            link = link.replace("-2", formNo);
+            console.log(link);
+            window.location.href = link;
+        }
+        else
+        {
+            alert("Please select customer");
+        }
     };
 
-    $(".date").on('change', function (e) {
-
-        var applicationDate = $("#FromDate").val();
-        console.log(applicationDate);
-        console.log(today);
-        if (applicationDate != "") {
-            if (applicationDate > today) {
-                console.log('true');
-                $("#FromDate_error").attr("style", "display:block");
-                $("#FromDate_error").html("Date selection should be less or equal to Today's date");
-                $("#FromDate").val(today);
-            }
-            else {
-                console.log('false');
-                $("#FromDate_error").html("");
-                $("#FromDate_error").attr("style", "display:none");
-            }
-        }
-    });
-
-    $("#FromDate").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("FromDate").value.trim();
-        console.log(selectedDate);
-
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("FromDate").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("FromDate_error").innerHTML = "From Date cannot be a future date";
-                setFromDate();
-            }
-            else {
-                document.getElementById("FromDate_error").innerHTML = "";
-            }
-        }
-
-    });
-
-    $("#ToDate").on("change", function () {
-        //debugger;
-        var selectedDate = document.getElementById("ToDate").value.trim();
-        console.log(selectedDate);
-
-        if (selectedDate != "") {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const myArray = document.getElementById("ToDate").value.split("-");
-
-            var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
-            console.log(today);
-            console.log(varDate);
-            if (varDate > today) {
-                document.getElementById("ToDate_error").innerHTML = "To Date cannot be a future date";
-                setToDate();
-            }
-            else {
-                document.getElementById("ToDate_error").innerHTML = "";
-            }
-        }
-
-    });
-
-    function setFromDate() {
-        var d = new Date();
-
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-        $("#FromDate").val(output);
-
-    };
-
-    function setToDate() {
-        var d = new Date();
-
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        var output = (day < 10 ? '0' : '') + day + '-' +
-            (month < 10 ? '0' : '') + month + '-' +
-            d.getFullYear();
-
-        $("#ToDate").val(output);
-
-    };
 
     $("#btnSave").on("click", (function (e) {
-        debugger;
         var fromdate = $("#FromDate").val();
         var todate = $("#ToDate").val();
 
-        var flag = true;
-
+        var flag = "Y";
+        debugger;
         if (fromdate != "" && todate != "") {
-            flag = checkDates();
+            flag = checkDates("FromDate_error");
         }
+        if (document.getElementById("FormNumber").value.trim() != "") {
 
-        if (flag == false)
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag="N";
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+        if (flag == "N")
             e.preventDefault();
 
     }));
 
-    function checkDates() {
-        var fromD = $("#FromDate").val();
-        var toD = $("#ToDate").val();
-        var dateflag = true;
-        if (fromD != "" && toD != "") {
-            if (fromD > toD) {
-
-                $("#FromDate_error").html("'From Date' should be less or equal to 'To date'");
-                dateflag = false;
-            }
-            else {
-                $("#FromDate_error").html("");
-            }
-        }
-        console.log(toD);
-        console.log(today);
-        if (toD != "") {
-            if (toD > today) {
-                $("#ToDate_error").html("To Date should be less or equal to Today's date");
-                dateflag = false;
-            }
-            else {
-                $("#ToDate_error").html("");
-            }
-        }
-
-        return dateflag;
-    }
+  
 
 </script>
 <style>

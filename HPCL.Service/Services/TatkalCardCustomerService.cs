@@ -126,23 +126,8 @@ namespace HPCL.Service.Services
         {
             TatkalViewRequestModel custModel = new TatkalViewRequestModel();
             custModel.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
-
-            string fromDate = "", toDate = "";
-            if (!string.IsNullOrEmpty(custModel.FromDate) && !string.IsNullOrEmpty(custModel.FromDate))
-            {
-                string[] fromDateArr = custModel.FromDate.Split("-");
-                string[] toDateArr = custModel.ToDate.Split("-");
-
-                fromDate = fromDateArr[2] + "-" + fromDateArr[1] + "-" + fromDateArr[0];
-                toDate = toDateArr[2] + "-" + toDateArr[1] + "-" + toDateArr[0];
-
-            }
-            else
-            {
-
-                return custModel;
-            }
-
+            custModel.FromDate = DateTime.Now.ToString("dd-MM-yyyy");
+            custModel.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             return custModel;
 
         }
@@ -165,14 +150,15 @@ namespace HPCL.Service.Services
             string customerDateOfApplication = "";
             string signedOn = "";
 
-            string[] custDateOfApplication = customerModel.DateOfApplication.Split("-");
+            //string[] custDateOfApplication = customerModel.DateOfApplication.Split("-");
 
-            customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
-
+            //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
+            customerDateOfApplication = await _commonActionService.changeDateFormat(customerModel.DateOfApplication);
             if (!string.IsNullOrEmpty(customerModel.SignedOn))
             {
-                string[] dateSignedOn = customerModel.SignedOn.Split("-");
-                signedOn = dateSignedOn[2] + "-" + dateSignedOn[1] + "-" + dateSignedOn[0];
+                //string[] dateSignedOn = customerModel.SignedOn.Split("-");
+                //signedOn = dateSignedOn[2] + "-" + dateSignedOn[1] + "-" + dateSignedOn[0];
+                signedOn = await _commonActionService.changeDateFormat(customerModel.SignedOn);
             }
 
             customerModel.DateOfApplication = customerDateOfApplication;
@@ -296,8 +282,36 @@ namespace HPCL.Service.Services
                 return mapResponseObj["Message"].ToString();
             }
         }
+        public async Task<ViewTatkalCardsResponseModel> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity)
+        {
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                entity.FromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                entity.ToDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            var searchBody = new ViewTatkalCardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalOfficeID = entity.ZonalOfficeID=="0"?"":entity.ZonalOfficeID,
+                RegionalOfficeID = entity.RegionalOfficeID=="0"?"":entity.RegionalOfficeID,
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate,
+                StatusId =entity.StatusId
+
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.viewtatkalcards);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ViewTatkalCardsResponseModel ViewTatkalCardsResponseModel  = obj.ToObject<ViewTatkalCardsResponseModel>();
+
+            return ViewTatkalCardsResponseModel;
+        }
+
 
     }
 
-    
+
 }

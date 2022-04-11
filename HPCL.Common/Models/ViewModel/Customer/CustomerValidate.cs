@@ -1,18 +1,19 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HPCL.Common.Models.ViewModel.Officers;
-using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ViewModel.Customer;
+﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Officers;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace HPCL.Common.Models
+namespace HPCL.Common.Models.ViewModel.Customer
 {
-    public class CustomerModel : BaseEntity
+    public class CustomerValidate : BaseEntity
     {
-        public CustomerModel()
+        public CustomerValidate()
         {
             CustomerTypeMdl = new List<CustomerTypeModel>();
             CustomerTypeMdl.Add(new CustomerTypeModel
@@ -47,7 +48,6 @@ namespace HPCL.Common.Models
                 StateID = 0,
                 StateName = "Select State"
             });
-            //CustomerDistrictMdl = new List<CustomerDistrictModel>();
             CustomerTbentityMdl = new List<CustomerTbentityModel>();
             CustomerTbentityMdl.Add(new CustomerTbentityModel
             {
@@ -97,7 +97,9 @@ namespace HPCL.Common.Models
                 districtID = 0,
                 districtName = "Select District"
             });
-            CustomerDateOfApplication= DateTime.Now.ToString("dd-MM-yyyy");
+            CustomerDateOfApplication = DateTime.Now.ToString("dd-MM-yyyy");
+
+            SearchCustomerResponseGridLst = new List<SearchCustomerResponseGrid>();
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -111,58 +113,58 @@ namespace HPCL.Common.Models
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public virtual List<SalesAreaModel> SalesAreaMdl { get; set; }
-
+        public virtual List<SearchCustomerResponseGrid> SearchCustomerResponseGridLst { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
         public virtual List<OfficerDistrictModel> PerOrRegAddressDistrictMdl { get; set; }
 
-        [Required(ErrorMessage = "Customer Type is Required")]
+        //[Required(ErrorMessage = "Customer Type is Required")]
         public int CustomerTypeID { get; set; }
-        [Required(ErrorMessage = "Zonal Office is Required")]
+        //[Required(ErrorMessage = "Zonal Office is Required")]
         public int CustomerZonalOfficeID { get; set; }
-        [Required(ErrorMessage = "Region  is Required")]
+        //[Required(ErrorMessage = "Region  is Required")]
         public int CustomerRegionID { get; set; }
-        [Required(ErrorMessage = "Sales Area  is Required")]
+        //[Required(ErrorMessage = "Sales Area  is Required")]
         public string SalesArea { get; set; }
-        [Required(ErrorMessage = "Customer Sub Type is Required")]
+        //[Required(ErrorMessage = "Customer Sub Type is Required")]
         public int CustomerSubTypeID { get; set; }
 
-        [Required(ErrorMessage = "Income Tax Pan is Required")]
+        //[Required(ErrorMessage = "Income Tax Pan is Required")]
         public string CustomerIncomeTaxPan { get; set; }
 
-        [Required(ErrorMessage = "Type of Business Entity is Required")]
+        //[Required(ErrorMessage = "Type of Business Entity is Required")]
         public int CustomerTbentityID { get; set; }
 
         //[Required(ErrorMessage = "Date of application is Required")]
         public string CustomerDateOfApplication { get; set; }
 
-        [Required(ErrorMessage = "Customer Name on Card is Required")]
+        //[Required(ErrorMessage = "Customer Name on Card is Required")]
         public string CustomerNameOnCard { get; set; }
 
-        [Required(ErrorMessage = "Customer Residence Status is Required")]
+        //[Required(ErrorMessage = "Customer Residence Status is Required")]
         public string CustomerResidenceStatus { get; set; }
-        [Required(ErrorMessage = "Individual Organisation Title is Required")]
+        //[Required(ErrorMessage = "Individual Organisation Title is Required")]
         public string IndividualOrgNameTitle { get; set; }
-        [Required(ErrorMessage = "Individual Organisation Name is Required")]
+        //[Required(ErrorMessage = "Individual Organisation Name is Required")]
 
         public string IndividualOrgName { get; set; }
-        [Required(ErrorMessage = "Address field cannot be left blank")]
+        //[Required(ErrorMessage = "Address field cannot be left blank")]
         public string CommunicationAddress1 { get; set; }
 
-        [Required(ErrorMessage = "Address field cannot be left blank")]
+        //[Required(ErrorMessage = "Address field cannot be left blank")]
         public string CommunicationAddress2 { get; set; }
         public string CommunicationAddress3 { get; set; }
         public string CommunicationLocation { get; set; }
 
-        [Required(ErrorMessage = "City is Required under communication Address")]
+        //[Required(ErrorMessage = "City is Required under communication Address")]
         public string CommunicationCity { get; set; }
-        [Required(ErrorMessage = "Pin code is Required under communication Address")]
+        //[Required(ErrorMessage = "Pin code is Required under communication Address")]
         public string CommunicationPinCode { get; set; }
-        [Required(ErrorMessage = "State is Required under communication Address")]
+        //[Required(ErrorMessage = "State is Required under communication Address")]
         public int CommunicationStateID { get; set; }
 
-        [Required(ErrorMessage = "State is Required under communication Address")]
+        //[Required(ErrorMessage = "State is Required under communication Address")]
         public string CommunicationState { get; set; }
-        [Required(ErrorMessage = "District is Required under communication Address")]
+        //[Required(ErrorMessage = "District is Required under communication Address")]
         public string CommunicationDistrictId { get; set; }
         public bool IsSameAsCommAddress { get; set; }
 
@@ -173,40 +175,40 @@ namespace HPCL.Common.Models
         //[Required(ErrorMessage = "Dial code is Required under communication Address")]
         public string CommunicationDialCode { get; set; }
         //[Required(ErrorMessage = "Phone Number is Required under communication Address")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string CommunicationPhoneNo { get; set; }
         public string CommunicationFaxCode { get; set; }
         public string CommunicationFax { get; set; }
 
-        [Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        //[Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string CommunicationMobileNumber { get; set; }
 
 
-        [Required(ErrorMessage = "E-mail is Required under communication Address")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        //[Required(ErrorMessage = "E-mail is Required under communication Address")]
+        //[EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string CommunicationEmail { get; set; }
 
 
-        [Required(ErrorMessage = "Address field cannot be left blank")]
+        //[Required(ErrorMessage = "Address field cannot be left blank")]
         public string PerOrRegAddress1 { get; set; }
-        [Required(ErrorMessage = "Address field cannot be left blank")]
+        //[Required(ErrorMessage = "Address field cannot be left blank")]
         public string PerOrRegAddress2 { get; set; }
         //[Required(ErrorMessage = "Address 3 is Required in Permanent/Registered  Address")]
         public string PerOrRegAddress3 { get; set; }
 
         public string PerOrRegAddressLocation { get; set; }
 
-        [Required(ErrorMessage = "City is Required under Permanent/Registered Address")]
+        //[Required(ErrorMessage = "City is Required under Permanent/Registered Address")]
         public string PerOrRegAddressCity { get; set; }
-        [Required(ErrorMessage = "Pin code is Required under Permanent/Registered Address")]
+        //[Required(ErrorMessage = "Pin code is Required under Permanent/Registered Address")]
         public string PerOrRegAddressPinCode { get; set; }
-        [Required(ErrorMessage = "State is Required under communication Address")]
+        //[Required(ErrorMessage = "State is Required under communication Address")]
         public int PerOrRegAddressStateID { get; set; }
-        [Required(ErrorMessage = "State is Required under Permanent/Registered Address")]
+        //[Required(ErrorMessage = "State is Required under Permanent/Registered Address")]
 
         public string PerOrRegAddressState { get; set; }
-        [Required(ErrorMessage = "District is Required under Permanent/Registered Address")]
+        //[Required(ErrorMessage = "District is Required under Permanent/Registered Address")]
         public string PerOrRegAddressDistrict { get; set; }
 
         public int PermanentDistrictId { get; set; }
@@ -219,22 +221,18 @@ namespace HPCL.Common.Models
         public string PermanentFaxCode { get; set; }
         public string PermanentFax { get; set; }
 
-
-
-
-
         // Key Office Details
 
-        [Required(ErrorMessage = "Title is Required")]
+        //[Required(ErrorMessage = "Title is Required")]
         public string KeyOffTitle { get; set; }
 
-        [Required(ErrorMessage = "First Name is Required")]
+        //[Required(ErrorMessage = "First Name is Required")]
         public string KeyOffFirstName { get; set; }
 
         public string KeyOffIndividualInitials { get; set; }
         public string KeyOffLastName { get; set; }
         public string KeyOffMiddleName { get; set; }
-        [Required(ErrorMessage = "Designation is Required")]
+        //[Required(ErrorMessage = "Designation is Required")]
         public string KeyOffDesignation { get; set; }
         public string KeyOffFaxCode { get; set; }
         public string KeyOffFax { get; set; }
@@ -247,11 +245,11 @@ namespace HPCL.Common.Models
         //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string KeyOffPhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
-        [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        //[Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
         public string KeyOffMobileNumber { get; set; }
 
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        //[EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string KeyOffEmail { get; set; }
         public string KeyOffDateOfAnniversary { get; set; }
         public string KeyOfficialDOB { get; set; }
@@ -280,7 +278,7 @@ namespace HPCL.Common.Models
 
         public int TierOfCustomerID { get; set; }
 
-        [Required(ErrorMessage = "Sales Area is Required")]
+        //[Required(ErrorMessage = "Sales Area is Required")]
         public int CustomerSalesAreaID { get; set; }
 
         public string FormNumber { get; set; }
@@ -291,6 +289,7 @@ namespace HPCL.Common.Models
         public string FormNumberForSearch { get; set; }
         public string CustomerReferenceNoForSearch { get; set; }
         public string Remarks { get; set; }
+        public string Message { get; set; }
 
         public string IdProofType { get; set; }
         public string IdProofDocumentNo { get; set; }
@@ -310,6 +309,5 @@ namespace HPCL.Common.Models
 
     }
 
-    
 
 }

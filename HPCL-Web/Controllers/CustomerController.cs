@@ -113,7 +113,6 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
         {
-
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
 
@@ -149,30 +148,14 @@ namespace HPCL_Web.Controllers
 
             return Json(customerCardInfo);
         }
-
+        
         [HttpPost]
-        public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
+        public async Task<IActionResult> AddCardDetails([FromBody]CustomerCardInfo customerCardInfo)
         {
-            CustomerCardInfo cardInfo = new CustomerCardInfo();
-            cardInfo = await _customerService.AddCardDetails(customerCardInfo);
+            var result = await _customerService.AddCardDetails(customerCardInfo);
 
-            if (cardInfo.StatusCode == 1000)
-            {
-                ViewBag.Message = "Customer card details saved Successfully";
-                customerCardInfo.Status = cardInfo.Status;
-                customerCardInfo.StatusCode = cardInfo.StatusCode;
-                return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = cardInfo.CustomerReferenceNo });
-                //ModelState.Clear();
-            }
-            else
-            {
-                ViewBag.Message = cardInfo.Message;
-                cardInfo.Remarks = cardInfo.Message;
-            }
-
-            return View(customerCardInfo);
+            return Json(result);
         }
-
 
         public async Task<IActionResult> UploadDoc(string customerReferenceNo, string FormNumber)
         {
@@ -228,23 +211,13 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> ValidateNewCustomer()
+        public async Task<IActionResult> ValidateNewCustomer(CustomerValidate entity)
         {
-            CustomerModel customerModel = new CustomerModel();
-            customerModel = await _customerService.ValidateNewCustomer();
+            var modals = await _customerService.ValidateNewCustomer(entity);
 
-            return View(customerModel);
+            return View(modals);
         }
-
-        [HttpPost]
-        public async Task<JsonResult> ValidateNewCustomer(CustomerModel entity)
-        {
-            List<SearchCustomerResponseGrid> searchList = new List<SearchCustomerResponseGrid>();
-            searchList = await _customerService.ValidateNewCustomer(entity);
-
-            return Json(new { searchList = searchList });
-        }
-
+        
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
@@ -255,6 +228,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewCustomerDetails(string FormNumber)
         {
+            if (!string.IsNullOrEmpty(FormNumber))
+                FormNumber = FormNumber.Trim();
+
             JObject obj = await _customerService.ViewCustomerDetails(FormNumber);
 
             var searchRes = obj["Data"].Value<JObject>();
