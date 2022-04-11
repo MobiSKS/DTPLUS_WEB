@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2" id="commAddressForm">
                         <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address<br />(if different from Retail Outlet Address)</p>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
                             <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
                                 <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
                                     <div class="form-group d-flex align-items-center flex-wrap w-100">
@@ -131,7 +131,7 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Mobile<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
                                                 <span class="error" id="mobile_error"></span>
                                             </div>
@@ -190,7 +190,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap w-100">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Pin</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Pin, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.Pin, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             @Html.ValidationMessageFor(m => m.Pin, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -200,7 +200,7 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Phone</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             </div>
                                             <span class="error" id="phone_error"></span>
                                         </div>
@@ -211,7 +211,7 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Fax</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Fax, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.Fax, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             </div>
                                             <span class="error" id="fax_error"></span>
                                         </div>
@@ -361,8 +361,18 @@
             }
         }
 
-        if (document.form1.UserName.value == "") {
+        if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE") {
             document.getElementById("userName_error").innerHTML = "User Name is required";
+            if (ret != "N") {
+                document.form1.UserName.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() == "RBE") {
+            document.getElementById("userName_error").innerHTML = "Emp ID is required";
             if (ret != "N") {
                 document.form1.UserName.focus();
             }
@@ -389,7 +399,7 @@
             document.getElementById("officerType_error").innerHTML = "";
         }
 
-        if (document.form1.location.value == "" || document.form1.location.value == "0") {
+        if (document.form1.location.value.trim() == "" || document.form1.location.value == "0") {
             document.getElementById("location_error").innerHTML = "Location is required";
             if (ret != "N") {
                 document.form1.location.focus();
@@ -406,7 +416,27 @@
         if ($('#OfficerTypeID :selected').text() != "RBE") {
 
             if (document.form1.Address1.value.trim() == "") {
-                document.getElementById("address1_error").innerHTML = "Address 1 is required";
+                document.getElementById("address1_error").innerHTML = "Address 1 field cannot be left blank";
+                if (ret != "N") {
+                    document.form1.Address1.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (checkForSpecialChars(document.form1.Address1.value.trim())){
+                document.getElementById("address1_error").innerHTML = "Address 1 is Invalid";
+                if (ret != "N") {
+                    document.form1.Address1.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.form1.Address1.value.match(onlyNumbers)){
+                document.getElementById("address1_error").innerHTML = "Only Numbers not allowed";
                 if (ret != "N") {
                     document.form1.Address1.focus();
                 }
@@ -419,6 +449,57 @@
                 document.getElementById("address1_error").innerHTML = "";
             }
 
+            if (document.form1.Address2.value.trim() != "") {
+                if (checkForSpecialChars(document.form1.Address2.value.trim())){
+                    document.getElementById("address2_error").innerHTML = "Address 2 is Invalid";
+                    if (ret != "N") {
+                        document.form1.Address2.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+                else if (document.form1.Address2.value.match(onlyNumbers)){
+                    document.getElementById("address2_error").innerHTML = "Only Numbers not allowed";
+                    if (ret != "N") {
+                        document.form1.Address2.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+                else {
+                    document.getElementById("address2_error").innerHTML = "";
+                }
+            }
+
+            if (document.form1.Address3.value.trim() != "") {
+                if (checkForSpecialChars(document.form1.Address3.value.trim())){
+                    document.getElementById("address3_error").innerHTML = "Address 3 is Invalid";
+                    if (ret != "N") {
+                        document.form1.Address3.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+                else if (document.form1.Address3.value.match(onlyNumbers)){
+                    document.getElementById("address3_error").innerHTML = "Only Numbers not allowed";
+                    if (ret != "N") {
+                        document.form1.Address3.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+                else {
+                    document.getElementById("address3_error").innerHTML = "";
+                }
+            }
             if (document.form1.State.value == "" || document.form1.State.value == "0") {
                 document.getElementById("state_error").innerHTML = "State is required";
                 if (ret != "N") {
@@ -494,6 +575,21 @@
             else {
                 document.getElementById("email_error").innerHTML = "";
             }
+            if (document.form1.City.value.trim() != "") {
+                if (!document.form1.City.value.match(nameCheck)){
+                    document.getElementById("city_error").innerHTML = "City is Invalid";
+                    if (ret != "N") {
+                        document.form1.City.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+                else {
+                    document.getElementById("city_error").innerHTML = "";
+                }
+            }
         }
         var confirmstring = "Are you sure ?";
         if (ret == "Y") {
@@ -510,14 +606,23 @@
         if (name == "RBE") {
             $("#userNameLabel").html("Emp. ID *");
             $("#commAddressForm").hide();
+            if($("#UserName").val().trim() == ""){
+                $("#userName_error").html("Emp ID is required");
+            }
         }
         else if (name == "RSM"){
             $("#userNameLabel").html("Emp. ID *");
             $("#commAddressForm").show();
+            if($("#UserName").val().trim() == ""){
+                $("#userName_error").html("Emp ID is required");
+            }
         }
         else {
             $("#userNameLabel").html("User Name *");
             $("#commAddressForm").show();
+            if($("#UserName").val().trim() == ""){
+                $("#userName_error").html("User Name is required");
+            }
         }
 
         if (ofcrTypeID != "" && ofcrTypeID != "0") {
@@ -755,8 +860,13 @@
                 success: function (data, status, xhr) {
                     var v = data;
                     if (status == 'success' && v == '0') {
-                        $("#userNamediv").addClass("btmMargin");
-                        $("#userName_error").html("User Name Exists");
+                        //$("#userNamediv").addClass("btmMargin");
+                        if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM"){
+                            $("#userName_error").html("Emp Id already Exists");
+                        }
+                        else{
+                            $("#userName_error").html("User Name already Exists");
+                        }
                     }
                     else {
                         $("#userName_error").html("");
@@ -765,53 +875,302 @@
                 }
             });
         }
+        else{
+            if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
+                document.getElementById("userName_error").innerHTML = "User Name is required";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.form1.UserName.value.trim() == "" && ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")) {
+                document.getElementById("userName_error").innerHTML = "Emp ID is required";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("userName_error").innerHTML = "";
+            }
+        }
     });
 
     $("#FirstName").on("blur", function () {
-        if ($("#FirstName").val().length > 0) {
+        if (document.form1.FirstName.value.trim() == "") {
+            document.getElementById("firstName_error").innerHTML = "First Name is required";
+            document.form1.FirstName.focus();
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.form1.FirstName.value.match(nameCheck)) {
+            document.getElementById("firstName_error").innerHTML = "First Name has invalid characters";
+            if (ret != "N") {
+                document.form1.FirstName.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("firstName_error").innerHTML = "";
         }
     });
-    $("#UserName").on("blur", function () {
-        if ($("#UserName").val().length > 0) {
-            document.getElementById("userName_error").innerHTML = "";
-        }
-    });
     $("#OfficerTypeID").on("blur", function () {
-        if ($("#OfficerTypeID").val().length > 0) {
+        if (document.form1.OfficerTypeID.value == "" || document.form1.OfficerTypeID.value == "0") {
+            document.getElementById("officerType_error").innerHTML = "Officer Type is required";
+            if (ret != "N") {
+                document.form1.OfficerTypeID.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("officerType_error").innerHTML = "";
         }
     });
     $("#location").on("blur", function () {
-        if ($("#location").val().length > 0) {
+        if (document.form1.location.value.trim() == "" || document.form1.location.value == "0") {
+            document.getElementById("location_error").innerHTML = "Location is required";
+            if (ret != "N") {
+                document.form1.location.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("location_error").innerHTML = "";
         }
     });
     $("#Address1").on("blur", function () {
-        if ($("#Address1").val().length > 0) {
+        if (document.form1.Address1.value.trim() == "") {
+            document.getElementById("address1_error").innerHTML = "Address 1 field cannot be left blank";
+            if (ret != "N") {
+                document.form1.Address1.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (checkForSpecialChars(document.form1.Address1.value.trim())){
+            document.getElementById("address1_error").innerHTML = "Address 1 is Invalid";
+            if (ret != "N") {
+                document.form1.Address1.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.form1.Address1.value.match(onlyNumbers)){
+            document.getElementById("address1_error").innerHTML = "Only Numbers not allowed";
+            if (ret != "N") {
+                document.form1.Address1.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("address1_error").innerHTML = "";
         }
     });
+    
+    $("#Address2").on("blur", function() {
+        if (document.form1.Address2.value.trim() != "") {
+            if (checkForSpecialChars(document.form1.Address2.value.trim())){
+                document.getElementById("address2_error").innerHTML = "Address 2 is Invalid";
+                if (ret != "N") {
+                    document.form1.Address2.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.form1.Address2.value.match(onlyNumbers)){
+                document.getElementById("address2_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.form1.Address2.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("address2_error").innerHTML = "";
+            }
+        }
+    });
+
+    $("#Address3").on("blur", function() {
+        if (document.form1.Address3.value.trim() != "") {
+            if (checkForSpecialChars(document.form1.Address3.value.trim())){
+                document.getElementById("address3_error").innerHTML = "Address 3 is Invalid";
+                if (ret != "N") {
+                    document.form1.Address3.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.form1.Address3.value.match(onlyNumbers)){
+                document.getElementById("address3_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.form1.Address3.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("address3_error").innerHTML = "";
+            }
+        }
+    });
     $("#State").on("blur", function () {
-        if ($("#State").val().length > 0) {
+        if (document.form1.State.value == "" || document.form1.State.value == "0") {
+            document.getElementById("state_error").innerHTML = "State is required";
+            if (ret != "N") {
+                document.form1.State.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("state_error").innerHTML = "";
         }
     });
     $("#district").on("blur", function () {
-        if ($("#district").val() != null) {
-            if ($("#district").val().length > 0) {
-                document.getElementById("district_error").innerHTML = "";
+        if (document.form1.district.value == "" || document.form1.district.value == "0") {
+            document.getElementById("district_error").innerHTML = "District is required";
+            if (ret != "N") {
+                document.form1.district.focus();
             }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("district_error").innerHTML = "";
         }
     });
     $("#Mobile").on("blur", function () {
-        if ($("#Mobile").val().length > 0) {
+        if (document.form1.Mobile.value.trim() == "") {
+            document.getElementById("mobile_error").innerHTML = "Mobile Number is required";
+            $("#Mobile").val("");
+            if (ret != "N") {
+                document.form1.Mobile.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.form1.Mobile.value.match(phoneno)) {
+            document.getElementById("mobile_error").innerHTML = "Mobile Number is Invalid";
+            if (ret != "N") {
+                document.form1.Mobile.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("mobile_error").innerHTML = "";
         }
     });
     $("#Email").on("blur", function () {
-        if ($("#Email").val().length > 0) {
+        if (document.form1.Email.value.trim() == "") {
+            document.getElementById("email_error").innerHTML = "Email Id is required";
+            $("#Email").val("");
+            if (ret != "N") {
+                document.form1.Email.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.form1.Email.value.match(email)) {
+            document.getElementById("email_error").innerHTML = "Invalid Email Address";
+            if (ret != "N") {
+                document.form1.Email.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("email_error").innerHTML = "";
+        }
+    });
+    $("#LastName").on("blur", function(){
+        if (document.form1.LastName.value != "") {
+            if (document.form1.LastName.value.trim() == ""){
+                document.getElementById("lastName_error").innerHTML = "Spaces are not allowed in Last Name";
+                $("#LastName").val("");
+                if (ret != "N") {
+                    document.form1.LastName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (!document.form1.LastName.value.match(nameCheck)) {
+                document.getElementById("lastName_error").innerHTML = "Last Name has invalid characters";
+                if (ret != "N") {
+                    document.form1.LastName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+        }
+        else{
+            document.getElementById("lastName_error").innerHTML = "";
+        }
+    });
+    $("#City").on("blur", function() {
+        if (document.form1.City.value.trim() != "") {
+            if (!document.form1.City.value.match(nameCheck)){
+                document.getElementById("city_error").innerHTML = "City is Invalid";
+                if (ret != "N") {
+                    document.form1.City.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("city_error").innerHTML = "";
+            }
         }
     });
 </script>
