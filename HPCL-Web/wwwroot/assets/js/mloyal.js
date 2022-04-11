@@ -1389,7 +1389,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+            }
         }
     }
     else
@@ -1406,7 +1414,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+            }
         }
     }
     else
@@ -1423,7 +1439,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+            }
         }
     }
     else
@@ -1440,7 +1464,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+            }
         }
     }
     else
@@ -1457,7 +1489,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "";
+            if (!(document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile1.value.trim().match(number)))
+            {
+                document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("KeyOfficialApproxMonthlySpendsonVechile1_error").innerHTML = "";
+            }
         }
     }
     else
@@ -1474,7 +1514,15 @@ function showCardDetails() {
         }
         else
         {
-            document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "";
+            if (!(document.applicationForm.KeyOfficialApproxMonthlySpendsonVechile2.value.trim().match(number)))
+            {
+                document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "Invalid No.";
+                return false;
+            }
+            else
+            {
+                document.getElementById("KeyOfficialApproxMonthlySpendsonVechile2_error").innerHTML = "";
+            }
         }
     }
     else
