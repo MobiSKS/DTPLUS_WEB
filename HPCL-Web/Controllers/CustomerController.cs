@@ -211,23 +211,13 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> ValidateNewCustomer()
+        public async Task<IActionResult> ValidateNewCustomer(CustomerValidate entity)
         {
-            CustomerModel customerModel = new CustomerModel();
-            customerModel = await _customerService.ValidateNewCustomer();
+            var modals = await _customerService.ValidateNewCustomer(entity);
 
-            return View(customerModel);
+            return View(modals);
         }
-
-        [HttpPost]
-        public async Task<JsonResult> ValidateNewCustomer(CustomerModel entity)
-        {
-            List<SearchCustomerResponseGrid> searchList = new List<SearchCustomerResponseGrid>();
-            searchList = await _customerService.ValidateNewCustomer(entity);
-
-            return Json(new { searchList = searchList });
-        }
-
+        
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
@@ -238,6 +228,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewCustomerDetails(string FormNumber)
         {
+            if (!string.IsNullOrEmpty(FormNumber))
+                FormNumber = FormNumber.Trim();
+
             JObject obj = await _customerService.ViewCustomerDetails(FormNumber);
 
             var searchRes = obj["Data"].Value<JObject>();
