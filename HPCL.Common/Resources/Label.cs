@@ -81,7 +81,7 @@
         public const string PhoneOfc = "Phone Office";
         public const string PhoneNumber = "Phone Number";
         public const string Fax = "Fax";
-        public const string Pin = "Pin";
+        public const string Pin = "Pin Code";
         public const string Address1 = "Address 1";
         public const string Address2 = "Address 2";
         public const string Address3 = "Address 3";
