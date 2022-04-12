@@ -708,7 +708,7 @@ function showOfficialDetails() {
         }
         else
         {
-            if (!faxphno.match(number))
+            if (!faxCode.match(number))
             {
                 document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -725,7 +725,7 @@ function showOfficialDetails() {
 
     var faxphno = document.applicationForm.CommunicationFax.value.trim();
     if (faxphno != "") {
-        if (phno.charAt(0) == "0") {
+        if (faxphno.charAt(0) == "0") {
             document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
             ret = false;
         }
@@ -1166,7 +1166,7 @@ function showCardDetails() {
         }
         else
         {
-            if (!faxCode.match(faxCode))
+            if (!faxCode.match(number))
             {
                 document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -1200,7 +1200,7 @@ function showCardDetails() {
             }
             else
             {
-                if (!faxCode.match(faxno))
+                if (!faxno.match(number))
                 {
                     document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
                     ret = false;
@@ -1229,7 +1229,7 @@ function showCardDetails() {
         }
         else
         {
-            if (!faxCode.match(stdCode))
+            if (!stdCode.match(number))
             {
                 document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
                 ret = false;
