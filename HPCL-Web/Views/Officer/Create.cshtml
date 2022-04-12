@@ -361,7 +361,7 @@
             }
         }
 
-        if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE") {
+        if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
             document.getElementById("userName_error").innerHTML = "User Name is required";
             if (ret != "N") {
                 document.form1.UserName.focus();
@@ -371,8 +371,40 @@
             });
             ret = "N";
         }
-        else if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() == "RBE") {
+        else if (document.form1.UserName.value.trim() == "" && ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() != "RSM")) {
             document.getElementById("userName_error").innerHTML = "Emp ID is required";
+            if (ret != "N") {
+                document.form1.UserName.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.form1.UserName.value.match(notOnlySpecialChars)){
+            if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
+                document.getElementById("userName_error").innerHTML = "User Name is Invalid";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")) {
+                document.getElementById("userName_error").innerHTML = "Emp ID is Invalid";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+        }
+        else if (document.getElementById("userName_error").innerHTML.length > 0)
+        {
             if (ret != "N") {
                 document.form1.UserName.focus();
             }
@@ -576,7 +608,7 @@
                 document.getElementById("email_error").innerHTML = "";
             }
             if (document.form1.City.value.trim() != "") {
-                if (!document.form1.City.value.match(nameCheck)){
+                if (!document.form1.City.value.match(CitynameCheck)){
                     document.getElementById("city_error").innerHTML = "City is Invalid";
                     if (ret != "N") {
                         document.form1.City.focus();
@@ -1209,7 +1241,7 @@
     });
     $("#City").on("blur", function() {
         if (document.form1.City.value.trim() != "") {
-            if (!document.form1.City.value.match(nameCheck)){
+            if (!document.form1.City.value.match(CitynameCheck)){
                 document.getElementById("city_error").innerHTML = "City is Invalid";
                 if (ret != "N") {
                     document.form1.City.focus();

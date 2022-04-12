@@ -27,3 +27,4 @@ var forVehicleNo = /^[a-zA-Z0-9]*$/;
 var onlyAlphabets = /^[a-zA-Z]+$/
 var notOnlySpecialChars = /^[A-Za-z0-9]{1,50}$/;
 var nameWithSpaceCheck = /^[a-zA-Z0-9\s]*$/;
+var CitynameCheck = /^[A-Za-z ]{2,40}$/;    
