@@ -420,14 +420,17 @@ function showregAddress() {
         }
         //ret = result;
     }
-    else {
-        if (document.applicationForm.CustomerIncomeTaxPan.value == "") {
+    else
+    {
+        if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "")
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else {
-            ret = false;
+        else
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
     }
 
@@ -444,7 +447,7 @@ function showregAddress() {
         document.getElementById("PanCardRemarks_error").innerHTML = "";
     }
 
-    
+    console.log(ret);
     if (ret == false)
         return ret;
 
