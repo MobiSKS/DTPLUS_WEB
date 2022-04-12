@@ -5,26 +5,20 @@ namespace HPCL.Common.Models.ResponseModel.ApplicationFormDataEntry
 {
     public class GetCustomerNameResponse : ResponseMsg
     {
-        public GetCustomerNameResponsedata data { get; set; }
+        public List<GetCustomerNameResponsedata> data { get; set; }
     }
 
     public class GetCustomerNameResponsedata
     {
-        public List<GetNameandFormNumberbyCustomerId> GetNameandFormNumberbyCustomerId { get; set; }
-        public List<GetStatus> GetStatus { get; set; }
-    }
-
-    public class GetStatus
-    {
-        public string CustomerID { get; set; }
-        public int Status { get; set; }
-        public string Reason { get; set; }
-    }
-
-    public class GetNameandFormNumberbyCustomerId
-    {
-        public string CustomerId { get; set; }
-        public string CustomerReferenceNo { get; set; }
         public string CustomerName { get; set; }
+        public string FormNumber { get; set; }
+        public int CustomerTypeId { get; set; }
+        public string CustomerTypeName { get; set; }
+        public int NoOfCards { get; set; }
+        public string PaymentType { get; set; }
+        public string PaymentReceivedDate { get; set; }
+        public decimal ReceivedAmount { get; set; }
+        public string RBEId { get; set; }
+        public string RBEName { get; set; }
     }
 }
