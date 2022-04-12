@@ -204,9 +204,13 @@
 
             });
 
+     $("#MerchantID").focus(function(){
+       $("#btnSave").attr("disabled", true);
+    });
+
     $("#MerchantID").on("blur", function () {
         //debugger;
-
+        $("#btnSave").attr("disabled", true);
         var regionalId = document.getElementById("CustomerRegionID").value;
         if (regionalId == "" || regionalId == "0") {
             document.getElementById("CustomerRegionID_error").innerHTML = "Region Name is required";
@@ -288,6 +292,7 @@
                                     else if (result.status == 1) {
                                         localStorage.setItem("MERCHANTAVAILABLE", "1");
                                         document.getElementById("MerchantID_error").innerHTML = "";
+                                        $("#btnSave").removeAttr("disabled");
                                     }
                                     else {
                                         localStorage.setItem("MERCHANTAVAILABLE", "0");
@@ -350,6 +355,7 @@
             document.getElementById("NoOfUnallocatedCards").value = "";
             document.getElementById("NoofAllocatedCards").value = "";
             $("#MerchantID_error").html("");
+
         }
 
     });
@@ -438,6 +444,12 @@
         });
         //alert(selectedCards);
 
+        if(selectedCards==0)
+        {
+            alert("Please select Un-Allocated Card(s)");
+            return false;
+        }
+
         if (NoofCardsAllocated != selectedCards) {
             alert("No. of Cards Allocated and Selected Un-Allocated Card(s) do not match");
             ret=false;
@@ -482,6 +494,7 @@
         $('#CustomerRegionID').val('0');
         document.getElementById("dvCards").innerHTML = "";
         document.getElementById("NoofAllocatedCards_error").innerHTML = "";
+        $("#btnSave").removeAttr("disabled");
     });
 
     $('#NoofAllocatedCards').on("cut copy paste",function(e) {
