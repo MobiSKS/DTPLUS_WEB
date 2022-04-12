@@ -656,7 +656,7 @@ function showOfficialDetails() {
         }
         else
         {
-            if (isNaN(stdCode))
+            if (!stdCode.match(number))
             {
                 document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -684,7 +684,8 @@ function showOfficialDetails() {
         }
         else
         {
-            if (isNaN(phno)) {
+            if (!phno.match(number))
+            {
                 document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
                 ret = false;
             }
@@ -701,14 +702,13 @@ function showOfficialDetails() {
 
     var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
     if (faxCode != "") {
-
         if (faxCode.length < 2 || faxCode.length > 4) {
             document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
             ret = false;
         }
         else
         {
-            if (isNaN(faxphno))
+            if (!faxCode.match(number))
             {
                 document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -725,7 +725,7 @@ function showOfficialDetails() {
 
     var faxphno = document.applicationForm.CommunicationFax.value.trim();
     if (faxphno != "") {
-        if (phno.charAt(0) == "0") {
+        if (faxphno.charAt(0) == "0") {
             document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
             ret = false;
         }
@@ -735,17 +735,20 @@ function showOfficialDetails() {
         }
         else
         {
-            if (isNaN(faxphno)) {
+            if (!faxphno.match(number))
+            {
                 document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
                 ret = false;
             }
-            else {
+            else
+            {
                 document.getElementById("CommunicationFax_error").innerHTML = "";
             }
         }
 
     }
-    else {
+    else
+    {
         document.getElementById("CommunicationFax_error").innerHTML = "";
     }
 
@@ -1163,7 +1166,7 @@ function showCardDetails() {
         }
         else
         {
-            if (isNaN(faxCode))
+            if (!faxCode.match(number))
             {
                 document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -1197,7 +1200,7 @@ function showCardDetails() {
             }
             else
             {
-                if (isNaN(faxno))
+                if (!faxno.match(number))
                 {
                     document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
                     ret = false;
@@ -1226,7 +1229,7 @@ function showCardDetails() {
         }
         else
         {
-            if (isNaN(stdCode))
+            if (!stdCode.match(number))
             {
                 document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
                 ret = false;
@@ -1260,7 +1263,7 @@ function showCardDetails() {
             }
             else
             {
-                if (isNaN(phno))
+                if (!phno.match(number))
                 {
                     document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
                     ret = false;
