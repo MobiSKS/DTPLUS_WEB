@@ -103,6 +103,9 @@ namespace HPCL_Web.Controllers
                         }
                         else if (loginRes[0].Status == 1)
                         {
+                            Random rnd = new Random();
+                            int num = rnd.Next();
+                            HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
                             HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
                             HttpContext.Session.SetString("RegionalId", string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "": loginRes[0].RegionalOfficeID);

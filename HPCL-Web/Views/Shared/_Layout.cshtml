@@ -582,6 +582,9 @@
 
     var today = '@Context.Session.GetString("Today")';
     var dateflag = "N";
+    var localStrNum = '@Context.Session.GetString("LocalStorage")';
+    localStorage.setItem("clearStorage", localStrNum);
+
     $(document).ready(function () {
         //setTimeout(function(){
         $('.datatable').DataTable({
@@ -593,7 +596,7 @@
             }
         });
 
-        $('.search_test').SumoSelect({ search: true, searchText: 'Enter here.' });
+        //$('.search_test').SumoSelect({ search: true, searchText: 'Enter Text here.' });
 
         if ($('.fromDate').val() != undefined){
             setFromDateFormat();
@@ -603,6 +606,14 @@
             setToDateFormat();
         }
 
+        //$('select').SumoSelect({
+        //    placeholder: '-Select-',
+        //    search: true
+        //});
+
+        if (localStorage.getItem("clearStorage") === localStrNum) {
+            window.localStorage.clear();
+        }
         //$(".error").addClass("displayNone");
         // },3000)
 
@@ -714,6 +725,25 @@
      $('.fromDate,.toDate').on("cut copy paste",function(e) {
       e.preventDefault();
     });
+
+    function checkForSpecialChars(str){
+        var flag = "N";
+        var count = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (!str.charAt(i).match(notOnlySpecialChars)){
+                if(!str.charAt(i + 1).match(notOnlySpecialChars)){
+                    flag = "Y";
+                    break;
+                }
+            }
+        }
+        if (flag == "N"){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
      
 </script>
 

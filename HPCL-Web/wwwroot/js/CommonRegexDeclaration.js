@@ -13,7 +13,10 @@ var noOfTerminalsCheck = /^[1-2]{1}$/;
 var mappedterminalID = /^(?=(5))[0-9]{10}$/;
 var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
-var nameWithSpaceCheck = /^[a-zA-Z0-9\s]*$/;
+var nameWithNumCheck = /^[A-Za-z0-9]{2,40}$/;
+var nameCheckwithSpace = /^[A-Za-z ]{2,40}$/;
+var nameCheckwithNumandSpace = /^[A-Za-z0-9 ]{2,40}$/;
+var onlyNumbers = /^[0-9]{2,40}$/;
 var highwayName = /^[a-z\d\-_\s]+$/i;
 ///^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/;
 var noSpecialChars = /^[A-Za-z0-9 ]+$/; //Regex for Valid Characters i.e. Alphabets, Numbers and Space 
@@ -22,3 +25,4 @@ var secretQuestion = /[0-9a-zA-Z /-]/;
 var mappedDealerName = /^.*\D+.*$/;
 var forVehicleNo = /^[a-zA-Z0-9]*$/;
 var onlyAlphabets = /^[a-zA-Z]+$/
+var notOnlySpecialChars = /^[A-Za-z0-9]{1,50}$/;

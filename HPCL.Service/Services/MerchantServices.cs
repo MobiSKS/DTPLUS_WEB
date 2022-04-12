@@ -122,6 +122,7 @@ namespace HPCL.Service.Services
             merchantMdl.RetailDistrictIdVal = merchantMdl.RetailOutletDistrictId;
             merchantMdl.SalesAreaIdVal = merchantMdl.SalesAreaId;
             merchantMdl.CommDistrictIdVal = merchantMdl.CommunicationDistrictId;
+            merchantMdl.OutletCategoryVal = merchantMdl.OutletCategoryId;
 
             merchantMdl.Action = actionFlow;
 
@@ -130,6 +131,11 @@ namespace HPCL.Service.Services
         public async Task<Tuple<string,string>> CreateMerchant(MerchantGetDetailsModel merchantMdl)
         {
             string url;
+            if (!string.IsNullOrEmpty(merchantMdl.OutletCategoryVal))
+            {
+                merchantMdl.OutletCategoryId = merchantMdl.OutletCategoryVal;
+            }
+
             var merchantCreateUpdateForms = new MerchantCreateUpdateRequestModal();
 
             if (merchantMdl.UpdateFlag == "Y")
@@ -197,6 +203,7 @@ namespace HPCL.Service.Services
                     RetailOutletName = merchantMdl.RetailOutletName,
                     MerchantTypeId = merchantMdl.MerchantTypeId,
                     DealerName = merchantMdl.DealerName,
+                    MappedMerchantId = String.IsNullOrEmpty(merchantMdl.MappedMerchantId) ? "" : merchantMdl.MappedMerchantId,
                     DealerMobileNo = merchantMdl.DealerMobileNo,
                     OutletCategoryId = merchantMdl.OutletCategoryId,
                     HighwayNo1 = merchantMdl.HighwayNo1,

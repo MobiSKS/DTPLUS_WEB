@@ -77,7 +77,7 @@
 
         public const string Email = "Email";
         public const string Mobile = "Mobile";
-        public const string Phone = "Phone";
+        public const string Phone = "Phone Number";
         public const string PhoneOfc = "Phone Office";
         public const string PhoneNumber = "Phone Number";
         public const string Fax = "Fax";

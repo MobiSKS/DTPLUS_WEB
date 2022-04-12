@@ -8,7 +8,6 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Profile", "Merchant")" class="text_primary">Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">Manage Profile</li>
         </ul>
-        @*<h5>Manage Profile</h5>*@
         <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="viewProfile-tab" data-toggle="tab" href="#viewProfile" role="tab" aria-controls="viewProfile" aria-selected="true">View Profile</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="false">Basic Information</a> </li>
@@ -16,7 +15,6 @@
             <li class="nav-item"> <a class="nav-link disable" id="terminalDetails-tab" data-toggle="tab" href="#terminalDetails" role="tab" aria-controls="terminalDetails" aria-selected="false">Terminal Details</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="summaryDetails-tab" data-toggle="tab" href="#summaryDetails" role="tab" aria-controls="summaryDetails" aria-selected="false">Summary Details</a> </li>
         </ul>
-        @*<form name="applicationForm" method="post" action="@Url.Action("CreateMerchant", "Merchant")" class="w-100">*@
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "applicationForm", name = "applicationForm" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -42,7 +40,7 @@
                                                 @*@if (Context.Session.GetString("LoginType") == "MO" || Context.Session.GetString("LoginType") == "Admin")
                                                     {*@
                                                 <div class="col-8">
-                                                    @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.SearchMerchantId, new { @class = "form-control",maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                 </div>
                                                 <div class="col-8" style="display:none">
                                                     @Html.TextBoxFor(m => m.Search, new { @class = "form-control" })
@@ -118,7 +116,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.MerchantType<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control, search_test" })
+                                            @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control" })
                                             <span class="error" id="merchantType_error"></span>
                                         </div>
                                     </div>
@@ -167,10 +165,10 @@
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    @Html.DropDownListFor(m => m.HighwayNo1, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control, search_test" })
+                                                    @Html.DropDownListFor(m => m.HighwayNo1, new SelectList(Model.PreHighwayNumbers, "PreHighwayNumberID", "PreHighwayNumberName"), new { @class = "form-control" })
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.HighwayNo2, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.HighwayNo2, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                                 </div>
                                             </div>
                                             <span class="error" id="highwayNum_error"></span>
@@ -203,7 +201,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.SBUType<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control, search_test" })
+                                            @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
                                             <div class="error" id="sbuType_error"></div>
                                         </div>
                                     </div>
@@ -214,7 +212,7 @@
                                             @Label.LpgCngSale<sup class="text-danger">*</sup><br />(3 months average in KL)
                                         </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.LPGCNGSale, new { @class = "form-control", maxlength = "9", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.LPGCNGSale, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             <div class="error" id="lpgCngSale_error"></div>
                                         </div>
                                     </div>
@@ -299,7 +297,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.State<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.RetailOutletStateId, new SelectList(Model.RetailOutletStates, "StateID", "StateName"), new { @class = "form-control, search_test", onchange = "getRetailDistrict()" })
+                                                @Html.DropDownListFor(m => m.RetailOutletStateId, new SelectList(Model.RetailOutletStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getRetailDistrict()" })
                                             </div>
                                             <span class="error" id="retail_state_error"></span>
                                         </div>
@@ -329,7 +327,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.PhoneOfc<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.RetailOutletPhoneNumber, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletPhoneNumber, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             <span class="error" id="retail_officePhone_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -349,7 +347,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.Fax</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.RetailOutletFax, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.RetailOutletFax, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             <span class="error" id="retail_faxNumber_error"></span>
                                         </div>
                                         @*<div class="col-md-7 col-12">
@@ -376,7 +374,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.ZonalOfc<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control, search_test", onchange = "getMerchantRegionalOfc()" })
+                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
                                             <span class="error" id="zonal_office_error"></span>
                                         </div>
                                     </div>
@@ -409,7 +407,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control", @disabled="disabled", @id="ErpCodeNoCheck" })
+                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control", @readonly = "readonly", @id="ErpCodeNoCheck", onkeypress = "return isNumberKey(event)" })
                                                 <span class="error" id="erpCode_error"></span>
                                             </div>
                                         </div>
@@ -421,7 +419,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">@Label.ErpCode<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ErpCode, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                                 <span class="error" id="erpCode_error"></span>
                                             </div>
                                         </div>
@@ -458,7 +456,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Mobile<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                         </div>
                                         <span class="error" id="mobile_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
@@ -501,6 +499,7 @@
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control" })
                                         </div>
+                                        <span class="error" id="communicationAddress1_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -509,6 +508,7 @@
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control" })
                                         </div>
+                                        <span class="error" id="communicationAddress2_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -517,6 +517,7 @@
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control" })
                                         </div>
+                                        <span class="error" id="communicationAddress3_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -525,6 +526,7 @@
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control" })
                                         </div>
+                                        <span class="error" id="communicationCity_error" style="margin-left: 42%; margin-top: -2.7%;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -532,7 +534,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.State</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control, search_test", onchange = "getCommDistrict()" })
+                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CommStates, "StateID", "StateName"), new { @class = "form-control", onchange = "getCommDistrict()" })
                                             </div>
                                         </div>
                                     </div>
@@ -1000,6 +1002,7 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.Action)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.MerchantId)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.UpdateFlag)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.OutletCategoryVal)</div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
@@ -1013,7 +1016,6 @@
                     </div>
                 </div>
             </div>
-            @*</form>*@
         }
 
     </div>
@@ -1031,19 +1033,29 @@
     var reason = '@ViewBag.Reason';
     var status = '@ViewBag.Status';
     var rejectedStatus = '@ViewBag.RejectedStatus';
+    var ret = "Y";
 
-    console.log(retailStateID);
-    console.log(commStateID);
-    console.log(retailDistrictID);
-    console.log(commDistrictID);
-    console.log(zonalID);
-    console.log(regionalID);
-    console.log(salesAreaID);
+    //console.log(retailStateID);
+    //console.log(commStateID);
+    //console.log(retailDistrictID);
+    //console.log(commDistrictID);
+    //console.log(zonalID);
+    //console.log(regionalID);
+    //console.log(salesAreaID);
 
     $(document).ready(function () {
-        //$("#MappedMerchantId").prop("disabled", true);
-    @*var message = "@ViewBag.Message";
-        var notFoundError = "@ViewBag.NotFoundError";*@
+
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
+        if ($("#OutletCategoryId").val() == "4"){
+
+            $(".mappedMerchId").removeClass("displayNone");
+            $("#OutletCategoryId").SumoSelect().sumo.disable();
+        }
         if (rejectedStatus == "true") {
             document.getElementById("viewProfile").classList.remove("active");
             document.getElementById("viewProfile").classList.remove("show");
@@ -1199,7 +1211,6 @@
     });
 
     function checkForMerchantId(e) {
-        var ret = "Y";
         if (document.applicationForm.SearchMerchantId.value == "") {
             document.getElementById("searchMerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
             document.applicationForm.SearchMerchantId.focus();
@@ -1246,13 +1257,31 @@
             });
             ret = "N";
         }
+        else if (!document.applicationForm.RetailOutletName.value.match(nameCheckwithNumandSpace)) {
+            $("#retailOutletName_error").removeClass("displayNone");
+            document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet field has invalid characters";
+            document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletName.value.match(onlyNumbers)){
+            $("#retailOutletName_error").removeClass("displayNone");
+            document.getElementById("retailOutletName_error").innerHTML = "Only Numbers not allowed";
+            document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
         else {
             document.getElementById("retailOutletName_error").innerHTML = "";
         }
 
         if (document.applicationForm.DealerName.value.trim() != "")
         {
-            if (!document.applicationForm.DealerName.value.match(nameCheck)){
+            if (!document.applicationForm.DealerName.value.match(nameCheckwithSpace)){
                 document.getElementById("dealerName_error").innerHTML = "Dealer Name should not allow only numeric";
                 if (ret != "N") {
                     document.applicationForm.DealerName.focus();
@@ -1328,7 +1357,7 @@
             ret = "N";
         }
         else if (!document.applicationForm.DealerMobileNo.value.match(phoneno)){
-            document.getElementById("dealerMobileNum_error").innerHTML = "Invalid Mobile Number, should start with 6,7,8,9 and have 10 Digits";
+            document.getElementById("dealerMobileNum_error").innerHTML = "Invalid Mobile Number";
             if (ret != "N") {
                 document.applicationForm.DealerMobileNo.focus();
             }
@@ -1501,6 +1530,26 @@
             });
             ret = "N";
         }
+        else if (checkForSpecialChars(document.applicationForm.RetailOutletAddress1.value.trim())){
+            document.getElementById("retail_address1_error").innerHTML = "Address 1 is Invalid";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletAddress1.value.match(onlyNumbers)){
+            document.getElementById("retail_address1_error").innerHTML = "Only Numbers not allowed";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
         else {
             document.getElementById("retail_address1_error").innerHTML = "";
         }
@@ -1515,12 +1564,42 @@
             });
             ret = "N";
         }
+        else if (checkForSpecialChars(document.applicationForm.RetailOutletAddress2.value.trim())){
+            document.getElementById("retail_address2_error").innerHTML = "Address 2 is Invalid";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletAddress2.value.match(onlyNumbers)){
+            document.getElementById("retail_address2_error").innerHTML = "Only Numbers not allowed";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
         else {
             document.getElementById("retail_address2_error").innerHTML = "";
         }
 
         if (document.applicationForm.RetailOutletCity.value.trim() == "") {
             document.getElementById("retail_city_error").innerHTML = "City field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletCity.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletCity.value.match(nameCheck)){
+            document.getElementById("retail_city_error").innerHTML = "Invalid City Name";
             if (ret != "N") {
                 document.applicationForm.RetailOutletCity.focus();
             }
@@ -1755,7 +1834,7 @@
             ret = "N";
         }
         else if (!document.applicationForm.MobileNo.value.match(phoneno)) {
-            document.getElementById("mobile_error").innerHTML = "Invalid Mobile Number, should start with 6,7,8,9 and have 10 Digits";
+            document.getElementById("mobile_error").innerHTML = "Invalid Mobile Number";
             if (ret != "N") {
                 document.applicationForm.MobileNo.focus();
             }
@@ -1806,7 +1885,123 @@
     function showMerchantTerminalDetails() {
         var ret = "Y";
 
-        if (document.applicationForm.CommunicationPinNumber.value != "" && !document.applicationForm.CommunicationPinNumber.value.match(number)) {
+        if (document.applicationForm.CommunicationAddress1.value.trim() != "") {
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress1.value.trim())){
+                document.getElementById("communicationAddress1_error").innerHTML = "Address 1 is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress1.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress1.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress1_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress1.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress1_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress1_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationAddress2.value.trim() != "") {
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress2.value.trim())){
+                document.getElementById("communicationAddress2_error").innerHTML = "Address 2 is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress2.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress2_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress2_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress2_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationAddress3.value.trim() != "") {
+            if (!document.applicationForm.CommunicationAddress3.value.match(notOnlySpecialChars)){
+                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 field cannot have Special Characters";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress3.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress3.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress3_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress3.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress3_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress3_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationCity.value.trim() != "") {
+            if (!document.applicationForm.CommunicationCity.value.match(notOnlySpecialChars)){
+                document.getElementById("communicationCity_error").innerHTML = "Invalid City Name";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationCity.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationCity.value.match(onlyNumbers)){
+                document.getElementById("communicationCity_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationCity.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationCity_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationCity_error").innerHTML = "";
+        }
+
+        if (document.applicationForm.CommunicationPinNumber.value.trim() != "" && !document.applicationForm.CommunicationPinNumber.value.match(number)) {
             document.getElementById("comm_pin_error").innerHTML = "Numeric Only";
             if (ret != "N") {
                 document.applicationForm.CommunicationPinNumber.focus();
@@ -1816,7 +2011,7 @@
             });
             ret = "N";
         }
-        else if (!document.applicationForm.CommunicationPinNumber.value.match(pincode) && document.applicationForm.CommunicationPinNumber.value != "") {
+        else if (!document.applicationForm.CommunicationPinNumber.value.match(pincode) && document.applicationForm.CommunicationPinNumber.value.trim() != "") {
             document.getElementById("comm_pin_error").innerHTML = "6 Digits Only";
             if (ret != "N") {
                 document.applicationForm.CommunicationPinNumber.focus();
@@ -1830,7 +2025,7 @@
             document.getElementById("comm_pin_error").innerHTML = "";
         }
 
-        if (document.applicationForm.CommunicationPhoneNumber.value != "" && !document.applicationForm.CommunicationPhoneNumber.value.match(number)) {
+        if (document.applicationForm.CommunicationPhoneNumber.value.trim() != "" && !document.applicationForm.CommunicationPhoneNumber.value.match(number)) {
             document.getElementById("comm_phoneNum_error").innerHTML = "Numeric Only";
             if (ret != "N") {
                 document.applicationForm.CommunicationPhoneNumber.focus();
@@ -1844,7 +2039,7 @@
             document.getElementById("comm_phoneNum_error").innerHTML = "";
         }
 
-        if (document.applicationForm.CommunicationFax.value != "" && !document.applicationForm.CommunicationFax.value.match(number)) {
+        if (document.applicationForm.CommunicationFax.value.trim() != "" && !document.applicationForm.CommunicationFax.value.match(number)) {
             document.getElementById("comm_fax_error").innerHTML = "Numeric Only";
             if (ret != "N") {
                 document.applicationForm.CommunicationFax.focus();
@@ -1872,7 +2067,7 @@
     function showMerchantSummary() {
         var ret = "Y";
 
-        if (document.applicationForm.NoofLiveTerminals.value == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
+        if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "Number of Live Terminals should be between either 1 or 2";
             if (ret != "N") {
                 document.applicationForm.NoofLiveTerminals.focus();
@@ -1980,25 +2175,14 @@
     }
 
     function getRetailDistrict() {
-        //var id = this.value;
         var id = $('#RetailOutletStateId :selected').val();
 
         if ($("#RetailOutletStateId").val().length > 0) {
             document.getElementById("retail_state_error").innerHTML = "";
         }
-
-        //console.log("RetailDistrict");
-        //console.log(id);
-        //console.log("retailStateID");
-        //console.log(retailStateID);
-
         if (retailStateID != "0" && retailStateID != null && retailStateID != "") {
             id = retailStateID;
         }
-
-        //if (id != 0) {
-        //    $("#state_error").html("");
-        //}
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetDistrictDetails", "Common")',
@@ -2045,6 +2229,7 @@
                                 }).html(data.districtName).appendTo("#RetailOutletDistrictId");
                         }
                     });
+                    $("#RetailOutletDistrictId")[0].sumo.reload()
                 }
                 else {
                     console.log(v);
@@ -2057,20 +2242,11 @@
     };
 
     function getCommDistrict() {
-        //var id = this.value;
         var id = $('#CommunicationStateId :selected').val();
-        //console.log("CommDistrict");
-        //console.log(id);
-        //console.log("CommState");
-        //console.log(commStateID);
 
         if (commStateID != "0" && commStateID != null && commStateID != "") {
             id = commStateID;
         }
-
-        //if (id != 0) {
-        //    $("#state_error").html("");
-        //}
 
         $.ajax({
             type: 'POST',  // http method
@@ -2127,6 +2303,7 @@
                                 }).html(data.districtName).appendTo("#CommunicationDistrictId");
                         }
                     });
+                    $("#CommunicationDistrictId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -2148,9 +2325,6 @@
         if (zonalID != "0" && zonalID != null && zonalID != "") {
             id = zonalID;
         }
-        //if (id != 0) {
-        //    $("#state_error").html("");
-        //}
 
         $.ajax({
             type: 'POST',  // http method
@@ -2199,6 +2373,7 @@
                         }
 
                     });
+                    $("#RegionalOfficeId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -2210,6 +2385,7 @@
         });
     };
 
+
     function getMerchantSalesArea() {
         var id = $('#RegionalOfficeId :selected').val();
 
@@ -2218,10 +2394,6 @@
         if (regionalID != "0" && regionalID != null && regionalID != "") {
             id = regionalID;
         }
-        //if (id != 0) {
-        //    $("#state_error").html("");
-        //}
-
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetSalesAreaList", "Common")',
@@ -2269,6 +2441,7 @@
                                 }).html(data.salesAreaName).appendTo("#SalesAreaId");
                         }
                     });
+                    $("#SalesAreaId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -2279,19 +2452,59 @@
             }
         });
     };
-
+    $("#DealerName").blur(function(){
+        if (document.applicationForm.DealerName.value.trim() != "") {
+            if(!document.applicationForm.DealerName.value.match(nameCheckwithSpace)){
+                document.getElementById("dealerName_error").innerHTML = "Dealer name has invalid characters";
+                if (ret != "N") {
+                    document.applicationForm.DealerName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("dealerName_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("dealerName_error").innerHTML = "";
+        }
+    });
     $("#RetailOutletDistrictId").change(function () {
         var id = this.value;
         $("#RetailDistrictIdVal").val(id);
-        if ($("#RetailOutletDistrictId").val() != null) {
-            if ($("#RetailOutletDistrictId").val().length > 0) {
-                document.getElementById("retail_district_error").innerHTML = "";
+        if (document.applicationForm.RetailOutletDistrictId.value == "0") {
+            document.getElementById("retail_district_error").innerHTML = "District field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletDistrictId.focus();
             }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("retail_district_error").innerHTML = "";
         }
     });
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
         $("#RegionalOfcIdVal").val(id);
+        if (document.applicationForm.RegionalOfficeId.value == "0") {
+            document.getElementById("regionalOfc_error").innerHTML = "Regional Office field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RegionalOfficeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("regionalOfc_error").innerHTML = "";
+        }
     });
     $("#CommunicationDistrictId").change(function () {
         var id = this.value;
@@ -2299,50 +2512,77 @@
     });
     $("#SalesAreaId").change(function () {
         var id = this.value;
-        if ($("#SalesAreaId").val().length > 0) {
+        $("#SalesAreaIdVal").val(id);
+        if (document.applicationForm.SalesAreaId.value == "0") {
+            document.getElementById("salesArea_error").innerHTML = "Sales Area field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.SalesAreaId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("salesArea_error").innerHTML = "";
         }
-        $("#SalesAreaIdVal").val(id);
     });
 
-    $("#MerchantTypeId").on("change", function () {
-        if ($("#MerchantTypeId").val().length > 0) {
+    $("#MerchantTypeId").on("change",function () {
+        if (document.applicationForm.MerchantTypeId.value == "0") {
+            document.getElementById("merchantType_error").innerHTML = "Merchant Type field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.MerchantTypeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("merchantType_error").innerHTML = "";
         }
         var MerchantTypeVal = $('#MerchantTypeId :selected').text();
         if (MerchantTypeVal != "Mobile Dispenser") {
             $("#MappedMerchantID").html("");
             $(".mappedMerchId").addClass("displayNone");
-            $("#OutletCategoryId").removeAttr("disabled");
+            $("#OutletCategoryId")[0].sumo.unSelectItem(4);
+            $("#OutletCategoryId")[0].sumo.enable();
             $("#OutletCategoryId > [value='4']").removeAttr("selected");
         }
         else {
-            $("#OutletCategoryId > [value='4']").attr("selected", "true");
-            $("#OutletCategoryId").attr("disabled", "disabled");
+            $("#OutletCategoryId")[0].sumo.selectItem(4);
+            $("#OutletCategoryId")[0].sumo.disable();
+            $("#OutletCategoryVal").val("4");
+            //$("#OutletCategoryId > [value='4']").attr("selected", "true");
             $(".mappedMerchId").removeClass("displayNone");
         }
     });
-
-    $("#OutletCategoryId").change(function () {
+    $("#OutletCategoryId").on("change",function () {
         if ($("#OutletCategoryId").val().length > 0) {
             document.getElementById("outletCategory_error").innerHTML = "";
         }
         var outletCategory = $('#OutletCategoryId :selected').text();
         if (outletCategory != "Highway") {
             $(".highwayDetails").addClass("displayNone");
-
-            //$("#highwayLabel").hide();
-            //$("#HighwayNo1").hide();
-            //$("#HighwayNo2").hide();
         }
         else {
             $(".highwayDetails").removeClass("displayNone");
-            //$("#highwayLabel").show();
-            //$("#HighwayNo1").show();
-            //$("#HighwayNo2").show();
+        }
+        if (document.applicationForm.OutletCategoryId.value == "0") {
+            document.getElementById("outletCategory_error").innerHTML = "Outlet Category field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.OutletCategoryId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("outletCategory_error").innerHTML = "";
         }
     });
-
     function clickedConfirm() {
         if (confirm('Are you sure?')) {
             $("#applicationForm").unbind().submit();
@@ -2355,352 +2595,736 @@
         }
     });
     $("#RetailOutletName").on("blur", function () {
-        if ($("#RetailOutletName").val().length > 0) {
+        if (document.applicationForm.RetailOutletName.value.trim() == "") {
+            $("#retailOutletName_error").removeClass("displayNone");
+            document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet Name cannot be left blank";
+            document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletName.value.match(nameCheckwithNumandSpace)) {
+            $("#retailOutletName_error").removeClass("displayNone");
+            document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet Name has invalid characters";
+            document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletName.value.match(onlyNumbers)){
+            $("#retailOutletName_error").removeClass("displayNone");
+            document.getElementById("retailOutletName_error").innerHTML = "Only Numbers not allowed";
+            document.applicationForm.RetailOutletName.focus();
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retailOutletName_error").innerHTML = "";
         }
     });
-    //$("#MerchantTypeId").on("blur", function () {
-    //    if ($("#MerchantTypeId").val().length > 0) {
-    //        document.getElementById("merchantType_error").innerHTML = "";
-    //    }
-    //});
     $("#MappedMerchantId").on("blur", function () {
-        if ($("#MappedMerchantId").val().length > 0) {
-            document.getElementById("mappedMerchantId_error").innerHTML = "";
+        if($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
+           if (document.applicationForm.MappedMerchantId.value == "") {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Mapped Merchant ID field cannot be left blank";
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (!document.applicationForm.MappedMerchantId.value.match(mappedMerchantID)) {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Should start with 3 and 10 Digits Only";
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (!document.applicationForm.MappedMerchantId.value.match(number)) {
+                document.getElementById("mappedMerchantId_error").innerHTML = "Numeric Only";
+                if (ret != "N") {
+                    document.applicationForm.MappedMerchantId.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("mappedMerchantId_error").innerHTML = "";
+            }
+        }
+        else if ($("#MappedMerchantId").val().length > 0) {
+            $("#MappedMerchantId").val("");
         }
     });
     $("#DealerMobileNo").on("blur", function () {
-        if ($("#DealerMobileNo").val().length > 0) {
+        if (document.applicationForm.DealerMobileNo.value.trim() == "") {
+            document.getElementById("dealerMobileNum_error").innerHTML = "Dealer Mobile Number cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.DealerMobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.DealerMobileNo.value.match(phoneno)){
+            document.getElementById("dealerMobileNum_error").innerHTML = "Invalid Mobile Number";
+            if (ret != "N") {
+                document.applicationForm.DealerMobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("dealerMobileNum_error").innerHTML = "";
         }
+
     });
-    //$("#OutletCategoryId").on("blur", function () {
-    //    if ($("#OutletCategoryId").val().length > 0) {
-    //        document.getElementById("outletCategory_error").innerHTML = "";
-    //    }
-    //});
     $("#HighwayNo2").on("blur", function () {
-        if ($("#HighwayNo2").val().length > 0) {
-            document.getElementById("highwayNum_error").innerHTML = "";
+        if ($('#OutletCategoryId :selected').text() == "Highway") {
+            if (document.applicationForm.HighwayNo2.value.trim() == "") {
+                document.getElementById("highwayNum_error").innerHTML = "Highway Number field cannot be left blank";
+                if (ret != "N") {
+                    document.applicationForm.HighwayNo2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (!document.applicationForm.HighwayNo2.value.match(number)) {
+                document.getElementById("highwayNum_error").innerHTML = "Highway Number field cannot be left blank";
+                if (ret != "N") {
+                    document.applicationForm.HighwayNo2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("highwayNum_error").innerHTML = "";
+            }
+        }
+        else if ($("#HighwayNo2").val().length > 0) {
+            $("#HighwayNo2").val("");
         }
     });
     $("#SBUTypeId").on("change", function () {
-        if ($("#SBUTypeId").val().length > 0) {
+        if (document.applicationForm.SBUTypeId.value == "0") {
+            document.getElementById("sbuType_error").innerHTML = "SBU Type field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.SBUTypeId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("sbuType_error").innerHTML = "";
         }
     });
     $("#LPGCNGSale").on("blur", function () {
-        if ($("#LPGCNGSale").val().length > 0) {
+        if (document.applicationForm.LPGCNGSale.value.trim() == "") {
+            document.getElementById("lpgCngSale_error").innerHTML = "LPG-CNG Sale field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.LPGCNGSale.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.LPGCNGSale.value.match(lpgCngSale)) {
+            document.getElementById("lpgCngSale_error").innerHTML = "LPG-CNG Sale value is invalid - From 1 to 1,00,000 Only";
+            if (ret != "N") {
+                document.applicationForm.LPGCNGSale.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("lpgCngSale_error").innerHTML = "";
         }
     });
     $("#PancardNumber").on("blur", function () {
-        if ($("#PancardNumber").val().length > 0) {
+        if (document.applicationForm.PancardNumber.value.trim() == "") {
+            document.getElementById("panCardNum_error").innerHTML = "PAN Card field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.PancardNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.PancardNumber.value.match(pancard)) {
+            document.getElementById("panCardNum_error").innerHTML = "PAN Card is Invalid";
+            if (ret != "N") {
+                document.applicationForm.PancardNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("panCardNum_error").innerHTML = "";
         }
     });
     $("#GSTNumber").on("blur", function () {
-        if ($("#GSTNumber").val().length > 0) {
+        if (document.applicationForm.GSTNumber.value.trim() != "") {
+            if (!document.applicationForm.GSTNumber.value.match(gstNumber))
+            {
+                document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.GSTNumber.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if ($('#GSTNumber').val().indexOf($("#PancardNumber").val().trim()) < 0)
+            {
+                document.getElementById("gstNum_error").innerHTML = "GST Number is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.GSTNumber.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+        }
+        else {
             document.getElementById("gstNum_error").innerHTML = "";
         }
     });
     $("#RetailOutletAddress1").on("blur", function () {
-        if ($("#RetailOutletAddress1").val().length > 0) {
+        if (document.applicationForm.RetailOutletAddress1.value.trim() == "") {
+            document.getElementById("retail_address1_error").innerHTML = "Address 1 field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (checkForSpecialChars(document.applicationForm.RetailOutletAddress1.value.trim())){
+            document.getElementById("retail_address1_error").innerHTML = "Address 1 is Invalid";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletAddress1.value.match(onlyNumbers)){
+            document.getElementById("retail_address1_error").innerHTML = "Only Numbers not allowed";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress1.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retail_address1_error").innerHTML = "";
         }
     });
     $("#RetailOutletAddress2").on("blur", function () {
-        if ($("#RetailOutletAddress2").val().length > 0) {
+        if (document.applicationForm.RetailOutletAddress2.value.trim() == "") {
+            document.getElementById("retail_address2_error").innerHTML = "Address 2 field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (checkForSpecialChars(document.applicationForm.RetailOutletAddress2.value.trim())){
+            document.getElementById("retail_address2_error").innerHTML = "Address 2 is Invalid";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.RetailOutletAddress2.value.match(onlyNumbers)){
+            document.getElementById("retail_address2_error").innerHTML = "Only Numbers not allowed";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletAddress2.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retail_address2_error").innerHTML = "";
         }
     });
     $("#RetailOutletCity").on("blur", function () {
-        if ($("#RetailOutletCity").val().length > 0) {
+        if (document.applicationForm.RetailOutletCity.value.trim() == "") {
+            document.getElementById("retail_city_error").innerHTML = "City field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletCity.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletCity.value.match(nameCheck)){
+            document.getElementById("retail_city_error").innerHTML = "Invalid City Name";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletCity.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retail_city_error").innerHTML = "";
         }
     });
-    //$("#RetailOutletStateId").on("blur", function () {
-    //    if ($("#RetailOutletStateId").val().length > 0) {
-    //        document.getElementById("retail_state_error").innerHTML = "";
-    //    }
-    //});
-    //$("#RetailOutletDistrictId").on("blur", function () {
-    //    if ($("#RetailOutletDistrictId").val() != null) {
-    //        if ($("#RetailOutletDistrictId").val().length > 0) {
-    //            document.getElementById("retail_district_error").innerHTML = "";
-    //        }
-    //    }
-    //});
     $("#RetailOutletPinNumber").on("blur", function () {
-        if ($("#RetailOutletPinNumber").val().length > 0) {
+        if (document.applicationForm.RetailOutletPinNumber.value == "") {
+            document.getElementById("retail_pincode_error").innerHTML = "Pin Code field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletPinNumber.value.match(number)) {
+            document.getElementById("retail_pincode_error").innerHTML = "Numeric Only";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletPinNumber.value.match(pincode)) {
+            document.getElementById("retail_pincode_error").innerHTML = "Invalid PIN";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPinNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retail_pincode_error").innerHTML = "";
         }
     });
     $("#RetailOutletPhoneNumber").on("blur", function () {
-        if ($("#RetailOutletPhoneNumber").val().length > 0) {
+        if (document.applicationForm.RetailOutletPhoneNumber.value == "") {
+            document.getElementById("retail_officePhone_error").innerHTML = "Phone Number field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPhoneNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.RetailOutletPhoneNumber.value.match(number)) {
+            document.getElementById("retail_officePhone_error").innerHTML = "Numeric Only";
+            if (ret != "N") {
+                document.applicationForm.RetailOutletPhoneNumber.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("retail_officePhone_error").innerHTML = "";
         }
     });
-    //$("#ZonalOfficeId").on("blur", function () {
-    //    if ($("#ZonalOfficeId").val().length > 0) {
-    //        document.getElementById("zonal_office_error").innerHTML = "";
-    //    }
-    //});
-    //$("#RegionalOfficeId").on("blur", function () {
-    //    if ($("#RegionalOfficeId").val().length > 0) {
-    //        document.getElementById("regionalOfc_error").innerHTML = "";
-    //    }
-    //});
-    $("#SalesAreaId").on("blur", function () {
-        if ($("#SalesAreaId").val().length > 0) {
-            document.getElementById("salesArea_error").innerHTML = "";
-        }
-    });
     $("#ErpCode").on("blur", function () {
-        if ($("#ErpCode").val().length > 0) {
-
-            var erpCode = this.value;
-
-            if (!erpCode.match(erpCodeCheck)) {
-                document.getElementById("erpCode_error").innerHTML = "Start with 1 and Only 8 Digits are allowed";
+        if (document.applicationForm.ErpCode.value.trim() == "") {
+            document.getElementById("erpCode_error").innerHTML = "ERP Code field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.ErpCode.focus();
             }
-            else{
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("ValidateErpCode", "Common")',
-                    data: { erpCode: erpCode },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success' && v == '0') {
-                            document.getElementById("erpCode_error").innerHTML = "ERP Code already exists";
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.ErpCode.value.match(erpCodeCheck)) {
+            document.getElementById("erpCode_error").innerHTML = "Start with 1 and Only 8 Digits are allowed";
+            if (ret != "N") {
+                document.applicationForm.ErpCode.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (document.applicationForm.ErpCode.value.match(erpCodeCheck) && $("#UpdateFlag").val() != "Y"){
+            var erpCode = document.applicationForm.ErpCode.value;
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ValidateErpCode", "Common")',
+                data: { erpCode: erpCode },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success' && v == '0') {
+                        document.getElementById("erpCode_error").innerHTML = "ERP Code already exists";
+                        if (ret != "N") {
+                            document.applicationForm.ErpCode.focus();
                         }
-                        else {
-                            document.getElementById("erpCode_error").innerHTML = "";
-                            console.log(v);
-                        }
+                        $("#applicationForm").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        ret = "N";
                     }
-                });
-            }
+                    else {
+                        document.getElementById("erpCode_error").innerHTML = "";
+                        console.log(v);
+                    }
+                }
+            });
+        }
+        else {
+            document.getElementById("erpCode_error").innerHTML = "";
         }
     });
     $("#ContactPersonNameFirstName").on("blur", function () {
-        if ($("#ContactPersonNameFirstName").val().length > 0) {
+        if (document.applicationForm.ContactPersonNameFirstName.value.trim() == "") {
+            document.getElementById("contact_name_error").innerHTML = "First Name field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameFirstName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.ContactPersonNameFirstName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "First Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameFirstName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+        }
+        else {
             document.getElementById("contact_name_error").innerHTML = "";
         }
     });
     $("#ContactPersonNameMiddleName").on("blur", function () {
-        if ($("#ContactPersonNameMiddleName").val().length > 0) {
+        if (document.applicationForm.ContactPersonNameMiddleName.value.trim() == "") {
+            document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameMiddleName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameMiddleName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+        }
+        else {
             document.getElementById("contact_name_error").innerHTML = "";
         }
     });
     $("#ContactPersonNameLastName").on("blur", function () {
-        if ($("#ContactPersonNameLastName").val().length > 0) {
+        if (document.applicationForm.ContactPersonNameLastName.value.trim() == "") {
+            document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.ContactPersonNameLastName.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameLastName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+        }
+        else {
             document.getElementById("contact_name_error").innerHTML = "";
         }
     });
     $("#MobileNo").on("blur", function () {
-        if ($("#MobileNo").val().length > 0) {
+        if (document.applicationForm.MobileNo.value.trim() == "") {
+            document.getElementById("mobile_error").innerHTML = "Mobile Number field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.MobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.MobileNo.value.match(phoneno)) {
+            document.getElementById("mobile_error").innerHTML = "Invalid Mobile Number";
+            if (ret != "N") {
+                document.applicationForm.MobileNo.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("mobile_error").innerHTML = "";
         }
+
     });
     $("#EmailId").on("blur", function () {
-        if ($("#EmailId").val().length > 0) {
+        if (document.applicationForm.EmailId.value.trim() == "") {
+            document.getElementById("email_error").innerHTML = "Email field cannot be left blank";
+            if (ret != "N") {
+                document.applicationForm.EmailId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.EmailId.value.match(email)) {
+            document.getElementById("email_error").innerHTML = "Invalid Email Address";
+            if (ret != "N") {
+                document.applicationForm.EmailId.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("email_error").innerHTML = "";
         }
     });
     $("#NoofLiveTerminals").on("blur", function () {
-        if ($("#NoofLiveTerminals").val().length > 0) {
+        if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "Number of Live Terminals should be between either 1 or 2";
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "Numeric Only";
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "Maximum 2 is allowed";
+            if (ret != "N") {
+                document.applicationForm.NoofLiveTerminals.focus();
+            }
+            $("#applicationForm").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "";
         }
     });
-    $("#TerminalTypeRequested").on("blur", function () {
-        if ($("#TerminalTypeRequested").val().length > 0) {
-            document.getElementById("terminalTypeReq_error").innerHTML = "";
-        }
-    });
     $("#HighwayName").on("blur", function () {
-        if ($("#HighwayName").val().length > 0) {
+        if (document.applicationForm.HighwayName.value.trim() != "") {
+            if (!document.applicationForm.HighwayName.value.match(highwayName)) {
+                document.getElementById("highwayName_error").innerHTML = "Highway Name has invalid characters";
+                if (ret != "N") {
+                    document.applicationForm.HighwayName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("highwayName_error").innerHTML = "";
+            }
+        }
+        else {
             document.getElementById("highwayName_error").innerHTML = "";
         }
     });
 
-    //$("#CommunicationPinNumber").on("blur", function () {
-    //    //debugger;
-    //    if (document.getElementById("CommunicationPinNumber").value.trim() == "") {
-    //        document.getElementById("comm_pin_error").innerHTML = "Pin code field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        if (document.getElementById("CommunicationPinNumber").value.substring(0, 1) == "0") {
-    //            document.getElementById("comm_pin_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-    //            document.getElementById("CommunicationPinNumber").value = "";
-    //            document.getElementById("CommunicationPinNumber").focus();
-    //            return false;
-    //        }
+    $("#CommunicationAddress1").on("blur", function () {
+        if (document.applicationForm.CommunicationAddress1.value.trim() != "") {
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress1.value.trim())){
+                document.getElementById("communicationAddress1_error").innerHTML = "Address 1 is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress1.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress1.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress1_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress1.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress1_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress1_error").innerHTML = "";
+        }
+    });
 
-    //        if (document.getElementById("CommunicationPinNumber").value.length < 6) {
-    //            document.getElementById("comm_pin_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-    //            document.getElementById("CommunicationPinNumber").value = "";
-    //            document.getElementById("CommunicationPinNumber").focus();
-    //            return false;
-    //        }
-    //    }
+    $("#CommunicationAddress2").on("blur", function () {
+        if (document.applicationForm.CommunicationAddress2.value.trim() != "") {
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress2.value.trim())){
+                document.getElementById("communicationAddress2_error").innerHTML = "Address 2 is Invalid";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress2.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress2_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress2.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress2_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress2_error").innerHTML = "";
+        }
+    });
 
-    //});
+    $("#CommunicationAddress3").on("blur", function () {
+        if (document.applicationForm.CommunicationAddress3.value.trim() != "") {
+            if (!document.applicationForm.CommunicationAddress3.value.match(notOnlySpecialChars)){
+                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 field cannot have Special Characters";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress3.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationAddress3.value.match(onlyNumbers)){
+                document.getElementById("communicationAddress3_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationAddress3.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationAddress3_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationAddress3_error").innerHTML = "";
+        }
+    });
 
-    //$("#RetailOutletPinNumber").on("blur", function () {
-    //    //debugger;
-    //    if (document.getElementById("RetailOutletPinNumber").value.trim() == "") {
-    //        document.getElementById("retail_pincode_error").innerHTML = "Pin code field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        if (document.getElementById("RetailOutletPinNumber").value.substring(0, 1) == "0") {
-    //            document.getElementById("retail_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-    //            document.getElementById("RetailOutletPinNumber").value = "";
-    //            document.getElementById("RetailOutletPinNumber").focus();
-    //            return false;
-    //        }
-
-    //        if (document.getElementById("RetailOutletPinNumber").value.length < 6) {
-    //            document.getElementById("retail_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
-    //            document.getElementById("RetailOutletPinNumber").value = "";
-    //            document.getElementById("RetailOutletPinNumber").focus();
-    //            return false;
-    //        }
-    //    }
-
-    //});
-
-    //$("#RetailOutletName").on("blur", function () {
-    //    //debugger;
-    //    var retailOutletName = document.getElementById("RetailOutletName").value.trim();
-    //    if (retailOutletName == "") {
-    //        document.getElementById("retailOutletName_error").innerHTML = "Retail Outlet Name field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        if (!isNaN(document.getElementById("RetailOutletName").value.trim())) {
-    //            document.getElementById("retailOutletName_error").innerHTML = "Invalid Retail Outlet Name";
-    //            document.getElementById("RetailOutletName").value = "";
-    //            //document.getElementById("RetailOutletName").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("retailOutletName_error").innerHTML = "";
-    //        }
-
-    //        if (!document.getElementById("RetailOutletName").value.match(nameWithSpaceCheck)) {
-    //            document.getElementById("retailOutletName_error").innerHTML = "Invalid Retail Outlet Name";
-    //            document.getElementById("RetailOutletName").value = "";
-    //            //document.getElementById("RetailOutletName").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("retailOutletName_error").innerHTML = "";
-    //        }
-    //    }
-
-    //});
-
-    //$("#DealerName").on("blur", function () {
-    //    //debugger;
-    //    var dealerName = document.getElementById("DealerName").value.trim();
-    //    if (dealerName == "") {
-    //        document.getElementById("dealerName_error").innerHTML = "Dealer Name field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        if (!isNaN(document.getElementById("DealerName").value.trim())) {
-    //            document.getElementById("dealerName_error").innerHTML = "Invalid Dealer Name";
-    //            document.getElementById("DealerName").value = "";
-    //            //document.getElementById("DealerName").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("dealerName_error").innerHTML = "";
-    //        }
-
-    //        if (!document.getElementById("DealerName").value.match(nameWithSpaceCheck)) {
-    //            document.getElementById("dealerName_error").innerHTML = "Invalid Dealer Name";
-    //            document.getElementById("DealerName").value = "";
-    //            //document.getElementById("DealerName").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("dealerName_error").innerHTML = "";
-    //        }
-    //    }
-
-    //});
-
-    //$("#DealerMobileNo").on("blur", function () {
-    //    //debugger;
-    //    var dealerMobileNo = document.getElementById("DealerMobileNo").value.trim();
-    //    if (dealerMobileNo == "") {
-    //        document.getElementById("dealerMobileNum_error").innerHTML = "Dealer Mobile Number field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        if (document.getElementById("DealerMobileNo").value.substring(0, 1) == "0") {
-    //            document.getElementById("dealerMobileNum_error").innerHTML = "Invalid Mobile Number. Min-max 10 digits";
-    //            document.getElementById("DealerMobileNo").value = "";
-    //            //document.getElementById("DealerMobileNo").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("dealerMobileNum_error").innerHTML = "";
-    //        }
-
-    //        if (document.getElementById("DealerMobileNo").value.length < 10) {
-    //            document.getElementById("dealerMobileNum_error").innerHTML = "Invalid Mobile Number. Min-max 10 digits";
-    //            document.getElementById("DealerMobileNo").value = "";
-    //            //document.getElementById("DealerMobileNo").focus();
-    //            return false;
-    //        }
-    //        else {
-    //            document.getElementById("dealerMobileNum_error").innerHTML = "";
-    //        }
-    //    }
-
-
-    //});
-
-    //$("#PancardNumber").on("blur", function () {
-    //    //debugger;
-    //    var panNumber = document.getElementById("PancardNumber").value.trim();
-
-    //    if (panNumber == "") {
-    //        document.getElementById("panCardNum_error").innerHTML = "PAN Card Number field cannot be left blank";
-    //        return (false);
-    //    }
-    //    else {
-    //        document.getElementById("PancardNumber").value = document.getElementById("PancardNumber").value.trim().toUpperCase();
-
-    //        if (panNumber.match(pancard)) {
-    //            document.getElementById("panCardNum_error").innerHTML = "";
-    //            //return true
-    //        }
-    //        else {
-    //            document.getElementById("panCardNum_error").innerHTML = "Invalid PAN Card Number";
-    //            document.getElementById("PancardNumber").focus();
-    //            return (false);
-    //        }
-
-    //        let forthdigitPan = panNumber.substr(3, 1);
-
-    //        if (forthdigitPan != 'P') {
-    //            //document.getElementById("CustomerIncomeTaxPan").value = "";
-    //            document.getElementById("panCardNum_error").innerHTML = "Invalid PAN Card Number";
-    //            document.getElementById("PancardNumber").focus();
-    //            return;
-    //        }
-    //        else {
-    //            document.getElementById("incomeTaxPan_error").innerHTML = "PAN Card Number is valid";
-    //        }
-    //    }
-
-    //});
-
+    $("#CommunicationCity").on("blur", function () {
+        if (document.applicationForm.CommunicationCity.value.trim() != "") {
+            if (!document.applicationForm.CommunicationCity.value.match(notOnlySpecialChars)){
+                document.getElementById("communicationCity_error").innerHTML = "Invalid City Name";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationCity.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if (document.applicationForm.CommunicationCity.value.match(onlyNumbers)){
+                document.getElementById("communicationCity_error").innerHTML = "Only Numbers not allowed";
+                if (ret != "N") {
+                    document.applicationForm.CommunicationCity.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else {
+                document.getElementById("communicationCity_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("communicationCity_error").innerHTML = "";
+        }
+    });
 </script>

@@ -25,7 +25,7 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control, search_test", onchange = "getViewAllocatedCardRegionalOfc()" })
+                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getViewAllocatedCardRegionalOfc()" })
                                             @*<div class="custom_select">
                                                 @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control" })
                                                 </div>
@@ -77,8 +77,12 @@
                                         @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
 
                                         <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusName, "StatusId", "StatusName"), new {  @class = "form-control" })
-
+                                           @*@Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusName, "StatusId", "StatusName"), new {  @class = "form-control" })*@
+                                            <select name="StatusId" id="StatusId" class="form-control">
+                                                    <option selected="selected" value="-1">--All--</option>
+                                                    <option value="0">Pending</option>
+                                                    <option value="1">Mapped</option>
+                                                </select>
                                         </div>
 
 
@@ -96,6 +100,7 @@
                                             <div class="px-2">
                                                 <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
                                             </div>
+                                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                                         </div>
 
 
@@ -186,10 +191,10 @@
     function getViewAllocatedCardRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
 
-        if (zonalID != "0" && zonalID != null && zonalID != "") {
-            id = zonalID;
-        }
-
+        //if (zonalID != "0" && zonalID != null && zonalID != "") {
+        //    id = zonalID;
+        //}
+        var regionalID = $("#RegionalOfcIdVal").val();
 
         $.ajax({
             type: 'POST',  // http method
