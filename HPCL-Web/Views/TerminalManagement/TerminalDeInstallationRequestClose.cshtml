@@ -121,7 +121,7 @@
     $(document).ready(function () {
 
         //setDates();
-        getMerchantRegionalOfc();
+        //getMerchantRegionalOfc();
 
     });
     $("#btnReset").click(function () {
@@ -207,26 +207,42 @@
         var id = this.value;
         $("#RegionalOfcIdVal").val(id);
     });
-      function getMerchantRegionalOfc() {
+    function getMerchantRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
         var regionalID = $("#RegionalOfcIdVal").val();
-         $.ajax({
-             type: 'POST',  // http method
-             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-             data: { ZonalOfcID: id },  // data to submit
-             dataType: "json",
-             success: function (data, status, xhr) {
-                 var v = data;
-                 if (status == 'success') {
-                     $("#RegionalOfficeId").html("");
-                     $.each(data, function (i, data) { // bind the dropdown list using json result
-                         if (i == 0) {
-                             $('<option>',
-                                 {
-                                     value: 0,
-                                     text: "--All--"
-                                 }).html("--All--").appendTo("#RegionalOfficeId");
-                             if (data.regionalOfficeID == regionalID) {
+        if(id>0){
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                 data: { ZonalOfcID: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success') {
+                         $("#RegionalOfficeId").html("");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+                             if (i == 0) {
+                                 $('<option>',
+                                     {
+                                         value: 0,
+                                         text: "--All--"
+                                     }).html("--All--").appendTo("#RegionalOfficeId");
+                                 if (data.regionalOfficeID == regionalID) {
+                                     $('<option selected = "selected">',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                 }
+                                 else {
+                                     $('<option>',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                 }
+                             }
+                             else if (data.regionalOfficeID == regionalID) {
                                  $('<option selected = "selected">',
                                      {
                                          value: data.regionalOfficeID,
@@ -240,32 +256,22 @@
                                          text: data.regionalOfficeName
                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
                              }
-                         }
-                         else if (data.regionalOfficeID == regionalID) {
-                             $('<option selected = "selected">',
-                                 {
-                                     value: data.regionalOfficeID,
-                                     text: data.regionalOfficeName
-                                 }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                         }
-                         else {
-                             $('<option>',
-                                 {
-                                     value: data.regionalOfficeID,
-                                     text: data.regionalOfficeName
-                                 }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                         }
-                     });
-                     $("#RegionalOfficeId")[0].sumo.reload();
+                         });
+                         $("#RegionalOfficeId")[0].sumo.reload();
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Regional Office Data");
                  }
-                 else {
-                     console.log(v);
-                 }
-             },
-             error: function (jqXhr, textStatus, errorMessage) {
-                 alert("Error Populating Regional Office Data");
-             }
-         });
+             });
+         }
+         else{
+            $("#RegionalOfficeId").html('');
+            $("#RegionalOfficeId")[0].sumo.reload();
+         }
      };
        $('select').SumoSelect({
             placeholder: '-All-',
