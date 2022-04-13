@@ -38,7 +38,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                @*@Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })*@
+                                                <select name="CustomerRegionID" id="CustomerRegionID" class="form-control"></select>
                                                 <span class="error" id="CustomerRegionID_error"></span>
                                             </div>
                                         </div>
@@ -195,24 +196,39 @@
         //    id = zonalID;
         //}
         var regionalID = $("#RegionalOfcIdVal").val();
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#CustomerRegionID").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "--All--"
-                                }).html("--All--").appendTo("#CustomerRegionID");
-                            if (data.regionalOfficeID == regionalID) {
+         if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfcID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#CustomerRegionID").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "--All--"
+                                    }).html("--All--").appendTo("#CustomerRegionID");
+                                if (data.regionalOfficeID == regionalID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
+                                }
+                            }
+                            else if (data.regionalOfficeID == regionalID) {
                                 $('<option selected = "selected">',
                                     {
                                         value: data.regionalOfficeID,
@@ -226,33 +242,23 @@
                                         text: data.regionalOfficeName
                                     }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
                             }
-                        }
-                        else if (data.regionalOfficeID == regionalID) {
-                            $('<option selected = "selected">',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
-                        }
 
-                    });
-                    $("#CustomerRegionID")[0].sumo.reload();
+                        });
+                        $("#CustomerRegionID")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office Data");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
-            }
-        });
+            });
+        }
+        else{
+             $("#CustomerRegionID").html('');
+            $("#CustomerRegionID")[0].sumo.reload();
+        }
     };
     $('select').SumoSelect({
             placeholder: '-All-',
