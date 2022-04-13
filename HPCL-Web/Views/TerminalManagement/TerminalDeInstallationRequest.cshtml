@@ -299,24 +299,10 @@
     })
     );
     $("#btnReset").click(function () {
-       //debugger;
-        resetData();
+       location.reload();
 
     });
-    function resetData() {
-        //debugger;
-        $("#RegionalOfcIdVal").val("");
-        $("#ZonalOfficeId").val(0);
-        getMerchantRegionalOfc();
-        $("#DeinstallationTypeID").val(0);
-        $("#MerchantId").val("");
-        $("#TerminalId").val("");
-        $("#show_Table").html("");
-        $("#Merchant_error").html("");
-        $("#type_error").html("");
-        $("#TerminalId").prop("readonly", false);
-        $("#terminalId_error").html("");
-    };
+    
     $("#RegionalOfficeId").change(function () {
         var id = this.value;
         $("#RegionalOfcIdVal").val(id);
@@ -333,65 +319,71 @@
     }
 
 
-   function getMerchantRegionalOfc() {
-       var id = $('#ZonalOfficeId :selected').val();
-       var regionalID = $("#RegionalOfcIdVal").val();
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#RegionalOfficeId").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "--All--"
-                                }).html("--All--").appendTo("#RegionalOfficeId");
-                            if (data.regionalOfficeID == regionalID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                            }
-                        }
-                        else if (data.regionalOfficeID == regionalID) {
-                            $('<option selected = "selected">',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
-                    });
-                }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
-            }
+    function getMerchantRegionalOfc() {
+        var id = $('#ZonalOfficeId :selected').val();
+        var regionalID = $("#RegionalOfcIdVal").val();
+         $.ajax({
+             type: 'POST',  // http method
+             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+             data: { ZonalOfcID: id },  // data to submit
+             dataType: "json",
+             success: function (data, status, xhr) {
+                 var v = data;
+                 if (status == 'success') {
+                     $("#RegionalOfficeId").html("");
+                     $.each(data, function (i, data) { // bind the dropdown list using json result
+                         if (i == 0) {
+                             $('<option>',
+                                 {
+                                     value: 0,
+                                     text: "--All--"
+                                 }).html("--All--").appendTo("#RegionalOfficeId");
+                             if (data.regionalOfficeID == regionalID) {
+                                 $('<option selected = "selected">',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                             }
+                             else {
+                                 $('<option>',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                             }
+                         }
+                         else if (data.regionalOfficeID == regionalID) {
+                             $('<option selected = "selected">',
+                                 {
+                                     value: data.regionalOfficeID,
+                                     text: data.regionalOfficeName
+                                 }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                         }
+                         else {
+                             $('<option>',
+                                 {
+                                     value: data.regionalOfficeID,
+                                     text: data.regionalOfficeName
+                                 }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                         }
+                     });
+                     $("#RegionalOfficeId")[0].sumo.reload();
+                 }
+                 else {
+                     console.log(v);
+                 }
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                 alert("Error Populating Regional Office Data");
+             }
+         });
+     };
+       $('select').SumoSelect({
+            placeholder: '-All-',
+            search: true,
+            searchText: 'Enter Text here.'
         });
-    };
 
      function submitTerminaldeinstallationRequest() {
         //alert("inside submit");

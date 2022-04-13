@@ -361,7 +361,7 @@
             }
         }
 
-        if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE") {
+        if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
             document.getElementById("userName_error").innerHTML = "User Name is required";
             if (ret != "N") {
                 document.form1.UserName.focus();
@@ -371,8 +371,40 @@
             });
             ret = "N";
         }
-        else if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() == "RBE") {
+        else if (document.form1.UserName.value.trim() == "" && ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() != "RSM")) {
             document.getElementById("userName_error").innerHTML = "Emp ID is required";
+            if (ret != "N") {
+                document.form1.UserName.focus();
+            }
+            $("#form1").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else if (!document.form1.UserName.value.match(notOnlySpecialChars)){
+            if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
+                document.getElementById("userName_error").innerHTML = "User Name is Invalid";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+            else if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")) {
+                document.getElementById("userName_error").innerHTML = "Emp ID is Invalid";
+                if (ret != "N") {
+                    document.form1.UserName.focus();
+                }
+                $("#form1").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+            }
+        }
+        else if (document.getElementById("userName_error").innerHTML.length > 0)
+        {
             if (ret != "N") {
                 document.form1.UserName.focus();
             }
@@ -576,7 +608,7 @@
                 document.getElementById("email_error").innerHTML = "";
             }
             if (document.form1.City.value.trim() != "") {
-                if (!document.form1.City.value.match(nameCheck)){
+                if (!document.form1.City.value.match(CitynameCheck)){
                     document.getElementById("city_error").innerHTML = "City is Invalid";
                     if (ret != "N") {
                         document.form1.City.focus();
@@ -609,6 +641,23 @@
             if($("#UserName").val().trim() == ""){
                 $("#userName_error").html("Emp ID is required");
             }
+            else{
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateUserName", "Common")',
+                    data: { userName: $("#UserName").val().trim() },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            $("#userName_error").html("Emp ID already Exists");
+                        }
+                        else {
+                            $("#userName_error").html("");
+                        }
+                    }
+                });
+            }
         }
         else if (name == "RSM"){
             $("#userNameLabel").html("Emp. ID *");
@@ -616,12 +665,46 @@
             if($("#UserName").val().trim() == ""){
                 $("#userName_error").html("Emp ID is required");
             }
+            else{
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateUserName", "Common")',
+                    data: { userName: $("#UserName").val().trim() },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            $("#userName_error").html("Emp ID already Exists");
+                        }
+                        else {
+                            $("#userName_error").html("");
+                        }
+                    }
+                });
+            }
         }
         else {
             $("#userNameLabel").html("User Name *");
             $("#commAddressForm").show();
             if($("#UserName").val().trim() == ""){
                 $("#userName_error").html("User Name is required");
+            }
+            else{
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateUserName", "Common")',
+                    data: { userName: $("#UserName").val().trim() },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            $("#userName_error").html("User Name already Exists");
+                        }
+                        else {
+                            $("#userName_error").html("");
+                        }
+                    }
+                });
             }
         }
 
@@ -1158,7 +1241,7 @@
     });
     $("#City").on("blur", function() {
         if (document.form1.City.value.trim() != "") {
-            if (!document.form1.City.value.match(nameCheck)){
+            if (!document.form1.City.value.match(CitynameCheck)){
                 document.getElementById("city_error").innerHTML = "City is Invalid";
                 if (ret != "N") {
                     document.form1.City.focus();

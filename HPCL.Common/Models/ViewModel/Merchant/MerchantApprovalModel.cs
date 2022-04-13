@@ -8,7 +8,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
     {
         public MerchantApprovalModel()
         {
-            FromDate = DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy");
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             Categories = new List<CategoriesModel>();
             MerchantApprovalTableDetails = new List<MerchantApprovalTableModel>();

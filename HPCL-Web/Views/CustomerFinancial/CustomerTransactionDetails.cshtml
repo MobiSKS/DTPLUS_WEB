@@ -109,340 +109,231 @@
                     </div>
                 </div>
 
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0" id="divtable" style="display:none">
-                    <div class="border-1 rounded border-grey pb-3">
-                        <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Summary of Transactions</p>
-                        <div class="d-flex align-items-center flex-wrap mb-3">
-                            <table id="CustTransactionSummary" class="table1 table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Account Number</th>
-                                        <th>Customer Name</th>
-                                        @*<th>Customer Code</th>*@
-                                        <th>Sale</th>
-                                        <th>Reload(CCMS & Cash)</th>
-                                        <th>CCMS Recharge</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div class="d-flex align-items-center flex-wrap mb-3">
-                            <table id="CustTransactionDetails" class="table1 table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th>SNo.</th>
-                                        <th>Terminal Id</th>
-                                        <th>Merchant</th>
-                                        @*<th>BatchID/ROC</th>*@
-                                        <th>Account Number</th>
-                                        <th>Vehicle No/User Name</th>
-                                        <th>Txn Date</th>
-                                        <th>Txn Type</th>
-                                        <th>Product</th>
-                                        <th>Price</th>
-                                        <th>Volume(Ltr.)</th>
-                                        <th>Currency</th>
-                                        <th>Service Charge</th>
-                                        <th>Amount</th>
-                                        <th>Discount</th>
-                                        <th>Odometer Reading</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+               
 
             </div>
         </form>
-        <div class="clearfix"></div>
-        <div>
-            <div id="message" class="mb-3 text-center" style="display:none">
-            </div>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="divtable">
         </div>
-
+        <div class="clearfix"></div>
+       
 
     </div>
 </div>
 <script type="text/javascript">
 
-   // var today = new Date();
-    //var dd = String(today.getDate()).padStart(2, '0');
-    //var mm = String(today.getMonth() + 1).padStart(2, '0');
-    //var yyyy = today.getFullYear();
-    //today = yyyy + '-' + mm + '-' + dd;
-    $(document).ready(function () {
-        if ($("#rbCardNo").is(":checked")) {
-            $("#lblCustomerId").attr("style", "display:none");
-            $("#lblCardNo").attr("style", "display:block");
-            $("#lblMobileNo").attr("style", "display:none");
-        }
-        else if ($("#rbMobileNo").is(":checked")) {
-            $("#lblCustomerId").attr("style", "display:none");
-            $("#lblCardNo").attr("style", "display:none");
-            $("#lblMobileNo").attr("style", "display:block");
-        }
-        else {
-            $("#lblCustomerId").attr("style", "display:block");
-            $("#lblCardNo").attr("style", "display:none");
-            $("#lblMobileNo").attr("style", "display:none");
-        }
-
-    });
-
-    $(".rbTransactionType").change(function () {
-
-        if ($("#rbCustomerID").is(":checked")) {
-            $("#cardNoDiv").attr("style", "display:none");
-            $("#mobileNoDiv").attr("style", "display:none");
-            $("#customerIdDiv").attr("style", "display:block");
-            $("#lblCustomerId").attr("style", "display:block");
-            $("#lblCardNo").attr("style", "display:none");
-            $("#lblMobileNo").attr("style", "display:none");
-
-        }
-        if ($("#rbCardNo").is(":checked")) {
-            $("#cardNoDiv").attr("style", "display:block");
-            $("#mobileNoDiv").attr("style", "display:none");
-            $("#customerIdDiv").attr("style", "display:none");
-            $("#lblCustomerId").attr("style", "display:none");
-            $("#lblCardNo").attr("style", "display:block");
-            $("#lblMobileNo").attr("style", "display:none");
-        }
-        if ($("#rbMobileNo").is(":checked")) {
-            $("#cardNoDiv").attr("style", "display:none");
-            $("#mobileNoDiv").attr("style", "display:block");
-            $("#customerIdDiv").attr("style", "display:none");
-            $("#lblCustomerId").attr("style", "display:none");
-            $("#lblCardNo").attr("style", "display:none");
-            $("#lblMobileNo").attr("style", "display:block");
-        }
-        $("#CardNo").val("");
-        $("#CustomerID").val("");
-        $("#MobileNo").val("");
-        $("#customerId_error").attr("style", "display:none");
-        $("#customerId_error").html("");
-
-    });
-   
-    
-
-    $("#btnSearch").on("click", (function (e) {
-         var fromdate = $("#FromDate").val();
-         var todate = $("#ToDate").val();
-         var customerId = "", cardNo = "", mobileNo = "";
-       
+    // var today = new Date();
+     //var dd = String(today.getDate()).padStart(2, '0');
+     //var mm = String(today.getMonth() + 1).padStart(2, '0');
+     //var yyyy = today.getFullYear();
+     //today = yyyy + '-' + mm + '-' + dd;
+     $(document).ready(function () {
          if ($("#rbCardNo").is(":checked")) {
-             cardNo = $("#CardNo").val();
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:block");
+             $("#lblMobileNo").attr("style", "display:none");
          }
          else if ($("#rbMobileNo").is(":checked")) {
-             mobileNo = $("#MobileNo").val();
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:block");
          }
          else {
-             customerId = $("#CustomerID").val();
-         }
-         var flag = "Y";
-         if (fromdate == "") {
-             $("#fromDate_error").attr("style", "display:block");
-             $("#fromDate_error").html("Select From Date");
-             flag = "N";
-         }
-         if (todate == "") {
-             $("#toDate_error").attr("style", "display:block");
-             $("#toDate_error").html("Select To Date");
-             flag = "N";
-        }
-         if (fromdate != "" && todate != "") {
-             flag = checkDates("fromDate_error","31");
-         }
-        if (customerId == "" && mobileNo == "" && cardNo == "") {
-            $("#customerId_error").attr("style", "display:block");
-            $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
-            flag = "N";
-        }
-        else {
-            if (customerId != "") {
-                if (!customerId.match(mappedCustomerId)){
-                    $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
-                    flag = "N";
-                }
-                else {
-                    $("#customerId_error").attr("style", "display:none");
-                    $("#customerId_error").html("");
-                }
-
-            }
-            if (mobileNo != "") {
-                if (!mobileNo.match(phoneno)) {
-                    $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
-                    flag = "N";
-                }
-                else {
-                    $("#customerId_error").attr("style", "display:none");
-                    $("#customerId_error").html("");
-                }
-            }
-            if (cardNo != "") {
-                if (cardNo.length < 16) {
-                    $("#customerId_error").attr("style", "display:block");
-                    $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
-                    flag = "N";
-                }
-                else {
-                    $("#customerId_error").attr("style", "display:none");
-                    $("#customerId_error").html("");
-                }
-            }
-        }
-
-
-         if (flag == "N")
-             e.preventDefault();
-
-
-         if (flag == "Y") {
-             //customerId = "2000000004";
-             $.ajax({
-                 type: 'POST',  // http method
-                 url: '@Url.Action("GetCustomerTransactionDetails", "CustomerFinancial")',
-                 data: { CustomerID: customerId, CardNo: cardNo, MobileNo: mobileNo, FromDate: fromdate, ToDate: todate},  // data to submit
-                 dataType: "json",
-                 success: function (data, status, xhr) {
-                     console.log(data);
-                     if (status == 'success') {
-                         $("#message").attr("style", "display:none");
-                         $("#CustTransactionDetails td").parent().remove();
-                         if (data.getTransactionsDetailSummary.length > 0) {
-                             for (var i = 0; i < data.getTransactionsDetailSummary.length; i++) {
-                                 var rows = "<tbody><tr>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].srNumber || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].terminalId || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].merchantId || '') + "</span></td>"
-                                     /*+ "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].batchIdandROC || '') + "</span></td>"*/
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].accountNumber || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].vechileNo || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].txnDate || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].txnType || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].productName || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].price || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].volume || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].currency || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].serviceCharge || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].amount || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].discount || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].odometerReading || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsDetailSummary[i].status || '') + "</span></td></tr></tbody>"
-
-
-                                 $('#CustTransactionDetails').append(rows);
-
-
-                             }
-
-                         }
-                         $("#CustTransactionSummary td").parent().remove();
-                         if (data.getTransactionsSaleSummary.length > 0) {
-                             for (var i = 0; i < data.getTransactionsSaleSummary.length; i++) {
-                                 var rows = "<tbody><tr>"
-
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].accountNumber || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerName || '') + "</span></td>"
-                                    /* + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].customerId || '') + "</span></td>"*/
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].sale || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].reloadCcmsCash || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].ccmsRecharge || '') + "</span></td>"
-                                     + "<td><span class='rowData'>" + (data.getTransactionsSaleSummary[i].dailyCashLimitBalance || '') + "</span></td></tr></tbody>"
-
-
-                                 $('#CustTransactionSummary').append(rows);
-
-
-                             }
-                         }
-
-
-                         if (data.getTransactionsSaleSummary.length == 0 && data.getTransactionsDetailSummary.length == 0) {
-                             $("#message").html("");
-                             $("#message").append(data.message);
-
-                             $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
-                             $("#divtable").attr("style", "display:none");
-
-                         }
-                         else {
-                             $("#message").attr("style", "display:none");
-                             $("#divtable").attr("style", "display:block");
-                             $('html, body').animate({
-                                 scrollTop: $("#CustTransactionSummary").offset().top
-                             }, 2000);
-                         }
-                     }
-
-                 },
-             });
+             $("#lblCustomerId").attr("style", "display:block");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:none");
          }
 
-    })
-    );
-    $("#btnReset").click(function () {
-        location.reload();
+     });
 
-    });
-     $("#CustomerID").on("blur", function () {
-         var customerId = $("#CustomerID").val();
-         if (customerId != "") {
-            if (!customerId.match(mappedCustomerId)) {
-                $("#customerId_error").attr("style", "display:block");
-                $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
-                
-            }
-            else{
-                $("#customerId_error").attr("style", "display:none");
-                $("#customerId_error").html("");
-            }
+     $(".rbTransactionType").change(function () {
+
+         if ($("#rbCustomerID").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:none");
+             $("#mobileNoDiv").attr("style", "display:none");
+             $("#customerIdDiv").attr("style", "display:block");
+             $("#lblCustomerId").attr("style", "display:block");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:none");
+
          }
-         else{
+         if ($("#rbCardNo").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:block");
+             $("#mobileNoDiv").attr("style", "display:none");
+             $("#customerIdDiv").attr("style", "display:none");
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:block");
+             $("#lblMobileNo").attr("style", "display:none");
+         }
+         if ($("#rbMobileNo").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:none");
+             $("#mobileNoDiv").attr("style", "display:block");
+             $("#customerIdDiv").attr("style", "display:none");
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:block");
+         }
+         $("#CardNo").val("");
+         $("#CustomerID").val("");
+         $("#MobileNo").val("");
+         $("#customerId_error").attr("style", "display:none");
+         $("#customerId_error").html("");
+
+     });
+
+
+
+     $("#btnSearch").on("click", (function (e) {
+          var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+          var customerId = "", cardNo = "", mobileNo = "";
+
+          if ($("#rbCardNo").is(":checked")) {
+              cardNo = $("#CardNo").val();
+          }
+          else if ($("#rbMobileNo").is(":checked")) {
+              mobileNo = $("#MobileNo").val();
+          }
+          else {
+              customerId = $("#CustomerID").val();
+          }
+          var flag = "Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+         }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error","31");
+          }
+         if (customerId == "" && mobileNo == "" && cardNo == "") {
              $("#customerId_error").attr("style", "display:block");
              $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+             flag = "N";
          }
+         else {
+             if (customerId != "") {
+                 if (!customerId.match(mappedCustomerId)){
+                     $("#customerId_error").attr("style", "display:block");
+                     $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+                     flag = "N";
+                 }
+                 else {
+                     $("#customerId_error").attr("style", "display:none");
+                     $("#customerId_error").html("");
+                 }
+
+             }
+             if (mobileNo != "") {
+                 if (!mobileNo.match(phoneno)) {
+                     $("#customerId_error").attr("style", "display:block");
+                     $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+                     flag = "N";
+                 }
+                 else {
+                     $("#customerId_error").attr("style", "display:none");
+                     $("#customerId_error").html("");
+                 }
+             }
+             if (cardNo != "") {
+                 if (cardNo.length < 16) {
+                     $("#customerId_error").attr("style", "display:block");
+                     $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+                     flag = "N";
+                 }
+                 else {
+                     $("#customerId_error").attr("style", "display:none");
+                     $("#customerId_error").html("");
+                 }
+             }
+         }
+
+
+          if (flag == "N")
+              e.preventDefault();
+
+
+          if (flag == "Y") {
+              //customerId = "2000000004";
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetCustomerTransactionDetails", "CustomerFinancial")',
+                  data: { CustomerID: customerId, CardNo: cardNo, MobileNo: mobileNo, FromDate: fromdate, ToDate: todate},  // data to submit
+                  success: function (data, status, xhr) {
+                      console.log(data);
+                      if (status == 'success') {
+                           $("#divtable").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#divtable").offset().top
+                            }, 2000);
+                      
+                      }
+
+                  },
+              });
+          }
+
+     })
+     );
+     $("#btnReset").click(function () {
+         location.reload();
+
      });
-     $("#MobileNo").on("blur", function () {
-         var mobileNo = $("#MobileNo").val();
-         if (mobileNo != "") {
-             if (!mobileNo.match(phoneno)) {
+      $("#CustomerID").on("blur", function () {
+          var customerId = $("#CustomerID").val();
+          if (customerId != "") {
+             if (!customerId.match(mappedCustomerId)) {
                  $("#customerId_error").attr("style", "display:block");
                  $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+
              }
              else{
                  $("#customerId_error").attr("style", "display:none");
                  $("#customerId_error").html("");
              }
-         }
-         else{
-             $("#customerId_error").attr("style", "display:block");
-             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
-         }
-     });
-     $("#CardNo").on("blur", function () {
-         var cardNo = $("#CardNo").val();
-         if (cardNo != "") {
-             if (cardNo.length < 16) {
-                 $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
-             }
-             else{
-                 $("#customerId_error").attr("style", "display:none");
-                 $("#customerId_error").html("");
-             }
-         }
-         else{
-             $("#customerId_error").attr("style", "display:block");
-             $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
-         }
-     });
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+          }
+      });
+      $("#MobileNo").on("blur", function () {
+          var mobileNo = $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!mobileNo.match(phoneno)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+              }
+              else{
+                  $("#customerId_error").attr("style", "display:none");
+                  $("#customerId_error").html("");
+              }
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+          }
+      });
+      $("#CardNo").on("blur", function () {
+          var cardNo = $("#CardNo").val();
+          if (cardNo != "") {
+              if (cardNo.length < 16) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("invalid CustomerID/Card Number/Mobile Number");
+              }
+              else{
+                  $("#customerId_error").attr("style", "display:none");
+                  $("#customerId_error").html("");
+              }
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Customer ID/Card Number/Mobile Number");
+          }
+      });
 </script>

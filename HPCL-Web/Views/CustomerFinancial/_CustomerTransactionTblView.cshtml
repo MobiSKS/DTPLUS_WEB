@@ -1,0 +1,108 @@
+﻿@model HPCL.Common.Models.ResponseModel.CustomerFinancial.CustomerTransactionResponseModel
+@using HPCL.Common.Resources
+@if (Model != null && Model.GetTransactionsDetailSummary.Count() > 0)
+{
+    <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Summary of Transactions</p>
+    <table id="CustTransactionSummary" class="table d-md-table table-bordered" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Account Number</th>
+                <th>Customer Name</th>
+                <th>Sale</th>
+                <th>Reload(CCMS & Cash)</th>
+                <th>CCMS Recharge</th>
+            </tr>
+        </thead>
+        @if (Model != null && Model.GetTransactionsSaleSummary.Count() > 0)
+        {
+            <tbody>
+
+                @foreach (var item in Model.GetTransactionsSaleSummary)
+                {
+                    <tr>
+                        <td>@item.AccountNumber</td>
+                        <td>@item.CustomerName</td>
+                        <td>@item.Sale</td>
+                        <td>@item.ReloadCcmsCash</td>
+                        <td>@item.CcmsRecharge</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+}
+<div class="clearfix"></div>
+
+@if (Model != null && Model.GetTransactionsDetailSummary.Count() > 0)
+{
+    <div>
+        <table id="CustTransactionDetails" class="datatable table table-striped table-bordered table-responsive" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>SNo.</th>
+                    <th>Terminal Id</th>
+                    <th>Merchant</th>
+                    <th>Account Number</th>
+                    <th>Vehicle No/User Name</th>
+                    <th>Txn Date</th>
+                    <th>Txn Type</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Volume(Ltr.)</th>
+                    <th>Currency</th>
+                    <th>Service Charge</th>
+                    <th>Amount</th>
+                    <th>Discount</th>
+                    <th>Odometer Reading</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int Sno = 0;
+                }
+                @foreach (var item in Model.GetTransactionsDetailSummary)
+                {
+                    Sno++;
+                    <tr>
+                        <td>@Sno</td>
+                        <td>@item.TerminalId</td>
+                        <td>@item.MerchantId</td>
+                        <td>@item.AccountNumber</td>
+                        <td>@item.VechileNo</td>
+                        <td>@item.TxnDate</td>
+                        <td>@item.TxnType</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.Price</td>
+                        <td>@item.Volume</td>
+                        <td>@item.Currency</td>
+                        <td>@item.ServiceCharge</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Discount</td>
+                        <td>@item.OdometerReading</td>
+                        <td>@item.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+}
+@if (Model.GetTransactionsDetailSummary.Count() == 0 && Model.GetTransactionsSaleSummary.Count() == 0)
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#CustTransactionDetails').DataTable({
+            "lengthMenu": [5,10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+
+</script>
