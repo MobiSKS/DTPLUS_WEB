@@ -64,12 +64,12 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetCustomerTransactionDetails(string CustomerID, string CardNo,string MobileNo,string FromDate,string ToDate)
+        public async Task<IActionResult> GetCustomerTransactionDetails(string CustomerID, string CardNo,string MobileNo,string FromDate,string ToDate)
         {
 
             var models=await _customerFinancialService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
-
-            return Json(models);
+            return PartialView("~/Views/CustomerFinancial/_CustomerTransactionTblView.cshtml", models);
+            //return Json(models);
         }
 
         public IActionResult ViewAccountStatement()
