@@ -152,6 +152,12 @@
   
 
     $(document).ready(function () {
+        
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
 
         $.ajax({
             type: 'POST',  // http method
@@ -164,36 +170,24 @@
                 $.each(data.zonalOfficeLst, function (i, option) {
                     $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
                 });
+                $(".zonalFetchId")[0].sumo.reload();
             },
             error: function (jqXhr, textStatus, errorMessage) {
                 alert("Error Populating Zonal Office");
             }
         });
-
-        //setDates();
     });
-
-    //function setDates() {
-    //    var fromd = new Date();
-    //    fromd.setMonth(fromd.getMonth());
-    //    fromd.setDate(fromd.getDate());
-    //    var dd = String(fromd.getDate()).padStart(2, '0');
-    //    var mm = String(fromd.getMonth() + 1).padStart(2, '0'); //January is 0!
-    //    var yyyy = fromd.getFullYear();
-
-    //    fromd = yyyy + '-' + mm + '-' + dd;
-    //    $("#FromDate").val(fromd);
-    //    $("#ToDate").val(today);
-
-    //    $("#fromDate_error").html("");
-    //    $("#toDate_error").html("");
-    //};
-
 
 
 
 $(".zonalFetchId").change(function () {
     var id = this.value;
+
+     if(id == ""){
+        $(".regionalFetchId").html("");
+        $(".regionalFetchId")[0].sumo.reload();
+        return false;
+     }
 
     if (id != 0) {
         $("#state_error").html("");
@@ -208,6 +202,7 @@ $(".zonalFetchId").change(function () {
             var v = data;
             if (status == 'success') {
                 $(".regionalFetchId").html("");
+                $('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
                 $.each(data, function (i, data) { // bind the dropdown list using json result
                     $('<option>',
                         {
@@ -215,6 +210,7 @@ $(".zonalFetchId").change(function () {
                             text: data.regionalOfficeName
                         }).html(data.districtName).appendTo(".regionalFetchId");
                 });
+                $(".regionalFetchId")[0].sumo.reload();
             }
             else {
                 console.log(v);

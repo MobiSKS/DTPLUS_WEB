@@ -302,6 +302,12 @@
 
     $(document).ready(function () {
 
+          $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+          });
+
           $.ajax({
               type: 'POST',  // http method
               url: '@Url.Action("GetzonalOfficeList", "Common")',
@@ -313,6 +319,7 @@
                   $.each(data.zonalOfficeLst, function (i, option) {
                       $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalVal");
                   });
+                  $(".zonalVal")[0].sumo.reload();
               },
               error: function (jqXhr, textStatus, errorMessage) {
                   alert("Error Populating Zonal Office");
@@ -330,6 +337,7 @@
                   $.each(data.stateLst, function (i, option) {
                       $("<option/>").val(option.stateID).text(option.stateName).appendTo(".stateVal");
                   });
+                  $(".stateVal")[0].sumo.reload();
               },
               error: function (jqXhr, textStatus, errorMessage) {
                   alert("Error Populating State Data");
@@ -339,6 +347,13 @@
 
     $(".zonalVal").change(function () {
             var id = this.value;
+
+            
+            if(id == ""){
+                $(".regionalVal").html("");
+                $(".regionalVal")[0].sumo.reload();
+                return false;
+            }
 
             if (id != 0) {
                 $("#state_error").html("");
@@ -352,6 +367,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".regionalVal").html("");
+                        $('<option>--Select Regional Office--</option>').appendTo(".regionalVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -359,6 +375,7 @@
                                     text: data.regionalOfficeName
                                 }).html(data.districtName).appendTo(".regionalVal");
                         });
+                        $(".regionalVal")[0].sumo.reload();
                     }
                     else {
                         console.log(v);
@@ -373,6 +390,12 @@
     $(".stateVal").change(function () {
             var id = this.value;
 
+            if(id == ""){
+                $(".distVal").html("");
+                $(".distVal")[0].sumo.reload();
+                return false;
+            }
+
             if (id != 0) {
                 $("#state_error").html("");
             }
@@ -386,6 +409,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".distVal").html("");
+                        $('<option>--Select District--</option>').appendTo(".distVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -393,6 +417,7 @@
                                     text: data.districtName
                                 }).html(data.districtName).appendTo(".distVal");
                         });
+                        $(".distVal")[0].sumo.reload();
                     }
                     else {
                         console.log(v);
@@ -406,6 +431,14 @@
 
     function GetRegionId(zonalId, regionId) {
          var id = zonalId;
+
+           if(id == ""){
+                $(".regionalVal").html("");
+                $(".regionalVal")[0].sumo.reload();
+                return false;
+            }
+
+
             if (id != 0) {
                 $("#regionalOffice_error").html("");
             }
@@ -418,6 +451,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".regionalVal").html("");
+                        $('<option>--Select Regional Office--</option>').appendTo(".regionalVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -425,6 +459,7 @@
                                     text: data.regionalOfficeName
                                 }).html(data.regionalOfficeName).appendTo(".regionalVal");
                         });
+                        $(".regionalVal")[0].sumo.reload();
                         $(".regionalVal").val(regionId);
                     }
                     else {
@@ -440,6 +475,15 @@
 
     function GetPerDistrict(stateId, districtId) {
         var id = stateId;
+
+        
+           if(id == ""){
+                $(".distVal").html("");
+                $(".distVal")[0].sumo.reload();
+                return false;
+            }
+
+
             if (id != 0) {
                 $("#state_error").html("");
             }
@@ -453,6 +497,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".distVal").html("");
+                        $('<option>--Select District--</option>').appendTo(".distVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -460,6 +505,7 @@
                                     text: data.districtName
                                 }).html(data.districtName).appendTo(".distVal");
                         });
+                        $(".regionalVal")[0].sumo.reload();
                         $(".distVal").val(regionId);
                     }
                     else {
