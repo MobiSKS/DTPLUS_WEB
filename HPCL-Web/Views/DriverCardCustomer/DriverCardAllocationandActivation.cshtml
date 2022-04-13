@@ -30,7 +30,8 @@
                                         <label class="font-weight-normal  col-md-4 col-12">@Label.RegionalOfc</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.RegionalOfficeId, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                @*@Html.DropDownListFor(m => m.RegionalOfficeId, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })*@
+                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -113,6 +114,7 @@
 
     function getCustomerRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
+        if(id>0){
         $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetRegionalOfcDetails", "Common")',
@@ -154,6 +156,12 @@
                 alert("Error");
             }
         });
+        }
+        else{
+             $("#RegionalOfficeId").html('');
+            $("#RegionalOfficeId")[0].sumo.reload();
+        }
+
     };
      $('select').SumoSelect({
             placeholder: '-All-',
