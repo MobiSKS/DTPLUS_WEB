@@ -237,12 +237,16 @@
         $("#label").attr("style", "display:none");
         $("#myTable").attr("style", "display:none");
         $("#Just").attr("style", "display:none");
-        $("#justificationId").val("");
-      
-       
+        $("#justificationId").val("");  
     }
 
       $(document).ready(function () {
+
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
 
          $.ajax({
                 type: 'POST',  // http method
@@ -255,6 +259,8 @@
                  $.each(data.zonalOfficeLst, function (i, option) {
                      $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
                  });
+
+                 $(".zonalFetchId")[0].sumo.reload();
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Zonal Office");
@@ -264,6 +270,12 @@
 
     $(".zonalFetchId").change(function () {
             var id = this.value;
+
+            if(id == ""){
+                $(".regionalFetchId").html("");
+                $(".regionalFetchId").append("<option value='0'>All</option>");
+                $(".regionalFetchId")[0].sumo.reload();
+            }
 
             if (id != 0) {
                 $("#state_error").html("");
@@ -278,6 +290,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".regionalFetchId").html("");
+                        $(".regionalFetchId").append("<option>All</option>");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -285,6 +298,7 @@
                                     text: data.regionalOfficeName
                                 }).html(data.districtName).appendTo(".regionalFetchId");
                         });
+                        $(".regionalFetchId")[0].sumo.reload();
                     }
                     else {
                         console.log(v);
@@ -316,7 +330,6 @@
 
     function OnSuccess(data) {
 
- 
         console.log(data.searchList.data);
 
         var objMerchantLst = data.searchList.data.objMerchantDetail;

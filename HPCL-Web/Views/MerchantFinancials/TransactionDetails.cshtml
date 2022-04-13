@@ -86,7 +86,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
 
-                                                @Html.ListBoxFor(m => m.TransType, Enumerable.Empty<SelectListItem>(), new{@class="lstBox"})
+                                                @Html.DropDownListFor(m => m.TransType, Enumerable.Empty<SelectListItem>(), new { @class="form-control txnType", multiple = "true" })
 
                                             </div>
                                         </div>
@@ -163,6 +163,12 @@
 
      $(document).ready(function () {
 
+        $('.txnType').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
         if ($('input[name=SearchType]:checked').val() == "Merchant") {
             console.log($('input[name=SearchType]:checked').val());
             document.getElementById("merchantSec").style.display = "block";
@@ -196,8 +202,9 @@
                  console.log("trans type :  ", data.sortedtList);
 
                  $.each(data.sortedtList, function (i, option) {
-                     $("<option/>").val(option.transactionID).text(option.transactionType).appendTo("#TransType");
+                     $("<option/>").val(option.transactionID).text(option.transactionType).appendTo(".txnType");
                  });
+                 $(".txnType")[0].sumo.reload();
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Transaction Type");
@@ -330,10 +337,3 @@
         }
     }
 </script>
-
-<style>
-.lstBox{
-    width: 100%;
-    border-radius: 2px;
-}
-</style>

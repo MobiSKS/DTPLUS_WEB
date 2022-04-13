@@ -329,6 +329,12 @@
 
     $(document).ready(function () {
 
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
          $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("GetStateList", "Common")',
@@ -340,6 +346,8 @@
                  $.each(data.stateLst, function (i, option) {
                      $("<option/>").val(option.stateID).text(option.stateName).appendTo(".stateVal");
                  });
+
+                 $(".stateVal")[0].sumo.reload();
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Customer Region");
@@ -349,6 +357,12 @@
 
     $(".stateVal").change(function () {
             var id = this.value;
+
+             if(id == ""){
+                $(".distVal").html("");
+                $(".distVal")[0].sumo.reload();
+                return false;
+             }
 
             if (id != 0) {
                 $("#state_error").html("");
@@ -363,7 +377,7 @@
                     var v = data;
                     if (status == 'success') {
                         $(".distVal").html("");
-                        $('<option>--Select--</option>').appendTo(".distVal");
+                        $('<option>--Select District--</option>').appendTo(".distVal");
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
@@ -371,6 +385,7 @@
                                     text: data.districtName
                                 }).html(data.districtName).appendTo(".distVal");
                         });
+                        $(".distVal")[0].sumo.reload();
                     }
                     else {
                         console.log(v);
