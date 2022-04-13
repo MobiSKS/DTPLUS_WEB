@@ -271,12 +271,6 @@
     $(".zonalFetchId").change(function () {
             var id = this.value;
 
-            if(id == ""){
-                $(".regionalFetchId").html("");
-                $(".regionalFetchId").append("<option value='0'>All</option>");
-                $(".regionalFetchId")[0].sumo.reload();
-            }
-
             if (id != 0) {
                 $("#state_error").html("");
             }
@@ -289,8 +283,17 @@
                 success: function (data, status, xhr) {
                     var v = data;
                     if (status == 'success') {
+
+                        console.log(id,"regional ofc");
+
                         $(".regionalFetchId").html("");
-                        $(".regionalFetchId").append("<option>All</option>");
+                        $(".regionalFetchId").append("<option value=''>All</option>");
+
+                        if(id == ""){
+                            $(".regionalFetchId")[0].sumo.reload();
+                            return false;
+                        }
+
                         $.each(data, function (i, data) { // bind the dropdown list using json result
                             $('<option>',
                                 {
