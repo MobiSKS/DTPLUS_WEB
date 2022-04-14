@@ -408,8 +408,8 @@ namespace HPCL.Service.Services
                 FromDate =fromDate,
                 ToDate = toDate,
                 Category = entity.Category,
-                ZonalOfficeId = entity.ZonalOfficeId,
-                RegionalOfficeId = entity.RegionalOfficeId
+                ZonalOfficeId = entity.ZonalOfficeId=="0"?"":entity.ZonalOfficeId,
+                RegionalOfficeId = entity.RegionalOfficeId=="0"?"":entity.RegionalOfficeId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

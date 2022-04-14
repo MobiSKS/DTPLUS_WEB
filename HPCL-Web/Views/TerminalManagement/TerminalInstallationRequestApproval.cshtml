@@ -202,7 +202,8 @@ $(".zonalFetchId").change(function () {
             var v = data;
             if (status == 'success') {
                 $(".regionalFetchId").html("");
-                $('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
+                $('<option>',{value: 0,text: "--Select Regional Office--"}).html("--Select Regional Office--").appendTo(".regionalFetchId");
+                //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
                 $.each(data, function (i, data) { // bind the dropdown list using json result
                     $('<option>',
                         {
@@ -280,7 +281,7 @@ $(".zonalFetchId").change(function () {
                                 var terminalId = "<span class='terminalVal'>" + (data.approvalList.terminalApprovalReqDetails[i].terminalId || '') + "</span>";
                                 var merchantId = "<a href='#a' class='merchantVal'>" + (data.approvalList.terminalApprovalReqDetails[i].merchantId || '') + "</a>";
                                 var terminalType = (data.approvalList.terminalApprovalReqDetails[i].terminalType || '');
-                                var merchantStatus = + (data.approvalList.terminalApprovalReqDetails[i].merchantStatus || '');
+                                var merchantStatus =  (data.approvalList.terminalApprovalReqDetails[i].merchantStatus || '');
                                 var lastMonthSpend = (data.approvalList.terminalApprovalReqDetails[i].lastMonthSpend);
                                 var noOfTransactionsOfLastMonth = (data.approvalList.terminalApprovalReqDetails[i].noOfTransactionsOfLastMonth);
                                 var requestType = (data.approvalList.terminalApprovalReqDetails[i].requestType);
@@ -386,16 +387,17 @@ $(".zonalFetchId").change(function () {
         var ObjMerchantTerminalInsertInput = [];
         var TerminalID;
 
-        $("#approvalTerminalList input[type=checkbox]:checked").each(function () {
-            var row = $(this).closest("tr");
+        $("#approvalTerminalList tbody tr").each(function () {
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) {
+                TerminalID = row.find('.terminalVal').text();
+                var MerchantId = row.find('.merchantVal').text();
 
-            TerminalID = row.find('.terminalVal').text();
-            var MerchantId = row.find('.merchantVal').text();
-
-            ObjMerchantTerminalInsertInput.push({
-                TerminalID: TerminalID,
-                MerchantId: MerchantId
-            });
+                ObjMerchantTerminalInsertInput.push({
+                    TerminalID: TerminalID,
+                    MerchantId: MerchantId
+                });
+            }
         });
 
 
@@ -405,7 +407,7 @@ $(".zonalFetchId").change(function () {
         }
 
 
-        if (confirm('Are you sure! You want to approve the selected record')) {
+        if (confirm('Are you sure you want to Approve the selected Terminal Installation request(s)?')) {
 
         $.ajax({
             url: "@Url.Action("TerminalInstallationRequestApprovalClick", "TerminalManagement")",
@@ -442,16 +444,17 @@ $(".zonalFetchId").change(function () {
         var ObjMerchantTerminalInsertInput = [];
         var TerminalID;
 
-        $("#approvalTerminalList input[type=checkbox]:checked").each(function () {
-            var row = $(this).closest("tr");
+        $("#approvalTerminalList tbody tr").each(function () {
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) {
+                TerminalID = row.find('.terminalVal').text();
+                var MerchantId = row.find('.merchantVal').text();
 
-            TerminalID = row.find('.terminalVal').text();
-            var MerchantId = row.find('.merchantVal').text();
-
-            ObjMerchantTerminalInsertInput.push({
-                TerminalID: TerminalID,
-                MerchantId: MerchantId
-            });
+                ObjMerchantTerminalInsertInput.push({
+                    TerminalID: TerminalID,
+                    MerchantId: MerchantId
+                });
+            }
         });
 
         if (TerminalID == undefined) {
@@ -459,7 +462,7 @@ $(".zonalFetchId").change(function () {
             return false;
         }
 
-        if (confirm('Are you sure! You want to reject the selected record')) {
+        if (confirm('Are you sure you want to Reject the selected Terminal Installation request(s)?')) {
 
             $.ajax({
                 url: "@Url.Action("TerminalInstallationRequestRejectClick", "TerminalManagement")",
