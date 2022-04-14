@@ -1372,5 +1372,37 @@ namespace HPCL.Service.Services
             return customerCardInfo;
         }
 
+        public async Task<CustomerCardInfo> GetCustomerCardsPartialView(string CustomerTypeId, string NoofCards, string NoofVehicles, string CardPreference)
+        {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo.CustomerTypeId = CustomerTypeId;
+            customerCardInfo.NoOfCards = NoofCards;
+            customerCardInfo.NoOfVehiclesAllCards = NoofVehicles;
+            customerCardInfo.CardPreference = CardPreference;
+            List<VehicleTypeModel> lst = await _commonActionService.GetVehicleTypeDropdown();
+            lst.Insert(0, new VehicleTypeModel { VehicleTypeId = 0, VehicleTypeName = "--Select--" });
+            customerCardInfo.VehicleTypeMdl.AddRange(lst);
+
+            int noofCards = Convert.ToInt32(string.IsNullOrEmpty(NoofCards) ? "0" : NoofCards);
+            int noofVehicles = Convert.ToInt32(string.IsNullOrEmpty(NoofVehicles) ? "0" : NoofVehicles);
+
+            if (noofCards > noofVehicles)
+            {
+                for (int i = 0; i < noofCards; i++)
+                {
+                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
+                }
+            }
+            else
+            {
+                for (int i = 0; i < noofVehicles; i++)
+                {
+                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
+                }
+            }
+
+            return customerCardInfo;
+        }
+
     }
 }
