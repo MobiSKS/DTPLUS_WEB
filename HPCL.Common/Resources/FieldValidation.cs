@@ -35,10 +35,10 @@
         public const string ValidMobileNumberErrMsg = "Enter a Valid Mobile Number";
 
         public const string ValidCustomerId = @"^(?=(2))[0-9]{10}$";
-        public const string ValidCustomerIdErrMsg = "start with 2 and contains 10 digits";
+        public const string ValidCustomerIdErrMsg = "Invalid Customer ID";
 
         public const string ValidMerchantId = @"^(?=(3))[0-9]{10}$";
-        public const string ValidMerchantIdErrMsg = "start with 3 and contains 10 digits";
+        public const string ValidMerchantIdErrMsg = "Invalid Merchant ID";
 
         public const string ValidAmount = @"^[1-9][0-9]*";
         public const string ValidAmountErrMsg = "Only digit allowed";
@@ -53,7 +53,7 @@
         public const string ValidFormNoErrMsg = "Enter valid Form Number";
 
         public const string ValidTerminalId = @"^(?=(5))[0-9]{10}$";
-        public const string ValidTerminalIdErrMsg = "start with 5 and contains 10 digits";
+        public const string ValidTerminalIdErrMsg = "Invalid Terminal ID";
 
         public const string ValidCustomerReferenceNo = @"^(?!(0))[0-9]{10}$";
         public const string ValidCustomerReferenceNoErrMsg = "Please enter 10 digits Customer Reference No.";

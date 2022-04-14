@@ -12,9 +12,9 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CustomerId { get; set; }
         public int StatusFlag { get; set; }
 
-        [Required(ErrorMessage = "Required Type of Limit")]
+        //[Required(ErrorMessage = "Required Type of Limit")]
         public int TypeOfLimit { get; set; }
-        public int CcmsLimit { get; set; }
+        public int CcmsLimitRs { get; set; }
     }
 
 
