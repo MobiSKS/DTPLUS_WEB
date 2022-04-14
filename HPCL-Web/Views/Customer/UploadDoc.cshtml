@@ -89,7 +89,7 @@
                                         <div class="col-md-7 col-12">
                                             @*@Html.DropDownListFor(m => m.IdProofType, new SelectList(Model.ProofTypesModal, "ProofTypeId", "ProofTypeName"), new { @class = "form-control" })*@
 
-                                            @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                            @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), "--Select ID Proof--", new { @class = "form-control proofType" })
                                             @Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -147,7 +147,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control proofType" })
+                                            @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), "--Select Address Proof--", new { @class = "form-control proofType" })
                                             @Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -233,6 +233,12 @@
 
      $(document).ready(function () {
 
+         $('.proofType').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+         });
+
          if ($("#CustomerReferenceNoId").val() != "") {
              openSearchGrid();
              $("#btnSave").click();
@@ -250,11 +256,13 @@
                      $("<option/>").val(option.proofTypeId).text(option.proofTypeName).appendTo(".proofType");
                  });
 
-                 
                  if (@Model.AddressProofType> 0)
                      document.getElementById("AddressProofType").value = @Model.AddressProofType;
                  if (@Model.IdProofType> 0)
                      document.getElementById("IdProofType").value = @Model.IdProofType;
+
+                 $("#IdProofType")[0].sumo.reload();
+                 $("#AddressProofType")[0].sumo.reload();
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Proof Type");

@@ -44,17 +44,12 @@ namespace HPCL.Service.Services
 
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard(TatkalCustomerCardRequestInfo tatkalCustomerCardRequestInfo)
         {
-            var driversRequestData = new Dictionary<string, string>
-                {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"RegionalId", tatkalCustomerCardRequestInfo.CustomerRegionID.ToString()},
-                    {"NoofCards", tatkalCustomerCardRequestInfo.NoofCards.ToString()},
-                    {"CreatedBy", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
-                };
+            tatkalCustomerCardRequestInfo.UserAgent = CommonBase.useragent;
+            tatkalCustomerCardRequestInfo.UserIp = CommonBase.userip;
+            tatkalCustomerCardRequestInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            tatkalCustomerCardRequestInfo.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(driversRequestData), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(tatkalCustomerCardRequestInfo), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertTatkalCardRequest);
 
 

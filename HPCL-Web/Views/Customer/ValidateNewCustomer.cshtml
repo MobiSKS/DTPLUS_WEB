@@ -168,7 +168,7 @@
                                         }
                                         else
                                         {
-                                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord" style="display:none">
+                                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
                                                 @Model.Message
                                             </div>
                                         }
@@ -1024,6 +1024,13 @@
 
     $(document).ready(function () {
 
+        $('#CustomerRegionID').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
+        //$("#CustomerRegionID")[0].sumo.reload();
       
 
         let tableCustData = sessionStorage.getItem("tableCustData");
@@ -1248,18 +1255,7 @@
                 var custSubType = $('<option value="' + res.customer.customerSubtypeName + '">' + res.customer.customerSubtypeName + '</option>');
                 $('#CustomerSubTypeID').append(custSubType);
 
-                //$('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
-                const dateObj = new Date(res.customer.dateOfApplication);
-
-                console.log(dateObj);
-                var month = dateObj.getMonth() + 1; //months from 1-12
-                var day = dateObj.getDate();
-                var year = dateObj.getFullYear();
-
-                var newdate = day + "/" + month + "/" + year;
-                console.log(dateObj.getDate());
-
-                $('#CustomerDateOfApplication').val(newdate);
+                $('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
 
                 var CustomerSalesArea = $('<option value="' + res.customer.salesArea + '">' + res.customer.salesArea + '</option>');
                 $('#CustomerSalesAreaID').append(CustomerSalesArea);
@@ -1375,41 +1371,12 @@
                 $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.customer.keyOfficialApproxMonthlySpendsonVechile1);
                 $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.customer.keyOfficialApproxMonthlySpendsonVechile2);
                 $('#AreaOfOperation').val(res.customer.areaOfOperation);
-                //$('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
-                //$('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOB);
+
                 $('#CustomerReferenceNoForSearch').val(res.customer.customerReferenceNo);
-
-                const dateDOB = new Date(res.customer.keyOfficialDOB);
-
-                console.log(dateDOB);
-                var monthDOB = dateDOB.getMonth() + 1; //months from 1-12
-                var dayDOB = dateDOB.getDate();
-                var yearDOB = dateDOB.getFullYear();
-
-                var newdateDOB = dayDOB + "/" + monthDOB + "/" + yearDOB;
-
-                if (yearDOB != "1900") {
-                    $('#KeyOfficialDOB').val(newdateDOB);
-                }
-                else {
-                    $('#KeyOfficialDOB').val('');
-                }
-
-                const dateDOA = new Date(res.customer.keyOfficialDOA);
-                console.log(dateDOA);
-                var monthDOA = dateDOA.getMonth() + 1; //months from 1-12
-                var dayDOA = dateDOA.getDate();
-                var yearDOA = dateDOA.getFullYear();
-
-                var newdateDOA = dayDOA + "/" + monthDOA + "/" + yearDOA;
-
-                if (yearDOA != "1900") {
-                    $('#KeyOffDateOfAnniversary').val(newdateDOA);
-                }
-                else {
-                    $('#KeyOffDateOfAnniversary').val('');
-                }
-
+                                
+                $('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
+                $('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOA);
+                
                 res.kycDetailsResult
                 //KYC
                 console.log(res.kycDetailsResult);
@@ -1473,6 +1440,7 @@
         document.getElementById('tblResponse').style.display = 'none';
         document.getElementById("formNumber_error").innerHTML = "";
         document.getElementById("FromDate_error").innerHTML = "";
+        document.getElementById("ToDate_error").innerHTML = "";
         $("#ManageCardHeader").text("Validate New Customer");
         sessionStorage.removeItem("tableCustData");
         //location.reload();
@@ -1595,7 +1563,8 @@
         $("#AddressTab").addClass("disabled");
         $("#OfficialDetailsTab").addClass("disabled");
         $("#KYCDetailsTab").addClass("disabled");
-
+        $('#CustomerRegionID')[0].sumo.unSelectAll();
+        $('#CustomerRegionID')[0].sumo.selectItem(0);
         return false;
     };
 

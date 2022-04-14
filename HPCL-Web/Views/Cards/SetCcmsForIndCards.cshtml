@@ -150,6 +150,7 @@
 
 
 @using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script>
 
@@ -194,8 +195,6 @@
 
             currentRow.find('input:text').attr("readonly", false);
             currentRow.find('.vls').attr("readonly", false);
-
-            console.log("txt", textBoxValue);
         }
         if (!$(this).is(':checked')) {
             $(this).closest("tr").attr("style", "background-color: #f2f2f2;");
@@ -245,16 +244,31 @@
 
                     for (var i = 0; i < ccmsDetails.length; i++) {
 
+                        var isDts;
+                        var expDts;
+
+                        if(((ccmsDetails[i].issueDate) == "01/01/0001 00:00:00") || ((ccmsDetails[i].issueDate) == "01/01/1900 00:00:00")){
+                            isDts = "";
+                        }else{
+                            isDts = moment(new Date(searchGrid[i].issueDate)).format('YYYY-MM-DD');
+                        }
+
+                        if(((ccmsDetails[i].expiryDate) == "01/01/0001 00:00:00") || ((ccmsDetails[i].expiryDate) == "01/01/1900 00:00:00")){
+                            expDts = "";
+                        }else{
+                            expDts = moment(new Date(searchGrid[i].expiryDate)).format('YYYY-MM-DD');
+                        }
+
                         var srNumber = (ccmsDetails[i].srNumber || '');
                         var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                        var cardNumber = (ccmsDetails[i].cardNumber || '');
+                        var cardNumber = "<span class='cdn'>"+(ccmsDetails[i].cardNumber || '')+"</span>";
                         var vechileNo = (ccmsDetails[i].vechileNo || '');
-                        var issueDate = (ccmsDetails[i].issueDate || '');
-                        var expiryDate = (ccmsDetails[i].expiryDate || '');
+                        var issueDate = isDts;
+                        var expiryDate = expDts;
                         var status = (ccmsDetails[i].status || '');
-                        var mobileNumber = "<input class='form-control mobn' name='" + (ccmsDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsDetails[i].mobileNumber || '') + "' readonly='readonly'>";
+                        var mobileNumber = "<input class='form-control mobn' maxlength='10' pattern='^(?!(0))[0-9]{10}$' name='" + (ccmsDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsDetails[i].mobileNumber || '') + "' readonly='readonly'>";
                         var ccmsLimitOption = "<select readonly='readonly' class='form-control vls'><option value='" + (ccmsDetails[i].ccmsLimitOption || '') + "'>" + (ccmsDetails[i].description || '') + "</option></select>";
-                        var ccmsReloadSaleLimitValue = "<input class='form-control amt' name='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' readonly='readonly'>";
+                        var ccmsReloadSaleLimitValue = "<div class='custom_select'><input maxlength='10' title='Please Enter numeric value' class='form-control amt' name='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' readonly='readonly'><i style='display:none;' class='fa fa-exclamation-triangle amntBox' aria-hidden='true'></i></div>";
 
                         tbl.row.add([
                             srNumber,
@@ -294,6 +308,16 @@
         }
     }
 
+    //function CustomValidatorForAmount(o){
+    //    if (o.value == "") {
+    //        $("#amount_err").attr("style", "display:block");
+    //        $("#amount_err").text("Please Enter Amount");
+    //        return false;
+    //    }else{
+    //        $("#amount_err").attr("style", "display:none");
+    //        return true;
+    //    }
+    //}
 
     function updateCards() {
 
@@ -334,6 +358,64 @@
 
         console.log("viewlist", viewArray);
         console.log("updt", updateArray);
+
+
+        //var checkBoxes = grid.getElementsByTagName("INPUT");
+
+        // console.log("Row",$("#CardSearch input[type=checkbox]:checked").length);
+
+        //$("#CardSearch input[type=checkbox]:checked").each(function () {
+
+        //    var row = $(this).closest("tr");
+
+        //    if (row.find('.amt').val() == "") {
+        //        //$("#amount_err").attr("style", "display:block");
+        //        //$("#amount_err").text("Please Enter Amount");
+         
+        //        //row.find('.amntBox').title('Please Enter Amount');
+        //        //row.find('.amntBox').attr("style", "display:block");
+
+        //        alert("Please Enter Amount");
+
+        //        return false;
+        //        }else{
+        //        if(!(row.find('.amt').val()).match("^[0-9]{1,10}$")){
+        //                //row.find('.amntBox').title('Please Enter numeric value');
+        //                //row.find('.amntBox').attr("style", "display:block");
+
+        //                alert("Please Enter numeric value");
+
+        //            return false;
+        //        }
+        //        }
+
+        //    if(!(row.find('.mobn').val()).match("^(?!(0))[0-9]{10}$")){
+        //        alert("Please Enter valid mobile number");
+        //        return false;
+        //    }
+
+            for(var i = 0; i < updateArray.length; i++){
+                 if (updateArray[i].Amount == "") {
+                    alert("Please Enter Amount");
+                    //row.find('.amntBox').title('Please Enter Amount');
+                    //row.find('.amntBox').attr("style", "display:block");
+
+                    return false;
+                 }else{
+                    if(!(updateArray[i].Amount).match("^[0-9]{1,10}$")){
+                         // row.find('.amntBox').title('Please Enter numeric value');
+                         //row.find('.amntBox').attr("style", "display:block");
+                         alert("Please Enter numeric value");
+                        return false;
+                    }
+                 }
+
+                if(!(updateArray[i].Mobileno).match("^(?!(0))[0-9]{10}$")){
+                    alert("Please Enter valid mobile number");
+                    return false;
+                }
+            }
+        //});
 
         if (confirm('Are you sure! You want to process the selected record(s)?')) {
             console.log('ok');

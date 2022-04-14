@@ -332,6 +332,8 @@ namespace HPCL.Service.Services
                 };
             }
 
+            _httpContextAccessor.HttpContext.Session.SetString("CCMSCustomerId", reqBody.CustomerId);
+
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCcmsAllCardLimitUrl);
 
@@ -340,7 +342,7 @@ namespace HPCL.Service.Services
             return searchCcmsCard;
         }
 
-        public async Task<string> UpdateCcmsLimitAllCards(GetCcmsLimitAll entity)
+        public async Task<string> UpdateCcmsLimitAllCards(int limitype, int amountVal)
         {
             var reqBody = new UpdateCcmsLimitAll
             {
@@ -348,8 +350,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerId = _httpContextAccessor.HttpContext.Session.GetString("CCMSCustomerId"),
-                LimitType=entity.TypeOfLimit,
-                Amount = entity.CcmsLimit,
+                LimitType=limitype,
+                Amount = amountVal,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 

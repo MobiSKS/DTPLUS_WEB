@@ -16,6 +16,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Services
 {
@@ -686,16 +687,15 @@ namespace HPCL.Service.Services
         }
         public async Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID)
         {
-            var customerRegion = new Dictionary<string, string>
-             {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"RegionID", RegionID.ToString() }
-
+            var requestInfo = new SalesAreaRequestModal()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionID = RegionID.ToString()
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getSalesArea);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
@@ -1369,6 +1369,38 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.Remarks = customerResponseByReferenceNo.Message;
             }
+            return customerCardInfo;
+        }
+
+        public async Task<CustomerCardInfo> GetCustomerCardsPartialView(string CustomerTypeId, string NoofCards, string NoofVehicles, string CardPreference)
+        {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo.CustomerTypeId = CustomerTypeId;
+            customerCardInfo.NoOfCards = NoofCards;
+            customerCardInfo.NoOfVehiclesAllCards = NoofVehicles;
+            customerCardInfo.CardPreference = CardPreference;
+            List<VehicleTypeModel> lst = await _commonActionService.GetVehicleTypeDropdown();
+            lst.Insert(0, new VehicleTypeModel { VehicleTypeId = 0, VehicleTypeName = "--Select--" });
+            customerCardInfo.VehicleTypeMdl.AddRange(lst);
+
+            int noofCards = Convert.ToInt32(string.IsNullOrEmpty(NoofCards) ? "0" : NoofCards);
+            int noofVehicles = Convert.ToInt32(string.IsNullOrEmpty(NoofVehicles) ? "0" : NoofVehicles);
+
+            if (noofCards > noofVehicles)
+            {
+                for (int i = 0; i < noofCards; i++)
+                {
+                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
+                }
+            }
+            else
+            {
+                for (int i = 0; i < noofVehicles; i++)
+                {
+                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
+                }
+            }
+
             return customerCardInfo;
         }
 

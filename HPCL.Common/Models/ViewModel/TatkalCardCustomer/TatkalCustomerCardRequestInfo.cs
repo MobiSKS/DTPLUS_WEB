@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
 {
-    public class TatkalCustomerCardRequestInfo
+    public class TatkalCustomerCardRequestInfo:BaseEntity
     {
         public TatkalCustomerCardRequestInfo()
         {
@@ -23,8 +23,8 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
         [Required(ErrorMessage = "No of Tatkal Cards is Required")]
         public string NoofCards { get; set; }
 
-        [Required(ErrorMessage = "Region Name is Required")]
-        public int CustomerRegionID { get; set; }
+        //[Required(ErrorMessage = "Region Name is Required")]
+        //public int RegionalId { get; set; }
         public string Remarks { get; set; }
         public int Internel_Status_Code { get; set; }
     }

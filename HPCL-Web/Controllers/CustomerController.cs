@@ -335,6 +335,83 @@ namespace HPCL_Web.Controllers
                         Customer.KeyOffPh = Customer.KeyOfficialFax;
                     }
                 }
+
+                string applicationDate = "";
+                if (!string.IsNullOrEmpty(Customer.DateOfApplication))
+                {
+                    string[] dateAndTime = Customer.DateOfApplication.Split(" ");
+                    string[] dateOfApplication = dateAndTime[0].Split("/");
+                    applicationDate = dateOfApplication[1] + "-" + dateOfApplication[0] + "-" + dateOfApplication[2];
+                    Customer.DateOfApplication = applicationDate;
+                }
+                else
+                {
+                    Customer.DateOfApplication = "";
+                }
+
+                applicationDate = "";
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialDOA))
+                {
+                    if (!Customer.KeyOfficialDOA.Contains("1900"))
+                    {
+                        string[] dateAndTime = Customer.KeyOfficialDOA.Split(" ");
+                        string[] DOA = dateAndTime[0].Split("/");
+                        applicationDate = DOA[1] + "-" + DOA[0] + "-" + DOA[2];
+                        Customer.KeyOfficialDOA = applicationDate;
+                    }
+                    else
+                    {
+                        Customer.KeyOfficialDOA = "";
+                    }
+                }
+                else
+                {
+                    Customer.KeyOfficialDOA = "";
+                }
+
+                applicationDate = "";
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialDOB))
+                {
+                    if (!Customer.KeyOfficialDOB.Contains("1900"))
+                    {
+                        string[] dateAndTime = Customer.KeyOfficialDOB.Split(" ");
+                        string[] DOB = dateAndTime[0].Split("/");
+                        applicationDate = DOB[1] + "-" + DOB[0] + "-" + DOB[2];
+                        Customer.KeyOfficialDOB = applicationDate;
+                    }
+                    else
+                    {
+                        Customer.KeyOfficialDOB = "";
+                    }
+                }
+                else
+                {
+                    Customer.KeyOfficialDOB = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) && Convert.ToInt32(Customer.FleetSizeNoOfVechileOwnedCarJeep) == 0)
+                {
+                    Customer.FleetSizeNoOfVechileOwnedCarJeep = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) && Convert.ToInt32(Customer.FleetSizeNoOfVechileOwnedHCV) == 0)
+                {
+                    Customer.FleetSizeNoOfVechileOwnedHCV = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) && Convert.ToInt32(Customer.FleetSizeNoOfVechileOwnedLCV) == 0)
+                {
+                    Customer.FleetSizeNoOfVechileOwnedLCV = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) && Convert.ToInt32(Customer.FleetSizeNoOfVechileOwnedMUVSUV) == 0)
+                {
+                    Customer.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) && Convert.ToDecimal(Customer.KeyOfficialApproxMonthlySpendsonVechile1) == 0)
+                {
+                    Customer.KeyOfficialApproxMonthlySpendsonVechile1 = "";
+                }
+                if (!string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) && Convert.ToDecimal(Customer.KeyOfficialApproxMonthlySpendsonVechile2) == 0)
+                {
+                    Customer.KeyOfficialApproxMonthlySpendsonVechile2 = "";
+                }
             }
 
             FormNumber = string.Empty;
@@ -509,6 +586,12 @@ namespace HPCL_Web.Controllers
             var Model = await _commonActionService.CheckVechileNoUsed(VechileNo);
 
             return Json(Model);
+        }
+
+        public async Task<IActionResult> GetCustomerCardsPartialView(string CustomerTypeId,string NoofCards, string NoofVehicles,string CardPreference)
+        {
+            var modals = await _customerService.GetCustomerCardsPartialView(CustomerTypeId, NoofCards, NoofVehicles, CardPreference);
+            return PartialView("~/Views/Customer/_CustomerCardsTbl.cshtml", modals);
         }
     }
 }

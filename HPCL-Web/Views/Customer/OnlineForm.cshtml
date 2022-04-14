@@ -500,7 +500,6 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
-                                            @*<input type="date" class="form-control">*@
                                             @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
@@ -569,7 +568,6 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @*<input type="date" class="form-control">*@
                                             @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                         </div>
                                     </div>
@@ -904,6 +902,12 @@
 
     //};
 
+    $('select').SumoSelect({
+            placeholder: '--Select--',
+            search: true,
+            searchText: 'Enter Text here.'
+        }); 
+
     $("#btnAdd").click(function () {
         let flag = 'Y';
         debugger;
@@ -961,7 +965,7 @@
                                 text: data.customerSubTypeName
                             }).html(data.customerSubTypeName).appendTo("#CustomerSubTypeID");
                     });
-
+                    $("#CustomerSubTypeID")[0].sumo.reload(); 
                 }
                 else {
                     console.log(v);
@@ -996,7 +1000,7 @@
                                 text: data.regionalOfficeName
                             }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
                     });
-
+                    $("#CustomerRegionID")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -1030,7 +1034,7 @@
                                     text: data.salesAreaName
                                 }).html(data.salesAreaName).appendTo("#CustomerSalesAreaID");
                         });
-
+                        $("#CustomerSalesAreaID")[0].sumo.reload();
                     }
                     else {
                         console.log(v);
@@ -1067,6 +1071,7 @@
                                 text: data.districtName
                             }).html(data.districtName).appendTo("#CommunicationDistrictId");
                     });
+                    $("#CommunicationDistrictId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -1101,11 +1106,8 @@
                                     text: data.districtName
                                 }).html(data.districtName).appendTo("#PermanentDistrictId");
                         });
+                        $("#PermanentDistrictId")[0].sumo.reload();
 
-                        //var sameAscheck = document.getElementById("sameAddressCheck");
-                        //if (sameAscheck) {
-                        //    $('#PerOrRegAddressDistrict').val($('#comm_district').val());
-                        //}
                     }
                     else {
                         console.log(v);
@@ -1258,6 +1260,7 @@
                 }
             }
             var id = $('#CommunicationStateID').val();
+            $('#PerOrRegAddressStateID')[0].sumo.selectItem($("#CommunicationStateID").val());
 
             $.ajax({
                 type: 'POST',  // http method
@@ -1276,7 +1279,12 @@
                                     text: data.districtName
                                 }).html(data.districtName).appendTo("#PermanentDistrictId");
                         });
-                        document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+                        $("#PermanentDistrictId")[0].sumo.reload();
+                        //$('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
+                        //document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+                        setTimeout(function(){
+                               $('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
+                           },500);
                     }
                     else {
                         console.log(v);
@@ -1292,7 +1300,7 @@
             $('#PerOrRegAddress3').val($('#CommunicationAddress3').val());
             $('#PerOrRegAddressLocation').val($('#CommunicationLocation').val());
             $('#PerOrRegAddressCity').val($('#CommunicationCity').val());
-            $('#PerOrRegAddressStateID').val($('#CommunicationStateID').val());
+            //$('#PerOrRegAddressStateID').val($('#CommunicationStateID').val());
             $('#PerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
             $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
             $('#PerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
@@ -1312,18 +1320,20 @@
             $("#PermanentFaxCode_error").html("");
             $("#perma_faxNumber_error").html("");
 
-            var Distrid = $('#CommunicationDistrictId').val();
-            var DistrictName = $("#CommunicationDistrictId option:selected").text();
+            //var Distrid = $('#CommunicationDistrictId').val();
+            //var DistrictName = $("#CommunicationDistrictId option:selected").text();
+            //$('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
 
-            $('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+            //$('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+            //$("#PerOrRegAddressStateID")[0].sumo.disable();
+            //$("#PermanentDistrictId")[0].sumo.disable();
             if (document.getElementById("sameAddressCheck").checked == true) {
                 permanent_add.querySelectorAll("input, select").forEach(function (i) {
                     i.setAttribute("disabled", true);
                 })
             }
             // sameas = true;
-
-            document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+           
         }
         else {
 
@@ -1332,11 +1342,13 @@
             $('#PerOrRegAddress3').val('');
             $('#PerOrRegAddressLocation').val('');
             $('#PerOrRegAddressCity').val('');
-            $('#PerOrRegAddressStateID')[0].selectedIndex = 0;
+            //$('#PerOrRegAddressStateID')[0].selectedIndex = 0;
+            $("#PerOrRegAddressStateID")[0].sumo.selectItem(0);
             $('#PerOrRegAddressPinCode').val('');
             $('#PerOrRegAddressDialCode').val('');
             $('#PermanentFaxCode').val('');
-            $('#PermanentDistrictId')[0].selectedIndex = 0;
+            //$('#PermanentDistrictId')[0].selectedIndex = 0;
+            $("#PermanentDistrictId")[0].sumo.selectItem(0);
             $('#PerOrRegAddressPhoneNumber').val('');
             $('#PermanentFax').val('');
 

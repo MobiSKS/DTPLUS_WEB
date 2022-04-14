@@ -132,9 +132,9 @@ namespace HPCL_Web.Controllers
 
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCcmsLimitAllCards(GetCcmsLimitAll entity)
+        public async Task<JsonResult> UpdateCcmsLimitAllCards(int limitype, int amountVal)
         {
-            var reason = await _cardService.UpdateCcmsLimitAllCards(entity);
+            var reason = await _cardService.UpdateCcmsLimitAllCards(limitype, amountVal);
 
             ModelState.Clear();
             return Json(reason);

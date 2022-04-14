@@ -8,7 +8,8 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Cards</a> </li>
             <li class="breadcrumb-item font-weight-light">Set CCMS Limits for All Cards</li>
         </ul>
-        <div class="tab-content mt-3" id="myTabContent">
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+        <div class="tab-content mt-3" id = "respMsg">
             <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                 <div class="border-1 rounded border-grey h-100 mt-3">
 
@@ -67,7 +68,7 @@
                             <div class="clearfix"></div>
 
                             <div class="mt-4">
-                                <form method="post" data-ajax="true" asp-controller="Cards" asp-action="UpdateCcmsLimitAllCards" data-ajax-method="POST" data-ajax-success="OnSuccessUpdateCcmsLimitAllCards" data-ajax-failure="OnFailure">
+                    
                                     <fieldset class="border-1 rounded border-grey">
                                         <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Update CCMS Limit</legend>
                                         <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
@@ -75,8 +76,8 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">Type Of Limit<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.DropDownListFor(m => m.TypeOfLimit, Enumerable.Empty<SelectListItem>(), new { @class = "form-control limitVal" })
-                                                        @Html.ValidationMessageFor(m => m.TypeOfLimit, "", new { @class = "text-danger" })
+                                                        @Html.DropDownListFor(m => m.TypeOfLimit, Enumerable.Empty<SelectListItem>(), "--Select Limit--", new { @class = "form-control limitVal" })
+                                                        @Html.ValidationMessageFor(m => m.TypeOfLimit, "", new {@id="TypeOfLimitErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
@@ -84,8 +85,8 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimit, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.CcmsLimit, "", new { @class = "text-danger" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,7 +105,7 @@
                                         <div class="d-flex align-items-center justify-content-center flex-wrap mb-3 mt-3">
                                             <div class="col-md-2 col-12 d-flex align-items-center justify-content-center">
                                                 <div class="pr-2 w-50">
-                                                    <button class="btn btn_primary py-2 px-4" type="submit" name="submit">UPDATE</button>
+                                                    <button class="btn btn_primary py-2 px-4" type="button" name="submit" onclick="updateCards()">UPDATE</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,14 +114,9 @@
                                     </div>
 
                                     <div class="clearfix"></div>
-
-                                </form>
+                
                             </div>
-
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -211,9 +207,6 @@
         if ($("#CCMSCustomerId").val() == "") {
             document.getElementById('setAllLimit').style.display = 'none';
         }
-        //if (($("#CCMSCustomerId").val() != "")) {
-        //    document.getElementById('setAllLimit').style.display = 'block';
-        //}
     };
 
     function OnSuccessSetCcmsLimitAll(res) {
@@ -244,13 +237,58 @@
         alert(data);
     }
 
-    function OnSuccessUpdateCcmsLimitAllCards(data) {
-        $("#noRecord").html("");
-        $("#noRecord").append("<span>" + data + "</span>");
-        document.getElementById("noRecord").style.display = "block";
-    }
-    function OnFailure(data) {
-        alert(data);
+    function updateCards() {
+
+        var limitype = $("#TypeOfLimit").val();
+        var amountVal = $("#CcmsLimitRs").val();
+
+        console.log(amountVal,"amountVal");
+
+        var flag = "Y";
+
+        if(limitype == ""){
+            $("#TypeOfLimitErr").text("Required Type of Limit");
+             flag = "N";
+        }else{
+             $("#TypeOfLimitErr").text("");
+              flag = "Y";
+        }
+
+        if(amountVal == ""){
+            amountVal = 0;
+        }else{
+            if(!amountVal.match("^[0-9]{1,10}$")){
+                $("#CcmsLimitRsErr").text("Please Enter numeric value");
+                flag = "N";
+            }else{
+                $("#CcmsLimitRsErr").text("");
+                flag = "Y";
+            }
+        }
+
+        //if (flag == "N")
+        //    e.preventDefault();
+
+        if (flag == "Y") {
+             //if ($("#updateAllCards").valid()) {
+                 $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("UpdateCcmsLimitAllCards", "Cards")',
+                    data: { limitype: limitype, amountVal:amountVal},
+                    success: function (data) {
+
+                        document.getElementById("respMsg").style.display = "none";
+                        $("#reason").html("");
+                        $("#reason").append("<span>" + data + "</span>");
+                        document.getElementById("reason").style.display = "block";
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Status Type");
+                    }
+                });
+            //}
+        }
     }
 
 </script>
