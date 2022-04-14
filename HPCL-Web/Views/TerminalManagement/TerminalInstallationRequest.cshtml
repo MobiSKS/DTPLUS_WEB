@@ -206,7 +206,7 @@
                                         </div>
                                         <div class="d-flex align-content-center justify-content-center flex-wrap">
                                             <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="addJustificationClick()" id="btnAdd" name="submit">ADD</button>
+                                                <button class="btn btn_primary" type="button"  id="btnAdd" name="submit">ADD</button>
                                             </div>
                                             <div class="px-2">
                                                 <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="resetPress()">RESET</button>
@@ -389,45 +389,28 @@
         //}
     };
 
-
-    function addJustificationClick() {
-
+   $("#btnAdd").on("click", (function (e) {
         var TerminalIssuanceType = $('input[name="terminalIssurenceType"]:checked').val();
         var TerminalTypeRequested = $('input[name="terminalTypeRequest"]:checked').val();
         var Justification = $("#justificationId").val();
         var MerchantId = $("#MerchantId").val();
-
-        console.log("Submit");
-        console.log(TerminalIssuanceType);
-        console.log(TerminalTypeRequested);
-        console.log(Justification);
-        console.log(MerchantId);
-        console.log("Close");
-
-        console.log(TerminalIssuanceType + " " + TerminalTypeRequested + " " + Justification + " " + MerchantId);
-
-        //if (TerminalTypeRequested != undefined) {
-        //    if (Justification != "") {
-
-        var flag="Y";
+         var flag="Y";
 
         if (TerminalTypeRequested == undefined){
             document.getElementById("terminalIssurenceType_error").innerHTML = "Terminal Type is required";
             flag = "N";
         }else{
-            $("#terminalIssurenceType_error").text("");
+            $("#terminalIssurenceType_error").html("");
         }
         if(Justification == ""){
-            $("#justification_error").text("Justification is required");
+            $("#justification_error").html("Justification is required");
             flag = "N";
         }else{
-            $("#justification_error").text("");
+            $("#justification_error").html("");
         }
 
         if (flag == "N")
             e.preventDefault();
-
-
         if (flag == "Y") {
 
             if (confirm('Do you want to place terminal installation request for this merchant?')) {
@@ -457,18 +440,8 @@
             }
         }
 
-        //    }
-        //    else {
-        //        document.getElementById("justification_error").innerHTML = "Justification is required";
-        //    }
-        //}
-        //else {
-        //    document.getElementById("terminalIssurenceType_error").innerHTML = "Terminal Type is required";
-        //    if (Justification == "") {
-        //        document.getElementById("justification_error").innerHTML = "Justification is required";
-        //    }
-        //}
-    }
+     }));
+    
 
     $("#terminalTypeRequest").on("blur", function () {
         if ($("#terminalTypeRequest").val().length > 0) {
@@ -548,6 +521,21 @@
             $("#Merchant_error").attr("style", "display:block");
             $("#Merchant_error").html("Merchant ID is required");
          }
+     });
+     $("#justificationId").on("blur", function () {
+         var justificationId = $("#justificationId").val();
+         if (justificationId == "") {
+            
+                $("#justification_error").attr("style", "display:block");
+                $("#justification_error").html("Justification is required");
+                
+            }
+            else{
+                $("#justification_error").attr("style", "display:none");
+                $("#justification_error").html("");
+            }
+         
+         
      });
 </script>
 
