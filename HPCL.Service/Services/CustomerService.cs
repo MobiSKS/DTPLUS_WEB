@@ -348,7 +348,7 @@ namespace HPCL.Service.Services
                         customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
                         customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                         customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
                         if (customerCardInfo.RBEId == "0")
                             customerCardInfo.RBEId = "";
                         if (customerCardInfo.NoOfCards == "0")
@@ -407,16 +407,17 @@ namespace HPCL.Service.Services
                     customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
                     customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
-                    //customerCardInfo.Status = 1;
+
                     if (customerCardInfo.RBEId == "null")
-                    {
                         customerCardInfo.RBEId = "";
-                    }
-                    if (customerCardInfo.RBEId == "0")
+                    else if (customerCardInfo.RBEId == null)
                         customerCardInfo.RBEId = "";
+                    else if (customerCardInfo.RBEId == "0")
+                        customerCardInfo.RBEId = "";
+
                     if (customerCardInfo.NoOfCards == "0")
                         customerCardInfo.NoOfCards = "";
-                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
 
                     if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                     {
@@ -1348,16 +1349,17 @@ namespace HPCL.Service.Services
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
                     customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
                     customerCardInfo.Reason = customerResponseByReferenceNo.Data[0].Reason;
-                    //customerCardInfo.Status = 1;
+
                     if (customerCardInfo.RBEId == "null")
-                    {
                         customerCardInfo.RBEId = "";
-                    }
-                    if (customerCardInfo.RBEId == "0")
+                    else if (customerCardInfo.RBEId == null)
                         customerCardInfo.RBEId = "";
+                    else if (customerCardInfo.RBEId == "0")
+                        customerCardInfo.RBEId = "";
+
                     if (customerCardInfo.NoOfCards == "0")
                         customerCardInfo.NoOfCards = "";
-                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
 
                     if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                     {
