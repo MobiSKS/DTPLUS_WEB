@@ -16,6 +16,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Services
 {
@@ -686,16 +687,15 @@ namespace HPCL.Service.Services
         }
         public async Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID)
         {
-            var customerRegion = new Dictionary<string, string>
-             {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"RegionID", RegionID.ToString() }
-
+            var requestInfo = new SalesAreaRequestModal()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionID = RegionID.ToString()
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getSalesArea);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
