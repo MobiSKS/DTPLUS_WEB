@@ -587,8 +587,8 @@
 
 
     function LoadCardDeatils() {
-
         debugger;
+        var ret=true;
 
         //if (document.getElementById("RBEId").value == "") {
         //    document.getElementById("RBEId_error").innerHTML = "RBE Id cannot be left blank";
@@ -613,55 +613,109 @@
         if (noOfCards == "") 
         {
             document.getElementById("NoOfCards_error").innerHTML = "No. of Cards cannot be left blank";
-            return (false);
+            ret=false;
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
+        {
+            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards may be 1 to 10";
+            ret=false;
         }
         else
         {
-            if (Number(noOfCards) <=0 || Number(noOfCards) >10)
-            {
-                document.getElementById("NoOfCards_error").innerHTML = "No. of Cards may be 1 to 10";
-                return (false);
-            }
-            else
-            {
-              document.getElementById("NoOfCards_error").innerHTML = "";
-            }
+            document.getElementById("NoOfCards_error").innerHTML = "";
         }
+        
 
-        if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
+        if (!(document.querySelector('input[name="CardPreference"]:checked'))) 
+        {
             alert("Please select Card Preference");
-            return;
+            ret=false;
         }
 
         var customerTypeId = document.getElementById("CustomerTypeId").value;
         var noOfVehiclesAllCards = document.getElementById("NoOfVehiclesAllCards").value;
         console.log(customerTypeId);
-        if (customerTypeId == "905" || customerTypeId == "909") {
-            if (noOfVehiclesAllCards == "") {
+        if (customerTypeId == "905" || customerTypeId == "909") 
+        {
+            if (noOfVehiclesAllCards == "") 
+            {
                 document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannot be left blank";
-                return (false);
+                ret=false;
+            }
+            else if (Number(noOfVehiclesAllCards) <=0 || Number(noOfVehiclesAllCards) >10)
+            {
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles May be 1 to 10";
+                ret=false;
+            }
+            else if (noOfCards > noOfVehiclesAllCards) 
+            {
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
+                ret=false;
             }
             else
             {
-                if (Number(noOfVehiclesAllCards) <=0 || Number(noOfVehiclesAllCards) >10)
-                {
-                    document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles May be 1 to 10";
-                    return (false);
-                }
-                else
-                {
-                   document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-                }
-
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
             }
+          
+        }
+        else 
+        {
+            document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
+        }
 
-            if (noOfCards > noOfVehiclesAllCards) {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
-                return (false);
+        if (document.getElementById("rbtnCard").checked) 
+        {
+
+            if (document.getElementById("rbtnFeeWaiver").checked) 
+            {
+                if (document.getElementById("FeePaymentNo").value.trim() == "") 
+                {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
+                    ret=false;
+                }
+                else 
+                {
+                  document.getElementById("FeePaymentNo_error").innerHTML = "";
+                }
+
+                if (document.getElementById("FeePaymentDate").value.trim() == "") 
+                {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
+                    ret=false;
+                }
+                else 
+                {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "";
+                }
+            }
+        
+            if (document.getElementById("rbtnOnline").checked) 
+            {
+                if (document.getElementById("FeePaymentNo").value.trim() == "") 
+                {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
+                    ret=false;
+                }
+                else 
+                {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "";
+                }
+
+                if (document.getElementById("FeePaymentDate").value.trim() == "") 
+                {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
+                    ret=false;
+                }
+                else 
+                {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "";
+                }
             }
         }
-        else {
-            document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
+
+        if(ret==false)
+        {
+            return ret;
         }
 
         $('#NoOfCards').attr("readonly", true);
@@ -672,6 +726,8 @@
         console.log(selected);
         //var found = false;
         //var custRBEId = document.getElementById("RBEId").value;
+               
+
 
     @*$.ajax({
         type: 'POST',  // http method
@@ -875,7 +931,6 @@
         //$('#FeePaymentDate').attr("disabled", true);
         //$('#FeePaymentNo').attr("disabled", true);
         //$('#FeePaymentDate').attr("disabled", true);
-
    
     }
 
@@ -1332,10 +1387,14 @@
                     {
                         //console.log(row.cells);
                         //alert(row.cells[10].innerHTML);
-                        if(row.cells[9].innerHTML.trim()=="0")
+                        var vno = $(row).find("td:eq(1) input[type='text']").val();
+                        if(vno!="")
                         {
-                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                           flag = "N";
+                            if(row.cells[9].innerHTML.trim()=="0")
+                            {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
+                               flag = "N";
+                            }
                         }
                         cnt=cnt+1;
                     }
@@ -1364,10 +1423,14 @@
                     for (let row of table.rows) 
                     {
                         //alert(row.cells[10].innerHTML);
-                        if(row.cells[8].innerHTML.trim()=="0")
+                        var vno = $(row).find("td:eq(1) input[type='text']").val();
+                        if(vno!="")
                         {
-                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                           flag = "N";
+                            if(row.cells[8].innerHTML.trim()=="0")
+                            {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
+                               flag = "N";
+                            }
                         }
                         cnt=cnt+1;
                     }
@@ -2804,5 +2867,59 @@
    $('#NoOfVehiclesAllCards').on("cut copy paste",function(e) {
       e.preventDefault();
     });
+
+    $("#FeePaymentNo").on("blur", function () 
+    {
+        var paymentNo = document.getElementById("FeePaymentNo").value.trim();
+        if (paymentNo == "") 
+        {
+            if (document.getElementById("rbtnCard").checked) 
+            {
+                if (document.getElementById("rbtnFeeWaiver").checked) 
+                {
+                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
+                    return false
+                }
+            }
+       
+            if (document.getElementById("rbtnOnline").checked) 
+            {
+                document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
+                return false
+            }
+        }
+        else 
+        {
+            document.getElementById("FeePaymentNo_error").innerHTML = "";
+        }
+
+   });
+
+   $("#FeePaymentDate").on("change", function () 
+    {
+        var paymentDate = document.getElementById("FeePaymentDate").value.trim();
+        if (paymentDate == "") 
+        {
+            if (document.getElementById("rbtnCard").checked) 
+            {
+                if (document.getElementById("rbtnFeeWaiver").checked) 
+                {
+                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
+                    return false
+                }
+            }
+       
+            if (document.getElementById("rbtnOnline").checked) 
+            {
+                document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
+                return false
+            }
+        }
+        else 
+        {
+            document.getElementById("FeePaymentDate_error").innerHTML = "";
+        }
+
+   });
 
 </script>
