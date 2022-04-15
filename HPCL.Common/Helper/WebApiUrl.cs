@@ -276,5 +276,10 @@
         public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
         public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
         #endregion
+
+        #region "DTP Support"
+        public static string GetBlockUnblockCustomerCcmsAccountByCustomeridUrl = "api/dtplus/dtp/get_block_unblock_customer_ccms_account_by_customerid";
+        public static string BlockUnblockCustomerCcmsAccountUrl = "api/dtplus/dtp/block_unblock_customer_ccms_account";
+        #endregion
     }
 }
