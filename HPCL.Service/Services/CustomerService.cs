@@ -16,6 +16,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Services
 {
@@ -347,7 +348,7 @@ namespace HPCL.Service.Services
                         customerCardInfo.NoOfCards = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].NoOfCards) ? "" : customerResponseByReferenceNo.Data[0].NoOfCards;
                         customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                         customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
-                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                        customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
                         if (customerCardInfo.RBEId == "0")
                             customerCardInfo.RBEId = "";
                         if (customerCardInfo.NoOfCards == "0")
@@ -406,16 +407,17 @@ namespace HPCL.Service.Services
                     customerCardInfo.ReceivedAmount = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].ReceivedAmount) ? "0" : customerResponseByReferenceNo.Data[0].ReceivedAmount;
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
                     customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
-                    //customerCardInfo.Status = 1;
+
                     if (customerCardInfo.RBEId == "null")
-                    {
                         customerCardInfo.RBEId = "";
-                    }
-                    if (customerCardInfo.RBEId == "0")
+                    else if (customerCardInfo.RBEId == null)
                         customerCardInfo.RBEId = "";
+                    else if (customerCardInfo.RBEId == "0")
+                        customerCardInfo.RBEId = "";
+
                     if (customerCardInfo.NoOfCards == "0")
                         customerCardInfo.NoOfCards = "";
-                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
 
                     if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                     {
@@ -686,16 +688,15 @@ namespace HPCL.Service.Services
         }
         public async Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID)
         {
-            var customerRegion = new Dictionary<string, string>
-             {
-                    {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
-                    {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"RegionID", RegionID.ToString() }
-
+            var requestInfo = new SalesAreaRequestModal()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionID = RegionID.ToString()
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(customerRegion), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getSalesArea);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
@@ -1348,16 +1349,17 @@ namespace HPCL.Service.Services
                     customerCardInfo.RBEId = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEId) ? "0" : customerResponseByReferenceNo.Data[0].RBEId;
                     customerCardInfo.Status = customerResponseByReferenceNo.Data[0].Status;
                     customerCardInfo.Reason = customerResponseByReferenceNo.Data[0].Reason;
-                    //customerCardInfo.Status = 1;
+
                     if (customerCardInfo.RBEId == "null")
-                    {
                         customerCardInfo.RBEId = "";
-                    }
-                    if (customerCardInfo.RBEId == "0")
+                    else if (customerCardInfo.RBEId == null)
                         customerCardInfo.RBEId = "";
+                    else if (customerCardInfo.RBEId == "0")
+                        customerCardInfo.RBEId = "";
+
                     if (customerCardInfo.NoOfCards == "0")
                         customerCardInfo.NoOfCards = "";
-                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "0" : customerResponseByReferenceNo.Data[0].RBEName;
+                    customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
 
                     if (customerCardInfo.CustomerTypeId == "905" || customerCardInfo.CustomerTypeId == "909")
                     {

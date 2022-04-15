@@ -6,8 +6,8 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
     public class AddAddOnCard : BaseEntity
     {
         public string CustomerId { get; set; }
-        public int FormNumber { get; set; }
-        public int NoOfCards { get; set; }
+        public string FormNumber { get; set; }
+        public string NoOfCards { get; set; }
         public string RBEId { get; set; }
         public string RBEName { get; set; }
         public int FeePaymentsCollectFeeWaiver { get; set; }
@@ -15,7 +15,11 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string FeePaymentDate { get; set; }
         public List<ObjCardDetail> ObjCardDetail { get; set; }
         public string CardPreference { get; set; }
-        public string NoofVechileforAllCards { get; set; }       
+        public string NoofVechileforAllCards { get; set; }
+        public string CustomerTypeId { get; set; }
+        public string Status { get; set; }
+        public string CustomerName { get; set; }
+        public string NoOfVehiclesAllCards { get; set; }
     }
 
     public class ObjCardDetail

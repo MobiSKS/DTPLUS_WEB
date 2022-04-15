@@ -84,7 +84,19 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetRegionalDetailsDropDown(int ZonalOfficeID)
         {
             List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
-            lstCustomerRegion = await _tatkalCardCustomerService.GetRegionalDetailsDropDown(ZonalOfficeID);
+            if (ZonalOfficeID > 0)
+            {
+                lstCustomerRegion = await _tatkalCardCustomerService.GetRegionalDetailsDropDown(ZonalOfficeID);
+            }
+            else
+            {
+                lstCustomerRegion.Add(new CustomerRegionModel
+                {
+                    RegionalOfficeID = 0,
+                    RegionalOfficeName = "--Select--",
+
+                });
+            }
             return Json(lstCustomerRegion);
         }
 

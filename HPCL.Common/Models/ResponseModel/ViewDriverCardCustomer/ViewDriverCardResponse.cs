@@ -30,5 +30,6 @@ namespace HPCL.Common.Models.ResponseModel.DriverCardCustomer
 
         public string CreatedDate { get; set; }
         public string AssignStatus { get; set; }
+        public string IssueDate { get; set; }
     }
 }

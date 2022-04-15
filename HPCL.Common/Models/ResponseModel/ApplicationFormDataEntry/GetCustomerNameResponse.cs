@@ -12,9 +12,9 @@ namespace HPCL.Common.Models.ResponseModel.ApplicationFormDataEntry
     {
         public string CustomerName { get; set; }
         public string FormNumber { get; set; }
-        public int CustomerTypeId { get; set; }
+        public string CustomerTypeId { get; set; }
         public string CustomerTypeName { get; set; }
-        public int NoOfCards { get; set; }
+        public string NoOfCards { get; set; }
         public string PaymentType { get; set; }
         public string PaymentReceivedDate { get; set; }
         public decimal ReceivedAmount { get; set; }

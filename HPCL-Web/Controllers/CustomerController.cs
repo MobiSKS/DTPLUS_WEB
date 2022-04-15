@@ -72,11 +72,23 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetRegionalDetails(int ZonalOfficeID)
         {
             List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
-            lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(ZonalOfficeID);
-            if (lstCustomerRegion.Count > 0)
+            if (ZonalOfficeID > 0)
             {
-                if (lstCustomerRegion[0].RegionalOfficeName == "--Select--")
-                    lstCustomerRegion[0].RegionalOfficeName = "Select Regional Office";
+                lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(ZonalOfficeID);
+                if (lstCustomerRegion.Count > 0)
+                {
+                    if (lstCustomerRegion[0].RegionalOfficeName == "--Select--")
+                        lstCustomerRegion[0].RegionalOfficeName = "Select Regional Office";
+                }
+            }
+            else
+            {
+                lstCustomerRegion.Add(new CustomerRegionModel
+                {
+                    RegionalOfficeID = 0,
+                    RegionalOfficeName = "Select Regional Office",
+
+                });
             }
             return Json(lstCustomerRegion);
         }
@@ -85,7 +97,18 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
             List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
-            lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
+            if (Convert.ToInt32(string.IsNullOrEmpty(Stateid) ? "0" : Stateid) > 0)
+            {
+                lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
+            }
+            else
+            {
+                lstDistrict.Add(new OfficerDistrictModel
+                {
+                    districtID = 0,
+                    districtName = "Select District"
+                });
+            }
             return Json(lstDistrict);
         }
 
@@ -433,7 +456,19 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetsalesAreaDetails(int RegionID)
         {
-            List<SalesAreaModel> lst = await _customerService.GetsalesAreaDetails(RegionID);
+            List<SalesAreaModel> lst = new List<SalesAreaModel>();
+            if (RegionID > 0)
+            {
+                lst = await _customerService.GetsalesAreaDetails(RegionID);
+            }
+            else
+            {
+                lst.Add(new SalesAreaModel
+                {
+                    SalesAreaID = 0,
+                    SalesAreaName = "Select Sales Area"
+                });
+            }
             return Json(lst);
         }
 

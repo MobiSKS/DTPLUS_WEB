@@ -41,6 +41,20 @@ namespace HPCL.Service.Services
 
             GetCustomerNameResponse searchList = obj.ToObject<GetCustomerNameResponse>();
 
+            if (searchList != null && searchList.data.Count > 0)
+            {
+                if (searchList.data[0].RBEId == "null")
+                    searchList.data[0].RBEId = "";
+                else if (searchList.data[0].RBEId == null)
+                    searchList.data[0].RBEId = "";
+                else if (searchList.data[0].RBEId == "0")
+                    searchList.data[0].RBEId = "";
+
+                if (searchList.data[0].NoOfCards == "0")
+                    searchList.data[0].NoOfCards = "";
+                searchList.data[0].RBEName = string.IsNullOrEmpty(searchList.data[0].RBEName) ? "" : searchList.data[0].RBEName;
+            }
+
             return searchList;
         }
 
