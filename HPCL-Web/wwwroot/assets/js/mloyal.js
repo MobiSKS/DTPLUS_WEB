@@ -956,18 +956,27 @@ function showOfficialDetails() {
     //    //return true;
     //}
 
-        
+    if (ret == false)
+        return ret;
 
-    if (document.getElementById("IsDuplicatePanNo").value == "0") {
-        if (document.getElementById("AllowPanDuplication").value != "Y") {
-            $("#panvalidation").modal("show");
-            ret = false;
+    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
+
+    if (TypeofBusinessEntityId != 10)
+    {
+        if (document.getElementById("IsDuplicatePanNo").value == "0")
+        {
+            if (document.getElementById("AllowPanDuplication").value != "Y")
+            {
+                $("#panvalidation").modal("show");
+                ret = false;
+            }
         }
-    }
-    else {
-        document.getElementById("PanCardRemarks").value = "";
-        document.getElementById("lblPanCardRemarks").style.display = "none";
-        document.getElementById("PanCardRemarks").style.display = "none";
+        else
+        {
+            document.getElementById("PanCardRemarks").value = "";
+            document.getElementById("lblPanCardRemarks").style.display = "none";
+            document.getElementById("PanCardRemarks").style.display = "none";
+        }
     }
 
     if (ret == false)
