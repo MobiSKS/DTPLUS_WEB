@@ -125,7 +125,18 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetDistrictDetails(string Stateid)
         {
             List<OfficerDistrictModel> lstDistrict = new List<OfficerDistrictModel>();
-            lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
+            if (Convert.ToInt32(string.IsNullOrEmpty(Stateid) ? "0" : Stateid) > 0)
+            {
+                lstDistrict = await _commonActionService.GetDistrictDetails(Stateid);
+            }
+            else
+            {
+                lstDistrict.Add(new OfficerDistrictModel
+                {
+                    districtID = 0,
+                    districtName = "Select District"
+                });
+            }
             return Json(lstDistrict);
         }
 
