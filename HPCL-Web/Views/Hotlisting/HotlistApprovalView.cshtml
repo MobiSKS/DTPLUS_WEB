@@ -1,0 +1,233 @@
+﻿@model HPCL.Common.Models.ViewModel.Hotlisting.HotlistorReactivateViewModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Hotlisting")" class="text_primary">Hotlisting</a> </li>
+            <li class="breadcrumb-item font-weight-light">Hotlist Approval</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <form class="toBeHiddenOnSuccess">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Hotlist Approval</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label id="lblEntityTypeId" class="font-weight-normal col-md-3 col-12">Entity Type<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.EntityTypeId, new SelectList(Model.HotlistEntity, "EntityId", "EntityName"), new { @class = "form-control", onchange = "getActionList()" })
+                                                <span class="error" id="entity_typeerror"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-3 col-12">Action<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.ActionId, new SelectList(Model.HotlistStatus, "StatusId", "StatusName"), new { @class = "form-control" , onchange = "validateAction()"})
+                                                <span class="error" id="action_error"></span>
+
+                                            </div>
+                                        </div>
+
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-3 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-3 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnSearch">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">RESET</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="clearfix"></div>
+
+       <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" >
+        </div>
+         <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+   
+    
+    $(document).ready(function () {
+    
+    });
+    function getActionList() {
+        var id = $('#EntityTypeId :selected').val();
+        if(id>0){
+            var entityType = $('#EntityTypeId :selected').text();
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetActionList", "Common")',
+                data: { EntityTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#ActionId").html("");
+                        $.each(data, function (i, data) {
+                            //debugger;
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "--Select--"
+                                    }).html("--Select--").appendTo("#ActionId");
+                                $('<option>',
+                                    {
+                                        value: data.statusId,
+                                        text: data.statusName
+                                    }).html(data.statusName).appendTo("#ActionId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.statusId,
+                                        text: data.statusName
+                                    }).html(data.statusName).appendTo("#ActionId");
+                            }
+                        });
+                        $("#ActionId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Data");
+                }
+            });
+            $("#entity_typeerror").attr("style", "display:none");
+            $("#entity_typeerror").html("");
+        }
+        else
+        {
+            $("#entity_typeerror").attr("style", "display:block");
+            $("#entity_typeerror").html("Please Select Entity Type");
+        }
+    };
+    function validateAction(){
+          var actionId = $('#ActionId :selected').val();
+          if (actionId == "0") {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+        }
+
+         else{
+             $("#action_error").attr("style", "display:none");
+             $("#action_error").html("");
+         }
+    };
+    $("#btnSearch").on("click", (function (e) {
+
+        var flag = "Y";
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        var entityTypeId = $('#EntityTypeId :selected').val();
+        var actionId = $('#ActionId :selected').val();
+         if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Please Select From Date");
+            flag = "N";
+        }
+
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Please Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+        if (entityTypeId == "0") {
+            $("#entity_typeerror").attr("style", "display:block");
+            $("#entity_typeerror").html("Please Select Entity Type");
+            flag = "N";
+        }
+        if (actionId == "0") {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+            flag = "N";
+        }
+
+        if(flag=="Y") {
+            $("#toDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#fromDate_error").html("");
+            $("#action_error").attr("style", "display:none");
+            $("#action_error").html("");
+            $("#entity_typeerror").attr("style", "display:none");
+            $("#entity_typeerror").html("");
+          var model= { EntityTypeId: entityTypeId,ActionId: actionId,FromDate:fromdate,ToDate:todate}
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetHotlistApproval", "Hotlisting")',
+                data: { EntityTypeId: entityTypeId,ActionId: actionId,FromDate:fromdate,ToDate:todate},
+                 contentType: "application/json; charset=utf-8",
+                 dataType: 'text',
+                success: function (data) {
+                    $("#show_Table").html(data);
+                         $('html, body').animate({
+                             scrollTop: $("#show_Table").offset().top
+                         }, 2000);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error"+ errorMessage);
+                 }
+            });
+        }
+    }));
+
+    $("#btnReset").click(function () {
+        location.reload();
+
+    });
+        $('select').SumoSelect({
+        placeholder: '-All-',
+        search: true,
+        searchText: 'Enter Text here.'
+    });
+    
+</script>

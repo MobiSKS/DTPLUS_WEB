@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.Hotlisting;
 using HPCL.Common.Models.ViewModel.Hotlisting;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,27 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> GetHotlistedorReactivatedData(string EntityTypeId,string EntityId)
         {
             var result = await _hotlistingService.GetHotlistedorReactivatedData(EntityTypeId, EntityId);
+            return Json(result);
+        }
+        public async Task<IActionResult> HotlistApprovalView()
+        {
+            HotlistorReactivateViewModel HotlistorReactivateMdl = new HotlistorReactivateViewModel();
+
+            var entitytype = await _commonActionService.GetEntityTypeList();
+            HotlistorReactivateMdl.HotlistEntity.AddRange(entitytype);
+
+
+            return View(HotlistorReactivateMdl);
+        }
+        public async Task<IActionResult> GetHotlistApproval(string EntityTypeId,string ActionId,string FromDate,string ToDate)
+        {
+            var result = await _hotlistingService.GetHotlistApproval(EntityTypeId, ActionId, FromDate, ToDate);
+            return PartialView("~/Views/Hotlisting/_HotlistApprovalTblView.cshtml", result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
+        {
+            var result = await _hotlistingService.UpdateHotlistApproval(hotlistApprovalRequest);
             return Json(result);
         }
     }

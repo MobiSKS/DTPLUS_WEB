@@ -263,6 +263,8 @@
         public static string getreasonlistforentities = "api/dtplus/hotlist/get_reason_list_for_entities";
         public static string updatehotlistorreactivate = "api/dtplus/hotlist/update_hotlist_or_reactivate";
         public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
+        public static string gethotlistapproval = "api/dtplus/hotlist/get_hotlist_approval";
+        public static string updatehotlistapproval = "api/dtplus/hotlist/update_hotlist_approval";
 
         #endregion
 
