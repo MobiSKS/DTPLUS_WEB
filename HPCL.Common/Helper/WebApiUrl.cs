@@ -275,6 +275,7 @@
         #region Application Form Data Entry
         public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
         public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
+        public static string addAddonCard = "api/dtplus/card/add_addon_card";
         #endregion
 
         #region "DTP Support"
