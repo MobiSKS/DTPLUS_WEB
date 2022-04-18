@@ -661,7 +661,7 @@
                     <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none">@Html.Raw(ViewBag.Reason)</div>
                     @if (Model.Success != "")
                     {
-                        <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Success</div>
+                        <div class="mb-3 text-center" id="successResp" style="background-color: #a0f1d6;">@Model.Success</div>
                     }
                     @if (Model.Error != "")
                     {
@@ -1051,11 +1051,15 @@
             searchText: 'Enter Text here.'
         });
 
-        if ($("#OutletCategoryId").val() == "4"){
-
+        if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
             $(".mappedMerchId").removeClass("displayNone");
             $("#OutletCategoryId").SumoSelect().sumo.disable();
         }
+        
+        if ($("#OutletCategoryId").val() != "1") {
+            $(".highwayDetails").addClass("displayNone");
+        }
+
         if (rejectedStatus == "true") {
             document.getElementById("viewProfile").classList.remove("active");
             document.getElementById("viewProfile").classList.remove("show");
@@ -1064,7 +1068,7 @@
 
             document.getElementById("basicInfo").classList.add("active");
             document.getElementById("basicInfo").classList.add("show");
-            document.getElementById("basicInfo-tab").classList.remove("disable");
+            //document.getElementById("basicInfo-tab").classList.remove("disable");
             document.getElementById("basicInfo-tab").classList.add("active");
         }
 
@@ -1089,7 +1093,7 @@
 
                 document.getElementById("summaryDetails").classList.add("active");
                 document.getElementById("summaryDetails").classList.add("show");
-                document.getElementById("summaryDetails-tab").classList.remove("disable");
+                //document.getElementById("summaryDetails-tab").classList.remove("disable");
                 document.getElementById("summaryDetails-tab").classList.add("active");
 
                 getRetailDistrict();
@@ -1112,15 +1116,15 @@
                 $("#SummaryERPCode").html($("#ErpCode").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-                $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-                $("#SummaryCity").html($("#CommunicationCity").val());
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+                $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text() : ""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
                 $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
                 $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
                 $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -1145,7 +1149,7 @@
 
                 document.getElementById("summaryDetails").classList.add("active");
                 document.getElementById("summaryDetails").classList.add("show");
-                document.getElementById("summaryDetails-tab").classList.remove("disable");
+                //document.getElementById("summaryDetails-tab").classList.remove("disable");
                 document.getElementById("summaryDetails-tab").classList.add("active");
 
                 getRetailDistrict();
@@ -1168,15 +1172,15 @@
                 $("#SummaryERPCode").html($("#ErpCode").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-                $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-                $("#SummaryCity").html($("#CommunicationCity").val());
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+                $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
                 $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
                 $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
                 $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -1198,7 +1202,7 @@
 
                 document.getElementById("basicInfo").classList.add("active");
                 document.getElementById("basicInfo").classList.add("show");
-                document.getElementById("basicInfo-tab").classList.remove("disable");
+                //document.getElementById("basicInfo-tab").classList.remove("disable");
                 document.getElementById("basicInfo-tab").classList.add("active");
 
                 getRetailDistrict();
@@ -1239,9 +1243,14 @@
 
     function showAddMerchant() {
         var ret = true;
+        status = "";
+        reason = "";
+        $("#finalPrevious").show();
+        $("#confirm").show();
+        $("#successResp").html("");
 
         document.getElementById("basicInfo-tab").click();
-        document.getElementById("basicInfo-tab").classList.remove("disable");
+        //document.getElementById("basicInfo-tab").classList.remove("disable");
         document.getElementById("viewProfile-tab").classList.add("disable");
         ret = false;
     };
@@ -1514,8 +1523,10 @@
                 });
                 ret = "N";
             }
+            else {
+                document.getElementById("gstNum_error").innerHTML = "";
+            }
         }
-
         else {
             document.getElementById("gstNum_error").innerHTML = "";
         }
@@ -1780,10 +1791,12 @@
                     }
                     else {
                         document.getElementById("erpCode_error").innerHTML = "";
-                        console.log(v);
                     }
                 }
             });
+            if (document.getElementById("erpCode_error").innerHTML != ""){
+                ret = "N";
+            }
         }
         else {
             document.getElementById("erpCode_error").innerHTML = "";
@@ -1876,7 +1889,7 @@
         }
         else {
             document.getElementById("address-tab").click();
-            document.getElementById("address-tab").classList.remove("disable");
+            //document.getElementById("address-tab").classList.remove("disable");
             localStorage.setItem("showMerchantCommAddress", true);
             return true;
         }
@@ -1944,8 +1957,8 @@
         }
 
         if (document.applicationForm.CommunicationAddress3.value.trim() != "") {
-            if (!document.applicationForm.CommunicationAddress3.value.match(notOnlySpecialChars)){
-                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 field cannot have Special Characters";
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress3.value.trim())){
+                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 is Invalid";
                 if (ret != "N") {
                     document.applicationForm.CommunicationAddress3.focus();
                 }
@@ -1973,7 +1986,7 @@
         }
 
         if (document.applicationForm.CommunicationCity.value.trim() != "") {
-            if (!document.applicationForm.CommunicationCity.value.match(notOnlySpecialChars)){
+            if (!document.applicationForm.CommunicationCity.value.match(CitynameCheck)){
                 document.getElementById("communicationCity_error").innerHTML = "Invalid City Name";
                 if (ret != "N") {
                     document.applicationForm.CommunicationCity.focus();
@@ -2058,7 +2071,7 @@
         }
         else {
             document.getElementById("terminalDetails-tab").click();
-            document.getElementById("terminalDetails-tab").classList.remove("disable");
+            //document.getElementById("terminalDetails-tab").classList.remove("disable");
             localStorage.setItem("showMerchantTerminalDetails", true);
             return true;
         }
@@ -2134,15 +2147,15 @@
             $("#SummaryERPCode").html($("#ErpCode").val());
             $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
             $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-            $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-            $("#SummaryCity").html($("#CommunicationCity").val());
-            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+            $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+            $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
             $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
             $("#SummaryFax").html($("#CommunicationFax").val());
             $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
             $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
             $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-            $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+            $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
             $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
             $("#SummaryRetFax").html($("#RetailOutletFax").val());
             $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -2155,7 +2168,7 @@
             $("#SummaryTerminalType").html($('input[name="TerminalTypeRequested"]:checked').val());
 
             document.getElementById("summaryDetails-tab").click();
-            document.getElementById("summaryDetails-tab").classList.remove("disable");
+            //document.getElementById("summaryDetails-tab").classList.remove("disable");
             localStorage.setItem("showMerchantSummary", true);
 
             return true;
@@ -2811,6 +2824,9 @@
                 });
                 ret = "N";
             }
+            else{
+                document.getElementById("gstNum_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("gstNum_error").innerHTML = "";
@@ -3268,8 +3284,8 @@
 
     $("#CommunicationAddress3").on("blur", function () {
         if (document.applicationForm.CommunicationAddress3.value.trim() != "") {
-            if (!document.applicationForm.CommunicationAddress3.value.match(notOnlySpecialChars)){
-                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 field cannot have Special Characters";
+            if (checkForSpecialChars(document.applicationForm.CommunicationAddress3.value.trim())){
+                document.getElementById("communicationAddress3_error").innerHTML = "Address 3 is Invalid";
                 if (ret != "N") {
                     document.applicationForm.CommunicationAddress3.focus();
                 }
@@ -3299,7 +3315,7 @@
 
     $("#CommunicationCity").on("blur", function () {
         if (document.applicationForm.CommunicationCity.value.trim() != "") {
-            if (!document.applicationForm.CommunicationCity.value.match(notOnlySpecialChars)){
+            if (!document.applicationForm.CommunicationCity.value.match(CitynameCheck)){
                 document.getElementById("communicationCity_error").innerHTML = "Invalid City Name";
                 if (ret != "N") {
                     document.applicationForm.CommunicationCity.focus();
