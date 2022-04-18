@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ResponseModel.Cards
@@ -28,12 +29,12 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public string VehicleMake { get; set; }
         public int CCMSLimitOption { get; set; }
         public string Description { get; set; }
-        public int CCMSReloadSaleLimitValue { get; set; }
+        public Decimal CCMSReloadSaleLimitValue { get; set; }
     }
 
     public class CCMSBalanceDetail
     {
-        public int ActualCCMSBalance { get; set; }
-        public int UnallocatedCCMSBalance { get; set; }
+        public Decimal ActualCCMSBalance { get; set; }
+        public Decimal UnallocatedCCMSBalance { get; set; }
     }
 }

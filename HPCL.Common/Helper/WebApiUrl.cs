@@ -272,11 +272,13 @@
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
         public static string getCustomerRbeId = "api/dtplus/RBE/get_rbe_id";
+        public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/rbe_deviceid_reset_request";
         #endregion
 
         #region Application Form Data Entry
         public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
         public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
+        public static string addAddonCard = "api/dtplus/card/add_addon_card";
         #endregion
 
         #region "DTP Support"
