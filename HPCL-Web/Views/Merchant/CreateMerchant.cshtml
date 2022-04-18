@@ -1761,6 +1761,7 @@
         }
         else if (document.applicationForm.ErpCode.value.match(erpCodeCheck) && $("#UpdateFlag").val() != "Y"){
             var erpCode = document.applicationForm.ErpCode.value;
+            ret = "N";
             $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("ValidateErpCode", "Common")',
@@ -1779,11 +1780,15 @@
                         ret = "N";
                     }
                     else {
+                        ret = "Y";
                         document.getElementById("erpCode_error").innerHTML = "";
                         console.log(v);
                     }
                 }
             });
+            if (document.getElementById("erpCode_error").innerHTML == "" || document.getElementById("erpCode_error").innerHTML == null){
+                ret = "Y";
+            }
         }
         else {
             document.getElementById("erpCode_error").innerHTML = "";
