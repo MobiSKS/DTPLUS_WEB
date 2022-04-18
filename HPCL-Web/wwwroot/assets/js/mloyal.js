@@ -15,7 +15,7 @@ $(document).on("ajaxError", function () {
     setTimeout(function () {
         $("#loader").fadeOut();
     }, 100)
-    //window.location.href = '@Url.Action("Index", "Home")';
+    window.location.href = "/Home/Index";
     
 })
 
