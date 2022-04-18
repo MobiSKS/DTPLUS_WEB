@@ -32,7 +32,7 @@
         public const string RetailOutletName = "Retail Outlet Name";
         public const string MerchantType = "Merchant Type";
         public const string DealerName = "Dealer Name";
-        public const string MappedMerchantId = "Mapped Merchant Id";
+        public const string MappedMerchantId = "Mapped Merchant ID";
         public const string DealerMobileNo = "Dealer Mobile No";
         public const string OutletCategory = "Outlet Category";
         public const string HighwayNo = "Highway No";
