@@ -1,0 +1,131 @@
+﻿@model HPCL.Common.Models.ResponseModel.Hotlisting.GetHotlistApprovalResponse
+@using HPCL.Common.Resources
+@if (Model.Data.Count() > 0)
+        {
+
+
+            <div class="table-responsive">
+                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="HotlistedData">
+                    <thead style="background-color:lightgray;">
+                        <tr>
+                            <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                           
+                            <th style="width:10%;">Entity Code</th>
+                            <th style="width:10%;">Creation Date</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody id="searchTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.Data)
+                        {
+                            i = i + 1;
+
+                            <tr>
+                                <td><input type="checkbox" id="check_@i" /></td>
+                                <td>@item.EntityCode</td>
+                                <td>@item.CreationDate</td>
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3"></div>
+
+       
+
+            <div class="d-flex align-items-center justify-content-center mt-0">
+                <div class="px-2">
+                    <button class="btn btn_primary" type="button" onclick="ApproveHotlistedEntity();">Approve</button>
+                </div>
+
+            </div>
+        }
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        @Model.Message
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+      $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    
+      function ApproveHotlistedEntity() {
+        detail = [];
+         $("#HotlistedData tbody tr").each(function () {
+             
+             var row = $(this);
+             if (row.find('input[type="checkbox"]').is(":checked")) {
+
+                 var entityCode = row[0].cells[1].textContent;
+                 detail.push({ EntityCode: entityCode });
+
+            }
+         });
+        var flag = "Y";
+        var entityTypeId = $('#EntityTypeId :selected').val();
+        var actionId = $('#ActionId :selected').val();
+        if (entityTypeId == "0") {
+            $("#entity_typeerror").attr("style", "display:block");
+            $("#entity_typeerror").html("Please Select Entity Type");
+            flag = "N";
+        }
+        if (actionId == "0") {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+            flag = "N";
+        }   
+        if (detail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+
+
+        if (detail.length > 0 && flag=="Y") {
+            
+            $("#action_error").attr("style", "display:none");
+            $("#action_error").html("");
+            $("#entity_typeerror").attr("style", "display:none");
+            $("#entity_typeerror").html("");
+            //if (confirm("Are you sure ?")) {
+                var model = { EntityTypeId: entityTypeId,ActionId:actionId, ObjUpdateHotlistApprovalEntityCode: detail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateHotlistApproval", "Hotlisting")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(model),
+                    success: function (data) {
+                        //setDates();
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            //}
+        }
+
+
+    };
+    
+</script>
+

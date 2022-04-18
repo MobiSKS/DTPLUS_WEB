@@ -230,6 +230,7 @@
                         else
                             $("#ActionId").removeAttr("disabled");
                     });
+                     $("#ActionId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -274,6 +275,7 @@
                                     }).html(data.statusName).appendTo("#ReasonId");
                             }
                         });
+                        
                     }
                     //else {
                     //    $('<option>',
@@ -282,7 +284,7 @@
                     //            text: "--Select--"
                     //        }).html("--Select--").appendTo("#ReasonId");
                     //}
-
+                    $("#ReasonId")[0].sumo.reload();
                 }
                 else {
                     console.log(v);
@@ -307,7 +309,7 @@
     }
 
 
-    $("#btnApply").click(function () {
+    $("#btnApply").on("click",(function (e) {
 
         var flag = "Y";
         var merchantId = "", terminalId = "", cardNo = "", customerId = "", entityIdVal = "";;
@@ -344,7 +346,7 @@
         else if ($('#EntityTypeId :selected').text() == "Card") {
             cardNo = $("#CardNo").val();
             if (cardNo != "") {
-                if (cardNo.length!=16) {
+                if (cardNo.length!=16 || !(cardNo.match(number))) {
                     $("#entityid_error").attr("style", "display:block");
                     $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
                     flag = "N";
@@ -466,16 +468,83 @@
                     });
             }
         }
-    });
+    }));
 
         $("#btnReset").click(function () {
             location.reload();
 
         });
          $('select').SumoSelect({
-            placeholder: '-All-',
+            placeholder: '-Select-',
             search: true,
             searchText: 'Enter Text here.'
         });
-
+        $("#MerchantId").on("blur", function () {
+         var merchantId = $("#MerchantId").val();
+          if (merchantId != "") {
+                if (!merchantId.match(mappedMerchantID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+         }
+         else{
+             $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Entity ID");
+         }
+     });
+     $("#TerminalId").on("blur", function () {
+         var terminalId = $("#TerminalId").val();
+        if (terminalId != "") {
+                if (!terminalId.match(mappedterminalID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+         }
+         else{
+              $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Entity ID");
+         }
+     });
+     $("#CardNo").on("blur", function () {
+            var cardNo = $("#CardNo").val();
+            if (cardNo != "") {
+                if (cardNo.length!=16 || !(cardNo.match(number))) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+            }
+         else{
+              $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Entity ID");
+         }
+     });
+     $("#CustomerId").on("blur", function () {
+            var customerId = $("#CustomerId").val();
+            if (customerId != "") {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID/Card Number/Terminal ID");
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+            }
+         else{
+             $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Entity ID");
+         }
+     });
 </script>

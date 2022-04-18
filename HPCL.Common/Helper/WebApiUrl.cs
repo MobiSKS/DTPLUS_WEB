@@ -263,6 +263,8 @@
         public static string getreasonlistforentities = "api/dtplus/hotlist/get_reason_list_for_entities";
         public static string updatehotlistorreactivate = "api/dtplus/hotlist/update_hotlist_or_reactivate";
         public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
+        public static string gethotlistapproval = "api/dtplus/hotlist/get_hotlist_approval";
+        public static string updatehotlistapproval = "api/dtplus/hotlist/update_hotlist_approval";
 
         #endregion
 
@@ -276,6 +278,7 @@
         #region Application Form Data Entry
         public static string GetCustomerNameUrl = "api/dtplus/customer/get_name_and_formnumber_by_customerid";
         public static string CheckAddOnFormUrl = "api/dtplus/card/check_addon_formnumber";
+        public static string addAddonCard = "api/dtplus/card/add_addon_card";
         #endregion
 
         #region "DTP Support"

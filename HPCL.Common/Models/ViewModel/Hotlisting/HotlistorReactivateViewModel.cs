@@ -28,7 +28,8 @@ namespace HPCL.Common.Models.ViewModel.Hotlisting
                 StatusId = 0,
                 StatusName = "--Select--"
             });
-
+            FromDate = DateTime.Now.ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         public string HotlistDate { get; set; }
         public string EntityType { get; set; }
@@ -46,5 +47,7 @@ namespace HPCL.Common.Models.ViewModel.Hotlisting
         public virtual List<HotlistEntity> HotlistEntity { get; set; }
         public virtual List<HotlistReason> HotlistReason { get; set; }
         public virtual List<HotlistStatus> HotlistStatus { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }  
     }
     }
