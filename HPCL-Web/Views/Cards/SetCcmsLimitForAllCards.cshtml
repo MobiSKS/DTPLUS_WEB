@@ -85,7 +85,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new { @class = "form-control" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control" })
                                                         @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -98,7 +98,16 @@
                                     <div class="row" id="setAllLimit" style="display:none;">
                                         <div class="d-flex align-items-center justify-content-center flex-wrap mt-4">
                                             <div class="col-12 col-md-6">
-                                                <div id="searchResponse" class="alert alert-warning" role="alert"> </div>
+                                                <div id="searchResponse" class="alert alert-warning" role="alert"> 
+                                                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width="50%" class="actual"></td>
+                                                                <td width="50%" class="unallocated"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -130,6 +139,8 @@
 
 <script>
     $(document).ready(function () {
+
+        $('#CcmsLimitRs').attr("readonly", true);
 
         $('select').SumoSelect({
             placeholder: '-Select-',
@@ -199,9 +210,18 @@
                 }
             });
         }
-
-
     });
+
+    $(".limitVal").change(function () {
+        var selectedValue = $('.limitVal option:selected').text();
+
+        if((selectedValue == "Unlimited") || (selectedValue == "--Select Limit--")){
+            $('#CcmsLimitRs').attr("readonly", true);
+        }else{
+            $('#CcmsLimitRs').attr("readonly", false);
+        }
+    });
+
 
     function searchAllCards() {
         if ($("#CCMSCustomerId").val() == "") {
@@ -217,11 +237,14 @@
 
             document.getElementById("noRecord").style.display = "none";
 
-            $("#searchResponse").html('');
+            $(".actual").html('');
+            $(".unallocated").html('');
 
-            var search = "<span>Actual CCMS Balance : " + res.searchCcmsCard.data[0].actualCCMSBalance + " Unallocated CCMS Balance : " + res.searchCcmsCard.data[0].unallocatedCCMSBalance + "</span>";
+            var actual = "<span>Actual CCMS Balance : " + res.searchCcmsCard.data[0].actualCCMSBalance + "</span>";
+            var unallocated = "<span>Unallocated CCMS Balance : " + res.searchCcmsCard.data[0].unallocatedCCMSBalance + "</span>";
 
-            $("#searchResponse").append(search);
+            $(".actual").append(actual);
+            $(".unallocated").append(unallocated);
 
             document.getElementById("setAllLimit").style.display = "block";
 
@@ -234,7 +257,7 @@
     }
 
     function OnFailure(data) {
-        alert(data);
+        alert("Issue with data");
     }
 
     function updateCards() {

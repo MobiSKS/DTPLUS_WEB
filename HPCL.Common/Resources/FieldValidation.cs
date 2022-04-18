@@ -60,6 +60,9 @@
 
         public const string ValidVachileNumber = @"^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$";
         public const string ValidVachileNumberErrMsg = "Invalid Vachile Number";
+
+        public const string ValidDocumentNumber = @"^[a-zA-Z0-9]{6,30}$";
+        public const string ValidDocumentNumberErrMsg = "Invalid Document Number";
         #endregion
 
         #region "Not Empty Validation"

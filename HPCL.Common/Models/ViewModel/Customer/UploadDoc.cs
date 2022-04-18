@@ -19,6 +19,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public int IdProofType { get; set; }
 
         [Required(ErrorMessage = "Id Proof Document Number is required")]
+        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string IdProofDocumentNo { get; set; }
 
         [Required(ErrorMessage = "Id Proof Front Photo is required")]
@@ -32,6 +33,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public int AddressProofType { get; set; }
 
         [Required(ErrorMessage = "Address Proof Document Number is required")]
+        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string AddressProofDocumentNo { get; set; }
 
         [Required(ErrorMessage = "Address Proof Front Photo is required")]
