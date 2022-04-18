@@ -938,23 +938,98 @@ function showOfficialDetails() {
     }
 
 
-    ////if (document.applicationForm.PerOrRegAddressDialCode.value == "") {
-    //if (document.getElementById("PerOrRegAddressDialCode").value == "") {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "Dial Code is required";
-    //    return false;
-    //}
-    ////else if (document.applicationForm.PerOrRegAddressPhoneNumber.value == "") {
-    //else if (document.getElementById("PerOrRegAddressPhoneNumber").value == "") {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "Phone (Home) is required";
-    //    return false;
-    //}
-    //else {
-    //    document.getElementById("perma_officePhone_error").innerHTML = "";
-    //    //console.log("dfgdf");				
-    //    //document.getElementById("officialDetails-tab").click();
-    //    //document.getElementById("officialDetails-tab").classList.remove("disable");
-    //    //return true;
-    //}
+    var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
+    if (stdCode != "") {
+
+        if (stdCode.length < 2 || stdCode.length > 4) {
+            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+            ret = false;
+        }
+        else {
+            if (!stdCode.match(number)) {
+                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else {
+                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+            }
+        }
+    }
+    else {
+        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+    }
+
+    var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
+    if (phno != "") {
+        if (phno.charAt(0) == "0") {
+            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+            ret = false;
+        }
+        else if (phno.length < 6 || phno.length > 8) {
+            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+            ret = false;
+        }
+        else {
+            if (!phno.match(number)) {
+                document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+                ret = false;
+            }
+            else {
+                document.getElementById("perma_officePhone_error").innerHTML = "";
+            }
+        }
+
+    }
+    else {
+        document.getElementById("perma_officePhone_error").innerHTML = "";
+    }
+
+    var faxCode = document.getElementById("PermanentFaxCode").value.trim();
+    if (faxCode != "") {
+        if (faxCode.length < 2 || faxCode.length > 4) {
+            document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+            ret = false;
+        }
+        else {
+            if (!faxCode.match(number)) {
+                document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else {
+                document.getElementById("PermanentFaxCode_error").innerHTML = "";
+            }
+        }
+
+    }
+    else {
+        document.getElementById("PermanentFaxCode_error").innerHTML = "";
+    }
+
+    var faxphno = document.getElementById("PermanentFax").value.trim();
+    if (faxphno != "") {
+        if (faxphno.charAt(0) == "0") {
+            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+            ret = false;
+        }
+        else if (faxphno.length < 6 || faxphno.length > 8) {
+            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+            ret = false;
+        }
+        else {
+            if (!faxphno.match(number)) {
+                document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else {
+                document.getElementById("perma_faxNumber_error").innerHTML = "";
+            }
+        }
+
+    }
+    else {
+        document.getElementById("perma_faxNumber_error").innerHTML = "";
+    }
+
 
     if (ret == false)
         return ret;
