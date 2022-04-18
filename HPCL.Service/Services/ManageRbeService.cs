@@ -57,5 +57,23 @@ namespace HPCL.Service.Services
             RbeUserListResponse searchList = obj.ToObject<RbeUserListResponse>();
             return searchList;
         }
+
+        public async Task<RbeDeviceIdResetRequestResponse> RbeDeviceIdResetRequestService(RbeDeviceIdResetRequest entity)
+        {
+            var reqBody = new RbeDeviceIdResetRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FirstName = entity.FirstName ?? "",
+                MobileNo = entity.MobileNo ?? ""
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetRbeDeviceIdResetRequest);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            RbeDeviceIdResetRequestResponse searchList = obj.ToObject<RbeDeviceIdResetRequestResponse>();
+            return searchList;
+        }
     }
 }

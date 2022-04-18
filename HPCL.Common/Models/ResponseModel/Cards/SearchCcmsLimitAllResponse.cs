@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ResponseModel.Cards
@@ -10,7 +11,7 @@ namespace HPCL.Common.Models.ResponseModel.Cards
 
     public class AllLimitCardResponse
     {
-        public int ActualCCMSBalance { get; set; }
-        public int UnallocatedCCMSBalance { get; set; }
+        public Decimal ActualCCMSBalance { get; set; }
+        public Decimal UnallocatedCCMSBalance { get; set; }
     }
 }

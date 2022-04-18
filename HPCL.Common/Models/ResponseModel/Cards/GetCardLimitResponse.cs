@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ResponseModel.Cards
@@ -20,9 +21,9 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public int YearOfRegistration { get; set; }
         public string MobileNumber { get; set; }
         public string VehicleMake { get; set; }
-        public int CashPurseLimit { get; set; }
-        public int SaleTxnLimit { get; set; }
-        public int DailySaleLimit { get; set; }
-        public int MonthlySaleLimit { get; set; }
+        public Decimal CashPurseLimit { get; set; }
+        public Decimal SaleTxnLimit { get; set; }
+        public Decimal DailySaleLimit { get; set; }
+        public Decimal MonthlySaleLimit { get; set; }
     }
 }

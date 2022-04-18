@@ -8,5 +8,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<ChangeRbeMappingResponse> ChangeRbeMapping(RbeMapping entity);
         Task<RbeUserListResponse> RbeUserList(RbeUserList entity);
+        Task<RbeDeviceIdResetRequestResponse> RbeDeviceIdResetRequestService(RbeDeviceIdResetRequest entity);
     }
 }
