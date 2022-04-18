@@ -272,6 +272,7 @@
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
         public static string getCustomerRbeId = "api/dtplus/RBE/get_rbe_id";
+        public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/rbe_deviceid_reset_request";
         #endregion
 
         #region Application Form Data Entry
