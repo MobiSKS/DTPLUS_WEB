@@ -1051,11 +1051,15 @@
             searchText: 'Enter Text here.'
         });
 
-        if ($("#OutletCategoryId").val() == "4"){
-
+        if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
             $(".mappedMerchId").removeClass("displayNone");
             $("#OutletCategoryId").SumoSelect().sumo.disable();
         }
+        
+        if ($("#OutletCategoryId").val() != "1") {
+            $(".highwayDetails").addClass("displayNone");
+        }
+
         if (rejectedStatus == "true") {
             document.getElementById("viewProfile").classList.remove("active");
             document.getElementById("viewProfile").classList.remove("show");
@@ -1112,15 +1116,15 @@
                 $("#SummaryERPCode").html($("#ErpCode").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-                $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-                $("#SummaryCity").html($("#CommunicationCity").val());
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+                $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text() : ""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
                 $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
                 $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
                 $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -1168,15 +1172,15 @@
                 $("#SummaryERPCode").html($("#ErpCode").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-                $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-                $("#SummaryCity").html($("#CommunicationCity").val());
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+                $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+                $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
                 $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
                 $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-                $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+                $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
                 $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
                 $("#SummaryRetFax").html($("#RetailOutletFax").val());
                 $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -1519,8 +1523,10 @@
                 });
                 ret = "N";
             }
+            else {
+                document.getElementById("gstNum_error").innerHTML = "";
+            }
         }
-
         else {
             document.getElementById("gstNum_error").innerHTML = "";
         }
@@ -1766,7 +1772,6 @@
         }
         else if (document.applicationForm.ErpCode.value.match(erpCodeCheck) && $("#UpdateFlag").val() != "Y"){
             var erpCode = document.applicationForm.ErpCode.value;
-            ret = "N";
             $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("ValidateErpCode", "Common")',
@@ -1785,14 +1790,12 @@
                         ret = "N";
                     }
                     else {
-                        ret = "Y";
                         document.getElementById("erpCode_error").innerHTML = "";
-                        console.log(v);
                     }
                 }
             });
-            if (document.getElementById("erpCode_error").innerHTML == "" || document.getElementById("erpCode_error").innerHTML == null){
-                ret = "Y";
+            if (document.getElementById("erpCode_error").innerHTML != ""){
+                ret = "N";
             }
         }
         else {
@@ -2144,15 +2147,15 @@
             $("#SummaryERPCode").html($("#ErpCode").val());
             $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
             $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
-            $("#SummaryAddress").html($("#CommunicationAddress1").val() + ", " + $("#CommunicationAddress2").val() + ", " + $("#CommunicationAddress3").val());
-            $("#SummaryCity").html($("#CommunicationCity").val());
-            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + ', ' + $("#CommunicationStateId :selected").text());
+            $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
+            $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
+            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
             $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
             $("#SummaryFax").html($("#CommunicationFax").val());
             $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
             $("#SummaryRetLocation").html($("#RetailOutletLocation").val());
             $("#SummaryRetCity").html($("#RetailOutletCity").val() + " (" + $("#RetailOutletPinNumber").val() + ")");
-            $("#SummaryRetDistrictState").html($("#RetailOutletStateId :selected").text() + ", " + $("#RetailOutletDistrictId :selected").text());
+            $("#SummaryRetDistrictState").html($("#RetailOutletDistrictId :selected").text() + ", " + $("#RetailOutletStateId :selected").text());
             $("#SummaryRetPhoneOfc").html($("#RetailOutletPhoneNumber").val());
             $("#SummaryRetFax").html($("#RetailOutletFax").val());
             $("#SummaryName").html($("#ContactPersonNameFirstName").val() + " " + $("#ContactPersonNameMiddleName").val() + " " + $("#ContactPersonNameLastName").val());
@@ -2820,6 +2823,9 @@
                     e.preventDefault();
                 });
                 ret = "N";
+            }
+            else{
+                document.getElementById("gstNum_error").innerHTML = "";
             }
         }
         else {
