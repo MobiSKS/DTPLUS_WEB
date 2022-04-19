@@ -64,5 +64,6 @@ namespace HPCL.Service.Interfaces
         Task<List<RecordTypeModel>> GetRecordType();
         Task<string> changeDateFormat(string date);
         Task<string> ValidateErpCode(string erpCode);
+        Task<string> ValidateMappedMerchantId(string mappedMerchantId);
     }
 }

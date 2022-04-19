@@ -1172,5 +1172,26 @@ namespace HPCL.Service.Services
             
             return validateErpCodeModels.First().Status.ToString();
         }
+
+        public async Task<string> ValidateMappedMerchantId(string mappedMerchantId)
+        {
+            var validateMappedMerchantIdForms = new ValidateMappedMerchantIdModalInput
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MappedMerchantID = string.IsNullOrEmpty(mappedMerchantId) ? "" : mappedMerchantId
+            };
+
+            StringContent validateMappedMerchantIdContent = new StringContent(JsonConvert.SerializeObject(validateMappedMerchantIdForms), Encoding.UTF8, "application/json");
+
+            var validateMappedMerchantIdResponse = await _requestService.CommonRequestService(validateMappedMerchantIdContent, WebApiUrl.validateMappedMerchantID);
+
+            JObject validateMappedMerchantIdObj = JObject.Parse(JsonConvert.DeserializeObject(validateMappedMerchantIdResponse).ToString());
+            var validateMappedMerchantIdJarr = validateMappedMerchantIdObj["Data"].Value<JArray>();
+            List<ValidateMappedMerchantIdModalOutput> validateErpCodeModels = validateMappedMerchantIdJarr.ToObject<List<ValidateMappedMerchantIdModalOutput>>();
+
+            return validateErpCodeModels.First().Status.ToString();
+        }
     }
 }

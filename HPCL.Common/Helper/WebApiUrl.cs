@@ -68,6 +68,7 @@
 
         public static string GetTerminalInstallReqAppUrl = "api/dtplus/terminal/get_terminal_installation_request_approval";
         public static string ApproveRejectTerminalUrl= "api/dtplus/terminal/insert_terminal_installation_request_approval";
+        public static string searchcardmappingdetailswithblankmobile = "api/dtplus/card/search_card_mapping_details_with_blank_mobile";
         #endregion
 
         #region Merchant
@@ -98,6 +99,7 @@
         public static string merchantErpReloadSaleEarningDetail = "api/dtplus/merchant/merchant_erp_reload_sale_earning_detail";
         public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
+        public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
         #endregion
 
         #region customer

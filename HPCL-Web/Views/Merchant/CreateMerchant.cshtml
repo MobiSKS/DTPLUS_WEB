@@ -1351,7 +1351,32 @@
                 ret = "N";
             }
             else {
-                document.getElementById("mappedMerchantId_error").innerHTML = "";
+                var mappedMerchantId = document.applicationForm.MappedMerchantId.value;
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateMappedMerchantId", "Common")',
+                    data: { mappedMerchantId: mappedMerchantId },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exists";
+                            if (ret != "N") {
+                                document.applicationForm.MappedMerchantId.focus();
+                            }
+                            $("#applicationForm").submit(function (e) {
+                                e.preventDefault();
+                            });
+                            ret = "N";
+                        }
+                        else {
+                            document.getElementById("mappedMerchantId_error").innerHTML = "";
+                        }
+                    }
+                });
+                if (document.getElementById("mappedMerchantId_error").innerHTML != ""){
+                    ret = "N";
+                }
             }
         }
 
@@ -1812,6 +1837,16 @@
             });
             ret = "N";
         }
+        else if (!document.applicationForm.ContactPersonNameFirstName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "First Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameFirstName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+        }
         else if (document.applicationForm.ContactPersonNameMiddleName.value.trim() == "") {
             document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
             if (ret != "N") {
@@ -1822,6 +1857,16 @@
             });
             ret = "N";
         }
+        else if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameMiddleName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
+        }
         else if (document.applicationForm.ContactPersonNameLastName.value.trim() == "") {
             document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
             if (ret != "N") {
@@ -1831,6 +1876,16 @@
                 e.preventDefault();
             });
             ret = "N";
+        }
+        else if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
+                document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
+                if (ret != "N") {
+                    document.applicationForm.ContactPersonNameLastName.focus();
+                }
+                $("#applicationForm").submit(function (e) {
+                    e.preventDefault();
+                });
+                ret = "N";
         }
         else {
             document.getElementById("contact_name_error").innerHTML = "";
@@ -2249,7 +2304,6 @@
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating District Data");
             }
         });
     };
@@ -2323,7 +2377,6 @@
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating District Data");
             }
         });
     };
@@ -2393,7 +2446,6 @@
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
             }
         });
     };
@@ -2461,7 +2513,6 @@
                 }
             },
             error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Sales Area Data");
             }
         });
     };
@@ -2672,7 +2723,29 @@
                 ret = "N";
             }
             else {
-                document.getElementById("mappedMerchantId_error").innerHTML = "";
+                var mappedMerchantId = document.applicationForm.MappedMerchantId.value;
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateMappedMerchantId", "Common")',
+                    data: { mappedMerchantId: mappedMerchantId },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exists";
+                            if (ret != "N") {
+                                document.applicationForm.MappedMerchantId.focus();
+                            }
+                            $("#applicationForm").submit(function (e) {
+                                e.preventDefault();
+                            });
+                            ret = "N";
+                        }
+                        else {
+                            document.getElementById("mappedMerchantId_error").innerHTML = "";
+                        }
+                    }
+                });
             }
         }
         else if ($("#MappedMerchantId").val().length > 0) {
@@ -3343,4 +3416,5 @@
             document.getElementById("communicationCity_error").innerHTML = "";
         }
     });
+
 </script>
