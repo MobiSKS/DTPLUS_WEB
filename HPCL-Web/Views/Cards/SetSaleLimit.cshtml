@@ -13,6 +13,9 @@
                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Set Sale Limit for Cards</p>
                 <div class="p-2 p-md-4">
                     <div class="w-100">
+
+                        <div id="successUpdate" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+
                         <fieldset class="border-1 rounded border-grey pb-3">
                             <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search Cards</legend>
                             <div class="d-flex align-items-center justify-content-between flex-wrap pt-3 ">
@@ -75,10 +78,7 @@
 
                     <div class="clearfix"></div>
 
-                    <div>
-                        <div class="alert alert-warning mt-3 mb-0" role="alert" style="display:none;" id="noRecord">
-                        </div>
-                    </div>
+                    <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
 
                     <div id="UpdateGrid" style="display:none;" class="w-100 mt-3">
                         <div class="table-responsive">
@@ -111,13 +111,13 @@
                                             @Html.DisplayName("Cash Purse Limit")
                                         </th>
                                         <th>
-                                            @Html.DisplayName("Sale Txn limit")
+                                            @Html.DisplayName("Sale Txn Limit")
                                         </th>
                                         <th>
                                             @Html.DisplayName("Daily Sale Limit")
                                         </th>
                                         <th>
-                                            @Html.DisplayName("Monthly Sale limit")
+                                            @Html.DisplayName("Monthly Sale Limit")
                                         </th>
 
                                     </tr>
@@ -235,13 +235,13 @@
                     if(((searchGrid[i].issueDate) == "01/01/0001 00:00:00") || ((searchGrid[i].issueDate) == "01/01/1900 00:00:00")){
                         isDts = "";
                     }else{
-                        isDts = moment(new Date(searchGrid[i].issueDate)).format('YYYY-MM-DD');
+                        isDts = moment(new Date(searchGrid[i].issueDate)).format('DD-MM-YYYY');
                     }
 
                     if(((searchGrid[i].expiryDate) == "01/01/0001 00:00:00") || ((searchGrid[i].expiryDate) == "01/01/1900 00:00:00")){
                         expDts = "";
                     }else{
-                        expDts = moment(new Date(searchGrid[i].expiryDate)).format('YYYY-MM-DD');
+                        expDts = moment(new Date(searchGrid[i].expiryDate)).format('DD-MM-YYYY');
                     }
 
                     var srNumber = (searchGrid[i].srNumber || '');
@@ -253,7 +253,7 @@
                     var issueDate = isDts;
                     var expiryDate = expDts;
                     var cashPurseLimit = "<input class='form-control cgl cpl' name='" + (searchGrid[i].cashPurseLimit || '') + "' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'>";
-                    var saleTxnLimit = "<input class='form-control cgl stl' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'>";
+                    var saleTxnLimit = "<input class='form-control cgl stl' onchange='saletxnlimitChange(this," + (i) + ")' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'><span class='field-validation-error text-danger' id='saletxn_error_"+i+"'></span>";
                     var dailySaleLimit = "<input class='form-control cgl dsl' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'>";
                     var monthlySaleLimit = "<input class='form-control cgl msl' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'>";
 
@@ -296,24 +296,33 @@
 
         if ($(this).is(':checked')) {
 
-            currentRow.find('input:text').attr("readonly", false);
+            currentRow.find('.cpl').attr("readonly", true);
+
+            currentRow.find('.stl').attr("readonly", false);
+            currentRow.find('.dsl').attr("readonly", false);
+            currentRow.find('.msl').attr("readonly", false);
 
             cardNo = currentRow.find('.getCard').text();
         }
         if (!$(this).is(':checked')) {
-            currentRow.find('input:text').attr("readonly", true);
+            currentRow.find('.stl').attr("readonly", true);
+            currentRow.find('.dsl').attr("readonly", true);
+            currentRow.find('.msl').attr("readonly", true);
+            currentRow.find('.cpl').attr("readonly", true);
         }
     });
 
 
     function OnFailure(data) {
-        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+        alert('Issue with data');
     }
-
 
     function updateCards() {
 
         var updateArray = new Array();
+
+        cnt = 0;
+        var flag = "Y";
 
         $("#CardSearchSaleLimit input[type=checkbox]:checked").each(function () {
             var row = $(this).closest("tr");
@@ -331,28 +340,82 @@
                 dailySale: dailySale,
                 monthlySale: monthlySale
             });
+
+            
+            if(saleTxn.trim() == ''){
+                document.getElementById('saletxn_error_'+cnt).innerHTML="Enter Sale Txn Value";
+                flag = "N";
+            }
+            else
+            {
+             if(saleTxn.trim()!='')
+             {
+                if (!saleTxn.match(number)) 
+                {
+                    document.getElementById('saletxn_error_'+cnt).innerHTML="Invalid Sale Txn";
+                    flag = "N";
+                }
+            } 
+        }
+
         });
 
 
         console.log("ObjCardLimits", updateArray);
 
 
-        $.ajax({
-            url: "@Url.Action("UpdateCards", "Cards")",
-            type: "POST",
-            dataType: "JSON",
-            data: { limitArray: updateArray},
-            success: function (res) {
+         if (flag == "N")
+            e.preventDefault();
 
-                $("#noRecord").html("");
-                $("#noRecord").append("<span>" + res + "</span>");
-                document.getElementById("noRecord").style.display = "block";
+        if (flag == "Y") {
+            $.ajax({
+                url: "@Url.Action("UpdateCards", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                data: { limitArray: updateArray},
+                success: function (res) {
 
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
+                    document.getElementById("noRecord").style.display = "none";
+                    $("#successUpdate").html("");
+                    $("#successUpdate").append("<span>" + res + "</span>");
+                    document.getElementById("successUpdate").style.display = "block";
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
 
     }
+
+     function saletxnlimitChange(o, rowSelected) 
+     {
+        var txnVal = o.value;
+        console.log(txnVal);
+     
+
+        if(txnVal.trim()=='')
+        {
+            document.getElementById('saletxn_error_'+rowSelected).innerHTML="Enter Sale Txn Value";
+            return;
+        }
+        else
+        {
+             if(txnVal.trim()!='')
+             {
+                if (!txnVal.match(number)) 
+                {
+                    document.getElementById('saletxn_error_'+rowSelected).innerHTML="Invalid Sale Txn";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('saletxn_error_'+rowSelected).innerHTML="";
+                }
+               
+            } 
+        }
+ 
+     } 
 </script>
