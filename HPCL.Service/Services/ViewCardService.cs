@@ -4,6 +4,7 @@ using HPCL.Common.Models.ResponseModel.ViewCard;
 using HPCL.Common.Models.ViewModel.ViewCard;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -25,18 +26,20 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<List<ViewCardSearchResult>> ViewCardSearch(ViewCardDetails entity)
+        public async Task<ViewCardSearch> ViewCardSearch(string CustomerId)
         {
+            ViewCardSearch viewCardSearch = new ViewCardSearch(); 
+
             var searchBody = new ViewCardDetails();
 
-            if (entity.Customerid != null)
+            if (CustomerId != null)
             {
                 searchBody = new ViewCardDetails
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    Customerid = entity.Customerid,
+                    Customerid = CustomerId,
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -53,26 +56,27 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.ViewCardLimitsUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
-            return searchList;
+            viewCardSearch = JsonConvert.DeserializeObject<ViewCardSearch>(response);
+            return viewCardSearch;
         }
 
 
-        public async Task<List<ViewCardSearchResult>> SearchCardMapping(string Customerid)
+        public async Task<ViewCardSearch> SearchCardMapping(ViewCardDetails viewCardDetails)
         {
             var searchBody = new ViewCardDetails();
-
-            if (Customerid != null)
+            ViewCardSearch viewCardSearch = new ViewCardSearch();
+            if (viewCardDetails.Customerid != null)
             {
                 searchBody = new ViewCardDetails
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                  
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno= viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno= viewCardDetails.MobileNo
+
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -82,17 +86,19 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
                 };
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ViewCardSearchResult> searchList = jarr.ToObject<List<ViewCardSearchResult>>();
-            return searchList;
+            
+            viewCardSearch = JsonConvert.DeserializeObject<ViewCardSearch>(response);
+            return viewCardSearch;
         }
         public async Task<string> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
@@ -115,7 +121,32 @@ namespace HPCL.Service.Services
             return updateResponse[0].Reason;
         }
 
+        public async Task<ViewCardSearch> AddCardMappingDetails(ViewCardDetails viewCardDetails)    
+        {
+            var searchBody = new ViewCardDetails();
+            ViewCardSearch viewCardSearch = new ViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new ViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
 
+                };
+            }
+           
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
+
+
+            viewCardSearch = JsonConvert.DeserializeObject<ViewCardSearch>(response);
+            return viewCardSearch;
+        }
 
     }
 }
