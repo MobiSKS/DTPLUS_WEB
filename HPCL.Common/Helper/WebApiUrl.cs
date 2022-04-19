@@ -68,6 +68,7 @@
 
         public static string GetTerminalInstallReqAppUrl = "api/dtplus/terminal/get_terminal_installation_request_approval";
         public static string ApproveRejectTerminalUrl= "api/dtplus/terminal/insert_terminal_installation_request_approval";
+        public static string searchcardmappingdetailswithblankmobile = "api/dtplus/card/search_card_mapping_details_with_blank_mobile";
         #endregion
 
         #region Merchant

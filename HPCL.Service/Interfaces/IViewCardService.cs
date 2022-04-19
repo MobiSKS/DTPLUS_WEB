@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.ViewCard;
 using HPCL.Common.Models.ViewModel.ViewCard;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,10 @@ namespace HPCL.Service.Interfaces
 {
    public interface IViewCardService
     {
-        Task<List<ViewCardSearchResult>> ViewCardSearch(ViewCardDetails entity);
-        Task<List<ViewCardSearchResult>> SearchCardMapping(string Customerid);
+        Task<ViewCardSearch> ViewCardSearch(string CustomerId);
+        Task<ViewCardSearch> SearchCardMapping(ViewCardDetails viewCardDetails);
         Task<string> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray);
+        Task<ViewCardSearch> AddCardMappingDetails(ViewCardDetails viewCardDetails);
 
     }
 }
