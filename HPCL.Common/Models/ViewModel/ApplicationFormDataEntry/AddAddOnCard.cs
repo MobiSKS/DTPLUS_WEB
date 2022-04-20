@@ -49,5 +49,6 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string VehicleMake { get; set; }
         public string YearOfRegistration { get; set; }
         public string MobileNo { get; set; }
+        public bool VehicleVerifiedManually { get; set; }
     }
 }

@@ -102,6 +102,7 @@ namespace HPCL.Service.Services
             if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
                 addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
             addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
+            addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
             addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0)
                 addAddOnCard.ObjCardDetail = arrs;
@@ -129,6 +130,7 @@ namespace HPCL.Service.Services
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.NoofVechileforAllCards = arrs[0].NoofVehicles;
             addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
