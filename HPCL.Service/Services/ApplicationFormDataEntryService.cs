@@ -168,12 +168,17 @@ namespace HPCL.Service.Services
                 {
                     cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
                 }
+                if (addAddOnCard.CustomerTypeId == "902" || addAddOnCard.CustomerTypeId == "917")
+                {
+                    cardDetails.YearOfRegistration = "0";
+                }
             }
 
             if (addAddOnCard.CustomerTypeId == "902" || addAddOnCard.CustomerTypeId == "917" || addAddOnCard.CustomerTypeId == "901" || addAddOnCard.CustomerTypeId == "906")
             {
                 addAddOnCard.NoofVechileforAllCards = "0";
             }
+                      
 
             addAddOnCard.UserAgent = CommonBase.useragent;
             addAddOnCard.UserIp = CommonBase.userip;
