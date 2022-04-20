@@ -496,6 +496,7 @@ namespace HPCL.Service.Services
             insertInfo.CustomerName = customerCardInfo.CustomerName;
             insertInfo.FormNumber = customerCardInfo.FormNumber;
             insertInfo.NoOfCards = customerCardInfo.NoOfCards;
+            insertInfo.NoofVechileforAllCards= customerCardInfo.NoOfVehiclesAllCards;
             insertInfo.RBEId = customerCardInfo.RBEId;
             insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
             insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;

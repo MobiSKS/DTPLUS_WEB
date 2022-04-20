@@ -1,8 +1,10 @@
 ﻿
 
 using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -23,7 +25,9 @@ namespace HPCL_Web.Controllers
 
         public IActionResult AddAddOnCards()
         {
-            return View();
+            AddAddOnCard addAddOnCard = new AddAddOnCard();
+            addAddOnCard.Message = "";
+            return View(addAddOnCard);
         }
 
         [HttpPost]
@@ -39,5 +43,34 @@ namespace HPCL_Web.Controllers
             var searchResult = await _applicationFormDataEntryService.CheckAddOnForm(formNumber);
             return Json(new { searchResult = searchResult });
         }
+        public async Task<IActionResult> GetAddOnCardsPartialView(string str)
+        {
+            var modals = await _applicationFormDataEntryService.GetAddOnCardsPartialView(str);
+            return PartialView("~/Views/ApplicationFormDataEntry/_AddAddOnCardsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> CustomerAddCardVehicleTbl(string str)
+        {
+            var modals = await _applicationFormDataEntryService.CustomerAddCardVehicleTbl(str);
+            return PartialView("~/Views/ApplicationFormDataEntry/_AddAddOnCardVehicleDetailsTable.cshtml", modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAddOnCards(AddAddOnCard addAddOnCard)
+        {
+            var Model = await _applicationFormDataEntryService.AddAddOnCards(addAddOnCard);
+
+            if (Model.StatusCode == 1000)
+            {
+                return RedirectToAction("SuccessAddOnCardRedirect", new { Message = Model.Reason });
+            }
+           
+            return View(Model);
+        }
+        public async Task<IActionResult> SuccessAddOnCardRedirect(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
     }
 }
