@@ -1,151 +1,642 @@
-﻿@model HPCL.Common.Models.ViewModel.ViewCard.AddOrEditMobile
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
-
-<div class="col-lg-12 p-4 p-md-4">
+﻿@model HPCL.Common.Models.ViewModel.ViewCard.ViewCardDetails
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0 ">
 
+            <li class="breadcrumb-item addMobile"><a href="@Url.Action("ViewCardLimits", "ViewCard")" class="text_primary">View Card Limits</a> </li>
+            <li class="breadcrumb-item font-weight-light">Map Mobile No</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <form id="formValid1" class="toBeHiddenOnSuccess">
 
-        @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-
-        <form method="post" data-ajax="true" data-ajax-controller="ViewCard" data-ajax-action="AddOrEditMobile" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
-
-
-            <div class="tab-content mt-3" id="myTabContent">
-                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-
-                    <div class="border-1 rounded border-grey h-100 mt-3">
-
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader"> Map Mobile No </p>
-                        <div class="py-2 p-md-4">
-                            <div class="tab-content">
-                                <div id="CustomerCardsSection" class="tab-pane active" role="tabpanel">
-                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Customer ID<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Card Number</label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Mobile Number</label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.MobileNumber, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Vehicle No</label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.VehicleNumber, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.VehicleNumber, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>                                            
+            <div class="border-1 rounded border-grey h-100 mt-3 mb-3">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Map Mobile No</p>
+                <div class="py-2 py-md-4">
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <div class="w-100">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.Customerid, new { @class = "form-control",maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="customerId_error"></span>
                                         </div>
-                                            <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 ml-sm-5 mb-3 px-4">
-                                                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                                    <a class="btn btn_primary py-2 px-4" href="@Url.Action("Edit")" id="btnEdit" name="Edit">EDIT</a>
-                                                </div>
-                                                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                                    <a class="btn btn_primary py-2 px-4" href="@Url.Action("Add")" id="btnAdd" name="Add">ADD</a>
-                                                </div>
-                                                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                                    <button class="btn btn_primary py-2 px-4" id="=btnCancel" name="cancel" onclick="resetFields()">RESET</button>
-                                                </div>
-                                                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                                    <a class="btn btn_primary py-2 px-4" href="@Url.Action("Mapping")" id="btnMapp" name="Mapp">MAPPING DETAILS</a>
-                                                </div>
-                                            </div>
-                                             <div class="table-responsive">
-                                                <table class="table table-striped table-bordered text-nowrap" id="CardSearch">
-                                                    <tr>
-                                                        <th>
+                                    </div>
+                                </div>
+                                 <div class="col-md-6 col-12 ">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="Mob">Mobile Number</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control",maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="mobileNo_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 ">
+                                    <div class="form-group d-flex align-items-center flex-wrap ">
+                                        <label class="font-weight-normal col-md-5 col-12" id="Card">Card Number</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control",maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="cardNo_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="col-md-6 col-12 ">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="Vec">Vehicle Number</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.VechileNo, new { @class = "form-control" ,maxlength = "12"})
+                                            <span style="display:none" class="error" id="vehicleNo_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayName("Card Number")
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayName("Vehicle Number")
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayName("Mobile Number")
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayName("Fastag Number")
-                                                        </th>
-                                                        <th>
-                                                            @Html.DisplayName("Action")
-                                                        </th>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <div class="form-group d-flex align-items-center justify-content-center flex-wrap">
-                                                <div class="px-2">
-                                                    <button class="btn btn_primary py-2 px-4" id="btnSave" name="Save" onclick="return confirm('Are sure wants to Save?');">Save</button>
-                                                </div>
-                                            </div>
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2 ">
+                                        <button class="btn btn_primary" type="button" id="btnEdit">EDIT</button>
+                                    </div>
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2 ">
+                                        <button class="btn btn_primary" type="button" id="btnAdd">ADD</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <butonn class="btn btn_primary " id="btnReset">RESET</butonn>
+                                    </div>
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2 ">
+                                        <button class="btn btn_primary" type="button" id="btnMapp">MAPPING DETAILS</button>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
             </div>
+
         </form>
+
+        <div class="mb-3 toBeHiddenOnSuccess " id="CardMappDiv" style="display:none">
+            <table class="table" id="CardMapp" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Card Number")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Vehicle No")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Mobile Number")
+                        </th>
+                        <th>
+                            @Html.DisplayName("FastagNumber")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Date")
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="mb-3 toBeHiddenOnSuccess" id="CardEditDiv" style="display:none">
+            <table id="CardEdit" class="table">
+                <thead>
+                    <tr>
+                        <th style="width:2%;" >
+                            @Html.DisplayName(" ")
+                        </th>
+
+                        <th style="width:10%;">
+                            @Html.DisplayName("Card Number")
+                        </th>
+                        <th style="width:8%;">
+                            @Html.DisplayName("Vehicle No")
+                        </th>
+                        <th style="width:20%;">
+                            @Html.DisplayName("Mobile Number")
+                        </th>
+                        <th style="width:25%;">
+                            @Html.DisplayName("FastagNumber")
+                        </th>
+                        <th style="width:10%;">
+                            @Html.DisplayName("Action")
+                        </th>
+
+                    </tr>
+                </thead>
+            </table>
+            <div class="d-flex align-items-center justify-content-center mt-3">
+                <div class="px-2">
+                    <button class="btn btn_primary" type="button" id="btnSave" name="submit">Save</button>
+
+                </div>
+            </div>
+        </div>
+        <div id="message" class="mb-3 text-center">
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    function resetFields() {
-        $("input:text").each(function () {
-            $(this).val("");
-        });
-        $("#CardSearch td").parent().remove();
-        document.getElementById('CardSearch').style.display = 'none';
-    }
+     $(document).ready(function () {
+         var customerId="@ViewBag.CustomerId";
+         $("#Customerid").val(customerId);
+    });
+     $("#btnReset").click(function () {
+       location.reload();
+    });
 
 
-    function OnSuccessAcDcSearch(data) {
+    $("#btnMapp").on('click', function (e) {
+        $("#CardEditDiv").attr("style","display:none");
+        var flag="Y";
+        var customerId = $("#Customerid").val();
+        if (customerId != "") {
+              if (!customerId.match(mappedCustomerId)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Customer ID");
+                  flag = "N";
+              }
+              else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+              }
+          }
+          else
+          {
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("Please enter Customer ID");
+                flag = "N";
+          }
+          var cardNo= $("#CardNo").val();
+          if (cardNo != "") {
+              if (!cardNo.match(number) || cardNo<16) {
+                  $("#cardNo_error").attr("style", "display:block");
+                  $("#cardNo_error").html("Invalid Card Number");
+                  flag = "N";
+              }
+              else{
+                 $("#cardNo_error").attr("style", "display:none");
+                 $("#cardNo_error").html("");
+              }
+          }
+          var mobileNo= $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!mobileNo.match(phoneno) ) {
+                  $("#mobileNo_error").attr("style", "display:block");
+                  $("#mobileNo_error").html("Invalid Mobile Number");
+                  flag = "N";
+              }
+              else{
+                 $("#mobileNo_error").attr("style", "display:none");
+                 $("#mobileNo_error").html("");
+              }
+          }
+          var vehicleNo= $("#VechileNo").val();
+        if(flag=="Y"){
+            var dataModel=$("#formValid1").serialize();
+            $.ajax({
+                url: "@Url.Action("SearchCardMapping", "ViewCard")",
+                type: "POST",
+                dataType: "JSON",
+                data: { customerId: customerId,cardNo:cardNo, mobileNo:mobileNo,vechileNo:vehicleNo},
+                success: function (res) {
+                      if(res.data.length>0){
 
-        console.log(data);
+                        $('#CardMapp').DataTable().clear().destroy();
 
-        $("#CardSearch td").parent().remove();
+                        var tbl = $('#CardMapp').DataTable({
+                            paging: true,
+                            searching: false,
+                            stateSave: true,
+                            "bDestroy": true,
+                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                            "autoWidth": false,
+                            "oLanguage": {
+                                "sLengthMenu": "Display _MENU_ Records",
+                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            }
+                        });
+                        var dataList=res.data;
+                        for (var i = 0; i < dataList.length; i++) {
+                            tbl.row.add([
 
-        for (var i = 0; i < data.searchList.length; i++) {
+                                dataList[i].cardNumber || '',
+                                dataList[i].vechileNo || '',
+                                dataList[i].mobileNumber || '',
+                                dataList[i].fastagNumber || '',
+                                 dataList[i].mappingDate || ''
+                            ]).draw();
+                         }
+                         $("#CardMappDiv").attr("style","display:block");
+                         $("#message").attr("style","display:none");
+                         
+                    }
+                    else {
+                         $("#CardMappDiv").attr("style","display:none");
+                         $("#message").attr("style","display:block;background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;");
+                         $("#message").html("");
+                         $("#message").append("<span>" + res.message + "</span>");
+                    }
+                },
+            });
+         }
+      });
+      $("#btnEdit").on('click', function (e) {
+           $("#CardMappDiv").attr("style","display:none");
+            
+           $("#message").attr("style","display:none");
+           var flag="Y";
+        var customerId = $("#Customerid").val();
+        if (customerId != "") {
+              if (!customerId.match(mappedCustomerId)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Customer ID");
+                  flag = "N";
+              }
+              else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+              }
+          }
+          else
+          {
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("Please enter Customer ID");
+                flag = "N";
+          }
+          var cardNo= $("#CardNo").val();
+          if (cardNo != "") {
+              if (!(cardNo.match(number)) || cardNo.length<16) {
+                  $("#cardNo_error").attr("style", "display:block");
+                  $("#cardNo_error").html("Invalid Card Number");
+                  flag = "N";
+              }
+              else{
+                 $("#cardNo_error").attr("style", "display:none");
+                 $("#cardNo_error").html("");
+              }
+          }
+          var mobileNo= $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!(mobileNo.match(phoneno))) {
+                  $("#mobileNo_error").attr("style", "display:block");
+                  $("#mobileNo_error").html("Invalid Mobile Number");
+                  flag = "N";
+              }
+              else{
+                 $("#mobileNo_error").attr("style", "display:none");
+                 $("#mobileNo_error").html("");
+              }
+          }
+          var vehicleNo= $("#VechileNo").val();
+        if(flag=="Y"){
+            var dataModel=$("#formValid1").serialize();
+             $.ajax({
+                url: "@Url.Action("SearchCardMapping", "ViewCard")",
+                type: "POST",
+                 dataType: "JSON",
+                data: { customerId: customerId,cardNo:cardNo, mobileNo:mobileNo,vechileNo:vehicleNo},
+                success: function (res) {
+                      if(res.data.length>0){
 
-            var rows = "<tbody><tr>"
-                + "<td>" + (data.searchList[i].srNumber || '') + "</td>"
-                + "<td class='crdNo'>" + (data.searchList[i].cardNumber || '') + "</td>"
-                + "<td>" + (data.searchList[i].vechileNo || '') + "</td>"
-                + "<td>" + (data.searchList[i].mobileNumber || '') + "</td>"
-                
-                + "<td class='changeTxt'></td>"
-            "<td><a href='#aaa' class='editNumber'>Delete Mapping</a></td></tr></tbody>";
-                + "</tr ></tbody > ";
+                          $("#CardEdit td").parent().remove();
+                        var dataList=res.data;
+                        for (var i = 0; i < dataList.length; i++) {
+                            var rows = "<tbody><tr>"
+                            + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                            + "<td class='cardNo'>" + (dataList[i].cardNumber || '') + "</td>"
+                            + "<td>" + (dataList[i].vechileNo || '') + "</td>"
+                            + "<td class='mobileNo'><input class='form-control cgl cpl mobileNo' name='" + (dataList[i].mobileNumber || '') + "' type='text' value='" + (dataList[i].mobileNumber || '') + "' readonly='readonly', maxlength = '10', onkeypress = 'return isNumberKey(event)' ><span class='field-validation-error text-danger' id='mobile_error_"+i+"'></span></td>"
+                            + "<td class='fastagNo'><input class='form-control cgl cpl fastagNo' name='" + (dataList[i].fastagNumber || '') + "' type='text' value='" + (dataList[i].fastagNumber || '') + "' readonly='readonly',maxlength = '16'><span class='field-validation-error text-danger' id='fasttag_error_"+i+"'></span></td>"
+                            + "<td><a href='' class='delete'>Delete Mapping</a></td>"
+                            "</tbody></tr>"
+                             $("#CardEdit").append(rows);
+                         }
+                         $("#CardEditDiv").attr("style","display:block");
+                         $("#message").attr("style","display:none");
+                         $('#CardEdit td:nth-child(6),th:nth-child(6)').show();
+                    }
+                    else {
+                         $("#CardEditDiv").attr("style","display:none");
+                         $("#message").attr("style","display:block;background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;");
+                         $("#message").html("");
+                         $("#message").append("<span>" + res.message + "</span>");
+                    }
+                },
+            });
+         }
+      });
+       $("#CardEdit").on('click', '.checkEnable', function (e) {
+                currentRow = $(this).closest("tr");
+                if ($(this).is(':checked')) {
+                    currentRow.find('input:text').attr("readonly", false);
+                }
+                if (!$(this).is(':checked')) {
+                    currentRow.find('input:text').attr("readonly", true);
+                    currentRow.find('span.field-validation-error').html("");
+                    currentRow.find('span.field-validation-error').attr("style","dispaly:none");
+                }
+            });
+      $("#btnSave").on('click', (function (e) {
+        var cardNumber = "";
+        var mobileNo = "";
+        var fastagNo = "";
+        var count=0;
+        var flag="Y";
+        updateArray=[];
+          $('#CardEdit tbody tr').each(function () {
+            var row = $(this);
+            count=$(this)[0].rowIndex-1;
+             if (row.find('input[type="checkbox"]').is(":checked")) {
+                cardNumber = row.find("td.cardNo").text();
+                mobileNo = row.find("td.mobileNo input[type='text']").val();
+                fastagNo = row.find("td.fastagNo input[type='text']").val();
+                if(mobileNo!=""){
+                if(!(mobileNo.match(phoneno))){
+                   $('#mobile_error_'+count).html("Invalid Mobile Number");
+                   $('#mobile_error_'+count).attr("style","display:block");
+                    flag = "N";
+                    
+                }
+                else{
+                    $('#mobile_error_'+count).html("");
+                    $('#mobile_error_'+count).attr("style","display:none");
+                }
+                }
+                else{
+                     $('#mobile_error_'+count).html("Mobile Number should be of 10 digit and cannot be left blank");
+                    $('#mobile_error_'+count).attr("style","display:block");
+                     flag = "N";
 
-            $('#CardSearch').append(rows);
+                }
+                  if(fastagNo!=""){
+                if(!(fastagNo.match(fastTagNoCheck))){
+                   $('#fasttag_error_'+count).html("Fasttag Number field should be alphanumeric and minimum length sixteen digit");
+                   $('#fasttag_error_'+count).attr("style","display:block");
+                    flag = "N";
+                    
+                }
+                else{
+                    $('#fasttag_error_'+count).html("");
+                    $('#fasttag_error_'+count).attr("style","display:none");
+                }
+                }
+                else{
+                     $('#fasttag_error_'+count).html("");
+                    $('#fasttag_error_'+count).attr("style","display:none");
 
-            if (data.searchList[i].status == "Active") {
-                $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:red;'>REACTIVATE CARD</button>");
+                }
+           updateArray.push({
+               cardNo: cardNumber,
+               mobileNo: mobileNo,
+               fastagNo: fastagNo
+           });
             }
-            if (data.searchList[i].status == "InActive") {
-                $(".changeTxt").replaceWith("<button class='btn updateStatus' type='submit' name='submit' style='background-color:#bdd4ec;color:black;'>DEACTIVATE CARD</button>");
+        });
+        var confirmText="Do you want to proceed with mapping of the Mobile No. for Cardless Transactions";
+        if(updateArray.length==0)
+            alert("Please select at least one record");
+       if(updateArray.length>0 && flag=="Y"){
+           if(confirm(confirmText)){
+              $.ajax({
+                    url: "@Url.Action("UpdateCards", "ViewCard")",
+                    type: "POST",
+                    dataType: "JSON",
+                   data: { limitArray: updateArray},
+                    success: function (res) {
+                        $("#reason").html(res);
+                        $(".toBeHiddenOnSuccess").hide();
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
             }
         }
-    }
+
+    }));
+
+     $("#Customerid").on("blur", function () {
+         var customerId = $("#Customerid").val();
+          if (customerId != "") {
+              if (!customerId.match(mappedCustomerId)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Customer ID");
+              }
+              else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+             }
+          }
+          else
+          {
+               $("#customerId_error").attr("style", "display:block");
+               $("#customerId_error").html("Please enter Customer ID");
+          }
+         
+     });
+
+     $("#CardEdit").on("blur", "td .mobileNo", function(e) {
+         var mobileNo = $(this).val();
+          var row=$(this).closest('td').closest('tr');
+          var count=row[0].rowIndex-1;
+          if (row.find('input[type="checkbox"]').is(":checked")) {
+              if(mobileNo!=""){
+            if(!(mobileNo.match(phoneno))){
+                   $('#mobile_error_'+count).html("Invalid Mobile Number");
+                   $('#mobile_error_'+count).attr("style","display:block");
+                    flag = "N";
+                    
+                }
+                else{
+                    $('#mobile_error_'+count).html("");
+                    $('#mobile_error_'+count).attr("style","display:none");
+
+
+                }
+              }
+               else{
+                     $('#mobile_error_'+count).html("Mobile Number should be of 10 digit and cannot be left blank");
+                    $('#mobile_error_'+count).attr("style","display:block");
+
+                }
+          }
+     });
+      $("#CardEdit").on("blur", "td .fastagNo", function(e) {
+         var fastagNo = $(this).val();
+          var row=$(this).closest('td').closest('tr');
+          var count=row[0].rowIndex-1;
+          if (row.find('input[type="checkbox"]').is(":checked")) {
+               if(fastagNo!=""){
+                if(!(fastagNo.match(fastTagNoCheck))){
+                   $('#fasttag_error_'+count).html("Fastag Number field should be alphanumeric and minimum length sixteen digit");
+                   $('#fasttag_error_'+count).attr("style","display:block");
+                    flag = "N";
+                    
+                }
+                else{
+                    $('#fasttag_error_'+count).html("");
+                    $('#fasttag_error_'+count).attr("style","display:none");
+                }
+                }
+                else{
+                     $('#fasttag_error_'+count).html("");
+                    $('#fasttag_error_'+count).attr("style","display:none");
+
+                }
+          }
+     });
+      $("#CardEdit").on('click', '.delete', function (e) {
+        currentRow = $(this).closest("tr");
+        var cardNumber = "";
+        var mobileNo = "";
+        var fastagNo = "";
+        updateArray=[];
+        cardNumber = currentRow.find("td.cardNo").text();
+            updateArray.push({
+                cardNo: cardNumber,
+                mobileNo: mobileNo,
+                fastagNo: fastagNo
+            });
+            var confirmText="Are you sure you want to Delete Mapping?";
+           
+        if(updateArray.length>0 ){
+            if(confirm(confirmText)){
+                $.ajax({
+                    url: "@Url.Action("UpdateCards", "ViewCard")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { limitArray: updateArray},
+                    success: function (res) {
+                        $("#reason").html(res);
+                        $(".toBeHiddenOnSuccess").hide();
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+            else
+                return false;
+        }
+    });
+   $("#CardNo").on("blur", function () {
+         var cardNo = $("#CardNo").val();
+           if (cardNo != "") {
+              if (!(cardNo.match(number)) || cardNo.length<16) {
+                  $("#cardNo_error").attr("style", "display:block");
+                  $("#cardNo_error").html("Invalid Card Number");
+              }
+              else{
+                 $("#cardNo_error").attr("style", "display:none");
+                 $("#cardNo_error").html("");
+              }
+          }
+         
+     });
+     $("#MobileNo").on("blur", function () {
+         var mobileNo= $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!(mobileNo.match(phoneno))) {
+                  $("#mobileNo_error").attr("style", "display:block");
+                  $("#mobileNo_error").html("Invalid Mobile Number");
+                  flag = "N";
+              }
+              else{
+                 $("#mobileNo_error").attr("style", "display:none");
+                 $("#mobileNo_error").html("");
+              }
+          }
+         
+     });
+       $("#btnAdd").on('click', function (e) {
+           $("#CardMappDiv").attr("style","display:none");
+           $("#message").attr("style","display:none");
+           var flag="Y";
+        var customerId = $("#Customerid").val();
+        if (customerId != "") {
+              if (!customerId.match(mappedCustomerId)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Customer ID");
+                  flag = "N";
+              }
+              else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+              }
+          }
+          else
+          {
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("Please enter Customer ID");
+                flag = "N";
+          }
+          var cardNo= $("#CardNo").val();
+          if (cardNo != "") {
+              if (!(cardNo.match(number)) || cardNo.length<16) {
+                  $("#cardNo_error").attr("style", "display:block");
+                  $("#cardNo_error").html("Invalid Card Number");
+                  flag = "N";
+              }
+              else{
+                 $("#cardNo_error").attr("style", "display:none");
+                 $("#cardNo_error").html("");
+              }
+          }
+          var mobileNo= $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!(mobileNo.match(phoneno))) {
+                  $("#mobileNo_error").attr("style", "display:block");
+                  $("#mobileNo_error").html("Invalid Mobile Number");
+                  flag = "N";
+              }
+              else{
+                 $("#mobileNo_error").attr("style", "display:none");
+                 $("#mobileNo_error").html("");
+              }
+          }
+          var vehicleNo= $("#VechileNo").val();
+        if(flag=="Y"){
+            var dataModel=$("#formValid1").serialize();
+             $.ajax({
+                url: "@Url.Action("AddCardMappingDetails", "ViewCard")",
+                type: "POST",
+                 dataType: "JSON",
+                data: { customerId: customerId,cardNo:cardNo, mobileNo:mobileNo,vechileNo:vehicleNo},
+                success: function (res) {
+                      if(res.data.length>0){
+
+                          $("#CardEdit td").parent().remove();
+                        var dataList=res.data;
+                        for (var i = 0; i < dataList.length; i++) {
+                            var rows = "<tbody><tr>"
+                            + "<td><input type='checkbox' class='checkEnable' name='enableRow'></td>"
+                            + "<td class='cardNo'>" + (dataList[i].cardNumber || '') + "</td>"
+                            + "<td>" + (dataList[i].vechileNo || '') + "</td>"
+                            + "<td class='mobileNo'><input class='form-control cgl cpl mobileNo' name='" + (dataList[i].mobileNumber || '') + "' type='text' value='" + (dataList[i].mobileNumber || '') + "' readonly='readonly', maxlength = '10', onkeypress = 'return isNumberKey(event)' ><span class='field-validation-error text-danger' id='mobile_error_"+i+"'></span></td>"
+                            + "<td class='fastagNo'><input class='form-control cgl cpl fastagNo' name='" + (dataList[i].fastagNumber || '') + "' type='text' value='" + (dataList[i].fastagNumber || '') + "' readonly='readonly',maxlength = '16'><span class='field-validation-error text-danger' id='fasttag_error_"+i+"'></span></td>"
+                            
+                            "</tbody></tr>" 
+                             $("#CardEdit").append(rows);
+                         }
+                         $("#CardEditDiv").attr("style","display:block");
+                         $("#message").attr("style","display:none");
+                         $('#CardEdit td:nth-child(6),th:nth-child(6)').hide();
+                    }
+                    else {
+                         $("#CardEditDiv").attr("style","display:none");
+                         $("#message").attr("style","display:block;background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;");
+                         $("#message").html("");
+                         $("#message").append("<span>" + res.message + "</span>");
+                    }
+                },
+            });
+         }
+      });
 </script>

@@ -225,5 +225,13 @@ namespace HPCL_Web.Controllers
             return Json(check);
         }
 
+        public async Task<JsonResult> ValidateMappedMerchantId(string mappedMerchantId)
+        {
+            var check = await _commonActionService.ValidateMappedMerchantId(mappedMerchantId);
+
+            ModelState.Clear();
+            return Json(check);
+        }
+
     }
 }
