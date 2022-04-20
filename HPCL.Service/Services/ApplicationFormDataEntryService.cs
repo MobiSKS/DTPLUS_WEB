@@ -138,6 +138,10 @@ namespace HPCL.Service.Services
             {
                 addAddOnCard.NoOfGridRows = arrs[0].NoofVehicles;
             }
+            else
+            {
+                addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
+            }
 
             return addAddOnCard;
         }
