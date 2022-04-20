@@ -25,27 +25,31 @@ namespace HPCL_Web.Controllers
         }
 
 
-        public async Task<IActionResult> ViewCardSearch()
+        public async Task<IActionResult> AddOrEditMobile(string CustomerId)
+        {
+            ViewBag.CustomerId = CustomerId;    
+            return View();
+        }
+        public async Task<IActionResult> ViewCardLimits()
         {
             return View();
         }
-
-        [HttpPost]
-        public async Task<JsonResult> ViewCardSearch(ViewCardDetails entity)
+        
+        
+        public async Task<ActionResult> ViewCardSearch(string CustomerId)
         {
-            var searchList = await _ViewService.ViewCardSearch(entity);
+            var searchList = await _ViewService.ViewCardSearch(CustomerId);
 
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
+            return PartialView("~/Views/ViewCard/_CardLimitsSearchTblView.cshtml", searchList);
         }
 
         [HttpPost]
-        public async Task<JsonResult> SearchCardMapping(string Customerid)
+        public async Task<JsonResult> SearchCardMapping(ViewCardDetails viewCardDetails)
         {
-            var searchList = await _ViewService.SearchCardMapping(Customerid);
+            var searchList = await _ViewService.SearchCardMapping(viewCardDetails);
 
             ModelState.Clear();
-            return Json(new { searchList = searchList });
+            return Json(searchList);
         }
 
         [HttpPost]
@@ -55,6 +59,14 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(reason);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddCardMappingDetails(ViewCardDetails viewCardDetails)
+        {
+            var searchList = await _ViewService.AddCardMappingDetails(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
         }
     }
 

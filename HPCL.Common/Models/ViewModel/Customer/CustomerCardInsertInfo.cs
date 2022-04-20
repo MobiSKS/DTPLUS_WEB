@@ -24,7 +24,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         public string Createdby { get; set; }
         public string VehicleNoVerifiedManually { get; set; }
-
+        public string NoofVechileforAllCards { get; set; }
         public List<CardDetails> ObjCardDetail { get; set; }
     }
 }
