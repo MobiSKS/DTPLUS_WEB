@@ -28,6 +28,7 @@ namespace HPCL.Common.Models.ResponseModel.ViewCard
         public string Reason { get; set; }
         public string MappingDate { get; set; }
         public string VechileNo { get; set; }
+        public string FastagNo { get; set; }
     }
 
 }
