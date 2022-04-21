@@ -21,7 +21,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerRBEName(string RBEId);
-        Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo);
+        Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo);
         Task<CustomerModel> ValidateNewCustomer();
         Task<CustomerValidate> ValidateNewCustomer(CustomerValidate entity);
         Task<List<SearchCustomerResponseGrid>> ReloadUpdatedGrid();
@@ -38,6 +38,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerModel> UpdateCustomer(CustomerModel cust);
         Task<UploadDocResponseBody> UploadDoc(string FormNumber);
         Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo);
-        Task<CustomerCardInfo> GetCustomerCardsPartialView(string CustomerTypeId, string NoofCards, string NoofVehicles, string CardPreference);
+        Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView(string str);
+        Task<CustomerCardInfo> GetCustomerAddCardsPartialView(string str);
     }
 }

@@ -138,6 +138,7 @@ namespace HPCL_Web.Controllers
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
+            customerCardInfo.Message = "";
 
             return View(customerCardInfo);
         }
@@ -171,13 +172,20 @@ namespace HPCL_Web.Controllers
 
             return Json(customerCardInfo);
         }
-        
-        [HttpPost]
-        public async Task<IActionResult> AddCardDetails([FromBody]CustomerCardInfo customerCardInfo)
-        {
-            var result = await _customerService.AddCardDetails(customerCardInfo);
 
-            return Json(result);
+        [HttpPost]
+        public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
+        {
+            var Model = await _customerService.AddCardDetails(customerCardInfo);
+
+            if (Model.StatusCode == 1000)
+            {
+                customerCardInfo.Status = Model.Status;
+                customerCardInfo.StatusCode = Model.StatusCode;
+                return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = Model.CustomerReferenceNo, Message = Model.Reason });
+            }
+
+            return View(Model);
         }
 
         public async Task<IActionResult> UploadDoc(string customerReferenceNo, string FormNumber)
@@ -557,9 +565,10 @@ namespace HPCL_Web.Controllers
             return Json(new { customer = Customer });
         }
 
-        public async Task<IActionResult> SuccessAddCardRedirect(string customerReferenceNo)
+        public async Task<IActionResult> SuccessAddCardRedirect(string customerReferenceNo, string Message)
         {
             ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.Message = Message;
             return View();
         }
         public async Task<IActionResult> GetCCMSBalanceDetails(string CustomerID)
@@ -622,11 +631,15 @@ namespace HPCL_Web.Controllers
 
             return Json(Model);
         }
-
-        public async Task<IActionResult> GetCustomerCardsPartialView(string CustomerTypeId,string NoofCards, string NoofVehicles,string CardPreference)
+        public async Task<IActionResult> GetAddCardPaymentDetailsPartialView(string str)
         {
-            var modals = await _customerService.GetCustomerCardsPartialView(CustomerTypeId, NoofCards, NoofVehicles, CardPreference);
-            return PartialView("~/Views/Customer/_CustomerCardsTbl.cshtml", modals);
+            var modals = await _customerService.GetAddCardPaymentDetailsPartialView(str);
+            return PartialView("~/Views/Customer/_AddCardPaymentDetailsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> GetCustomerAddCardsPartialView(string str)
+        {
+            var modals = await _customerService.GetCustomerAddCardsPartialView(str);
+            return PartialView("~/Views/Customer/_AddCardVehicleDetailsTbl.cshtml", modals);
         }
     }
 }

@@ -1,0 +1,833 @@
+﻿@model HPCL.Common.Models.ViewModel.Customer.CustomerCardInfo
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+    <div class="border-1 rounded border-grey pb-3">
+        <div class="d-flex align-items-center flex-wrap mb-3">
+            <div class="table-responsive">
+				@if (Model.CardPreference == "Card")
+				{
+					<table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" id="NoOfCardsTbl" style="width:100%;">
+						<thead>
+							<tr>
+								<th>S.No</th>
+								@if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+								{
+									<th>Card Identifier</th>
+								}
+								@if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+								{
+									<th>Vehicle No.</th>
+									<th></th>
+									<th>Vehicle Type</th>
+									<th>Vehicle Make</th>
+									<th>Year of Reg.</th>
+									<th></th>
+									<th style="display:none;"></th>
+									<th style="display:none;"></th>
+								}
+							</tr>
+						</thead>
+						<tbody>
+							@{ int Slno = 1;}
+							@for(int i = 0; i < Convert.ToInt32(Model.NoOfGridRows); i++)
+							{
+                                if (@Model.ObjCardDetail.Count > 0)
+                                {
+                                    <tr>
+                                        <td>@Slno</td>
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" value="@Model.ObjCardDetail[i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button>
+                                            </td>
+                                            <td>
+                                                <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i' value="@Model.ObjCardDetail[i].VehicleType">
+                                                <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="ObjCardDetail[@i].VehicleMake" value="@Model.ObjCardDetail[i].VehicleMake" onchange='VehicleMakeChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='VehicleMake_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="4" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].YearOfRegistration" value="@Model.ObjCardDetail[i].YearOfRegistration" onchange='YearOfRegistrationChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='YearOfRegistration_error_@i'></span>
+                                            </td>
+                                            <td></td>
+                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">0</td>
+                                        }
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@Slno</td>
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                            </td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td>
+                                                <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i'>
+                                                <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="ObjCardDetail[@i].VehicleMake" onchange='VehicleMakeChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='VehicleMake_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="4" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].YearOfRegistration" onchange='YearOfRegistrationChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='YearOfRegistration_error_@i'></span>
+                                            </td>
+                                            <td></td>
+                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">0</td>
+                                        }
+                                    </tr>
+                                }
+                                Slno++;
+							}
+						</tbody>
+					</table>
+				}
+				else
+				{
+					<table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
+						<thead>
+							<tr>
+								<th>S.No</th>
+								@if (Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+								{
+									<th>Card Identifier</th>
+									<th>Mobile No</th>
+								}
+								@if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
+								{
+									<th>Card Identifier</th>
+								}
+								@if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+								{
+									<th>Vehicle No.</th>
+									<th></th>
+									<th>Vehicle Type</th>
+									<th>Vehicle Make</th>
+									<th>Year of Reg.</th>
+									<th>Mobile No</th>
+									<td></td>
+									<td style="display:none;">0</td>
+									<td style="display:none;">0</td>
+								}
+							</tr>
+						</thead>
+						<tbody>
+							@{ int Slno = 1;}
+							@for(int i = 0; i < Convert.ToInt32(Model.NoOfGridRows); i++)
+							{
+                                if (@Model.ObjCardDetail.Count > 0)
+                                {
+                                     <tr>
+                                        <td>@Slno</td>
+                                        @if (Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" value="@Model.ObjCardDetail[i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this," + (@i) + ")'>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" value="@Model.ObjCardDetail[i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                            </td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td>
+                                                <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i' value="@Model.ObjCardDetail[i].VehicleType">
+                                                <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="ObjCardDetail[@i].VehicleMake" value="@Model.ObjCardDetail[i].VehicleMake" onchange='VehicleMakeChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='VehicleMake_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="4" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].YearOfRegistration" value="@Model.ObjCardDetail[i].YearOfRegistration" onchange='YearOfRegistrationChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='YearOfRegistration_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" value="@Model.ObjCardDetail[i].MobileNo" onchange='MobileNoChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                            </td>
+                                            <td></td>
+                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">0</td>
+                                        }
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@Slno</td>
+                                        @if (Model.CustomerTypeId == "902" || Model.CustomerTypeId == "917")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this," + (@i) + ")'>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardIdentifier" onchange='CardIdentifierChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardIdentifier_error_@i'></span>
+                                            </td>
+                                        }
+                                        @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
+                                        {
+                                            <td>
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                            </td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td>
+                                                <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i'>
+                                                <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="ObjCardDetail[@i].VehicleMake" onchange='VehicleMakeChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='VehicleMake_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="4" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].YearOfRegistration" onchange='YearOfRegistrationChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='YearOfRegistration_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                            </td>
+                                            <td></td>
+                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">0</td>
+                                        }
+                                    </tr>
+                                }
+                                Slno++;
+							}
+						</tbody>
+					</table>
+				}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(model => Model.NoOfGridRows)
+
+<div class="clearfix"></div>
+<script>
+ $(document).ready(function () {
+
+    $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+                dataType: "json",
+                success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.sortedtList, function (i, option) {
+                    $("<option/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo(".vls");
+                });
+                //$(".vls")[0].sumo.reload();
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Vehicle Type Data");
+                }
+            });
+
+
+      for(i=0;i<Number(document.getElementById('NoOfGridRows').value);i++)
+      {
+          var v ='ddlVehicleType_'+ i;
+          var h='hdnVehicleType_'+ i;
+
+          if(document.getElementById(h).value!="")
+          {
+            PopulateVehicleTypeList(document.getElementById(h).value, v);
+          }
+      }
+
+    });
+
+    function PopulateVehicleTypeList(vehicleTypeId, selectID)
+    {
+        console.log('inside PopulateVehicleTypeList');
+        $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+
+                    console.log(data);
+
+                    $.each(data.sortedtList, function (i, option) {
+                        if (option.vehicleTypeName == vehicleTypeId)
+                            $("<option selected = 'selected'/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo("#" + selectID);
+                        else
+                           $("<option/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo("#" + selectID);
+                    });
+                    //$("#" + selectID)[0].sumo.reload();
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Vehicle Type Dropdown");
+                    }
+                });
+  }
+
+  function CheckVechileNoUsed(o, rowSelected) 
+  {
+          debugger;
+          var vehicleNo = o.value;
+          console.log(vehicleNo);
+
+          var customerTypeId = document.getElementById("CustomerTypeId").value;
+
+          var selected = $("input[name='CardPreference']:checked").val();
+          if (selected == "" || selected == undefined)
+              selected = "Not Selected";
+          console.log(selected);
+                    
+        if(vehicleNo.trim()=='')
+        {
+            document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+            return false;
+        }
+        else
+        {
+            if(vehicleNo.trim()!='')
+            {
+                if (!(vehicleNo.match(forVehicleNo))) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if (!vehicleNo.match(atLeastOneAlphabet)) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if(vehicleNo.length<6 || vehicleNo.length>10)
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="";
+                }
+            }
+        }  
+        
+
+          console.log(rowSelected);
+
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+
+          var mycel;
+          var mycelStatus;
+          if (customerTypeId == "901" || customerTypeId == "906") {
+              if (selected.toUpperCase() == "CARDLESS") {
+                  mycel = myrow.getElementsByTagName("td")[7];
+                  mycelStatus=myrow.getElementsByTagName("td")[8];
+              }
+              else {
+                  mycel = myrow.getElementsByTagName("td")[6];
+                  mycelStatus=myrow.getElementsByTagName("td")[7];
+              }
+          }
+          else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
+              if (selected.toUpperCase() == "CARDLESS") {
+                  mycel = myrow.getElementsByTagName("td")[8];
+                  mycelStatus=myrow.getElementsByTagName("td")[9];
+              }
+              else {
+                  mycel = myrow.getElementsByTagName("td")[7];
+                  mycelStatus=myrow.getElementsByTagName("td")[8];
+              }
+          }
+          console.log(mycel);
+          console.log(mycelStatus);
+          console.log(rowSelected);
+          
+          if (vehicleNo == '') 
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+              mycelStatus.innerHTML = "0";
+              return;
+          }
+          else 
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+              mycelStatus.innerHTML = "0";
+          }
+
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("CheckVechileNoUsed", "Customer")',
+              data: { VechileNo: vehicleNo },  // data to submit
+              dataType: "json",
+              success: function (data, status, xhr) {
+                  console.log(data);
+                  if (data.status == "0") {
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                      mycelStatus.innerHTML = "1";
+                  }
+                  else {
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                      mycelStatus.innerHTML = "0";
+                  }
+              },
+              error: function (jqXhr, textStatus, errorMessage) {
+                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                  mycelStatus.innerHTML = "1";
+
+              }
+          });
+
+      }
+
+    //$('select').SumoSelect({
+    //    placeholder: '--Select--',
+    //    search: true,
+    //    searchText: 'Enter Text here.'
+    //}); 
+
+	  function ValidateVehicleNo(rowSelected) 
+      {
+          debugger;
+          var customerTypeId = document.getElementById("CustomerTypeId").value;
+
+          if($(VehicleVerifiedManually).prop("checked"))
+          {
+              return false;
+          }
+
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+          mycel = myrow.getElementsByTagName("td")[1];
+          mycelValidStatus = myrow.getElementsByTagName("td")[1];
+
+          if (customerTypeId == "901" || customerTypeId == "906") {//Fleet
+              mycel = myrow.getElementsByTagName("td")[1];
+          }
+          else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
+              mycel = myrow.getElementsByTagName("td")[2];
+          }
+
+          console.log(mycel);
+          var vehicleNo = mycel.getElementsByTagName("input")[0].value;
+
+          console.log(vehicleNo);
+
+
+          var selected = $("input[name='CardPreference']:checked").val();
+          if (selected == "" || selected == undefined)
+              selected = "Not Selected";
+          console.log(selected);
+
+
+          console.log(rowSelected);
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+          var mycel;
+          if (customerTypeId == "901" || customerTypeId == "906") {//Fleet
+              if (selected.toUpperCase() == "CARDLESS") {
+                  mycel = myrow.getElementsByTagName("td")[7];
+                  mycelValidStatus = myrow.getElementsByTagName("td")[9];
+              }
+              else {
+                  mycel = myrow.getElementsByTagName("td")[6];
+                  mycelValidStatus = myrow.getElementsByTagName("td")[8];
+              }
+          }
+          else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
+              if (selected.toUpperCase() == "CARDLESS") {
+                  mycel = myrow.getElementsByTagName("td")[8];
+                  mycelValidStatus = myrow.getElementsByTagName("td")[10];
+              }
+              else {
+                  mycel = myrow.getElementsByTagName("td")[7];
+                  mycelValidStatus = myrow.getElementsByTagName("td")[9];
+              }
+          }
+          console.log(mycel);
+          if (vehicleNo == '') 
+          {
+              //mycel.innerHTML = "Enter Vehicle No";
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+              return false;
+          }
+          else 
+          {
+                if(vehicleNo.length<6 || vehicleNo.length>10)
+                {
+                    document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else
+                {
+                   document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                }
+          }
+
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("CheckVehicleRegistrationValid", "Customer")',
+              data: { RegistrationNumber: vehicleNo },  // data to submit
+              dataType: "json",
+              success: function (data, status, xhr) {
+                  //debugger;
+                  var jsonData = JSON.parse(data);
+                  if (status == 'success' && jsonData['statusCode'] == '101') {
+                      //mycel.innerHTML = "Vehicle Number is valid";
+                      //mycel.innerHTML = "";
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                      console.log(jsonData);
+                      mycelValidStatus.innerHTML="1";
+                      //console.log(mycel.innerHTML);
+                  }
+                  else 
+                  {
+                      //mycel.innerHTML = "Invalid Vehicle Number";
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
+                      mycelValidStatus.innerHTML="0";
+                  }
+              },
+              error: function (jqXhr, textStatus, errorMessage) 
+              {
+                  //mycel.innerHTML = "Invalid Vehicle Number";
+                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
+                  mycelValidStatus.innerHTML="0";
+
+              }
+          });
+
+      }
+
+      function VehicleTypeChange(o, rowSelected) 
+      {
+          var vehicleType = o.value;
+          console.log(vehicleType);
+
+        if(vehicleType.trim()=='--Select--')
+        {
+            document.getElementById('ddlVehicleType_error_'+rowSelected).innerHTML="Select Vehicle Type";
+            return
+        }
+        else
+        {
+            document.getElementById('ddlVehicleType_error_'+rowSelected).innerHTML="";
+        } 
+
+     }
+
+     function CardIdentifierChange(o, rowSelected) 
+     {
+         var identifier = o.value;
+         console.log(identifier);
+         var isValid=true;
+
+        if(identifier.trim()=='')
+        {
+            document.getElementById('CardIdentifier_error_'+rowSelected).innerHTML="Enter Card Identifier";
+            isValid=false;
+        }
+        else
+        {
+            if (identifier.charAt(0) == "0") 
+            {
+                document.getElementById('CardIdentifier_error_'+rowSelected).innerHTML="Invalid Card Identifier";
+                isValid=false;
+            }
+            else if (identifier.length < 2 || identifier.length > 16) 
+            {
+                document.getElementById('CardIdentifier_error_'+rowSelected).innerHTML="Invalid Card Identifier";
+                isValid=false;
+            }
+            else if(!identifier.match(number)) 
+            {
+                document.getElementById('CardIdentifier_error_'+rowSelected).innerHTML="Invalid Card Identifier";
+                isValid = false;
+            }
+            else
+            {
+                document.getElementById('CardIdentifier_error_'+rowSelected).innerHTML="";
+            }
+        } 
+
+        if(isValid)
+        {
+            var j=0;i=0;
+            var cnt=0;
+            console.log('Before Checking For Duplicate Card Identifier');
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                var row = $(this);
+                j=0;
+                i=i+1;
+                cnt = 0;
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row1 = $(this);
+
+                    j=j+1;
+                    if(i>0 && j>1 && j>i)
+                    {
+                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                        if(PrevIdent!="" && CurIdent!="")
+                        {
+                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                            {
+
+                                if(CurIdent.length<2 || CurIdent.length>16)
+                                {
+                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                  flag = "N";
+                                }
+                                else if(!CurIdent.match(number))
+                                {
+                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                  flag = "N";
+                                }
+                                else
+                                {
+                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
+                                    flag = "N";
+                                }
+
+                            }
+                        }
+                    }
+
+                    cnt=cnt+1;
+                });
+
+            });
+
+        }
+
+     }
+
+     function VehicleMakeChange(o, rowSelected) 
+     {
+          var vehicleMake = o.value;
+          console.log(vehicleMake);
+
+        if(vehicleMake.trim()=='')
+        {
+            document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="Enter Vehicle Make";
+            return false;
+        }
+        else if (!vehicleMake.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="Invalid Vehicle Make";
+            return false;
+        }
+        else
+        {
+            document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="";
+        } 
+
+     }
+
+     function YearOfRegistrationChange(o, rowSelected) 
+     {
+        var yearReg = o.value;
+        console.log(yearReg);
+        const d = new Date();
+        let curYear = d.getFullYear();
+
+        if(yearReg.trim()=='')
+        {
+            document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="Enter Year of Reg.";
+            return;
+        }
+        else
+        {
+             if(yearReg.trim()!='')
+             {
+                if (!yearReg.match(number)) 
+                {
+                    document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="Invalid Year of Reg.";
+                    return false;
+                }
+                else if (yearReg.length < 4) 
+                {
+                    document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="Invalid Year of Reg.";
+                    return false;
+                }
+                else if (yearReg < 1980 || yearReg > curYear) 
+                {
+                    document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="Invalid Year of Reg.";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="";
+                }
+               
+            } 
+        }
+ 
+     }  
+
+     function MobileNoChange(o, rowSelected) 
+     {
+         var mobile = o.value;
+         console.log(mobile);
+         var isValid=true;
+         var customerTypeId = document.getElementById("CustomerTypeId").value;
+         var PrevMobile = "";
+         var CurMobile =  "";
+
+        if(mobile.trim()=='')
+        {
+            document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Enter Mobile No.";
+            isValid = false;
+        }
+        else
+        {
+            if (mobile.charAt(0) == "0") 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if (mobile.length < 10) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if(!mobile.match(phoneno)) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="";
+            }
+        }
+        
+        if(isValid)
+        {
+            j=0;i=0;
+            cnt=0;
+            console.log('Before Checking For Duplicate MobileNo');
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                var row = $(this);
+                j=0;
+                i=i+1;
+                cnt = 0;
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row1 = $(this);
+
+                    j=j+1;
+                    if(i>0 && j>1 && j>i)
+                    {
+                        var PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                        var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+
+                        if (customerTypeId == "905" || customerTypeId == "909")
+                        {
+                            PrevMobile = row.find("td:eq(7) input[type='text']").val();
+                            CurMobile =  row1.find("td:eq(7) input[type='text']").val();
+                        }
+                        else if (customerTypeId == "901" || customerTypeId == "906")
+                        {
+                            PrevMobile = row.find("td:eq(6) input[type='text']").val();
+                            CurMobile =  row1.find("td:eq(6) input[type='text']").val();
+                        }
+                        else
+                        {
+                            PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                            CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+                        }
+
+                        if(PrevMobile!="" && CurMobile!="")
+                        {
+                            if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
+                            {
+                                document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                            }
+                        }
+                    }
+
+                    cnt=cnt+1;
+                });
+
+            });
+
+        }
+
+
+     }
+
+     function IsAlphaNumeric(keyCode) 
+     {
+           return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 46 ||
+                    (keyCode >= 97 && keyCode <= 122) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
+     }
+
+</script>
