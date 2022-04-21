@@ -317,7 +317,7 @@
 
         cnt = 0;
         var flag = "Y";
-
+        var Cardno;
         $("#CardSearch input[type=checkbox]:checked").each(function () {
 
             var selectedRow = $(this).closest("tr")[0];
@@ -330,7 +330,7 @@
             var Mobileno = row.find('.mobn').val();
             var Limittype = row.find('.vls').val();
             var Amount = row.find('.amt').val();
-            var Cardno = row.find('.cdn').text();
+            Cardno = row.find('.cdn').text();
             var vehicleNo = row.find('.vn').text();
             var issueDate = row.find('.isd').text();
             var expiryDate = row.find('.expd').text();
@@ -354,7 +354,6 @@
                 Amount: Amount,
                 limitTypeText: limitTypeText
             });
-
 
             
         if(Mobileno.trim()!=''){
@@ -400,6 +399,12 @@
 
         });
 
+        
+        if (Cardno == undefined) {
+            alert("Please select at least one item");
+            flag = "N";
+        }
+
         console.log("viewlist", viewArray);
         console.log("updt", updateArray);
 
@@ -407,6 +412,14 @@
             e.preventDefault();
 
         if (flag == "Y") {
+             $("#CardSearch input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('mobileno_error_'+indexS).style.display = "none";
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "none";
+            });
+
             if (confirm('Are you sure! You want to process the selected record(s)?')) {
                 console.log('ok');
 

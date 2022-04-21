@@ -430,15 +430,26 @@
                     }
                 }
             }
-            cnt=cnt+1;
         });
 
+         if (cardNo == undefined) {
+                alert("Please select at least one item to Set limits.");
+                flag = "N";
+         }
  
          if (flag == "N")
             e.preventDefault();
 
         if (flag == "Y") {
-            document.getElementById('saletxn_error_'+cnt).style.display = "none";
+            $("#CardSearchSaleLimit input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('saletxn_error_'+indexS).style.display = "none";
+                document.getElementById('dailysale_error_'+indexS).style.display = "none";
+                document.getElementById('monthlysale_error_'+indexS).style.display = "none";
+            });
+
             $.ajax({
                 url: "@Url.Action("UpdateCards", "Cards")",
                 type: "POST",
