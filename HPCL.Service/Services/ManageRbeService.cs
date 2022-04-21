@@ -75,5 +75,24 @@ namespace HPCL.Service.Services
             RbeDeviceIdResetRequestResponse searchList = obj.ToObject<RbeDeviceIdResetRequestResponse>();
             return searchList;
         }
+
+        public async Task<ChangeRbeMappingByUserNameResponse> ChangeRbeMappingByUserName(string newUserName, string userName)
+        {
+            var reqBody = new ChangeRbeMapping
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                PreRBEUserName = userName ?? "",
+                NewRBEUserName = newUserName ?? "",
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ChangeRbeMappingByUserNameUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ChangeRbeMappingByUserNameResponse changeList = obj.ToObject<ChangeRbeMappingByUserNameResponse>();
+            return changeList;
+        }
     }
 }

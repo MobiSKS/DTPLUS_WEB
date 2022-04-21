@@ -88,6 +88,116 @@
 </div>
 <div class="clearfix"></div>
 
+<div id="responseMsgModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="statusMsg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-0">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal">CLOSE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobileno change Popup Modal -->
+<div class="modal fade" id="mobilenochangepopOtp" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE ID</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control-plaintext" id="GetRbeIdOtp">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">New Username</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="userNameValOtp" maxlength="10">
+                        <p class="text-success text-left mb-0">OTP has been sent successfully to new user, please enter OTP to verify user</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">Please Enter OTP <sup class="text-danger">*</sup></label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="" value="">
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn_primary">Verify OTP </button>
+                        <p class="text-danger mt-1 mb-0" style="cursor:pointer"><u>Resend OTP</u></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-0">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal">Cancel </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Mobileno change Popup Modal2 -->
+<div class="modal fade" id="mobilenochangepop" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE ID</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control-plaintext" id="GetRbeId">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">New Username</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="userNameVal" maxlength="10" onchange="userNameOnChange(this)">
+                        <span style="display:none" class="error" id="userName_error"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal" onclick="clickChangeRbe()">Request Change RBE</button>
+                    </div>
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
 
@@ -134,14 +244,14 @@
                         for (var i = 0; i < girdList.length; i++) {
 
                             var srNumber = (i + 1);
-                            var rbeID = (girdList[i].rbeid || '');
-                            var userName = (girdList[i].userName || '');
+                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '')+"</span>";
+                            var userName = "<span class='userName'>"+(girdList[i].userName || '')+"</span>";
                             var firstName = (girdList[i].firstName || '');
                             var lastName = (girdList[i].lastName || '');
                             var emailId = (girdList[i].emailId || '');
                             var region = (girdList[i].region || '');
                             var zone = (girdList[i].zone || '');
-                            var action = "<a href='#aaa' class='actionRbe'>" + (girdList[i].action || '') + "</a>";
+                            var action = "<a class='actionRbe' href='#exampleModal'>" + (girdList[i].action || '') + "</a>";
 
                             tbl.row.add([
                                 srNumber,
@@ -173,4 +283,90 @@
         }
     }
 
+    var userName;
+    var rbeIdVll;
+
+    $("#RbeMapping").on('click', '.actionRbe', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        userName = currentRow.find('.userName').text();
+        rbeIdVll = currentRow.find('.rbeIdVal').text();
+
+        var actionType = currentRow.find('.actionRbe').text();
+
+        console.log("values", userName+"    "+actionType);
+
+        if(actionType == "Change RBE Mapping"){
+
+            $("#GetRbeId").val(rbeIdVll);
+
+            $("#mobilenochangepop").modal('show');
+        }
+    });
+
+    function clickChangeRbe(){
+        console.log(userName,"clicked");
+        var newUserName = $("#userNameVal").val();
+        if(newUserName == userName){
+            $("#statusMsg").html("");
+            $("#statusMsg").append("<span>User Name can not be same.</span>")
+            $("#responseMsgModal").modal('show');
+        }else{
+            var flag = "Y";
+
+            if(newUserName.trim()!=''){
+                if (!newUserName.match(/^(?!(0))[0-9]{10}$/)){
+                     $("#userName_error").attr("style", "display:block");
+                     $("#userName_error").html("Batch ID is required");
+                     flag = "N";
+                }
+            }
+
+            if (flag == "N")
+                e.preventDefault();
+
+            if (flag == "Y") {
+                $.ajax({
+                    url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { newUserName: newUserName, userName: userName},
+                    success: function (res) {
+                       console.log("res",res);
+                       if(res.changeList.data[0].status == 1){
+                           $("#GetRbeIdOtp").val(rbeIdVll);
+                           $("#userNameValOtp").val(userName);
+                           $("#mobilenochangepopOtp").modal('show');
+                       }else{
+                           $("#mobilenochangepopOtp").modal('hide');
+                           $("#statusMsg").html("");
+                           console.log(res.changeList.data[0].reason);
+                           $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
+                           $("#responseMsgModal").modal('show');
+                       }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+        }
+    }
+
+    function userNameOnChange(o){
+        var userNameVal = o.value;
+
+        if(userNameVal.trim()!=''){
+            if (!userNameVal.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#userName_error").attr("style", "display:block");
+                 $("#userName_error").html("Username is a 10 digit number");
+                 return false;
+            }
+            else{
+                 $("#userName_error").attr("style", "display:none");
+                 $("#userName_error").html("");
+            }
+        }
+    }
 </script>
