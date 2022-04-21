@@ -85,7 +85,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control", @onchange = "ccmsLimitValidate(this)" })
                                                         @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -310,5 +310,22 @@
             //}
         }
     }
+
+    function ccmsLimitValidate(o){
+        var amountVal = o.value;
+        if(amountVal == ""){
+            amountVal = 0;
+        }else{
+            if(!amountVal.match("^[0-9]{1,10}$")){
+                $("#CcmsLimitRsErr").text("Please Enter numeric value");
+                return false;
+            }else if((amountVal == 0) || !(amountVal < 5000001)){
+                $("#CcmsLimitRsErr").text("Invalid CCMS Limit");
+                return false;
+            }else{
+                $("#CcmsLimitRsErr").text("");
+            }
+        }
+     }
 
 </script>
