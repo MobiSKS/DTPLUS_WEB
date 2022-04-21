@@ -319,6 +319,12 @@
         var flag = "Y";
 
         $("#CardSearch input[type=checkbox]:checked").each(function () {
+
+            var selectedRow = $(this).closest("tr")[0];
+            console.log("index",selectedRow.rowIndex);
+            
+            var indexS = (selectedRow.rowIndex) - 1;
+
             var row = $(this).closest("tr");
 
             var Mobileno = row.find('.mobn').val();
@@ -352,42 +358,43 @@
 
             
         if(Mobileno.trim()!=''){
-            if (!mobileNoVal.match(/^(?!(0))[0-9]{10}$/)){
-                document.getElementById('mobileno_error_'+cnt).title="Invalid Mobile Number";
-                document.getElementById('mobileno_error_'+cnt).style.display = "block";
+            if (!Mobileno.match(/^(?!(0))[0-9]{10}$/)){
+                document.getElementById('mobileno_error_'+indexS).title="Invalid Mobile Number";
+                document.getElementById('mobileno_error_'+indexS).style.display = "block";
                 flag = "N";
+            }else{
+                 document.getElementById('mobileno_error_'+indexS).style.display = "none";
             }
         }
 
         if(Limittype.trim() == "5"){
-            $('#ccmsReloadSaleid_'+cnt).attr("readonly", true);
+            $('#ccmsReloadSaleid_'+indexS).attr("readonly", true);
         }else{
-            $('#ccmsReloadSaleid_'+cnt).attr("readonly", false);
+            $('#ccmsReloadSaleid_'+indexS).attr("readonly", false);
         }
 
         if(!$('#ccmsReloadSaleid_'+cnt).is('[readonly]')){
             if(Amount.trim()==''){
-                document.getElementById('ccmsReloadSale_error_'+cnt).title="Please Enter Amount";
-                document.getElementById('ccmsReloadSale_error_'+cnt).style.display = "block";
+                document.getElementById('ccmsReloadSale_error_'+indexS).title="Please Enter Amount";
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "block";
                 flag = "N";
+            }else{
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "none";
             }
         }
 
-         //if ($('#ccmsReloadSaleid_'+cnt).attr("readonly") == true) {
-         //       document.getElementById('ccmsReloadSale_error_'+cnt).title="";
-         //       document.getElementById('ccmsReloadSale_error_'+cnt).style.display = "none";
-         //}
-
         if(Amount.trim()!=''){
-            if (!amountVal.match(number)){
-                document.getElementById('ccmsReloadSale_error_'+cnt).title="Please Enter Numeric Value";
-                document.getElementById('ccmsReloadSale_error_'+cnt).style.display = "block";
+            if (!Amount.match(number)){
+                document.getElementById('ccmsReloadSale_error_'+indexS).title="Please Enter Numeric Value";
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "block";
                 flag = "N";
             }
-            else if (Amount >= 5000000){
-                document.getElementById('ccmsReloadSale_error_'+cnt).title="Invalid CCMS Reload/Sale Limit";
-                document.getElementById('ccmsReloadSale_error_'+cnt).style.display = "block";
+            else if (!(Amount < 5000001)){
+                document.getElementById('ccmsReloadSale_error_'+indexS).title="Invalid CCMS Reload/Sale Limit";
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "block";
                 flag = "N";
+            }else{
+                document.getElementById('ccmsReloadSale_error_'+indexS).style.display = "none";
             }
         }
 
@@ -477,7 +484,7 @@
                 document.getElementById('ccmsReloadSale_error_'+rowSelected).style.display = "block";
                 return false;
             }
-            else if (amountVal >= 5000000){
+            else if (!(amountVal < 5000001)){
                 document.getElementById('ccmsReloadSale_error_'+rowSelected).title="Invalid CCMS Reload/Sale Limit";
                 document.getElementById('ccmsReloadSale_error_'+rowSelected).style.display = "block";
                 return false;
