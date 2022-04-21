@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Cards
@@ -12,7 +13,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CustomerId { get; set; }
         public int StatusFlag { get; set; }
         public int TypeOfLimit { get; set; }
-        public int CcmsLimitRs { get; set; }
+        public Decimal CcmsLimitRs { get; set; }
     }
 
 

@@ -53,7 +53,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
+        public async Task<IActionResult> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
             var reason = await _ViewService.UpdateCards(limitArray);
 

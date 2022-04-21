@@ -76,6 +76,65 @@
             color: #f00;
             top: 100%;
         }
+        .dropdown-menu.radio .dropdown-item { 
+	        position:relative;
+	        overflow:hidden; 
+	        cursor:pointer; }
+
+        .dropdown-menu.radio input { 
+	        visibility: hidden; 
+	        position:absolute; left: -30px; }
+
+        .dropdown-menu.radio i { 
+	        font-weight:normal; font-style:normal; 
+	        display:block; }
+
+        .dropdown-item.active {
+          background-color:#555; 
+          color:#fff;
+        }
+        .dropdown-menu.radio .dropdown-item { 
+	        position:relative;
+	        overflow:hidden; 
+	        cursor:pointer; }
+
+        .dropdown-menu.radio input { 
+	        visibility: hidden; 
+	        position:absolute; left: -30px; }
+
+        .dropdown-menu.radio i { 
+	        font-weight:normal; font-style:normal; 
+	        display:block; }
+
+        .dropdown-menu.radio.show .dropdown-item.active {
+          background-color:#073a7a; 
+          color:#fff;
+        }
+        .btn_filter {
+            background: #084693;
+            color: #fff;
+            font-size: 12px;
+            height: 42px;
+            border-radius: 30px;
+            min-width: 140px;
+        }
+        .dropdown-menu.radio.show {
+            background: #084693;
+        }
+        .dropdown-menu.radio.show .dropdown-item i{
+            color: #fff;
+            font-size: 12px;
+        }
+        .dropdown-menu.radio.show .dropdown-item i{
+            padding: 5px 10px;
+        }
+        .dropdown-menu.radio.show .dropdown-item:focus, 
+        .dropdown-menu.radio.show .dropdown-item:hover {
+            color: #fff;
+            text-decoration: none;
+            background-color: #0f58b2;
+        }
+
     </style>
 </head>
 
@@ -95,7 +154,7 @@
                         <div class="input-group-prepend"> <span class="input-group-text "><img src="~/assets/images/search_icon.png" alt=""></span> </div>
                         <input type="search" class="form-control" aria-label="Start Searching" placeholder="Start Searching...">
                         <div class="input-group-append">
-                            <div class="customSumoFilter">
+                            @*<div class="customSumoFilter">
                                 <select name="" id="">
                                     <option value="">Filter By</option>
                                     <option value="">Customer Search</option> 
@@ -103,9 +162,35 @@
                                     <option value="">Merchant Search</option>
                                     <option value="">Terminal Search</option>
                                 </select>
-                            </div>
+                            </div>*@
+
+                            <div class="dropdown">
+	                            <button type="button" class="btn btn_filter dropdown-toggle" data-toggle="dropdown">
+	  	                            <span>Filter By</span>
+	                            </button>
+	                            <div class="dropdown-menu radio">
+    	                            <label class="dropdown-item">
+                                    <input class="jRadioDropdown" type="radio" value="005" name="alphabet">
+                                    <i>Customer Search</i>
+                                  </label>
+
+    	                            <label class="dropdown-item">
+                                    <input class="jRadioDropdown" type="radio" value="006" name="alphabet">
+                                    <i>Card Search</i>
+                                  </label>
+
+    	                            <label class="dropdown-item">
+                                    <input class="jRadioDropdown" type="radio" value="007" name="alphabet">
+                                    <i>Merchant Search</i>
+                                  </label>
+                                  <label class="dropdown-item">
+                                    <input class="jRadioDropdown" type="radio" value="008" name="alphabet">
+                                    <i>Terminal Search</i>
+                                  </label>
+	                            </div>
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="col-lg-3 col-md-8 col-5 py-2">
                     <div class="d-flex align-items-center justify-content-end">
@@ -257,7 +342,7 @@
                                                     <div class="level2Menu_div">
                                                         <ul class="level2Menu">
                                                             <li><a href="@Url.Action("ManageCards", "Cards")">Manage Cards</a></li>
-                                                            <li><a href="@Url.Action("ViewCardSearch", "ViewCard")">View Card Limits</a></li>
+                                                            <li><a href="@Url.Action("ViewCardLimits", "ViewCard")">View Card Limits</a></li>
                                                             <li><a href="@Url.Action("AcDcCardSearch", "Cards")">Deactivate / Reactivate Card Usage</a></li>
                                                             <li><a href="@Url.Action("SetSaleLimit", "Cards")">Set Sale Limits for Cards</a></li>
                                                             <li><a href="@Url.Action("SetCcmsLimitForAllCards", "Cards")">Set CCMS Limit for All Cards</a></li>
@@ -741,4 +826,31 @@
             sessionStorage.clear();
             window.location.href = '@Html.Raw(@Url.Action("Index", "Home"))';
         });
+
+        // Change the button text & add active class
+            $('.jRadioDropdown').change(function() {
+              var dropdown = $(this).closest('.dropdown');
+              var thislabel = $(this).closest('label');
+
+              dropdown.find('label').removeClass('active'); 
+              if( $(this).is(':checked') ) {
+                thislabel.addClass('active');
+                dropdown.find('span').html( thislabel.text() );
+              }
+
+            });    
+ 
+            //Add tabindex on labels
+            $('label.dropdown-item').each(function (index, value){
+              $(this).attr('tabindex', 0 );
+              $(this).find('input').attr('tabindex', -1 );
+            });
+
+            //Add keyboard navigation
+            $('label.dropdown-item').keypress(function(e){
+              if((e.keyCode ? e.keyCode : e.which) == 13){
+                $(this).trigger('click');
+              }
+            });
+
 </script>
