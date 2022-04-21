@@ -56,5 +56,12 @@ namespace HPCL_Web.Controllers
             var searchList = await _manageRbeService.RbeDeviceIdResetRequestService(entity);
             return Json(new { searchList = searchList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> ChangeRbeMappingByUserName(string newUserName, string userName)
+        {
+            var changeList = await _manageRbeService.ChangeRbeMappingByUserName(newUserName, userName);
+            return Json(new { changeList = changeList });
+        }
     }
 }

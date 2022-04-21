@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
         Task<SearchDetailsByCardId> ViewCardDetails(string CardId);
         Task<string> UpdateService(string serviceId, bool flag);
         Task<UpdateMobileModal> CardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue);
-        Task<string> CardlessMapping(UpdateMobileModal entity);
+        Task<string> CardlessMappingUpdate(string mobNoNew, string crdNo);
         Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity);
         Task<string> UpdateStatus(string cardNo, int Statusflag);
         Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity);

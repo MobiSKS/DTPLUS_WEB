@@ -274,6 +274,7 @@
 
                 document.getElementById("UpdateGrid").style.display = "grid";
         } else {
+            document.getElementById("successUpdate").style.display = "none";
             document.getElementById("UpdateGrid").style.display = "none";
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
@@ -315,12 +316,21 @@
     }
 
     function updateCards() {
+        document.getElementById("successUpdate").style.display = "none";
         var updateArray = new Array();
 
-        cnt = 0;
+        
         var flag = "Y";
-
+        var cnt = 0;
         $("#CardSearchSaleLimit input[type=checkbox]:checked").each(function () {
+
+            var selectedRow = $(this).closest("tr")[0];
+            console.log("index",selectedRow.rowIndex);
+            
+            var indexS = (selectedRow.rowIndex) - 1;
+
+            console.log("indexS",indexS);
+
             var row = $(this).closest("tr");
 
             cardNo = row.find('.getCard').text();
@@ -337,102 +347,110 @@
                 monthlySale: monthlySale
             });
 
-            var cashPurseLimitVal = $('#cashpurselimitid_'+cnt).val();
-            var saleTxnLimitVal = $('#saletxnlimitid_'+cnt).val();
-            var monthlySaleLimitVal = $('#monthlySalelimitid_'+cnt).val();
+            var cashPurseLimitVal = $('#cashpurselimitid_'+indexS).val();
+            var saleTxnLimitVal = $('#saletxnlimitid_'+indexS).val();
+            var monthlySaleLimitVal = $('#monthlySalelimitid_'+indexS).val();
 
             if(saleTxn.trim() == ''){
-                document.getElementById('saletxn_error_'+cnt).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                document.getElementById('saletxn_error_'+cnt).style.display = "block";
+                document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                document.getElementById('saletxn_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
              if(saleTxn.trim()!=''){
                 if (!saleTxn.match(number)){
-                    document.getElementById('saletxn_error_'+cnt).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+cnt).style.display = "block";
+                    document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                    document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
                 }
                 else if(saleTxn == 0){
-                    document.getElementById('saletxn_error_'+cnt).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+cnt).style.display = "block";
+                    document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                    document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
                 }
-                else if(!(saleTxn <= 100000)){
-                    document.getElementById('saletxn_error_'+cnt).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+cnt).style.display = "block";
+                else if(!(saleTxn < 100001) || !(saleTxn < cashPurseLimitVal+1)){
+                    document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                    document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
                 }
               }
-            }
-
-            if((saleTxn <= 100000)){
-                if(!(saleTxn <= cashPurseLimitVal)){
-                        document.getElementById('saletxn_error_'+cnt).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                        document.getElementById('saletxn_error_'+cnt).style.display = "block";
-                        return false;
-                }
-            }  
+            } 
             
             if(dailySale.trim()==''){
-                document.getElementById('dailysale_error_'+cnt).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limitsss";
-                document.getElementById('dailysale_error_'+cnt).style.display = "block";
+                document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limitsss";
+                document.getElementById('dailysale_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
                  if(dailySale.trim()!=''){
                     if (!dailySale.match(number)){
-                        document.getElementById('dailysale_error_'+cnt).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
-                        document.getElementById('dailysale_error_'+cnt).style.display = "block";
+                        document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                        document.getElementById('dailysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
                     else if(dailySale == 0){
-                        document.getElementById('dailysale_error_'+cnt).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
-                        document.getElementById('dailysale_error_'+cnt).style.display = "block";
+                        document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                        document.getElementById('dailysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
-                    else if(dailySale <= saleTxnLimitVal || dailySale >= monthlySaleLimitVal ){
-                        document.getElementById('dailysale_error_'+cnt).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
-                        document.getElementById('dailysale_error_'+cnt).style.display = "block";
+                    else if(!(dailySale > saleTxnLimitVal+1)){
+                        document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                        document.getElementById('dailysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
-                }
+                    else if(!(dailySale < monthlySaleLimitVal+1)){
+                        document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                        document.getElementById('dailysale_error_'+indexS).style.display = "block";
+                         flag = "N";
+                    }
+                 }
             }
 
 
              if(monthlySale.trim()==''){
-                document.getElementById('monthlysale_error_'+cnt).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                document.getElementById('monthlysale_error_'+cnt).style.display = "block";
+                document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
                  if(monthlySale.trim()!=''){
                     if (!monthlySale.match(number)){
-                        document.getElementById('monthlysale_error_'+cnt).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                        document.getElementById('monthlysale_error_'+cnt).style.display = "block";
+                        document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                        document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
                     else if(monthlySale == 0){
-                        document.getElementById('monthlysale_error_'+cnt).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                        document.getElementById('monthlysale_error_'+cnt).style.display = "block";
+                        document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                        document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
-                    else if(monthlySale > 10000000 ){
-                        document.getElementById('monthlysale_error_'+cnt).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                        document.getElementById('monthlysale_error_'+cnt).style.display = "block";
+                    else if(!(monthlySale < 10000001)){
+                        document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                        document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
                 }
             }
         });
 
-        console.log("ObjCardLimits", updateArray);
-
+         if (cardNo == undefined) {
+                alert("Please select at least one item to Set limits.");
+                flag = "N";
+         }
+ 
          if (flag == "N")
             e.preventDefault();
 
         if (flag == "Y") {
-            document.getElementById('saletxn_error_'+cnt).style.display = "none";
+            $("#CardSearchSaleLimit input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('saletxn_error_'+indexS).style.display = "none";
+                document.getElementById('dailysale_error_'+indexS).style.display = "none";
+                document.getElementById('monthlysale_error_'+indexS).style.display = "none";
+            });
+
             $.ajax({
                 url: "@Url.Action("UpdateCards", "Cards")",
                 type: "POST",
@@ -476,7 +494,7 @@
                     document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
                     return false;
                 }
-                else if(!(txnVal <= 100000)){
+                else if(!(txnVal < 100001) || !(txnVal < cashPurseLimitVal+1)){
                     document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
                     return false;
@@ -488,25 +506,14 @@
                 }
             }
         }
-
-        if((txnVal <= 100000)){
-            if(!(txnVal <= cashPurseLimitVal)){
-                    document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
-                    return false;
-            }
-            else
-            {
-                document.getElementById('saletxn_error_'+rowSelected).title="";
-                document.getElementById('saletxn_error_'+rowSelected).style.display = "none";
-            }
-        }
      }
 
      function dailySalelimitChange(o, rowSelected){
         var dailySaleVal = o.value;
         var saleTxnLimitVal = $('#saletxnlimitid_'+rowSelected).val();
         var monthlySaleLimitVal = $('#monthlySalelimitid_'+rowSelected).val();
+
+        console.log("recent val   ", saleTxnLimitVal+"     "+monthlySaleLimitVal);
 
         if(dailySaleVal.trim()==''){
             document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
@@ -527,7 +534,12 @@
                     document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
                     return false;
                 }
-                else if(dailySaleVal <= saleTxnLimitVal || dailySaleVal >= monthlySaleLimitVal ){
+                else if(!(dailySaleVal > saleTxnLimitVal+1)){
+                    document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                    document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
+                    return false;
+                }
+                else if(!(dailySaleVal < monthlySaleLimitVal+1)){
                     document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
                     document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
                     return false;
@@ -560,7 +572,7 @@
                     document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
                     return false;
                 }
-                else if(monthlySale > 10000000 ){
+                else if(!(monthlySale < 10000001)){
                     document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
                     document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
                     return false;

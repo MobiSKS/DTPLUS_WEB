@@ -126,15 +126,17 @@
                 url: '@Url.Action("SearchCustomerCcmsAccount", "DtpSupport")',
                 data: {customerId: customerId},  // data to submit
                 success: function (res, status, xhr) {
+                       
+                       console.log("res",res);
 
-                       if(res.searchResult.data[0].status == 1){
+                       if(res.searchResult.success == true){
 
                            document.getElementById("reason").style.display = "none";
 
                            $("#CustomerName").html("");
                            $("#remarkVal").html("");
 
-                           $("#CustomerName").append("<span>"+ res.searchResult.data[0].customerName +"</span>");
+                           $("#CustomerName").append("<span>"+ (res.searchResult.data[0].customerName || '') +"</span>");
 
                            $('input[name="CCMSBalanceStatus"][value="' + res.searchResult.data[0].ccmsBalanceStatusId + '"]').prop('checked', true);
 
@@ -147,7 +149,7 @@
                        }else{
                             document.getElementById("updateSection").style.display = "none";
                             $("#reason").html("");
-                            $("#reason").append("<span>" + res.searchResult.data[0].reason + "</span>");
+                            $("#reason").append("<span>" + res.searchResult.message + "</span>");
                             document.getElementById("reason").style.display = "block";
                        }
 

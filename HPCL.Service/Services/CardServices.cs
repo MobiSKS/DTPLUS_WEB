@@ -151,15 +151,15 @@ namespace HPCL.Service.Services
             return editMobBody;
         }
 
-        public async Task<string> CardlessMapping(UpdateMobileModal entity)
+        public async Task<string> CardlessMappingUpdate(string mobNoNew, string crdNo)
         {
             var cardDetailsBody = new UpdateMobile
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CardNo = entity.CardNumber,
-                MobileNo = entity.MobileNumber,
+                CardNo = crdNo,
+                MobileNo = mobNoNew,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
             StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
