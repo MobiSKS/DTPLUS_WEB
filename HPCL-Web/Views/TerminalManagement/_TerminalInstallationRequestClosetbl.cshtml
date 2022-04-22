@@ -2,47 +2,45 @@
 @using HPCL.Common.Resources
 @if (Model.TerminalManagementRequestDetails.Count() > 0)
 {
-    <div class="table-responsive">
-        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="TerminalRequestDetails">
-            <thead style="background-color:lightgray;">
+    <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="TerminalRequestDetails">
+        <thead style="background-color:lightgray;">
+            <tr>
+                <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                <th style="width:5%;">Merchant ID</th>
+                <th style="width:10%;">Terminal ID</th>
+                <th style="width:10%;">Zonal Office</th>
+                <th style="width:10%;">Regional Office</th>
+
+                <th style="width:20%;">Status</th>
+                <th style="width:10%;">Terminal Type Requested</th>
+                <th style="width:10%;">Created By</th>
+                <th style="width:10%;">Created Date</th>
+            </tr>
+        </thead>
+        <tbody id="searchTableBody">
+            @{
+                int i = 0;
+            }
+            @foreach (var item in Model.TerminalManagementRequestDetails)
+            {
+                i = i + 1;
+
                 <tr>
-                    <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
-                    <th style="width:5%;">Merchant ID</th>
-                    <th style="width:10%;">Terminal ID</th>
-                    <th style="width:10%;">Zonal Office</th>
-                    <th style="width:10%;">Regional Office</th>
+                    <td><input type="checkbox" id="check_@i" /></td>
+                    <td>@item.MerchantID</td>
+                    <td>@item.TerminalID</td>
+                    <td>@item.ZonalOfficeName</td>
+                    <td>@item.RegionalOfficeName</td>
+                    <td>@item.Status</td>
+                    <td>@item.TerminalTypeRequested</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.CreatedDate</td>
 
-                    <th style="width:20%;">Status</th>
-                    <th style="width:10%;">Terminal Type Requested</th>
-                    <th style="width:10%;">Created By</th>
-                    <th style="width:10%;">Created Date</th>
+
                 </tr>
-            </thead>
-            <tbody id="searchTableBody">
-                @{
-                    int i = 0;
-                }
-                @foreach (var item in Model.TerminalManagementRequestDetails)
-                {
-                    i = i + 1;
-
-                    <tr>
-                        <td><input type="checkbox" id="check_@i" /></td>
-                        <td>@item.MerchantID</td>
-                        <td>@item.TerminalID</td>
-                        <td>@item.ZonalOfficeName</td>
-                        <td>@item.RegionalOfficeName</td>
-                        <td>@item.Status</td>
-                        <td>@item.TerminalTypeRequested</td>
-                        <td>@item.CreatedBy</td>
-                        <td>@item.CreatedDate</td>
-
-
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
 
     <div class="clearfix"></div>
     <div class="border-1 rounded border-grey mt-3">
@@ -66,7 +64,7 @@
                     <label class="font-weight-normal col-md-4 col-12  ">Reason<sup class="text-danger">*</sup></label>
                     <div class="col-md-7 col-12">
                         <div class="custom_select">
-                            @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control" })
+                            @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control" ,onchange = "validateReason()"})
                             <span class="error" id="reason_error"></span>
                         </div>
 
@@ -104,7 +102,7 @@ else
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
-    
+
     function submitTerminalrequestClose() {
         //alert("inside submit");
         merchantDetail = [];
@@ -130,7 +128,7 @@ else
         }
         if (reasonId == "0") {
              flag = "N";
-             $("#reason_error").html("Please select reason");
+             $("#reason_error").html("Select reason");
         }
         if (merchantDetail.length > 0 && flag == "Y") {
             if (confirm("Are you sure, you want to close these installation requests as Problematic installations ?")) {
@@ -162,5 +160,14 @@ else
             search: true,
             searchText: 'Enter Text here.'
         });
+    function validateReason() {
+        var reasonId = $('#Reason :selected').val();
+        if (reasonId == "0") {
+            $("#reason_error").html("Please select reason");
+        }
+        else
+            $("#reason_error").html("");
+
+    };
 </script>
 
