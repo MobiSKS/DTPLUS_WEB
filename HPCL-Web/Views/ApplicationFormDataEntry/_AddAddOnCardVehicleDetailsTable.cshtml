@@ -50,7 +50,7 @@
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td>
-                                                <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button>
+                                                <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button>
                                             </td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
@@ -88,7 +88,7 @@
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i'>
@@ -174,7 +174,7 @@
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i' value="@Model.ObjCardDetail[i].VehicleType">
@@ -226,7 +226,7 @@
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i'>
@@ -266,7 +266,7 @@
 <div class="clearfix"></div>
 <script>
  $(document).ready(function () {
-
+    
     $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
@@ -325,6 +325,7 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
+          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
 
@@ -532,6 +533,7 @@
                   //debugger;
                   var jsonData = JSON.parse(data);
                   if (status == 'success' && jsonData['statusCode'] == '101') {
+                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
                       //mycel.innerHTML = "Vehicle Number is valid";
                       //mycel.innerHTML = "";
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
@@ -541,6 +543,7 @@
                   }
                   else 
                   {
+                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
                       //mycel.innerHTML = "Invalid Vehicle Number";
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
                       mycelValidStatus.innerHTML="0";
