@@ -32,7 +32,7 @@
         public const string ValidEmailErrMsg = "Enter a valid Email ID";
 
         public const string ValidMobileNumber = @"^(?!(0))[0-9]{10}$";
-        public const string ValidMobileNumberErrMsg = "Enter a Valid Mobile Number";
+        public const string ValidMobileNumberErrMsg = "Mobile Number field should be of 10 digit and can not be left blank";
 
         public const string ValidCustomerId = @"^(?=(2))[0-9]{10}$";
         public const string ValidCustomerIdErrMsg = "Invalid Customer ID";
@@ -68,7 +68,7 @@
         #region "Not Empty Validation"
 
         public const string CustomerNotEmpty = "Customer ID should not be Empty";
-        public const string MobNoNotEmpty = "Mobile Number should not be Empty";
+        public const string MobNoNotEmpty = "Mobile Number field should be of 10 digit and can not be left blank";
         public const string MerchantNotEmpty = "Merchant ID should not be Empty";
         public const string AmountNotEmpty = "Amount should not be Empty";
         public const string TerminalNotEmpty = "Terminal ID should not be Empty";

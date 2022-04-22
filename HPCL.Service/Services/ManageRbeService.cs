@@ -1,10 +1,12 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.ManageRbe;
 using HPCL.Common.Models.ViewModel.ManageRbe;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,6 +95,27 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             ChangeRbeMappingByUserNameResponse changeList = obj.ToObject<ChangeRbeMappingByUserNameResponse>();
             return changeList;
+        }
+
+        public async Task<List<SuccessResponse>> UserNameVerifyOtp(string newUserName, string userName, string otp)
+        {
+            var reqBody = new UserNameVerifyOtpResponse
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                PreRBEUserName = userName ?? "",
+                NewRBEUserName = newUserName ?? "",
+                OTP = otp,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UserNameVerifyOtpUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var successRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> resMsg = successRes.ToObject<List<SuccessResponse>>();
+            return resMsg;
         }
     }
 }

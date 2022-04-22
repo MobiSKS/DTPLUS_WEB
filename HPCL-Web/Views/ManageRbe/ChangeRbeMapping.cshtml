@@ -54,10 +54,7 @@
                         </div>
                         <div class="clearfix"></div>
 
-                        <div>
-                            <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
-                            </div>
-                        </div>
+                         <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;"></div>
 
                         <div class="clearfix"></div>
                         <div class="col-12 col-md-12 px-0 mt-3">
@@ -88,11 +85,36 @@
 </div>
 <div class="clearfix"></div>
 
+<div id="confirmDialogMsg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you want to sure create new RBE user?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal" onclick="changeUserMapNew()">YES</button>
+                    </div>
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="responseMsgModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <h5 class="modal-title" id="mobilenochange">Message</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -132,18 +154,19 @@
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">New Username</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="userNameValOtp" maxlength="10">
-                        <p class="text-success text-left mb-0">OTP has been sent successfully to new user, please enter OTP to verify user</p>
+                        <input type="text" class="form-control" id="userNameValOtp" maxlength="10" onchange="userNameOtpOnChange(this)">
+                        <span style="display:none" class="error" id="userName_otp_error"></span>
+                        <p class="text-success text-left mb-0" id="otpRes"></p>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">Please Enter OTP <sup class="text-danger">*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" id="" value="">
+                        <input type="text" class="form-control" id="findOtp">
                     </div>
                     <div class="col-sm-3">
-                        <button type="button" class="btn btn_primary">Verify OTP </button>
-                        <p class="text-danger mt-1 mb-0" style="cursor:pointer"><u>Resend OTP</u></p>
+                        <button type="button" class="btn btn_primary" onclick="verifyOtpClick()" data-dismiss="modal">Verify OTP</button>
+                        <p class="text-danger mt-1 mb-0" style="cursor:pointer" onclick="ResendOtp()" id="resendPwd"><u>Resend OTP</u></p>
                     </div>
                 </div>
             </div>
@@ -157,7 +180,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Mobileno change Popup Modal2 -->
 <div class="modal fade" id="mobilenochangepop" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
@@ -285,6 +307,7 @@
 
     var userName;
     var rbeIdVll;
+    var newUserName;
 
     $("#RbeMapping").on('click', '.actionRbe', function (e) {
 
@@ -306,8 +329,9 @@
     });
 
     function clickChangeRbe(){
-        console.log(userName,"clicked");
-        var newUserName = $("#userNameVal").val();
+        newUserName = $("#userNameVal").val();
+        console.log(userName+"   "+newUserName,"clicked");
+        
         if(newUserName == userName){
             $("#statusMsg").html("");
             $("#statusMsg").append("<span>User Name can not be same.</span>")
@@ -327,31 +351,54 @@
                 e.preventDefault();
 
             if (flag == "Y") {
-                $.ajax({
-                    url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: { newUserName: newUserName, userName: userName},
-                    success: function (res) {
-                       console.log("res",res);
-                       if(res.changeList.data[0].status == 1){
-                           $("#GetRbeIdOtp").val(rbeIdVll);
-                           $("#userNameValOtp").val(userName);
-                           $("#mobilenochangepopOtp").modal('show');
-                       }else{
-                           $("#mobilenochangepopOtp").modal('hide');
-                           $("#statusMsg").html("");
-                           console.log(res.changeList.data[0].reason);
-                           $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
-                           $("#responseMsgModal").modal('show');
-                       }
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-                });
+               if(newUserName.trim() == ''){
+                   $("#confirmDialogMsg").modal('show');
+               }else{
+                   $.ajax({
+                        url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: { newUserName: newUserName, userName: userName},
+                        success: function (res) {
+                            console.log("res",res);
+                            if(res.changeList.data[0].status == 1){
+                                $("#GetRbeIdOtp").val(rbeIdVll);
+                                $("#userNameValOtp").val(newUserName);
+                                $("#otpRes").html("");
+                                $("#otpRes").append("<span>OTP has been sent successfully to new user, please enter OTP to verify user</span>");
+                                $("#mobilenochangepopOtp").modal('show');
+                            }else{
+                                $("#mobilenochangepopOtp").modal('hide');
+                                $("#statusMsg").html("");
+                                $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
+                                $("#responseMsgModal").modal('show');
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Failed' + ex);
+                        }
+                    });
+               }
             }
         }
+    }
+
+    function changeUserMapNew(){
+         $.ajax({
+            url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
+            type: "POST",
+            dataType: "JSON",
+            data: { newUserName: newUserName, userName: userName},
+            success: function (res) {
+                reloadGrid();
+                $("#statusMsg").html("");
+                $("#statusMsg").append("<span>Request created successfully !!</span>")
+                $("#responseMsgModal").modal('show');
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
     }
 
     function userNameOnChange(o){
@@ -368,5 +415,172 @@
                  $("#userName_error").html("");
             }
         }
+    }
+
+    function userNameOtpOnChange(o){
+        var userNameVal = o.value;
+
+        if(userNameVal.trim()!=''){
+            if (!userNameVal.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#userName_otp_error").attr("style", "display:block");
+                 $("#userName_otp_error").html("Username is a 10 digit number");
+                 return false;
+            }
+            else{
+                 $("#userName_otp_error").attr("style", "display:none");
+                 $("#userName_otp_error").html("");
+            }
+        }
+    }
+
+    function verifyOtpClick(){
+        var newUserNameOtp = $("#userNameValOtp").val();
+        var otpGet = $("#findOtp").val();
+        $.ajax({
+            url: "@Url.Action("UserNameVerifyOtp", "ManageRbe")",
+            type: "POST",
+            dataType: "JSON",
+            data: { newUserName: newUserNameOtp, userName: userName, otp:otpGet},
+            success: function (res) {
+                reloadGrid();
+                console.log("res otp modal",res);
+                if(res.resMsg[0].status == 1){
+                    reloadGrid();
+                    $("#statusMsg").html("");
+                    $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
+                    $("#responseMsgModal").modal('show');
+                }else{
+                    $("#statusMsg").html("");
+                    $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
+                    $("#responseMsgModal").modal('show');
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    }
+
+     function ResendOtp(){
+        newUserName = $("#userNameValOtp").val();
+        console.log(userName+"   "+newUserName,"clicked OTP modal");
+        
+        if(newUserName == userName){
+            $("#mobilenochangepopOtp").modal('hide');
+            $("#statusMsg").html("");
+            $("#statusMsg").append("<span>User Name can not be same.</span>")
+            $("#responseMsgModal").modal('show');
+        }else{
+            var flag = "Y";
+
+            if(newUserName.trim()!=''){
+                if (!newUserName.match(/^(?!(0))[0-9]{10}$/)){
+                     $("#userName_otp_error").attr("style", "display:block");
+                     $("#userName_otp_error").html("Username is a 10 digit number");
+                     flag = "N";
+                }
+            }
+
+            if (flag == "N")
+                e.preventDefault();
+
+            if (flag == "Y") {
+                $.ajax({
+                    url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { newUserName: newUserName, userName: userName},
+                    success: function (res) {
+                        console.log("res",res);
+                        if(res.changeList.data[0].status == 1){
+                            $("#GetRbeIdOtp").val(rbeIdVll);
+                            $("#userNameValOtp").val(newUserName);
+                            $("#otpRes").html("");
+                            $("#otpRes").append("<span>OTP has been sent again !!</span>");
+                        }else{
+                            $("#mobilenochangepopOtp").modal('hide');
+                            $("#statusMsg").html("");
+                            $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
+                            $("#responseMsgModal").modal('show');
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+        }
+    }
+
+    function reloadGrid(){
+        $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ChangeRbeMapping", "ManageRbe")',
+                success: function (res, status, xhr) {
+
+                    console.log(res);
+
+                    if (res.searchList.success == true) {
+
+                        var girdList = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+                        var girdList = res.searchList.data;
+
+                        $("#RbeMapping td").parent().remove();
+
+                        $('#RbeMapping').DataTable().clear().destroy();
+
+                        var tbl = $('#RbeMapping').DataTable({
+                            paging: true,
+                            searching: false,
+                            stateSave: true,
+                            "bDestroy": true,
+                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                            "autoWidth": false,
+                            "oLanguage": {
+                                "sLengthMenu": "Display _MENU_ Records",
+                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            }
+                        });
+
+                        for (var i = 0; i < girdList.length; i++) {
+
+                            var srNumber = (i + 1);
+                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '')+"</span>";
+                            var userName = "<span class='userName'>"+(girdList[i].userName || '')+"</span>";
+                            var firstName = (girdList[i].firstName || '');
+                            var lastName = (girdList[i].lastName || '');
+                            var emailId = (girdList[i].emailId || '');
+                            var region = (girdList[i].region || '');
+                            var zone = (girdList[i].zone || '');
+                            var action = "<a class='actionRbe' href='#exampleModal'>" + (girdList[i].action || '') + "</a>";
+
+                            tbl.row.add([
+                                srNumber,
+                                rbeID,
+                                userName,
+                                firstName,
+                                lastName,
+                                emailId,
+                                region,
+                                zone,
+                                action
+                            ]).draw();
+                        }
+                        document.getElementById('tblResponse').style.display = 'block';
+                    } else {
+                        document.getElementById("tblResponse").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error");
+                }
+            });
     }
 </script>

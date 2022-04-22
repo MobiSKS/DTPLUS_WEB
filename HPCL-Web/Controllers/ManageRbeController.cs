@@ -63,5 +63,12 @@ namespace HPCL_Web.Controllers
             var changeList = await _manageRbeService.ChangeRbeMappingByUserName(newUserName, userName);
             return Json(new { changeList = changeList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> UserNameVerifyOtp(string newUserName, string userName, string otp)
+        {
+            var resMsg = await _manageRbeService.UserNameVerifyOtp(newUserName, userName, otp);
+            return Json(new { resMsg = resMsg });
+        }
     }
 }
