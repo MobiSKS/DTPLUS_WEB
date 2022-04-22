@@ -60,7 +60,13 @@ namespace HPCL.Service.Services
         public async Task<ValidateNewCardsModel> Details(ValidateNewCardsModel validateNewCardsMdl)
         {
             ValidateNewCardsModel validateNewCardsModel = new ValidateNewCardsModel();
-
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(validateNewCardsMdl.FromDate) && !string.IsNullOrEmpty(validateNewCardsMdl.FromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(validateNewCardsMdl.FromDate);
+                toDate = await _commonActionService.changeDateFormat(validateNewCardsMdl.ToDate);
+            }
+           
             validateNewCardsModel.OfficerTypeMdl.AddRange(await _commonActionService.GetOfficerTypeList());
 
             var validateNewCardsForms = new ValidateNewCardModel
@@ -68,11 +74,12 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                StateId = "",
+                StateId = validateNewCardsMdl.StateId=="0"?null:validateNewCardsMdl.StateId,
                 FormNumber = string.IsNullOrEmpty(validateNewCardsMdl.FormNumber) ? "" : validateNewCardsMdl.FormNumber,
-                CustomerName = "",
-                Createdon = string.IsNullOrEmpty(validateNewCardsMdl.Date) ? "" : validateNewCardsMdl.Date,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CustomerName = string.IsNullOrEmpty(validateNewCardsMdl.CustomerName) ? "" : validateNewCardsMdl.CustomerName,
+                FromDate = fromDate,
+                ToDate = toDate,    
+                CreatedBy = validateNewCardsMdl.CreatedBy== "0" ? null : validateNewCardsMdl.CreatedBy
             };
 
             StringContent validateNewCardsContent = new StringContent(JsonConvert.SerializeObject(validateNewCardsForms), Encoding.UTF8, "application/json");

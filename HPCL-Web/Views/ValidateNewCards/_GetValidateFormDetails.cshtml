@@ -1,5 +1,7 @@
 ﻿@model List<HPCL.Common.Models.ViewModel.ValidateNewCards.VehicleDetailsModel>
-
+@{
+    string CustomerType = ViewBag.CustomerType;
+}
 <div class="w-100 toBeHiddenOnSuccess">
 
     <div class="">
@@ -158,13 +160,129 @@
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                         <div class="row">
                             <div class="col-lg-2">
-                                <label class="font-weight-normal col-md-5 col-12">Comments</label>
+                                <label class="font-weight-normal col-md-5 col-12">Comments<sup class="text-danger">*</sup></label>
                             </div>
                             <div class="col-lg-6">
                                 <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;"></textarea>
                                 <div class="error" id="comment_error"></div>
                                 <div style="display:none;" id="custRefNo">@Model[0].CustomerReferenceNo</div>
                             </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+
+                        <div id="show_vehicleTable" class="toBeHiddenOnSuccess">
+
+                            @if (Model[0].CardPreference == "Card")
+                            {
+                                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" id="NoOfCardsTbl" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "902" || CustomerType == "917")
+                                            {
+                                                <th>Card Identifier</th>
+                                            }
+                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                            {
+                                                <th>Vehicle No.</th>
+                                                <th>Vehicle Type</th>
+                                                <th>Vehicle Make</th>
+                                                <th>Year of Reg.</th>
+
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int Slno = 1;
+
+                                        }
+                                        @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
+                                        {
+
+                                            <tr>
+                                                <td>@Slno</td>
+                                                @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "902" || CustomerType == "917")
+                                                {
+                                                    <td>@Model[i].CardIdentifier</td>
+                                                }
+                                                @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                                {
+                                                    <td>@Model[i].VechileNo</td>
+                                                    <td>@Model[i].VehicleType</td>
+                                                    <td>@Model[i].VehicleMake</td>
+                                                    <td>@Model[i].YearofRegistration</td>
+
+                                                }
+                                            </tr>
+                                            Slno++;
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            @if (CustomerType == "902" || CustomerType == "917")
+                                            {
+                                                <th>Card Identifier</th>
+                                                <th>Mobile No</th>
+                                            }
+                                            @if (CustomerType == "905" || CustomerType == "909")
+                                            {
+                                                <th>Card Identifier</th>
+                                            }
+                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                            {
+                                                <th>Vehicle No.</th>
+                                                <th>Vehicle Type</th>
+                                                <th>Vehicle Make</th>
+                                                <th>Year of Reg.</th>
+                                                <th>Mobile No</th>
+
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int Slno = 1;
+
+                                        }
+                                        @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
+                                        {
+                                            <tr>
+                                                <td>@Slno</td>
+                                                @if (CustomerType == "902" || CustomerType == "917")
+                                                {
+                                                    <td>@Model[i].CardIdentifier</td>
+                                                    <td>@Model[i].MobileNo</td>
+                                                }
+                                                @if (CustomerType == "905" || CustomerType == "909")
+                                                {
+                                                    <td>@Model[i].CardIdentifier</td>
+                                                }
+                                                @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                                {
+                                                    <td>@Model[i].VechileNo</td>
+                                                    <td>@Model[i].VehicleType</td>
+                                                    <td>@Model[i].VehicleMake</td>
+                                                    <td>@Model[i].YearofRegistration</td>
+                                                    <td>@Model[i].MobileNo</td>
+
+                                                }
+                                            </tr>
+
+
+                                            Slno++;
+                                        }
+                                    </tbody>
+                                </table>
+                            }
                         </div>
                         <div>
                             <div class="d-flex align-items-center justify-content-center mt-4">
@@ -209,4 +327,17 @@
             $("#comment_error").html("Comment is required");
         }
     }
+    $("#comments").on("blur", function () {
+         var comments = $("#comments").val();
+         if (comments != "") {
+
+                 $("#comment_error").attr("style", "display:none");
+                 $("#comment_error").html("");
+
+         }
+         else{
+             $("#comment_error").attr("style", "display:block");
+              $("#comment_error").html("Comment is required");
+         }
+     });
 </script>

@@ -463,12 +463,22 @@
                      dataType: "JSON",
                     data: { limitArray: updateArray},
                      success: function (res) {
-                         $("#reason").html(res);
-                         $(".toBeHiddenOnSuccess").hide();
+                        if(res.length>0){
+                            $("#reason").html("");
+                            for(var i=1;i<res.length;i++){
+                                $("#reason").append("<span>" + res[i] + "</span></br>");
+                            }
+                            if(res[0]=="0")
+                                $("#reason").attr("style","display:block;background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;");
+                            else
+                                $("#reason").attr("style","display:block;background-color: #a0f1d6;");
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
+                        
                      },
-                     error: function (ex) {
-                         alert('Failed' + ex);
-                     }
+                     error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error " + errorMessage);
+                    }
                  });
              }
          }

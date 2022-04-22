@@ -15,12 +15,15 @@
                 <li class="breadcrumb-item font-weight-light">Add Card</li>
             </ul>
             <h5>Add Card</h5>
-            <div id="divSuccess" class="mb-3 text-center" style="display:none;background-color:#a0f1d6;"></div>
-            <form name="addCustomerCardsForm" class="toBeHiddenOnSuccess">
+            @using (Html.BeginForm("AddCardDetails", "Customer", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
                 <div class="w-100">
                     <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                         <div class="border-1 rounded border-grey">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add New Card</p>
+                            <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+                                @Html.DisplayFor(m => m.Message)
+                            </div>
                             <div class="py-3 px-0 px-md-2">
 
                                 <div class="d-flex align-items-center flex-wrap">
@@ -44,6 +47,7 @@
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
@@ -79,9 +83,9 @@
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12"  id="lblNoOfVehicles" style="display:none;">No. of Vehicles (For All Cards) <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-5 col-12" id="lblNoOfVehicles" style="display:none;">No. of Vehicles (For All Cards) <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.NoOfVehiclesAllCards, new { @id = "NoOfVehiclesAllCards", @class = "form-control", @style="display:none;", maxlength = "2", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.NoOfVehiclesAllCards, new { @id = "NoOfVehiclesAllCards", @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)", @style = "display:none", autocomplete = "off" })
                                                 <span class="error" id="NoOfVehiclesAllCards_error"></span>
                                             </div>
                                         </div>
@@ -97,7 +101,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-12">
+                                    <div class="col-lg-6 col-12 mb-3">
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-5 col-12">RBE Name </label> @*<sup class="text-danger">*</sup>*@
                                             <div class="col-md-7 col-12">
@@ -107,141 +111,57 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*<div class="ml-4 mr-4" style="display:none;" id="divNoRecord">
-                                    <div class="alert alert-danger" role="alert" style="display:none;" id="noRecord">
-                                </div>*@
-                                <div id="divDetails" style="display:none">
-                                    <div class="px-2 px-md-4">
-                                        <fieldset class="border-1 rounded border-grey mb-3">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Preference</legend>
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="col-md-7 col-12 d-flex align-items-center justify-content-start mb-3">
-                                                        <label class="d-flex align-items-center justify-content-start">
-                                                            @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "rbtnCard" })
-                                                            <span class="ml-2">Card</span>
-                                                        </label>
-                                                        <label class="d-flex align-items-center justify-content-start ml-3">
-                                                            @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless" })
-                                                            <span class="ml-2">Cardless</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </fieldset>
-
-                                        <fieldset class="border-1 rounded border-grey mb-4" id="divFeePaymentDetails">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Fee Payment Details</legend>
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
-                                                <div class="col-md-6 col-12">
-                                                    <div class="col-12">
-                                                        <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                                            <label class="d-flex align-items-center justify-content-start mr-3">
-                                                                @Html.RadioButtonFor(m => m.FeePaymentsCollectFeeWaiver, "1", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar" })
-                                                                <span class="ml-2">Online</span>
-                                                            </label>
-                                                            <label class="d-flex align-items-center justify-content-start">
-                                                                @Html.RadioButtonFor(model => Model.FeePaymentsCollectFeeWaiver, "2", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar" })
-                                                                <span class="ml-2">Fee Waiver</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </fieldset>
-
-                                    </div>
-
-
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12 mb-0">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Cheque No.<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off" })
-                                                    <span class="error" id="FeePaymentNo_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12 mb-0">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control fromDate",@placeholder="dd-mm-yyyy", autocomplete = "off" })
-                                                    <span class="error" id="FeePaymentDate_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12 mb-0">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12" id="lblReceivedAmount">Received Amount<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.ReceivedAmount, new { @id = "ReceivedAmount", @class = "form-control", @readonly = "readonly" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12 mb-3">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                @*<label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>*@
-                                                <div class="col-md-7 col-12">
-                                                    <span class="error" id="Common_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
-                                        <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button">Add</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()">Reset</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="px-2 px-md-4 w-100">
-                                        <div class=" table-responsive">
-                                            <table class="table table-bordered table-striped text-nowrap" id="NoOfCardsTbl" style="display: none">
-                                                <tbody id="cardDetails">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
 
-                        <div id="divSubmit" style="display:none;">
-                            <div class="col-md-12 col-12 px-0" id="divVehicleNoVerifiedManually">
-                                <div class="d-flex align-items-center justify-content-start mt-3 mb-3">
-                                    <div class="pr-2 chk_sty">
-                                        @Html.CheckBoxFor(m=>m.VehicleNoVerifiedManually)<span class="ml-2">Vehicle Numbers have been verified using VAHAN Portal</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-12 px-0">
-                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
-                                    <div class="col-md-12 col-12 d-flex align-items-center justify-content-center">
-                                        <div class="pr-2">
-                                            <button class="btn btn_primary" id="btnsubmit" type="button">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        @*<div class="ml-4 mr-4" style="display:none;" id="divNoRecord">
+                            <div class="alert alert-danger" role="alert" style="display:none;" id="noRecord">
+                        </div>*@
+
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="ViewCardDetailsTbl">
                         </div>
+                       
                     </div>
                     <div class="clearfix"></div>
                 </div>
+                <div style="display:none">
+                <table id="OldVehicleDetails">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ObjCardDetail)
+                        {
+                            <tr>
+                                <td>@item.CardIdentifier</td>
+                                <td>@item.VechileNo</td>
+                                <td>@item.VehicleType</td>
+                                <td>@item.VehicleMake</td>
+                                <td>@item.YearOfRegistration</td>
+                                <td>@item.MobileNo</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
                 <div style="display:none;">@Html.TextBoxFor(m => m.CustomerTypeId)</div>
                 @Html.HiddenFor(model => Model.FeePaymentsCollectFeeWaiver)
                 @Html.HiddenFor(model => Model.CardPreference)
                 @Html.HiddenFor(model => Model.Status)
-            </form>
+                @Html.HiddenFor(model => Model.FeePaymentsCollectFeeWaiver)
+                @Html.HiddenFor(model => Model.CardPreference)
+                @Html.HiddenFor(model => Model.FeePaymentDate)
+                @Html.HiddenFor(model => Model.FeePaymentNo)
+                @Html.HiddenFor(model => Model.VehicleNoVerifiedManually)
+            @*</form>*@
+            }
         </div>
     </div>
 
@@ -250,74 +170,125 @@
 
 <script type="text/javascript">
 
-    //$(document).ready(function () {
-    //    $('input[name=FeePaymentsCollectFeeWaiver]').click(function () {
-    //        if ($('input[name=FeePaymentsCollectFeeWaiver]:checked').val() == "1") {
-    //            document.getElementById("CustomerReferenceNo_error").innerHTML = "";
-    //        } else {
-    //            $('#tab1').hide();
-    //        }
-    //    });
-    //});
-
     var feePaymentDate = $("#FeePaymentDate").val();
     var notFoundError = "@ViewBag.NotFoundError";
 
-    $(document).ready(function () {
+    $(document).ready(function () 
+    {
 
-        //if (notFoundError == "") {
-        //    if (feePaymentDate == "") {
-        //        $("#FeePaymentDate").datepicker({
-        //            "setDate": new Date(),
-        //            "autoclose": true,
-        //            dateFormat: 'dd-mm-yy'
-        //        });
-        //        //setDates();
-        //    }
-        //    else {
-        //        $("#FeePaymentDate").datepicker({ dateFormat: 'dd-mm-yy' });
-        //    }
-
+        //if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
+        //    document.getElementById("rbtnCard").checked = true;
+        //    document.getElementById("rbtnCardless").checked = false;
         //}
 
-        if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
-            document.getElementById("rbtnCard").checked = true;
-            document.getElementById("rbtnCardless").checked = false;
-        }
+        //if(document.getElementById("Status").value=="1")
+        //{
+        //     document.getElementById("divDetails").style.display = "block";
+        //     document.getElementById("divSubmit").style.display = "none";
 
-        if(document.getElementById("Status").value=="1")
+        //     var customerTypeId = document.getElementById("CustomerTypeId").value;
+
+        //     if (customerTypeId == "905" || customerTypeId == "909")
+        //     {
+        //        $('#lblNoOfVehicles').show();
+        //        $('#NoOfVehiclesAllCards').show();
+        //        $('#NoOfVehiclesAllCards').attr("readonly", false);
+        //    }
+        //    else {
+        //        $('#lblNoOfVehicles').hide();
+        //        $('#NoOfVehiclesAllCards').hide();
+        //    }
+
+        //    //if($("#dvRemarks").html().trim()=="")
+        //    //{
+        //       $("#btnSearch").click();
+        //    //}
+        //}
+        //else
+        //{
+        //     document.getElementById("divDetails").style.display = "none";
+        //     document.getElementById("divSubmit").style.display = "none";
+        //}
+
+        if($("#dvRemarks").html().trim()!="")
         {
-             document.getElementById("divDetails").style.display = "block";
-             document.getElementById("divSubmit").style.display = "none";
 
-             var customerTypeId = document.getElementById("CustomerTypeId").value;
+                ViewCardDetailsTbl.style.display = "block";
+                var customerTypeId = document.getElementById("CustomerTypeId").value;
 
-             if (customerTypeId == "905" || customerTypeId == "909")
-             {
+                    var vehicles = [];
+                    var checked=false;
+
+                        vehicles.push({
+                            CustomerTypeId: customerTypeId,
+                            Message: $("#dvRemarks").html().trim(),
+                            CardPreference: $("#CardPreference").val(),
+                            FeePaymentDate: $("#FeePaymentDate").val(),
+                            FeePaymentNo: $("#FeePaymentNo").val(),
+                            FeePaymentsCollectFeeWaiver: $("#FeePaymentsCollectFeeWaiver").val(),
+                            CardIdentifier: "",
+                            VechileNo: "",
+                            VehicleType: "",
+                            VehicleMake: "",
+                            YearOfRegistration: "",
+                            MobileNo: "",
+                            NoOfCards: "",
+                            NoofVehicles: "",
+                            VehicleNoVerifiedManually: checked
+                        });
+
+                    console.log("Value Check");
+                    console.log(vehicles);
+
+                        $.ajax({
+                            type: 'GET',  // http method
+                            url: '@Url.Action("GetAddCardPaymentDetailsPartialView", "Customer")',
+                            contentType: "application/json; charset=utf-8",
+                            data: { str: JSON.stringify(vehicles) },
+                            dataType: "text",
+                            success: function (data, status, xhr) {
+                                    var v = data;
+                                    //console.log(data);
+                                    if (status == 'success') {
+                                        $("#ViewCardDetailsTbl").html(data);
+                                        $('html, body').animate({
+                                            scrollTop: $("#ViewCardDetailsTbl").offset().top
+                                        }, 2000);
+                                    }
+                                    else {
+                                        console.log(v);
+                                    }
+                                },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                                ViewCardDetailsTbl.style.display = "none";
+
+                            }
+                        });
+
+
+                            
+            $("#CustomerReferenceNo").prop('readonly', true);
+
+            if (customerTypeId == "905" || customerTypeId == "909") 
+            {
                 $('#lblNoOfVehicles').show();
                 $('#NoOfVehiclesAllCards').show();
                 $('#NoOfVehiclesAllCards').attr("readonly", false);
             }
-            else {
+            else 
+            {
                 $('#lblNoOfVehicles').hide();
                 $('#NoOfVehiclesAllCards').hide();
             }
 
-            //if($("#dvRemarks").html().trim()=="")
-            //{
-               $("#btnSearch").click();
-            //}
-        }
-        else
-        {
-             document.getElementById("divDetails").style.display = "none";
-             document.getElementById("divSubmit").style.display = "none";
         }
 
-        //if($("#dvRemarks").html().trim()!="")
-        //{
-        //  LoadCardDeatils();
-        //}
+        if($("#dvRemarks").html().trim()=="" && document.getElementById("CustomerReferenceNo").value.trim()!="")
+        {
+            $("#btnSearch").click();
+        }
+
     });
 
     function setDates() {
@@ -332,7 +303,6 @@
         $("#FeePaymentDate").val(output);
 
     };
-
 
     $("#btnSearch").click(function () {
         debugger;
@@ -391,8 +361,9 @@
                             //alert(data.status);
                             if(data.status==0)
                             {
-                                document.getElementById("divDetails").style.display = "none";
-                                document.getElementById("divSubmit").style.display = "none";
+                                //document.getElementById("divDetails").style.display = "none";
+                                //document.getElementById("divSubmit").style.display = "none";
+                                ViewCardDetailsTbl.style.display = "none";
                                 alert(data.reason);
                                 //$("#noRecord").html("");
                                 //$("#noRecord").append("<span>" + data.reason + "</span>");
@@ -402,17 +373,70 @@
                             }
                             else
                             {
-                                document.getElementById("divDetails").style.display = "block";
-                                document.getElementById("divSubmit").style.display = "none";
+                                //document.getElementById("divDetails").style.display = "block";
+                                //document.getElementById("divSubmit").style.display = "none";
+                                ViewCardDetailsTbl.style.display = "block";
                                 //document.getElementById("noRecord").style.display = "none";
                                 //document.getElementById("divNoRecord").style.display = "none";
+                                document.getElementById("CustomerTypeId").value = data.customerTypeId;
+                                var customerTypeId = document.getElementById("CustomerTypeId").value;
+
+                                    var vehicles = [];
+                                    var checked=false;
+
+                                     vehicles.push({
+                                         CustomerTypeId: customerTypeId,
+                                         Message: $("#dvRemarks").html().trim(),
+                                         CardPreference: $("#CardPreference").val(),
+                                         FeePaymentDate: $("#FeePaymentDate").val(),
+                                         FeePaymentNo: $("#FeePaymentNo").val(),
+                                         FeePaymentsCollectFeeWaiver: $("#FeePaymentsCollectFeeWaiver").val(),
+                                         CardIdentifier: "",
+                                         VechileNo: "",
+                                         VehicleType: "",
+                                         VehicleMake: "",
+                                         YearOfRegistration: "",
+                                         MobileNo: "",
+                                         NoOfCards: "",
+                                         NoofVehicles: "",
+                                         VehicleNoVerifiedManually: checked
+                                     });
+
+                                 console.log("Value Check");
+                                 console.log(vehicles);
+
+                                     $.ajax({
+                                         type: 'GET',  // http method
+                                         url: '@Url.Action("GetAddCardPaymentDetailsPartialView", "Customer")',
+                                         contentType: "application/json; charset=utf-8",
+                                         data: { str: JSON.stringify(vehicles) },
+                                         dataType: "text",
+                                         success: function (data, status, xhr) {
+                                                 var v = data;
+                                                 //console.log(data);
+                                                 if (status == 'success') {
+                                                     $("#ViewCardDetailsTbl").html(data);
+                                                     $('html, body').animate({
+                                                         scrollTop: $("#ViewCardDetailsTbl").offset().top
+                                                     }, 2000);
+                                                 }
+                                                 else {
+                                                     console.log(v);
+                                                 }
+                                             },
+                                         error: function (jqXhr, textStatus, errorMessage) {
+                                             //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                                             ViewCardDetailsTbl.style.display = "none";
+
+                                         }
+                                     });
+
                             }
                             document.getElementById("CustomerName").value = data.customerName;
                             document.getElementById("FormNumber").value = data.formNumber;
-                            document.getElementById("CustomerTypeId").value = data.customerTypeId;
-                            document.getElementById("NoOfCardsTbl").deleteTHead();
-                            $("#NoOfCardsTbl td").parent().remove();
-                            var customerTypeId = document.getElementById("CustomerTypeId").value;
+                            //document.getElementById("NoOfCardsTbl").deleteTHead();
+                            //$("#NoOfCardsTbl td").parent().remove();
+                            
                             $("#CustomerReferenceNo").prop('readonly', true);
                             console.log(customerTypeId);
                             if (customerTypeId == "905" || customerTypeId == "909") 
@@ -428,14 +452,14 @@
                             }
                             console.log(data.paymentType);
 
-                            if(customerTypeId == "902" || customerTypeId == "917")
-                            {
-                                document.getElementById("divVehicleNoVerifiedManually").style.display = "none";
-                            }
-                            else
-                            {
-                                 document.getElementById("divVehicleNoVerifiedManually").style.display = "block";
-                            }
+                            //if(customerTypeId == "902" || customerTypeId == "917")
+                            //{
+                            //    document.getElementById("divVehicleNoVerifiedManually").style.display = "none";
+                            //}
+                            //else
+                            //{
+                            //     document.getElementById("divVehicleNoVerifiedManually").style.display = "block";
+                            //}
 
                             if (data.rbeId != "") {
                                 document.getElementById("RBEId").value = data.rbeId;
@@ -448,51 +472,51 @@
                                 $("#RBEId").prop('readonly', false);
                             }
 
-                            if (data.paymentType != "")
-                            {
-                                document.getElementById("FeePaymentNo").value = data.paymentType;
-                                document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
-                                $("#FeePaymentNo").prop('readonly', true);
-                                $("#FeePaymentDate").prop('readonly', true);
+                            //if (data.paymentType != "")
+                            //{
+                            //    document.getElementById("FeePaymentNo").value = data.paymentType;
+                            //    document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
+                            //    $("#FeePaymentNo").prop('readonly', true);
+                            //    $("#FeePaymentDate").prop('readonly', true);
 
-                                document.getElementById("rbtnCard").checked = true;
-                                document.getElementById("rbtnCard").disabled = true;
-                                document.getElementById("CardPreference").value = document.getElementById("rbtnCard").value;
+                            //    document.getElementById("rbtnCard").checked = true;
+                            //    document.getElementById("rbtnCard").disabled = true;
+                            //    document.getElementById("CardPreference").value = document.getElementById("rbtnCard").value;
 
-                                document.getElementById("rbtnCardless").checked = false;
-                                document.getElementById("rbtnCardless").disabled = true;
+                            //    document.getElementById("rbtnCardless").checked = false;
+                            //    document.getElementById("rbtnCardless").disabled = true;
 
-                                document.getElementById("rbtnOnline").checked = true;
-                                document.getElementById("rbtnOnline").disabled = true;
+                            //    document.getElementById("rbtnOnline").checked = true;
+                            //    document.getElementById("rbtnOnline").disabled = true;
 
-                                document.getElementById("rbtnFeeWaiver").checked = false;
-                                document.getElementById("rbtnFeeWaiver").disabled = true;
+                            //    document.getElementById("rbtnFeeWaiver").checked = false;
+                            //    document.getElementById("rbtnFeeWaiver").disabled = true;
 
-                                $('#lblChequeNo').text('');
-                                $('#lblChequeNo').append("Payment Source<sup class='text-danger'>*</sup>");
-                                $('#lblChequeDate').text('');
-                                $('#lblChequeDate').append("Payment Date<sup class='text-danger'>*</sup>");
-                                document.getElementById("NoOfCards").value = data.noOfCards;
-                                $("#NoOfCards").prop('readonly', true);
-                                document.getElementById("ReceivedAmount").value = data.receivedAmount;
+                            //    $('#lblChequeNo').text('');
+                            //    $('#lblChequeNo').append("Payment Source<sup class='text-danger'>*</sup>");
+                            //    $('#lblChequeDate').text('');
+                            //    $('#lblChequeDate').append("Payment Date<sup class='text-danger'>*</sup>");
+                            //    document.getElementById("NoOfCards").value = data.noOfCards;
+                            //    $("#NoOfCards").prop('readonly', true);
+                            //    document.getElementById("ReceivedAmount").value = data.receivedAmount;
 
-                            }
-                            else
-                            {
-                                $("#rbtnOnline").prop('disabled', true);
-                                document.getElementById("rbtnOnline").checked = false;
-                                document.getElementById("rbtnCard").checked = false;
-                                $("#rbtnCard").prop('disabled', false);
-                                $("#FeePaymentNo").prop('readonly', false);
-                                $("#FeePaymentDate").prop('readonly', false);
-                                $('#lblChequeNo').text('');
-                                $('#lblChequeNo').append("Approval Email From<sup class='text-danger'>*</sup>");
-                                $('#lblChequeDate').text('');
-                                $('#lblChequeDate').append("Approval Email Date<sup class='text-danger'>*</sup>");
-                                document.getElementById("NoOfCards").value = "";
-                                $("#NoOfCards").prop('readonly', false);
-                                document.getElementById("ReceivedAmount").value = "";
-                            }
+                            //}
+                            //else
+                            //{
+                            //    $("#rbtnOnline").prop('disabled', true);
+                            //    document.getElementById("rbtnOnline").checked = false;
+                            //    document.getElementById("rbtnCard").checked = false;
+                            //    $("#rbtnCard").prop('disabled', false);
+                            //    $("#FeePaymentNo").prop('readonly', false);
+                            //    $("#FeePaymentDate").prop('readonly', false);
+                            //    $('#lblChequeNo').text('');
+                            //    $('#lblChequeNo').append("Approval Email From<sup class='text-danger'>*</sup>");
+                            //    $('#lblChequeDate').text('');
+                            //    $('#lblChequeDate').append("Approval Email Date<sup class='text-danger'>*</sup>");
+                            //    document.getElementById("NoOfCards").value = "";
+                            //    $("#NoOfCards").prop('readonly', false);
+                            //    document.getElementById("ReceivedAmount").value = "";
+                            //}
 
                        }
                     }
@@ -583,1587 +607,134 @@
 
     });
 
+      
 
-
-    function LoadCardDeatils() {
-        debugger;
-        var ret=true;
-
-        //if (document.getElementById("RBEId").value == "") {
-        //    document.getElementById("RBEId_error").innerHTML = "RBE Id cannot be left blank";
-        //    return (false);
-        //}
-        //else {
-        //    document.getElementById("RBEId_error").innerHTML = "";
-        //}
-
-        //if (document.getElementById("RBEName").value == "") {
-        //    document.getElementById("RBEName_error").innerHTML = "RBE Name is not valid";
-        //    return (false);
-        //}
-        //else {
-        //    document.getElementById("RBEName_error").innerHTML = "";
-        //}
-
-         //var images =JSON.parse('@Html.Raw(Json.Serialize(@Model.ObjCardDetail))');
-         //console.log(images);
-
-        var noOfCards = document.getElementById("NoOfCards").value.trim();
-        if (noOfCards == "") 
-        {
-            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards cannot be left blank";
-            ret=false;
-        }
-        else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
-        {
-            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards may be 1 to 10";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("NoOfCards_error").innerHTML = "";
-        }
-        
-
-        if (!(document.querySelector('input[name="CardPreference"]:checked'))) 
-        {
-            alert("Please select Card Preference");
-            ret=false;
-        }
-
-        var customerTypeId = document.getElementById("CustomerTypeId").value;
-        var noOfVehiclesAllCards = document.getElementById("NoOfVehiclesAllCards").value;
-        console.log(customerTypeId);
-        if (customerTypeId == "905" || customerTypeId == "909") 
-        {
-            if (noOfVehiclesAllCards == "") 
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannot be left blank";
-                ret=false;
-            }
-            else if (Number(noOfVehiclesAllCards) <=0 || Number(noOfVehiclesAllCards) >10)
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles May be 1 to 10";
-                ret=false;
-            }
-            else if (noOfCards > noOfVehiclesAllCards) 
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
-                ret=false;
-            }
-            else
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-            }
-          
-        }
-        else 
-        {
-            document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-        }
-
-        if (document.getElementById("rbtnCard").checked) 
-        {
-
-            if (document.getElementById("rbtnFeeWaiver").checked) 
-            {
-                if (document.getElementById("FeePaymentNo").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
-                    ret=false;
-                }
-                else 
-                {
-                  document.getElementById("FeePaymentNo_error").innerHTML = "";
-                }
-
-                if (document.getElementById("FeePaymentDate").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
-                    ret=false;
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "";
-                }
-            }
-        
-            if (document.getElementById("rbtnOnline").checked) 
-            {
-                if (document.getElementById("FeePaymentNo").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
-                    ret=false;
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "";
-                }
-
-                if (document.getElementById("FeePaymentDate").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
-                    ret=false;
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "";
-                }
-            }
-        }
-
-        if(ret==false)
-        {
-            return ret;
-        }
-
-        $('#NoOfCards').attr("readonly", true);
-        $('#NoOfVehiclesAllCards').attr("readonly", true);
-        var selected = $("input[name='CardPreference']:checked").val();
-        if (selected == "" || selected == undefined)
-            selected = "Not Selected";
-        console.log(selected);
-        //var found = false;
-        //var custRBEId = document.getElementById("RBEId").value;
-               
-
-
-    @*$.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("GetCustomerRBEName", "Customer")',
-        data: { RBEId: custRBEId },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-        console.log(data);
-        var v = data;
-        if (status == 'success') {
-        found = true;
-        }
-        else {
-        found = false;
-        }
-        }
-        });*@
-
-        //if (found == false) {
-        //    document.getElementById("RBEId_error").innerHTML = "RBE Id is not valid";
-        //    return (false);
-        //}
-        //else {
-        //    document.getElementById("RBEId_error").innerHTML = "";
-        //}
-        var customerTypeId = document.getElementById("CustomerTypeId").value;
-        //console.log(customerTypeId);
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
-            data: {},
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-
-                var NoOfcards = $('#NoOfCards').val();
-                $("#NoOfCardsTbl td").parent().remove();
-
-                var NoOfVehicles = $('#NoOfVehiclesAllCards').val();
-
-                //<option value="901">Fleet</option>
-                //<option value="906">Credit</option>
-                    
-                //<option value="905">Attached</option>
-                //<option value="909">Generic</option>
-
-                //<option value="902">Corporate</option>
-                //<option value="917">Non Fleet</option>
-
-                document.getElementById("NoOfCardsTbl").deleteTHead();
-
-                if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-                    if (selected.toUpperCase() == "CARDLESS") {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-                    }
-                    else {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-                    }
-                }
-                else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-                    if (selected.toUpperCase() == "CARDLESS") {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Mobile No</th><th></th></tr></thead>');
-                    }
-                    else {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th></th></tr></thead>');
-                    }
-                }
-                else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-                    if (selected.toUpperCase() == "CARDLESS") {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th> <th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-                    }
-                    else {
-                        $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-                    }
-                }
-
-
-                if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-
-                    NoOfcards = NoOfVehicles;
-                }
-
-
-                for (var i = 0; i < parseInt(NoOfcards); i++) {
-                    //var id = 'ddlVehicleType' + i;
-                    var j = (i + 1);
-                    var name = 'ObjCardDetail[' + (i) + '].VehicleType';
-                    var id = 'ddlVehicleType' + i;
-                    var spanCardIdentifier = 'CardIdentifier_error' + i;
-                    
-                    if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-
-                        if (selected.toUpperCase() == "CARDLESS") {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-                                + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' class='form-control' style='text-transform:uppercase' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-                                + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-                                + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-                                + "<td style='display:none;'>0</td>"
-                                + "<td style='display:none;'>0</td></tr>";
-                        }
-                        else {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-                                + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' class='form-control' style='text-transform:uppercase' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-                                + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-                                + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-                                + "<td style='display:none;'>0</td>"
-                                + "<td style='display:none;'>0</td></tr>";
-                        }
-                    }
-                    else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-                        if (selected.toUpperCase() == "CARDLESS") {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='error'></span></td></tr>";
-                        }
-                        else {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='16' class='form - control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='field-validation-error text-danger'></span></td></tr>";
-                        }
-                    }
-                    else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-
-                        if (selected.toUpperCase() == "CARDLESS") {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' style='text-transform:uppercase' class='form-control' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-                                + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-                                + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-                                + "<td style='display:none;'>0</td>"
-                                + "<td style='display:none;'>0</td></tr>";
-                        }
-                        else {
-                            var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-                                + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' style='text-transform:uppercase' class='form-control' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-                                + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-                                + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-                                + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></td>"
-                                + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-                                + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-                                + "<td style='display:none;'>0</td>"
-                                + "<td style='display:none;'>0</td></tr>";
-                        }
-                    }
-
-                    //console.log(rows);
-
-                    $('#NoOfCardsTbl').append(rows);
-                    //console.log(document.getElementById(id));
-
-                    $("#" + id).html("");
-                    $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
-                        $('<option>',
-                            {
-                                value: data.vehicleTypeName,
-                                text: data.vehicleTypeName
-                            }).html(data.vehicleTypeName).appendTo("#" + id);
-                    });
-                }
-
-                var count = $('#NoOfCardsTbl tr').length;
-                //alert(count);
-                if(count>1)
-                {
-                   document.getElementById("divSubmit").style.display = "block";
-                }
-                else
-                {
-                   document.getElementById("divSubmit").style.display = "none";
-                }
-
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating VehicleTpeData Data");
-            }
-
-
-        });
-
-        //  vehicleTypelst.append('</select >');
-
-
-        document.getElementById('NoOfCardsTbl').style.display = 'table';
-        // document.getElementById('NoOfCardsTbl').style.display = 'block';
-
-        //$('#NoOfCards').attr("disabled", true);
-        //$('#FeePaymentDate').attr("disabled", true);
-        //$('#FeePaymentNo').attr("disabled", true);
-        //$('#FeePaymentDate').attr("disabled", true);
+ //$("#btnsubmit").on("click", (function (e) {
    
-    }
 
-    function ClearCardDeatils() {
-
-        //$('#NoOfCards').val('');
-        //$('#FeePaymentDate').val('');
-        // $('#FeePaymentNo').val('');
-        $('#NoOfCardsTbl > tr').remove();
-        document.getElementById('NoOfCardsTbl').style.display = 'none';
-        $("#NoOfCardsTbl tr").remove();
-
-        $('#NoOfCards').attr("readonly", false);
-        $('#NoOfVehiclesAllCards').attr("readonly", false);
-        $('#FeePaymentDate').attr("readonly", false);
-        $('#FeePaymentNo').attr("readonly", false);
-
-        var count = $('#NoOfCardsTbl tr').length;
-        //alert(count);
-        if(count>1)
-        {
-           document.getElementById("divSubmit").style.display = "block";
-        }
-        else
-        {
-           document.getElementById("divSubmit").style.display = "none";
-        }
-    }
-
- $("#btnsubmit").on("click", (function (e) {
-    var flag = "Y";
-    var i=0;
-    var j=0;
-    var cnt = 0;
-    var emptyVehicleNo=false;
-    var emptyVehicleMake=false;
-    var emptyYearOfReg=false;
-    var emptyVehicleType=false;
-    var emptyMobile=false;
-    var emptyIdentifier=false;
-    var invalidIdentifier=false;
-    var invalidVehicleNo=false;
-    
-    var table = document.getElementById("NoOfCardsTbl");
-
-        if (document.getElementById("CustomerReferenceNo").value.trim() == "") 
-        {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
-            flag = "N";
-        }
-        else 
-        {
-            if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0") 
-            {
-              document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
-              flag = "N";
-            }
-            else 
-            {
-                if (document.getElementById("CustomerReferenceNo").value.length < 10) 
-                {
-                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
-                    flag = "N";
-                }
-                else 
-                {
-                    if (!(document.getElementById("CustomerReferenceNo").value.match(number))) 
-                    {
-                        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
-                        flag = "N";
-                    }
-                    else
-                    {
-                        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
-                    }
-                }
-            }
-        }
-
-        if (document.getElementById("CustomerName").value == "") 
-        {
-            document.getElementById("CustomerName_error").innerHTML = "Customer Name cannot be left blank";
-            flag = "N";
-        }
-        else 
-        {
-            document.getElementById("CustomerName_error").innerHTML = "";
-        }
-
-        if (document.getElementById("FormNumber").value == "0" || document.getElementById("FormNumber").value == "") 
-        {
-            document.getElementById("FormNumber_error").innerHTML = "Form Number cannot be left blank";
-            flag = "N";
-        }
-        else 
-        {
-            document.getElementById("FormNumber_error").innerHTML = "";
-        }
-
-        if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value.trim() == "") 
-        {
-            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards cannot be left blank";
-            flag = "N";
-        }
-        else 
-        {
-            document.getElementById("NoOfCards_error").innerHTML = "";
-        }
-
-        if (document.getElementById("RBEId").value != "") 
-        {
-            if(document.getElementById("RBEName").value=="")
-            {
-              document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
-              flag = "N";
-            }
-        }
-        else 
-        {
-            document.getElementById("RBEId_error").innerHTML = "";
-        }
-
-        var customerTypeId = document.getElementById("CustomerTypeId").value;
-        if (customerTypeId == "905" || customerTypeId == "909") 
-        {
-            if (document.getElementById("NoOfVehiclesAllCards").value == "0" || document.getElementById("NoOfVehiclesAllCards").value == "") 
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannot be left blank";
-                flag = "N";
-            }
-            else 
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-            }
-        }
-
-
-        if (document.getElementById("rbtnCard").checked) 
-        {
-
-            if (document.getElementById("rbtnFeeWaiver").checked) 
-            {
-                if (document.getElementById("FeePaymentNo").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
-                    flag = "N";
-                }
-                else 
-                {
-                  document.getElementById("FeePaymentNo_error").innerHTML = "";
-                }
-
-                if (document.getElementById("FeePaymentDate").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
-                    flag = "N";
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "";
-                }
-            }
-        }
-
-        if (document.getElementById("rbtnCard").checked) 
-        {
-            if (document.getElementById("rbtnOnline").checked) 
-            {
-                if (document.getElementById("FeePaymentNo").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
-                    flag = "N";
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "";
-                }
-
-                if (document.getElementById("FeePaymentDate").value.trim() == "") 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
-                    flag = "N";
-                }
-                else 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "";
-                }
-            }
-        }
-
-        if (!(document.querySelector('input[name="CardPreference"]:checked'))) {
-            alert("Please select Card Preference");
-            flag = "N";
-        }
-
-        if (document.getElementById("rbtnCard").checked) {
-            if (!(document.querySelector('input[name="FeePaymentsCollectFeeWaiver"]:checked'))) {
-                alert("Fee Payment Details Not Selected");
-                flag = "N";
-            }
-        }
-
-        var selectedCardType = $("input[name='CardPreference']:checked").val();
-        document.getElementById("CardPreference").value = selectedCardType;
-        console.log(selectedCardType);
-
-        var selectedFeePayment = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val();
-        document.getElementById("FeePaymentsCollectFeeWaiver").value = selectedFeePayment;
-        console.log(selectedFeePayment);
-
-        var count = $('#NoOfCardsTbl tr').length;
-
-        //alert(count);
-
-        if (count == 1) {
-            alert("Vehicle Details Not Added");
-            return false;
-            flag = "N";
-        }
-
-        var DuplicateFound = false;
-        var DetailsNotFound = false;
-        var InvalidYearFound = false;
-        const d = new Date();
-        let curYear = d.getFullYear();
-
-        var selected = $("input[name='CardPreference']:checked").val();
-        if (selected == "" || selected == undefined)
-            selected = "Not Selected";
-
-        if (customerTypeId == "901" || customerTypeId == "906") //Fleet And Credit
-        {
-
-            document.getElementById("Common_error").innerHTML = "";
-                     
-            i=0;
-            cnt = 0;
-
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                
-                var vhno = row.find("td:eq(1) input[type='text']").val();
-                var vehicleType =row.find('td').eq(3).find('select').val();
-                var vehicleMake = row.find("td:eq(4) input[type='text']").val();
-                var yearReg = row.find("td:eq(5) input[type='text']").val();
-
-                if (selected.toUpperCase() == "CARDLESS")
-                {
-                    var mobile = row.find("td:eq(6) input[type='text']").val();
-                }
-
-                if(vhno.trim()=='')
-                {
-                    document.getElementById('VechileNo_error_'+cnt).innerHTML="Enter Vehicle No.";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('VechileNo_error_'+cnt).innerHTML="";
-                }
-
-                if(vhno.trim()!='')
-                {
-                    if(vhno.length<6)
-                    {
-                      document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
-                      flag = "N";
-                    }
-                }
-
-                if (vehicleType == "--Select--") 
-                {
-                    document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="Select Vehicle Type";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="";
-                }
-
-                if(vehicleMake.trim()=='')
-                {
-                    document.getElementById('VehicleMake_error_'+cnt).innerHTML="Enter Vehicle Make";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('VehicleMake_error_'+cnt).innerHTML="";
-                }
-                
-                if(yearReg.trim()=='')
-                {
-                    document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Enter Year of Reg.";
-                    flag = "N";
-                }
-                else
-                {
-                    if (!yearReg.match(number)) 
-                    {
-                        document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                        flag = "N";
-                    }
-                    else if (yearReg.length < 4) 
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                      flag = "N";
-                    }
-                    else if (yearReg < 1980 || yearReg > curYear) 
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                      flag = "N";
-                    }
-                    else
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="";
-                    }
-                }
-                              
-
-                if (selected.toUpperCase() == "CARDLESS")
-                {
-                    var mobile = row.find("td:eq(6) input[type='text']").val();
-
-                    if(mobile.trim()=='')
-                    {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
-                        flag = "N";
-                    }
-                    else
-                    {
-                        if (mobile.charAt(0) == "0") 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if (mobile.length < 10) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if(!mobile.match(phoneno)) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else
-                        {
-                           document.getElementById('MobileNo_error_'+cnt).innerHTML="";
-                        }
-                    }
-
-                       
-
-                }
-                  
-              
-                cnt=cnt+1;
-
-            });
-                      
-
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate VehicleNo');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
-                    {
-                        var PrevRVno = row.find("td:eq(1) input[type='text']").val();
-                        var CurRVno =  row1.find("td:eq(1) input[type='text']").val();
-
-                        if(PrevRVno!="" && CurRVno!="")
-                        {
-                            if(PrevRVno.trim().toUpperCase()==CurRVno.trim().toUpperCase())
-                            {
-                                document.getElementById('VechileNo_error_'+cnt).innerHTML="Duplicate Vehicle No.";
-                                flag = "N";
-                            }
-                        }
-                    }
-
-                    cnt=cnt+1;
-                });
-
-            });
-                                                         
-
-            if (selected.toUpperCase() == "CARDLESS")
-            {
-                j=0;i=0;
-                cnt=0;
-                console.log('Before Checking For Duplicate MobileNo');
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row = $(this);
-                    j=0;
-                    i=i+1;
-                    cnt = 0;
-                    $("#NoOfCardsTbl tbody tr").each(function () 
-                    {
-                        var row1 = $(this);
-
-                        j=j+1;
-                        if(i>0 && j>1 && j>i)
-                        {
-                            var PrevMbno = row.find("td:eq(6) input[type='text']").val();
-                            var CurMbno =  row1.find("td:eq(6) input[type='text']").val();
-
-                            if(PrevMbno!="" && CurMbno!="")
-                            {
-                                if(PrevMbno.trim()==CurMbno.trim())
-                                {
-                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile No";
-                                    flag = "N";
-                                }
-                            }
-                        }
-
-                        cnt=cnt+1;
-                    });
-                });
-
-
-                console.log('Before Checking Existing Vehicle No.');
-                var table = document.getElementById("NoOfCardsTbl");
-                cnt=-1;
-                for (let row of table.rows)
-                {
-                    if(row.cells[8].innerHTML.trim()=="1")
-                    {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
-                       flag = "N";
-                    }
-                    cnt=cnt+1;
-                }
-
-                cnt = 0;
-                var table = document.getElementById("NoOfCardsTbl");
-                if (!$(VehicleNoVerifiedManually).prop("checked"))
-                {
-                    console.log('Before Checking Vehicle No. Verified');
-                    cnt=-1;
-                    for (let row of table.rows) 
-                    {
-                        //console.log(row.cells);
-                        //alert(row.cells[10].innerHTML);
-                        var vno = $(row).find("td:eq(1) input[type='text']").val();
-                        if(vno!="")
-                        {
-                            if(row.cells[9].innerHTML.trim()=="0")
-                            {
-                               document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                               flag = "N";
-                            }
-                        }
-                        cnt=cnt+1;
-                    }
-                }
- 
-            }
-            else
-            {
-                console.log('Before Checking Existing Vehicle No.');
-                var table = document.getElementById("NoOfCardsTbl");
-                cnt=-1;
-                for (let row of table.rows)
-                {
-                    if(row.cells[7].innerHTML.trim()=="1")
-                    {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
-                       flag = "N";
-                    }
-                    cnt=cnt+1;
-                }
-
-                cnt=-1;
-                if (!$(VehicleNoVerifiedManually).prop("checked"))
-                {
-                    console.log('Before Checking Vehicle No. Verified');
-                    for (let row of table.rows) 
-                    {
-                        //alert(row.cells[10].innerHTML);
-                        var vno = $(row).find("td:eq(1) input[type='text']").val();
-                        if(vno!="")
-                        {
-                            if(row.cells[8].innerHTML.trim()=="0")
-                            {
-                               document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                               flag = "N";
-                            }
-                        }
-                        cnt=cnt+1;
-                    }
-                }
-            }
-
-        }
-        else if (customerTypeId == "905" || customerTypeId == "909") //Attached,Generic
-        {
-
-            document.getElementById("Common_error").innerHTML = "";
-
-           cnt=0;
-           $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                
-                var cardIdentifier = row.find("td:eq(1) input[type='text']").val();
-                var vhno = row.find("td:eq(2) input[type='text']").val();
-                var vehicleType =row.find('td').eq(4).find('select').val();
-                var vehicleMake = row.find("td:eq(5) input[type='text']").val();
-                var yearReg = row.find("td:eq(6) input[type='text']").val();
-                
-                if(cardIdentifier.trim()=='')
-                {
-                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Enter Card Identifier";
-                    flag = "N";
-                }
-                else
-                {
-                    if(cardIdentifier.trim()!='')
-                    {
-                        if(cardIdentifier.length<2 || cardIdentifier.length>16)
-                        {
-                          document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                          flag = "N";
-                        }
-                        else if(!cardIdentifier.match(number))
-                        {
-                          document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                          flag = "N";
-                        }
-                        else
-                        {
-                            document.getElementById('CardIdentifier_error_'+cnt).innerHTML="";
-                        }
-                    }
-                }   
-
-                if(vhno.trim()=='')
-                {
-                    document.getElementById('VechileNo_error_'+cnt).innerHTML="Enter Vehicle No.";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('VechileNo_error_'+cnt).innerHTML="";
-                }
-
-                if(vhno.trim()!='')
-                {
-                    if(vhno.length<6)
-                    {
-                      document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
-                      flag = "N";
-                    }
-                }
-
-                if (vehicleType == "--Select--") 
-                {
-                    document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="Select Vehicle Type";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="";
-                }
-
-                if(vehicleMake.trim()=='')
-                {
-                    document.getElementById('VehicleMake_error_'+cnt).innerHTML="Enter Vehicle Make";
-                    flag = "N";
-                }
-                else
-                {
-                    document.getElementById('VehicleMake_error_'+cnt).innerHTML="";
-                }
-                
-                if(yearReg.trim()=='')
-                {
-                    document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Enter Year of Reg.";
-                    flag = "N";
-                }
-                else
-                {
-                    if (!yearReg.match(number)) 
-                    {
-                        document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                        flag = "N";
-                    }
-                    else if (yearReg.length < 4) 
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                      flag = "N";
-                    }
-                    else if (yearReg < 1980 || yearReg > curYear) 
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="Invalid Year of Reg.";
-                      flag = "N";
-                    }
-                    else
-                    {
-                      document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="";
-                    }
-                }
-                              
-
-                if (selected.toUpperCase() == "CARDLESS")
-                {
-                    var mobile = row.find("td:eq(7) input[type='text']").val();
-
-                    if(mobile.trim()=='')
-                    {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
-                        flag = "N";
-                    }
-                    else
-                    {
-                        if (mobile.charAt(0) == "0") 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if (mobile.length < 10) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if(!mobile.match(phoneno)) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else
-                        {
-                           document.getElementById('MobileNo_error_'+cnt).innerHTML="";
-                        }
-                    }
-
-
-                }
-                  
-              
-                cnt=cnt+1;
-
-            });
-
-
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate Card Identifier');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
-                    {
-                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
-
-                        if(PrevIdent!="" && CurIdent!="")
-                        {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
-                            {
-
-                                if(CurIdent.length<2 || CurIdent.length>16)
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else if(!CurIdent.match(number))
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else
-                                {
-                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
-                                    flag = "N";
-                                }
-                                
-                            }
-                        }
-                    }
-
-                    cnt=cnt+1;
-                });
-
-            });
-
-           
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate VehicleNo');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
-                    {
-                        var PrevRVno = row.find("td:eq(2) input[type='text']").val();
-                        var CurRVno =  row1.find("td:eq(2) input[type='text']").val();
-
-                        if(PrevRVno!="" && CurRVno!="")
-                        {
-                            if(PrevRVno.trim().toUpperCase()==CurRVno.trim().toUpperCase())
-                            {
-                                document.getElementById('VechileNo_error_'+cnt).innerHTML="Duplicate Vehicle No.";
-                                flag = "N";
-                            }
-                        }
-                    }
-
-                    cnt=cnt+1;
-                });
-
-            });
-          
-
-            if (selected.toUpperCase() == "CARDLESS")
-            {
-                j=0;i=0;
-                cnt=0;
-                console.log('Before Checking For Duplicate MobileNo');
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row = $(this);
-                    j=0;
-                    i=i+1;
-                    cnt = 0;
-                    $("#NoOfCardsTbl tbody tr").each(function () 
-                    {
-                        var row1 = $(this);
-
-                        j=j+1;
-                        if(i>0 && j>1 && j>i)
-                        {
-                            var PrevMbno = row.find("td:eq(7) input[type='text']").val();
-                            var CurMbno =  row1.find("td:eq(7) input[type='text']").val();
-
-                            if(PrevMbno!="" && CurMbno!="")
-                            {
-                                if(PrevMbno.trim()==CurMbno.trim())
-                                {
-                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile No";
-                                    flag = "N";
-                                }
-                            }
-                        }
-
-                        cnt=cnt+1;
-                    });
-                });
-
-
-                cnt=-1;
-                console.log('Before Checking Existing Vehicle No.');
-                var table = document.getElementById("NoOfCardsTbl");
-
-                for (let row of table.rows)
-                {
-                    //alert(row.cells[9].innerHTML);
-                    if(row.cells[9].innerHTML.trim()=="1")
-                    {
-                        var Vhno = $(row).find("td:eq(2) input[type='text']").val();
-                        //Vhno=Vhno.toUpperCase()
-                        //alert('Vehicle No. Already Exists: ' + Vhno);
-                        if(Vhno!="")
-                        {
-                          document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
-                          flag = "N";
-                        }
-
-                    }
-                    cnt=cnt+1;
-                }
-
-               cnt=-1;
-                if (!$(VehicleNoVerifiedManually).prop("checked"))
-                {
-                    console.log('Before Checking Vehicle No. Verified');
-                    for (let row of table.rows) 
-                    {
-                        //alert(row.cells[10].innerHTML);
-                        if(row.cells[10].innerHTML.trim()=="0")
-                        {
-                            var Vhno = $(row).find("td:eq(2) input[type='text']").val();
-                            //Vhno=Vhno.toUpperCase()
-                            //alert('Vehicle No Not Verified: ' + Vhno);
-                            //flag = "N";
-                            if(Vhno!="")
-                            {
-                              document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                              flag = "N";
-                            }
-                        }
-                        cnt=cnt+1;
-                    }
-                }
-
-
-            }
-            else
-            {
-                console.log('Before Checking Existing Vehicle No.');
-                var table = document.getElementById("NoOfCardsTbl");
-                cnt=-1;
-                for (let row of table.rows)
-                {
-                    //alert(row.cells[8].innerHTML);
-                    if(row.cells[8].innerHTML.trim()=="1")
-                    {
-                        var Vhno = $(row).find("td:eq(2) input[type='text']").val();
-                        //Vhno=Vhno.toUpperCase()
-                        //alert('Vehicle No. Already Exists: ' + Vhno);
-                        if(Vhno!="")
-                        {
-                          document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
-                          flag = "N";
-                        }
-                    }
-                    cnt=cnt+1;
-                }
-
-                if (!$(VehicleNoVerifiedManually).prop("checked"))
-                {
-                    console.log('Before Checking Vehicle No. Verified');
-                    cnt=-1;
-                    for (let row of table.rows) 
-                    {
-                        //alert(row.cells[9].innerHTML);
-                        if(row.cells[9].innerHTML.trim()=="0")
-                        {
-                            var Vhno = $(row).find("td:eq(2) input[type='text']").val();
-                            //Vhno=Vhno.toUpperCase()
-                            //alert('Vehicle No. Not Verified: ' + Vhno);
-                            if(Vhno!="")
-                            {
-                              document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
-                              flag = "N";
-                            }
-                        }
-
-                        cnt=cnt+1;
-
-                    }
-                }
-
-            }
-
-        }
-        else if (customerTypeId == "902" || customerTypeId == "917") //Corporate,Non Fleet
-        {
-
-            document.getElementById("Common_error").innerHTML = "";
-
-            cnt=0;
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                
-                var cardIdentifier = row.find("td:eq(1) input[type='text']").val();
-
-                if(cardIdentifier.trim()=='')
-                {
-                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Enter Card Identifier";
-                    flag = "N";
-                }
-                else
-                {
-                    if(cardIdentifier.trim()!='')
-                    {
-                        if(cardIdentifier.length<2 || cardIdentifier.length>16)
-                        {
-                          document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                          flag = "N";
-                        }
-                        else if(!cardIdentifier.match(number))
-                        {
-                          document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                          flag = "N";
-                        }
-                        else
-                        {
-                            document.getElementById('CardIdentifier_error_'+cnt).innerHTML="";
-                        }
-                    }
-                }               
-                                                             
-
-                if (selected.toUpperCase() == "CARDLESS")
-                {
-                    var mobile = row.find("td:eq(2) input[type='text']").val();
-
-                    if(mobile.trim()=='')
-                    {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
-                        flag = "N";
-                    }
-                    else
-                    {
-                        if (mobile.charAt(0) == "0") 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if (mobile.length < 10) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else if(!mobile.match(phoneno)) 
-                        {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
-                            flag = "N";
-                        }
-                        else
-                        {
-                           document.getElementById('MobileNo_error_'+cnt).innerHTML="";
-                        }
-                    }
-                      
-                }
-                  
-              
-                cnt=cnt+1;
-
-            });
-
-
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate Card Identifier');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
-                    {
-                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
-
-                        if(PrevIdent!="" && CurIdent!="")
-                        {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
-                            {
-                                if(CurIdent.length<2 || CurIdent.length>16)
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else if(!CurIdent.match(number))
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else
-                                {
-                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
-                                    flag = "N";
-                                }
-                            }
-                        }
-                    }
-
-                    cnt=cnt+1;
-                });
-
-            });
-                        
-
-            if (selected.toUpperCase() == "CARDLESS")
-            {
- 
-                j=0;i=0;
-                cnt=0;
-                console.log('Before Checking For Duplicate MobileNo');
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row = $(this);
-                    j=0;
-                    i=i+1;
-                    cnt = 0;
-                    $("#NoOfCardsTbl tbody tr").each(function () 
-                    {
-                        var row1 = $(this);
-
-                        j=j+1;
-                        if(i>0 && j>1 && j>i)
-                        {
-                            var PrevMobile = row.find("td:eq(2) input[type='text']").val();
-                            var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
-
-                            if(PrevMobile!="" && CurMobile!="")
-                            {
-                                if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
-                                {
-                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
-                                    flag = "N";
-                                }
-                            }
-                        }
-
-                        cnt=cnt+1;
-                    });
-
-                });
-
-
-            }
-
-        }
-
-
-         cardDetail = [];
-         $("#NoOfCardsTbl tbody tr").each(function () {
-             //debugger;
-
-             var row = $(this);
-             var cardIdentifier="";
-             var mobileNo="";
-             var vehicleNo="";
-             var vehicleType="";
-             var vehicleMake="";
-             var yearOfRegistration="1900";
-             console.log(customerTypeId);
-             if(customerTypeId == "902" || customerTypeId == "917")
-             {
-                 cardIdentifier = row.find("td:eq(1) input[type='text']").val();
-                 if (selected.toUpperCase() == "CARDLESS")
-                 {
-                     mobileNo=row.find("td:eq(2) input[type='text']").val();
-                 }
-             }
-             else if(customerTypeId == "901" || customerTypeId == "906")
-             {
-                 vehicleNo = row.find("td:eq(1) input[type='text']").val();
-                 //vehicleType = row.find("td:eq(3) input[type='select']").val();
-                 vehicleType = row.find('td').eq(3).find('select').val();
-                 vehicleMake = row.find("td:eq(4) input[type='text']").val();
-                 yearOfRegistration = row.find("td:eq(5) input[type='text']").val();
-
-                 if (selected.toUpperCase() == "CARDLESS")
-                 {
-                     mobileNo=row.find("td:eq(6) input[type='text']").val();
-                 }
-             }
-             else
-             {
-                 cardIdentifier = row.find("td:eq(1) input[type='text']").val();
-                 vehicleNo = row.find("td:eq(2) input[type='text']").val();
-                 vehicleType = row.find('td').eq(4).find('select').val();
-                 vehicleMake = row.find("td:eq(5) input[type='text']").val();
-                 yearOfRegistration = row.find("td:eq(6) input[type='text']").val();
-
-                 if (selected.toUpperCase() == "CARDLESS")
-                 {
-                     mobileNo=row.find("td:eq(7) input[type='text']").val();
-                 }
-             }
-
-              cardDetail.push({ CardIdentifier: cardIdentifier, VechileNo: vehicleNo, VehicleType: vehicleType, VehicleMake: vehicleMake,YearOfRegistration: yearOfRegistration,MobileNo: mobileNo });
-
-         });
-
-        //debugger;
+ //        cardDetail = [];
+ //        $("#NoOfCardsTbl tbody tr").each(function () 
+ //        {
+ //            //debugger;
+
+ //            var row = $(this);
+ //            var cardIdentifier="";
+ //            var mobileNo="";
+ //            var vehicleNo="";
+ //            var vehicleType="";
+ //            var vehicleMake="";
+ //            var yearOfRegistration="1900";
+ //            console.log(customerTypeId);
+ //            if(customerTypeId == "902" || customerTypeId == "917")
+ //            {
+ //                cardIdentifier = row.find("td:eq(1) input[type='text']").val();
+ //                if (selected.toUpperCase() == "CARDLESS")
+ //                {
+ //                    mobileNo=row.find("td:eq(2) input[type='text']").val();
+ //                }
+ //            }
+ //            else if(customerTypeId == "901" || customerTypeId == "906")
+ //            {
+ //                vehicleNo = row.find("td:eq(1) input[type='text']").val();
+ //                //vehicleType = row.find("td:eq(3) input[type='select']").val();
+ //                vehicleType = row.find('td').eq(3).find('select').val();
+ //                vehicleMake = row.find("td:eq(4) input[type='text']").val();
+ //                yearOfRegistration = row.find("td:eq(5) input[type='text']").val();
+
+ //                if (selected.toUpperCase() == "CARDLESS")
+ //                {
+ //                    mobileNo=row.find("td:eq(6) input[type='text']").val();
+ //                }
+ //            }
+ //            else
+ //            {
+ //                cardIdentifier = row.find("td:eq(1) input[type='text']").val();
+ //                vehicleNo = row.find("td:eq(2) input[type='text']").val();
+ //                vehicleType = row.find('td').eq(4).find('select').val();
+ //                vehicleMake = row.find("td:eq(5) input[type='text']").val();
+ //                yearOfRegistration = row.find("td:eq(6) input[type='text']").val();
+
+ //                if (selected.toUpperCase() == "CARDLESS")
+ //                {
+ //                    mobileNo=row.find("td:eq(7) input[type='text']").val();
+ //                }
+ //            }
+
+ //             cardDetail.push({ CardIdentifier: cardIdentifier, VechileNo: vehicleNo, VehicleType: vehicleType, VehicleMake: vehicleMake,YearOfRegistration: yearOfRegistration,MobileNo: mobileNo });
+
+ //        });
+
+ //       //debugger;
        
-        if (cardDetail.length > 0 && flag == "Y") 
-        {
-                var custRefNo = document.getElementById("CustomerReferenceNo").value;
-                var noOfCards = document.getElementById("NoOfCards").value;
-                var custRBEId = document.getElementById("RBEId").value;
-                var selectedFeePayment = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val();
-                var feePaymentNo = document.getElementById("FeePaymentNo").value;
-                var feePaymentDate = document.getElementById("FeePaymentDate").value;
-                var cardPreference = $("input[name='CardPreference']:checked").val();
-                var noOfVehiclesAllCards = document.getElementById("NoOfVehiclesAllCards").value;
-                var vehicleNoVerifiedManually=false;
-                if($(VehicleNoVerifiedManually).prop("checked"))
-                {
-                    vehicleNoVerifiedManually=true;
-                }
+ //       if (cardDetail.length > 0 && flag == "Y") 
+ //       {
+ //               var custRefNo = document.getElementById("CustomerReferenceNo").value;
+ //               var noOfCards = document.getElementById("NoOfCards").value;
+ //               var custRBEId = document.getElementById("RBEId").value;
+ //               var selectedFeePayment = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val();
+ //               var feePaymentNo = document.getElementById("FeePaymentNo").value;
+ //               var feePaymentDate = document.getElementById("FeePaymentDate").value;
+ //               var cardPreference = $("input[name='CardPreference']:checked").val();
+ //               var noOfVehiclesAllCards = document.getElementById("NoOfVehiclesAllCards").value;
+ //               var vehicleNoVerifiedManually=false;
+ //               if($(VehicleNoVerifiedManually).prop("checked"))
+ //               {
+ //                   vehicleNoVerifiedManually=true;
+ //               }
                                 
-                //var customerCardInfo = { CustomerReferenceNo: custRefNo, NoOfCards: noOfCards, RBEId : custRBEId, FeePaymentsCollectFeeWaiver : selectedFeePayment, FeePaymentNo : feePaymentNo, FeePaymentDate : feePaymentDate, CardPreference: cardPreference, NoOfVehiclesAllCards : noOfVehiclesAllCards, VehicleNoVerifiedManually : vehicleNoVerifiedManually, ObjCardDetail: cardDetail };
-                var customerCardInfo = { CustomerReferenceNo: custRefNo, NoOfCards: noOfCards, RBEId : custRBEId, FeePaymentsCollectFeeWaiver : selectedFeePayment, FeePaymentNo : feePaymentNo, FeePaymentDate : feePaymentDate, CardPreference: cardPreference, NoOfVehiclesAllCards : noOfVehiclesAllCards, VehicleNoVerifiedManually : vehicleNoVerifiedManually, ObjCardDetail: cardDetail };
+ //               //var customerCardInfo = { CustomerReferenceNo: custRefNo, NoOfCards: noOfCards, RBEId : custRBEId, FeePaymentsCollectFeeWaiver : selectedFeePayment, FeePaymentNo : feePaymentNo, FeePaymentDate : feePaymentDate, CardPreference: cardPreference, NoOfVehiclesAllCards : noOfVehiclesAllCards, VehicleNoVerifiedManually : vehicleNoVerifiedManually, ObjCardDetail: cardDetail };
+ //               var customerCardInfo = { CustomerReferenceNo: custRefNo, NoOfCards: noOfCards, RBEId : custRBEId, FeePaymentsCollectFeeWaiver : selectedFeePayment, FeePaymentNo : feePaymentNo, FeePaymentDate : feePaymentDate, CardPreference: cardPreference, NoOfVehiclesAllCards : noOfVehiclesAllCards, VehicleNoVerifiedManually : vehicleNoVerifiedManually, ObjCardDetail: cardDetail };
 
-                //console.log(customerCardInfo);
-                console.log('Before Json');
-                console.log(JSON.stringify(customerCardInfo));
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("AddCardDetails", "Customer")',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(customerCardInfo),
-                    success: function (data) 
-                    {
-                        console.log(data);
-                        if(data.statusCode==1000)
-                        {
-                          $("#divSuccess").html(data.reason);
-                          $(".toBeHiddenOnSuccess").hide();
-                          document.getElementById("divSuccess").style.display = "block";
-                          document.getElementById("divSuccess").className = "mb-3 text-center";
-                          document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
-                        }
-                        else
-                        {
-                            $("#divSuccess").html(data.message);
-                            document.getElementById("divSuccess").style.display = "block";
-                            document.getElementById("divSuccess").className = "alert alert-danger";
-                            //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
-                        }
-                        console.log('success');
-                    },
-                    error: function (ex) {
-                        console.log('Failed');
-                        alert('Error.' + ex);
-                    }
-                });
+ //               //console.log(customerCardInfo);
+ //               console.log('Before Json');
+ //               console.log(JSON.stringify(customerCardInfo));
+ //               $.ajax({
+ //                   type: 'POST',
+ //                   url: '@Url.Action("AddCardDetails", "Customer")',
+ //                   contentType: "application/json; charset=utf-8",
+ //                   data: JSON.stringify(customerCardInfo),
+ //                   success: function (data) 
+ //                   {
+ //                       console.log(data);
+ //                       if(data.statusCode==1000)
+ //                       {
+ //                         $("#divSuccess").html(data.reason);
+ //                         $(".toBeHiddenOnSuccess").hide();
+ //                         document.getElementById("divSuccess").style.display = "block";
+ //                         document.getElementById("divSuccess").className = "mb-3 text-center";
+ //                         document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
+ //                       }
+ //                       else
+ //                       {
+ //                           $("#divSuccess").html(data.message);
+ //                           document.getElementById("divSuccess").style.display = "block";
+ //                           document.getElementById("divSuccess").className = "alert alert-danger";
+ //                           //document.getElementById("divSuccess").style.backgroundColor ="#a0f1d6;";
+ //                       }
+ //                       console.log('success');
+ //                   },
+ //                   error: function (ex) {
+ //                       console.log('Failed');
+ //                       alert('Error.' + ex);
+ //                   }
+ //               });
             
-        }
+ //       }
 
 
-        console.log('ZZZZZZZ');
+ //       console.log('ZZZZZZZ');
 
-       })
+ //      })
 
-       );
+ //      );
 
 
 </script>
 
 <script language="javascript">
-      $(document).ready(function () {
+      //$(document).ready(function () {
 
-          $('input[name="FeePaymentsCollectFeeWaiver"]:radio').change(function () {
-              //alert($("input[name='FeePaymentsCollectFeeWaiver']:checked").val());
-
-              var selected = $("input[name='FeePaymentsCollectFeeWaiver']:checked").val()
-              //alert(selected);
-              if (selected == "1") {
-                $('#lblChequeNo').text('');
-                $('#lblChequeNo').append("Payment Source<sup class='text-danger'>*</sup>");
-                $('#lblChequeDate').text('');
-                $('#lblChequeDate').text("Payment Date<sup class='text-danger'>*</sup>");
-              }
-              else if (selected == "2") {
-                $('#lblChequeNo').text('');
-                $('#lblChequeNo').append("Approval Email From<sup class='text-danger'>*</sup>");
-                $('#lblChequeDate').text('');
-                $('#lblChequeDate').append("Approval Email Date<sup class='text-danger'>*</sup>");
-              }
-
-          });
-
-          $('#lblReceivedAmount').hide();
-          $('#ReceivedAmount').hide();
-
-          $('input[name="CardPreference"]:radio').change(function () {
-              //alert($("input[name='CardPreference']:checked").val());
-
-              var selected = $("input[name='CardPreference']:checked").val()
-              //alert(selected);
-              if (selected == "Cardless") {
-                  $('#lblChequeNo').hide();
-                  $('#lblChequeDate').hide();
-                  $("#FeePaymentNo").val('');
-                  $("#FeePaymentDate").val('');
-                  $('#FeePaymentNo').hide();
-                  $('#FeePaymentDate').hide();
-                  $('#ReceivedAmount').hide();
-                  $('#divFeePaymentDetails').hide();
-                  $('#lblReceivedAmount').hide();
-                  document.getElementById("rbtnFeeWaiver").checked = false;
-                  document.getElementById("rbtnOnline").checked = false;
-              }
-              else if (selected == "Card") {
-                  $('#lblChequeNo').show();
-                  $('#lblChequeDate').show();
-                  $("#FeePaymentNo").val('');
-                  $("#FeePaymentDate").val('');
-                  $('#FeePaymentNo').show();
-                  $('#FeePaymentDate').show();
-                  $('#ReceivedAmount').show();
-                  $('#divFeePaymentDetails').show();
-                  $('#lblReceivedAmount').show();
-
-                  document.getElementById("rbtnFeeWaiver").checked = true;
-                  //$("#rbtnCard").prop('disabled', false);
-                  //$("#FeePaymentNo").prop('disabled', false);
-                  //$("#FeePaymentDate").prop('disabled', false);
-                  //$('#lblChequeNo').text("Approval Email From");
-                  if(document.getElementById("rbtnFeeWaiver").checked)
-                  {
-                      $('#lblReceivedAmount').hide();
-                      $('#ReceivedAmount').hide();
-                  }
-              }
-
-              //LoadCardDeatils();
-
-          });
-      });
+      //});
 
       function RemoveSpecialChar(txtName) {
           if (txtName.value != '' && txtName.value.match(/^[\w ]+$/) == null) {
@@ -2579,46 +1150,51 @@
           document.getElementById("RBEId").value = "";
           document.getElementById("RBEName").value = "";
           $("#RBEId").prop('readonly', false);
-          document.getElementById("rbtnCardless").checked = false;
-          document.getElementById("rbtnCardless").disabled = false;
-
-          document.getElementById("rbtnCard").checked = false;
-          document.getElementById("rbtnCard").disabled = false;
-
-          document.getElementById("rbtnOnline").checked = false;
-          document.getElementById("rbtnOnline").disabled = false;
-
-          document.getElementById("rbtnFeeWaiver").checked = false;
-          document.getElementById("rbtnFeeWaiver").disabled = false;
-
-          document.getElementById("FeePaymentNo").value = "";
-          document.getElementById("FeePaymentDate").value = "";
-
-          $("#rbtnCard").prop('disabled', false);
-          $("#FeePaymentNo").prop('readonly', false);
-          $("#FeePaymentDate").prop('readonly', false);
+          document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
           document.getElementById("NoOfCards").value = "";
           $("#NoOfCards").prop('readonly', false);
-          document.getElementById("ReceivedAmount").value = "";
-
-          $('#NoOfCardsTbl > tr').remove();
-          document.getElementById('NoOfCardsTbl').style.display = 'none';
-
-
           $('#NoOfCards').attr("readonly", false);
-          $('#FeePaymentDate').attr("readonly", false);
-          $('#FeePaymentNo').attr("readonly", false);
-          document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-          document.getElementById("FeePaymentNo_error").innerHTML = "";
-          document.getElementById("Common_error").innerHTML = "";
-          document.getElementById("divSubmit").style.display = "none";
-          document.getElementById("divDetails").style.display = "none";
           document.getElementById("NoOfVehiclesAllCards").value = "";
           document.getElementById("NoOfCards_error").innerHTML = "";
           document.getElementById("RBEId_error").innerHTML = "";
           document.getElementById("RBEName_error").innerHTML = "";
-          document.getElementById("RBEName").value = "";
-          document.getElementById("VehicleNoVerifiedManually").checked = false;
+
+         ViewCardDetailsTbl.style.display = "none";
+         $("#Remarks").html('');
+         $("#dvRemarks").html('');
+         dvRemarks.style.display = 'none';
+
+          //document.getElementById("rbtnCardless").checked = false;
+          //document.getElementById("rbtnCardless").disabled = false;
+
+          //document.getElementById("rbtnCard").checked = false;
+          //document.getElementById("rbtnCard").disabled = false;
+
+          //document.getElementById("rbtnOnline").checked = false;
+          //document.getElementById("rbtnOnline").disabled = false;
+
+          //document.getElementById("rbtnFeeWaiver").checked = false;
+          //document.getElementById("rbtnFeeWaiver").disabled = false;
+
+          //document.getElementById("FeePaymentNo").value = "";
+          //document.getElementById("FeePaymentDate").value = "";
+
+          //$("#rbtnCard").prop('disabled', false);
+          //$("#FeePaymentNo").prop('readonly', false);
+          //$("#FeePaymentDate").prop('readonly', false);
+
+          //document.getElementById("ReceivedAmount").value = "";
+          //$('#NoOfCardsTbl > tr').remove();
+          //document.getElementById('NoOfCardsTbl').style.display = 'none';
+                    
+          //$('#FeePaymentDate').attr("readonly", false);
+          //$('#FeePaymentNo').attr("readonly", false);
+         
+          //document.getElementById("FeePaymentNo_error").innerHTML = "";
+          //document.getElementById("Common_error").innerHTML = "";
+          //document.getElementById("divSubmit").style.display = "none";
+          //document.getElementById("divDetails").style.display = "none";
+          //document.getElementById("VehicleNoVerifiedManually").checked = false;
       });
 
       function IsAlphaNumeric(keyCode) {
@@ -2866,59 +1442,5 @@
    $('#NoOfVehiclesAllCards').on("cut copy paste",function(e) {
       e.preventDefault();
     });
-
-    $("#FeePaymentNo").on("blur", function () 
-    {
-        var paymentNo = document.getElementById("FeePaymentNo").value.trim();
-        if (paymentNo == "") 
-        {
-            if (document.getElementById("rbtnCard").checked) 
-            {
-                if (document.getElementById("rbtnFeeWaiver").checked) 
-                {
-                    document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
-                    return false
-                }
-            }
-       
-            if (document.getElementById("rbtnOnline").checked) 
-            {
-                document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
-                return false
-            }
-        }
-        else 
-        {
-            document.getElementById("FeePaymentNo_error").innerHTML = "";
-        }
-
-   });
-
-   $("#FeePaymentDate").on("change", function () 
-    {
-        var paymentDate = document.getElementById("FeePaymentDate").value.trim();
-        if (paymentDate == "") 
-        {
-            if (document.getElementById("rbtnCard").checked) 
-            {
-                if (document.getElementById("rbtnFeeWaiver").checked) 
-                {
-                    document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
-                    return false
-                }
-            }
-       
-            if (document.getElementById("rbtnOnline").checked) 
-            {
-                document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
-                return false
-            }
-        }
-        else 
-        {
-            document.getElementById("FeePaymentDate_error").innerHTML = "";
-        }
-
-   });
 
 </script>

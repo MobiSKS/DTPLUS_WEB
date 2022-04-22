@@ -465,8 +465,8 @@ namespace HPCL.Service.Services
             }
             return customerCardInfo;
         }
-        
-        public async Task<CustomerCardInfo> AddCardDetails([FromBody] CustomerCardInfo customerCardInfo)
+
+        public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
         {
 
             string feePaymentDate = "";
@@ -486,6 +486,11 @@ namespace HPCL.Service.Services
                 {
                     cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
                 }
+
+                if (customerCardInfo.CustomerTypeId == "902" || customerCardInfo.CustomerTypeId == "917")
+                {
+                    cardDetails.YearOfRegistration = "0";
+                }
             }
 
             #region Create Request Info
@@ -496,7 +501,7 @@ namespace HPCL.Service.Services
             insertInfo.CustomerName = customerCardInfo.CustomerName;
             insertInfo.FormNumber = customerCardInfo.FormNumber;
             insertInfo.NoOfCards = customerCardInfo.NoOfCards;
-            insertInfo.NoofVechileforAllCards= customerCardInfo.NoOfVehiclesAllCards;
+            insertInfo.NoofVechileforAllCards = (String.IsNullOrEmpty(customerCardInfo.NoOfVehiclesAllCards) ? "0" : customerCardInfo.NoOfVehiclesAllCards);
             insertInfo.RBEId = customerCardInfo.RBEId;
             insertInfo.FeePaymentsCollectFeeWaiver = customerCardInfo.FeePaymentsCollectFeeWaiver;
             insertInfo.FeePaymentNo = customerCardInfo.FeePaymentNo;
@@ -1374,37 +1379,71 @@ namespace HPCL.Service.Services
             }
             return customerCardInfo;
         }
-
-        public async Task<CustomerCardInfo> GetCustomerCardsPartialView(string CustomerTypeId, string NoofCards, string NoofVehicles, string CardPreference)
+        
+        public async Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView(string str)
         {
-            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-            customerCardInfo.CustomerTypeId = CustomerTypeId;
-            customerCardInfo.NoOfCards = NoofCards;
-            customerCardInfo.NoOfVehiclesAllCards = NoofVehicles;
-            customerCardInfo.CardPreference = CardPreference;
-            List<VehicleTypeModel> lst = await _commonActionService.GetVehicleTypeDropdown();
-            lst.Insert(0, new VehicleTypeModel { VehicleTypeId = 0, VehicleTypeName = "--Select--" });
-            customerCardInfo.VehicleTypeMdl.AddRange(lst);
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
 
-            int noofCards = Convert.ToInt32(string.IsNullOrEmpty(NoofCards) ? "0" : NoofCards);
-            int noofVehicles = Convert.ToInt32(string.IsNullOrEmpty(NoofVehicles) ? "0" : NoofVehicles);
+            CustomerCardInfo addAddOnCard = new CustomerCardInfo();
+            addAddOnCard.Message = "";
+            addAddOnCard.CardPreference = "";
+            addAddOnCard.FeePaymentDate = "";
+            addAddOnCard.FeePaymentNo = "";
 
-            if (noofCards > noofVehicles)
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            if (!string.IsNullOrEmpty(arrs[0].CardPreference))
+                addAddOnCard.CardPreference = arrs[0].CardPreference;
+            if (!string.IsNullOrEmpty(arrs[0].FeePaymentDate))
+                addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
+            if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
+                addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
+            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
+            addAddOnCard.VehicleNoVerifiedManually = arrs[0].VehicleNoVerifiedManually;
+            addAddOnCard.TableStringyfiedData = str;
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            return addAddOnCard;
+        }
+
+        public async Task<CustomerCardInfo> GetCustomerAddCardsPartialView(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
+            CustomerCardInfo addAddOnCard = new CustomerCardInfo();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            if (!string.IsNullOrEmpty(arrs[0].CardPreference))
+                addAddOnCard.CardPreference = arrs[0].CardPreference;
+            if (!string.IsNullOrEmpty(arrs[0].FeePaymentDate))
+                addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
+            if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
+                addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
+            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.NoOfVehiclesAllCards = arrs[0].NoofVehicles;
+            addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleNoVerifiedManually = arrs[0].VehicleNoVerifiedManually;
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            if (addAddOnCard.CustomerTypeId == "905" || addAddOnCard.CustomerTypeId == "909")
             {
-                for (int i = 0; i < noofCards; i++)
-                {
-                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
-                }
+                addAddOnCard.NoOfGridRows = arrs[0].NoofVehicles;
             }
             else
             {
-                for (int i = 0; i < noofVehicles; i++)
-                {
-                    customerCardInfo.ObjCardDetail.Add(new CardDetails());
-                }
+                addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
             }
 
-            return customerCardInfo;
+            return addAddOnCard;
         }
 
     }

@@ -13,7 +13,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<ViewCardSearch> ViewCardSearch(string CustomerId);
         Task<ViewCardSearch> SearchCardMapping(ViewCardDetails viewCardDetails);
-        Task<string> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray);
+        Task<List<string>> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray);
         Task<ViewCardSearch> AddCardMappingDetails(ViewCardDetails viewCardDetails);
 
     }

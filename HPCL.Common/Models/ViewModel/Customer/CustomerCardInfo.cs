@@ -31,7 +31,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string NoOfVehiclesAllCards { get; set; }
         public string CustomerTypeName { get; set; }
         public string CustomerTypeId { get; set; }
-
         public string PaymentType { get; set; }
         public string PaymentReceivedDate { get; set; }
         public string ReceivedAmount { get; set; }
@@ -39,6 +38,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string Remarks { get; set; }
         public bool VehicleNoVerifiedManually { get; set; }
         public string Reason { get; set; }
+        public string TableStringyfiedData { get; set; }
+        public string NoOfGridRows { get; set; }
     }
 
     public class CardDetails
@@ -47,8 +48,17 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string VechileNo { get; set; }
         public string VehicleType { get; set; }
         public string VehicleMake { get; set; }
-        public int YearOfRegistration { get; set; }
+        public string YearOfRegistration { get; set; }
         public string MobileNo { get; set; }
+        public string CustomerTypeId { get; set; }
+        public string Message { get; set; }
+        public string CardPreference { get; set; }
+        public string FeePaymentNo { get; set; }
+        public string FeePaymentDate { get; set; }
+        public int FeePaymentsCollectFeeWaiver { get; set; }
+        public string NoOfCards { get; set; }
+        public string NoofVehicles { get; set; }
+        public bool VehicleNoVerifiedManually { get; set; }
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Models.ViewModel.ValidateNewCards;
 using HPCL.Service.Interfaces;
@@ -32,10 +33,14 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> Details(ValidateNewCardsModel validateNewCardsMdl)
         {
             var modals = await _validateNewCardsService.Details(validateNewCardsMdl);
+            List<StateResponseModal> lstState = new List<StateResponseModal>();
+            lstState = await _commonActionService.GetStateList();
+            modals.States.AddRange(lstState);
             return View(modals);
         }
-        public async Task<IActionResult> GetCardDetailsForApproval(string CustomerRefNo)
+        public async Task<IActionResult> GetCardDetailsForApproval(string CustomerRefNo,string CustomerType)
         {
+            ViewBag.CustomerType=CustomerType;
             var modals = await _validateNewCardsService.GetCardDetailsForApproval(CustomerRefNo);
             return PartialView("~/Views/ValidateNewCards/_GetValidateFormDetails.cshtml", modals);
         }

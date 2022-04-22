@@ -2,6 +2,7 @@ using HPCL.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -25,6 +26,13 @@ namespace HPCL_Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //*** For AntiforgeryToken Validation, but not tested
+            //services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(typeof(AutoValidateAntiforgeryTokenAttribute));
+            //});
+            //services.AddScoped<AutoValidateAntiforgeryTokenAttribute>();
 
             //Setting 30 Minutes for Session as Token's life is alsio 30 Minutes
             services.AddSession(options =>
