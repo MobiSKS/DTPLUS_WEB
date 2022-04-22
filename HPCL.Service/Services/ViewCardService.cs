@@ -121,10 +121,11 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             if (updateResponse.Count > 0)
             {
-                foreach(var item in updateResponse)
+                messageList.Add(updateResponse[0].Status.ToString());
+                foreach (var item in updateResponse)
                     messageList.Add(item.Reason);
             }
-
+            
             return messageList;
         }
 
