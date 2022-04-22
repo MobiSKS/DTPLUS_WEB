@@ -91,6 +91,7 @@
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i'>
                                                 <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                             </td>
                                             <td>
@@ -228,6 +229,7 @@
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i'>
                                                 <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                             </td>
                                             <td>
@@ -342,10 +344,24 @@
         {
             if(vehicleNo.trim()!='')
             {
-                if(vehicleNo.length<6 || vehicleNo.length>10)
+                if (!(vehicleNo.match(forVehicleNo))) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     return false;
+                }
+                else if (!vehicleNo.match(atLeastOneAlphabet)) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if(vehicleNo.length<6 || vehicleNo.length>10)
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="";
                 }
             }
         }   
@@ -388,7 +404,7 @@
               //mycel.innerHTML = "Enter Vehicle No.";
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
               mycelStatus.innerHTML = "0";
-              return;
+              return false;
           }
           else 
           {
@@ -549,7 +565,7 @@
         if(vehicleType.trim()=='--Select--')
         {
             document.getElementById('ddlVehicleType_error_'+rowSelected).innerHTML="Select Vehicle Type";
-            return
+            return false;
         }
         else
         {
@@ -655,13 +671,17 @@
         if(vehicleMake.trim()=='')
         {
             document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="Enter Vehicle Make";
-            return
+            return false;
+        }
+        else if (!vehicleMake.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="Invalid Vehicle Make";
+            return false;
         }
         else
         {
             document.getElementById('VehicleMake_error_'+rowSelected).innerHTML="";
         } 
-
      }
 
      function YearOfRegistrationChange(o, rowSelected) 
@@ -674,7 +694,7 @@
         if(yearReg.trim()=='')
         {
             document.getElementById('YearOfRegistration_error_'+rowSelected).innerHTML="Enter Year of Reg.";
-            return;
+            return false;
         }
         else
         {
