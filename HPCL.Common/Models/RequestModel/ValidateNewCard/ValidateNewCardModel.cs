@@ -10,6 +10,7 @@ namespace HPCL.Common.Models.RequestModel.ValidateNewCard
         public string StateId { get; set; }
         public string FormNumber { get; set; }
         public string CustomerName { get; set; }
-        public string Createdon { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
     }
 }

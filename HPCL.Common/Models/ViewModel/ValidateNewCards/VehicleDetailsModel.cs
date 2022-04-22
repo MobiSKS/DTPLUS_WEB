@@ -20,5 +20,7 @@
         public string VehicleMake { get; set; }
         public string VechileNo { get; set; }
         public string VechileOwnerName { get; set; }
+        public string YearofRegistration { get; set; }
+        public string MobileNo { get; set; }
     }
 }

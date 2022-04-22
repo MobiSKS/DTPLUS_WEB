@@ -100,7 +100,7 @@ namespace HPCL.Service.Services
             viewCardSearch = JsonConvert.DeserializeObject<ViewCardSearch>(response);
             return viewCardSearch;
         }
-        public async Task<string> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
+        public async Task<List<string>> UpdateCards(ObjUpdateMobileandFastagNoInCard[] limitArray)
         {
             var updateServiceBody = new UpdateMobileRequest
             {
@@ -117,8 +117,15 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
             var updateRes = obj["Data"].Value<JArray>();
+            List<string> messageList = new List<string>();
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
-            return updateResponse[0].Reason;
+            if (updateResponse.Count > 0)
+            {
+                foreach(var item in updateResponse)
+                    messageList.Add(item.Reason);
+            }
+
+            return messageList;
         }
 
         public async Task<ViewCardSearch> AddCardMappingDetails(ViewCardDetails viewCardDetails)    

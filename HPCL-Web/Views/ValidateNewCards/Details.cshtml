@@ -29,29 +29,66 @@
                             <div class="d-flex align-items-center justify-content-start flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
-                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Form Number<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Form Number</label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" , maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off"})
                                             </div>
-                                            <span class="error" style="font-size: 14px; color: #dc3545 !important " id="categoryID"></span>
+                                            <span class="error" id="formNo_error"></span>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
-                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Date</label>
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">State</label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Date, new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.StateId, new SelectList(Model.States, "StateID", "StateName"), new { @class = "form-control" })
                                             </div>
-                                            <span class="error" style="font-size: 14px; color: #dc3545 !important " id="fromDate"></span>
+                                            <span class="error" id="state_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">From Date</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">To Date</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Customer Name</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="Customer_error"></span>
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
                                         <label class="font-weight-normal col-md-5 col-12 mb-3">Created By</label>
@@ -89,8 +126,13 @@
                         <th style="width:5%;">S.No.</th>
                         <th style="width:10%;">Customer Ref. No.</th>
                         <th style="width:10%;">Form No.</th>
+                        <th style="width:10%;">Customer ID</th>
                         <th style="width:20%;">Customer Name</th>
+                        <th style="width:20%;">No of Vechiles</th>
+                        <th style="width:20%;">Total Cards</th>
+                        <th style="width:20%;">Role Name</th>
                         <th style="width:10%;">RBE/RSM Name</th>
+                        <th style="width:10%;">Created Date</th>
                         <th>Mobile No.</th>
                         <th style="width:10%;">Action</th>
                     </tr>
@@ -106,10 +148,15 @@
                             <td>@y</td>
                             <td>@item.CustomerReferenceNo</td>
                             <td>@item.FormNumber</td>
+                            <td>@item.CustomerID</td>
                             <td>@item.CustomerName</td>
+                            <td>@(item.NoofVechileforAllCards=="0"?"":item.NoofVechileforAllCards)</td>
+                            <td>@(item.TotalCards=="0"?"":item.TotalCards)</td>
                             <td>@item.CreatedRoleName</td>
-                            <td style="width:10%;">@item.MobileNo</td>
-                            <td><a href="#" onclick="statusAction(@item.CustomerReferenceNo)">@item.StatusName</a></td>
+                            <td>@item.CreatedBy</td>
+                            <td>@item.CreatedDate</td>
+                            <td>@item.MobileNo</td>
+                            <td><a href="#" onclick="statusAction(@item.CustomerReferenceNo,@item.CustomerType)">@item.Action</a></td>
                         </tr>
                     }
                 </tbody>
@@ -140,29 +187,30 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#Date").datepicker({
-            "setDate": new Date(),
-            "autoclose": true,
-            dateFormat: 'dd-mm-yy'
-        });
+       
     });
 
     function clearDetails() {
         document.getElementById("vehicleDetails").innerHTML = "";
+        document.getElementById("show_Table").innerHTML = "";
         $("#FormNumber").val("");
-        $("#CreatedBy").val(0);
-        $("#Date").val("");
-
+        $("#CustomerName").val("");
+        $("#StateId").val("0");
+        $("#CreatedBy").val("0");
+        $("#FromDate").val("");
+        $("#ToDate").val("");
+        $("#CreatedBy")[0].sumo.reload();
+        $("#StateId")[0].sumo.reload();
     };
 
-    function statusAction(CustomerRefNum) {
+    function statusAction(CustomerRefNum,customerType) {
         var id = CustomerRefNum;
-
+        var type=customerType
         $.ajax({
             type: 'GET',  // http method
             url: '@Url.Action("GetCardDetailsForApproval", "ValidateNewCards")',
             contentType: "application/json; charset=utf-8",
-            data: { CustomerRefNo: id },  // data to submit
+            data: { CustomerRefNo: id ,CustomerType:type},  // data to submit
             dataType: "text",
             success: function (data, status, xhr) {
                 var v = data;
@@ -181,5 +229,22 @@
             }
         });
     };
-
+    $("#FormNumber").on("blur", function () {
+         var FormNumber = $("#FormNumber").val();
+         if (FormNumber != "") {
+             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" )){
+                 $("#formNo_error").attr("style", "display:block");
+                 $("#formNo_error").html("Invalid Form Number");
+             }
+             else{
+                 $("#formNo_error").attr("style", "display:none");
+                 $("#formNo_error").html("");
+             }
+         }
+         else{
+             $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
+         }
+     });
+     
 </script>
