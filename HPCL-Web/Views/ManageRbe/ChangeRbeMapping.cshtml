@@ -162,10 +162,12 @@
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">Please Enter OTP <sup class="text-danger">*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" id="findOtp">
+                        <input type="text" class="form-control" id="findOtp" maxlength="6" onchange="otpOnChange(this)">
+                        <span style="display:none" class="error" id="otp_error"></span>
+                        <p class="text-danger text-left mb-0" id="otpResErr"></p>
                     </div>
                     <div class="col-sm-3">
-                        <button type="button" class="btn btn_primary" onclick="verifyOtpClick()" data-dismiss="modal">Verify OTP</button>
+                        <button type="button" class="btn btn_primary" onclick="verifyOtpClick()">Verify OTP</button>
                         <p class="text-danger mt-1 mb-0" style="cursor:pointer" onclick="ResendOtp()" id="resendPwd"><u>Resend OTP</u></p>
                     </div>
                 </div>
@@ -321,9 +323,8 @@
         console.log("values", userName+"    "+actionType);
 
         if(actionType == "Change RBE Mapping"){
-
             $("#GetRbeId").val(rbeIdVll);
-
+            $("#userNameVal").val("");
             $("#mobilenochangepop").modal('show');
         }
     });
@@ -342,7 +343,7 @@
             if(newUserName.trim()!=''){
                 if (!newUserName.match(/^(?!(0))[0-9]{10}$/)){
                      $("#userName_error").attr("style", "display:block");
-                     $("#userName_error").html("Batch ID is required");
+                     $("#userName_error").html("Username is a 10 digit number");
                      flag = "N";
                 }
             }
@@ -364,6 +365,7 @@
                             if(res.changeList.data[0].status == 1){
                                 $("#GetRbeIdOtp").val(rbeIdVll);
                                 $("#userNameValOtp").val(newUserName);
+                                $("#otpResErr").html("");
                                 $("#otpRes").html("");
                                 $("#otpRes").append("<span>OTP has been sent successfully to new user, please enter OTP to verify user</span>");
                                 $("#mobilenochangepopOtp").modal('show');
@@ -433,32 +435,83 @@
         }
     }
 
+    function otpOnChange(o){
+        var otpVal = o.value;
+
+        if(otpVal.trim() ==''){
+            $("#otp_error").attr("style", "display:block");
+            $("#otp_error").html("Please Enter OTP");
+            return false;
+        }
+        if(otpVal.trim()!=''){
+            if (!otpVal.match(/^[0-9]{6}$/)){
+                 $("#otp_error").attr("style", "display:block");
+                 $("#otp_error").html("OTP is a 6 digit number");
+                 return false;
+            }
+            else{
+                 $("#otp_error").attr("style", "display:none");
+                 $("#otp_error").html("");
+            }
+        }
+    }
+
     function verifyOtpClick(){
         var newUserNameOtp = $("#userNameValOtp").val();
         var otpGet = $("#findOtp").val();
-        $.ajax({
-            url: "@Url.Action("UserNameVerifyOtp", "ManageRbe")",
-            type: "POST",
-            dataType: "JSON",
-            data: { newUserName: newUserNameOtp, userName: userName, otp:otpGet},
-            success: function (res) {
-                reloadGrid();
-                console.log("res otp modal",res);
-                if(res.resMsg[0].status == 1){
-                    reloadGrid();
-                    $("#statusMsg").html("");
-                    $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
-                    $("#responseMsgModal").modal('show');
-                }else{
-                    $("#statusMsg").html("");
-                    $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
-                    $("#responseMsgModal").modal('show');
-                }
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
+
+        var flag = "Y";
+
+        if(newUserNameOtp.trim()!=''){
+            if (!newUserNameOtp.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#userName_otp_error").attr("style", "display:block");
+                 $("#userName_otp_error").html("Username is a 10 digit number");
+                 flag = "N";
             }
-        });
+        }
+
+        if(otpGet.trim() ==''){
+            $("#otp_error").attr("style", "display:block");
+            $("#otp_error").html("Please Enter OTP");
+            flag = "N";
+        }
+        if(otpGet.trim()!=''){
+            if (!otpGet.match(/^[0-9]{6}$/)){
+                 $("#otp_error").attr("style", "display:block");
+                 $("#otp_error").html("OTP is a 6 digit number");
+                 flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            $.ajax({
+                url: "@Url.Action("UserNameVerifyOtp", "ManageRbe")",
+                type: "POST",
+                dataType: "JSON",
+                data: { newUserName: newUserNameOtp, userName: userName, otp:otpGet},
+                success: function (res) {
+                    reloadGrid();
+                    console.log("res otp modal",res);
+                    if(res.resMsg[0].status == 1){
+                        reloadGrid();
+                        $("#mobilenochangepopOtp").modal('hide');
+                        $("#statusMsg").html("");
+                        $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
+                        $("#responseMsgModal").modal('show');
+                    }else{
+                        $("#otpRes").html("");
+                        $("#otpResErr").html("");
+                        $("#otpResErr").append("<span>"+res.resMsg[0].reason+"</span>");
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
     }
 
      function ResendOtp(){
@@ -495,6 +548,7 @@
                         if(res.changeList.data[0].status == 1){
                             $("#GetRbeIdOtp").val(rbeIdVll);
                             $("#userNameValOtp").val(newUserName);
+                            $("#otpResErr").html("");
                             $("#otpRes").html("");
                             $("#otpRes").append("<span>OTP has been sent again !!</span>");
                         }else{
