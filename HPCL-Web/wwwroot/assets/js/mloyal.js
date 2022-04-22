@@ -379,44 +379,44 @@ function showregAddress() {
             ret = false;
         }
         else {
-            //    var result = false;
-            var result = true;
-            //    var panno = $('#CustomerIncomeTaxPan').val();
-            //    var OrgName = $('#IndividualOrgName').val();
-            //    var correctPANName = '';
+                var result = false;
+            //var result = true;
+                var panno = $('#CustomerIncomeTaxPan').val();
+                var OrgName = $('#IndividualOrgName').val();
+                var correctPANName = '';
 
-            //    $.ajax({
-            //        type: 'POST',  // http method
-            //        url: "PANValidation/Customer",
-            //        data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
-            //        dataType: "json",
-            //        success: function (data, status, xhr) {
-            //            //debugger;
-            //            var jsonData = JSON.parse(data);
-            //            if (status == 'success' && jsonData['status-code'] == '101') {
-            //                result = true;
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: "PANValidation/Customer",
+                    data: { PANNumber: document.applicationForm.CustomerIncomeTaxPan.value },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        //debugger;
+                        var jsonData = JSON.parse(data);
+                        if (status == 'success' && jsonData['status-code'] == '101') {
+                            result = true;
 
-            //                console.log(jsonData);
-            //                document.getElementById("address-tab").click();
-            //                document.getElementById("address-tab").classList.remove("disable");
-            //                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-            //                correctPANName = jsonData["result"]["name"];
-            //                if (OrgName == correctPANName) {
-            //                    localStorage.setItem("showregAddress", true)
-            //                }
-            //                else {
-            //                    result = false;
-            //                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-            //                }
-            //            }
-            //            else {
-            //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //            }
-            //        },
-            //        error: function (jqXhr, textStatus, errorMessage) {
-            //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-            //        }
-            //    });
+                            console.log(jsonData);
+                            document.getElementById("address-tab").click();
+                            document.getElementById("address-tab").classList.remove("disable");
+                            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                            correctPANName = jsonData["result"]["name"];
+                            if (OrgName == correctPANName) {
+                                localStorage.setItem("showregAddress", true)
+                            }
+                            else {
+                                result = false;
+                                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                            }
+                        }
+                        else {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+                    }
+                });
 
         }
         //ret = result;
@@ -2181,55 +2181,55 @@ function ValidatePAN() {
         }
     }
 
-    //var result = false;
+    var result = false;
 
-    //$.ajax({
-    //    type: 'POST',  // http method
-    //    url: "PANValidation/Customer",
-    //    data: { PANNumber: panno },  // data to submit
-    //    dataType: "json",
-    //    success: function (data, status, xhr) {
-    //        //debugger;
-    //        var jsonData = JSON.parse(data);
-    //        if (status == 'success' && jsonData['status-code'] == '101') {
-    //            result = true;
+    $.ajax({
+        type: 'POST',  // http method
+        url: "PANValidation/Customer",
+        data: { PANNumber: panno },  // data to submit
+        dataType: "json",
+        success: function (data, status, xhr) {
+            //debugger;
+            var jsonData = JSON.parse(data);
+            if (status == 'success' && jsonData['status-code'] == '101') {
+                result = true;
 
-    //            console.log(jsonData);
-    //            console.log(result);
-    //            //document.getElementById("address-tab").click();
-    //            //document.getElementById("address-tab").classList.remove("disable");
-    //            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-    //            correctPANName = jsonData["result"]["name"];
-    //            //localStorage.setItem("showregAddress", true)
+                console.log(jsonData);
+                console.log(result);
+                //document.getElementById("address-tab").click();
+                //document.getElementById("address-tab").classList.remove("disable");
+                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                correctPANName = jsonData["result"]["name"];
+                //localStorage.setItem("showregAddress", true)
 
-    //            if (result == false) {
-    //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-    //            }
-    //            else {
-    //                document.getElementById("incomeTaxPan_error").innerHTML = "";
-    //            }
-    //            console.log(correctPANName);
-    //            console.log(OrgName);
-    //            if (correctPANName != OrgName) {
-    //                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-    //            }
-    //            else {
-    //                document.getElementById("incomeTaxPan_error").innerHTML = "";
-    //            }
+                if (result == false) {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                }
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+                console.log(correctPANName);
+                console.log(OrgName);
+                if (correctPANName != OrgName) {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                }
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
 
-    //        }
-    //        else {
-    //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-    //            console.log(jsonData['status-code']);
-    //            //document.applicationForm.CustomerIncomeTaxPan.focus();
-    //        }
-    //    },
-    //    error: function (jqXhr, textStatus, errorMessage) {
-    //        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
-    //        console.log(jsonData['status-code']);
-    //        //document.applicationForm.CustomerIncomeTaxPan.focus();
-    //    }
-    //});
+            }
+            else {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+                console.log(jsonData['status-code']);
+                //document.applicationForm.CustomerIncomeTaxPan.focus();
+            }
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid PAN Number";
+            console.log(jsonData['status-code']);
+            //document.applicationForm.CustomerIncomeTaxPan.focus();
+        }
+    });
 
     
 }
