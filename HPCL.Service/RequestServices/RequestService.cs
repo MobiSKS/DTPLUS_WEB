@@ -61,16 +61,16 @@ namespace HPCL.Service
             {
                 using (var Response = await client.PostAsync(requestUrl, content))
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         var ResponseContent = await Response.Content.ReadAsStringAsync();
 
                         return ResponseContent;
                     }
-                    else
-                    {
-                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
-                    }
+                    //else
+                    //{
+                    //    throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    //}
                 }
             }
         }
@@ -81,16 +81,16 @@ namespace HPCL.Service
             {
                 using (var Response = await client.PostAsync(requestUrl, content))
                 {
-                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    //if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         var ResponseContent = await Response.Content.ReadAsStringAsync();
 
                         return ResponseContent;
                     }
-                    else
-                    {
-                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
-                    }
+                    //else
+                    //{
+                    //    throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    //}
                 }
             }
         }
