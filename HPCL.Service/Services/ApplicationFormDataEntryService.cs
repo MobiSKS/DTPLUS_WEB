@@ -199,6 +199,43 @@ namespace HPCL.Service.Services
 
             customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
 
+            if (customerInserCardResponse.Internel_Status_Code != 1000)
+            {
+                foreach (HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
+                {
+                    cardDetails.DuplicateVehicleNo = "";
+                    cardDetails.DuplicateMobileNo = "";
+                }
+
+                if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
+                        {
+                            if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                            {
+                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                            }
+                        }
+                    }
+                }
+
+                if (customerInserCardResponse.Message.Contains("Mobile No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
+                        {
+                            if (cardDetails.MobileNo == responseData.Reason)
+                            {
+                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                            }
+                        }
+                    }
+                }
+            }
+
             if (customerInserCardResponse.Internel_Status_Code == 1000)
             {
                 addAddOnCard.Status = customerInserCardResponse.Data[0].Status;
