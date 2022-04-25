@@ -44,7 +44,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
                                             </div>
-                                             <span class="error" id="fromDate_error"></span>
+                                            <span class="error" id="fromDate_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +65,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">@Label.Merchant</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span style="display:none" class="error" id="merchantId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -75,7 +76,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">@Label.TerminalID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.TerminalID, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.TerminalID, new{ @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span style="display:none" class="error" id="terminalId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +100,6 @@
             </div>
         </form>
         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="terminalDeInstallApprovalDetailsTbl">
-
         </div>
         <div class="clearfix"></div>
     </div>
@@ -107,51 +108,57 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(".toBeHiddenOnSuccess").show();
-        
+
     });
     function getTerminalRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#RegionalOfficeId").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "-All-"
-                                }).html("--All--").appendTo("#RegionalOfficeId");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                        }
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfcID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#RegionalOfficeId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "-All-"
+                                    }).html("--All--").appendTo("#RegionalOfficeId");
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                            }
 
-                    });
-                    $("#RegionalOfficeId")[0].sumo.reload();
+                        });
+                        $("#RegionalOfficeId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error");
-            }
-        });
+            });
+        }
+        else{
+             $("#RegionalOfficeId").html('');
+            $("#RegionalOfficeId")[0].sumo.reload();
+        }
     };
 
     $("#RegionalOfficeId").change(function () {
@@ -166,9 +173,28 @@
         var roID = $("#RegionalOfficeId").val();
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
-        flag=checkDates("fromDate_error");
         var merchantID = $("#MerchantID").val();
         var terminalID = $("#TerminalID").val();
+        
+         if (fromDate != "" && toDate != "") {
+            flag = checkDates("fromDate_error");
+        }
+        if (merchantID != "") {
+            if (!merchantID.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Please enter valid Merchant ID");
+                flag = "N";
+            }
+        }
+        if (terminalID != "") {
+            if (!terminalID.match(mappedterminalID)) {
+                $("#terminalId_error").attr("style", "display:block");
+                $("#terminalId_error").html("Please enter valid Terminal ID");
+                flag = "N";
+            }
+        }
+        
+        
         if(flag=="Y"){
             $.ajax({
                 type: 'GET',  // http method
@@ -195,11 +221,46 @@
         }
     }
     function resetFields() {
-        $("#terminalDeInstallApprovalDetailsTbl").html("");
+        location.reload();
     }
       $('select').SumoSelect({
             placeholder: '-All-',
             search: true,
             searchText: 'Enter Text here.'
         });
+          $("#MerchantID").on("blur", function () {
+         var merchantId = $("#MerchantID").val();
+         if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Please enter valid Merchant ID");
+                
+            }
+            else{
+                $("#merchantId_error").attr("style", "display:none");
+                $("#merchantId_error").html("");
+            }
+         }
+         else{
+             $("#merchantId_error").attr("style", "display:none");
+             $("#merchantId_error").html("");
+         }
+     });
+     $("#TerminalID").on("blur", function () {
+         var terminalId = $("#TerminalID").val();
+         if (terminalId != "") {
+             if (!terminalId.match(mappedterminalID)) {
+                 $("#terminalId_error").attr("style", "display:block");
+                 $("#terminalId_error").html("Please enter valid Terminal ID");
+             }
+             else{
+                 $("#terminalId_error").attr("style", "display:none");
+                 $("#terminalId_error").html("");
+             }
+         }
+         else{
+             $("#terminalId_error").attr("style", "display:none");
+             $("#terminalId_error").html("");
+         }
+     });
 </script>
