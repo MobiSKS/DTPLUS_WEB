@@ -12,6 +12,7 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
         public string CustomerID { get; set; }
         public int CCMSBalanceStatus { get; set; }
         [Required(ErrorMessage = "Remark should not be blank")]
+        [RegularExpression(FieldValidation.ValidRemarks, ErrorMessage = FieldValidation.ValidRemarksErrMsg)]
         public string CCMSBalanceRemarks { get; set; }
     }
 }

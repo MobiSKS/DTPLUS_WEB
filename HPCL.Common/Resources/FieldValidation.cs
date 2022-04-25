@@ -31,8 +31,8 @@
         public const string ValidEmail = @"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$";
         public const string ValidEmailErrMsg = "Enter a valid Email ID";
 
-        public const string ValidMobileNumber = @"^(?!(0))[0-9]{10}$";
-        public const string ValidMobileNumberErrMsg = "Mobile Number field should be of 10 digit and can not be left blank";
+        public const string ValidMobileNumber = @"^[6789]\d{9}$";
+        public const string ValidMobileNumberErrMsg = "Invalid Mobile Number";
 
         public const string ValidCustomerId = @"^(?=(2))[0-9]{10}$";
         public const string ValidCustomerIdErrMsg = "Invalid Customer ID";
@@ -63,6 +63,9 @@
 
         public const string ValidDocumentNumber = @"^[a-zA-Z0-9]{6,30}$";
         public const string ValidDocumentNumberErrMsg = "Invalid Document Number";
+
+        public const string ValidRemarks = @"^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$";
+        public const string ValidRemarksErrMsg = "Invalid Remarks";
         #endregion
 
         #region "Not Empty Validation"
