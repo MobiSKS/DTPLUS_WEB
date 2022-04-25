@@ -47,7 +47,9 @@
                                         {
                                             <td>
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
-                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
+                                                    @Model.ObjCardDetail[i].DuplicateVehicleNo
+                                                </span>
                                             </td>
                                             <td>
                                                 <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button>
@@ -172,7 +174,9 @@
                                         {
                                             <td>
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
-                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
+                                                    @Model.ObjCardDetail[i].DuplicateVehicleNo
+                                                </span>
                                             </td>
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
@@ -190,7 +194,9 @@
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" value="@Model.ObjCardDetail[i].MobileNo" onchange='MobileNoChange(this,@i)'>
-                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'>
+                                                    @Model.ObjCardDetail[i].DuplicateMobileNo
+                                                </span>
                                             </td>
                                             <td></td>
                                             <td style="display:none;">0</td>
@@ -420,21 +426,22 @@
               url: '@Url.Action("CheckVechileNoUsed", "Customer")',
               data: { VechileNo: vehicleNo },  // data to submit
               dataType: "json",
-              success: function (data, status, xhr) {
+              success: function (data, status, xhr) 
+              {
                   console.log(data);
-                  if (data.status == "0") {
-                      //mycel.innerHTML = "Vehicle No. already exists";
+                  if (data.status == "0") 
+                  {
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
                       mycelStatus.innerHTML = "1";
                   }
-                  else {
-                      //mycel.innerHTML = "";
+                  else 
+                  {
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
                       mycelStatus.innerHTML = "0";
                   }
               },
-              error: function (jqXhr, textStatus, errorMessage) {
-                  //mycel.innerHTML = "Vehicle No. already exists";
+              error: function (jqXhr, textStatus, errorMessage) 
+              {
                   document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
                   mycelStatus.innerHTML = "1";
 
