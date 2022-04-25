@@ -152,7 +152,7 @@ namespace HPCL.Service.Services
             string feePaymentDate = "";
             string oldPaymentDate = "";
 
-            oldPaymentDate = addAddOnCard.FeePaymentDate;
+            oldPaymentDate = (string.IsNullOrEmpty(addAddOnCard.FeePaymentDate) ? "" : addAddOnCard.FeePaymentDate);
             if (!string.IsNullOrEmpty(addAddOnCard.FeePaymentDate))
             {
                 feePaymentDate = await _commonActionService.changeDateFormat(addAddOnCard.FeePaymentDate);
@@ -178,7 +178,7 @@ namespace HPCL.Service.Services
             {
                 addAddOnCard.NoofVechileforAllCards = "0";
             }
-                      
+
 
             addAddOnCard.UserAgent = CommonBase.useragent;
             addAddOnCard.UserIp = CommonBase.userip;

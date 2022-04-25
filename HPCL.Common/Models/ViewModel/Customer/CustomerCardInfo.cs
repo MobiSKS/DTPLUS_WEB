@@ -11,6 +11,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         {
             VehicleTypeMdl = new List<VehicleTypeModel>();
             ObjCardDetail = new List<CardDetails>();
+            VehicleNoVerifiedManually = false;
         }
 
         public String CustomerReferenceNo { get; set; }
@@ -59,6 +60,11 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string NoOfCards { get; set; }
         public string NoofVehicles { get; set; }
         public bool VehicleNoVerifiedManually { get; set; }
+
+        public CardDetails()
+        {
+            VehicleNoVerifiedManually = false;
+        }
     }
 
 }

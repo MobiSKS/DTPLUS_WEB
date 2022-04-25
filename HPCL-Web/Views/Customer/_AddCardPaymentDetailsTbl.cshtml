@@ -110,7 +110,7 @@
     <div class="col-md-12 col-12 px-0" id="divVehicleNoVerifiedManually">
         <div class="d-flex align-items-center justify-content-start mt-3 mb-3">
             <div class="pr-2 chk_sty">
-                @Html.CheckBoxFor(m=>m.VehicleNoVerifiedManually)<span class="ml-2">Vehicle Numbers have been verified using VAHAN Portal</span>
+                @Html.CheckBoxFor(m=>m.VehicleNoVerifiedManually,new {@checked = false})<span class="ml-2">Vehicle Numbers have been verified using VAHAN Portal</span>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@
         <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
             <div class="col-md-12 col-12 d-flex align-items-center justify-content-center">
                 <div class="pr-2">
-                    <button class="btn btn_primary" id="btnsubmit" type="submit" onclick="return SubmitValidations()">Submit</button>
+                    <input class="btn btn_primary" id="btnsubmit" type="submit" onclick="return SubmitValidations()" value="SUBMIT">
                 </div>
             </div>
         </div>
@@ -126,6 +126,7 @@
 </div>
 @Html.HiddenFor(model => Model.Message)
 @Html.HiddenFor(model => Model.CardPreference)
+@Html.HiddenFor(model => Model.VehicleNoVerifiedManually)
 
 <script>
 
@@ -519,6 +520,23 @@
             checked=true;
         }
 
+        var FeePayments=$("#FeePaymentsCollectFeeWaiver").val();
+
+        console.log(FeePayments);
+
+        if(FeePayments===undefined)
+        {
+          FeePayments="0";
+        }
+        else if(FeePayments==undefined)
+        {
+          FeePayments="0";
+        }
+        else if(FeePayments=="undefined")
+        {
+          FeePayments="0";
+        }
+
         if($("#dvRemarks").html().trim()!="")
         {
                 $("#OldVehicleDetails TBODY TR").each(function () {
@@ -529,7 +547,7 @@
                         CardPreference: $('input[name="CardPreference"]:checked').val(),
                         FeePaymentDate: $("#FeePaymentDate").val(),
                         FeePaymentNo: $("#FeePaymentNo").val(),
-                        FeePaymentsCollectFeeWaiver: $("#FeePaymentsCollectFeeWaiver").val(),
+                        FeePaymentsCollectFeeWaiver: FeePayments,
                         CardIdentifier: row.find("TD").eq(0).html(),
                         VechileNo: row.find("TD").eq(1).html(),
                         VehicleType: row.find("TD").eq(2).html(),
@@ -550,7 +568,7 @@
                             CardPreference: $('input[name="CardPreference"]:checked').val(),
                             FeePaymentDate: $("#FeePaymentDate").val(),
                             FeePaymentNo: $("#FeePaymentNo").val(),
-                            FeePaymentsCollectFeeWaiver: $("#FeePaymentsCollectFeeWaiver").val(),
+                            FeePaymentsCollectFeeWaiver: FeePayments,
                             CardIdentifier: "",
                             VechileNo: "",
                             VehicleType: "",
@@ -811,20 +829,15 @@
 
    function SubmitValidations()
    {
+    debugger;
+
     var ret=true;
 
     var i=0;
     var j=0;
     var cnt = 0;
-    var emptyVehicleNo=false;
-    var emptyVehicleMake=false;
-    var emptyYearOfReg=false;
-    var emptyVehicleType=false;
-    var emptyMobile=false;
-    var emptyIdentifier=false;
-    var invalidIdentifier=false;
-    var invalidVehicleNo=false;
-    
+
+    $("#VehicleNoVerifiedManually").rules("remove", "required");
     var table = document.getElementById("NoOfCardsTbl");
 
         if (document.getElementById("CustomerReferenceNo").value.trim() == "") 
@@ -1644,9 +1657,8 @@
                     if(row.cells[9].innerHTML.trim()=="1")
                     {
                         var Vhno = $(row).find("td:eq(2) input[type='text']").val();
-                        //Vhno=Vhno.toUpperCase()
-                        //alert('Vehicle No. Already Exists: ' + Vhno);
-                        if(Vhno!="")
+
+                        if(Vhno!=undefined && Vhno!="")
                         {
                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                           ret=false;
@@ -1710,7 +1722,7 @@
                     {
                         var Vhno = $(row).find("td:eq(2) input[type='text']").val();
 
-                        if(Vhno!="")
+                        if(Vhno!=undefined && Vhno!="")
                         {
                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                           ret=false;
@@ -1719,13 +1731,14 @@
                     cnt=cnt+1;
                 }
 
+                var table = document.getElementById("NoOfCardsTbl");
                 if (!$(VehicleNoVerifiedManually).prop("checked"))
                 {
                     console.log('Before Checking Vehicle No. Verified');
                     cnt=-1;
                     for (let row of table.rows) 
                     {
-                        //alert(row.cells[9].innerHTML);
+                        console.log(row.cells[9].innerHTML);
                         if(row.cells[9].innerHTML.trim()=="0")
                         {
                             var Vhno = $(row).find("td:eq(2) input[type='text']").val();
@@ -1932,7 +1945,15 @@
 
         }
         console.log(ret);
-        return ret;
+
+        if (ret == true)
+        {
+		    return true;    
+	    }
+        else
+        {
+		    return false;
+        }
    }
 
    function ClearCardDeatils() {
