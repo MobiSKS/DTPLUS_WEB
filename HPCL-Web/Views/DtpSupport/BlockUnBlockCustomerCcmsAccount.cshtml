@@ -129,27 +129,34 @@
                        
                        console.log("res",res);
 
-                       if(res.searchResult.data[0].status == 1){
+                       document.getElementById("reason").style.display = "none";
 
-                           document.getElementById("reason").style.display = "none";
+                       if(res.searchResult.success == true){
+                           if(res.searchResult.data[0].status == 1){
 
-                           $("#CustomerName").html("");
-                           $("#remarkVal").html("");
+                               $("#CustomerName").html("");
+                               $("#remarkVal").html("");
 
-                           $("#CustomerName").append("<span>"+ (res.searchResult.data[0].customerName || '') +"</span>");
+                               $("#CustomerName").append("<span>"+ (res.searchResult.data[0].customerName || '') +"</span>");
 
-                           $('input[name="CCMSBalanceStatus"][value="' + res.searchResult.data[0].ccmsBalanceStatusId + '"]').prop('checked', true);
+                               $('input[name="CCMSBalanceStatus"][value="' + res.searchResult.data[0].ccmsBalanceStatusId + '"]').prop('checked', true);
 
-                           $("#remarkVal").val(res.searchResult.data[0].ccmsBalanceRemarks);
+                               $("#remarkVal").val(res.searchResult.data[0].ccmsBalanceRemarks);
 
-                           document.getElementById("updateSection").style.display = "block";
+                               document.getElementById("updateSection").style.display = "block";
 
-                           $("#custIdVal").attr("readonly", true);
+                               $("#custIdVal").attr("readonly", true);
 
+                           }else{
+                                document.getElementById("updateSection").style.display = "none";
+                                $("#reason").html("");
+                                $("#reason").append("<span>" + res.searchResult.data[0].reason + "</span>");
+                                document.getElementById("reason").style.display = "block";
+                           }
                        }else{
                             document.getElementById("updateSection").style.display = "none";
                             $("#reason").html("");
-                            $("#reason").append("<span>" + res.searchResult.data[0].reason + "</span>");
+                            $("#reason").append("<span>" + res.searchResult.message + "</span>");
                             document.getElementById("reason").style.display = "block";
                        }
 
