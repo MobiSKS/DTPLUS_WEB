@@ -95,15 +95,11 @@ else
     var flag = "Y";
     function terminalDeInstallationForFinal(action) {
         var remark = $("#Remark").val();
-        if (remark == "") {
-            $("#remark_error").html("Please fill Remarks!");
-        }
-        else {
-        $("#remark_error").html("");
+        
         ObjApprovalRejectDetail = [];
         $("#terminalDeInstallApprovalTable tr").each(function () {
             if ($(this).find('input[type="checkbox"]').is(":checked")) {
-                if (confirm('Do you want to authorize selected Terminal deinstallation request(s) ?')) {
+                
                     let merchant = $(this).find(".merchantId").html();
                     let terminal = $(this).find(".terminalId").html();
                     if (merchant != undefined && terminal != undefined) {
@@ -112,30 +108,54 @@ else
                     else {
                         flag = "N";
                     }
-                }
+                
             }
         });
+        if (ObjApprovalRejectDetail.length == 0) {
+            alert("Please select at least one request to authorize.");
+            flag = "N";
+            return;
+        }
+        if (remark == "") {
+            $("#remark_error").html("Please enter remark.");
+            flag = "N";
+            return;
+        }
+        else
+            $("#remark_error").html("");
         if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
-            var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationAuthorizationInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("TerminalDeInstallRequestApprovalRejectionAuth", "Approvals")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                data: JSON.stringify(modal),
-                success: function (data) {
-                    console.log(data);
-                    $("#reason").html(data);
-                    $(".toBeHiddenOnSuccessAuth").hide();
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
+            if (confirm('Do you want to authorize selected Terminal deinstallation request(s) ?')) {
+                var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationAuthorizationInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("TerminalDeInstallRequestApprovalRejectionAuth", "Approvals")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(modal),
+                    success: function (data) {
+                        console.log(data);
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccessAuth").hide();
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                    });
                 }
-                });
             }
-        else if (ObjApprovalRejectDetail.length == 0) {
-            alert("Please select at least one row");
-        }
-        }
+       
+        
     };
+    $("#Remark").on("blur", function () {
+         var remark = $("#Remark").val();
+         if (remark == "") {
+             $("#remark_error").attr("style", "display:block");
+             $("#remark_error").html("Please enter remark.");
+
+         }
+         else{
+             $("#remark_error").attr("style", "display:none");
+             $("#remark_error").html("");
+         }
+     });
 </script>
