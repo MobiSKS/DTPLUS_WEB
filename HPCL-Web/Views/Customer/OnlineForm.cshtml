@@ -1761,49 +1761,56 @@
         var panNumberUsed = false;
         localStorage.setItem("PANNOALREADYUSED", "1");
         localStorage.setItem("DUPLICATEPANUSED", "1");
+        document.getElementById('IsDuplicatePanNo').value = "1";
 
-        if (customerTbentityid == 10) {
+        if (customerTbentityid == 10) 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
-            localStorage.setItem("PANNOALREADYUSED", "1");
-            document.getElementById("IsDuplicatePanNo").value = "1";
             $('#AllowPanDuplication').val('N');
-            localStorage.setItem("IsDuplicatePanNo", "1");
-            if (panNumber == "") {
+            if (panNumber == "") 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 return (false);
             }
-            else {
+            else 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
             }
             return (false);
         }
 
-        if (panNumber == "") {
+        if (panNumber == "") 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.getElementById("incomeTaxPan_error").className = "error";
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
         document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
 
-        if ($('#CustomerIncomeTaxPan').val().match(pancard)) {
+        if ($('#CustomerIncomeTaxPan').val().match(pancard)) 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
             document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
             document.getElementById("incomeTaxPan_error").className = "error";
             return (false);
         }
 
-        if (customerTbentityid == 2) {
+        if (customerTbentityid == 2) //solo Propritorship 4th Char Pan should be 'P'
+        {
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') {
+            if (forthdigitPan != 'P') 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 return (false);
@@ -1824,7 +1831,8 @@
                 url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
                 data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
                 dataType: "json",
-                success: function (data, status, xhr) {
+                success: function (data, status, xhr) 
+                {
                     console.log(data);
                     console.log(status);
                     var v = data;
@@ -1878,44 +1886,7 @@
             $("#PanCardRemarks").prop('readonly', true);
         }
 
-        @*$.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckPanNoDuplication", "Customer")',
-            data: { PanNo: panNumber },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
-                var v = data;
-                if (status == 'success') {
-
-                    if (data.status == "0") {
-                        panNumberUsed = true;
-                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
-                        document.getElementById("incomeTaxPan_error").className = "error";
-                        localStorage.setItem("PANNOALREADYUSED", "0");
-                    }
-                    else {
-                        panNumberUsed = false;
-                        document.getElementById("incomeTaxPan_error").innerHTML = "";
-                    }
-                }
-                else {
-                    //console.log(v);
-                    panNumberUsed = true;
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                //document.getElementById("RBEName").value = "";
-            },
-            statusCode: {
-                1024: function () {
-                    //document.getElementById("RBEName").value = "";
-                }
-            }
-        });*@
-
-
+ 
     });
 
     $("#CustomerIncomeTaxPan").keydown(function (e) {
