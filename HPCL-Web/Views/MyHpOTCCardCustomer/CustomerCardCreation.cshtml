@@ -583,6 +583,8 @@
         localStorage.setItem("MOBILENUMBERREADYUSED2", "1");
         localStorage.setItem("VEHICLEADYUSED1", "1");
         localStorage.setItem("VEHICLEADYUSED2", "1");
+        localStorage.setItem("INVALIDVEHICLENO1", "1");
+        localStorage.setItem("INVALIDVEHICLENO2", "1");
 
     });
 
@@ -2004,6 +2006,11 @@
                                     document.getElementById("VehicleNo1_error").innerHTML = "Vehicle No already exists";
                                     ret = false;
                                 }
+                                else if (localStorage.getItem("INVALIDVEHICLENO1") == 0) 
+                                {
+                                    document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                                    ret = false;
+                                }
                                 else 
                                 {
                                     document.getElementById("VehicleNo1_error").innerHTML = "";
@@ -2043,6 +2050,11 @@
                                 if (localStorage.getItem("VEHICLEADYUSED2") == 0) 
                                 {
                                     document.getElementById("VehicleNo2_error").innerHTML = "Vehicle No already exists";
+                                    ret = false;
+                                }
+                                else if (localStorage.getItem("INVALIDVEHICLENO2") == 0) 
+                                {
+                                    document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                                     ret = false;
                                 }
                                 else 
@@ -2292,7 +2304,8 @@
 
 
     $("#btnCard1Verify").click(function () {
-        //debugger;
+        debugger;
+        localStorage.setItem("INVALIDVEHICLENO1", "1");
         var vehicleNo = document.getElementById("VehicleNo1").value;
         if (vehicleNo == "") {
             document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is required";
@@ -2328,19 +2341,22 @@
             success: function (data, status, xhr) {
                 //debugger;
                 var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') {
-                    result = true;
-                    document.getElementById("VehicleNo1_error").innerHTML = "Vehicle Number is valid";
+                if (status == 'success' && jsonData['statusCode'] == '101') 
+                {
+                    document.getElementById("VehicleNo1_error").innerHTML = "";
                     console.log(jsonData);
                     console.log(document.getElementById("VehicleNo1_error").innerHTML);
                 }
-                else {
+                else 
+                {
                     document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                    localStorage.setItem("INVALIDVEHICLENO1", "0");
                 }
             },
-            error: function (jqXhr, textStatus, errorMessage) {
+            error: function (jqXhr, textStatus, errorMessage) 
+            {
                 document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-
+                localStorage.setItem("INVALIDVEHICLENO1", "0");
             }
         });
 
@@ -2349,7 +2365,8 @@
 
 
     $("#btnCard2Verify").click(function () {
-        //debugger;
+        debugger;
+        localStorage.setItem("INVALIDVEHICLENO2", "1");
         var vehicleNo = document.getElementById("VehicleNo2").value;
         if (vehicleNo == "") {
             document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is required";
@@ -2386,19 +2403,22 @@
             success: function (data, status, xhr) {
                 //debugger;
                 var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') {
-                    result = true;
-                    document.getElementById("VehicleNo2_error").innerHTML = "Vehicle Number is valid";
+                if (status == 'success' && jsonData['statusCode'] == '101') 
+                {
+                    document.getElementById("VehicleNo2_error").innerHTML = "";
                     console.log(jsonData);
                     console.log(document.getElementById("VehicleNo2_error").innerHTML);
                 }
-                else {
+                else 
+                {
                     document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                    localStorage.setItem("INVALIDVEHICLENO2", "0");
                 }
             },
-            error: function (jqXhr, textStatus, errorMessage) {
+            error: function (jqXhr, textStatus, errorMessage) 
+            {
                 document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-
+                localStorage.setItem("INVALIDVEHICLENO2", "0");
             }
         });
 
@@ -2957,6 +2977,7 @@
     $("#VehicleNo1").on("blur", function () {
         //debugger;
         localStorage.setItem("VEHICLEADYUSED1", "1");
+        localStorage.setItem("INVALIDVEHICLENO1", "1");
 
         var vehicleNo2 = document.getElementById("VehicleNo2").value.trim();
         var vehicleNo1 = document.getElementById("VehicleNo1").value.trim();
@@ -3048,6 +3069,7 @@
     $("#VehicleNo2").on("blur", function () {
         //debugger;
         localStorage.setItem("VEHICLEADYUSED2", "1");
+        localStorage.setItem("INVALIDVEHICLENO2", "1");
 
         var vehicleNo2 = document.getElementById("VehicleNo2").value.trim();
         var vehicleNo1 = document.getElementById("VehicleNo1").value.trim();
