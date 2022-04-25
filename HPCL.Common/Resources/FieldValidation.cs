@@ -25,8 +25,8 @@
         public const string ValidFirstName = @"^[a-zA-Z]{0,50}$";
         public const string ValidFirstNameErrMsg = "Enter Valid First Name";
 
-        public const string ValidUserName = @"^[a-zA-Z]{0,50}$";
-        public const string ValidUserNameErrMsg = "Enter Valid First Name";
+        public const string ValidUserName = @"^[0-9]{10}$";
+        public const string ValidUserNameErrMsg = "Enter Valid User Name";
 
         public const string ValidEmail = @"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$";
         public const string ValidEmailErrMsg = "Enter a valid Email ID";

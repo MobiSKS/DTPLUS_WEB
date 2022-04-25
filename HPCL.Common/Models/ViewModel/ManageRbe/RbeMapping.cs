@@ -9,7 +9,8 @@ namespace HPCL.Common.Models.ViewModel.ManageRbe
         [RegularExpression(FieldValidation.ValidFirstName, ErrorMessage = FieldValidation.ValidFirstNameErrMsg)]
         public string FirstName { get; set; }
 
-        [RegularExpression(FieldValidation.ValidUserName, ErrorMessage = FieldValidation.ValidUserNameErrMsg)]
+        [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidUserNameErrMsg)]
+        [StringLength(10)]
         public string UserName { get; set; }
     }
 }
