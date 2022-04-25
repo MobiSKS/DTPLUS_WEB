@@ -305,7 +305,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                                            <label class="font-weight-normal col-md-5 col-12">Income Tax PAN<sup class="text-danger">*</sup></label>
+                                                            <label class="font-weight-normal col-md-5 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
                                                                 @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                                 <span class="error" id="incomeTaxPan_error"></span>
@@ -1287,6 +1287,21 @@
                 $('#IndividualOrgName').val(res.customer.individualOrgName);
 
                 $('#CustomerNameOnCard').val(res.customer.nameOnCard);
+
+                if(res.customer.typeOfBusinessEntityId==10)
+                {
+                     document.getElementById("lblPanCardRemarks").style.display = "none";
+                     document.getElementById("PanCardRemarks").style.display = "none";
+                     $('#lblPanText').text('');
+                     $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                }
+                else
+                {
+                    document.getElementById("lblPanCardRemarks").style.display = "block";
+                    document.getElementById("PanCardRemarks").style.display = "block";
+                    $('#lblPanText').text('');
+                    $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                }
 
                 var CustomerTbentity = $('<option value="' + res.customer.typeOfBusinessEntityName + '">' + res.customer.typeOfBusinessEntityName + '</option>');
                 $('#CustomerTbentityID').append(CustomerTbentity);
