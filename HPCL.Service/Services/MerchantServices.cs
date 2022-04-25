@@ -367,13 +367,22 @@ namespace HPCL.Service.Services
             merchantModel.LPG_CNGSale = merchantDetailsModel.LPGCNGSale;
             merchantModel.PANCardNumber = merchantDetailsModel.PancardNumber;
             merchantModel.GSTNumber = merchantDetailsModel.GSTNumber;
+
             merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1;
             merchantModel.Retail_Outlet_Address2 = merchantDetailsModel.RetailOutletAddress2;
             merchantModel.Retail_Outlet_Address3 = merchantDetailsModel.RetailOutletAddress3;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3)) && !(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2)))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1 + "," + merchantDetailsModel.RetailOutletAddress2 + "," + merchantDetailsModel.RetailOutletAddress3;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3) && !(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2)))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1 + "," + merchantDetailsModel.RetailOutletAddress2;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3) && String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1;
             merchantModel.Retail_Outlet_Location = merchantDetailsModel.RetailOutletLocation;
             merchantModel.Retail_Outlet_City = merchantDetailsModel.RetailOutletCity;
             merchantModel.Retail_Outlet_State = merchantDetailsModel.RetailOutletStateName;
             merchantModel.Retail_Outlet_District = merchantDetailsModel.RetailOutletDistrictName;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletStateName)))
+                merchantModel.Retail_Outlet_District = merchantDetailsModel.RetailOutletDistrictName + "," + merchantDetailsModel.RetailOutletStateName;
             merchantModel.Retail_DistictID = merchantDetailsModel.RetailOutletDistrictId;
             merchantModel.Retail_Outlet_Pin = merchantDetailsModel.RetailOutletPinNumber;
             merchantModel.ZonalOffice = merchantDetailsModel.ZonalOfficeName;
@@ -391,9 +400,21 @@ namespace HPCL.Service.Services
             merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1;
             merchantModel.Comm_Address2 = merchantDetailsModel.CommunicationAddress2;
             merchantModel.Comm_Address3 = merchantDetailsModel.CommunicationAddress3;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3)) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2)))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1 + "," + merchantDetailsModel.CommunicationAddress2 + "," + merchantDetailsModel.CommunicationAddress3;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2)))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1 + "," + merchantDetailsModel.CommunicationAddress2;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3) && String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1;
             merchantModel.Comm_City = merchantDetailsModel.CommunicationCity;
             merchantModel.Comm_State = merchantDetailsModel.CommunicationStateName;
             merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName)) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName + "," + merchantDetailsModel.CommunicationStateName;
+            else if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName)) && (String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationStateName;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName;
             merchantModel.Comm_DistictID = merchantDetailsModel.CommunicationDistrictId;
             merchantModel.Comm_Pin = merchantDetailsModel.CommunicationPinNumber;
             merchantModel.NumOfLiveTerminals = merchantDetailsModel.NoofLiveTerminals;
