@@ -70,5 +70,24 @@ namespace HPCL_Web.Controllers
             var resMsg = await _manageRbeService.UserNameVerifyOtp(newUserName, userName, otp);
             return Json(new { resMsg = resMsg });
         }
+
+        public IActionResult ApproveChangedRbeMapping()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ApproveChangedRbeMapping(GetApproveChangedRbeMapping entity)
+        {
+            var searchList = await _manageRbeService.ApproveChangedRbeMapping(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ApproveRejectChangedRbeMapping(string userName, string actionPress)
+        {
+            var resp = await _manageRbeService.ApproveRejectChangedRbeMappingSerivce(userName, actionPress);
+            return Json(new { resp = resp });
+        }
     }
 }

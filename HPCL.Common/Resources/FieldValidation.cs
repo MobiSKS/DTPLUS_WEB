@@ -70,11 +70,11 @@
 
         #region "Not Empty Validation"
 
-        public const string CustomerNotEmpty = "Customer ID should not be Empty";
+        public const string CustomerNotEmpty = "Customer ID should not be left empty";
         public const string MobNoNotEmpty = "Mobile Number field should be of 10 digit and can not be left blank";
-        public const string MerchantNotEmpty = "Merchant ID should not be Empty";
-        public const string AmountNotEmpty = "Amount should not be Empty";
-        public const string TerminalNotEmpty = "Terminal ID should not be Empty";
+        public const string MerchantNotEmpty = "Merchant ID should not be left Empty";
+        public const string AmountNotEmpty = "Amount should not be left Empty";
+        public const string TerminalNotEmpty = "Terminal ID should not be left Empty";
 
         #endregion
     }

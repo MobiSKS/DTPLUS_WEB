@@ -1,0 +1,371 @@
+﻿@model HPCL.Common.Models.ViewModel.ManageRbe.GetApproveChangedRbeMapping
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Manage RBE</a> </li>
+            <li class="breadcrumb-item font-weight-light">Approve Change RBE Mapping</li>
+        </ul>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Approve Changed RBE Mapping</p>
+
+                        <fieldset class="border-1 rounded border-grey" style="margin:1%">
+                            <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                                   <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12"> First Name </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                     @Html.DropDownListFor(m => m.MappingStatus, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control mapStatusVal" })
+                                                     @Html.ValidationMessageFor(m => m.MappingStatus, "", new {@class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12"> First Name </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FirstName, new { @id = "custIdVal", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12"> User Name </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                                </div>
+                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-0">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="searchRbeUserList()">Search</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="clearfix"></div>
+
+                        <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
+
+                        <div class="clearfix"></div>
+                            <div class="table-responsive" id="tblResponse" style="display:none;padding:1%;">
+                                <table id="RbeMapping" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>S No.</th>
+                                            <th>RBE ID</th>
+                                            <th>New RBE User</th>
+                                            <th>New User Name</th>
+                                            <th>Prev RBE User</th>
+                                            <th>Prev User Name</th>
+                                            <th style="width:1%">From Location</th>
+                                            <th style="width:1%">To Location</th>
+                                            <th>Status</th>
+                                            <th>Change RBE</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div id="confirmDialogMsg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal" onclick="ChangeStatus(this)">APPROVE</button>
+                    </div>
+                    <div class="px-2">
+                        <button type="button" class="btn btn_primary" onclick="ChangeStatus(this)">REJECT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="responseMsgModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilenochange">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="statusMsg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-0">
+                        <button type="button" class="btn btn_primary" data-dismiss="modal">CLOSE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+ function resetClick(){
+     location.reload();
+ }
+
+ $(document).ready(function () {
+
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetRbeMappingStatus", "Common")',
+            data: { status: "AllCardLimit" },
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.successRes, function (i, option) {
+                    $("<option/>").val(option.statusId).text(option.mappingStatus).appendTo(".mapStatusVal");
+                });
+                $(".mapStatusVal")[0].sumo.reload();
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Status Type");
+            }
+        });
+    });
+
+    function searchRbeUserList(){
+        if ($("#formValid").valid()){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ApproveChangedRbeMapping", "ManageRbe")',
+                data: $('#formValid').serialize(),  // data to submit
+                success: function (res, status, xhr) {
+
+                    console.log(res);
+
+                    if (res.searchList.success == true) {
+
+                        var girdList = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+                        var girdList = res.searchList.data;
+
+                        $("#RbeMapping td").parent().remove();
+
+                        $('#RbeMapping').DataTable().clear().destroy();
+
+                        var tbl = $('#RbeMapping').DataTable({
+                            paging: true,
+                            searching: false,
+                            stateSave: true,
+                            "bDestroy": true,
+                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                            "autoWidth": false,
+                            "oLanguage": {
+                                "sLengthMenu": "Display _MENU_ Records",
+                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            }
+                        });
+
+                        for (var i = 0; i < girdList.length; i++) {
+
+                            var srNumber = (i + 1);
+                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '');
+                            var newRBEUser = (girdList[i].newRBEUser || '')+"</span>";
+                            var newUserName = (girdList[i].newUserName || '');
+                            var preRBEUser = "<span class='userName'>"+(girdList[i].preRBEUser || '')+"</span>";
+                            var preUserName = (girdList[i].preUserName || '');
+                            var fromLocation = (girdList[i].fromLocation || '');
+                            var toLocation = (girdList[i].toLocation || '');
+                            var status = (girdList[i].status || '');
+                            var changeRBE = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBE || '') + "</a>";
+
+                            tbl.row.add([
+                                srNumber,
+                                rbeID,
+                                newRBEUser,
+                                newUserName,
+                                preRBEUser,
+                                preUserName,
+                                fromLocation,
+                                toLocation,
+                                status,
+                                changeRBE
+                            ]).draw();
+                        }
+                        document.getElementById('tblResponse').style.display = 'block';
+                    } else {
+                        document.getElementById("tblResponse").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error");
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+
+    var userName;
+    $("#RbeMapping").on('click', '.actionRbe', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        userName = currentRow.find('.userName').text();
+        var actionType = currentRow.find('.actionRbe').text();
+
+        console.log("values", userName);
+
+        if(actionType == "Pending"){
+            $("#confirmDialogMsg").modal('show');
+        }
+    });
+
+    function ChangeStatus(o){
+        var actionPress = o.innerHTML;
+        $.ajax({
+            url: "@Url.Action("ApproveRejectChangedRbeMapping", "ManageRbe")",
+            type: "POST",
+            dataType: "JSON",
+            data: { userName: userName, actionPress: actionPress},
+            success: function (res) {
+                console.log(res)
+                //if(res.resp[0].status == 1){
+                    $("#confirmDialogMsg").modal('hide');
+                    reloadGrid();
+                    $("#statusMsg").html("");
+                    $("#statusMsg").append("<span>"+res.resp[0].reason+"</span>")
+                    $("#responseMsgModal").modal('show');
+                //}
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    }
+
+    function reloadGrid(){
+         $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ApproveChangedRbeMapping", "ManageRbe")',
+                success: function (res, status, xhr) {
+
+                    console.log(res);
+
+                    if (res.searchList.success == true) {
+
+                        var girdList = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+                        var girdList = res.searchList.data;
+
+                        $("#RbeMapping td").parent().remove();
+
+                        $('#RbeMapping').DataTable().clear().destroy();
+
+                        var tbl = $('#RbeMapping').DataTable({
+                            paging: true,
+                            searching: false,
+                            stateSave: true,
+                            "bDestroy": true,
+                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                            "autoWidth": false,
+                            "oLanguage": {
+                                "sLengthMenu": "Display _MENU_ Records",
+                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                            }
+                        });
+
+                        for (var i = 0; i < girdList.length; i++) {
+
+                            var srNumber = (i + 1);
+                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '');
+                            var newRBEUser = (girdList[i].newRBEUser || '')+"</span>";
+                            var newUserName = (girdList[i].newUserName || '');
+                            var preRBEUser = "<span class='userName'>"+(girdList[i].preRBEUser || '')+"</span>";
+                            var preUserName = (girdList[i].preUserName || '');
+                            var fromLocation = (girdList[i].fromLocation || '');
+                            var toLocation = (girdList[i].toLocation || '');
+                            var status = (girdList[i].status || '');
+                            var changeRBE = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBE || '') + "</a>";
+
+                            tbl.row.add([
+                                srNumber,
+                                rbeID,
+                                newRBEUser,
+                                newUserName,
+                                preRBEUser,
+                                preUserName,
+                                fromLocation,
+                                toLocation,
+                                status,
+                                changeRBE
+                            ]).draw();
+                        }
+                        document.getElementById('tblResponse').style.display = 'block';
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error");
+                }
+            });
+    }
+</script>

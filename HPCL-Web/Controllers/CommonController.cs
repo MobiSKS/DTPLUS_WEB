@@ -233,5 +233,10 @@ namespace HPCL_Web.Controllers
             return Json(check);
         }
 
+        public async Task<JsonResult> GetRbeMappingStatus()
+        {
+            var successRes = await _commonActionService.RbeMappingStatusService();
+            return Json(new { successRes = successRes });
+        }
     }
 }

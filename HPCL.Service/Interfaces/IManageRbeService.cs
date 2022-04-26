@@ -13,5 +13,7 @@ namespace HPCL.Service.Interfaces
         Task<RbeDeviceIdResetRequestResponse> RbeDeviceIdResetRequestService(RbeDeviceIdResetRequest entity);
         Task<ChangeRbeMappingByUserNameResponse> ChangeRbeMappingByUserName(string newUserName, string userName);
         Task<List<SuccessResponse>> UserNameVerifyOtp(string newUserName, string userName, string otp);
+        Task<GetApproveChnagedRbeMappingResponse> ApproveChangedRbeMapping(GetApproveChangedRbeMapping entity);
+        Task<List<ApproveRejectChangedRbeMappingResponse>> ApproveRejectChangedRbeMappingSerivce(string userName, string actionPress);
     }
 }
