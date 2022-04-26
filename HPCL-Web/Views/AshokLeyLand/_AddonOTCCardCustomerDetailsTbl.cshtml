@@ -360,24 +360,28 @@
                document.getElementById("NoOfCardsErrMsg").innerHTML = "";
            }
 
+           if (document.getElementById("DealerCode").value == "")
+           {
+               document.getElementById("DealerCode_error").innerHTML = "Dealer Code cannot be left blank";
+               ret = false;
+           }
+           else if (document.getElementById("DealerCode").value != "")
+           {
+               if(document.getElementById("SalesExecutiveEmployeeID").value=="")
+               {
+                 document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                 ret = false;
+               }
+               else
+               {
+                   document.getElementById("DealerCode_error").innerHTML = "";
+               }
+           }
+           else
+           {
+               document.getElementById("DealerCode_error").innerHTML = "";
+           }
 
-           //if (document.getElementById("RBEId").value != "")
-           //{
-           //    if(document.getElementById("RbeNameVal").value=="")
-           //    {
-           //      document.getElementById("RbeValErrMsg").innerHTML = "Invalid RBE ID";
-           //      ret = false;
-           //    }
-           //    else
-           //    {
-           //        document.getElementById("RbeValErrMsg").innerHTML = "";
-           //    }
-           //}
-           //else
-           //{
-           //    document.getElementById("RbeValErrMsg").innerHTML = "";
-           //}
-           //console.log('After RBEId');
 
            var cardsCount = $("#NoOfCards").val();
 
@@ -707,9 +711,67 @@
                }
 
 
-
-
            console.log(ret);
            return ret;
        }
+
+  $("#DealerCode").on("blur", function () 
+  {
+    //debugger;
+    var dealerCode = document.getElementById("DealerCode").value.trim();
+    if (dealerCode == "") 
+    {
+        document.getElementById("DealerCode_error").innerHTML = "Dealer Code cannot be left blank";
+        document.getElementById("SalesExecutiveEmployeeID").value = "";
+        return (false);
+    }
+    else 
+    {
+        document.getElementById("DealerCode_error").innerHTML = "";
+    }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetAlSalesExeEmpIdAddOnOTCCardMapping", "AshokLeyLand")',
+            data: { dealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                if (status == 'success') {
+                    document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                    //found = true;
+                    if(data.statusCode==1000)
+                    {
+                        document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                        document.getElementById("DealerCode_error").innerHTML ="";
+                    }
+                    else
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                    }
+
+                    if (data == "Failed to load Customer Details")
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                }
+                else 
+                {
+                    $("#DealerCode_error").html("");
+                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("SalesExecutiveEmployeeID").value = "";
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                }
+            }
+        });
+
+
+  });
 </script>
