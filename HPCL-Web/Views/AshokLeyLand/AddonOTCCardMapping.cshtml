@@ -82,13 +82,75 @@
             </tbody>
         </table>
       </div>
-
+      @Html.HiddenFor(model => Model.VehicleVerifiedManually)
     }
     <div class="clearfix"></div>
     </div>
 </div>
 
 <script>
+    $(document).ready(function ()
+      {
+         if($("#dvRemarks").html().trim()!="")
+         {
+             debugger;
+             ViewCardDetailsTbl.style.display = "block";
+
+             var vehicles = [];
+             var checked=false;
+
+             checked=$("#VehicleVerifiedManually").val();
+                          
+             console.log(FeePayments);
+             $("#OldVehicleDetails TBODY TR").each(function () {
+                 var row = $(this);
+
+                 vehicles.push({
+                     CustomerId: $("#CustomerId").val().trim(),
+                     Message: $("#dvRemarks").html().trim(),
+                     CardNo: row.find("TD").eq(0).html(),
+                     VechileNo: row.find("TD").eq(1).html(),
+                     VehicleType: row.find("TD").eq(2).html(),
+                     VINNumber: row.find("TD").eq(3).html(),
+                     MobileNo: row.find("TD").eq(4).html(),
+                     NoOfCards: "",
+                     VehicleVerifiedManually: checked
+                 })
+             });
+
+             console.log("Value Check");
+             console.log(vehicles);
+
+                $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetAlAddonOTCCardCustomerDetailsPartialView", "AshokLeyLand")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { str: JSON.stringify(vehicles) },
+                    dataType: "text",
+                    success: function (data, status, xhr) {
+                            var v = data;
+                            //console.log(data);
+                            if (status == 'success') {
+                                $("#ViewCardDetailsTbl").html(data);
+                                $('html, body').animate({
+                                    scrollTop: $("#ViewCardDetailsTbl").offset().top
+                                }, 2000);
+                            }
+                            else {
+                                console.log(v);
+                            }
+                        },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                        ViewCardDetailsTbl.style.display = "none";
+
+                    }
+                });
+
+
+         }
+      });
+
 	function GetCustomerDetails() 
     {
 
@@ -122,6 +184,9 @@
 
 
                         var vehicles = [];
+                        var checked=false;
+
+                        checked=$("#VehicleVerifiedManually").val();
                        
                          vehicles.push({
                              CustomerId: $("#CustomerId").val().trim(),
@@ -131,7 +196,8 @@
                              VehicleType: "",
                              VINNumber: "",
                              MobileNo: "",
-                             NoOfCards: ""
+                             NoOfCards: "",
+                             VehicleVerifiedManually: checked
                          });
 
                      console.log("Value Check");

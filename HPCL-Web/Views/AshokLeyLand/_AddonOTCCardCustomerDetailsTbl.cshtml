@@ -94,9 +94,20 @@
 <div class="clearfix"></div>
 
 <div id="divSubmit" style="display:none;">
-    <div class="d-flex align-items-center justify-content-center flex-wrap mt-0">
-        <div class="px-0">
-            <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">Submit</button>
+    <div class="col-md-12 col-12 px-0" id="divVehicleVerifiedManually">
+        <div class="d-flex align-items-center justify-content-start mt-3 mb-3">
+            <div class="pr-2 chk_sty">
+                @Html.CheckBoxFor(m=>m.VehicleVerifiedManually)<span class="ml-2">Vehicle Numbers have been verified using VAHAN Portal</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-12 px-0">
+        <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
+            <div class="col-md-12 col-12 d-flex align-items-center justify-content-center">
+                <div class="pr-2">
+                    <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -238,6 +249,12 @@
            }
 
            var vehicles = [];
+           var checked=false;
+
+            if ($(VehicleVerifiedManually).prop("checked"))
+            {
+                checked=true;
+            }
 
            if($("#dvRemarks").html().trim()!="")
            {
@@ -253,7 +270,8 @@
                            MobileNo: row.find("TD").eq(4).html(),
                            NoOfCards: cardsCount,
                            DuplicateVehicleNo: row.find("TD").eq(5).html(),
-                           DuplicateMobileNo: row.find("TD").eq(6).html()
+                           DuplicateMobileNo: row.find("TD").eq(6).html(),
+                           VehicleVerifiedManually: checked
                        })
                    });
               }
@@ -269,7 +287,8 @@
                                MobileNo: "",
                                NoOfCards: cardsCount,
                                DuplicateVehicleNo: "",
-                               DuplicateMobileNo: ""
+                               DuplicateMobileNo: "",
+                               VehicleVerifiedManually: checked
                            });
               }
 
@@ -669,7 +688,7 @@
                }
 
                var table = document.getElementById("NoOfCardsTbl");
-               //if (!$(VehicleVerifiedManually).prop("checked"))
+               if (!$(VehicleVerifiedManually).prop("checked"))
                {
                    console.log('Before Checking Vehicle No. Verified');
                    cnt=-1;

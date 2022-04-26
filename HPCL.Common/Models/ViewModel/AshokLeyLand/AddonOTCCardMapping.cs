@@ -22,11 +22,13 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string NameOnCard { get; set; }
         public string DealerCode { get; set; }
         public string SalesExecutiveEmployeeID { get; set; }
-        public string TableStringyfiedData { get; set; }        
+        public string TableStringyfiedData { get; set; }
+        public bool VehicleVerifiedManually { get; set; }
         public AddonOTCCardMapping()
         {
             VehicleTypeMdl = new List<VehicleTypeModel>();
             ObjCardDetail = new List<AddonOTCCardDetails>();
+            VehicleVerifiedManually = false;
         }
     }
     
@@ -42,6 +44,11 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string DuplicateVehicleNo { get; set; }
         public string DuplicateMobileNo { get; set; }
         public string CustomerId { get; set; }
+        public bool VehicleVerifiedManually { get; set; }
+        public AddonOTCCardDetails()
+        {
+            VehicleVerifiedManually = false;
+        }
     }
 
 }
