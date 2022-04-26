@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using System;
+using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 
 namespace HPCL.Service.Services
 {
@@ -244,6 +245,149 @@ namespace HPCL.Service.Services
             response = JsonConvert.DeserializeObject<ALOTCCardDealerAllocationResponse>(ResponseContent);
 
             return response;
+        }
+
+        public async Task<GetCustomerDetails> GetAlAddonOTCCardMappingCustomerDetails(string customerId)
+        {
+            var searchBody = new GetCustomerName
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAladdonOTCCardMappingCustomerDetails);
+
+            GetAlAddonCustomerResponse customerResponse = JsonConvert.DeserializeObject<GetAlAddonCustomerResponse>(response);
+            GetCustomerDetails GetCustomerDetails = new GetCustomerDetails();
+
+            if (customerResponse != null && customerResponse.Data != null)
+            {
+                GetCustomerDetails = customerResponse.Data.GetCustomerNameAndNameOnCard[0];
+                if (String.IsNullOrEmpty(GetCustomerDetails.CustomerOrgName))
+                {
+                    GetCustomerDetails.CustomerOrgName = "";
+                    GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                }
+                if (String.IsNullOrEmpty(GetCustomerDetails.NameOnCard))
+                {
+                    GetCustomerDetails.NameOnCard = "";
+                }
+            }
+
+            return GetCustomerDetails;
+        }
+
+        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
+
+            AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
+            addAddOnCard.Message = "";
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.TableStringyfiedData = str;
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            return addAddOnCard;
+        }
+        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
+            AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.CustomerId = arrs[0].CustomerId;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.TableStringyfiedData = str;
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            return addAddOnCard;
+        }
+
+        public async Task<AddonOTCCardMapping> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard)
+        {
+
+            foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                {
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                }
+            }
+
+            addAddOnCard.UserAgent = CommonBase.useragent;
+            addAddOnCard.UserIp = CommonBase.userip;
+            addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            addAddOnCard.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(addAddOnCard), Encoding.UTF8, "application/json");
+
+            CustomerInserCardResponse customerInserCardResponse;
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.alAddonOTCCard);
+
+            customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+            if (customerInserCardResponse.Internel_Status_Code != 1000)
+            {
+                foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                {
+                    cardDetails.DuplicateVehicleNo = "";
+                    cardDetails.DuplicateMobileNo = "";
+                }
+
+                if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                        {
+                            if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                            {
+                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                            }
+                        }
+                    }
+                }
+
+                if (customerInserCardResponse.Message.Contains("Mobile No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                        {
+                            if (cardDetails.MobileNo == responseData.Reason)
+                            {
+                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (customerInserCardResponse.Internel_Status_Code == 1000)
+            {
+                addAddOnCard.Status = customerInserCardResponse.Data[0].Status;
+                addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                addAddOnCard.Message = customerInserCardResponse.Message;
+                addAddOnCard.Reason = customerInserCardResponse.Data[0].Reason;
+            }
+            else
+            {
+                addAddOnCard.Message = customerInserCardResponse.Message;
+                addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+            }
+
+            return addAddOnCard;
         }
 
     }

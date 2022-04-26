@@ -26,12 +26,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public async Task<JsonResult> GetAllStatusValue(ManageTerminalRequest entity)
+        
+        public async Task<IActionResult> GetAllStatusValue(string MerchantId,string TerminalId,string Status)
         {
-            var searchList = await _TerminalService.GetAllStatusValue(entity);
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
+            var searchList = await _TerminalService.GetAllStatusValue(MerchantId,TerminalId,Status);
+            return PartialView("~/Views/TerminalManagement/_ManageTerminalView.cshtml", searchList);
         }
 
         public async Task<IActionResult> ManageTerminal()

@@ -1211,5 +1211,25 @@ namespace HPCL.Service.Services
 
             return successRes;
         }
+
+        public async Task<List<StatusModal>> GetStatusTypeforTerminal()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getstatustypesforterminal);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusModal> sortedtList = jarr.ToObject<List<StatusModal>>();
+            return sortedtList;
+        }
+
     }
 }
