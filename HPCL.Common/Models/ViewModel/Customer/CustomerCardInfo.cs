@@ -60,7 +60,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string NoOfCards { get; set; }
         public string NoofVehicles { get; set; }
         public bool VehicleNoVerifiedManually { get; set; }
-
+        public string DuplicateVehicleNo { get; set; }
+        public string DuplicateMobileNo { get; set; }
         public CardDetails()
         {
             VehicleNoVerifiedManually = false;
