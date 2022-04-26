@@ -23,15 +23,15 @@
                                         <label class="font-weight-normal col-md-2 col-12">Search Terminal <sup class="text-danger">*</sup></label>
                                         <div class="col-md-10 col-12">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" onclick="text(0)" checked value="option1" style="margin-right:0px;">
+                                                <input class="form-check-input rbOption" type="radio" name="inlineRadioOptions" id="inlineRadio1" checked value="option1" style="margin-right:0px;">
                                                 <label class="form-check-label ml-2" for="inlineRadio1">Terminal Status</label>
                                             </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="enable_tb" type="radio" name="inlineRadioOptions" id="inlineRadio" onclick="text(1)" value="option2">
+                                            <div class="form-check form-check-inline ">
+                                                <input class="enable_tb rbOption" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
                                                 <label class="form-check-label ml-2" for="inlineRadio2">Terminal ID</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="enable_tb" type="radio" name="inlineRadioOptions" id="inlineRadio" onclick="text(2)" value="option3">
+                                                <input class="enable_tb rbOption" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
                                                 <label class="form-check-label ml-2" for="inlineRadio3">Merchant ID</label>
                                             </div>
                                         </div>
@@ -44,10 +44,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Select Status <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select name="StatusFlag" id="status" class="form-control statusVal">
-                                                </select>
+                                               @Html.DropDownListFor(m => m.DeploymentStatus, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })
 
-                                                @Html.ValidationMessageFor(m => m.StatusFlag, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -58,7 +56,8 @@
                                         <label class="font-weight-normal col-md-4 col-12" id="terminal">Terminal ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 offset-md-1">
                                             <div class="custom_select">
-                                                <input class="form-control" id="MerchantId" name="MerchantID" type="text" disabled="disabled" value="">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off"})
+                                                <span style="display:none" class="error" id="merchantId_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -70,53 +69,15 @@
                                     <button class="btn btn_primary" id="btnSearch" type="button">Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset">Reset</button>
                                 </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
 
-                        <div>
-                            <div class="px-3 manageTerminalTable displayNone">
-                                <table id="ManagTerminalTable" class="table table-bordered datatable" style="display:none;">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                @Html.DisplayName("Merchant Id")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Terminal Id")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Approval Date")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Deployment Status")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Terminal Issuance Type")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Mapped Merchant Id")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Service Charge In Rs Per Ltr")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Route Id")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Effective Date ")
-                                            </th>
-                                            @*<th>
-                                                @Html.DisplayName("Action")
-                                            </th>*@
-                                        </tr>
-                                    </thead>
-                                    <tbody class="manageTerminalBody"></tbody>
-                                </table>
-                            </div>
+                        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
                         </div>
+                        <div class="clearfix"></div>
 
                     </div>
                 </div>
@@ -128,102 +89,141 @@
 
 <script type="text/javascript">
 
-    $('input:radio').click(function () {
-        $("#status").prop("enable", true);
-        if ($(this).attr('id') == 'inlineRadio') {
-            $("#status").prop("disabled", true);
-        } else {
-            $("#status").prop("disabled", false);
+        $(".rbOption").change(function () {
+            $("#MerchantId").val("");
+            if ($("#inlineRadio1").is(":checked")) {
+                $("#DeploymentStatus").prop("disabled", false);
+                $("#DeploymentStatus")[0].sumo.reload();
+                $("#MerchantId").prop("disabled", true);
 
-        }
-    });
-
-    $('input:radio').click(function () {
-        $("#MerchantId").prop("disabled", true);
-        if ($(this).hasClass('enable_tb')) {
-            $("#MerchantId").prop("disabled", false);
-        }
-    });
-
-    function text(x) {
-        if (x == 0) {
-
-        }
-        else if (x == 1) {
-            $('#MerchantId').attr('enable', 'true');
-            document.getElementById("terminal").style.display = "block";
-            document.getElementById("merchant").style.display = "none";
-
-        }
-        else {
-            document.getElementById("merchant").style.display = "block";
-            document.getElementById("terminal").style.display = "none";
-
-        }
-
-
-    }
-$(document).ready(function () {
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetStatusType", "Common")',
-            data: { status: "ManageTerminal" },
-            dataType: "json",
-            success: function (data, status, xhr) {
-
-                console.log(data);
-
-                $.each(data.statusTypeList, function (i, option) {
-                    $("<option/>").val(option.statusId).text(option.statusName).appendTo(".statusVal");
-                });
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Status Type");
+            }
+            if ($("#inlineRadio2").is(":checked")) {
+                 $("#DeploymentStatus").prop("disabled", true);
+                 $("#MerchantId").prop("disabled", false);
+                 document.getElementById("terminal").style.display = "block";
+                 document.getElementById("merchant").style.display = "none";
+            }
+             if ($("#inlineRadio3").is(":checked")) {
+                $("#DeploymentStatus").prop("disabled", true);
+                $("#MerchantId").prop("disabled", false);
+                document.getElementById("terminal").style.display = "none";
+                document.getElementById("merchant").style.display = "block";
             }
         });
 
-});
 
-    $("#btnSearch").click(function () {
+    $(document).ready(function () {
+        $("#MerchantId").prop("disabled", true);
+       
 
-        $("#ManagTerminalTable td").parent().remove();
+    });
+    $("#btnReset").click(function () {
+        location.reload();
+    });
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: "@Url.Action("GetAllStatusValue", "TerminalManagement")",
-            //data: { RegionalId: RegionID },  // data to submit
-            dataType: "json",
-            success: function (res) {
-                console.log(res, "res");
-                $(".manageTerminalTable").removeClass("displayNone");
-                    $("#ManagTerminalTable").show();
+        $("#btnSearch").click(function () {
+             var merchantId = "",terminalId="",status="";
 
-                    for (var i = 0; i < res.searchList.length; i++) {
+           if ($("#inlineRadio3").is(":checked")){
+                merchantId = $("#MerchantId").val();
+                if (merchantId == "") {
+                    $("#merchantId_error").attr("style", "display:block");
+                    $("#merchantId_error").html("Please enter valid ID.");
+                    flag = "N";
+                }
+                else{
+                    if (!merchantId.match(mappedMerchantID)) {
+                        $("#merchantId_error").attr("style", "display:block");
+                        $("#merchantId_error").html("Please enter valid Merchant ID");
+                        flag = "N";
+                    }
+                }
+           }
+           else if($("#inlineRadio2").is(":checked")){
+                terminalId = $("#MerchantId").val();
+                if (terminalId == "") {
+                    $("#merchantId_error").attr("style", "display:block");
+                    $("#merchantId_error").html("Please enter valid ID.");
+                    flag = "N";
+                }
+                else{
+                    if (!terminalId.match(mappedterminalID)) {
+                        $("#merchantId_error").attr("style", "display:block");
+                        $("#merchantId_error").html("Please enter valid Terminal ID");
+                        flag = "N";
+                    }
+                }
+           }
+           else
+                status=$("#DeploymentStatus").val()
+           
+        
+            $.ajax({
+                type: 'GET',  // http method
+                url: "@Url.Action("GetAllStatusValue", "TerminalManagement")",
+                data: { MerchantId: merchantId, TerminalId:terminalId,Status:status},  // data to submit
+                dataType: "html",
+                success:function (data, status, xhr) {  
+                    var v = data;
+                     if (status == 'success') {
+                         $("#show_Table").html(data);
+                         $('html, body').animate({
+                             scrollTop: $("#show_Table").offset().top
+                         }, 2000);
+                     }
+                     else {
+                         console.log(v);
+                     }
 
-                        var rows = "<tr>"
-                            + "<td>" + (res.searchList[i].merchantid || '') + "</td>"
-                            + "<td>" + (res.searchList[i].terminalid || '') + "</td>"
-                            + "<td>" + (res.searchList[i].approvalDate || '') + "</td>"
-                            + "<td>" + (res.searchList[i].deploymentStatus || '') + "</td>"
-                            + "<td>" + (res.searchList[i].terminalIssuanceType || '') + "</td>"
-                            + "<td>" + (res.searchList[i].mappedMerchantId || '') + "</td>"
-                            + "<td>" + (res.searchList[i].serviceChargeInRsPerLtr || '') + "</td>"
-                            + "<td>" + (res.searchList[i].routeId|| '') + "</td>"
-                            + "<td>" + (res.searchList[i].effectiveDate || '') + "</td>"
-                            + "</tr >";
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
 
-                        $(".manageTerminalBody").append(rows);
+                }
+            });
 
+        });
+           $('select').SumoSelect({
+                placeholder: '-All-',
+                search: true,
+                searchText: 'Enter Text here.'
+            });
+         $("#MerchantId").on("blur", function () {
+             if ($("#inlineRadio3").is(":checked")){
+                 var merchantId = $("#MerchantId").val();
+                 if (merchantId != "") {
+                    if (!merchantId.match(mappedMerchantID)) {
+                        $("#merchantId_error").attr("style", "display:block");
+                        $("#merchantId_error").html("Please enter valid Merchant ID");
 
                     }
+                    else{
+                        $("#merchantId_error").attr("style", "display:none");
+                        $("#merchantId_error").html("");
+                    }
+                 }
+                 else{
+                     $("#merchantId_error").attr("style", "display:none");
+                     $("#merchantId_error").html("");
+                 }
+             }
+             else if($("#inlineRadio2").is(":checked")){
+                  var terminalId = $("#MerchantId").val();
+                 if (terminalId != "") {
+                    if (!terminalId.match(mappedterminalID)) {
+                        $("#merchantId_error").attr("style", "display:block");
+                        $("#merchantId_error").html("Please enter valid Terminal ID");
 
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                    }
+                    else{
+                        $("#merchantId_error").attr("style", "display:none");
+                        $("#merchantId_error").html("");
+                    }
+                 }
+                 else{
+                     $("#merchantId_error").attr("style", "display:none");
+                     $("#merchantId_error").html("");
+                 }
+             }
+         });
 
-            }
-        });
-
-    });
 </script>

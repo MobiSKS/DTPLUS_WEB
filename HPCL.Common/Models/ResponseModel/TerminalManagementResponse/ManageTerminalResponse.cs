@@ -1,10 +1,16 @@
-﻿using System;
+﻿using HPCL.Common.Helper;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
 {
-  public  class ManageTerminalResponse
+    public class ManageTerminalResponse:CommonResponseBase
+    {
+        public virtual List<ManageTerminalResponseDetails> Data { get; set; }
+
+    }
+  public  class ManageTerminalResponseDetails
     {
 
         public string Merchantid { get; set; }

@@ -22,6 +22,10 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public IActionResult CardBalanceTransfer()
+        {
+            return View();
+        }
 
         [HttpPost]
         public async Task<JsonResult> SearchCustomerCcmsAccount(string customerId)
@@ -36,5 +40,11 @@ namespace HPCL_Web.Controllers
             var searchResult = await _dtpSupportService.UpdateCustomerCcmsAccountStatus(entity);
             return Json(searchResult);
         }
+        public async Task<IActionResult> GetCardBalanceTransferDetails(string CardNo)
+        {
+            var searchResult = await _dtpSupportService.GetCardBalanceTransferDetails(CardNo);
+            return PartialView("~/Views/DtpSupport/_CardBalanceTransferTbl.cshtml", searchResult);
+        }
+        
     }
 }
