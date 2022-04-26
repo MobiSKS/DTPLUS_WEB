@@ -22,5 +22,6 @@ namespace HPCL.Service.Interfaces
         Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView(string str);
         Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str);
         Task<AddonOTCCardMapping> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard);
+        Task<AddonOTCCardMapping> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode);
     }
 }

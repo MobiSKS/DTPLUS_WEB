@@ -174,5 +174,15 @@ namespace HPCL_Web.Controllers
             return View(Model);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode)
+        {
+
+            AddonOTCCardMapping addonOTCCardMapping = new AddonOTCCardMapping();
+            addonOTCCardMapping = await _ashokLeyLandService.GetAlSalesExeEmpIdAddOnOTCCardMapping(dealerCode);
+
+            return Json(addonOTCCardMapping);
+        }
+
     }
 }

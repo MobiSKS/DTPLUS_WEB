@@ -390,5 +390,40 @@ namespace HPCL.Service.Services
             return addAddOnCard;
         }
 
+        public async Task<AddonOTCCardMapping> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode)
+        {
+            AddonOTCCardMapping customerCardInfo = new AddonOTCCardMapping();
+
+            var requestInfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = dealerCode
+            };
+            
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getAlSalesExeEmpidAddonOtcCardMapping);
+
+            SalesExecutiveEmployeeIDResponse salesExecutiveEmployeeIDResponse = JsonConvert.DeserializeObject<SalesExecutiveEmployeeIDResponse>(response);
+
+
+            if (salesExecutiveEmployeeIDResponse.Internel_Status_Code == 1000)
+            {
+                customerCardInfo.SalesExecutiveEmployeeID = salesExecutiveEmployeeIDResponse.Data[0].SalesExecutiveEmployeeID;
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            else
+            {
+                if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                    customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                else
+                    customerCardInfo.Reason = "Invalid Dealer Code";
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            return customerCardInfo;
+        }
+
     }
 }
