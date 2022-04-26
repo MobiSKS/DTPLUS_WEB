@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.ManageRbe
 {
-    public class RbeMapping : BaseEntity
+    public class GetApproveChangedRbeMapping : BaseEntity
     {
+        public string MappingStatus { get; set; }
         [RegularExpression(FieldValidation.ValidFirstName, ErrorMessage = FieldValidation.ValidFirstNameErrMsg)]
         public string FirstName { get; set; }
-
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidUserNameErrMsg)]
         [StringLength(10)]
-        public string UserName { get; set; }
+        public string MobileNo { get; set; }
     }
 }

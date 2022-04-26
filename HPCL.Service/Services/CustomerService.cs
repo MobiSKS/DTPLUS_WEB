@@ -473,8 +473,6 @@ namespace HPCL.Service.Services
 
             if (!string.IsNullOrEmpty(customerCardInfo.FeePaymentDate))
             {
-                //string[] arrFeePaymentDate = customerCardInfo.FeePaymentDate.Split("-");
-                //feePaymentDate = arrFeePaymentDate[2] + "-" + arrFeePaymentDate[1] + "-" + arrFeePaymentDate[0];
                 feePaymentDate = await _commonActionService.changeDateFormat(customerCardInfo.FeePaymentDate);
             }
 
@@ -531,6 +529,43 @@ namespace HPCL.Service.Services
 
 
             customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+            if (customerInserCardResponse.Internel_Status_Code != 1000)
+            {
+                foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+                {
+                    cardDetails.DuplicateVehicleNo = "";
+                    cardDetails.DuplicateMobileNo = "";
+                }
+
+                if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+                        {
+                            if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                            {
+                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                            }
+                        }
+                    }
+                }
+
+                if (customerInserCardResponse.Message.Contains("Mobile No."))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+                        {
+                            if (cardDetails.MobileNo == responseData.Reason)
+                            {
+                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                            }
+                        }
+                    }
+                }
+            }
 
             if (customerInserCardResponse.Internel_Status_Code == 1000)
             {

@@ -25,8 +25,8 @@
         public const string ValidFirstName = @"^[a-zA-Z]{0,50}$";
         public const string ValidFirstNameErrMsg = "Enter Valid First Name";
 
-        public const string ValidUserName = @"^[a-zA-Z]{0,50}$";
-        public const string ValidUserNameErrMsg = "Enter Valid First Name";
+        public const string ValidUserName = @"^[0-9]{10}$";
+        public const string ValidUserNameErrMsg = "Enter Valid User Name";
 
         public const string ValidEmail = @"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$";
         public const string ValidEmailErrMsg = "Enter a valid Email ID";
@@ -70,11 +70,11 @@
 
         #region "Not Empty Validation"
 
-        public const string CustomerNotEmpty = "Customer ID should not be Empty";
+        public const string CustomerNotEmpty = "Customer ID should not be left empty";
         public const string MobNoNotEmpty = "Mobile Number field should be of 10 digit and can not be left blank";
-        public const string MerchantNotEmpty = "Merchant ID should not be Empty";
-        public const string AmountNotEmpty = "Amount should not be Empty";
-        public const string TerminalNotEmpty = "Terminal ID should not be Empty";
+        public const string MerchantNotEmpty = "Merchant ID should not be left Empty";
+        public const string AmountNotEmpty = "Amount should not be left Empty";
+        public const string TerminalNotEmpty = "Terminal ID should not be left Empty";
 
         #endregion
     }

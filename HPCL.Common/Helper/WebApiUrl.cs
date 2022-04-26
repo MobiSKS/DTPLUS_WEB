@@ -277,6 +277,9 @@
         public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/rbe_deviceid_reset_request";
         public static string ChangeRbeMappingByUserNameUrl = "api/dtplus/RBE/request_to_change_rbe_mapping";
         public static string UserNameVerifyOtpUrl = "api/dtplus/RBE/validate_otp_rbe_mapping";
+        public static string GetRbeMappingStatusUrl = "api/dtplus/RBE/get_rbe_mapping_status";
+        public static string GetApproveChangedRbeMappingUrl = "api/dtplus/RBE/get_approve_changed_rbe_mapping";
+        public static string ApproveRejectChangedRbeMappingUrl = "api/dtplus/RBE/approve_reject_changed_rbe_mapping";
         #endregion
 
         #region Application Form Data Entry

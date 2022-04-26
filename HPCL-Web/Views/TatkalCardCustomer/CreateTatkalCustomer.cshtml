@@ -240,7 +240,7 @@
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3 mb-0">
                     <div class="px-2">
-                        <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
+                        <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
                     </div>
                     <div class="px-2">
                         <button class="btn btn_primary" type="button" id="btnFooterReset">@Label.Reset</button>
@@ -912,61 +912,61 @@
         //    document.getElementById("comm_email_error").innerHTML = "";
         //}
         
-        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number cannot be left blank";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else {
-            var result = false;
-
-            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                document.getElementById("incomeTaxPan_error").className = "error";
-                ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-            }
-
-            if (localStorage.getItem("PANNOALREADYUSED") == 0) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number already exists";
-                document.getElementById("incomeTaxPan_error").className = "error";
-                ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-            }
-
+        else 
+        {
+            
              document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
                          
             var panNumber = document.getElementById("IncomeTaxPan").value;
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
-                document.getElementById("incomeTaxPan_error").className = "error";
-               ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
-                document.getElementById("incomeTaxPan_error").className = "error text-success";
-            }
-
-            if ($('#IncomeTaxPan').val().match(pancard)) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
-                document.getElementById("incomeTaxPan_error").className = "error text-success";
-            }
-            else {
+            if (forthdigitPan != 'P') 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
+            else if (!$('#IncomeTaxPan').val().match(pancard)) 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else 
+            {
+                if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("INVALIDPAN") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+                }
+            }
 
         }
 
-        //if (ret == false)
-        //    return ret;
         console.log(ret);
         return ret;
     }
@@ -1035,107 +1035,140 @@
         }
     });
 
-    $("#IncomeTaxPan").on("blur", function () {
-        //debugger;
-        var panNumber = document.getElementById("IncomeTaxPan").value;
-        localStorage.setItem("PANNOALREADYUSED", "1");
+    $("#IncomeTaxPan").focus(function()
+    {
+       $("#btnSubmit").attr("disabled", true);
+    });
 
-        if (panNumber == "") {
+    $("#IncomeTaxPan").on("blur", function () 
+    {
+        debugger;
+        $("#btnSubmit").attr("disabled", true);
+        var panNumber = document.getElementById("IncomeTaxPan").value.trim();
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        localStorage.setItem("INVALIDPAN", "1");
+
+        if (panNumber == "") 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number cannot be left blank";
             document.getElementById("incomeTaxPan_error").className = "error";
+            $("#btnSubmit").attr("disabled", false);
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
         document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
         
-        if ($('#IncomeTaxPan').val().match(pancard)) {
+        if ($('#IncomeTaxPan').val().match(pancard)) 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
             document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
+            $("#btnSubmit").attr("disabled", false);
             return (false);
         }
 
         let forthdigitPan = panNumber.substr(3, 1);
         console.log(forthdigitPan);
-        if (forthdigitPan != 'P') {
+        if (forthdigitPan != 'P') 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
+            $("#btnSubmit").attr("disabled", false);
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
             document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
 
+        var OrgName = $('#IndividualOrgName').val();
+        var correctPANName = '';
 
-        @*$.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckPanNoDuplication", "Common")',
-            data: { PanNo: panNumber },  // data to submit
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PANValidation", "MyHpOTCCardCustomer")',
+            data: { PANNumber: panNumber },
             dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
-                var v = data;
-                if (status == 'success') {
-
-                    if (data.status == "0") {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+            success: function (data, status, xhr) 
+            {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                 console.log(jsonData);
+                if (status == 'success' && jsonData['status-code'] == '101') 
+                {
+                    correctPANName = jsonData["result"]["name"];
+                    if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                    {
+                        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                    }
+                    else 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
                         document.getElementById("incomeTaxPan_error").className = "error";
-                        localStorage.setItem("PANNOALREADYUSED", "0");
+                        localStorage.setItem("PANNOANDNAMEMATCHING", "0");
                     }
-                    else {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "";
-                    }
+                    console.log(OrgName);
+                    console.log(correctPANName);
+                    console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
                 }
-                else {
-                    //console.log(v);
+                else 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    localStorage.setItem("INVALIDPAN", "0");
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
-                //document.getElementById("RBEName").value = "";
-            },
-            statusCode: {
-                1024: function () {
-                    //document.getElementById("RBEName").value = "";
-                }
+            error: function (jqXhr, textStatus, errorMessage) 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                localStorage.setItem("INVALIDPAN", "0");
             }
-        });*@
+        });
 
+        $("#btnSubmit").attr("disabled", false);
 
     });
 
-    $("#DateOfApplication").on("change", function () {
+    $("#DateOfApplication").on("change", function () 
+    {
         //debugger;
         var selectedDate = document.getElementById("DateOfApplication").value.trim();
         console.log(selectedDate);
 
-        if (selectedDate == "") {
+        if (selectedDate == "") 
+        {
             document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
         }
-        else {
+        else 
+        {
             document.getElementById("applicationDate_error").innerHTML = "";
         }
-        
 
     });
 
-    $("#SignedOn").on("change", function () {
+    $("#SignedOn").on("change", function () 
+    {
         //debugger;
         var selectedDate = document.getElementById("SignedOn").value.trim();
-        if (selectedDate == "") {
+        if (selectedDate == "") 
+        {
              document.getElementById("SignedOn_error").innerHTML = "Signed On field cannot be left blank";
         }
-        else {
+        else 
+        {
             document.getElementById("SignedOn_error").innerHTML = "";
         }
-        
 
     });
 

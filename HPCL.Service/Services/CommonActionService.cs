@@ -1193,5 +1193,23 @@ namespace HPCL.Service.Services
 
             return validateErpCodeModels.First().Status.ToString();
         }
+
+        public async Task<List<RbeMappingStatusResponse>> RbeMappingStatusService()
+        {
+            var reqBody = new BaseEntity
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip
+            };
+
+            StringContent validateMappedMerchantIdContent = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var reponse = await _requestService.CommonRequestService(validateMappedMerchantIdContent, WebApiUrl.GetRbeMappingStatusUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(reponse).ToString());
+            var dataList = obj["Data"].Value<JArray>();
+            List<RbeMappingStatusResponse> successRes = dataList.ToObject<List<RbeMappingStatusResponse>>();
+
+            return successRes;
+        }
     }
 }

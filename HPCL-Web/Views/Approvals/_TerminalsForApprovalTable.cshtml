@@ -88,8 +88,9 @@ else
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
-    var flag = "Y";
+    
     function terminalDeInstallationForAuthorization(action) {
+        var flag = "Y";
         var remark = $("#Remark").val();
       
             ObjApprovalRejectDetail = [];
@@ -102,14 +103,15 @@ else
                             if (merchant != undefined && terminal != undefined) {
                                 ObjApprovalRejectDetail.push({ MerchantId: merchant, TerminalId: terminal });
                             }
-                            else {
-                                flag = "N";
-                            }
+                           
                     
                 }
             });
             if (ObjApprovalRejectDetail.length == 0) {
-                alert("Please select at least one request to approve.");
+                if(action=="Approve")
+                    alert("Please select at least one request to approve.");
+                if(action=="Reject")
+                    alert("Please select at least one request to reject.");
                 flag = "N";
                 return;
             }
@@ -120,8 +122,13 @@ else
              }
              else 
                 $("#remark_error").html("");
+                var confirmText="";
+             if(action=="Approve")
+                confirmText="Do you want to approve the selected Terminal deinstallation request(s)?";
+            if(action=="Reject")
+             confirmText ="Do you want to reject the selected Terminal deinstallation request(s)?";
             if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
-                if (confirm('Do you want to approve the selected Terminal deinstallation request(s)?')) {
+                if (confirm(confirmText)) {
                     var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationInsertInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
                     $.ajax({
                         type: 'POST',
