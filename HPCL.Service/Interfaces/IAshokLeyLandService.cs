@@ -18,5 +18,9 @@ namespace HPCL.Service.Interfaces
         Task<AshokLeylandCardCreationModel> CreateMultipleOTCCard(AshokLeylandCardCreationModel ashokLeylandCardCreationModel);
         Task<ViewALOTCCardDealerMappingModel> ViewALOTCCardsDealerMapping();
         Task<ALOTCCardDealerAllocationResponse> GetViewALOTCCardDealerAllocation(string DealerCode, string CardNo);
+        Task<GetCustomerDetails> GetAlAddonOTCCardMappingCustomerDetails(string customerId);
+        Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView(string str);
+        Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str);
+        Task<AddonOTCCardMapping> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard);
     }
 }

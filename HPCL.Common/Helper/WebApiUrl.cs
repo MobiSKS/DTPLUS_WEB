@@ -216,6 +216,8 @@
         public static string getAvailityAlOTCCard = "api/dtplus/ashokleyland/get_availity_al_otc_card";
         public static string insertAlCustomer = "api/dtplus/ashokleyland/insert_al_customer";
         public static string viewAlOTCCardDealerAllocation = "api/dtplus/ashokleyland/view_al_otc_card_dealer_allocation";
+        public static string getAladdonOTCCardMappingCustomerDetails = "api/dtplus/ashokleyland/get_al_addon_otc_card_mapping_customer_details";
+        public static string alAddonOTCCard = "api/dtplus/ashokleyland/al_addon_otc_card";
         #endregion
 
         #region Customer Financial
