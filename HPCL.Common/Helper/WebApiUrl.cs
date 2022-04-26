@@ -204,6 +204,7 @@
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/insert_terminal_de_installation_request_authorization";
         public static string ManageTerminalUrl = "api/dtplus/terminal/get_manage_terminal_detail";
+        public static string getstatustypesforterminal = "api/dtplus/settings/get_status_types_for_terminal";
         #endregion
 
         #region AshokLeyLand
@@ -279,6 +280,9 @@
         public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/rbe_deviceid_reset_request";
         public static string ChangeRbeMappingByUserNameUrl = "api/dtplus/RBE/request_to_change_rbe_mapping";
         public static string UserNameVerifyOtpUrl = "api/dtplus/RBE/validate_otp_rbe_mapping";
+        public static string GetRbeMappingStatusUrl = "api/dtplus/RBE/get_rbe_mapping_status";
+        public static string GetApproveChangedRbeMappingUrl = "api/dtplus/RBE/get_approve_changed_rbe_mapping";
+        public static string ApproveRejectChangedRbeMappingUrl = "api/dtplus/RBE/approve_reject_changed_rbe_mapping";
         #endregion
 
         #region Application Form Data Entry
@@ -290,6 +294,7 @@
         #region "DTP Support"
         public static string GetBlockUnblockCustomerCcmsAccountByCustomeridUrl = "api/dtplus/dtp/get_block_unblock_customer_ccms_account_by_customerid";
         public static string BlockUnblockCustomerCcmsAccountUrl = "api/dtplus/dtp/block_unblock_customer_ccms_account";
+        public static string GetCardBalanceTransfer = "api/dtplus/dtp/card_balance_transfer";
         #endregion
     }
 }

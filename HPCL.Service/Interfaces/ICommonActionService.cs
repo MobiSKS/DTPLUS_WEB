@@ -65,5 +65,7 @@ namespace HPCL.Service.Interfaces
         Task<string> changeDateFormat(string date);
         Task<string> ValidateErpCode(string erpCode);
         Task<string> ValidateMappedMerchantId(string mappedMerchantId);
+        Task<List<RbeMappingStatusResponse>> RbeMappingStatusService();
+        Task<List<StatusModal>> GetStatusTypeforTerminal();
     }
 }

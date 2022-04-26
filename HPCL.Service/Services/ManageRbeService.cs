@@ -117,5 +117,43 @@ namespace HPCL.Service.Services
             List<SuccessResponse> resMsg = successRes.ToObject<List<SuccessResponse>>();
             return resMsg;
         }
+
+        public async Task<GetApproveChnagedRbeMappingResponse> ApproveChangedRbeMapping(GetApproveChangedRbeMapping entity)
+        {
+            var reqBody = new GetApproveChangedRbeMapping
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MappingStatus = entity.MappingStatus ?? "",
+                FirstName = entity.FirstName ?? "",
+                MobileNo = entity.MobileNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetApproveChangedRbeMappingUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetApproveChnagedRbeMappingResponse searchList = obj.ToObject<GetApproveChnagedRbeMappingResponse>();
+            return searchList;
+        }
+
+        public async Task<List<ApproveRejectChangedRbeMappingResponse>> ApproveRejectChangedRbeMappingSerivce(string userName, string actionPress)
+        {
+            var reqBody = new ApproveRejectChangedRbeMapping
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                PreRBEUserName = userName ?? "",
+                MappingStatus = actionPress ?? ""
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ApproveRejectChangedRbeMappingUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var successRes = obj["Data"].Value<JArray>();
+            List<ApproveRejectChangedRbeMappingResponse> resp = successRes.ToObject<List<ApproveRejectChangedRbeMappingResponse>>();
+            return resp;
+        }
     }
 }
