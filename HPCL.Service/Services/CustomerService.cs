@@ -17,6 +17,7 @@ using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.RequestModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
+using Microsoft.Extensions.Configuration;
 
 namespace HPCL.Service.Services
 {
@@ -25,12 +26,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public CustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public CustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
 
         public async Task<UploadDocResponse> UploadDoc(UploadDoc entity)
@@ -97,6 +100,12 @@ namespace HPCL.Service.Services
             custMdl.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
 
             custMdl.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
 
             return custMdl;
         }
@@ -871,6 +880,12 @@ namespace HPCL.Service.Services
             custMdl.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
 
             custMdl.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
 
             if (!string.IsNullOrEmpty(FormNumber))
             {

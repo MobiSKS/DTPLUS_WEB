@@ -524,6 +524,7 @@
 
             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId, new { id = "RegionalOfficeId" })</div>
             <div style="display:none;">@Html.TextBoxFor(m => m.LoggedInAs, new { id = "LoggedInAs" })</div>
+            @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
         </form>
     <div class="clearfix"></div>
 </div>
@@ -1171,49 +1172,64 @@
         var OrgName = $('#IndividualOrgName').val();
         var correctPANName = '';
 
-        $.ajax({
-            type: 'POST',
-            url: "PANValidation/MyHpOTCCardCustomer",
-            data: { PANNumber: document.getElementById("IncomeTaxPan").value },
-            dataType: "json",
-            success: function (data, status, xhr) 
-            {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                 console.log(jsonData);
-                if (status == 'success' && jsonData['status-code'] == '101') 
+        var externalPANAPIStatus="Y";
+
+        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+        console.log(externalPANAPIStatus);
+
+        if(externalPANAPIStatus=="Y")
+        {
+
+            $.ajax({
+                type: 'POST',
+                url: "PANValidation/MyHpOTCCardCustomer",
+                data: { PANNumber: document.getElementById("IncomeTaxPan").value },
+                dataType: "json",
+                success: function (data, status, xhr) 
                 {
-                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                    correctPANName = jsonData["result"]["name"];
-                    if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                     console.log(jsonData);
+                    if (status == 'success' && jsonData['status-code'] == '101') 
                     {
-                        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+                        if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                        {
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                        }
+                        console.log(OrgName);
+                        console.log(correctPANName);
+                        console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
                     }
                     else 
                     {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
                         document.getElementById("incomeTaxPan_error").className = "error";
-                        localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                        localStorage.setItem("INVALIDPAN", "0");
                     }
-                    console.log(OrgName);
-                    console.log(correctPANName);
-                    console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
-                }
-                else 
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
                 {
                     document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
                     document.getElementById("incomeTaxPan_error").className = "error";
                     localStorage.setItem("INVALIDPAN", "0");
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                document.getElementById("incomeTaxPan_error").className = "error";
-                localStorage.setItem("INVALIDPAN", "0");
-            }
-        });
+            });
 
+        }
+        else
+        {
+            localStorage.setItem("INVALIDPAN", "1");
+            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        }
 
     });
 
@@ -2099,75 +2115,7 @@
                 document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
             }
         }
-
-        console.log('Testing');
         
-        if (document.getElementById("IncomeTaxPan").value.trim() == "") {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
-            document.getElementById("incomeTaxPan_error").className = "error";
-            ret = false;
-        }
-        else {
-            var result = false;
-
-            if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                document.getElementById("incomeTaxPan_error").className = "error";
-                ret = false;
-            }
-            else {
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-            }
-
-            var panno = $('#IncomeTaxPan').val();
-            var OrgName = $('#IndividualOrgName').val();
-            var correctPANName = '';
-
-            $.ajax({
-                type: 'POST',
-                url: "PANValidation/MyHpOTCCardCustomer",
-                data: { PANNumber: document.getElementById("IncomeTaxPan").value },
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    //debugger;
-                    var jsonData = JSON.parse(data);
-                    if (status == 'success' && jsonData['status-code'] == '101') {
-                        result = true;
-
-                        console.log(jsonData);
-                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                        correctPANName = jsonData["result"]["name"];
-                        if (OrgName.toUpperCase() == correctPANName.toUpperCase()) {
-                            localStorage.setItem("showregAddress", true)
-                        }
-                        else {
-                            result = false;
-                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                            document.getElementById("incomeTaxPan_error").className = "error";
-                        }
-                    }
-                    else {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                        document.getElementById("incomeTaxPan_error").className = "error";
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                    document.getElementById("incomeTaxPan_error").className = "error";
-                }
-            });
-
-            ret = result;
-
-            console.log('Inside Loop Before');
-            console.log(result);
-            console.log('Inside Loop After');
-        }
-
-        console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
-
-        if (ret == false)
-            return ret;
         console.log(ret);
         return ret;
     }
