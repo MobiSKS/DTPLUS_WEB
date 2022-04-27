@@ -439,6 +439,19 @@ namespace HPCL.Service.Services
                         addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
                     }
                     addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+
+                    foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                    {
+                        if (addAddOnCard.VehicleVerifiedManually)
+                        {
+                            cardDetails.Verified = "0";
+                        }
+                        else
+                        {
+                            cardDetails.Verified = "1";
+                        }
+                    }
+
                 }
             }
 

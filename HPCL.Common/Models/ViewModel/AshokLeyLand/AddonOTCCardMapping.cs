@@ -50,6 +50,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string NameOnCard { get; set; }
         public string DealerCode { get; set; }
         public string SalesExecutiveEmployeeID { get; set; }
+        public string Verified { get; set; }
         public AddonOTCCardDetails()
         {
             VehicleVerifiedManually = false;
