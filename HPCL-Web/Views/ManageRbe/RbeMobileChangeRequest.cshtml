@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.ManageRbe.RbeMapping
+﻿@model HPCL.Common.Models.ViewModel.ManageRbe.RbeMobileChange
 @using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12">
@@ -34,9 +34,9 @@
                                         <label class="font-weight-normal col-md-4 col-12"> User Name </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
                                             </div>
-                                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                                            @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +63,7 @@
                                     <tr>
                                         <th>S No.</th>
                                         <th>RBE ID</th>
-                                        <th>User Name</th>
+                                        <th>Mobile No.</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th style="width:1%">Email Id</th>
@@ -82,31 +82,6 @@
     </div>
 </div>
 <div class="clearfix"></div>
-
-<div id="confirmDialogMsg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you want to sure create new RBE user?</p>
-            </div>
-            <div class="modal-footer">
-                <div class="d-flex align-items-center justify-content-center mt-0">
-                    <div class="px-2">
-                        <button type="button" class="btn btn_primary" data-dismiss="modal" onclick="changeUserMapNew()">YES</button>
-                    </div>
-                    <div class="px-2">
-                        <button type="button" class="btn btn_primary" data-dismiss="modal">NO</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="responseMsgModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mobilenochange" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -150,10 +125,16 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-4 col-form-label">New Username</label>
+                    <label for="inputPassword" class="col-sm-4 col-form-label">Existing Mobile No.</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="userNameValOtp" maxlength="10" onchange="userNameOtpOnChange(this)">
-                        <span style="display:none" class="error" id="userName_otp_error"></span>
+                        <input type="text" readonly class="form-control-plaintext" id="GetExistMobNoOtp">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">New Mobile No. <sup class="text-danger">*</sup></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="newMobileNoOtpVal" maxlength="10" onchange="mobilenoOtpOnChange(this)">
+                        <span style="display:none" class="error" id="mobileno_otp_error"></span>
                         <p class="text-success text-left mb-0" id="otpRes"></p>
                     </div>
                 </div>
@@ -186,30 +167,36 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mobilenochange">Change RBE User</h5>
+                <h5 class="modal-title" id="mobilenochange">Change RBE Mobile</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE ID</label>
+                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE Id</label>
                     <div class="col-sm-8">
                         <input type="text" readonly class="form-control-plaintext" id="GetRbeId">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-4 col-form-label">New Username</label>
+                    <label for="inputPassword" class="col-sm-4 col-form-label">Existing Mobile No.</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="userNameVal" maxlength="10" onchange="userNameOnChange(this)">
-                        <span style="display:none" class="error" id="userName_error"></span>
+                        <input type="text" readonly class="form-control-plaintext" id="GetExistMobNo">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">New Mobile No. <sup class="text-danger">*</sup></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="newMobileNoVall" maxlength="10" onchange="mobileNoOnChange(this)">
+                        <span style="display:none" class="error" id="mobileno_error"></span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex align-items-center justify-content-center mt-0">
                     <div class="px-2">
-                        <button type="button" class="btn btn_primary" onclick="clickChangeRbe()">Request Change RBE</button>
+                        <button type="button" class="btn btn_primary" onclick="clickChangeRbe()">Request Mobile Change</button>
                     </div>
                     <div class="px-2">
                         <button type="button" class="btn btn_primary" data-dismiss="modal">Cancel</button>
@@ -232,7 +219,7 @@
 
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("ChangeRbeMapping", "ManageRbe")',
+                url: '@Url.Action("RbeMobileChangeRequest", "ManageRbe")',
                 data: $('#formValid').serialize(),  // data to submit
                 success: function (res, status, xhr) {
 
@@ -267,18 +254,18 @@
 
                             var srNumber = (i + 1);
                             var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '')+"</span>";
-                            var userName = "<span class='userName'>"+(girdList[i].userName || '')+"</span>";
+                            var mobileNo = "<span class='mobNo'>"+(girdList[i].mobileNo || '')+"</span>";
                             var firstName = (girdList[i].firstName || '');
                             var lastName = (girdList[i].lastName || '');
                             var emailId = (girdList[i].emailId || '');
                             var region = (girdList[i].region || '');
                             var zone = (girdList[i].zone || '');
-                            var action = "<a class='actionRbe' href='#exampleModal'>" + (girdList[i].action || '') + "</a>";
+                            var action = "<a class='actionRbe' href='#a'>" + (girdList[i].action || '') + "</a>";
 
                             tbl.row.add([
                                 srNumber,
                                 rbeID,
-                                userName,
+                                mobileNo,
                                 firstName,
                                 lastName,
                                 emailId,
@@ -305,51 +292,58 @@
         }
     }
 
-    var userName;
+    var mobNo;
     var rbeIdVll;
-    var newUserName;
+    var newMobNo;
 
     $("#RbeMapping").on('click', '.actionRbe', function (e) {
 
         var currentRow = $(this).closest("tr");
 
-        userName = currentRow.find('.userName').text();
+        mobNo = currentRow.find('.mobNo').text();
         rbeIdVll = currentRow.find('.rbeIdVal').text();
 
         var actionType = currentRow.find('.actionRbe').text();
 
-        console.log("values", userName+"    "+actionType);
+        console.log("values", mobNo+"    "+actionType);
 
-        if(actionType == "Change RBE Mapping"){
+        if(actionType == "Change RBE Mobile"){
             $("#GetRbeId").val(rbeIdVll);
-            $("#userNameVal").val("");
+            $("#GetExistMobNo").val(mobNo);
+            $("#newMobileNoVall").val("");
             $('#mobilenochangepop').modal({
-                    backdrop: 'static',
-                    keyboard: false, 
-                    show: true
-            });
+                        backdrop: 'static',
+                        keyboard: false, 
+                        show: true
+                });
         }
     });
 
     function clickChangeRbe(){
-        newUserName = $("#userNameVal").val();
-        console.log(userName+"   "+newUserName,"clicked");
+        newMobNo = $("#newMobileNoVall").val();
+        console.log(mobNo+"   "+newMobNo,"clicked");
 
-        if(newUserName == userName){
+        if(newMobNo == mobNo){
+            $("#mobilenochangepop").modal('hide');
             $("#statusMsg").html("");
-            $("#statusMsg").append("<span>User Name can not be same.</span>")
+            $("#statusMsg").append("<span>User already registered with mobile: "+ mobNo +"</span>")
             $('#responseMsgModal').modal({
-                    backdrop: 'static',
-                    keyboard: false, 
-                    show: true
-            });
+                        backdrop: 'static',
+                        keyboard: false, 
+                        show: true
+                });
         }else{
             var flag = "Y";
 
-            if(newUserName.trim()!=''){
-                if (!newUserName.match(/^(?!(0))[0-9]{10}$/)){
-                     $("#userName_error").attr("style", "display:block");
-                     $("#userName_error").html("Username is a 10 digit number");
+            if(newMobNo.trim() ==''){
+                $("#mobileno_error").attr("style", "display:block");
+                $("#mobileno_error").html("Please enter new mobile");
+                flag = "N";
+            }
+            if(newMobNo.trim()!=''){
+                if (!newMobNo.match(/^(?!(0))[0-9]{10}$/)){
+                     $("#mobileno_error").attr("style", "display:block");
+                     $("#mobileno_error").html("Mobile is a 10 digit number");
                      flag = "N";
                 }
             }
@@ -358,98 +352,83 @@
                 e.preventDefault();
 
             if (flag == "Y") {
-               if(newUserName.trim() == ''){
-                   $("#confirmDialogMsg").modal('show');
-               }else{
-                   $.ajax({
-                        url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
-                        type: "POST",
-                        dataType: "JSON",
-                        data: { newUserName: newUserName, userName: userName},
-                        success: function (res) {
-                            console.log("res",res);
-                            if(res.changeList.data[0].status == 1){
-                                $("#GetRbeIdOtp").val(rbeIdVll);
-                                $("#userNameValOtp").val(newUserName);
-                                $("#mobilenochangepop").modal('hide');
-                                $("#otpResErr").html("");
-                                $("#otpRes").html("");
-                                $("#otpRes").append("<span>OTP has been sent successfully to new user, please enter OTP to verify user</span>");
-                                $('#mobilenochangepopOtp').modal({
-                                        backdrop: 'static',
-                                        keyboard: false, 
-                                        show: true
-                                });
-                            }else{
-                                $("#mobilenochangepopOtp").modal('hide');
-                                $("#statusMsg").html("");
-                                $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
-                                $('#responseMsgModal').modal({
-                                        backdrop: 'static',
-                                        keyboard: false, 
-                                        show: true
-                                });
-                            }
-                        },
-                        error: function (ex) {
-                            alert('Failed' + ex);
+                $.ajax({
+                    url: "@Url.Action("GetOtpMobileChangeReq", "ManageRbe")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { newMobileNo: newMobNo },
+                    success: function (res) {
+                        console.log("res",res);
+                        if(res.resp.data[0].status == 1){
+                            $("#GetRbeIdOtp").val(rbeIdVll);
+                            $("#GetExistMobNoOtp").val(mobNo);
+                            $("#newMobileNoOtpVal").val(newMobNo);
+                            $("#mobilenochangepop").modal('hide');
+                            $("#otpResErr").html("");
+                            $("#otpRes").html("");
+                            $("#otpRes").append("<span>OTP has been sent successfully to new mobile, please enter OTP to verify mobile.</span>");
+                            $('#mobilenochangepopOtp').modal({
+                                    backdrop: 'static',
+                                    keyboard: false, 
+                                    show: true
+                            });
+                        }else{
+                            $("#mobilenochangepopOtp").modal('hide');
+                            $("#statusMsg").html("");
+                            $("#statusMsg").append("<span>"+res.resp.data[0].reason+"</span>")
+                            $('#responseMsgModal').modal({
+                                    backdrop: 'static',
+                                    keyboard: false, 
+                                    show: true
+                            });
                         }
-                    });
-               }
-            }
-        }
-    }
-
-    function changeUserMapNew(){
-         $.ajax({
-            url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
-            type: "POST",
-            dataType: "JSON",
-            data: { newUserName: newUserName, userName: userName},
-            success: function (res) {
-                reloadGrid();
-                $("#statusMsg").html("");
-                $("#statusMsg").append("<span>Request created successfully !!</span>")
-                $('#responseMsgModal').modal({
-                        backdrop: 'static',
-                        keyboard: false, 
-                        show: true
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
                 });
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
-    }
-
-    function userNameOnChange(o){
-        var userNameVal = o.value;
-
-        if(userNameVal.trim()!=''){
-            if (!userNameVal.match(/^(?!(0))[0-9]{10}$/)){
-                 $("#userName_error").attr("style", "display:block");
-                 $("#userName_error").html("Username is a 10 digit number");
-                 return false;
-            }
-            else{
-                 $("#userName_error").attr("style", "display:none");
-                 $("#userName_error").html("");
             }
         }
     }
 
-    function userNameOtpOnChange(o){
-        var userNameVal = o.value;
+    function mobileNoOnChange(o){
+        var mobNoVal = o.value;
 
-        if(userNameVal.trim()!=''){
-            if (!userNameVal.match(/^(?!(0))[0-9]{10}$/)){
-                 $("#userName_otp_error").attr("style", "display:block");
-                 $("#userName_otp_error").html("Username is a 10 digit number");
+        if(mobNoVal.trim() ==''){
+            $("#mobileno_error").attr("style", "display:block");
+            $("#mobileno_error").html("Please enter new mobile");
+            return false;
+        }
+        if(mobNoVal.trim()!=''){
+            if (!mobNoVal.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#mobileno_error").attr("style", "display:block");
+                 $("#mobileno_error").html("Mobile is a 10 digit number");
                  return false;
             }
             else{
-                 $("#userName_otp_error").attr("style", "display:none");
-                 $("#userName_otp_error").html("");
+                 $("#mobileno_error").attr("style", "display:none");
+                 $("#mobileno_error").html("");
+            }
+        }
+    }
+
+    function mobilenoOtpOnChange(o){
+        var mobNoVal = o.value;
+
+        if(mobNoVal.trim() ==''){
+             $("#mobileno_otp_error").attr("style", "display:block");
+             $("#mobileno_otp_error").html("Please enter new mobile");
+             return false;
+        }
+        if(mobNoVal.trim()!=''){
+            if (!mobNoVal.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#mobileno_otp_error").attr("style", "display:block");
+                 $("#mobileno_otp_error").html("Mobile is a 10 digit number");
+                 return false;
+            }
+            else{
+                 $("#mobileno_otp_error").attr("style", "display:none");
+                 $("#mobileno_otp_error").html("");
             }
         }
     }
@@ -476,15 +455,22 @@
     }
 
     function verifyOtpClick(){
-        var newUserNameOtp = $("#userNameValOtp").val();
+        var existMobNoVal = $("#GetExistMobNoOtp").val();
+        var newMobNoVal = $("#newMobileNoOtpVal").val();
         var otpGet = $("#findOtp").val();
 
         var flag = "Y";
 
-        if(newUserNameOtp.trim()!=''){
-            if (!newUserNameOtp.match(/^(?!(0))[0-9]{10}$/)){
-                 $("#userName_otp_error").attr("style", "display:block");
-                 $("#userName_otp_error").html("Username is a 10 digit number");
+        if(newMobNoVal.trim() ==''){
+            $("#mobileno_otp_error").attr("style", "display:block");
+            $("#mobileno_otp_error").html("Please enter new mobile");
+            flag = "N";
+        }
+
+        if(newMobNoVal.trim()!=''){
+            if (!newMobNoVal.match(/^(?!(0))[0-9]{10}$/)){
+                 $("#mobileno_otp_error").attr("style", "display:block");
+                 $("#mobileno_otp_error").html("Mobile is a 10 digit number");
                  flag = "N";
             }
         }
@@ -507,27 +493,27 @@
 
         if (flag == "Y") {
             $.ajax({
-                url: "@Url.Action("UserNameVerifyOtp", "ManageRbe")",
+                url: "@Url.Action("VerifyOtpMobileChangeReq", "ManageRbe")",
                 type: "POST",
                 dataType: "JSON",
-                data: { newUserName: newUserNameOtp, userName: userName, otp:otpGet},
+                data: { existMobNo: existMobNoVal, newMobileNo: newMobNoVal, otp: otpGet},
                 success: function (res) {
                     reloadGrid();
                     console.log("res otp modal",res);
-                    if(res.resMsg[0].status == 1){
+                    if(res.resp[0].status == 1){
                         reloadGrid();
                         $("#mobilenochangepopOtp").modal('hide');
                         $("#statusMsg").html("");
-                        $("#statusMsg").append("<span>"+res.resMsg[0].reason+"</span>");
+                        $("#statusMsg").append("<span>"+res.resp[0].reason+"</span>");
                         $('#responseMsgModal').modal({
-                                backdrop: 'static',
-                                keyboard: false, 
-                                show: true
-                        });
+                                    backdrop: 'static',
+                                    keyboard: false, 
+                                    show: true
+                         });
                     }else{
                         $("#otpRes").html("");
                         $("#otpResErr").html("");
-                        $("#otpResErr").append("<span>"+res.resMsg[0].reason+"</span>");
+                        $("#otpResErr").append("<span>"+res.resp[0].reason+"</span>");
                     }
                 },
                 error: function (ex) {
@@ -538,13 +524,13 @@
     }
 
      function ResendOtp(){
-        newUserName = $("#userNameValOtp").val();
-        console.log(userName+"   "+newUserName,"clicked OTP modal");
+        newMobNo = $("#newMobileNoVall").val();
+        console.log(mobNo+"   "+newMobNo,"clicked");
 
-        if(newUserName == userName){
-            $("#mobilenochangepopOtp").modal('hide');
+        if(newMobNo == mobNo){
+            $("#mobilenochangepop").modal('hide');
             $("#statusMsg").html("");
-            $("#statusMsg").append("<span>User Name can not be same.</span>")
+            $("#statusMsg").append("<span>User already registered with mobile: "+ mobNo +"</span>")
             $('#responseMsgModal').modal({
                     backdrop: 'static',
                     keyboard: false, 
@@ -553,10 +539,15 @@
         }else{
             var flag = "Y";
 
-            if(newUserName.trim()!=''){
-                if (!newUserName.match(/^(?!(0))[0-9]{10}$/)){
-                     $("#userName_otp_error").attr("style", "display:block");
-                     $("#userName_otp_error").html("Username is a 10 digit number");
+            if(newMobNo.trim() ==''){
+                $("#mobileno_otp_error").attr("style", "display:block");
+                $("#mobileno_otp_error").html("Please enter new mobile");
+                flag = "N";
+            }
+            if(newMobNo.trim()!=''){
+                if (!newMobNo.match(/^(?!(0))[0-9]{10}$/)){
+                     $("#mobileno_otp_error").attr("style", "display:block");
+                     $("#mobileno_otp_error").html("Mobile is a 10 digit number");
                      flag = "N";
                 }
             }
@@ -565,23 +556,30 @@
                 e.preventDefault();
 
             if (flag == "Y") {
-                $.ajax({
-                    url: "@Url.Action("ChangeRbeMappingByUserName", "ManageRbe")",
+                 $.ajax({
+                    url: "@Url.Action("GetOtpMobileChangeReq", "ManageRbe")",
                     type: "POST",
                     dataType: "JSON",
-                    data: { newUserName: newUserName, userName: userName},
+                    data: { newMobileNo: newMobNo },
                     success: function (res) {
                         console.log("res",res);
-                        if(res.changeList.data[0].status == 1){
+                        if(res.resp.data[0].status == 1){
                             $("#GetRbeIdOtp").val(rbeIdVll);
-                            $("#userNameValOtp").val(newUserName);
+                            $("#GetExistMobNoOtp").val(mobNo);
+                            $("#newMobileNoOtpVal").val(newMobNo);
+                            $("#mobilenochangepop").modal('hide');
                             $("#otpResErr").html("");
                             $("#otpRes").html("");
                             $("#otpRes").append("<span>OTP has been sent again !!</span>");
+                            $('#mobilenochangepopOtp').modal({
+                                    backdrop: 'static',
+                                    keyboard: false, 
+                                    show: true
+                            });
                         }else{
                             $("#mobilenochangepopOtp").modal('hide');
                             $("#statusMsg").html("");
-                            $("#statusMsg").append("<span>"+res.changeList.data[0].reason+"</span>")
+                            $("#statusMsg").append("<span>"+res.resp.data[0].reason+"</span>")
                             $('#responseMsgModal').modal({
                                     backdrop: 'static',
                                     keyboard: false, 
@@ -600,7 +598,7 @@
     function reloadGrid(){
         $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("ChangeRbeMapping", "ManageRbe")',
+                url: '@Url.Action("RbeMobileChangeRequest", "ManageRbe")',
                 success: function (res, status, xhr) {
 
                     console.log(res);
@@ -634,18 +632,18 @@
 
                             var srNumber = (i + 1);
                             var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '')+"</span>";
-                            var userName = "<span class='userName'>"+(girdList[i].userName || '')+"</span>";
+                            var mobileNo = "<span class='mobNo'>"+(girdList[i].mobileNo || '')+"</span>";
                             var firstName = (girdList[i].firstName || '');
                             var lastName = (girdList[i].lastName || '');
                             var emailId = (girdList[i].emailId || '');
                             var region = (girdList[i].region || '');
                             var zone = (girdList[i].zone || '');
-                            var action = "<a class='actionRbe' href='#exampleModal'>" + (girdList[i].action || '') + "</a>";
+                            var action = "<a class='actionRbe' href='#a'>" + (girdList[i].action || '') + "</a>";
 
                             tbl.row.add([
                                 srNumber,
                                 rbeID,
-                                userName,
+                                mobileNo,
                                 firstName,
                                 lastName,
                                 emailId,

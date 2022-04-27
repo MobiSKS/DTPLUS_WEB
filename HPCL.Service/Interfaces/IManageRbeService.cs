@@ -15,5 +15,8 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UserNameVerifyOtp(string newUserName, string userName, string otp);
         Task<GetApproveChnagedRbeMappingResponse> ApproveChangedRbeMapping(GetApproveChangedRbeMapping entity);
         Task<List<ApproveRejectChangedRbeMappingResponse>> ApproveRejectChangedRbeMappingSerivce(string userName, string actionPress);
+        Task<RbeMobileChangeResponse> RbeMobileChangeRequestService(RbeMobileChange entity);
+        Task<GetSendOtpChangeRbeMobileResponse> GetOtpMobileChangeReqService(string newMobileNo);
+        Task<List<SuccessResponse>> VerifyOtpMobileChangeReqService(string existMobNo, string newMobileNo, string otp);
     }
 }
