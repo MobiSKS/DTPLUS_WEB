@@ -280,6 +280,9 @@
         public static string GetRbeMappingStatusUrl = "api/dtplus/RBE/get_rbe_mapping_status";
         public static string GetApproveChangedRbeMappingUrl = "api/dtplus/RBE/get_approve_changed_rbe_mapping";
         public static string ApproveRejectChangedRbeMappingUrl = "api/dtplus/RBE/approve_reject_changed_rbe_mapping";
+        public static string RbeMobileChangeRequestUrl = "api/dtplus/RBE/get_rbe_mobile_change_request";
+        public static string GetOtpMobileChangeReqUrl = "api/dtplus/RBE/send_otp_change_rbe_mobile";
+        public static string VerifyOtpMobileChangeReqUrl = "api/dtplus/RBE/validate_otp_change_rbe_mobile";
         #endregion
 
         #region Application Form Data Entry
