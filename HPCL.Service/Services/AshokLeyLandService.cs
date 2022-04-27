@@ -288,8 +288,24 @@ namespace HPCL.Service.Services
             AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
             addAddOnCard.Message = "";
 
-            if (!string.IsNullOrEmpty(arrs[0].Message))
-                addAddOnCard.Message = arrs[0].Message;
+            if (arrs != null && arrs.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(arrs[0].Message))
+                    addAddOnCard.Message = arrs[0].Message;
+                if (!string.IsNullOrEmpty(arrs[0].NoOfCards))
+                    addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+                else
+                    addAddOnCard.NoOfCards = "";
+                if (!string.IsNullOrEmpty(arrs[0].CustomerOrgName))
+                    addAddOnCard.CustomerOrgName = arrs[0].CustomerOrgName;
+                if (!string.IsNullOrEmpty(arrs[0].NameOnCard))
+                    addAddOnCard.NameOnCard = arrs[0].NameOnCard;
+                if (!string.IsNullOrEmpty(arrs[0].DealerCode))
+                    addAddOnCard.DealerCode = arrs[0].DealerCode;
+                if (!string.IsNullOrEmpty(arrs[0].SalesExecutiveEmployeeID))
+                    addAddOnCard.SalesExecutiveEmployeeID = arrs[0].SalesExecutiveEmployeeID;
+                addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
+            }
             addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
@@ -329,62 +345,69 @@ namespace HPCL.Service.Services
             addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             addAddOnCard.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(addAddOnCard), Encoding.UTF8, "application/json");
-
-            CustomerInserCardResponse customerInserCardResponse;
-
-            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.alAddonOTCCard);
-
-            customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
-
-            if (customerInserCardResponse.Internel_Status_Code != 1000)
+            if (Convert.ToInt32(string.IsNullOrEmpty(addAddOnCard.NoOfCards) ? "0" : addAddOnCard.NoOfCards) > 0)
             {
-                foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
-                {
-                    cardDetails.DuplicateVehicleNo = "";
-                    cardDetails.DuplicateMobileNo = "";
-                }
+                StringContent content = new StringContent(JsonConvert.SerializeObject(addAddOnCard), Encoding.UTF8, "application/json");
 
-                if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                CustomerInserCardResponse customerInserCardResponse;
+
+                var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.alAddonOTCCard);
+
+                customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+                if (customerInserCardResponse.Internel_Status_Code != 1000)
                 {
-                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
                     {
-                        foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                        cardDetails.DuplicateVehicleNo = "";
+                        cardDetails.DuplicateMobileNo = "";
+                    }
+
+                    if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
                         {
-                            if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                            foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
                             {
-                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                                if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                                }
+                            }
+                        }
+                    }
+
+                    if (customerInserCardResponse.Message.Contains("Mobile No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.MobileNo == responseData.Reason)
+                                {
+                                    cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                                }
                             }
                         }
                     }
                 }
 
-                if (customerInserCardResponse.Message.Contains("Mobile No."))
+                if (customerInserCardResponse.Internel_Status_Code == 1000)
                 {
-                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
-                    {
-                        foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
-                        {
-                            if (cardDetails.MobileNo == responseData.Reason)
-                            {
-                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
-                            }
-                        }
-                    }
+                    addAddOnCard.Status = customerInserCardResponse.Data[0].Status;
+                    addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                    addAddOnCard.Message = customerInserCardResponse.Message;
+                    addAddOnCard.Reason = customerInserCardResponse.Data[0].Reason;
                 }
-            }
-
-            if (customerInserCardResponse.Internel_Status_Code == 1000)
-            {
-                addAddOnCard.Status = customerInserCardResponse.Data[0].Status;
-                addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
-                addAddOnCard.Message = customerInserCardResponse.Message;
-                addAddOnCard.Reason = customerInserCardResponse.Data[0].Reason;
-            }
-            else
-            {
-                addAddOnCard.Message = customerInserCardResponse.Message;
-                addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                else
+                {
+                    addAddOnCard.Message = customerInserCardResponse.Message;
+                    if (customerInserCardResponse.Message.Contains("No Record Found"))
+                    {
+                        addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
+                    }
+                    addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                }
             }
 
             return addAddOnCard;

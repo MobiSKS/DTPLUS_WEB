@@ -168,7 +168,7 @@ namespace HPCL_Web.Controllers
 
             if (Model.StatusCode == 1000)
             {
-                return RedirectToAction("SuccessAddOnCardRedirect", new { Message = Model.Reason });
+                return RedirectToAction("SuccessAddonOTCCardMapping", new { Message = Model.Reason });
             }
 
             return View(Model);
@@ -182,6 +182,11 @@ namespace HPCL_Web.Controllers
             addonOTCCardMapping = await _ashokLeyLandService.GetAlSalesExeEmpIdAddOnOTCCardMapping(dealerCode);
 
             return Json(addonOTCCardMapping);
+        }
+        public async Task<IActionResult> SuccessAddonOTCCardMapping(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }

@@ -45,6 +45,10 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string DuplicateMobileNo { get; set; }
         public string CustomerId { get; set; }
         public bool VehicleVerifiedManually { get; set; }
+        public string CustomerOrgName { get; set; }
+        public string NameOnCard { get; set; }
+        public string DealerCode { get; set; }
+        public string SalesExecutiveEmployeeID { get; set; }
         public AddonOTCCardDetails()
         {
             VehicleVerifiedManually = false;
