@@ -8,6 +8,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<GetBlockUnblockCustomerCcmsAccountByCustomeridResponse> GetBlockUnblockCustomerCcmsAccount(string customerId);
         Task<string> UpdateCustomerCcmsAccountStatus (BlockUnblockCustomerCcmsAccount entity);
-        Task<CardBalanceTransferResponseModel> GetCardBalanceTransferDetails(string CardNo);
+        Task<string> GetCardBalanceTransferDetails(string CardNo);
     }
 }
