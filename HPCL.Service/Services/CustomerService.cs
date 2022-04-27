@@ -319,7 +319,11 @@ namespace HPCL.Service.Services
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo.Remarks = "";
             customerCardInfo.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
-
+            customerCardInfo.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(customerCardInfo.ExternalVehicleAPIStatus))
+            {
+                customerCardInfo.ExternalVehicleAPIStatus = "Y";
+            }
 
             if (!string.IsNullOrEmpty(customerReferenceNo))
             {
@@ -350,7 +354,6 @@ namespace HPCL.Service.Services
                         customerCardInfo.CustomerTypeName = customerResponseByReferenceNo.Data[0].CustomerTypeName;
                         customerCardInfo.CustomerTypeId = customerResponseByReferenceNo.Data[0].CustomerTypeId;
                         customerCardInfo.Status= customerResponseByReferenceNo.Data[0].Status;
-                        //customerCardInfo.Status = 1;
 
                         customerCardInfo.PaymentType = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentType) ? "" : customerResponseByReferenceNo.Data[0].PaymentType;
                         customerCardInfo.PaymentReceivedDate = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].PaymentReceivedDate) ? "" : customerResponseByReferenceNo.Data[0].PaymentReceivedDate;
@@ -1440,6 +1443,11 @@ namespace HPCL.Service.Services
             addAddOnCard.CardPreference = "";
             addAddOnCard.FeePaymentDate = "";
             addAddOnCard.FeePaymentNo = "";
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
 
             if (!string.IsNullOrEmpty(arrs[0].Message))
                 addAddOnCard.Message = arrs[0].Message;
@@ -1491,6 +1499,11 @@ namespace HPCL.Service.Services
             else
             {
                 addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
+            }
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
             }
 
             return addAddOnCard;

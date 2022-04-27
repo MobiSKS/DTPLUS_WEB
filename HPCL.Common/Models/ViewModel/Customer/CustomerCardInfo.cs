@@ -41,6 +41,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string Reason { get; set; }
         public string TableStringyfiedData { get; set; }
         public string NoOfGridRows { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
     }
 
     public class CardDetails
