@@ -24,6 +24,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string SalesExecutiveEmployeeID { get; set; }
         public string TableStringyfiedData { get; set; }
         public bool VehicleVerifiedManually { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
         public AddonOTCCardMapping()
         {
             VehicleTypeMdl = new List<VehicleTypeModel>();

@@ -103,6 +103,7 @@
 </div>
 
 @Html.HiddenFor(model => Model.NoOfCards)
+@Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
 
 <div class="clearfix"></div>
 <script>
@@ -322,36 +323,51 @@
                 }
           }
 
+        var externalVehicleAPIStatus="Y";
 
-          $.ajax({
-              type: 'POST',  // http method
-              url: '@Url.Action("CheckVehicleRegistrationValid", "Customer")',
-              data: { RegistrationNumber: vehicleNo },  // data to submit
-              dataType: "json",
-              success: function (data, status, xhr) {
-                  //debugger;
-                  var jsonData = JSON.parse(data);
-                  if (status == 'success' && jsonData['statusCode'] == '101') 
+        externalVehicleAPIStatus = document.getElementById("ExternalVehicleAPIStatus").value.trim();
+
+        console.log(externalVehicleAPIStatus);
+
+         if(externalVehicleAPIStatus=="Y")
+         {
+
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("CheckVehicleRegistrationValid", "Customer")',
+                  data: { RegistrationNumber: vehicleNo },  // data to submit
+                  dataType: "json",
+                  success: function (data, status, xhr) {
+                      //debugger;
+                      var jsonData = JSON.parse(data);
+                      if (status == 'success' && jsonData['statusCode'] == '101') 
+                      {
+                          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                          console.log(jsonData);
+                          mycelValidStatus.innerHTML="1";
+                      }
+                      else 
+                      {
+                          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
+                          mycelValidStatus.innerHTML="0";
+                      }
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) 
                   {
-                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
-                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
-                      console.log(jsonData);
-                      mycelValidStatus.innerHTML="1";
-                  }
-                  else 
-                  {
-                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
                       mycelValidStatus.innerHTML="0";
-                  }
-              },
-              error: function (jqXhr, textStatus, errorMessage) 
-              {
-                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
-                  mycelValidStatus.innerHTML="0";
 
-              }
-          });
+                  }
+              });
+
+          }
+          else
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+              mycelValidStatus.innerHTML="1";
+          }
 
       }
 

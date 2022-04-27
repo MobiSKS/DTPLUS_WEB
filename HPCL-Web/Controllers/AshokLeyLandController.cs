@@ -138,9 +138,7 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> AddonOTCCardMapping()
         {
-            var modals = new AddonOTCCardMapping();
-            modals.Remarks = "";
-            modals.Message = "";
+            var modals = await _ashokLeyLandService.AddonOTCCardMapping();
             return View(modals);
         }
 
