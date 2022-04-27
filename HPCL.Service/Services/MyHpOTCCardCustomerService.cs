@@ -92,6 +92,11 @@ namespace HPCL.Service.Services
             {
                 custModel.ExternalPANAPIStatus = "Y";
             }
+            custModel.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalVehicleAPIStatus))
+            {
+                custModel.ExternalVehicleAPIStatus = "Y";
+            }
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
             {

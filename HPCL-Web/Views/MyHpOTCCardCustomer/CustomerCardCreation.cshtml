@@ -525,6 +525,7 @@
             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId, new { id = "RegionalOfficeId" })</div>
             <div style="display:none;">@Html.TextBoxFor(m => m.LoggedInAs, new { id = "LoggedInAs" })</div>
             @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
+            @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
         </form>
     <div class="clearfix"></div>
 </div>
@@ -2280,34 +2281,46 @@
             document.getElementById("VehicleNo1_error").innerHTML = "";
         }
 
+        var externalVehicleAPIStatus="Y";
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-            data: { RegistrationNumber: vehicleNo },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') 
-                {
-                    document.getElementById("VehicleNo1_error").innerHTML = "";
-                    console.log(jsonData);
-                    console.log(document.getElementById("VehicleNo1_error").innerHTML);
-                }
-                else 
+        externalVehicleAPIStatus = document.getElementById("ExternalVehicleAPIStatus").value.trim();
+
+        console.log(externalVehicleAPIStatus);
+
+        if(externalVehicleAPIStatus=="Y")
+        {
+            $.ajax({
+                type: 'POST',  // http method
+                url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+                data: { RegistrationNumber: vehicleNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['statusCode'] == '101') 
+                    {
+                        document.getElementById("VehicleNo1_error").innerHTML = "";
+                        console.log(jsonData);
+                        console.log(document.getElementById("VehicleNo1_error").innerHTML);
+                    }
+                    else 
+                    {
+                        document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                        localStorage.setItem("INVALIDVEHICLENO1", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
                 {
                     document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                     localStorage.setItem("INVALIDVEHICLENO1", "0");
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-                localStorage.setItem("INVALIDVEHICLENO1", "0");
-            }
-        });
-
+            });
+        }
+        else
+        {
+            document.getElementById("VehicleNo1_error").innerHTML = "";
+            localStorage.setItem("INVALIDVEHICLENO1", "1");
+        }
 
     });
 
@@ -2343,32 +2356,48 @@
         }
 
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-            data: { RegistrationNumber: vehicleNo },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') 
-                {
-                    document.getElementById("VehicleNo2_error").innerHTML = "";
-                    console.log(jsonData);
-                    console.log(document.getElementById("VehicleNo2_error").innerHTML);
-                }
-                else 
+        var externalVehicleAPIStatus="Y";
+
+        externalVehicleAPIStatus = document.getElementById("ExternalVehicleAPIStatus").value.trim();
+
+        console.log(externalVehicleAPIStatus);
+
+        if(externalVehicleAPIStatus=="Y")
+        {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+                data: { RegistrationNumber: vehicleNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['statusCode'] == '101') 
+                    {
+                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                        console.log(jsonData);
+                        console.log(document.getElementById("VehicleNo2_error").innerHTML);
+                    }
+                    else 
+                    {
+                        document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                        localStorage.setItem("INVALIDVEHICLENO2", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
                 {
                     document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                     localStorage.setItem("INVALIDVEHICLENO2", "0");
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                localStorage.setItem("INVALIDVEHICLENO2", "0");
-            }
-        });
+            });
+
+        }
+        else
+        {
+            document.getElementById("VehicleNo2_error").innerHTML = "";
+            localStorage.setItem("INVALIDVEHICLENO2", "1");
+        }
 
 
     });
