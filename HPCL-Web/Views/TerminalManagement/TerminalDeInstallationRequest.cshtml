@@ -1,4 +1,4 @@
-﻿    @model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
@@ -7,7 +7,7 @@
             <li class="breadcrumb-item font-weight-light">Terminal Deinstallation Request</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
@@ -58,8 +58,8 @@
 
                                                 if (DeinstallationTypeID == "1")
                                                     @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", @readonly = "readonly", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    else
-                                                        @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                else
+                                                    @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             }
                                             <span style="display:none" class="error" id="terminalId_error"></span>
                                         </div>
@@ -82,7 +82,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
@@ -96,425 +96,230 @@
             </div>
         }
         <div class="clearfix"></div>
-        <div id="show_Table" class="toBeHiddenOnSuccess">
-            @if (Model.ObjMerchantDeinstallationDetail.Count() > 0 && Model.ObjTerminalDeinstallationDetail.Count() > 0)
-            {
-                @if (Model.ObjMerchantDeinstallationDetail.Count() > 0)
-                {
-                    <div class="border-1 rounded border-grey w-100">
-                        <div class="py-2 p-md-4">
-                            <div class="row">
-                                <div class="col-12 float-left">
-                                    <div class="col-6 float-left">
 
-                                        <div class="col-lg-12 col-md-12 col-12">
-                                            <div class=" d-flex align-items-start flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Merchant Name :</label>
-                                                <div class="col-md-7 col-12" id="SummaryMerchantID">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().MerchantName</label>
-
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
-                                                <div class="col-md-7 col-12" id="SummaryRetailOutletName">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().RetailOutletName</label>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Address :</label>
-                                                <div class="col-md-7 col-12" id="SummaryMerchantType">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().Address</label>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">City :</label>
-                                                <div class="col-md-7 col-12" id="SummaryDealerName">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().City</label>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">State :</label>
-                                                <div class="col-md-7 col-12" id="SummaryDealerMobileNum">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().State</label>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">District :</label>
-                                                <div class="col-md-7 col-12" id="SummaryOutletCategory">
-                                                    <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().District</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-
-                }
-                @if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
-                {
-
-
-                    string DeinstallationTypeID = Model.DeinstallationTypeID, disabled = "";
-                    if (DeinstallationTypeID == "1")
-                        disabled = "disabled";
-
-                    <div class="table-responsive">
-                        <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive mt-3" style="width:100%;" id="TerminalRequestDetails">
-                            <thead style="background-color:lightgray;">
-                                <tr>
-                                    <th style="width:5%;"><input type="checkbox" id="checkAll" @disabled /></th>
-                                    <th style="width:10%;">Zonal Office</th>
-                                    <th style="width:10%;">Regional Office</th>
-                                    <th style="width:10%;">Terminal ID</th>
-                                    <th style="width:10%;">Created Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="searchTableBody">
-                                @{
-                                    int i = 0;
-
-                                }
-                                @foreach (var item in Model.ObjTerminalDeinstallationDetail)
-                                {
-                                    i = i + 1;
-
-                                    <tr>
-                                        <td><input type="checkbox" id="check_@i" @disabled /></td>
-                                        <td>@item.ZonalOfficeName</td>
-                                        <td>@item.RegionalOfficeName</td>
-                                        <td>@item.TerminalId</td>
-                                        <td>@item.CreatedTime</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="clearfix"></div>
-
-
-                    <div class="d-flex align-items-center flex-wrap">
-                        <div class="col-lg-6 col-12">
-                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
-                                <div class="col-md-7 col-12">
-                                    <div class="custom_select">
-                                        <textarea rows="4" id="txtComments" cols="50" class="form-control"></textarea>
-                                        <span class="error" id="comment_error"></span>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="d-flex align-items-center justify-content-center mt-0">
-                        <div class="px-2">
-                            <button class="btn btn_primary" type="button" id="btnDeinstall" onclick="submitTerminaldeinstallationRequest();">Deinstall</button>
-                        </div>
-
-                    </div>
-
-                }
-            }
-            else
-            {
-                <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
-                    @Model.Message
-                </div>
-            }
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
         </div>
+        <div class="clearfix"></div>
     </div>
 </div>
 <script type="text/javascript">
-    //debugger;
-    $("#checkAll").click(function () {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-    });
-    var zonalID = $("#ZonalOfficeId").val();
-    var regionalID = $("#RegionalOfcIdVal").val();
+     //debugger;
+
+     var zonalID = $("#ZonalOfficeId").val();
+     var regionalID = $("#RegionalOfcIdVal").val();
 
 
-    $(document).ready(function () {
-        //getMerchantRegionalOfc();
-        //debugger;
-        var merchantID = $("#MerchantId").val();
-        if (merchantID == "") {
-            $("#show_Table").html("");
-        }
+     $(document).ready(function () {
 
-    });
-
-    $("#btnSearch").on("click", (function (e) {
-        //debugger;
-        var deInstallationType = $("#DeinstallationTypeID :selected").val();
-        var merchantID = $("#MerchantId").val();
-        var terminalId = $("#TerminalId").val();
-        var flag = "Y";
-        if (merchantID == "") {
-            $("#Merchant_error").attr("style", "display:block");
-            $("#Merchant_error").html("Merchant ID required");
-            flag = "N";
-        }
-        else {
-            if (!merchantID.match(mappedMerchantID)) {
-                $("#Merchant_error").attr("style", "display:block");
-                $("#Merchant_error").html("Please enter valid Merchant ID");
-                flag = "N";
-            }
-            else {
-                $("#Merchant_error").attr("style", "display:none");
-                $("#Merchant_error").html("");
-            }
-        }
-        if (terminalId != "") {
-            if (!terminalId.match(mappedterminalID)) {
-                $("#terminalId_error").attr("style", "display:block");
-                $("#terminalId_error").html("Please enter valid Terminal ID");
-                flag = "N";
-            }
-        }
-        if (deInstallationType == "0") {
-            $("#type_error").html("Select Deinstallation Type");
-            flag = "N";
-        }
-        else {
-            $("#type_error").html("");
-            if (deInstallationType == "1") {
-                $("#TerminalId").val("");
-                $("#TerminalId").prop("readonly", true);
-            }
-            else
-                $("#TerminalId").prop("readonly", false);
-        }
-        if (flag == "N")
-            e.preventDefault();
-
-    })
-    );
-    $("#btnReset").click(function () {
-       location.reload();
-
-    });
-    
-    $("#RegionalOfficeId").change(function () {
-        var id = this.value;
-        $("#RegionalOfcIdVal").val(id);
-    });
-    function changeterminalId() {
-        var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
-        if (deInstallationTypeID == "1") {
-            $("#TerminalId").val("");
-            $("#TerminalId").prop("readonly", true);
-        }
-        else
-            $("#TerminalId").prop("readonly", false);
-        $("#show_Table").html("");
-    }
-
-
-   function getMerchantRegionalOfc() {
-        var id = $('#ZonalOfficeId :selected').val();
-        var regionalID = $("#RegionalOfcIdVal").val();
-        if(id>0){
-             $.ajax({
-                 type: 'POST',  // http method
-                 url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                 data: { ZonalOfcID: id },  // data to submit
-                 dataType: "json",
-                 success: function (data, status, xhr) {
-                     var v = data;
-                     if (status == 'success') {
-                         $("#RegionalOfficeId").html("");
-                         $.each(data, function (i, data) { // bind the dropdown list using json result
-                             if (i == 0) {
-                                 $('<option>',
-                                     {
-                                         value: 0,
-                                         text: "--All--"
-                                     }).html("--All--").appendTo("#RegionalOfficeId");
-                                 if (data.regionalOfficeID == regionalID) {
-                                     $('<option selected = "selected">',
-                                         {
-                                             value: data.regionalOfficeID,
-                                             text: data.regionalOfficeName
-                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                                 }
-                                 else {
-                                     $('<option>',
-                                         {
-                                             value: data.regionalOfficeID,
-                                             text: data.regionalOfficeName
-                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                                 }
-                             }
-                             else if (data.regionalOfficeID == regionalID) {
-                                 $('<option selected = "selected">',
-                                     {
-                                         value: data.regionalOfficeID,
-                                         text: data.regionalOfficeName
-                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                             }
-                             else {
-                                 $('<option>',
-                                     {
-                                         value: data.regionalOfficeID,
-                                         text: data.regionalOfficeName
-                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                             }
-                         });
-                         $("#RegionalOfficeId")[0].sumo.reload();
-                     }
-                     else {
-                         console.log(v);
-                     }
-                 },
-                 error: function (jqXhr, textStatus, errorMessage) {
-                     alert("Error Populating Regional Office Data");
-                 }
-             });
-         }
-         else{
-            $("#RegionalOfficeId").html('');
-            $("#RegionalOfficeId")[0].sumo.reload();
-         }
-     };
-       $('select').SumoSelect({
-            placeholder: '-All-',
-            search: true,
-            searchText: 'Enter Text here.'
-        });
-
-     function submitTerminaldeinstallationRequest() {
-        //alert("inside submit");
-         var confirmstring = "Do you want to Deinstall the selected Terminal.";
-         terminalDetail = [];
-         var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
-         var deInstallationType = $("#DeinstallationTypeID :selected").text();
-         if (deInstallationTypeID == "1") {
-             $("#TerminalRequestDetails tbody tr").each(function () {
-                 var row = $(this);
-                 var terminalId = row[0].cells[3].textContent;
-                 terminalDetail.push({ TerminalId: terminalId });
-             });
-             confirmstring = "You have selected all Terminals for Deinstallation, Merchant will be hot listed";
-         }
-         if (deInstallationTypeID == "2") {
-             $("#TerminalRequestDetails tbody tr").each(function () {
-                 var row = $(this);
-                 if (row.find('input[type="checkbox"]').is(":checked")) {
-                     var terminalId = row[0].cells[3].textContent;
-                     terminalDetail.push({ TerminalId: terminalId });
-                 }
-             });
-             confirmstring = "Do you want to Deinstall the selected Terminal.";
-         }
-        var flag = "Y";
-        //debugger;
-         var comments = $('#txtComments').val();
-         var merchantID = $("#MerchantId").val();
-         if (terminalDetail.length == 0) {
-            alert("Please select at least one request to process.");
-            return;
-        }
-         if (comments == "") {
-             flag = "N";
-             $("#comment_error").html("Please enter a comment for Deinstallation");
-             return;
-        }
-         if (terminalDetail.length > 0 && flag == "Y") {
-             if (confirm(confirmstring)) {
-                 $("#comment_error").html("");
-                 var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
-                 $.ajax({
-                     type: 'POST',
-                     url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
-                     contentType: "application/json; charset=utf-8",
-                     dataType: 'json',
-                     data: JSON.stringify(terminationReqmodel),
-                     success: function (data) {
-                         $("#reason").html(data);
-                         $(".toBeHiddenOnSuccess").hide();
-
-                     },
-                     error: function (ex) {
-                         alert('Error.' + ex);
-                     }
-                 });
-             }
-        }
-
-
-    };
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
-        if (charCode != 46 && charCode > 31
-            && (charCode < 48 || charCode > 57))
-            return false;
-
-        return true;
-    }
-     $("#MerchantId").on("blur", function () {
-         var merchantId = $("#MerchantId").val();
-         if (merchantId != "") {
-            if (!merchantId.match(mappedMerchantID)) {
-                $("#Merchant_error").attr("style", "display:block");
-                $("#Merchant_error").html("Please enter valid Merchant ID");
-                
-            }
-            else{
-                $("#Merchant_error").attr("style", "display:none");
-                $("#Merchant_error").html("");
-            }
-         }
-         else{
-            $("#Merchant_error").attr("style", "display:block");
-            $("#Merchant_error").html("Merchant ID required");
-         }
      });
-     $("#TerminalId").on("blur", function () {
+
+     $("#btnSearch").on("click", (function (e) {
+         //debugger;
+         var deInstallationType = $("#DeinstallationTypeID :selected").val();
+         var merchantID = $("#MerchantId").val();
          var terminalId = $("#TerminalId").val();
+         var flag = "Y";
+         if (merchantID == "") {
+             $("#Merchant_error").attr("style", "display:block");
+             $("#Merchant_error").html("Merchant ID required");
+             flag = "N";
+         }
+         else {
+             if (!merchantID.match(mappedMerchantID)) {
+                 $("#Merchant_error").attr("style", "display:block");
+                 $("#Merchant_error").html("Please enter valid Merchant ID");
+                 flag = "N";
+             }
+             else {
+                 $("#Merchant_error").attr("style", "display:none");
+                 $("#Merchant_error").html("");
+             }
+         }
          if (terminalId != "") {
              if (!terminalId.match(mappedterminalID)) {
                  $("#terminalId_error").attr("style", "display:block");
                  $("#terminalId_error").html("Please enter valid Terminal ID");
+                 flag = "N";
+             }
+         }
+         if (deInstallationType == "0") {
+             $("#type_error").html("Select Deinstallation Type");
+             flag = "N";
+         }
+         else {
+             $("#type_error").html("");
+             if (deInstallationType == "1") {
+                 $("#TerminalId").val("");
+                 $("#TerminalId").prop("readonly", true);
+             }
+             else
+                 $("#TerminalId").prop("readonly", false);
+         }
+         if (flag == "N")
+             e.preventDefault();
+             else{
+
+                  var zoID = $("#ZonalOfficeId").val();
+                  var roID = $("#RegionalOfficeId").val();
+                 var terminationReqmodel = { MerchantId: merchantID, TerminalId: terminalId, ZonalOfficeId: zoID, RegionalOfficeId: roID,DeinstallationTypeID:deInstallationType };
+                  $.ajax({
+                      type: 'GET',
+                      url: '@Url.Action("SearchTerminalDeInstallationRequest", "TerminalManagement")',
+                      contentType: "application/json; charset=utf-8",
+                      data: terminationReqmodel,
+                      success: function (data) {
+                            $("#show_Table").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#show_Table").offset().top
+                            }, 2000);
+                      },
+                      error: function (ex) {
+                          alert('Error.' + ex);
+                      }
+                  });
+             }
+
+     })
+     );
+     $("#btnReset").click(function () {
+         location.reload();
+
+     });
+
+     $("#RegionalOfficeId").change(function () {
+         var id = this.value;
+         $("#RegionalOfcIdVal").val(id);
+     });
+     function changeterminalId() {
+         var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
+         if (deInstallationTypeID == "1") {
+             $("#TerminalId").val("");
+             $("#TerminalId").prop("readonly", true);
+         }
+         else
+             $("#TerminalId").prop("readonly", false);
+         $("#show_Table").html("");
+     }
+
+
+    function getMerchantRegionalOfc() {
+         var id = $('#ZonalOfficeId :selected').val();
+         var regionalID = $("#RegionalOfcIdVal").val();
+         if(id>0){
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                  data: { ZonalOfcID: id },  // data to submit
+                  dataType: "json",
+                  success: function (data, status, xhr) {
+                      var v = data;
+                      if (status == 'success') {
+                          $("#RegionalOfficeId").html("");
+                          $.each(data, function (i, data) { // bind the dropdown list using json result
+                              if (i == 0) {
+                                  $('<option>',
+                                      {
+                                          value: 0,
+                                          text: "--All--"
+                                      }).html("--All--").appendTo("#RegionalOfficeId");
+                                  if (data.regionalOfficeID == regionalID) {
+                                      $('<option selected = "selected">',
+                                          {
+                                              value: data.regionalOfficeID,
+                                              text: data.regionalOfficeName
+                                          }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                  }
+                                  else {
+                                      $('<option>',
+                                          {
+                                              value: data.regionalOfficeID,
+                                              text: data.regionalOfficeName
+                                          }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                  }
+                              }
+                              else if (data.regionalOfficeID == regionalID) {
+                                  $('<option selected = "selected">',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                              else {
+                                  $('<option>',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                          });
+                          $("#RegionalOfficeId")[0].sumo.reload();
+                      }
+                      else {
+                          console.log(v);
+                      }
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) {
+                      alert("Error Populating Regional Office Data");
+                  }
+              });
+          }
+          else{
+             $("#RegionalOfficeId").html('');
+             $("#RegionalOfficeId")[0].sumo.reload();
+          }
+      };
+        $('select').SumoSelect({
+             placeholder: '-All-',
+             search: true,
+             searchText: 'Enter Text here.'
+         });
+
+
+
+      $("#MerchantId").on("blur", function () {
+          var merchantId = $("#MerchantId").val();
+          if (merchantId != "") {
+             if (!merchantId.match(mappedMerchantID)) {
+                 $("#Merchant_error").attr("style", "display:block");
+                 $("#Merchant_error").html("Please enter valid Merchant ID");
+
              }
              else{
-                 $("#terminalId_error").attr("style", "display:none");
-                 $("#terminalId_error").html("");
+                 $("#Merchant_error").attr("style", "display:none");
+                 $("#Merchant_error").html("");
              }
+          }
+          else{
+             $("#Merchant_error").attr("style", "display:block");
+             $("#Merchant_error").html("Merchant ID required");
+          }
+      });
+      $("#TerminalId").on("blur", function () {
+          var terminalId = $("#TerminalId").val();
+          if (terminalId != "") {
+              if (!terminalId.match(mappedterminalID)) {
+                  $("#terminalId_error").attr("style", "display:block");
+                  $("#terminalId_error").html("Please enter valid Terminal ID");
+              }
+              else{
+                  $("#terminalId_error").attr("style", "display:none");
+                  $("#terminalId_error").html("");
+              }
+          }
+          else{
+              $("#terminalId_error").attr("style", "display:none");
+              $("#terminalId_error").html("");
+          }
+      });
+      $("#DeinstallationTypeID").on("change", function () {
+          var deInstallationType = $("#DeinstallationTypeID :selected").val();
+          if (deInstallationType == "0") {
+             $("#type_error").html("Select Deinstallation Type");
          }
-         else{
-             $("#terminalId_error").attr("style", "display:none");
-             $("#terminalId_error").html("");
+         else {
+             $("#type_error").html("");
          }
-     });
-     $("#DeinstallationTypeID").on("change", function () {
-         var deInstallationType = $("#DeinstallationTypeID :selected").val();
-         if (deInstallationType == "0") {
-            $("#type_error").html("Select Deinstallation Type");
-        }
-        else {
-            $("#type_error").html("");
-        }
-     });
-     
-      $("#txtComments").on("blur", function () {
-         var txtComments = $("#txtComments").val();
-         if (txtComments == "") {
-             $("#comment_error").attr("style", "display:block");
-             $("#comment_error").html("Please enter a comment for Deinstallation");
-             
-         }
-         else{
-             $("#comment_error").attr("style", "display:none");
-             $("#comment_error").html("");
-         }
-     });
+      });
+
+
 </script>

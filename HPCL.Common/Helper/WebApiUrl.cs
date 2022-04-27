@@ -204,6 +204,7 @@
         public static string getTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/get_terminal_de_installation_request_authorization";
         public static string updateTerminalDeInstallationRequestAuthorization = "api/dtplus/terminal/insert_terminal_de_installation_request_authorization";
         public static string ManageTerminalUrl = "api/dtplus/terminal/get_manage_terminal_detail";
+        public static string getstatustypesforterminal = "api/dtplus/settings/get_status_types_for_terminal";
         #endregion
 
         #region AshokLeyLand
@@ -216,6 +217,9 @@
         public static string getAvailityAlOTCCard = "api/dtplus/ashokleyland/get_availity_al_otc_card";
         public static string insertAlCustomer = "api/dtplus/ashokleyland/insert_al_customer";
         public static string viewAlOTCCardDealerAllocation = "api/dtplus/ashokleyland/view_al_otc_card_dealer_allocation";
+        public static string getAladdonOTCCardMappingCustomerDetails = "api/dtplus/ashokleyland/get_al_addon_otc_card_mapping_customer_details";
+        public static string alAddonOTCCard = "api/dtplus/ashokleyland/al_addon_otc_card";
+        public static string getAlSalesExeEmpidAddonOtcCardMapping = "api/dtplus/ashokleyland/get_al_sales_exe_empid_addon_otc_card_mapping";
         #endregion
 
         #region Customer Financial
@@ -294,6 +298,7 @@
         #region "DTP Support"
         public static string GetBlockUnblockCustomerCcmsAccountByCustomeridUrl = "api/dtplus/dtp/get_block_unblock_customer_ccms_account_by_customerid";
         public static string BlockUnblockCustomerCcmsAccountUrl = "api/dtplus/dtp/block_unblock_customer_ccms_account";
+        public static string GetCardBalanceTransfer = "api/dtplus/dtp/card_balance_transfer";
         #endregion
     }
 }

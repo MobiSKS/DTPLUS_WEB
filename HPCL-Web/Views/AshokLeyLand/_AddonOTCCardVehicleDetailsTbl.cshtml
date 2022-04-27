@@ -1,0 +1,578 @@
+﻿@model HPCL.Common.Models.ViewModel.AshokLeyLand.AddonOTCCardMapping
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+        <div class="d-flex align-items-center flex-wrap mb-3">
+            <div class="table-responsive">
+					<table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
+						<thead>
+							<tr>
+								<th>S.No</th>
+								<th>Card Number</th>
+                                <th>Vehicle Number</th>
+                                <th></th>
+	     						<th>Vehicle Type</th>
+								<th>VIN Number</th>
+								<th>Mobile No</th>
+								<td></td>
+								<td style="display:none;">0</td>
+								<td style="display:none;">0</td>
+							</tr>
+						</thead>
+						<tbody>
+							@{ int Slno = 1;}
+							@for(int i = 0; i < Convert.ToInt32(Model.NoOfCards); i++)
+							{
+                                if (@Model.ObjCardDetail.Count > 0)
+                                {
+                                     <tr>
+                                        <td>@Slno</td>
+                                        <td>
+                                            <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardNo" value="@Model.ObjCardDetail[i].CardNo" onchange='CardNumberChange(this,@i)'>
+                                            <span class='field-validation-error text-danger' id='CardNo_error_@i'></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" onkeydown='javascript: IsAlphaNumeric(this)' value="@Model.ObjCardDetail[i].VechileNo">
+                                            <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
+                                                @Model.ObjCardDetail[i].DuplicateVehicleNo
+                                            </span>
+                                        </td>
+                                        <td style="vertical-align: unset;"><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
+                                        <td>
+                                            <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                            <input type="hidden" id='hdnVehicleType_@i' value="@Model.ObjCardDetail[i].VehicleType">
+                                            <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" maxlength="17" class="form-control" name="ObjCardDetail[@i].VINNumber" value="@Model.ObjCardDetail[i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
+                                            <span class='field-validation-error text-danger' id='VINNumber_error_@i'></span>
+                                        </td>
+                                            <td>
+                                            <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" value="@Model.ObjCardDetail[i].MobileNo" onchange='MobileNoChange(this,@i)'>
+                                            <span class='field-validation-error text-danger' id='MobileNo_error_@i'>
+                                                @Model.ObjCardDetail[i].DuplicateMobileNo
+                                            </span>
+                                        </td>
+                                        <td></td>
+                                        <td style="display:none;">0</td>
+                                        <td style="display:none;">0</td>
+
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@Slno</td>
+                                       
+                                            <td>
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].CardNo" onchange='CardNumberChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='CardNo_error_@i'></span>
+                                            </td>
+                                        
+                                            <td>
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" onkeydown='javascript: IsAlphaNumeric(this)'>
+                                                <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
+                                            </td>
+                                            <td style="vertical-align: unset;"><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
+                                            <td>
+                                                <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
+                                                <input type="hidden" id='hdnVehicleType_@i'>
+                                                <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" maxlength="17" class="form-control" name="ObjCardDetail[@i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
+                                                <span class='field-validation-error text-danger' id='VINNumber_error_@i'></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
+                                            </td>
+                                            <td></td>
+                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">0</td>
+
+                                    </tr>
+                                }
+                                Slno++;
+							}
+						</tbody>
+					</table>
+            </div>
+        </div>
+    
+</div>
+
+@Html.HiddenFor(model => Model.NoOfCards)
+
+<div class="clearfix"></div>
+<script>
+ $(document).ready(function () {
+    
+    $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+                dataType: "json",
+                success: function (data, status, xhr) {
+
+                console.log(data);
+
+                $.each(data.sortedtList, function (i, option) {
+                    $("<option/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo(".vls");
+                });
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Region");
+                }
+            });
+
+      for(i=0;i<Number(document.getElementById('NoOfCards').value);i++)
+      {
+          var v ='ddlVehicleType_'+ i;
+          var h='hdnVehicleType_'+ i;
+
+          if(document.getElementById(h).value!="")
+          {
+            PopulateVehicleTypeList(document.getElementById(h).value, v);
+          }
+      }
+
+    });
+
+    function PopulateVehicleTypeList(vehicleTypeId, selectID)
+    {
+        $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+
+                    console.log(data);
+
+                    $.each(data.sortedtList, function (i, option) {
+                        if (option.vehicleTypeName == vehicleTypeId)
+                            $("<option selected = 'selected'/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo("#" + selectID);
+                        else
+                           $("<option/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo("#" + selectID);
+                    });
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Vehicle Type Dropdown");
+                    }
+                });
+  }
+
+  function CheckVechileNoUsed(o, rowSelected) 
+  {
+          debugger;
+          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+          var vehicleNo = o.value;
+          console.log(vehicleNo);
+
+                    
+        if(vehicleNo.trim()=='')
+        {
+            document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+            return false;
+        }
+        else
+        {
+            if(vehicleNo.trim()!='')
+            {
+                if (!(vehicleNo.match(forVehicleNo))) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if (!vehicleNo.match(atLeastOneAlphabet)) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if(vehicleNo.length<6 || vehicleNo.length>10)
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="";
+                }
+            }
+        }   
+        
+
+          console.log(rowSelected);
+
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+
+          var mycel;
+          var mycelStatus;
+
+          mycel = myrow.getElementsByTagName("td")[7];
+          mycelStatus=myrow.getElementsByTagName("td")[8];
+              
+          console.log(mycel);
+          console.log(mycelStatus);
+          console.log(rowSelected);
+          
+          if (vehicleNo == '') 
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+              mycelStatus.innerHTML = "0";
+              return false;
+          }
+          else 
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+              mycelStatus.innerHTML = "0";
+          }
+
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("CheckVechileNoUsed", "Customer")',
+              data: { VechileNo: vehicleNo },  // data to submit
+              dataType: "json",
+              success: function (data, status, xhr) 
+              {
+                  console.log(data);
+                  if (data.status == "0") 
+                  {
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                      mycelStatus.innerHTML = "1";
+                  }
+                  else 
+                  {
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                      mycelStatus.innerHTML = "0";
+                  }
+              },
+              error: function (jqXhr, textStatus, errorMessage) 
+              {
+                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                  mycelStatus.innerHTML = "1";
+
+              }
+          });
+
+      }
+
+	  function ValidateVehicleNo(rowSelected) 
+      {
+          debugger;
+
+          if($(VehicleVerifiedManually).prop("checked"))
+          {
+              return false;
+          }
+
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+          mycel = myrow.getElementsByTagName("td")[1];
+          mycelValidStatus = myrow.getElementsByTagName("td")[1];
+
+
+         mycel = myrow.getElementsByTagName("td")[2];
+
+
+          console.log(mycel);
+          var vehicleNo = mycel.getElementsByTagName("input")[0].value;
+
+          console.log(vehicleNo);
+
+          console.log(rowSelected);
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+          var mycel;
+
+            mycel = myrow.getElementsByTagName("td")[7];
+            mycelValidStatus = myrow.getElementsByTagName("td")[9];
+             
+          if (vehicleNo == '') 
+          {
+              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+              return false;
+          }
+          else 
+          {
+                if (!(vehicleNo.match(forVehicleNo))) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if (!vehicleNo.match(atLeastOneAlphabet)) 
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else if(vehicleNo.length<6 || vehicleNo.length>10)
+                {
+                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    return false;
+                }
+                else
+                {
+                   document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                }
+          }
+
+
+          $.ajax({
+              type: 'POST',  // http method
+              url: '@Url.Action("CheckVehicleRegistrationValid", "Customer")',
+              data: { RegistrationNumber: vehicleNo },  // data to submit
+              dataType: "json",
+              success: function (data, status, xhr) {
+                  //debugger;
+                  var jsonData = JSON.parse(data);
+                  if (status == 'success' && jsonData['statusCode'] == '101') 
+                  {
+                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                      console.log(jsonData);
+                      mycelValidStatus.innerHTML="1";
+                  }
+                  else 
+                  {
+                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
+                      mycelValidStatus.innerHTML="0";
+                  }
+              },
+              error: function (jqXhr, textStatus, errorMessage) 
+              {
+                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
+                  mycelValidStatus.innerHTML="0";
+
+              }
+          });
+
+      }
+
+      function VehicleTypeChange(o, rowSelected) 
+      {
+          var vehicleType = o.value;
+          console.log(vehicleType);
+
+        if(vehicleType.trim()=='--Select--')
+        {
+            document.getElementById('ddlVehicleType_error_'+rowSelected).innerHTML="Select Vehicle Type";
+            return false;
+        }
+        else
+        {
+            document.getElementById('ddlVehicleType_error_'+rowSelected).innerHTML="";
+        } 
+
+     }
+
+     function CardNumberChange(o, rowSelected) 
+     {
+         var identifier = o.value;
+         console.log(identifier);
+         var isValid=true;
+
+        if(identifier.trim()=='')
+        {
+            document.getElementById('CardNo_error_'+rowSelected).innerHTML="Enter Card Number";
+            isValid=false;
+        }
+        else
+        {
+            if (identifier.charAt(0) == "0") 
+            {
+                document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
+                isValid=false;
+            }
+            else if (identifier.length < 16 || identifier.length > 16) 
+            {
+                document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
+                isValid=false;
+            }
+            else if(!identifier.match(number)) 
+            {
+                document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
+                isValid = false;
+            }
+            else
+            {
+                document.getElementById('CardNo_error_'+rowSelected).innerHTML="";
+            }
+        } 
+
+        if(isValid)
+        {
+            var j=0;i=0;
+            var cnt=0;
+            console.log('Before Checking For Duplicate Card Number');
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                var row = $(this);
+                j=0;
+                i=i+1;
+                cnt = 0;
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row1 = $(this);
+
+                    j=j+1;
+                    if(i>0 && j>1 && j>i)
+                    {
+                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                        if(PrevIdent!="" && CurIdent!="")
+                        {
+                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                            {
+
+                                if(CurIdent.length<16 || CurIdent.length>16)
+                                {
+                                  document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                                  isValid=false;
+                                }
+                                else if(!CurIdent.match(number))
+                                {
+                                  document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                                  isValid=false;
+                                }
+                                else
+                                {
+                                    document.getElementById('CardNo_error_'+cnt).innerHTML="Duplicate Card Number";
+                                    isValid=false;
+                                }
+
+                            }
+                        }
+                    }
+
+                    cnt=cnt+1;
+                });
+
+            });
+
+        }
+
+     }
+
+     function VINNumberChange(o, rowSelected) 
+     {
+          var vinNumber = o.value;
+          console.log(vinNumber);
+
+        if(vinNumber.trim()=='')
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Enter VIN Number";
+            return false;
+        }
+        else if (!(vinNumber.match(forVehicleNo))) 
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
+            return false;
+        }
+        else if (!vinNumber.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Invalid VIN Number";
+            return false;
+        }
+        else if(vinNumber.length<17 || vinNumber.length>17)
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
+            return false;
+        }
+        else
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML="";
+        } 
+     }
+
+     function MobileNoChange(o, rowSelected) 
+     {
+         var mobile = o.value;
+         console.log(mobile);
+         var isValid=true;
+         var PrevMobile = "";
+         var CurMobile =  "";
+
+        if(mobile.trim()=='')
+        {
+            document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Enter Mobile No.";
+            isValid = false;
+        }
+        else
+        {
+            if (mobile.charAt(0) == "0") 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if (mobile.length < 10) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if(!mobile.match(phoneno)) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="";
+            }
+        }
+        
+        if(isValid)
+        {
+            j=0;i=0;
+            cnt=0;
+            console.log('Before Checking For Duplicate MobileNo');
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                var row = $(this);
+                j=0;
+                i=i+1;
+                cnt = 0;
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row1 = $(this);
+
+                    j=j+1;
+                    if(i>0 && j>1 && j>i)
+                    {
+
+                        PrevMobile = row.find("td:eq(6) input[type='text']").val();
+                        CurMobile =  row1.find("td:eq(6) input[type='text']").val();
+
+                        if(PrevMobile!="" && CurMobile!="")
+                        {
+                            if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
+                            {
+                                document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                            }
+                        }
+                    }
+
+                    cnt=cnt+1;
+                });
+
+            });
+
+        }
+
+
+     }
+
+function IsAlphaNumeric(keyCode)
+{
+    return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 46 ||
+        (keyCode >= 97 && keyCode <= 122) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
+}
+
+</script>

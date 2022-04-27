@@ -136,5 +136,58 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/AshokLeyLand/_ALOTCCardsDealerAllocationTable.cshtml", modals);
         }
 
+        public async Task<IActionResult> AddonOTCCardMapping()
+        {
+            var modals = new AddonOTCCardMapping();
+            modals.Remarks = "";
+            modals.Message = "";
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAlAddonOTCCardMappingCustomerDetails(string customerId)
+        {
+            var searchResult = await _ashokLeyLandService.GetAlAddonOTCCardMappingCustomerDetails(customerId);
+            return Json(new { searchResult = searchResult });
+        }
+        public async Task<IActionResult> GetAlAddonOTCCardCustomerDetailsPartialView(string str)
+        {
+            var modals = await _ashokLeyLandService.GetAlAddonOTCCardCustomerDetailsPartialView(str);
+            return PartialView("~/Views/AshokLeyLand/_AddonOTCCardCustomerDetailsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> GetAlAddonOTCCardAddCardsPartialView(string str)
+        {
+            var modals = await _ashokLeyLandService.GetAlAddonOTCCardAddCardsPartialView(str);
+            return PartialView("~/Views/AshokLeyLand/_AddonOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard)
+        {
+            var Model = await _ashokLeyLandService.AddonOTCCardMapping(addAddOnCard);
+
+            if (Model.StatusCode == 1000)
+            {
+                return RedirectToAction("SuccessAddonOTCCardMapping", new { Message = Model.Reason });
+            }
+
+            return View(Model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode)
+        {
+
+            AddonOTCCardMapping addonOTCCardMapping = new AddonOTCCardMapping();
+            addonOTCCardMapping = await _ashokLeyLandService.GetAlSalesExeEmpIdAddOnOTCCardMapping(dealerCode);
+
+            return Json(addonOTCCardMapping);
+        }
+        public async Task<IActionResult> SuccessAddonOTCCardMapping(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
     }
 }

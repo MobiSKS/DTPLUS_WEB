@@ -26,12 +26,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public async Task<JsonResult> GetAllStatusValue(ManageTerminalRequest entity)
+        
+        public async Task<IActionResult> GetAllStatusValue(string MerchantId,string TerminalId,string Status)
         {
-            var searchList = await _TerminalService.GetAllStatusValue(entity);
-            ModelState.Clear();
-            return Json(new { searchList = searchList });
+            var searchList = await _TerminalService.GetAllStatusValue(MerchantId,TerminalId,Status);
+            return PartialView("~/Views/TerminalManagement/_ManageTerminalView.cshtml", searchList);
         }
 
         public async Task<IActionResult> ManageTerminal()
@@ -157,11 +156,21 @@ namespace HPCL_Web.Controllers
             var result = await _TerminalService.SubmitProblematicDeinstalltoDeinstall(deInstall);
             return Json(result);
         }
-
-        public async Task<IActionResult> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<IActionResult> TerminalDeInstallationRequest()
         {
+            TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalReq.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalReq);
+        }
+        public async Task<IActionResult> SearchTerminalDeInstallationRequest( string MerchantId, string TerminalId,string ZonalOfficeId, string RegionalOfficeId,string DeinstallationTypeID)
+        {
+            TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
+            terminalReq.MerchantId = MerchantId;terminalReq.TerminalId = TerminalId;terminalReq.ZonalOfficeId = ZonalOfficeId;
+            terminalReq.RegionalOfficeId = RegionalOfficeId;
             var modals = await _TerminalService.TerminalDeInstallationRequest(terminalReq);
-            return View(modals);
+            modals.DeinstallationTypeID = DeinstallationTypeID;
+            return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationReqTbl.cshtml", modals);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
