@@ -1,0 +1,231 @@
+﻿@model HPCL.Common.Models.ViewModel.Terminal.TerminalDeinstallationRequestViewModel
+@using HPCL.Common.Resources
+@if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
+{
+    @if (Model.ObjMerchantDeinstallationDetail.Count() > 0)
+    {
+        <div class="border-1 rounded border-grey w-100">
+            <div class="py-2 p-md-4">
+                <div class="row">
+                    <div class="col-12 float-left">
+                        <div class="col-6 float-left">
+
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <div class=" d-flex align-items-start flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">Merchant Name :</label>
+                                    <div class="col-md-7 col-12" id="SummaryMerchantID">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().MerchantName</label>
+
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
+                                    <div class="col-md-7 col-12" id="SummaryRetailOutletName">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().RetailOutletName</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">Address :</label>
+                                    <div class="col-md-7 col-12" id="SummaryMerchantType">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().Address</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">City :</label>
+                                    <div class="col-md-7 col-12" id="SummaryDealerName">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().City</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">State :</label>
+                                    <div class="col-md-7 col-12" id="SummaryDealerMobileNum">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().State</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">District :</label>
+                                    <div class="col-md-7 col-12" id="SummaryOutletCategory">
+                                        <label class="font-weight-normal  col-12">@Model.ObjMerchantDeinstallationDetail.First().District</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+    }
+    @if (Model.ObjTerminalDeinstallationDetail.Count() > 0)
+    {
+
+
+        string DeinstallationTypeID = Model.DeinstallationTypeID, disabled = "", checkedval = "unchecked";
+        if (DeinstallationTypeID == "1")
+        {
+            disabled = "disabled";
+            checkedval = "checked";
+        }
+
+        <div class="table-responsive">
+            <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive mt-3" style="width:100%;" id="TerminalRequestDetails">
+                <thead style="background-color:lightgray;">
+                    <tr>
+                        <th style="width:5%;"><input type="checkbox" id="checkAll" @disabled @checkedval /></th>
+                        <th style="width:10%;">Zonal Office</th>
+                        <th style="width:10%;">Regional Office</th>
+                        <th style="width:10%;">Terminal ID</th>
+                        <th style="width:10%;">Created Date</th>
+                    </tr>
+                </thead>
+                <tbody id="searchTableBody">
+                    @{
+                        int i = 0;
+
+                    }
+                    @foreach (var item in Model.ObjTerminalDeinstallationDetail)
+                    {
+                        i = i + 1;
+
+                        <tr>
+                            <td><input type="checkbox" id="check_@i" @disabled @checkedval /></td>
+                            <td>@item.ZonalOfficeName</td>
+                            <td>@item.RegionalOfficeName</td>
+                            <td>@item.TerminalId</td>
+                            <td>@item.CreatedTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="clearfix"></div>
+
+
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="col-lg-6 col-12">
+                <div class="d-flex align-items-center flex-wrap mb-3">
+                    <label class="font-weight-normal col-md-4 col-12">Comments<sup class="text-danger">*</sup></label>
+                    <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                            <textarea rows="4" id="txtComments" cols="50" class="form-control"></textarea>
+                            <span class="error" id="comment_error"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+        <div class="d-flex align-items-center justify-content-center mt-0">
+            <div class="px-2">
+                <button class="btn btn_primary" type="button" id="btnDeinstall" onclick="submitTerminaldeinstallationRequest();">Deinstall</button>
+            </div>
+
+        </div>
+
+    }
+}
+else
+{
+    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+        Data Not Found.
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+  $('select').SumoSelect({
+            placeholder: '-All-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+            function submitTerminaldeinstallationRequest() {
+        //alert("inside submit");
+         var confirmstring = "Do you want to Deinstall the selected Terminal.";
+         terminalDetail = [];
+         var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
+         var deInstallationType = $("#DeinstallationTypeID :selected").text();
+         if (deInstallationTypeID == "1") {
+             $("#TerminalRequestDetails tbody tr").each(function () {
+                 var row = $(this);
+                 var terminalId = row[0].cells[3].textContent;
+                 terminalDetail.push({ TerminalId: terminalId });
+             });
+             confirmstring = "You have selected all Terminals for Deinstallation, Merchant will be hot listed";
+         }
+         if (deInstallationTypeID == "2") {
+             $("#TerminalRequestDetails tbody tr").each(function () {
+                 var row = $(this);
+                 if (row.find('input[type="checkbox"]').is(":checked")) {
+                     var terminalId = row[0].cells[3].textContent;
+                     terminalDetail.push({ TerminalId: terminalId });
+                 }
+             });
+             confirmstring = "Do you want to Deinstall the selected Terminal.";
+         }
+        var flag = "Y";
+        //debugger;
+         var comments = $('#txtComments').val();
+         var merchantID = $("#MerchantId").val();
+         if (terminalDetail.length == 0) {
+            alert("Please select at least one request to process.");
+            return;
+        }
+         if (comments == "") {
+             flag = "N";
+             $("#comment_error").html("Please enter a comment for Deinstallation");
+             return;
+        }
+         if (terminalDetail.length > 0 && flag == "Y") {
+             if (confirm(confirmstring)) {
+                 $("#comment_error").html("");
+                 var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
+                 $.ajax({
+                     type: 'POST',
+                     url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
+                     contentType: "application/json; charset=utf-8",
+                     dataType: 'json',
+                     data: JSON.stringify(terminationReqmodel),
+                     success: function (data) {
+                         $("#reason").html(data);
+                         $(".toBeHiddenOnSuccess").hide();
+
+                     },
+                     error: function (ex) {
+                         alert('Error.' + ex);
+                     }
+                 });
+             }
+        }
+
+
+    };
+     $("#txtComments").on("blur", function () {
+         var txtComments = $("#txtComments").val();
+         if (txtComments == "") {
+             $("#comment_error").attr("style", "display:block");
+             $("#comment_error").html("Please enter a comment for Deinstallation");
+             
+         }
+         else{
+             $("#comment_error").attr("style", "display:none");
+             $("#comment_error").html("");
+         }
+     });
+</script>
+

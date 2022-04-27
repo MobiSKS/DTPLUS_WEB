@@ -156,11 +156,21 @@ namespace HPCL_Web.Controllers
             var result = await _TerminalService.SubmitProblematicDeinstalltoDeinstall(deInstall);
             return Json(result);
         }
-
-        public async Task<IActionResult> TerminalDeInstallationRequest(TerminalDeinstallationRequestViewModel terminalReq)
+        public async Task<IActionResult> TerminalDeInstallationRequest()
         {
+            TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
+            var ZonalOfficeslist = await _commonActionService.GetZonalOfficeList();
+            terminalReq.ZonalOffices.AddRange(ZonalOfficeslist);
+            return View(terminalReq);
+        }
+        public async Task<IActionResult> SearchTerminalDeInstallationRequest( string MerchantId, string TerminalId,string ZonalOfficeId, string RegionalOfficeId,string DeinstallationTypeID)
+        {
+            TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
+            terminalReq.MerchantId = MerchantId;terminalReq.TerminalId = TerminalId;terminalReq.ZonalOfficeId = ZonalOfficeId;
+            terminalReq.RegionalOfficeId = RegionalOfficeId;
             var modals = await _TerminalService.TerminalDeInstallationRequest(terminalReq);
-            return View(modals);
+            modals.DeinstallationTypeID = DeinstallationTypeID;
+            return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationReqTbl.cshtml", modals);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
