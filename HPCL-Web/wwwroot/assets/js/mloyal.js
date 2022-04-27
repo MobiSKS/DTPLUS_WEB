@@ -2056,7 +2056,8 @@ function GetClientConfirmation(o) {
     $('#panvalidation').modal('hide');
 }
 
-function ValidatePAN() {
+function ValidatePAN()
+{
     debugger;
     var panno = $('#CustomerIncomeTaxPan').val().trim();
     var OrgName = $('#IndividualOrgName').val().trim();
@@ -2102,53 +2103,56 @@ function ValidatePAN() {
         }
     }
 
+    var externalPANAPIStatus = "Y";
 
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("PANValidation", "Customer")',
-        data: { PANNumber: panno },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-            //debugger;
-            var jsonData = JSON.parse(data);
-            if (status == 'success' && jsonData['status-code'] == '101')
-            {
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
 
-                console.log(jsonData);
-                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                correctPANName = jsonData["result"]["name"];
+    console.log(externalPANAPIStatus);
 
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-                document.getElementById("incomeTaxPan_error").className = "error text-success";
+    if (externalPANAPIStatus == "Y")
+    {
 
-                console.log(correctPANName);
-                console.log(OrgName);
-                if (correctPANName.toUpperCase() != OrgName.toUpperCase())
-                {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                    document.getElementById("incomeTaxPan_error").className = "error";
-                }
-                else
-                {
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panno },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['status-code'] == '101') {
+
+                    console.log(jsonData);
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
                     document.getElementById("incomeTaxPan_error").innerHTML = "";
                     document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                    }
+                    else {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+
                 }
-
-            }
-            else
-            {
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    console.log(jsonData['status-code']);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                document.getElementById("incomeTaxPan_error").className = "error";
                 console.log(jsonData['status-code']);
+                document.getElementById("incomeTaxPan_error").className = "error";
             }
-        },
-        error: function (jqXhr, textStatus, errorMessage)
-        {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            console.log(jsonData['status-code']);
-            document.getElementById("incomeTaxPan_error").className = "error";
-        }
-    });
-
+        });
+    }
     
 }

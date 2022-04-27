@@ -18,6 +18,7 @@ using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace HPCL.Service.Services
 {
@@ -26,12 +27,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public TatkalCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public TatkalCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard()
         {
@@ -78,6 +81,11 @@ namespace HPCL.Service.Services
             custModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+            custModel.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalPANAPIStatus))
+            {
+                custModel.ExternalPANAPIStatus = "Y";
+            }
 
             return custModel;
         }

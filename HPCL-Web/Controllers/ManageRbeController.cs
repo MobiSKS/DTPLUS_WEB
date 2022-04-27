@@ -89,5 +89,31 @@ namespace HPCL_Web.Controllers
             var resp = await _manageRbeService.ApproveRejectChangedRbeMappingSerivce(userName, actionPress);
             return Json(new { resp = resp });
         }
+
+        public IActionResult RbeMobileChangeRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RbeMobileChangeRequest(RbeMobileChange entity)
+        {
+            var searchList = await _manageRbeService.RbeMobileChangeRequestService(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetOtpMobileChangeReq(string newMobileNo)
+        {
+            var resp = await _manageRbeService.GetOtpMobileChangeReqService(newMobileNo);
+            return Json(new { resp = resp });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> VerifyOtpMobileChangeReq(string existMobNo, string newMobileNo, string otp)
+        {
+            var resp = await _manageRbeService.VerifyOtpMobileChangeReqService(existMobNo, newMobileNo, otp);
+            return Json(new { resp = resp });
+        }
     }
 }

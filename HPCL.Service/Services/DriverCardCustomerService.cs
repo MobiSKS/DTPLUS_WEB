@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.RequestModel.DriverCardCustomer;
 using HPCL.Common.Models.ResponseModel.DriverCardCustomer;
+using Microsoft.Extensions.Configuration;
 
 namespace HPCL.Service.Services
 {
@@ -27,12 +28,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public DriverCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public DriverCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
 
         public async Task<RequestForDriverCardModel> RequestForDriverCard()
@@ -87,6 +90,11 @@ namespace HPCL.Service.Services
             custMdl.DocumentTypeMdl.AddRange(await _commonActionService.GetAddressProofList());
 
             custMdl.LoggedInAs = "";
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
             {
