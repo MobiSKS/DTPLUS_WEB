@@ -32,7 +32,7 @@
                                             <span class='field-validation-error text-danger' id='CardNo_error_@i'></span>
                                         </td>
                                         <td>
-                                            <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                            <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" onkeydown='javascript: IsAlphaNumeric(this)' value="@Model.ObjCardDetail[i].VechileNo">
                                             <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
                                                 @Model.ObjCardDetail[i].DuplicateVehicleNo
                                             </span>
@@ -44,7 +44,7 @@
                                             <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" name="ObjCardDetail[@i].VINNumber" value="@Model.ObjCardDetail[i].VINNumber" onchange='VINNumberChange(this,@i)'>
+                                            <input type="text" maxlength="17" class="form-control" name="ObjCardDetail[@i].VINNumber" value="@Model.ObjCardDetail[i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
                                             <span class='field-validation-error text-danger' id='VINNumber_error_@i'></span>
                                         </td>
                                             <td>
@@ -70,7 +70,7 @@
                                             </td>
                                         
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" onkeydown='javascript: IsAlphaNumeric(this)'>
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td style="vertical-align: unset;"><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
@@ -80,7 +80,7 @@
                                                 <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="ObjCardDetail[@i].VINNumber" onchange='VINNumberChange(this,@i)'>
+                                                <input type="text" maxlength="17" class="form-control" name="ObjCardDetail[@i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
                                                 <span class='field-validation-error text-danger' id='VINNumber_error_@i'></span>
                                             </td>
                                             <td>
@@ -463,20 +463,25 @@
 
      function VINNumberChange(o, rowSelected) 
      {
-          var vehicleMake = o.value;
-          console.log(vehicleMake);
+          var vinNumber = o.value;
+          console.log(vinNumber);
 
-        if(vehicleMake.trim()=='')
+        if(vinNumber.trim()=='')
         {
             document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Enter VIN Number";
             return false;
         }
-        else if (!vehicleMake.match(atLeastOneAlphabet)) 
+        else if (!(vinNumber.match(forVehicleNo))) 
+        {
+            document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
+            return false;
+        }
+        else if (!vinNumber.match(atLeastOneAlphabet)) 
         {
             document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Invalid VIN Number";
             return false;
         }
-        else if(vehicleMake.length<10 || vehicleMake.length>17)
+        else if(vinNumber.length<17 || vinNumber.length>17)
         {
             document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
             return false;
@@ -563,5 +568,11 @@
 
 
      }
+
+function IsAlphaNumeric(keyCode)
+{
+    return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 46 ||
+        (keyCode >= 97 && keyCode <= 122) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
+}
 
 </script>

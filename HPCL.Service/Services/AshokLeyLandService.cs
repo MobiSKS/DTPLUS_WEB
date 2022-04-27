@@ -340,6 +340,8 @@ namespace HPCL.Service.Services
                 }
             }
 
+            addAddOnCard.Message = "";
+            addAddOnCard.Reason = "";
             addAddOnCard.UserAgent = CommonBase.useragent;
             addAddOnCard.UserIp = CommonBase.userip;
             addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
