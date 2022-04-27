@@ -214,7 +214,6 @@ namespace HPCL.Service.Services
 
             TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             
-
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -241,7 +240,7 @@ namespace HPCL.Service.Services
             terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
             terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
             terminalReq.Message = ResponseModel.Message;
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+           // terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
