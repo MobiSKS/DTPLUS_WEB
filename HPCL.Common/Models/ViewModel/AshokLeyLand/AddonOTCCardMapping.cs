@@ -42,8 +42,10 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string MobileNo { get; set; }
         public string Message { get; set; }
         public string NoOfCards { get; set; }
-        public string DuplicateVehicleNo { get; set; }
-        public string DuplicateMobileNo { get; set; }
+        public string VehicleNoMsg { get; set; }
+        public string MobileNoMsg { get; set; }
+        public string CardNoMsg { get; set; }
+        public string VINNoMsg { get; set; }
         public string CustomerId { get; set; }
         public bool VehicleVerifiedManually { get; set; }
         public string CustomerOrgName { get; set; }
