@@ -335,6 +335,7 @@
           $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
+          var isValid=true;
 
           var customerTypeId = document.getElementById("CustomerTypeId").value;
 
@@ -346,6 +347,7 @@
         if(vehicleNo.trim()=='')
         {
             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
+            isValid=false;
             return false;
         }
         else
@@ -355,16 +357,19 @@
                 if (!(vehicleNo.match(forVehicleNo))) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    isValid=false;
                     return false;
                 }
                 else if (!vehicleNo.match(atLeastOneAlphabet)) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    isValid=false;
                     return false;
                 }
                 else if(vehicleNo.length<6 || vehicleNo.length>10)
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
+                    isValid=false;
                     return false;
                 }
                 else
@@ -412,6 +417,7 @@
               //mycel.innerHTML = "Enter Vehicle No.";
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
               mycelStatus.innerHTML = "0";
+              isValid=false;
               return false;
           }
           else 
@@ -433,6 +439,7 @@
                   if (data.status == "0") 
                   {
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                      isValid=false;
                       mycelStatus.innerHTML = "1";
                   }
                   else 
@@ -444,10 +451,81 @@
               error: function (jqXhr, textStatus, errorMessage) 
               {
                   document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                  isValid=false;
                   mycelStatus.innerHTML = "1";
 
               }
           });
+
+
+        setTimeout(function()
+        {
+
+            if(isValid)
+            {
+                var j=0;i=0;
+                var cnt=0;
+                console.log('Before Checking For Duplicate Vehicle Number');
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row = $(this);
+                    j=0;
+                    i=i+1;
+                    cnt = 0;
+                    $("#NoOfCardsTbl tbody tr").each(function () 
+                    {
+                        var row1 = $(this);
+
+                        j=j+1;
+                        if(i>0 && j>1 && j>i)
+                        {
+                            var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                            var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                            if (customerTypeId == "905" || customerTypeId == "909") 
+                            {
+                                PrevIdent = row.find("td:eq(2) input[type='text']").val();
+                                CurIdent =  row1.find("td:eq(2) input[type='text']").val();
+                            }
+
+                            if(PrevIdent!="" && CurIdent!="")
+                            {
+                                if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                                {
+
+                                    if(CurIdent.trim()!="")
+                                    {
+                                        if (!(CurIdent.match(forVehicleNo))) 
+                                        {
+                                            document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                                        }
+                                        else if (!CurIdent.match(atLeastOneAlphabet)) 
+                                        {
+                                            document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                                        }
+                                        else if(CurIdent.length<6 || CurIdent.length>10)
+                                        {
+                                            document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                                        }
+                                        else
+                                        {
+                                            document.getElementById('VechileNo_error_'+cnt).innerHTML="Duplicate Vehicle No.";
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                        cnt=cnt+1;
+                    });
+
+                });
+
+            }
+
+        },500);
 
       }
 
