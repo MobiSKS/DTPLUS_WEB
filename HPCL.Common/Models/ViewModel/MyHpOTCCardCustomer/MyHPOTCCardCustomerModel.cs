@@ -98,6 +98,8 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public string RegionalOffice { get; set; }
         public string SalesArea { get; set; }
         public string OutletName { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
     }
 
     [Serializable()]

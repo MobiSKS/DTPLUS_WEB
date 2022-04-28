@@ -214,7 +214,6 @@ namespace HPCL.Service.Services
 
             TerminalDeinstallationRequestViewModel ResponseModel = new TerminalDeinstallationRequestViewModel();
             
-
             var TerminalManagementRequest = new TerminalManagementModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -241,7 +240,7 @@ namespace HPCL.Service.Services
             terminalReq.ObjMerchantDeinstallationDetail.AddRange(MerchantDeInstallReqList);
             terminalReq.ObjTerminalDeinstallationDetail.AddRange(TerminalDeInstallReqList);
             terminalReq.Message = ResponseModel.Message;
-            terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+           // terminalReq.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
             //terminalReq.Reasons.AddRange(await _commonActionService.GetTerminalRequestCloseReason());
             return terminalReq;
         }
@@ -569,60 +568,32 @@ namespace HPCL.Service.Services
             List<SearchTerminalDetailsResponseModal> searchDetailsTableModels = searchDetailsTableJarr.ToObject<List<SearchTerminalDetailsResponseModal>>();
             return searchDetailsTableModels;
         }
-        public async Task<List<ManageTerminalResponse>> GetAllStatusValue(ManageTerminalRequest entity)
+        public async Task<ManageTerminalResponse> GetAllStatusValue(string MerchantId, string TerminalId, string Status)
         {
             var searchBody = new ManageTerminalRequest();
-            if (entity.MerchantId != null)
-            {
+          
                 searchBody = new ManageTerminalRequest
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     //StatusFlag = entity.StatusFlag,
-                    TerminalId = "",
-                    MerchantId = "",
-                    DeploymentStatus = ""
+                    TerminalId = TerminalId,
+                    MerchantId = MerchantId,
+                    DeploymentStatus = Status == "0" ?null:Status
 
                 };
-            }
-            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
-            {
-                searchBody = new ManageTerminalRequest
-                {
-                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
-                    //StatusFlag = -1,
-                    TerminalId = "",
-                    MerchantId = "",
-                    DeploymentStatus = ""
-                };
-            }
-            else
-            {
-                searchBody = new ManageTerminalRequest
-                {
-                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
-                    TerminalId = "",
-                    MerchantId = "",
-                    DeploymentStatus = ""
-                };
-            }
+           
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.ManageTerminalUrl);
 
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<ManageTerminalResponse> searchList = jarr.ToObject<List<ManageTerminalResponse>>();
+            ManageTerminalResponse searchList = JsonConvert.DeserializeObject<ManageTerminalResponse>(response);
             return searchList;
         }
         public async Task<ManageTerminalModel> ManageTerminal()
         {
             ManageTerminalModel custModel = new ManageTerminalModel();
-
+            custModel.StatusModals.AddRange(await _commonActionService.GetStatusTypeforTerminal());
             return custModel;
         }
     }

@@ -17,6 +17,7 @@ using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using HPCL.Common.Models.RequestModel.TatkalCardCustomer;
+using Microsoft.Extensions.Configuration;
 
 namespace HPCL.Service.Services
 {
@@ -26,12 +27,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public MyHpOTCCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public MyHpOTCCardCustomerService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
 
         public async Task<RequestForOTCCardModel> RequestForOTCCard()
@@ -84,6 +87,16 @@ namespace HPCL.Service.Services
 
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             custModel.LoggedInAs = "";
+            custModel.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalPANAPIStatus))
+            {
+                custModel.ExternalPANAPIStatus = "Y";
+            }
+            custModel.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalVehicleAPIStatus))
+            {
+                custModel.ExternalVehicleAPIStatus = "Y";
+            }
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "MERCHANT")
             {

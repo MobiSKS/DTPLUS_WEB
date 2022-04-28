@@ -20,13 +20,19 @@
         <tbody id="searchTableBody">
             @{
                 int i = 0;
+                string flag = "Y";
             }
             @foreach (var item in Model.TerminalManagementRequestDetails)
             {
                 i = i + 1;
 
                 <tr>
-                    <td><input type="checkbox" id="check_@i" /></td>
+                    <td>@if (item.Status != "Problematic Installation")
+                        {
+                            <input type="checkbox" id="check_@i" />
+                            flag = "N";
+                        }
+                    </td>
                     <td>@item.MerchantID</td>
                     <td>@item.TerminalID</td>
                     <td>@item.ZonalOfficeName</td>
@@ -41,46 +47,48 @@
             }
         </tbody>
     </table>
-
-    <div class="clearfix"></div>
-    <div class="border-1 rounded border-grey mt-3">
-        <div class="d-flex align-items-center flex-wrap">
-            <div class="col-lg-6 col-12">
-                <div class="d-flex align-items-center flex-wrap mb-3 mt-3">
-                    <label class="font-weight-normal col-md-4 col-12 ">Status <sup class="text-danger">*</sup></label>
-                    <div class="col-md-7 col-12">
-                        <div class="custom_select">
-                            <input class="mr-2 form-check-input" type="radio" name="Status" style="margin-top: 0.1rem;" value="Problematic-Installation" disabled checked>
-                            <span>Problematic-Installation</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="d-flex align-items-center flex-wrap">
-            <div class="col-lg-6 col-12">
-                <div class="d-flex align-items-center flex-wrap mb-3">
-                    <label class="font-weight-normal col-md-4 col-12  ">Reason<sup class="text-danger">*</sup></label>
-                    <div class="col-md-7 col-12">
-                        <div class="custom_select">
-                            @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control" ,onchange = "validateReason()"})
-                            <span class="error" id="reason_error"></span>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    @if (flag == "N")
+    {
         <div class="clearfix"></div>
-        <div class="d-flex align-items-center justify-content-center mb-3">
-            <div class="px-2">
-                <button class="btn btn_primary" type="button" onclick="submitTerminalrequestClose();">Submit</button>
-            </div>
+        <div class="border-1 rounded border-grey mt-3">
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="col-lg-6 col-12">
+                    <div class="d-flex align-items-center flex-wrap mb-3 mt-3">
+                        <label class="font-weight-normal col-md-4 col-12 ">Status <sup class="text-danger">*</sup></label>
+                        <div class="col-md-7 col-12">
+                            <div class="custom_select">
+                                <input class="mr-2 form-check-input" type="radio" name="Status" style="margin-top: 0.1rem;" value="Problematic-Installation" disabled checked>
+                                <span>Problematic-Installation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="col-lg-6 col-12">
+                    <div class="d-flex align-items-center flex-wrap mb-3">
+                        <label class="font-weight-normal col-md-4 col-12  ">Reason<sup class="text-danger">*</sup></label>
+                        <div class="col-md-7 col-12">
+                            <div class="custom_select">
+                                @Html.DropDownListFor(m => m.Reason, new SelectList(Model.Reasons, "ReasonId", "ReasonName"), new { @class = "form-control" ,onchange = "validateReason()"})
+                                <span class="error" id="reason_error"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <div class="px-2">
+                    <button class="btn btn_primary" type="button" onclick="submitTerminalrequestClose();">Submit</button>
+                </div>
+
+            </div>
         </div>
-    </div>
+    }
 }
 else
 {

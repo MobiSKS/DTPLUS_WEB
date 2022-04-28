@@ -293,13 +293,13 @@ function showregAddress() {
         }
         else if (!panno.match(pancard))
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
         else if (panno.length < 10)
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
@@ -310,19 +310,19 @@ function showregAddress() {
             if (forthdigitPan != 'P')
             {
                 console.log('Inside forthdigitPan');
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
             else if (localStorage.getItem("INVALIDPAN") == 0)
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
             else if (localStorage.getItem("PANNAMEMATCHING") == 0)
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
@@ -333,13 +333,13 @@ function showregAddress() {
         }
         else if (localStorage.getItem("INVALIDPAN") == 0)
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
         else if (localStorage.getItem("PANNAMEMATCHING") == 0)
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
@@ -2056,7 +2056,8 @@ function GetClientConfirmation(o) {
     $('#panvalidation').modal('hide');
 }
 
-function ValidatePAN() {
+function ValidatePAN()
+{
     debugger;
     var panno = $('#CustomerIncomeTaxPan').val().trim();
     var OrgName = $('#IndividualOrgName').val().trim();
@@ -2070,15 +2071,21 @@ function ValidatePAN() {
         return (false);
     }
 
+    if (OrgName == '')
+    {
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        alert('Individual/Org. Name is required');
+        return (false);
+    }
 
     if ($('#CustomerIncomeTaxPan').val().match(pancard))
     {
-        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
         document.getElementById("incomeTaxPan_error").className = "error text-success";
     }
     else
     {
-        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
         document.getElementById("incomeTaxPan_error").className = "error";
         return (false);
     }
@@ -2090,65 +2097,68 @@ function ValidatePAN() {
         console.log(forthdigitPan);
         if (forthdigitPan != 'P')
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
             alert('Please Enter Valid Income Tax PAN');
             return (false);
         }
         else
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
             document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
     }
 
+    var externalPANAPIStatus = "Y";
 
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("PANValidation", "Customer")',
-        data: { PANNumber: panno },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-            //debugger;
-            var jsonData = JSON.parse(data);
-            if (status == 'success' && jsonData['status-code'] == '101')
-            {
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
 
-                console.log(jsonData);
-                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                correctPANName = jsonData["result"]["name"];
+    console.log(externalPANAPIStatus);
 
-                document.getElementById("incomeTaxPan_error").innerHTML = "";
-                document.getElementById("incomeTaxPan_error").className = "error text-success";
+    if (externalPANAPIStatus == "Y")
+    {
 
-                console.log(correctPANName);
-                console.log(OrgName);
-                if (correctPANName.toUpperCase() != OrgName.toUpperCase())
-                {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
-                    document.getElementById("incomeTaxPan_error").className = "error";
-                }
-                else
-                {
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panno },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['status-code'] == '101') {
+
+                    console.log(jsonData);
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
                     document.getElementById("incomeTaxPan_error").innerHTML = "";
                     document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                    }
+                    else {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+
                 }
-
-            }
-            else
-            {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-                document.getElementById("incomeTaxPan_error").className = "error";
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    console.log(jsonData['status-code']);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 console.log(jsonData['status-code']);
+                document.getElementById("incomeTaxPan_error").className = "error";
             }
-        },
-        error: function (jqXhr, textStatus, errorMessage)
-        {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
-            console.log(jsonData['status-code']);
-            document.getElementById("incomeTaxPan_error").className = "error";
-        }
-    });
-
+        });
+    }
     
 }

@@ -10,6 +10,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<GetCustomerNameResponse> GetCustomerName(string customerId);
         Task<List<SuccessResponse>> CheckAddOnForm(string formNumber);
+        Task<AddAddOnCard> AddAddOnCards();
         Task<AddAddOnCard> GetAddOnCardsPartialView(string str);
         Task<AddAddOnCard> CustomerAddCardVehicleTbl(string str);
         Task<AddAddOnCard> AddAddOnCards(AddAddOnCard addAddOnCard);

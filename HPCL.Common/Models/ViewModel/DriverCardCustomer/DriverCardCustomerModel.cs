@@ -103,6 +103,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public string OutletName { get; set; }
         public string Zone { get; set; }
         public string RegionalOffice { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
 
     }
 

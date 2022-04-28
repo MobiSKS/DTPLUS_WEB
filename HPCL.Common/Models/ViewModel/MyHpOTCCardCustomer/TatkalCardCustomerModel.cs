@@ -91,6 +91,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public string DateOfApplication { get; set; }
         public string SignedOn { get; set; }
         public string NameOnCard { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
 
     }
 

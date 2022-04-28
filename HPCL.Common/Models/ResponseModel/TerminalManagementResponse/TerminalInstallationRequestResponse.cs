@@ -12,6 +12,7 @@ namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
     {
         public List<ObjMerchantDetail> ObjMerchantDetail { get; set; }
         public List<ObjTerminalDetail> ObjTerminalDetail { get; set; }
+        public List<ObjStatusDetail> ObjStatusDetail { get; set; }
     }
 
     public class ObjMerchantDetail
@@ -38,5 +39,10 @@ namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
         public string TerminalId { get; set; }
         public double LastMonthSpends { get; set; }
         public string Status { get; set; }
+    }
+    public class ObjStatusDetail
+    {
+        public string Status { get; set; }
+        public string Reason { get; set; }
     }
 }

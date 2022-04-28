@@ -307,6 +307,7 @@ namespace HPCL.Common.Models
         public string PanCardRemarks { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
 
     }
 
