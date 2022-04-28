@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.ManageRbe
 {
-    public class GetApproveChangeRbeMobile : BaseEntity
+    public class GetDeviceIdResetRequest : BaseEntity
     {
-        public string ApprovalStatus { get; set; }
         [RegularExpression(FieldValidation.ValidFirstName, ErrorMessage = FieldValidation.ValidFirstNameErrMsg)]
         public string FirstName { get; set; }
-        public string RBEId { get; set; }
+        [RegularExpression(FieldValidation.ValidUserName, ErrorMessage = FieldValidation.ValidUserNameErrMsg)]
+        [StringLength(10)]
+        public string MobileNo { get; set; }
     }
 }

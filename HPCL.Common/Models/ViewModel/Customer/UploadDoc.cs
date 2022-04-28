@@ -18,6 +18,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "{0} is required")]
         public int IdProofType { get; set; }
 
+        [MaxLength(20)]
         [Required(ErrorMessage = "Id Proof Document Number is required")]
         [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string IdProofDocumentNo { get; set; }
@@ -32,6 +33,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Type is required")]
         public int AddressProofType { get; set; }
 
+        [MaxLength(20)]
         [Required(ErrorMessage = "Address Proof Document Number is required")]
         [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string AddressProofDocumentNo { get; set; }
