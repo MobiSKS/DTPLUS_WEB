@@ -150,10 +150,15 @@
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-8 col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
                                                 <span class="error" id="incomeTaxPan_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-0">
+                                            <div class="custom_select">
+                                               <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
                                             </div>
                                         </div>
                                     </div>
@@ -525,6 +530,7 @@
             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfficeId, new { id = "RegionalOfficeId" })</div>
             <div style="display:none;">@Html.TextBoxFor(m => m.LoggedInAs, new { id = "LoggedInAs" })</div>
             @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
+            @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
         </form>
     <div class="clearfix"></div>
 </div>
@@ -1097,7 +1103,7 @@
         console.log(forthdigitPan);
         if (forthdigitPan != 'P') 
         {
-            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
             return (false);
         }
@@ -1105,12 +1111,12 @@
         {
             if ($('#IncomeTaxPan').val().match(pancard)) 
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
                 document.getElementById("incomeTaxPan_error").className = "error text-success";
             }
             else 
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 return (false);
             }
@@ -1201,7 +1207,7 @@
                         }
                         else 
                         {
-                            document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
                             document.getElementById("incomeTaxPan_error").className = "error";
                             localStorage.setItem("PANNOANDNAMEMATCHING", "0");
                         }
@@ -1211,14 +1217,14 @@
                     }
                     else 
                     {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                         document.getElementById("incomeTaxPan_error").className = "error";
                         localStorage.setItem("INVALIDPAN", "0");
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) 
                 {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                     document.getElementById("incomeTaxPan_error").className = "error";
                     localStorage.setItem("INVALIDPAN", "0");
                 }
@@ -1381,7 +1387,7 @@
             console.log(forthdigitPan);
             if (forthdigitPan != 'P') 
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
             }
@@ -1389,7 +1395,7 @@
             {
                 if (!$('#IncomeTaxPan').val().match(pancard)) 
                 {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                     document.getElementById("incomeTaxPan_error").className = "error";
                     ret = false;
                 }
@@ -1403,19 +1409,19 @@
                     }
                     else if (localStorage.getItem("INVALIDPAN") == 0) 
                     {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                         document.getElementById("incomeTaxPan_error").className = "error";
                         ret = false;
                     }
                     else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
                     {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Your pan card name not match with pan card name";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
                         document.getElementById("incomeTaxPan_error").className = "error";
                         ret = false;
                     }
                     else 
                     {
-                        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN is valid";
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
                         document.getElementById("incomeTaxPan_error").className = "error text-success";
                     }
                 }
@@ -2280,34 +2286,46 @@
             document.getElementById("VehicleNo1_error").innerHTML = "";
         }
 
+        var externalVehicleAPIStatus="Y";
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-            data: { RegistrationNumber: vehicleNo },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') 
-                {
-                    document.getElementById("VehicleNo1_error").innerHTML = "";
-                    console.log(jsonData);
-                    console.log(document.getElementById("VehicleNo1_error").innerHTML);
-                }
-                else 
+        externalVehicleAPIStatus = document.getElementById("ExternalVehicleAPIStatus").value.trim();
+
+        console.log(externalVehicleAPIStatus);
+
+        if(externalVehicleAPIStatus=="Y")
+        {
+            $.ajax({
+                type: 'POST',  // http method
+                url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+                data: { RegistrationNumber: vehicleNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['statusCode'] == '101') 
+                    {
+                        document.getElementById("VehicleNo1_error").innerHTML = "";
+                        console.log(jsonData);
+                        console.log(document.getElementById("VehicleNo1_error").innerHTML);
+                    }
+                    else 
+                    {
+                        document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
+                        localStorage.setItem("INVALIDVEHICLENO1", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
                 {
                     document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
                     localStorage.setItem("INVALIDVEHICLENO1", "0");
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                document.getElementById("VehicleNo1_error").innerHTML = "Invalid Vehicle Number";
-                localStorage.setItem("INVALIDVEHICLENO1", "0");
-            }
-        });
-
+            });
+        }
+        else
+        {
+            document.getElementById("VehicleNo1_error").innerHTML = "";
+            localStorage.setItem("INVALIDVEHICLENO1", "1");
+        }
 
     });
 
@@ -2343,32 +2361,48 @@
         }
 
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
-            data: { RegistrationNumber: vehicleNo },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['statusCode'] == '101') 
-                {
-                    document.getElementById("VehicleNo2_error").innerHTML = "";
-                    console.log(jsonData);
-                    console.log(document.getElementById("VehicleNo2_error").innerHTML);
-                }
-                else 
+        var externalVehicleAPIStatus="Y";
+
+        externalVehicleAPIStatus = document.getElementById("ExternalVehicleAPIStatus").value.trim();
+
+        console.log(externalVehicleAPIStatus);
+
+        if(externalVehicleAPIStatus=="Y")
+        {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: "CheckVehicleRegistrationValid/MyHpOTCCardCustomer",
+                data: { RegistrationNumber: vehicleNo },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['statusCode'] == '101') 
+                    {
+                        document.getElementById("VehicleNo2_error").innerHTML = "";
+                        console.log(jsonData);
+                        console.log(document.getElementById("VehicleNo2_error").innerHTML);
+                    }
+                    else 
+                    {
+                        document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
+                        localStorage.setItem("INVALIDVEHICLENO2", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
                 {
                     document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
                     localStorage.setItem("INVALIDVEHICLENO2", "0");
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) 
-            {
-                document.getElementById("VehicleNo2_error").innerHTML = "Invalid Vehicle Number";
-                localStorage.setItem("INVALIDVEHICLENO2", "0");
-            }
-        });
+            });
+
+        }
+        else
+        {
+            document.getElementById("VehicleNo2_error").innerHTML = "";
+            localStorage.setItem("INVALIDVEHICLENO2", "1");
+        }
 
 
     });
@@ -2453,14 +2487,16 @@
                 
     });
 
-    $("#MobileNo1").on("blur", function () {
-        //debugger;
+    $("#MobileNo1").on("blur", function () 
+    {
+        debugger;
         localStorage.setItem("MOBILENUMBERREADYUSED1", "1");
 
         var mobileNo2 = document.getElementById("MobileNo2").value.trim();
         var mobileNo1 = document.getElementById("MobileNo1").value.trim();
         var cardNumber2 = document.getElementById("CardNumber2").value.trim();
         var cardNumber1 = document.getElementById("CardNumber1").value.trim();
+
         if (mobileNo1 == "") 
         {
             if(cardNumber2=="")
@@ -2510,6 +2546,13 @@
                             {
                                 document.getElementById("MobileNo1_error").innerHTML = "Both Mobile Nos. are same";
                                 return false;
+                            }
+                            else
+                            {
+                                if(document.getElementById("MobileNo2_error").innerHTML.toUpperCase()=="BOTH MOBILE NOS. ARE SAME")
+                                {
+                                    document.getElementById("MobileNo2_error").innerHTML = "";
+                                }
                             }
                         }
                         else
@@ -2570,12 +2613,14 @@
 
     });
 
-    $("#MobileNo2").on("blur", function () {
-        //debugger;
+    $("#MobileNo2").on("blur", function () 
+    {
+        debugger;
         localStorage.setItem("MOBILENUMBERREADYUSED2", "1");
 
         var mobileNo1 = document.getElementById("MobileNo1").value.trim();
         var mobileNo2 = document.getElementById("MobileNo2").value.trim();
+
         if (mobileNo2 == "") 
         {
             if(document.getElementById("CardNumber2").value.trim()!="")
@@ -2617,6 +2662,13 @@
                             {
                                 document.getElementById("MobileNo2_error").innerHTML = "Both Mobile Nos. are same";
                                 return false;
+                            }
+                            else
+                            {
+                                if(document.getElementById("MobileNo1_error").innerHTML.toUpperCase()=="BOTH MOBILE NOS. ARE SAME")
+                                {
+                                    document.getElementById("MobileNo1_error").innerHTML = "";
+                                }
                             }
                         }
                         else
@@ -2922,7 +2974,8 @@
         }
     });
 
-    $("#VehicleNo1").on("blur", function () {
+    $("#VehicleNo1").on("blur", function () 
+    {
         //debugger;
         localStorage.setItem("VEHICLEADYUSED1", "1");
         localStorage.setItem("INVALIDVEHICLENO1", "1");
@@ -2970,6 +3023,11 @@
                             else
                             {
                                 document.getElementById("VehicleNo1_error").innerHTML = "";
+
+                                if(document.getElementById("VehicleNo2_error").innerHTML.toUpperCase()=="BOTH VEHICLE NOS. ARE SAME")
+                                {
+                                   document.getElementById("VehicleNo2_error").innerHTML = "";
+                                }
                             }
                         }
                         else
@@ -3014,7 +3072,8 @@
 
     });
 
-    $("#VehicleNo2").on("blur", function () {
+    $("#VehicleNo2").on("blur", function () 
+    {
         //debugger;
         localStorage.setItem("VEHICLEADYUSED2", "1");
         localStorage.setItem("INVALIDVEHICLENO2", "1");
@@ -3063,6 +3122,11 @@
                             else
                             {
                                 document.getElementById("VehicleNo2_error").innerHTML = "";
+
+                                if(document.getElementById("VehicleNo1_error").innerHTML.toUpperCase()=="BOTH VEHICLE NOS. ARE SAME")
+                                {
+                                   document.getElementById("VehicleNo1_error").innerHTML = "";
+                                }
                             }
                         }
                         else
@@ -3238,5 +3302,109 @@
     }
 
   });
+
+function ValidatePAN()
+{
+    debugger;
+    var panno = $('#IncomeTaxPan').val().trim();
+    var OrgName = $('#IndividualOrgName').val().trim();
+    var correctPANName = '';
+
+    if (panno == '')
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+
+    if (OrgName == '')
+    {
+        document.getElementById("individualName_error").innerHTML = "Customer/Org.Name is required";
+        alert('Customer/Org.Name is required');
+        return (false);
+    }
+
+    if ($('#IncomeTaxPan').val().match(pancard))
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
+    }
+    else
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+
+    //solo Propritorship 4th Char Pan should be 'P'
+    let forthdigitPan = panno.substr(3, 1);
+    console.log(forthdigitPan);
+    if (forthdigitPan != 'P')
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        alert('Please Enter Valid Income Tax PAN');
+        return (false);
+    }
+    else
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
+    }
+
+
+    var externalPANAPIStatus = "Y";
+
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+    console.log(externalPANAPIStatus);
+
+    if (externalPANAPIStatus == "Y")
+    {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panno },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['status-code'] == '101') {
+
+                    console.log(jsonData);
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                    }
+                    else {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+
+                }
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    console.log(jsonData['status-code']);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                console.log(jsonData['status-code']);
+                document.getElementById("incomeTaxPan_error").className = "error";
+            }
+        });
+    }
+    
+}
 
 </script>

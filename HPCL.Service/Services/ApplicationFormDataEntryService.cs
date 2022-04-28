@@ -5,6 +5,7 @@ using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -19,12 +20,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public ApplicationFormDataEntryService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public ApplicationFormDataEntryService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
 
         public async Task<GetCustomerNameResponse> GetCustomerName(string customerId)
@@ -107,6 +110,13 @@ namespace HPCL.Service.Services
             if (arrs != null && arrs.Count > 0)
                 addAddOnCard.ObjCardDetail = arrs;
 
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
             return addAddOnCard;
         }
 
@@ -143,9 +153,28 @@ namespace HPCL.Service.Services
                 addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
             }
 
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
             return addAddOnCard;
         }
+        public async Task<AddAddOnCard> AddAddOnCards()
+        {
+            AddAddOnCard addAddOnCard = new AddAddOnCard();
+            addAddOnCard.Message = "";
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
 
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
         public async Task<AddAddOnCard> AddAddOnCards(AddAddOnCard addAddOnCard)
         {
 

@@ -40,10 +40,10 @@ namespace HPCL_Web.Controllers
             var searchResult = await _dtpSupportService.UpdateCustomerCcmsAccountStatus(entity);
             return Json(searchResult);
         }
-        public async Task<IActionResult> GetCardBalanceTransferDetails(string CardNo)
+        public async Task<JsonResult> GetCardBalanceTransferDetails(string CardNo)
         {
             var searchResult = await _dtpSupportService.GetCardBalanceTransferDetails(CardNo);
-            return PartialView("~/Views/DtpSupport/_CardBalanceTransferTbl.cshtml", searchResult);
+            return Json(searchResult);
         }
         
     }

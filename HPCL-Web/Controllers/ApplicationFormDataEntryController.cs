@@ -23,11 +23,11 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public IActionResult AddAddOnCards()
+        public async Task<IActionResult> AddAddOnCards()
         {
-            AddAddOnCard addAddOnCard = new AddAddOnCard();
-            addAddOnCard.Message = "";
-            return View(addAddOnCard);
+            var model = await _applicationFormDataEntryService.AddAddOnCards();
+
+            return View(model);
         }
 
         [HttpPost]

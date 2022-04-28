@@ -27,6 +27,7 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public string TableStringyfiedData { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
         public AddAddOnCard()
         {
             ObjCardDetail = new List<ObjCardDetail>();

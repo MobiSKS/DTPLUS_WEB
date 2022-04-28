@@ -15,6 +15,7 @@ using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using System;
 using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
+using Microsoft.Extensions.Configuration;
 
 namespace HPCL.Service.Services
 {
@@ -23,12 +24,14 @@ namespace HPCL.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
+        private readonly IConfiguration _configuration;
 
-        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public AshokLeyLandService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
             _commonActionService = commonActionService;
+            _configuration = configuration;
         }
 
         public async Task<SearchAlResult> SearchDealer(string dealerCode, string dtpCode)
@@ -246,7 +249,20 @@ namespace HPCL.Service.Services
 
             return response;
         }
+        public async Task<AddonOTCCardMapping> AddonOTCCardMapping()
+        {
+            AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
+            addAddOnCard.Remarks = "";
+            addAddOnCard.Message = "";
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
 
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
         public async Task<GetCustomerDetails> GetAlAddonOTCCardMappingCustomerDetails(string customerId)
         {
             var searchBody = new GetCustomerName
@@ -310,6 +326,13 @@ namespace HPCL.Service.Services
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
             return addAddOnCard;
         }
         public async Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str)
@@ -325,6 +348,13 @@ namespace HPCL.Service.Services
             addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
 
             return addAddOnCard;
         }
@@ -409,6 +439,19 @@ namespace HPCL.Service.Services
                         addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
                     }
                     addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+
+                    foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                    {
+                        if (addAddOnCard.VehicleVerifiedManually)
+                        {
+                            cardDetails.Verified = "0";
+                        }
+                        else
+                        {
+                            cardDetails.Verified = "1";
+                        }
+                    }
+
                 }
             }
 
