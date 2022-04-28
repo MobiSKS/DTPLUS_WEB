@@ -220,7 +220,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MappingStatus = entity.MappingStatus ?? "",
+                ApprovalStatus = entity.ApprovalStatus ?? "",
                 FirstName = entity.FirstName ?? "",
                 RBEId = entity.RBEId ?? ""
             };
