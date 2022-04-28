@@ -6,7 +6,7 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Cards</a> </li>
-            <li class="breadcrumb-item font-weight-light">Set CCMS Limits for All Cards</li>
+            <li class="breadcrumb-item font-weight-light"><a href="@Url.Action("SetCcmsLimitForAllCards", "Cards")" class="text_primary">Set CCMS Limits for All Cards</a></li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
         <div class="tab-content mt-3" id = "respMsg">
@@ -59,11 +59,7 @@
                                 </form>
                             </div>
 
-                            <div>
-                                <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
-
-                                </div>
-                            </div>
+                            <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
 
                             <div class="clearfix"></div>
 
@@ -106,7 +102,8 @@
                                                                 <td width="50%" class="unallocated"></td>
                                                             </tr>
                                                         </tbody>
-                                                    </table>
+                                                      </table>
+                                                      <p class='warnMsg'></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -231,7 +228,7 @@
 
     function OnSuccessSetCcmsLimitAll(res) {
 
-        console.log(res);
+        console.log("res",res);
 
         if (res.searchCcmsCard.success == true) {
 
@@ -239,10 +236,18 @@
 
             $(".actual").html('');
             $(".unallocated").html('');
+            $(".warnMsg").html('');
 
+            if(res.searchCcmsCard.data[0].ccmsUnlimitedStatus == 1){
+                var unallocated = "<span>Unallocated CCMS Balance : 0</span>";
+                var warningMsg = "<span>Balance is showing 0 because CCMS Limit is set 'UNLIMITED' for one or more cards</span>";
+                $(".warnMsg").append(warningMsg);
+            }else{
+                var unallocated = "<span>Unallocated CCMS Balance : " + res.searchCcmsCard.data[0].unallocatedCCMSBalance + "</span>";
+            }
+            
             var actual = "<span>Actual CCMS Balance : " + res.searchCcmsCard.data[0].actualCCMSBalance + "</span>";
-            var unallocated = "<span>Unallocated CCMS Balance : " + res.searchCcmsCard.data[0].unallocatedCCMSBalance + "</span>";
-
+            
             $(".actual").append(actual);
             $(".unallocated").append(unallocated);
 

@@ -13,5 +13,6 @@ namespace HPCL.Common.Models.ResponseModel.Cards
     {
         public Decimal ActualCCMSBalance { get; set; }
         public Decimal UnallocatedCCMSBalance { get; set; }
+        public int CCMSUnlimitedStatus { get; set; }
     }
 }
