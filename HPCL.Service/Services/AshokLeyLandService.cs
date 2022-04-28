@@ -391,11 +391,47 @@ namespace HPCL.Service.Services
                 {
                     foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
                     {
-                        cardDetails.DuplicateVehicleNo = "";
-                        cardDetails.DuplicateMobileNo = "";
+                        cardDetails.VehicleNoMsg = "";
+                        cardDetails.MobileNoMsg = "";
+                        cardDetails.CardNoMsg = "";
+                        cardDetails.VINNoMsg = "";
                     }
 
-                    if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                    addAddOnCard.Message = customerInserCardResponse.Message;
+                    if (customerInserCardResponse.Message.Contains("No Record Found"))
+                    {
+                        addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
+                    }
+
+                    if (addAddOnCard.Message.Contains("Card No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.CardNo.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.CardNoMsg = "Card No. already allocated";
+                                }
+                            }
+                        }
+                    }
+
+                    if (addAddOnCard.Message.Contains("VIN No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.VINNumber.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.VINNoMsg = "VIN No. already exists.";
+                                }
+                            }
+                        }
+                    }
+
+                    if (addAddOnCard.Message.Contains("Vehicle No."))
                     {
                         foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
                         {
@@ -403,13 +439,13 @@ namespace HPCL.Service.Services
                             {
                                 if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
                                 {
-                                    cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                                    cardDetails.VehicleNoMsg = "Vehicle No. already exists";
                                 }
                             }
                         }
                     }
 
-                    if (customerInserCardResponse.Message.Contains("Mobile No."))
+                    if (addAddOnCard.Message.Contains("Mobile No."))
                     {
                         foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
                         {
@@ -417,7 +453,7 @@ namespace HPCL.Service.Services
                             {
                                 if (cardDetails.MobileNo == responseData.Reason)
                                 {
-                                    cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                                    cardDetails.MobileNoMsg = "Mobile No. already exists";
                                 }
                             }
                         }
@@ -433,11 +469,6 @@ namespace HPCL.Service.Services
                 }
                 else
                 {
-                    addAddOnCard.Message = customerInserCardResponse.Message;
-                    if (customerInserCardResponse.Message.Contains("No Record Found"))
-                    {
-                        addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
-                    }
                     addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
 
                     foreach (AddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
