@@ -134,5 +134,10 @@ namespace HPCL_Web.Controllers
             var resp = await _manageRbeService.ApproveRejectChangedRbeMobileService(existMobNo, mappingStatus);
             return Json(new { resp = resp });
         }
+
+        public IActionResult DeviceIdResetRequest()
+        {
+            return View();
+        }
     }
 }
