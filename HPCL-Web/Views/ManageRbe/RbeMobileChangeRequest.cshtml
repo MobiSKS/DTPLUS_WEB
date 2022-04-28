@@ -214,6 +214,8 @@
         location.reload();
     }
 
+    var mobNoArr = [];
+    var mobN;
     function searchRbeMapping() {
         if ($("#formValid").valid()) {
 
@@ -273,6 +275,8 @@
                                 zone,
                                 action
                             ]).draw();
+
+                            mobNoArr.push({mobN:girdList[i].mobileNo});
                         }
                         document.getElementById('tblResponse').style.display = 'block';
                     } else {
@@ -307,6 +311,8 @@
 
         console.log("values", mobNo+"    "+actionType);
 
+        console.log("mob array:  ",mobNoArr);
+
         if(actionType == "Change RBE Mobile"){
             $("#GetRbeId").val(rbeIdVll);
             $("#GetExistMobNo").val(mobNo);
@@ -323,71 +329,75 @@
         newMobNo = $("#newMobileNoVall").val();
         console.log(mobNo+"   "+newMobNo,"clicked");
 
-        if(newMobNo == mobNo){
-            $("#mobilenochangepop").modal('hide');
-            $("#statusMsg").html("");
-            $("#statusMsg").append("<span>User already registered with mobile: "+ mobNo +"</span>")
-            $('#responseMsgModal').modal({
-                        backdrop: 'static',
-                        keyboard: false, 
-                        show: true
+        console.log("mob array:  ",mobNoArr);
+
+        for(var i = 0;  i < mobNoArr.length; i++){
+            if(newMobNo == mobNoArr[i].mobN){
+                $("#mobilenochangepop").modal('hide');
+                $("#statusMsg").html("");
+                $("#statusMsg").append("<span>User already registered with mobile: "+ mobNoArr[i].mobN +"</span>")
+                $('#responseMsgModal').modal({
+                    backdrop: 'static',
+                    keyboard: false, 
+                    show: true
                 });
-        }else{
-            var flag = "Y";
-
-            if(newMobNo.trim() ==''){
-                $("#mobileno_error").attr("style", "display:block");
-                $("#mobileno_error").html("Please enter new mobile");
-                flag = "N";
             }
-            if(newMobNo.trim()!=''){
-                if (!newMobNo.match(/^(?!(0))[0-9]{10}$/)){
-                     $("#mobileno_error").attr("style", "display:block");
-                     $("#mobileno_error").html("Mobile is a 10 digit number");
-                     flag = "N";
-                }
+        }
+
+        var flag = "Y";
+
+        if(newMobNo.trim() ==''){
+            $("#mobileno_error").attr("style", "display:block");
+            $("#mobileno_error").html("Please enter new mobile");
+            flag = "N";
+        }
+        if(newMobNo.trim()!=''){
+            if (!newMobNo.match(/^(?!(0))[0-9]{10}$/)){
+                    $("#mobileno_error").attr("style", "display:block");
+                    $("#mobileno_error").html("Mobile is a 10 digit number");
+                    flag = "N";
             }
+        }
 
-            if (flag == "N")
-                e.preventDefault();
+        if (flag == "N")
+            e.preventDefault();
 
-            if (flag == "Y") {
-                $.ajax({
-                    url: "@Url.Action("GetOtpMobileChangeReq", "ManageRbe")",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: { newMobileNo: newMobNo },
-                    success: function (res) {
-                        console.log("res",res);
-                        if(res.resp.data[0].status == 1){
-                            $("#GetRbeIdOtp").val(rbeIdVll);
-                            $("#GetExistMobNoOtp").val(mobNo);
-                            $("#newMobileNoOtpVal").val(newMobNo);
-                            $("#mobilenochangepop").modal('hide');
-                            $("#otpResErr").html("");
-                            $("#otpRes").html("");
-                            $("#otpRes").append("<span>OTP has been sent successfully to new mobile, please enter OTP to verify mobile.</span>");
-                            $('#mobilenochangepopOtp').modal({
-                                    backdrop: 'static',
-                                    keyboard: false, 
-                                    show: true
-                            });
-                        }else{
-                            $("#mobilenochangepopOtp").modal('hide');
-                            $("#statusMsg").html("");
-                            $("#statusMsg").append("<span>"+res.resp.data[0].reason+"</span>")
-                            $('#responseMsgModal').modal({
-                                    backdrop: 'static',
-                                    keyboard: false, 
-                                    show: true
-                            });
-                        }
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
+        if (flag == "Y") {
+            $.ajax({
+                url: "@Url.Action("GetOtpMobileChangeReq", "ManageRbe")",
+                type: "POST",
+                dataType: "JSON",
+                data: { newMobileNo: newMobNo },
+                success: function (res) {
+                    console.log("res",res);
+                    if(res.resp.data[0].status == 1){
+                        $("#GetRbeIdOtp").val(rbeIdVll);
+                        $("#GetExistMobNoOtp").val(mobNo);
+                        $("#newMobileNoOtpVal").val(newMobNo);
+                        $("#mobilenochangepop").modal('hide');
+                        $("#otpResErr").html("");
+                        $("#otpRes").html("");
+                        $("#otpRes").append("<span>OTP has been sent successfully to new mobile, please enter OTP to verify mobile.</span>");
+                        $('#mobilenochangepopOtp').modal({
+                                backdrop: 'static',
+                                keyboard: false, 
+                                show: true
+                        });
+                    }else{
+                        $("#mobilenochangepopOtp").modal('hide');
+                        $("#statusMsg").html("");
+                        $("#statusMsg").append("<span>"+res.resp.data[0].reason+"</span>")
+                        $('#responseMsgModal').modal({
+                                backdrop: 'static',
+                                keyboard: false, 
+                                show: true
+                        });
                     }
-                });
-            }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
         }
     }
 
