@@ -287,6 +287,8 @@
         public static string RbeMobileChangeRequestUrl = "api/dtplus/RBE/get_rbe_mobile_change_request";
         public static string GetOtpMobileChangeReqUrl = "api/dtplus/RBE/send_otp_change_rbe_mobile";
         public static string VerifyOtpMobileChangeReqUrl = "api/dtplus/RBE/validate_otp_change_rbe_mobile";
+        public static string ApproveChangeRbeMobileUrl = "api/dtplus/RBE/get_approve_change_rbe_mobile";
+        public static string ApproveRejectChangedRbeMobileUrl = "api/dtplus/RBE/approve_reject_changed_rbe_mobile";
         #endregion
 
         #region Application Form Data Entry

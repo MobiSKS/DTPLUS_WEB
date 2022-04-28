@@ -195,11 +195,13 @@
 
             currentRow.find('input:text').attr("readonly", false);
             currentRow.find('.vls').attr("readonly", false);
+            currentRow.find('.vls').attr("disabled", false);
         }
         if (!$(this).is(':checked')) {
             $(this).closest("tr").attr("style", "background-color: #f2f2f2;");
             currentRow.find('input:text').attr("readonly", true);
             currentRow.find('.vls').attr("readonly", true);
+            currentRow.find('.vls').attr("disabled", true);
         }
     });
 
@@ -266,9 +268,9 @@
                         var issueDate = isDts;
                         var expiryDate = expDts;
                         var status = (ccmsDetails[i].status || '');
-                        var mobileNumber = "<div style='width:160px;display:flex;'><input onchange='mobilenoChange(this," + (i) + ")' class='form-control mobn cgl' maxlength='10' pattern='^(?!(0))[0-9]{10}$' name='" + (ccmsDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsDetails[i].mobileNumber || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='mobileno_error_"+i+"' aria-hidden='true'></i></div>";
-                        var ccmsLimitOption = "<div style='width:160px;display:flex;'><select onchange='selectCcmsLimitChange(this," + (i) + ")' readonly='readonly' class='form-control vls cgl'><option value='" + (ccmsDetails[i].ccmsLimitOption || '') + "'>" + (ccmsDetails[i].description || '') + "</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='selectCcmsLimit_error_"+i+"' aria-hidden='true'></i></div>";
-                        var ccmsReloadSaleLimitValue = "<div style='width:160px;display:flex;'><input id='ccmsReloadSaleid_"+i+"' onchange='ccmsReloadSaleChange(this," + (i) + ")' class='form-control amt cgl' name='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='ccmsReloadSale_error_"+i+"' aria-hidden='true'></i></div>";
+                        var mobileNumber = "<div style='width:160px;display:flex;'><input maxlength='10' onchange='mobilenoChange(this," + (i) + ")' class='form-control mobn cgl' maxlength='10' pattern='^(?!(0))[0-9]{10}$' name='" + (ccmsDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsDetails[i].mobileNumber || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='mobileno_error_"+i+"' aria-hidden='true'></i></div>";
+                        var ccmsLimitOption = "<div style='width:160px;display:flex;'><select onchange='selectCcmsLimitChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control vls cgl'><option value='" + (ccmsDetails[i].ccmsLimitOption || '') + "'>" + (ccmsDetails[i].description || '') + "</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='selectCcmsLimit_error_"+i+"' aria-hidden='true'></i></div>";
+                        var ccmsReloadSaleLimitValue = "<div style='width:160px;display:flex;'><input maxlength='10' id='ccmsReloadSaleid_"+i+"' onchange='ccmsReloadSaleChange(this," + (i) + ")' class='form-control amt cgl' name='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' type='text' value='" + (ccmsDetails[i].ccmsReloadSaleLimitValue || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='ccmsReloadSale_error_"+i+"' aria-hidden='true'></i></div>";
 
                         tbl.row.add([
                             srNumber,
@@ -476,13 +478,11 @@
       function ccmsReloadSaleChange(o, rowSelected){
         var amountVal = o.value;
 
-        //if ($('#ccmsReloadSaleid_'+rowSelected).attr("readonly") == false) {
-            if(amountVal.trim()==''){
-                document.getElementById('ccmsReloadSale_error_'+rowSelected).title="Please Enter Amount";
-                document.getElementById('ccmsReloadSale_error_'+rowSelected).style.display = "block";
-                return false;
-            }
-        //}
+         if(amountVal.trim()==''){
+            document.getElementById('ccmsReloadSale_error_'+rowSelected).title="Please Enter Amount";
+            document.getElementById('ccmsReloadSale_error_'+rowSelected).style.display = "block";
+            return false;
+         }
 
          if ($('#ccmsReloadSaleid_'+rowSelected).attr("readonly") == true) {
                 document.getElementById('ccmsReloadSale_error_'+rowSelected).title="";
@@ -507,8 +507,8 @@
         }
      }
 </script>
-@*<style>
+<style>
     .cgl {
         width: 80%;
     }
-</style>*@
+</style>

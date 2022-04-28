@@ -1,17 +1,17 @@
-﻿@model HPCL.Common.Models.ViewModel.ManageRbe.GetApproveChangedRbeMapping
+﻿@model HPCL.Common.Models.ViewModel.ManageRbe.GetApproveChangeRbeMobile
 @using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Manage RBE</a> </li>
-            <li class="breadcrumb-item font-weight-light">Approve Change RBE Mapping</li>
+            <li class="breadcrumb-item font-weight-light">Approve Changed RBE Mobile</li>
         </ul>
         <form id="formValid">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Approve Changed RBE Mapping</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Approve Changed RBE Mobile</p>
 
                         <fieldset class="border-1 rounded border-grey" style="margin:1%">
                             <div class="col-lg-12 col-md-12 col-12 py-3">
@@ -47,12 +47,12 @@
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12"> User Name </label>
+                                            <label class="font-weight-normal col-md-4 col-12"> RBE Id </label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(m => m.RBEId, new { @class = "form-control" })
                                                 </div>
-                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(m => m.RBEId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -81,12 +81,10 @@
                                         <tr>
                                             <th>S No.</th>
                                             <th>RBE ID</th>
-                                            <th>New RBE User</th>
-                                            <th>New User Name</th>
-                                            <th>Prev RBE User</th>
-                                            <th>Prev User Name</th>
-                                            <th style="width:1%">From Location</th>
-                                            <th style="width:1%">To Location</th>
+                                            <th>RBE Name</th>
+                                            <th>Existing Mobile</th>
+                                            <th>New Mobile</th>
+                                            <th style="width:1%">Region</th>
                                             <th>Status</th>
                                             <th>Change RBE</th>
                                         </tr>
@@ -187,7 +185,7 @@
         if ($("#formValid").valid()){
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("ApproveChangedRbeMapping", "ManageRbe")',
+                url: '@Url.Action("ApproveChangeRbeMobile", "ManageRbe")',
                 data: $('#formValid').serialize(),  // data to submit
                 success: function (res, status, xhr) {
 
@@ -221,27 +219,23 @@
                         for (var i = 0; i < girdList.length; i++) {
 
                             var srNumber = (i + 1);
-                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '');
-                            var newRBEUser = (girdList[i].newRBEUser || '')+"</span>";
-                            var newUserName = (girdList[i].newUserName || '');
-                            var preRBEUser = "<span class='userName'>"+(girdList[i].preRBEUser || '')+"</span>";
-                            var preUserName = (girdList[i].preUserName || '');
-                            var fromLocation = (girdList[i].fromLocation || '');
-                            var toLocation = (girdList[i].toLocation || '');
+                            var rbeID = (girdList[i].rbeid || '');
+                            var rbeName = (girdList[i].rbeName || '');
+                            var existingMobileNo = "<span class='existMobNo'>" + (girdList[i].existingMobileNo || '') + "</span>";
+                            var newMobileNo = (girdList[i].newMobileNo || '');
+                            var region = (girdList[i].region || '');
                             var status = (girdList[i].status || '');
-                            var changeRBE = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBE || '') + "</a>";
-
+                            var changeRBEMobile = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBEMobile || '') + "</a>";
+                          
                             tbl.row.add([
                                 srNumber,
                                 rbeID,
-                                newRBEUser,
-                                newUserName,
-                                preRBEUser,
-                                preUserName,
-                                fromLocation,
-                                toLocation,
+                                rbeName,
+                                existingMobileNo,
+                                newMobileNo,
+                                region,
                                 status,
-                                changeRBE
+                                changeRBEMobile
                             ]).draw();
                         }
                         document.getElementById('tblResponse').style.display = 'block';
@@ -251,7 +245,6 @@
                         $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                         document.getElementById("noRecord").style.display = "block";
                     }
-
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     console.log("Error");
@@ -262,15 +255,15 @@
         }
     }
 
-    var userName;
+    var existMobNo;
     $("#RbeMapping").on('click', '.actionRbe', function (e) {
 
         var currentRow = $(this).closest("tr");
 
-        userName = currentRow.find('.userName').text();
+        existMobNo = currentRow.find('.existMobNo').text();
         var actionType = currentRow.find('.actionRbe').text();
 
-        console.log("values", userName);
+        console.log("values", existMobNo);
 
         if(actionType == "Pending"){
             $("#confirmDialogMsg").modal('show');
@@ -278,12 +271,12 @@
     });
 
     function ChangeStatus(o){
-        var actionPress = o.innerHTML;
+        var mappingStatus = o.innerHTML;
         $.ajax({
-            url: "@Url.Action("ApproveRejectChangedRbeMapping", "ManageRbe")",
+            url: "@Url.Action("ApproveRejectChangedRbeMobile", "ManageRbe")",
             type: "POST",
             dataType: "JSON",
-            data: { userName: userName, actionPress: actionPress},
+            data: { existMobNo: existMobNo, mappingStatus: mappingStatus},
             success: function (res) {
                 console.log(res)
                 $("#confirmDialogMsg").modal('hide');
@@ -305,7 +298,8 @@
     function reloadGrid(){
          $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("ApproveChangedRbeMapping", "ManageRbe")',
+                url: '@Url.Action("ApproveChangeRbeMobile", "ManageRbe")',
+                data: $('#formValid').serialize(),  // data to submit
                 success: function (res, status, xhr) {
 
                     console.log(res);
@@ -338,32 +332,32 @@
                         for (var i = 0; i < girdList.length; i++) {
 
                             var srNumber = (i + 1);
-                            var rbeID = "<span class='rbeIdVal'>"+(girdList[i].rbeid || '');
-                            var newRBEUser = (girdList[i].newRBEUser || '')+"</span>";
-                            var newUserName = (girdList[i].newUserName || '');
-                            var preRBEUser = "<span class='userName'>"+(girdList[i].preRBEUser || '')+"</span>";
-                            var preUserName = (girdList[i].preUserName || '');
-                            var fromLocation = (girdList[i].fromLocation || '');
-                            var toLocation = (girdList[i].toLocation || '');
+                            var rbeID = (girdList[i].rbeid || '');
+                            var rbeName = (girdList[i].rbeName || '');
+                            var existingMobileNo = "<span class='existMobNo'>" + (girdList[i].existingMobileNo || '') + "</span>";
+                            var newMobileNo = (girdList[i].newMobileNo || '');
+                            var region = (girdList[i].region || '');
                             var status = (girdList[i].status || '');
-                            var changeRBE = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBE || '') + "</a>";
-
+                            var changeRBEMobile = "<a class='actionRbe' href='#a'>" + (girdList[i].changeRBEMobile || '') + "</a>";
+                          
                             tbl.row.add([
                                 srNumber,
                                 rbeID,
-                                newRBEUser,
-                                newUserName,
-                                preRBEUser,
-                                preUserName,
-                                fromLocation,
-                                toLocation,
+                                rbeName,
+                                existingMobileNo,
+                                newMobileNo,
+                                region,
                                 status,
-                                changeRBE
+                                changeRBEMobile
                             ]).draw();
                         }
                         document.getElementById('tblResponse').style.display = 'block';
+                    } else {
+                        document.getElementById("tblResponse").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
                     }
-
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     console.log("Error");
