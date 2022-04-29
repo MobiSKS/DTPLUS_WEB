@@ -580,7 +580,7 @@ namespace HPCL.Service.Services
                     //StatusFlag = entity.StatusFlag,
                     TerminalId = TerminalId,
                     MerchantId = MerchantId,
-                    DeploymentStatus = Status == "0" ?null:Status
+                    DeploymentStatus = Status == "-1" ?null:Status
 
                 };
            

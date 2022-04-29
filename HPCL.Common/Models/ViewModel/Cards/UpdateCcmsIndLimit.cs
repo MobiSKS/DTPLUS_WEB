@@ -1,5 +1,7 @@
 ﻿
 using HPCL.Common.Models.CommonEntity;
+using System;
+using System.ComponentModel;
 
 namespace HPCL.Common.Models.ViewModel.Cards
 {
@@ -13,6 +15,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string Cardno { get; set; }
         public string Mobileno { get; set; }
         public int Limittype { get; set; }
-        public int Amount { get; set; }
+        [DefaultValue(0)]
+        public Decimal Amount { get; set; }
     }
 }

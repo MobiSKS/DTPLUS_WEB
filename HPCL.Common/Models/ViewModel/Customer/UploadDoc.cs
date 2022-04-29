@@ -18,9 +18,11 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "{0} is required")]
         public int IdProofType { get; set; }
 
+        [MaxLength(20)]
         [Required(ErrorMessage = "Id Proof Document Number is required")]
         [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string IdProofDocumentNo { get; set; }
+        //[CustomImageValidate]
 
         [Required(ErrorMessage = "Id Proof Front Photo is required")]
         public IFormFile IdProofFront { get; set; }
@@ -32,6 +34,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Type is required")]
         public int AddressProofType { get; set; }
 
+        [MaxLength(20)]
         [Required(ErrorMessage = "Address Proof Document Number is required")]
         [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string AddressProofDocumentNo { get; set; }
@@ -46,16 +49,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string CustomerName { get; set; }
         public string IdProofFrontSRC { get; set; }
 
-        //public ValidationResult Validate(ValidationContext validationContext)
-        //{
-        //    var numAttachments = AddressProofFront;
-        //    if (numAttachments == 0)
-        //    {
-        //        yield return new ValidationResult(
-        //            "You must attached at least one file.",
-        //            new string[] { nameof(Attachments) });
-        //    }
-        //}
     }
 
     public class UploadDocResponse: ResponseMsg
@@ -79,10 +72,15 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
     //public class CustomImageValidate : ValidationAttribute
     //{
+    //    public CustomImageValidate()
+    //    {
+
+    //    }
     //    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     //    {
+    //        var file = value as IFormFile;
     //        var model = (Customer.UploadDoc)validationContext.ObjectInstance;
-    //        if (value.FileName == model.IdProofBack.FileName)
+    //        if (file.FileName == model.IdProofBack.FileName)
     //        {
     //            return new ValidationResult("Please use diiferent Image");
     //        }

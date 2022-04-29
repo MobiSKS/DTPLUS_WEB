@@ -33,6 +33,7 @@ namespace HPCL.Service
             services.AddTransient<IApplicationFormDataEntryService, ApplicationFormDataEntryService>();
             services.AddTransient<IInterfaceService, InterfaceService>();
             services.AddTransient<IDtpSupportService, DtpSupportService>();
+            services.AddTransient<ITMSService, TMSService>();
             return services;
         }
     }

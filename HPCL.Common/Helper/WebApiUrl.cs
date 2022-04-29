@@ -289,6 +289,9 @@
         public static string VerifyOtpMobileChangeReqUrl = "api/dtplus/RBE/validate_otp_change_rbe_mobile";
         public static string ApproveChangeRbeMobileUrl = "api/dtplus/RBE/get_approve_change_rbe_mobile";
         public static string ApproveRejectChangedRbeMobileUrl = "api/dtplus/RBE/approve_reject_changed_rbe_mobile";
+        public static string GetDeviceIdResetRequestUrl = "api/dtplus/RBE/get_rbe_deviceid_reset_request";
+        public static string GetOtpRbeDeviceResetUrl = "api/dtplus/RBE/send_otp_reset_rbe_device";
+        public static string ValidateOtpRbeDeviceResetUrl = "api/dtplus/RBE/validate_otp_reset_rbe_device";
         #endregion
 
         #region Application Form Data Entry
@@ -301,6 +304,10 @@
         public static string GetBlockUnblockCustomerCcmsAccountByCustomeridUrl = "api/dtplus/dtp/get_block_unblock_customer_ccms_account_by_customerid";
         public static string BlockUnblockCustomerCcmsAccountUrl = "api/dtplus/dtp/block_unblock_customer_ccms_account";
         public static string GetCardBalanceTransfer = "api/dtplus/dtp/card_balance_transfer";
+        #endregion
+
+        #region TMS
+        public static string GetCustomerSearchDetails = "api/dtplus/TMS/bind_enroll_transport_management_system";
         #endregion
     }
 }

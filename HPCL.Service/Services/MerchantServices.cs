@@ -188,7 +188,8 @@ namespace HPCL.Service.Services
                     CommunicationPinNumber = merchantMdl.CommunicationPinNumber,
                     CommunicationPhoneNumber = merchantMdl.CommunicationPhoneNumber,
                     CommunicationFax = merchantMdl.CommunicationFax,
-                    ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    MappedMerchantId=merchantMdl.MappedMerchantId
                 };
             }
             else
@@ -244,7 +245,8 @@ namespace HPCL.Service.Services
                     CommunicationFax = merchantMdl.CommunicationFax,
                     NoofLiveTerminals = merchantMdl.NoofLiveTerminals,
                     TerminalTypeRequested = merchantMdl.TerminalTypeRequested,
-                    CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    
                 };
             }
 

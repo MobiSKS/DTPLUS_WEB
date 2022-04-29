@@ -13,7 +13,7 @@ namespace HPCL.Common.Models.ViewModel.Terminal
             StatusModals = new List<StatusModal>();
             StatusModals.Add(new StatusModal
             {
-                StatusId = 0,
+                StatusId = -1,
                 StatusName = "--All--"
             });
         }
