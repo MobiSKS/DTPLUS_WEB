@@ -148,14 +148,14 @@ namespace HPCL_Web.Controllers
             var searchResult = await _ashokLeyLandService.GetAlAddonOTCCardMappingCustomerDetails(customerId);
             return Json(new { searchResult = searchResult });
         }
-        public async Task<IActionResult> GetAlAddonOTCCardCustomerDetailsPartialView(string str)
+        public async Task<IActionResult> GetAlAddonOTCCardCustomerDetailsPartialView([FromBody] List<AddonOTCCardDetails> objCardDetails)
         {
-            var modals = await _ashokLeyLandService.GetAlAddonOTCCardCustomerDetailsPartialView(str);
+            var modals = await _ashokLeyLandService.GetAlAddonOTCCardCustomerDetailsPartialView(objCardDetails);
             return PartialView("~/Views/AshokLeyLand/_AddonOTCCardCustomerDetailsTbl.cshtml", modals);
         }
-        public async Task<IActionResult> GetAlAddonOTCCardAddCardsPartialView(string str)
+        public async Task<IActionResult> GetAlAddonOTCCardAddCardsPartialView([FromBody] List<AddonOTCCardDetails> objCardDetails)
         {
-            var modals = await _ashokLeyLandService.GetAlAddonOTCCardAddCardsPartialView(str);
+            var modals = await _ashokLeyLandService.GetAlAddonOTCCardAddCardsPartialView(objCardDetails);
             return PartialView("~/Views/AshokLeyLand/_AddonOTCCardVehicleDetailsTbl.cshtml", modals);
         }
 

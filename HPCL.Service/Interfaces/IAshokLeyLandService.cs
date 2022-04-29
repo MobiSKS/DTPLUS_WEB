@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,8 +21,8 @@ namespace HPCL.Service.Interfaces
         Task<ALOTCCardDealerAllocationResponse> GetViewALOTCCardDealerAllocation(string DealerCode, string CardNo);
         Task<AddonOTCCardMapping> AddonOTCCardMapping();
         Task<GetCustomerDetails> GetAlAddonOTCCardMappingCustomerDetails(string customerId);
-        Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView(string str);
-        Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str);
+        Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView([FromBody] List<AddonOTCCardDetails> arrs);
+        Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView([FromBody] List<AddonOTCCardDetails> arrs);
         Task<AddonOTCCardMapping> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard);
         Task<AddonOTCCardMapping> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode);
     }
