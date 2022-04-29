@@ -52,8 +52,9 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string YearOfRegistration { get; set; }
         public string MobileNo { get; set; }
         public string VehicleVerifiedManually { get; set; }
-        public string DuplicateVehicleNo { get; set; }
-        public string DuplicateMobileNo { get; set; }
+        public string VehicleNoMsg { get; set; }
+        public string MobileNoMsg { get; set; }
+        public string Verified { get; set; }
         public ObjCardDetail()
         {
             VehicleVerifiedManually = "false";

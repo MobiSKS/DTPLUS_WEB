@@ -47,7 +47,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CardNoMsg { get; set; }
         public string VINNoMsg { get; set; }
         public string CustomerId { get; set; }
-        public bool VehicleVerifiedManually { get; set; }
+        public string VehicleVerifiedManually { get; set; }
         public string CustomerOrgName { get; set; }
         public string NameOnCard { get; set; }
         public string DealerCode { get; set; }
@@ -55,7 +55,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string Verified { get; set; }
         public AddonOTCCardDetails()
         {
-            VehicleVerifiedManually = false;
+            VehicleVerifiedManually = "false";
         }
     }
 

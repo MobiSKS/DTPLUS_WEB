@@ -631,14 +631,14 @@ namespace HPCL_Web.Controllers
 
             return Json(Model);
         }
-        public async Task<IActionResult> GetAddCardPaymentDetailsPartialView(string str)
+        public async Task<IActionResult> GetAddCardPaymentDetailsPartialView([FromBody] List<CardDetails> objCardDetails)
         {
-            var modals = await _customerService.GetAddCardPaymentDetailsPartialView(str);
+            var modals = await _customerService.GetAddCardPaymentDetailsPartialView(objCardDetails);
             return PartialView("~/Views/Customer/_AddCardPaymentDetailsTbl.cshtml", modals);
         }
-        public async Task<IActionResult> GetCustomerAddCardsPartialView(string str)
+        public async Task<IActionResult> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> objCardDetails)
         {
-            var modals = await _customerService.GetCustomerAddCardsPartialView(str);
+            var modals = await _customerService.GetCustomerAddCardsPartialView(objCardDetails);
             return PartialView("~/Views/Customer/_AddCardVehicleDetailsTbl.cshtml", modals);
         }
     }

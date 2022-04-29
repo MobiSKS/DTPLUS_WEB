@@ -57,15 +57,16 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string CardPreference { get; set; }
         public string FeePaymentNo { get; set; }
         public string FeePaymentDate { get; set; }
-        public int FeePaymentsCollectFeeWaiver { get; set; }
+        public string FeePaymentsCollectFeeWaiver { get; set; }
         public string NoOfCards { get; set; }
         public string NoofVehicles { get; set; }
-        public bool VehicleNoVerifiedManually { get; set; }
-        public string DuplicateVehicleNo { get; set; }
-        public string DuplicateMobileNo { get; set; }
+        public string VehicleNoVerifiedManually { get; set; }
+        public string VehicleNoMsg { get; set; }
+        public string MobileNoMsg { get; set; }
+        public string Verified { get; set; }
         public CardDetails()
         {
-            VehicleNoVerifiedManually = false;
+            VehicleNoVerifiedManually = "false";
         }
     }
 

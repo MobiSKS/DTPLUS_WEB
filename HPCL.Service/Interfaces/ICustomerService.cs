@@ -38,7 +38,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerModel> UpdateCustomer(CustomerModel cust);
         Task<UploadDocResponseBody> UploadDoc(string FormNumber);
         Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo);
-        Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView(string str);
-        Task<CustomerCardInfo> GetCustomerAddCardsPartialView(string str);
+        Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView([FromBody] List<CardDetails> arrs);
+        Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
     }
 }

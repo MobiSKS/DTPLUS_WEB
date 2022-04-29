@@ -89,7 +89,7 @@
                 <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button">Add</button>
             </div>
             <div class="px-2">
-                <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()">Reset</button>
+                <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" style="display:none">Reset</button>
             </div>
         </div>
     </div>
@@ -506,11 +506,11 @@
         //console.log(customerTypeId);
 
         var vehicles = [];
-        var checked=false;
+        var checked="false";
 
         if ($(VehicleNoVerifiedManually).prop("checked"))
         {
-            checked=true;
+            checked="true";
         }
 
         var FeePayments=$("#FeePaymentsCollectFeeWaiver").val();
@@ -550,8 +550,9 @@
                         NoOfCards: noOfCards,
                         NoofVehicles: noOfVehiclesAllCards,
                         VehicleNoVerifiedManually: checked,
-                        DuplicateVehicleNo: row.find("TD").eq(6).html(),
-                        DuplicateMobileNo: row.find("TD").eq(7).html()
+                        VehicleNoMsg: row.find("TD").eq(6).html(),
+                        MobileNoMsg: row.find("TD").eq(7).html(),
+                        Verified: row.find("TD").eq(8).html()
                     })
                 });
            }
@@ -573,8 +574,9 @@
                             NoOfCards: noOfCards,
                             NoofVehicles: noOfVehiclesAllCards,
                             VehicleNoVerifiedManually: checked,
-                            DuplicateVehicleNo: "",
-                            DuplicateMobileNo: ""
+                            VehicleNoMsg: "",
+                            MobileNoMsg: "",
+                            Verified: "0"
                         });
            }
 
@@ -582,11 +584,11 @@
 
 
          $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '@Url.Action("GetCustomerAddCardsPartialView", "Customer")',
             contentType: "application/json; charset=utf-8",
-            data: { str: JSON.stringify(vehicles) },
-            dataType: "text",
+            data: JSON.stringify(vehicles),
+            dataType: "html",
             success: function (data, status, xhr) {
                     var v = data;
                     if (status == 'success') {
@@ -609,165 +611,6 @@
             }
         });
 
-        //$.ajax({
-        //    type: 'POST',  // http method
-        //    url: '@Url.Action("GetVehicleTypeDetails", "Customer")',
-        //    data: {},
-        //    dataType: "json",
-        //    success: function (data, status, xhr) {
-        //        //debugger;
-
-        //        var NoOfcards = $('#NoOfCards').val();
-        //        $("#NoOfCardsTbl td").parent().remove();
-
-        //        var NoOfVehicles = $('#NoOfVehiclesAllCards').val();
-
-        //        document.getElementById("NoOfCardsTbl").deleteTHead();
-
-        //        if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-        //            if (selected.toUpperCase() == "CARDLESS") {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-        //            }
-        //            else {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-        //            }
-        //        }
-        //        else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-        //            if (selected.toUpperCase() == "CARDLESS") {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th>Mobile No</th><th></th></tr></thead>');
-        //            }
-        //            else {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Card Identifier</th><th></th></tr></thead>');
-        //            }
-        //        }
-        //        else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-        //            if (selected.toUpperCase() == "CARDLESS") {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th>Mobile No</th><th></th> <th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-        //            }
-        //            else {
-        //                $('#NoOfCardsTbl').append('<thead><tr><th>S.No</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>Vehicle Make</th><th>Year of Reg.</th><th></th><th style="display:none;"></th><th style="display:none;"></th></tr></thead>');
-        //            }
-        //        }
-
-
-        //        if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-
-        //            NoOfcards = NoOfVehicles;
-        //        }
-
-
-        //        for (var i = 0; i < parseInt(NoOfcards); i++) {
-        //            //var id = 'ddlVehicleType' + i;
-        //            var j = (i + 1);
-        //            var name = 'ObjCardDetail[' + (i) + '].VehicleType';
-        //            var id = 'ddlVehicleType' + i;
-        //            var spanCardIdentifier = 'CardIdentifier_error' + i;
-                    
-        //            if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-
-        //                if (selected.toUpperCase() == "CARDLESS") {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' class='form-control' style='text-transform:uppercase' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-        //                        + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-        //                        + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-        //                        + "<td style='display:none;'>0</td>"
-        //                        + "<td style='display:none;'>0</td></tr>";
-        //                }
-        //                else {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' class='form-control' style='text-transform:uppercase' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-        //                        + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-        //                        + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-        //                        + "<td style='display:none;'>0</td>"
-        //                        + "<td style='display:none;'>0</td></tr>";
-        //                }
-        //            }
-        //            else if (customerTypeId == "902" || customerTypeId == "917") {//Corporate,Non Fleet
-        //                if (selected.toUpperCase() == "CARDLESS") {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='16' class='form-control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='error'></span></td></tr>";
-        //                }
-        //                else {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='16' class='form - control' onkeypress = 'return isNumberKey(event)' class='cardIdentifierInput' name='ObjCardDetail[" + (i) + "].CardIdentifier' onchange='CardIdentifierChange(this," + (i) + ")'> <span class='field-validation-error text-danger' id='CardIdentifier_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='field-validation-error text-danger'></span></td></tr>";
-        //                }
-        //            }
-        //            else if (customerTypeId == "901" || customerTypeId == "906") {//Fleet,Credit
-
-        //                if (selected.toUpperCase() == "CARDLESS") {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' style='text-transform:uppercase' class='form-control' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-        //                        + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-        //                        + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control'  maxlength='10' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].MobileNo' onchange='MobileNoChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='MobileNo_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-        //                        + "<td style='display:none;'>0</td>"
-        //                        + "<td style='display:none;'>0</td></tr>";
-        //                }
-        //                else {
-        //                    var rows = "<tr><td><span class='rowData'>" + j + "</span></td>"
-        //                        + "<td><input type='text' maxlength='10' onkeydown='return IsAlphaNumeric(event.keyCode)' style='text-transform:uppercase' class='form-control' onchange='CheckVechileNoUsed(this," + (i) + ")' name='ObjCardDetail[" + (i) + "].VechileNo'><span class='field-validation-error text-danger' id='VechileNo_error_"+i+"'></span></td>"
-        //                        + "<td><button class='btn btn_primary px-4 py - 2 verify' onclick='ValidateVehicleNo(" + (i) + ")' type='button' name='btnVechileCheck" + (i) + "'>Verify</button></td>"
-        //                        + "<td><select id='" + id + "'class='vls form-control' name='" + name + "' onchange='VehicleTypeChange(this," + (i) + ")'></select><span class='field-validation-error text-danger' id='ddlVehicleType_error_"+i+"'></span></td>"
-        //                        + "<td><input type='text' class='form-control' name='ObjCardDetail[" + (i) + "].VehicleMake' onchange='VehicleMakeChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='VehicleMake_error_"+i+"'></td>"
-        //                        + "<td><input type='text' class='form-control' maxlength='4' onkeypress = 'return isNumberKey(event)' name='ObjCardDetail[" + (i) + "].YearOfRegistration' onchange='YearOfRegistrationChange(this," + (i) + ")'><span class='field-validation-error text-danger' id='YearOfRegistration_error_"+i+"'></span></td>"
-        //                        + "<td class='rowData' style='color: red;'><span class='error'></span></td>"
-        //                        + "<td style='display:none;'>0</td>"
-        //                        + "<td style='display:none;'>0</td></tr>";
-        //                }
-        //            }
-
-        //            //console.log(rows);
-
-        //            $('#NoOfCardsTbl').append(rows);
-        //            //console.log(document.getElementById(id));
-
-        //            $("#" + id).html("");
-        //            $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
-        //                $('<option>',
-        //                    {
-        //                        value: data.vehicleTypeName,
-        //                        text: data.vehicleTypeName
-        //                    }).html(data.vehicleTypeName).appendTo("#" + id);
-        //            });
-        //        }
-
-        //        var count = $('#NoOfCardsTbl tr').length;
-        //        //alert(count);
-        //        if(count>1)
-        //        {
-        //           document.getElementById("divSubmit").style.display = "block";
-        //        }
-        //        else
-        //        {
-        //           document.getElementById("divSubmit").style.display = "none";
-        //        }
-
-        //    },
-        //    error: function (jqXhr, textStatus, errorMessage) {
-        //        alert("Error Populating VehicleTpeData Data");
-        //    }
-
-
-        //});
-
-
-        //document.getElementById('NoOfCardsTbl').style.display = 'table';
-   
     }
 
     $("#FeePaymentNo").on("blur", function () 

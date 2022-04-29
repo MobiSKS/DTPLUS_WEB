@@ -16,6 +16,7 @@ using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using System;
 using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HPCL.Service.Services
 {
@@ -296,10 +297,10 @@ namespace HPCL.Service.Services
             return GetCustomerDetails;
         }
 
-        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView(string str)
+        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardCustomerDetailsPartialView([FromBody] List<AddonOTCCardDetails> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
 
             AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
             addAddOnCard.Message = "";
@@ -320,9 +321,9 @@ namespace HPCL.Service.Services
                     addAddOnCard.DealerCode = arrs[0].DealerCode;
                 if (!string.IsNullOrEmpty(arrs[0].SalesExecutiveEmployeeID))
                     addAddOnCard.SalesExecutiveEmployeeID = arrs[0].SalesExecutiveEmployeeID;
-                addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
+                addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
             }
-            addAddOnCard.TableStringyfiedData = str;
+            //addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
@@ -335,17 +336,17 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
-        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView(string str)
+        public async Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView([FromBody] List<AddonOTCCardDetails> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<AddonOTCCardDetails> arrs = objs.ToObject<List<AddonOTCCardDetails>>();
             AddonOTCCardMapping addAddOnCard = new AddonOTCCardMapping();
 
             if (!string.IsNullOrEmpty(arrs[0].Message))
                 addAddOnCard.Message = arrs[0].Message;
             addAddOnCard.CustomerId = arrs[0].CustomerId;
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
-            addAddOnCard.TableStringyfiedData = str;
+            //addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
