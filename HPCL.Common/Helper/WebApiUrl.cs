@@ -302,5 +302,9 @@
         public static string BlockUnblockCustomerCcmsAccountUrl = "api/dtplus/dtp/block_unblock_customer_ccms_account";
         public static string GetCardBalanceTransfer = "api/dtplus/dtp/card_balance_transfer";
         #endregion
+
+        #region TMS
+        public static string GetCustomerSearchDetails = "api/dtplus/TMS/bind_enroll_transport_management_system";
+        #endregion
     }
 }
