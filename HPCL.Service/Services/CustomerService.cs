@@ -546,8 +546,8 @@ namespace HPCL.Service.Services
             {
                 foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
                 {
-                    cardDetails.DuplicateVehicleNo = "";
-                    cardDetails.DuplicateMobileNo = "";
+                    cardDetails.VehicleNoMsg = "";
+                    cardDetails.MobileNoMsg = "";
                 }
 
                 if (customerInserCardResponse.Message.Contains("Vehicle No."))
@@ -558,7 +558,7 @@ namespace HPCL.Service.Services
                         {
                             if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
                             {
-                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                                cardDetails.VehicleNoMsg = "Vehicle No. already exists";
                             }
                         }
                     }
@@ -572,7 +572,7 @@ namespace HPCL.Service.Services
                         {
                             if (cardDetails.MobileNo == responseData.Reason)
                             {
-                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                                cardDetails.MobileNoMsg = "Mobile No. already exists";
                             }
                         }
                     }
@@ -590,6 +590,17 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.Message = customerInserCardResponse.Message;
                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
+                {
+                    if (customerCardInfo.VehicleNoVerifiedManually)
+                    {
+                        cardDetails.Verified = "0";
+                    }
+                    else
+                    {
+                        cardDetails.Verified = "1";
+                    }
+                }
             }
 
             return customerCardInfo;
@@ -1433,10 +1444,10 @@ namespace HPCL.Service.Services
             return customerCardInfo;
         }
         
-        public async Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView(string str)
+        public async Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView([FromBody] List<CardDetails> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
 
             CustomerCardInfo addAddOnCard = new CustomerCardInfo();
             addAddOnCard.Message = "";
@@ -1457,21 +1468,21 @@ namespace HPCL.Service.Services
                 addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
             if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
                 addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
-            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
-                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            if (Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver) > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver);
             addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
-            addAddOnCard.VehicleNoVerifiedManually = arrs[0].VehicleNoVerifiedManually;
-            addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleNoVerifiedManually = Convert.ToBoolean(arrs[0].VehicleNoVerifiedManually);
+            //addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             return addAddOnCard;
         }
 
-        public async Task<CustomerCardInfo> GetCustomerAddCardsPartialView(string str)
+        public async Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<CardDetails> arrs = objs.ToObject<List<CardDetails>>();
             CustomerCardInfo addAddOnCard = new CustomerCardInfo();
 
             if (!string.IsNullOrEmpty(arrs[0].Message))
@@ -1482,13 +1493,13 @@ namespace HPCL.Service.Services
                 addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
             if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
                 addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
-            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
-                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            if (Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver) > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver);
             addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.NoOfVehiclesAllCards = arrs[0].NoofVehicles;
-            addAddOnCard.TableStringyfiedData = str;
-            addAddOnCard.VehicleNoVerifiedManually = arrs[0].VehicleNoVerifiedManually;
+            //addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleNoVerifiedManually = Convert.ToBoolean(arrs[0].VehicleNoVerifiedManually);
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 

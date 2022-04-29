@@ -48,11 +48,11 @@
                                             <td>
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
-                                                    @Model.ObjCardDetail[i].DuplicateVehicleNo
+                                                    @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button>
+                                                <button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button>
                                             </td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
@@ -69,7 +69,9 @@
                                             </td>
                                             <td></td>
                                             <td style="display:none;">0</td>
-                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">
+                                                @Model.ObjCardDetail[i].Verified
+                                            </td>
                                         }
                                     </tr>
                                 }
@@ -90,7 +92,7 @@
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i'>
@@ -175,10 +177,10 @@
                                             <td>
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
-                                                    @Model.ObjCardDetail[i].DuplicateVehicleNo
+                                                    @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i' value="@Model.ObjCardDetail[i].VehicleType">
@@ -195,12 +197,14 @@
                                             <td>
                                                 <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" value="@Model.ObjCardDetail[i].MobileNo" onchange='MobileNoChange(this,@i)'>
                                                 <span class='field-validation-error text-danger' id='MobileNo_error_@i'>
-                                                    @Model.ObjCardDetail[i].DuplicateMobileNo
+                                                    @Model.ObjCardDetail[i].MobileNoMsg
                                                 </span>
                                             </td>
                                             <td></td>
                                             <td style="display:none;">0</td>
-                                            <td style="display:none;">0</td>
+                                            <td style="display:none;">
+                                                @Model.ObjCardDetail[i].Verified
+                                            </td>
                                         }
                                     </tr>
                                 }
@@ -232,7 +236,7 @@
                                                 <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
-                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0">Verify</button></td>
+                                            <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
                                             <td>
                                                 <select id='ddlVehicleType_@i' class="form-control vls" name="ObjCardDetail[@i].VehicleType" onchange='VehicleTypeChange(this,@i)'></select>
                                                 <input type="hidden" id='hdnVehicleType_@i'>
@@ -324,7 +328,7 @@
                         else
                            $("<option/>").val(option.vehicleTypeName).text(option.vehicleTypeName).appendTo("#" + selectID);
                     });
-                    //$("#" + selectID)[0].sumo.reload();
+
 
                     },
                     error: function (jqXhr, textStatus, errorMessage) {
@@ -336,6 +340,7 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
+          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
           var isValid=true;
@@ -634,23 +639,22 @@
                   {
                       //debugger;
                       var jsonData = JSON.parse(data);
-                      if (status == 'success' && jsonData['statusCode'] == '101') {
-                          //mycel.innerHTML = "Vehicle Number is valid";
+                      if (status == 'success' && jsonData['statusCode'] == '101') 
+                      {
+                          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
                           document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
                           console.log(jsonData);
                           mycelValidStatus.innerHTML="1";
-                          //console.log(mycel.innerHTML);
                       }
                       else 
                       {
-                          //mycel.innerHTML = "Invalid Vehicle Number";
+                          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
                           document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
                           mycelValidStatus.innerHTML="0";
                       }
                   },
                   error: function (jqXhr, textStatus, errorMessage) 
                   {
-                      //mycel.innerHTML = "Invalid Vehicle Number";
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Invalid Vehicle No.";
                       mycelValidStatus.innerHTML="0";
 
@@ -662,6 +666,7 @@
           {
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
               mycelValidStatus.innerHTML="1";
+              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
           }
 
       }

@@ -115,10 +115,6 @@
                             </div>
                         </div>
 
-                        @*<div class="ml-4 mr-4" style="display:none;" id="divNoRecord">
-                            <div class="alert alert-danger" role="alert" style="display:none;" id="noRecord">
-                        </div>*@
-
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="ViewCardDetailsTbl">
                         </div>
                        
@@ -129,6 +125,8 @@
                 <table id="OldVehicleDetails">
                     <thead>
                         <tr>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -148,8 +146,9 @@
                                 <td>@item.VehicleMake</td>
                                 <td>@item.YearOfRegistration</td>
                                 <td>@item.MobileNo</td>
-                                <td>@item.DuplicateVehicleNo</td>
-                                <td>@item.DuplicateMobileNo</td>
+                                <td>@item.VehicleNoMsg</td>
+                                <td>@item.MobileNoMsg</td>
+                                <td>@item.Verified</td>
                             </tr>
                         }
                     </tbody>
@@ -177,41 +176,7 @@
 
     $(document).ready(function () 
     {
-
-        //if (!document.getElementById("rbtnCard").checked && !document.getElementById("rbtnCardless").checked) {
-        //    document.getElementById("rbtnCard").checked = true;
-        //    document.getElementById("rbtnCardless").checked = false;
-        //}
-
-        //if(document.getElementById("Status").value=="1")
-        //{
-        //     document.getElementById("divDetails").style.display = "block";
-        //     document.getElementById("divSubmit").style.display = "none";
-
-        //     var customerTypeId = document.getElementById("CustomerTypeId").value;
-
-        //     if (customerTypeId == "905" || customerTypeId == "909")
-        //     {
-        //        $('#lblNoOfVehicles').show();
-        //        $('#NoOfVehiclesAllCards').show();
-        //        $('#NoOfVehiclesAllCards').attr("readonly", false);
-        //    }
-        //    else {
-        //        $('#lblNoOfVehicles').hide();
-        //        $('#NoOfVehiclesAllCards').hide();
-        //    }
-
-        //    //if($("#dvRemarks").html().trim()=="")
-        //    //{
-        //       $("#btnSearch").click();
-        //    //}
-        //}
-        //else
-        //{
-        //     document.getElementById("divDetails").style.display = "none";
-        //     document.getElementById("divSubmit").style.display = "none";
-        //}
-
+ 
         if($("#dvRemarks").html().trim()!="")
         {
 
@@ -219,7 +184,7 @@
                 var customerTypeId = document.getElementById("CustomerTypeId").value;
 
                     var vehicles = [];
-                    var checked=false;
+                    var checked="false";
 
                     checked=$("#VehicleNoVerifiedManually").val();
 
@@ -255,35 +220,39 @@
                             MobileNo: "",
                             NoOfCards: "",
                             NoofVehicles: "",
-                            VehicleNoVerifiedManually: checked
+                            VehicleNoVerifiedManually: checked,
+                            Verified:"0"
                         });
 
-                    console.log("Value Check");
+                    console.log("vehicles Value Check Main View on Reload");
                     console.log(vehicles);
 
                         $.ajax({
-                            type: 'GET',  // http method
+                            type: 'POST',  // http method
                             url: '@Url.Action("GetAddCardPaymentDetailsPartialView", "Customer")',
                             contentType: "application/json; charset=utf-8",
-                            data: { str: JSON.stringify(vehicles) },
-                            dataType: "text",
-                            success: function (data, status, xhr) {
+                            data: JSON.stringify(vehicles),
+                            dataType: "html",
+                            success: function (data, status, xhr) 
+                            {
                                     var v = data;
                                     //console.log(data);
-                                    if (status == 'success') {
+                                    if (status == 'success') 
+                                    {
                                         $("#ViewCardDetailsTbl").html(data);
                                         $('html, body').animate({
                                             scrollTop: $("#ViewCardDetailsTbl").offset().top
                                         }, 2000);
                                     }
-                                    else {
+                                    else 
+                                    {
                                         console.log(v);
                                     }
                                 },
-                            error: function (jqXhr, textStatus, errorMessage) {
-                                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                            error: function (jqXhr, textStatus, errorMessage) 
+                            {
+                                console.log("Error populating GetAddCardPaymentDetailsPartialView");
                                 ViewCardDetailsTbl.style.display = "none";
-
                             }
                         });
 
@@ -403,7 +372,7 @@
                                 var customerTypeId = document.getElementById("CustomerTypeId").value;
 
                                     var vehicles = [];
-                                    var checked=false;
+                                    var checked="false";
                                     var FeePayments=$("#FeePaymentsCollectFeeWaiver").val();
 
                                      checked=$("#VehicleNoVerifiedManually").val();
@@ -438,35 +407,39 @@
                                          MobileNo: "",
                                          NoOfCards: "",
                                          NoofVehicles: "",
-                                         VehicleNoVerifiedManually: checked
+                                         VehicleNoVerifiedManually: checked,
+                                         Verified : "0"
                                      });
 
-                                 console.log("Value Check");
+                                 console.log("vehicles Value Check Main View On btnSearch click");
                                  console.log(vehicles);
 
                                      $.ajax({
-                                         type: 'GET',  // http method
+                                         type: 'POST',  // http method
                                          url: '@Url.Action("GetAddCardPaymentDetailsPartialView", "Customer")',
                                          contentType: "application/json; charset=utf-8",
-                                         data: { str: JSON.stringify(vehicles) },
-                                         dataType: "text",
-                                         success: function (data, status, xhr) {
+                                         data: JSON.stringify(vehicles),
+                                         dataType: "html",
+                                         success: function (data, status, xhr) 
+                                         {
                                                  var v = data;
                                                  //console.log(data);
-                                                 if (status == 'success') {
+                                                 if (status == 'success') 
+                                                 {
                                                      $("#ViewCardDetailsTbl").html(data);
                                                      $('html, body').animate({
                                                          scrollTop: $("#ViewCardDetailsTbl").offset().top
                                                      }, 2000);
                                                  }
-                                                 else {
+                                                 else 
+                                                 {
                                                      console.log(v);
                                                  }
                                              },
-                                         error: function (jqXhr, textStatus, errorMessage) {
-                                             //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                                         error: function (jqXhr, textStatus, errorMessage) 
+                                         {
+                                             console.log("Error populating GetAddCardPaymentDetailsPartialView");
                                              ViewCardDetailsTbl.style.display = "none";
-
                                          }
                                      });
 
@@ -500,62 +473,18 @@
                             //     document.getElementById("divVehicleNoVerifiedManually").style.display = "block";
                             //}
 
-                            if (data.rbeId != "") {
+                            if (data.rbeId != "") 
+                            {
                                 document.getElementById("RBEId").value = data.rbeId;
                                 document.getElementById("RBEName").value = data.rbeName;
                                 $("#RBEId").prop('readonly', true);
                             }
-                            else {
+                            else 
+                            {
                                 document.getElementById("RBEId").value = "";
                                 document.getElementById("RBEName").value = "";
                                 $("#RBEId").prop('readonly', false);
                             }
-
-                            //if (data.paymentType != "")
-                            //{
-                            //    document.getElementById("FeePaymentNo").value = data.paymentType;
-                            //    document.getElementById("FeePaymentDate").value = data.paymentReceivedDate;
-                            //    $("#FeePaymentNo").prop('readonly', true);
-                            //    $("#FeePaymentDate").prop('readonly', true);
-
-                            //    document.getElementById("rbtnCard").checked = true;
-                            //    document.getElementById("rbtnCard").disabled = true;
-                            //    document.getElementById("CardPreference").value = document.getElementById("rbtnCard").value;
-
-                            //    document.getElementById("rbtnCardless").checked = false;
-                            //    document.getElementById("rbtnCardless").disabled = true;
-
-                            //    document.getElementById("rbtnOnline").checked = true;
-                            //    document.getElementById("rbtnOnline").disabled = true;
-
-                            //    document.getElementById("rbtnFeeWaiver").checked = false;
-                            //    document.getElementById("rbtnFeeWaiver").disabled = true;
-
-                            //    $('#lblChequeNo').text('');
-                            //    $('#lblChequeNo').append("Payment Source<sup class='text-danger'>*</sup>");
-                            //    $('#lblChequeDate').text('');
-                            //    $('#lblChequeDate').append("Payment Date<sup class='text-danger'>*</sup>");
-                            //    document.getElementById("NoOfCards").value = data.noOfCards;
-                            //    $("#NoOfCards").prop('readonly', true);
-                            //    document.getElementById("ReceivedAmount").value = data.receivedAmount;
-
-                            //}
-                            //else
-                            //{
-                            //    $("#rbtnOnline").prop('disabled', true);
-                            //    document.getElementById("rbtnOnline").checked = false;
-                            //    document.getElementById("rbtnCard").checked = false;
-                            //    $("#rbtnCard").prop('disabled', false);
-                            //    $("#FeePaymentNo").prop('readonly', false);
-                            //    $("#FeePaymentDate").prop('readonly', false);
-                            //    $('#lblChequeNo').text('');
-                            //    $('#lblChequeNo').append("Approval Email From<sup class='text-danger'>*</sup>");
-                            //    $('#lblChequeDate').text('');
-                            //    $('#lblChequeDate').append("Approval Email Date<sup class='text-danger'>*</sup>");
-                            //    document.getElementById("NoOfCards").value = "";
-                            //    $("#NoOfCards").prop('readonly', false);
-                            //    document.getElementById("ReceivedAmount").value = "";
-                            //}
 
                        }
                     }
@@ -652,11 +581,9 @@
 </script>
 
 <script language="javascript">
-      //$(document).ready(function () {
 
-      //});
-
-      function RemoveSpecialChar(txtName) {
+      function RemoveSpecialChar(txtName) 
+      {
           if (txtName.value != '' && txtName.value.match(/^[\w ]+$/) == null) {
               txtName.value = txtName.value.replace(/[\W]/g, '');
           }
