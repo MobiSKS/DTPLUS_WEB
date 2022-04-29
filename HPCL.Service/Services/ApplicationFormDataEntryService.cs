@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -83,10 +84,10 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse;
         }
-        public async Task<AddAddOnCard> GetAddOnCardsPartialView(string str)
+        public async Task<AddAddOnCard> GetAddOnCardsPartialView(List<ObjCardDetail> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<ObjCardDetail> arrs = objs.ToObject<List<ObjCardDetail>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<ObjCardDetail> arrs = objs.ToObject<List<ObjCardDetail>>();
 
             AddAddOnCard addAddOnCard = new AddAddOnCard();
             addAddOnCard.Message = "";
@@ -102,11 +103,11 @@ namespace HPCL.Service.Services
                 addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
             if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
                 addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
-            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
-                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            if (Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver) > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver);
             addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
-            addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
-            addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
+           // addAddOnCard.TableStringyfiedData = str;
             if (arrs != null && arrs.Count > 0)
                 addAddOnCard.ObjCardDetail = arrs;
 
@@ -120,10 +121,10 @@ namespace HPCL.Service.Services
             return addAddOnCard;
         }
 
-        public async Task<AddAddOnCard> CustomerAddCardVehicleTbl(string str)
+        public async Task<AddAddOnCard> CustomerAddCardVehicleTbl(List<ObjCardDetail> arrs)
         {
-            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
-            List<ObjCardDetail> arrs = objs.ToObject<List<ObjCardDetail>>();
+            //JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            //List<ObjCardDetail> arrs = objs.ToObject<List<ObjCardDetail>>();
             AddAddOnCard addAddOnCard = new AddAddOnCard();
 
             if (!string.IsNullOrEmpty(arrs[0].Message))
@@ -134,13 +135,13 @@ namespace HPCL.Service.Services
                 addAddOnCard.FeePaymentDate = arrs[0].FeePaymentDate;
             if (!string.IsNullOrEmpty(arrs[0].FeePaymentNo) && arrs[0].FeePaymentNo != "0")
                 addAddOnCard.FeePaymentNo = arrs[0].FeePaymentNo;
-            if (arrs[0].FeePaymentsCollectFeeWaiver > 0)
-                addAddOnCard.FeePaymentsCollectFeeWaiver = arrs[0].FeePaymentsCollectFeeWaiver;
+            if (Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver) > 0)
+                addAddOnCard.FeePaymentsCollectFeeWaiver = Convert.ToInt32(arrs[0].FeePaymentsCollectFeeWaiver);
             addAddOnCard.CustomerTypeId = arrs[0].CustomerTypeId;
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.NoofVechileforAllCards = arrs[0].NoofVehicles;
-            addAddOnCard.TableStringyfiedData = str;
-            addAddOnCard.VehicleVerifiedManually = arrs[0].VehicleVerifiedManually;
+            //addAddOnCard.TableStringyfiedData = str;
+            addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 

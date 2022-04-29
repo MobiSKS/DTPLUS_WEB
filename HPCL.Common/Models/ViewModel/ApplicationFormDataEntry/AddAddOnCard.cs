@@ -42,7 +42,7 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string CardPreference { get; set; }
         public string FeePaymentNo { get; set; }
         public string FeePaymentDate { get; set; }
-        public int FeePaymentsCollectFeeWaiver { get; set; }
+        public string FeePaymentsCollectFeeWaiver { get; set; }
         public string NoOfCards { get; set; }
         public string NoofVehicles { get; set; }
         public string CardIdentifier { get; set; }
@@ -51,12 +51,12 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string VehicleMake { get; set; }
         public string YearOfRegistration { get; set; }
         public string MobileNo { get; set; }
-        public bool VehicleVerifiedManually { get; set; }
+        public string VehicleVerifiedManually { get; set; }
         public string DuplicateVehicleNo { get; set; }
         public string DuplicateMobileNo { get; set; }
         public ObjCardDetail()
         {
-            VehicleVerifiedManually = false;
+            VehicleVerifiedManually = "false";
         }
     }
 }
