@@ -30,6 +30,7 @@ namespace HPCL.Common.Models.ResponseModel.TerminalManagementResponse
         public string RouteId { get; set; }
 
         public string EffectiveDate { get; set; }
+        public string TerminalStatus { get; set; }
 
     }
 }

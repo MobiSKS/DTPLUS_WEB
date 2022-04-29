@@ -694,6 +694,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-4 displayNone mappedMerchId">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Mapped Merchant ID :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryMappedID">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group d-flex align-items-center flex-wrap mb-1">
                                             <label class="font-weight-normal col-md-5 col-12 px-0">Dealer Name :</label>
@@ -1104,6 +1111,9 @@
                 $("#SummaryMerchantID").html($("#MerchantId").val());
                 $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
                 $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
+                if($("#MerchantTypeId :selected").text()=="Mobile Dispenser"){
+                    $("#SummaryMappedID").html($("#MappedMerchantId").val());
+                }
                 $("#SummaryDealerName").html($("#DealerName").val());
                 $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
                 $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
@@ -1118,7 +1128,7 @@
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
                 $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
                 $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text() : ""));
+                $("#SummaryDistrict").html(($("#CommunicationDistrictId :selected").text()!="Select District"?$("#CommunicationDistrictId :selected").text():"")+(($("#CommunicationDistrictId :selected").text()!="Select District"&& $("#CommunicationStateId :selected").text()!="Select State")?", ":"") +($("#CommunicationStateId :selected").text()!="Select State"?$("#CommunicationStateId :selected").text():""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
@@ -1160,6 +1170,9 @@
                 $("#SummaryMerchantID").html($("#MerchantId").val());
                 $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
                 $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
+                if($("#MerchantTypeId :selected").text()=="Mobile Dispenser"){
+                    $("#SummaryMappedID").html($("#MappedMerchantId").val());
+                }
                 $("#SummaryDealerName").html($("#DealerName").val());
                 $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
                 $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
@@ -1174,7 +1187,7 @@
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
                 $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
                 $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
-                $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
+                $("#SummaryDistrict").html(($("#CommunicationDistrictId :selected").text()!="Select District"?$("#CommunicationDistrictId :selected").text():"")+(($("#CommunicationDistrictId :selected").text()!="Select District"&& $("#CommunicationStateId :selected").text()!="Select State")?", ":"") +($("#CommunicationStateId :selected").text()!="Select State"?$("#CommunicationStateId :selected").text():""));
                 $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
                 $("#SummaryFax").html($("#CommunicationFax").val());
                 $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
@@ -1360,7 +1373,7 @@
                     success: function (data, status, xhr) {
                         var v = data;
                         if (status == 'success' && v == '0') {
-                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exists";
+                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exist";
                             if (ret != "N") {
                                 document.applicationForm.MappedMerchantId.focus();
                             }
@@ -1847,45 +1860,49 @@
                 });
                 ret = "N";
         }
-        else if (document.applicationForm.ContactPersonNameMiddleName.value.trim() == "") {
-            document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
-            if (ret != "N") {
-                document.applicationForm.ContactPersonNameMiddleName.focus();
+        //else if (document.applicationForm.ContactPersonNameMiddleName.value.trim() == "") {
+        //    document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
+        //    if (ret != "N") {
+        //        document.applicationForm.ContactPersonNameMiddleName.focus();
+        //    }
+        //    $("#applicationForm").submit(function (e) {
+        //        e.preventDefault();
+        //    });
+        //    ret = "N";
+        //}
+        else if (document.applicationForm.ContactPersonNameMiddleName.value.trim() != "") {
+            if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
+                    document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
+                    if (ret != "N") {
+                        document.applicationForm.ContactPersonNameMiddleName.focus();
+                    }
+                    $("#applicationForm").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
         }
-        else if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
-                document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
-                if (ret != "N") {
-                    document.applicationForm.ContactPersonNameMiddleName.focus();
-                }
-                $("#applicationForm").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
-        }
-        else if (document.applicationForm.ContactPersonNameLastName.value.trim() == "") {
-            document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
-            if (ret != "N") {
-                document.applicationForm.ContactPersonNameLastName.focus();
+        //else if (document.applicationForm.ContactPersonNameLastName.value.trim() == "") {
+        //    document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
+        //    if (ret != "N") {
+        //        document.applicationForm.ContactPersonNameLastName.focus();
+        //    }
+        //    $("#applicationForm").submit(function (e) {
+        //        e.preventDefault();
+        //    });
+        //    ret = "N";
+        //}
+        else if (document.applicationForm.ContactPersonNameLastName.value.trim() != "") {
+            if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
+                    document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
+                    if (ret != "N") {
+                        document.applicationForm.ContactPersonNameLastName.focus();
+                    }
+                    $("#applicationForm").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
-                document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
-                if (ret != "N") {
-                    document.applicationForm.ContactPersonNameLastName.focus();
-                }
-                $("#applicationForm").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
         }
         else {
             document.getElementById("contact_name_error").innerHTML = "";
@@ -2190,6 +2207,9 @@
             $("#SummaryMerchantID").html($("#MerchantId").val());
             $("#SummaryRetailOutletName").html($("#RetailOutletName").val());
             $("#SummaryMerchantType").html($("#MerchantTypeId :selected").text());
+            if($("#MerchantTypeId :selected").text()=="Mobile Dispenser"){
+                    $("#SummaryMappedID").html($("#MappedMerchantId").val());
+                }
             $("#SummaryDealerName").html($("#DealerName").val());
             $("#SummaryDealerMobileNum").html($("#DealerMobileNo").val());
             $("#SummaryOutletCategory").html($("#OutletCategoryId :selected").text());
@@ -2204,7 +2224,7 @@
             $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
             $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
             $("#SummaryCity").html($("#CommunicationCity").val() + (($("#CommunicationPinNumber").val() != "") ? ", " + $("#CommunicationPinNumber").val() : ""));
-            $("#SummaryDistrict").html($("#CommunicationDistrictId :selected").text() + (($("#CommunicationStateId :selected").text() != "Select State") ? ", " + $("#CommunicationStateId :selected").text()  : ""));
+            $("#SummaryDistrict").html(($("#CommunicationDistrictId :selected").text()!="Select District"?$("#CommunicationDistrictId :selected").text():"")+(($("#CommunicationDistrictId :selected").text()!="Select District"&& $("#CommunicationStateId :selected").text()!="Select State")?", ":"") +($("#CommunicationStateId :selected").text()!="Select State"?$("#CommunicationStateId :selected").text():""));
             $("#SummaryPhoneOfc").html($("#CommunicationPhoneNumber").val());
             $("#SummaryFax").html($("#CommunicationFax").val());
             $("#SummaryRetAddress").html($("#RetailOutletAddress1").val() + ", " + $("#RetailOutletAddress2").val() + ", " + $("#RetailOutletAddress3").val());
@@ -2309,6 +2329,7 @@
     };
 
     function getCommDistrict() {
+        debugger;
         var id = $('#CommunicationStateId :selected').val();
 
         if (commStateID != "0" && commStateID != null && commStateID != "") {
@@ -2732,7 +2753,7 @@
                     success: function (data, status, xhr) {
                         var v = data;
                         if (status == 'success' && v == '0') {
-                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exists";
+                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exist";
                             if (ret != "N") {
                                 document.applicationForm.MappedMerchantId.focus();
                             }
@@ -3137,50 +3158,62 @@
         }
     });
     $("#ContactPersonNameMiddleName").on("blur", function () {
-        if (document.applicationForm.ContactPersonNameMiddleName.value.trim() == "") {
-            document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
-            if (ret != "N") {
-                document.applicationForm.ContactPersonNameMiddleName.focus();
+        
+            //document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
+            //if (ret != "N") {
+            //    document.applicationForm.ContactPersonNameMiddleName.focus();
+            //}
+            //$("#applicationForm").submit(function (e) {
+            //    e.preventDefault();
+            //});
+            //ret = "N";
+        //}
+        //else 
+        if (document.applicationForm.ContactPersonNameMiddleName.value.trim() != "") {
+            if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
+                    document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
+                    if (ret != "N") {
+                        document.applicationForm.ContactPersonNameMiddleName.focus();
+                    }
+                    $("#applicationForm").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
-                document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
-                if (ret != "N") {
-                    document.applicationForm.ContactPersonNameMiddleName.focus();
-                }
-                $("#applicationForm").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+            else {
+                document.getElementById("contact_name_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("contact_name_error").innerHTML = "";
         }
     });
     $("#ContactPersonNameLastName").on("blur", function () {
-        if (document.applicationForm.ContactPersonNameLastName.value.trim() == "") {
-            document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
-            if (ret != "N") {
-                document.applicationForm.ContactPersonNameLastName.focus();
+        
+        //    document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
+        //    if (ret != "N") {
+        //        document.applicationForm.ContactPersonNameLastName.focus();
+        //    }
+        //    $("#applicationForm").submit(function (e) {
+        //        e.preventDefault();
+        //    });
+        //    ret = "N";
+        //}
+        //else 
+        if (document.applicationForm.ContactPersonNameLastName.value.trim() != "") {
+            if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
+                    document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
+                    if (ret != "N") {
+                        document.applicationForm.ContactPersonNameLastName.focus();
+                    }
+                    $("#applicationForm").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
-                document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
-                if (ret != "N") {
-                    document.applicationForm.ContactPersonNameLastName.focus();
-                }
-                $("#applicationForm").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+            else {
+                document.getElementById("contact_name_error").innerHTML = "";
+            }
         }
         else {
             document.getElementById("contact_name_error").innerHTML = "";
