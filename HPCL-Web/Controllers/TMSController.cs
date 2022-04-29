@@ -1,6 +1,8 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Service.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -10,10 +12,12 @@ namespace HPCL_Web.Controllers
     {
         private readonly ITMSService _tmsService;
         private readonly ICommonActionService _commonActionService;
-        public TMSController(ITMSService tmsService, ICommonActionService commonActionService)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public TMSController(ITMSService tmsService, ICommonActionService commonActionService, IWebHostEnvironment hostingEnvironment)
         {
             _tmsService = tmsService;
             _commonActionService = commonActionService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -32,6 +36,21 @@ namespace HPCL_Web.Controllers
             var model = await _tmsService.ViewCustomerDetails(CustomerId);
 
             return PartialView("~/Views/TMS/_ViewCustomerTblView.cshtml", model);
+        }
+        public FileResult DownloadFile(string fileName)
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string contentRootPath = _hostingEnvironment.ContentRootPath;
+
+            string path = "";
+            path = Path.Combine(contentRootPath, "Views\\TMS");
+            path = Path.Combine(path, fileName);
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
         }
     }
 }
