@@ -47,7 +47,7 @@
         public const string ValidDealerCodeErrMsg = "Enter a valid Dealer Code";
 
         public const string ValidCardNo = @"^(?!(0))[0-9]{16}$";
-        public const string ValidCardNoErrMsg = "Enter a valid Card Number";
+        public const string ValidCardNoErrMsg = "Invalid Card Number";
 
         public const string ValidFormNo = @"^(?!(0))[0-9]{10}$";
         public const string ValidFormNoErrMsg = "Enter valid Form Number";

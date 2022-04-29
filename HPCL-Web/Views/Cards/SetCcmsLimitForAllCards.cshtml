@@ -27,7 +27,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CustomerId, new { @id = "CCMSCustomerId", @class = "form-control" })
+                                                        @Html.TextBoxFor(m => m.CustomerId, new { @id = "CCMSCustomerId", @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                                         @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -81,7 +81,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control", @onchange = "ccmsLimitValidate(this)" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control", @onchange = "ccmsLimitValidate(this)", onkeypress = "return isNumberKey(event)" })
                                                         @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -136,6 +136,15 @@
 
 <script>
     $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
 
         $('#CcmsLimitRs').attr("readonly", true);
 

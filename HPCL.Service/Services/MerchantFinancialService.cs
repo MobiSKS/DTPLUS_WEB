@@ -47,12 +47,12 @@ namespace HPCL.Service.Services
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
-                    MerchantId = entity.MerchantId,
-                    MerchantStatus = entity.MerchantStatus,
+                    MerchantId = entity.MerchantId ?? "",
+                    MerchantStatus = entity.MerchantStatus ?? "",
                     FromDate = entity.FromDate,
                     ToDate = entity.ToDate,
-                    RegionalOffice = entity.RegionalOffice,
-                    SalesArea = entity.SalesArea
+                    RegionalOffice = entity.RegionalOffice ?? "",
+                    SalesArea = entity.SalesArea ?? ""
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
