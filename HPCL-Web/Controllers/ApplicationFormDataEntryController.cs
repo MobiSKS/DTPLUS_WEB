@@ -43,14 +43,16 @@ namespace HPCL_Web.Controllers
             var searchResult = await _applicationFormDataEntryService.CheckAddOnForm(formNumber);
             return Json(new { searchResult = searchResult });
         }
-        public async Task<IActionResult> GetAddOnCardsPartialView(string str)
+        [HttpPost]
+        public async Task<IActionResult> GetAddOnCardsPartialView([FromBody] List<ObjCardDetail> objCardDetails)
         {
-            var modals = await _applicationFormDataEntryService.GetAddOnCardsPartialView(str);
+            var modals = await _applicationFormDataEntryService.GetAddOnCardsPartialView(objCardDetails);
             return PartialView("~/Views/ApplicationFormDataEntry/_AddAddOnCardsTbl.cshtml", modals);
         }
-        public async Task<IActionResult> CustomerAddCardVehicleTbl(string str)
+        [HttpPost]
+        public async Task<IActionResult> CustomerAddCardVehicleTbl([FromBody] List<ObjCardDetail> objCardDetails)
         {
-            var modals = await _applicationFormDataEntryService.CustomerAddCardVehicleTbl(str);
+            var modals = await _applicationFormDataEntryService.CustomerAddCardVehicleTbl(objCardDetails);
             return PartialView("~/Views/ApplicationFormDataEntry/_AddAddOnCardVehicleDetailsTable.cshtml", modals);
         }
 

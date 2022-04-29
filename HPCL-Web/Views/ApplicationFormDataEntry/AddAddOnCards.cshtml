@@ -189,7 +189,7 @@
              var customerTypeId = document.getElementById("CustomerTypeId").value;
 
              var vehicles = [];
-             var checked=false;
+             var checked="false";
 
              checked=$("#VehicleVerifiedManually").val();
 
@@ -233,17 +233,17 @@
                  })
              });
 
-             console.log("Value Check");
-             console.log(vehicles);
+             console.log("Value Check Main");
+             console.log(JSON.stringify(vehicles));
 
-             $.ajax({
-                 type: 'GET',  // http method
-                 url: '@Url.Action("GetAddOnCardsPartialView", "ApplicationFormDataEntry")',
-                 contentType: "application/json; charset=utf-8",
-                 data: { str: JSON.stringify(vehicles) },
-                 //data: JSON.stringify(vehicles),
-                 dataType: "text",
-                 success: function (data, status, xhr) {
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetAddOnCardsPartialView", "ApplicationFormDataEntry")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(vehicles),
+                //data: JSON.stringify(vehicles),
+                dataType: "html",
+                success: function (data, status, xhr) {
                          var v = data;
                          //console.log(data);
                          if (status == 'success') {
@@ -336,7 +336,7 @@
 
 
                         var vehicles = [];
-                        var checked=false;
+                        var checked="false";
                         var FeePayments=$("#FeePaymentsCollectFeeWaiver").val();
 
                         if(FeePayments===undefined)
@@ -372,19 +372,21 @@
                              VehicleVerifiedManually: checked
                          });
 
-                     console.log("Value Check");
-                     console.log(vehicles);
+                     //console.log("Value Check");
+                     //console.log(JSON.stringify(vehicles));
 
                          $.ajax({
-                             type: 'GET',  // http method
+                             type: 'POST',  // http method
                              url: '@Url.Action("GetAddOnCardsPartialView", "ApplicationFormDataEntry")',
                              contentType: "application/json; charset=utf-8",
-                             data: { str: JSON.stringify(vehicles) },
+                             data: JSON.stringify(vehicles),
                              //data: JSON.stringify(vehicles),
-                             dataType: "text",
+                             dataType: "html",
                              success: function (data, status, xhr) {
                                      var v = data;
-                                     //console.log(data);
+                                     console.log("Inside Success");
+                                     console.log(data);
+                                     console.log(status);
                                      if (status == 'success') {
                                          $("#ViewCardDetailsTbl").html(data);
                                          $('html, body').animate({
@@ -566,7 +568,7 @@
          $("#Remarks").html('');
          $("#dvRemarks").html('');
          dvRemarks.style.display = 'none';
-         //location.reload();
+         //window.location.reload(true);
     });
 
     $('#NoOfCards').on("cut copy paste",function(e) {
