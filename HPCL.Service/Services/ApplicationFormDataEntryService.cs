@@ -233,8 +233,8 @@ namespace HPCL.Service.Services
             {
                 foreach (HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
                 {
-                    cardDetails.DuplicateVehicleNo = "";
-                    cardDetails.DuplicateMobileNo = "";
+                    cardDetails.VehicleNoMsg = "";
+                    cardDetails.MobileNoMsg = "";
                 }
 
                 if (customerInserCardResponse.Message.Contains("Vehicle No."))
@@ -245,7 +245,7 @@ namespace HPCL.Service.Services
                         {
                             if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
                             {
-                                cardDetails.DuplicateVehicleNo = "Vehicle No. already exists";
+                                cardDetails.VehicleNoMsg = "Vehicle No. already exists";
                             }
                         }
                     }
@@ -259,7 +259,7 @@ namespace HPCL.Service.Services
                         {
                             if (cardDetails.MobileNo == responseData.Reason)
                             {
-                                cardDetails.DuplicateMobileNo = "Mobile No. already exists";
+                                cardDetails.MobileNoMsg = "Mobile No. already exists";
                             }
                         }
                     }
@@ -278,6 +278,18 @@ namespace HPCL.Service.Services
                 addAddOnCard.Message = customerInserCardResponse.Message;
                 addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
                 addAddOnCard.FeePaymentDate = oldPaymentDate;
+
+                foreach (ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
+                {
+                    if (addAddOnCard.VehicleVerifiedManually)
+                    {
+                        cardDetails.Verified = "0";
+                    }
+                    else
+                    {
+                        cardDetails.Verified = "1";
+                    }
+                }
             }
 
             return addAddOnCard;
