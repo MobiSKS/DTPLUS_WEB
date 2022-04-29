@@ -139,5 +139,26 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> DeviceIdResetRequest(GetDeviceIdResetRequest entity)
+        {
+            var searchList = await _manageRbeService.GetDeviceIdResetRequestSerivce(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetOtpRbeDeviceResetService(string mobNo)
+        {
+            var resp = await _manageRbeService.GetOtpRbeDeviceResetService(mobNo);
+            return Json(new { resp = resp });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ValidateOtpRbeDeviceResetService(string MobileNo, string otp)
+        {
+            var resp = await _manageRbeService.ValidateOtpRbeDeviceResetService(MobileNo, otp);
+            return Json(new { resp = resp });
+        }
     }
 }

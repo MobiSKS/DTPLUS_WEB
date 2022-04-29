@@ -250,5 +250,61 @@ namespace HPCL.Service.Services
             List<ApproveRejectChangedRbeMappingResponse> resp = successRes.ToObject<List<ApproveRejectChangedRbeMappingResponse>>();
             return resp;
         }
+
+        public async Task<GetDeviceIdResetRequestRespose> GetDeviceIdResetRequestSerivce(GetDeviceIdResetRequest entity)
+        {
+            var reqBody = new GetDeviceIdResetRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FirstName = entity.FirstName ?? "",
+                MobileNo = entity.MobileNo ?? ""
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetDeviceIdResetRequestUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetDeviceIdResetRequestRespose resp = obj.ToObject<GetDeviceIdResetRequestRespose>();
+            return resp;
+        }
+
+        public async Task<GetSendOtpChangeRbeMobileResponse> GetOtpRbeDeviceResetService(string mobNo)
+        {
+            var reqBody = new GetOtpRbeDeviceReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MobileNo = mobNo ?? "",
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetOtpRbeDeviceResetUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetSendOtpChangeRbeMobileResponse resp = obj.ToObject<GetSendOtpChangeRbeMobileResponse>();
+            return resp;
+        }
+
+        public async Task<List<SuccessResponse>> ValidateOtpRbeDeviceResetService(string MobileNo, string otp)
+        {
+            var reqBody = new ValidateOtpRbeDeviceReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MobileNo = MobileNo ?? "",
+                OTP = otp ?? "",
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ValidateOtpRbeDeviceResetUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var successRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> resp = successRes.ToObject<List<SuccessResponse>>();
+            return resp;
+        }
     }
 }
