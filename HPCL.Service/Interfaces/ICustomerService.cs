@@ -42,5 +42,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
         Task<UpdateCustomerAddress> GetCustomerAddress(string CustomerId);
         Task<UpdateCustomerAddress> UpdateCustomerAddress();
+        Task<UpdateCustomerAddress> UpdateCustomerAddress(UpdateCustomerAddress model);
     }
 }

@@ -68,8 +68,10 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         public string CommunicationDialCode { get; set; }
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
+        public string CommunicationPhonePart2 { get; set; }
         public string CommunicationPhoneNo { get; set; }
         public string CommunicationFaxCode { get; set; }
+        public string CommunicationFaxPart2 { get; set; }
         public string CommunicationFax { get; set; }
 
         [Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
@@ -119,5 +121,9 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string PanCardRemarks { get; set; }
         public string ExternalPANAPIStatus { get; set; }
         public string Message { get; set; }
+        public string CASID { get; set; }
+        public string PASID { get; set; }
+        public string CADID { get; set; }
+        public string PADID { get; set; }
     }
 }

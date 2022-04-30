@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using Microsoft.Extensions.Configuration;
 using HPCL.Common.Models.ViewModel.TMS;
+//using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 
 namespace HPCL.Service.Services
 {
@@ -1551,8 +1552,10 @@ namespace HPCL.Service.Services
                 }
 
                 custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-                custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
-                custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
+                //custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
+                //custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
+                custMdl.CASID = "78";
+                custMdl.PASID = "66";
 
                 if (!string.IsNullOrEmpty(custMdl.CommunicationPhoneNo))
                 {
@@ -1561,11 +1564,11 @@ namespace HPCL.Service.Services
                     if (subs.Count() > 1)
                     {
                         custMdl.CommunicationDialCode = subs[0].ToString();
-                        custMdl.CommunicationPhoneNo = subs[1].ToString();
+                        custMdl.CommunicationPhonePart2 = subs[1].ToString();
                     }
                     else
                     {
-                        custMdl.CommunicationPhoneNo = custMdl.CommunicationPhoneNo;
+                        custMdl.CommunicationPhonePart2 = custMdl.CommunicationPhoneNo;
                     }
                 }
 
@@ -1576,11 +1579,11 @@ namespace HPCL.Service.Services
                     if (subs.Count() > 1)
                     {
                         custMdl.CommunicationFaxCode = subs[0].ToString();
-                        custMdl.CommunicationFax = subs[1].ToString();
+                        custMdl.CommunicationFaxPart2 = subs[1].ToString();
                     }
                     else
                     {
-                        custMdl.CommunicationFax = custMdl.CommunicationFax;
+                        custMdl.CommunicationFaxPart2 = custMdl.CommunicationFax;
                     }
                 }
 
@@ -1637,6 +1640,52 @@ namespace HPCL.Service.Services
             }
 
             return custMdl;
+        }
+
+        public async Task<UpdateCustomerAddress> UpdateCustomerAddress(UpdateCustomerAddress model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CommunicationPhoneNo = (string.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
+            model.CommunicationFax = (string.IsNullOrEmpty(model.CommunicationFaxCode) ? "" : model.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(model.CommunicationFaxPart2) ? "" : model.CommunicationFaxPart2);
+            model.PermanentPhoneNo = (string.IsNullOrEmpty(model.PerOrRegAddressDialCode) ? "" : model.PerOrRegAddressDialCode) + "-" + (string.IsNullOrEmpty(model.PerOrRegAddressPhoneNumber) ? "" : model.PerOrRegAddressPhoneNumber);
+            model.PermanentFax = (string.IsNullOrEmpty(model.PermanentFaxCode) ? "" : model.PermanentFaxCode) + "-" + (string.IsNullOrEmpty(model.PermanentFaxPhoneNumber) ? "" : model.PermanentFaxPhoneNumber);
+
+            if (!string.IsNullOrEmpty(model.CommunicationEmailid))
+            {
+                model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
+            }
+                       
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateCustomerAddress);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            //OTCCustomerCardResponse customerResponse = JsonConvert.DeserializeObject<OTCCustomerCardResponse>(response, settings);
+
+            //model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            //model.Remarks = customerResponse.Message;
+
+            //if (customerResponse.Internel_Status_Code != 1000)
+            //{
+            //    if (customerResponse.Data != null)
+            //        model.Remarks = customerResponse.Data[0].Reason;
+            //    else
+            //        model.Remarks = customerResponse.Message;
+
+            //    model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            //    model.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.CommunicationStateID.ToString()));
+            //    model.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.PerOrRegAddressStateID.ToString()));
+            //}
+
+            return model;
         }
 
     }

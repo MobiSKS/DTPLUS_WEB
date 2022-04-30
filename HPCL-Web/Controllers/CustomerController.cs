@@ -652,6 +652,20 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCustomerAddress(CustomerId);
             return Json(new { customer = modals });
         }
-      
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCustomerAddress(UpdateCustomerAddress model)
+        {
+
+            var modals = await _customerService.UpdateCustomerAddress(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = model.Remarks });
+            }
+
+            return View(modals);
+        }
+
     }
 }

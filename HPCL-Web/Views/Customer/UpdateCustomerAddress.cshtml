@@ -11,7 +11,8 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Requests</a> </li>
             <li class="breadcrumb-item font-weight-light">Update Customer Details</li>
         </ul>
-        <form>
+         @using (Html.BeginForm("UpdateCustomerAddress", "Customer", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+         {
             <div class="w-100">
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                 <div class="border-1 rounded border-grey pb-3">
@@ -159,8 +160,8 @@
                                             <span class="error" id="CommunicationDialCode_error"></span>
                                         </div>
                                         <div class="col-8 pl-0">
-                                            @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                            <span class="error" id="comm_officePhone_error"></span>
+                                            @Html.TextBoxFor(m => m.CommunicationPhonePart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="CommunicationPhonePart2_error"></span>
                                         </div>
                                     </div>
 
@@ -190,8 +191,8 @@
                                             <span class="error" id="CommunicationFaxCode_error"></span>
                                         </div>
                                         <div class="col-8 pl-0">
-                                            @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                            <span class="error" id="CommunicationFax_error"></span>
+                                            @Html.TextBoxFor(m => m.CommunicationFaxPart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="CommunicationFaxPart2_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -354,8 +355,8 @@
                                             <span class="error" id="PermanentFaxCode_error"></span>
                                         </div>
                                         <div class="col-8 pl-0">
-                                            @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                            <span class="error" id="perma_faxNumber_error"></span>
+                                            @Html.TextBoxFor(m => m.PermanentFaxPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="PermanentFaxPhoneNumber_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -380,7 +381,7 @@
 			</div>
 
 			</div>
-        </form>
+        }
         <div class="clearfix"></div>
         </div>
 </div>
@@ -403,6 +404,12 @@
 
 
   });
+
+    $('select').SumoSelect({
+        placeholder: '--Select--',
+        search: true,
+        searchText: 'Enter Text here.'
+    }); 
 
     $("#btnReset").click(function () {
         location.reload();
@@ -499,14 +506,14 @@
                 $('#CommunicationCityName').val(res.customer.communicationCityName);
                 $('#CommunicationPinCode').val(res.customer.communicationPinCode);
 
-                //var CommunicationDistrict = $('<option value="' + res.customer.communicationDistrictName + '">' + res.customer.communicationDistrictName + '</option>');
-                //$('#CommunicationDistrictId').append(CommunicationDistrict);
-                //$("#CommunicationDistrictId")[0].sumo.reload();
+				$('#CommunicationStateID')[0].sumo.selectItem(res.customer.casid);
+				$('#PerOrRegAddressStateID')[0].sumo.selectItem(res.customer.pasid);
+				              
 
                 $('#CommunicationDialCode').val(res.customer.communicationDialCode);
-                $('#CommunicationPhoneNo').val(res.customer.communicationPhoneNo);
+                $('#CommunicationPhonePart2').val(res.customer.communicationPhonePart2);
                 $('#CommunicationFaxCode').val(res.customer.communicationFaxCode);
-                $('#CommunicationFax').val(res.customer.communicationFax);
+                $('#CommunicationFaxPart2').val(res.customer.communicationFaxPart2);
                 $('#CommunicationMobileNo').val(res.customer.communicationMobileNo);
                 $('#CommunicationEmailid').val(res.customer.communicationEmailid);
 
@@ -524,7 +531,72 @@
                 $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
                 $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPhoneNumber);
                 $('#PermanentFaxCode').val(res.customer.permanentFaxCode);
-                $('#PermanentFax').val(res.customer.permanentFaxPhoneNumber);
+                $('#PermanentFaxPhoneNumber').val(res.customer.permanentFaxPhoneNumber);
+
+				 $.ajax({
+					type: 'POST',  // http method
+					url: '@Url.Action("GetDistrictDetails", "Customer")',
+					data: { Stateid: res.customer.casid },  // data to submit
+					dataType: "json",
+					success: function (data, status, xhr) {
+						var v = data;
+						if (status == 'success') 
+						{
+							$("#CommunicationDistrictId").html("");
+							$.each(data, function (i, data) { // bind the dropdown list using json result
+								$('<option>',
+									{
+										value: data.districtID,
+										text: data.districtName
+									}).html(data.districtName).appendTo("#CommunicationDistrictId");
+							});
+							$("#CommunicationDistrictId")[0].sumo.reload();
+
+							//setTimeout(function(){
+						   //$('#CommunicationDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
+						   //},500);
+						}
+						else {
+							console.log(v);
+						}
+					},
+					error: function (jqXhr, textStatus, errorMessage) {
+						alert("Error Populating District Data");
+					}
+				});
+
+
+				 $.ajax({
+					type: 'POST',  // http method
+					url: '@Url.Action("GetDistrictDetails", "Customer")',
+					data: { Stateid: res.customer.pasid },  // data to submit
+					dataType: "json",
+					success: function (data, status, xhr) {
+						var v = data;
+						if (status == 'success') 
+						{
+							$("#PermanentDistrictId").html("");
+							$.each(data, function (i, data) { // bind the dropdown list using json result
+								$('<option>',
+									{
+										value: data.districtID,
+										text: data.districtName
+									}).html(data.districtName).appendTo("#PermanentDistrictId");
+							});
+							$("#PermanentDistrictId")[0].sumo.reload();
+
+							//setTimeout(function(){
+						   //$('#PermanentDistrictId')[0].sumo.selectItem($("#PermanentDistrictId").val());
+						   //},500);
+						}
+						else {
+							console.log(v);
+						}
+					},
+					error: function (jqXhr, textStatus, errorMessage) {
+						alert("Error Populating District Data");
+					}
+				});
 
 
                 },
