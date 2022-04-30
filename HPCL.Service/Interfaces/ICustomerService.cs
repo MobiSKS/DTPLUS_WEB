@@ -40,5 +40,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo);
         Task<CustomerCardInfo> GetAddCardPaymentDetailsPartialView([FromBody] List<CardDetails> arrs);
         Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
+        Task<UpdateCustomerAddress> GetCustomerAddress(string CustomerId);
+        Task<UpdateCustomerAddress> UpdateCustomerAddress();
     }
 }

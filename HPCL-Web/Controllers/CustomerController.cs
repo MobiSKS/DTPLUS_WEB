@@ -641,5 +641,17 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCustomerAddCardsPartialView(objCardDetails);
             return PartialView("~/Views/Customer/_AddCardVehicleDetailsTbl.cshtml", modals);
         }
+        public async Task<IActionResult> UpdateCustomerAddress()
+        {
+            var modals = await _customerService.UpdateCustomerAddress();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerAddress(string CustomerId)
+        {
+            var modals = await _customerService.GetCustomerAddress(CustomerId);
+            return Json(new { customer = modals });
+        }
+      
     }
 }

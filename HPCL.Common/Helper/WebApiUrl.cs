@@ -308,6 +308,8 @@
 
         #region TMS
         public static string GetCustomerSearchDetails = "api/dtplus/TMS/bind_enroll_transport_management_system";
+        public static string EnrollTransportManagementSystem = "api/dtplus/TMS/get_enroll_transport_management_system";
+        public static string GetDetailsForCustomerUpdate = "api/dtplus/TMS/get_details_for_customer_update";
         #endregion
     }
 }

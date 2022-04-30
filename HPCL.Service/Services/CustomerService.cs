@@ -18,6 +18,7 @@ using HPCL.Common.Models.RequestModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using Microsoft.Extensions.Configuration;
+using HPCL.Common.Models.ViewModel.TMS;
 
 namespace HPCL.Service.Services
 {
@@ -1025,7 +1026,7 @@ namespace HPCL.Service.Services
                         }
                         else
                         {
-                            custMdl.PermanentFax = Customer.CommunicationFax;
+                            custMdl.PermanentFax = Customer.PermanentFax;
                         }
                     }
 
@@ -1518,6 +1519,124 @@ namespace HPCL.Service.Services
             }
 
             return addAddOnCard;
+        }
+
+        public async Task<UpdateCustomerAddress> GetCustomerAddress(string CustomerId)
+        {
+            UpdateCustomerAddress custMdl = new UpdateCustomerAddress();
+            custMdl.Remarks = "";
+
+            var request = new EnrollToTransportManagementSystemModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.GetDetailsForCustomerUpdate);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<UpdateCustomerAddress> lst = jarr.ToObject<List<UpdateCustomerAddress>>();
+
+            if (lst != null && lst.Count > 0)
+            {
+                custMdl = lst[0];
+
+                custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+                if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+                {
+                    custMdl.ExternalPANAPIStatus = "Y";
+                }
+
+                custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
+                custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
+
+                if (!string.IsNullOrEmpty(custMdl.CommunicationPhoneNo))
+                {
+                    string[] subs = custMdl.CommunicationPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.CommunicationDialCode = subs[0].ToString();
+                        custMdl.CommunicationPhoneNo = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.CommunicationPhoneNo = custMdl.CommunicationPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(custMdl.CommunicationFax))
+                {
+                    string[] subs = custMdl.CommunicationFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.CommunicationFaxCode = subs[0].ToString();
+                        custMdl.CommunicationFax = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.CommunicationFax = custMdl.CommunicationFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(custMdl.PermanentFax))
+                {
+                    string[] subs = custMdl.PermanentFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.PermanentFaxCode = subs[0].ToString();
+                        custMdl.PermanentFaxPhoneNumber = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.PermanentFaxPhoneNumber = custMdl.PermanentFax;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(custMdl.PermanentPhoneNo))
+                {
+                    string[] subs = custMdl.PermanentPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.PerOrRegAddressDialCode = subs[0].ToString();
+                        custMdl.PerOrRegAddressPhoneNumber = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.PerOrRegAddressPhoneNumber = custMdl.PermanentPhoneNo;
+                    }
+                }
+            }
+            else
+            {
+                custMdl.Message = obj["Message"].ToString();
+                custMdl.CommunicationAddress1 = "";
+            }
+
+            return custMdl;
+        }
+
+        public async Task<UpdateCustomerAddress> UpdateCustomerAddress()
+        {
+            UpdateCustomerAddress custMdl = new UpdateCustomerAddress();
+            custMdl.Remarks = "";
+
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+
+            return custMdl;
         }
 
     }
