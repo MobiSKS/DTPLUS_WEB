@@ -370,26 +370,53 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Business Details</p>
                         <div class="py-2 p-md-4">
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">@Label.ZonalOfc<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
-                                            <span class="error" id="zonal_office_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control" onchange="getMerchantSalesArea()"></select>
+                                @if (Model.CreatedMerchant == "Y")
+                                {  string  disabled = "disabled";
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.ZonalOfc<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()",@disabled})
+                                                @Html.HiddenFor(m => m.ZonalOfficeId)
+                                                <span class="error" id="zonal_office_error"></span>
                                             </div>
-                                            <span class="error" id="regionalOfc_error"></span>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control" disabled onchange="getMerchantSalesArea()"></select>
+                                                </div>
+                                                <span class="error" id="regionalOfc_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                     <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.ZonalOfc<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                <span class="error" id="zonal_office_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control" onchange="getMerchantSalesArea()"></select>
+                                                </div>
+                                                <span class="error" id="regionalOfc_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">@Label.SalesArea<sup class="text-danger">*</sup></label>
@@ -722,7 +749,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-4 highwayDetails">
                                         <div class="form-group d-flex align-items-center flex-wrap mb-1">
                                             <label class="font-weight-normal col-md-5 col-12 px-0">Highway No :</label>
                                             <div class="col-md-7 col-12 font-weight-bold" id="SummaryHighwayNum">
@@ -776,13 +803,26 @@
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-12 border-1 rounded border-grey px-0 mb-2">
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold">Business Details</p>
-                                    <div class="col-12 col-md-4">
-                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                            <label class="font-weight-normal col-md-5 col-12 px-0">ERP Code :</label>
-                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryERPCode">
+                                    @if (Model.CreatedMerchant == "Y")
+                                    {
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                                <label class="font-weight-normal col-md-5 col-12 px-0">ERP Code :</label>
+                                                <div class="col-md-7 col-12 font-weight-bold" id="SummaryERPCodeNoCheck">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                                <label class="font-weight-normal col-md-5 col-12 px-0">ERP Code :</label>
+                                                <div class="col-md-7 col-12 font-weight-bold" id="SummaryERPCode">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                     <div class="col-12 col-md-4">
                                         <div class="form-group d-flex align-items-center flex-wrap mb-1">
                                             <label class="font-weight-normal col-md-5 col-12 px-0">Sales Area :</label>
@@ -796,7 +836,7 @@
                                             <div class="col-md-7 col-12 font-weight-bold" id="SummaryRegionalZonalOfc">
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
 
@@ -811,32 +851,32 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">City (PIN) :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryCity">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">City (PIN) :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryCity">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">District, State :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryDistrict">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">District, State :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryDistrict">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Phone Office :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryPhoneOfc">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Phone Office :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryPhoneOfc">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Fax :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryFax">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Fax :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryFax">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -846,129 +886,129 @@
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold">Retail Outlet Address</p>
 
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Address :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetAddress">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Address :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetAddress">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Location :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetLocation">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Location :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetLocation">
+                                            </div>
                                         </div>
-                                    </div>
-                                     </div>
-                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">City (PIN) :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetCity">
-                                        </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">District, State :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetDistrictState">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">City (PIN) :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetCity">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Phone Office :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetPhoneOfc">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">District, State :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetDistrictState">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Fax :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetFax">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Phone Office :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetPhoneOfc">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Fax :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryRetFax">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                             </div>
+                            </div>
 
 
-                                <div class="row">
+                            <div class="row">
                                 <div class="col-lg-12 col-md-12 col-12 border-1 rounded border-grey px-0 mb-2">
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold">Contact Person Details</p>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Name :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryName">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Name :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryName">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Mobile :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryMobile">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Mobile :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryMobile">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Email :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryEmail">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Email :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryEmail">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Misc :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryMisc">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Misc :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryMisc">
+                                            </div>
                                         </div>
-                                    </div>
-                                    </div>
                                     </div>
                                 </div>
-                                
-                                <div class="row">
+                            </div>
+
+                            <div class="row">
                                 <div class="col-lg-12 col-md-12 col-12 border-1 rounded border-grey px-0 mb-2">
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold">Bank Account Details</p>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Account Holder Name :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryAccHolderName">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Account Holder Name :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryAccHolderName">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">ICICI Bank Account No :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryBankAccNum">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">ICICI Bank Account No :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryBankAccNum">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Branch Location :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryBranchLocation">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Branch Location :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryBranchLocation">
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
                                 </div>
-                                </div>
+                            </div>
 
-                                <div class="row">
+                            <div class="row">
                                 <div class="col-lg-12 col-md-12 col-12 border-1 rounded border-grey px-0 mb-2">
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold px-0">Caution Limit Details</p>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">DTP Caution Limit in RS :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryDTPCautionLimit">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">DTP Caution Limit in RS :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryDTPCautionLimit">
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-6 col-12 px-0">HPPAY Caution Limit in RS :</label>
-                                        <div class="col-md-6 col-12 font-weight-bold" id="SummaryHpPayCautionLimit">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-6 col-12 px-0">HPPAY Caution Limit in RS :</label>
+                                            <div class="col-md-6 col-12 font-weight-bold" id="SummaryHpPayCautionLimit">
+                                            </div>
                                         </div>
                                     </div>
-                                     </div>
 
                                     @*<div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Branch Location :</label>
@@ -976,26 +1016,26 @@
                                         </div>
                                         </div>*@
                                 </div>
-                                </div>
+                            </div>
 
-                                <div class="row">
+                            <div class="row">
                                 <div class="col-lg-12 col-md-12 col-12 border-1 rounded border-grey px-0 mb-2">
                                     <p class="text_primary mb-2 p-2 bg-grey font-weight-bold">Terminal Details</p>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">No. of Live Terminal :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryNumOfLiveTerminals">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">No. of Live Terminal :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryNumOfLiveTerminals">
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
-                                     <div class="col-12 col-md-4">
-                                    <div class="form-group d-flex align-items-center flex-wrap mb-1">
-                                        <label class="font-weight-normal col-md-5 col-12 px-0">Terminal Type :</label>
-                                        <div class="col-md-7 col-12 font-weight-bold" id="SummaryTerminalType">
+                                    <div class="col-12 col-md-4">
+                                        <div class="form-group d-flex align-items-center flex-wrap mb-1">
+                                            <label class="font-weight-normal col-md-5 col-12 px-0">Terminal Type :</label>
+                                            <div class="col-md-7 col-12 font-weight-bold" id="SummaryTerminalType">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1062,7 +1102,7 @@
             $(".mappedMerchId").removeClass("displayNone");
             $("#OutletCategoryId").SumoSelect().sumo.disable();
         }
-        
+
         if ($("#OutletCategoryId").val() != "1") {
             $(".highwayDetails").addClass("displayNone");
         }
@@ -1124,6 +1164,7 @@
                 $("#SummaryGSTNum").html($("#GSTNumber").val());
                 $("#SummarySBUType").html($("#SBUTypeId :selected").text());
                 $("#SummaryERPCode").html($("#ErpCode").val());
+                $("#SummaryERPCodeNoCheck").html($("#ErpCodeNoCheck").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
                 $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
@@ -1183,6 +1224,7 @@
                 $("#SummaryGSTNum").html($("#GSTNumber").val());
                 $("#SummarySBUType").html($("#SBUTypeId :selected").text());
                 $("#SummaryERPCode").html($("#ErpCode").val());
+                $("#SummaryERPCodeNoCheck").html($("#ErpCodeNoCheck").val());
                 $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
                 $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
                 $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
@@ -2220,6 +2262,7 @@
             $("#SummaryGSTNum").html($("#GSTNumber").val());
             $("#SummarySBUType").html($("#SBUTypeId :selected").text());
             $("#SummaryERPCode").html($("#ErpCode").val());
+            $("#SummaryERPCodeNoCheck").html($("#ErpCodeNoCheck").val());
             $("#SummarySalesArea").html($("#SalesAreaId :selected").text());
             $("#SummaryRegionalZonalOfc").html($("#RegionalOfficeId :selected").text() + ", " + $("#ZonalOfficeId :selected").text());
             $("#SummaryAddress").html($("#CommunicationAddress1").val() + (($("#CommunicationAddress2").val() != "") ? ", " + $("#CommunicationAddress2").val() : "") + (($("#CommunicationAddress3").val() != "") ? ", " + $("#CommunicationAddress3").val() : ""));
@@ -2646,6 +2689,7 @@
     $("#OutletCategoryId").on("change",function () {
         if ($("#OutletCategoryId").val().length > 0) {
             document.getElementById("outletCategory_error").innerHTML = "";
+            $("#OutletCategoryVal").val($("#OutletCategoryId").val());
         }
         var outletCategory = $('#OutletCategoryId :selected').text();
         if (outletCategory != "Highway") {
@@ -2669,7 +2713,7 @@
         }
     });
     function clickedConfirm() {
-        if (confirm('Are you sure?')) {
+        if (confirm('Are you sure you want to save the Merchant Details?')) {
             $("#applicationForm").unbind().submit();
         }
     }
@@ -3158,7 +3202,7 @@
         }
     });
     $("#ContactPersonNameMiddleName").on("blur", function () {
-        
+
             //document.getElementById("contact_name_error").innerHTML = "Middle Name field cannot be left blank";
             //if (ret != "N") {
             //    document.applicationForm.ContactPersonNameMiddleName.focus();
@@ -3168,7 +3212,7 @@
             //});
             //ret = "N";
         //}
-        //else 
+        //else
         if (document.applicationForm.ContactPersonNameMiddleName.value.trim() != "") {
             if (!document.applicationForm.ContactPersonNameMiddleName.value.match(nameCheck)){
                     document.getElementById("contact_name_error").innerHTML = "Middle Name has Invalid Characters";
@@ -3189,7 +3233,7 @@
         }
     });
     $("#ContactPersonNameLastName").on("blur", function () {
-        
+
         //    document.getElementById("contact_name_error").innerHTML = "Last Name field cannot be left blank";
         //    if (ret != "N") {
         //        document.applicationForm.ContactPersonNameLastName.focus();
@@ -3199,7 +3243,7 @@
         //    });
         //    ret = "N";
         //}
-        //else 
+        //else
         if (document.applicationForm.ContactPersonNameLastName.value.trim() != "") {
             if (!document.applicationForm.ContactPersonNameLastName.value.match(nameCheck)){
                     document.getElementById("contact_name_error").innerHTML = "Last Name has Invalid Characters";
@@ -3272,7 +3316,7 @@
     });
     $("#NoofLiveTerminals").on("blur", function () {
         if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "Number of Live Terminals should be between either 1 or 2";
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
             if (ret != "N") {
                 document.applicationForm.NoofLiveTerminals.focus();
             }

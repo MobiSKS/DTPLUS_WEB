@@ -13,7 +13,7 @@ namespace HPCL.Service.Interfaces
         Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category,string ERPCode, string actionFlow);
         Task<Tuple<string, string>> CreateMerchant(MerchantGetDetailsModel merchantMdl);
         Task<MerchantApprovalModel> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl);
-        Task<string> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal erpnmodel);
+        Task<List<string>> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal erpnmodel);
         Task<MerchantRejectedModel> RejectedMerchant(string FromDate, string ToDate);
         Task<MerchantModel> MerchantSummary(string ERPCode, string fromDate, string toDate);
         Task<SearchMerchantModel> SearchMerchant();
