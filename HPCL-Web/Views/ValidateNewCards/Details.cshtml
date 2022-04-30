@@ -104,7 +104,7 @@
 
                         <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100 mb-3">
                             <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                <button class="btn btn_primary py-2 px-4" type="submit">Search</button>
+                                <button class="btn btn_primary py-2 px-4" id="btnSearch" type="submit">Search</button>
                             </div>
                             <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                 <button class="btn btn_primary py-2 px-4" type="button" onclick="clearDetails()">Reset</button>
@@ -200,6 +200,8 @@
         $("#ToDate").val("");
         $("#CreatedBy")[0].sumo.reload();
         $("#StateId")[0].sumo.reload();
+         $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
     };
 
     function statusAction(CustomerRefNum,customerType) {
@@ -245,5 +247,28 @@
              $("#formNo_error").html("");
          }
      });
-     
+       $("#btnSearch").on("click", (function (e) {
+           var flag="Y";
+         var FormNumber = $("#FormNumber").val();
+         if (FormNumber != "") {
+             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" )){
+                 $("#formNo_error").attr("style", "display:block");
+                 $("#formNo_error").html("Invalid Form Number");
+                 flag="N";
+             }
+             else{
+                 $("#formNo_error").attr("style", "display:none");
+                 $("#formNo_error").html("");
+             }
+         }
+         else{
+             $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
+         }
+         if (flag == "N")
+             e.preventDefault();
+             
+
+     })
+     );
 </script>

@@ -28,7 +28,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
             _commonActionService = commonActionService;
         }
-        public async Task<string> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
+        public async Task<List<string>> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
         {
             var approvalRejectionMerchantForms = new ApproveRejectListRequestModal
             {
@@ -43,16 +43,24 @@ namespace HPCL.Service.Services
             StringContent approvalRejectionMerchantContent = new StringContent(JsonConvert.SerializeObject(approvalRejectionMerchantForms), Encoding.UTF8, "application/json");
             var approvalRejectionMerchantResponse = await _requestService.CommonRequestService(approvalRejectionMerchantContent, WebApiUrl.approveRejectMerchant);
             JObject approvalRejectionMerchantObj = JObject.Parse(JsonConvert.DeserializeObject(approvalRejectionMerchantResponse).ToString());
+            List<string> messageList = new List<string>();
 
             if (approvalRejectionMerchantObj["Status_Code"].ToString() == "200")
             {
                 var approvalRejectionMerchantJarr = approvalRejectionMerchantObj["Data"].Value<JArray>();
                 List<SuccessResponse> approvalRejectionMerchantLst = approvalRejectionMerchantJarr.ToObject<List<SuccessResponse>>();
-                return approvalRejectionMerchantLst.First().Reason.ToString();
+
+                if (approvalRejectionMerchantLst.Count > 0)
+                {
+                    foreach (var item in approvalRejectionMerchantLst)
+                        messageList.Add(item.Reason);
+                }
+                return messageList;
             }
             else
             {
-                return approvalRejectionMerchantObj["Message"].ToString();
+                 messageList.Add(approvalRejectionMerchantObj["Message"].ToString());
+                return messageList;
             }
         }
 
@@ -152,8 +160,10 @@ namespace HPCL.Service.Services
                     DealerName = merchantMdl.DealerName,
                     DealerMobileNo = merchantMdl.DealerMobileNo,
                     OutletCategoryId = merchantMdl.OutletCategoryId,
-                    HighwayNo1 = merchantMdl.HighwayNo1,
-                    HighwayNo2 = merchantMdl.HighwayNo2,
+                    HighwayNo1 = merchantMdl.OutletCategoryId == "1" ? merchantMdl.HighwayNo1 : "",
+                    HighwayNo2 = merchantMdl.OutletCategoryId == "1" ? merchantMdl.HighwayNo2 : "",
+                    //HighwayNo1 = merchantMdl.HighwayNo1,
+                    //HighwayNo2 =  merchantMdl.HighwayNo2,
                     HighwayName = merchantMdl.HighwayName,
                     SBUTypeId = merchantMdl.SBUTypeId,
                     LPGCNGSale = merchantMdl.LPGCNGSale,
@@ -207,8 +217,10 @@ namespace HPCL.Service.Services
                     MappedMerchantId = String.IsNullOrEmpty(merchantMdl.MappedMerchantId) ? "" : merchantMdl.MappedMerchantId,
                     DealerMobileNo = merchantMdl.DealerMobileNo,
                     OutletCategoryId = merchantMdl.OutletCategoryId,
-                    HighwayNo1 = merchantMdl.HighwayNo1,
-                    HighwayNo2 = merchantMdl.HighwayNo2,
+                    HighwayNo1 = merchantMdl.OutletCategoryId == "1" ? merchantMdl.HighwayNo1 : "",
+                    HighwayNo2 = merchantMdl.OutletCategoryId == "1" ? merchantMdl.HighwayNo2 : "",
+                    //HighwayNo1 = merchantMdl.HighwayNo1,
+                    //HighwayNo2 = merchantMdl.HighwayNo2,
                     HighwayName = merchantMdl.HighwayName,
                     SBUTypeId = merchantMdl.SBUTypeId,
                     LPGCNGSale = merchantMdl.LPGCNGSale,
