@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.TMS;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -52,5 +53,21 @@ namespace HPCL_Web.Controllers
             //Send the File to Download.
             return File(bytes, "application/octet-stream", fileName);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model)
+        {
+            var Model = await _tmsService.EnrollToTransportManagementSystem(model);
+
+            //if (Model.StatusCode == 1000)
+            //{
+            //    model.Status = Model.Status;
+            //    model.StatusCode = Model.StatusCode;
+            //    return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = Model.CustomerReferenceNo, Message = Model.Reason });
+            //}
+
+            return View(Model);
+        }
+
     }
 }
