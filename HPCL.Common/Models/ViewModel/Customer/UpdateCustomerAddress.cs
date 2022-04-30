@@ -91,7 +91,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         public string PermanentAddress3 { get; set; }
 
-        public string PerOrRegAddressLocation { get; set; }
+        public string PermanentLocation { get; set; }
 
         [Required(ErrorMessage = "City is Required under Permanent/Registered Address")]
         public string PermanentCityName { get; set; }
