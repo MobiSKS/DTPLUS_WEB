@@ -52,5 +52,37 @@ namespace HPCL.Service.Services
             viewCardSearch = JsonConvert.DeserializeObject<ViewCustomerSearch>(response);
             return viewCardSearch;
         }
+        public async Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            //CustomerInserCardResponse customerInserCardResponse;
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.EnrollTransportManagementSystem);
+
+            //customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+
+            //if (model.Internel_Status_Code == 1000)
+            //{
+            //    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+            //    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+            //    customerCardInfo.Message = customerInserCardResponse.Message;
+            //    customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
+            //}
+            //else
+            //{
+            //    customerCardInfo.Message = customerInserCardResponse.Message;
+            //    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+            //}
+
+            return model;
+        }
+
     }
 }

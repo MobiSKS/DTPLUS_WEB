@@ -12,5 +12,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem();
         Task<ViewCustomerSearch> ViewCustomerDetails(string CustomerId);
+        Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model);
     }
 }

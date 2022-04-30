@@ -11,7 +11,8 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a> </li>
             <li class="breadcrumb-item font-weight-light"> Enroll To Transport Management System</li>
         </ul>
-        <form>
+         @using (Html.BeginForm("EnrollToTransportManagementSystem", "TMS", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey">
@@ -41,8 +42,8 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap">
-                                        <p class="mb-3 px-3">Note:- If you find details are not correct please <a class="text_primary" href="#">click here</a> to update.</p>
-                                        <p class="mb-0 px-3"><input style="vertical-align: middle;margin-right: 5px;margin-top: -2px;" type="checkbox" value="1"> I Agree to <a class="text_primary" href="@Url.Action("DownloadFile","TMS", new { fileName = "TermAndCondition.pdf" })">Terms &amp; Conditions</a></p>
+                                        <p class="mb-3 px-3">Note:- If you find details are not correct please <a class="text_primary" href="@Url.Action("UpdateCustomerAddress","Customer")">click here</a> to update.</p>
+                                        <p class="mb-0 px-3">@Html.CheckBoxFor(m=>m.AgreeTermsAndConditions,new {@checked = false}) I Agree to <a class="text_primary" href="@Url.Action("DownloadFile","TMS", new { fileName = "TermAndCondition.pdf" })">Terms &amp; Conditions</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +67,7 @@
                 </div>
             </div>
 
-        </form>
+        }
 
     </div>
 
@@ -160,10 +161,12 @@
                         if(count>1)
                         {
                             document.getElementById("divSubmit").style.display = "block";
+                             $('#CustomerId').attr("readonly", true);
                         }
                         else
                         {
                             document.getElementById("divSubmit").style.display = "none";
+                             $('#CustomerId').attr("readonly", false);
                         }
                      },
                      error: function (jqXhr, textStatus, errorMessage)
@@ -178,5 +181,44 @@
 
 
     }));
+
+   function SubmitValidations()
+   {
+    debugger;
+
+    var ret=true;
+
+     var customerId = $("#CustomerId").val();
+        if (customerId != "")
+        {
+            if (!customerId.match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("start with 2 and contains 10 digits");
+                 ret=false;
+            }
+            else
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:none");
+                $("#CustomerIdValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+             ret=false;
+        }
+
+     if (!$(AgreeTermsAndConditions).prop("checked"))
+     {
+         ret=false;
+         alert('Select I Agree to Terms & Conditions');
+     }
+
+    console.log(ret);
+    return ret;
+
+   }
 
 </script>
