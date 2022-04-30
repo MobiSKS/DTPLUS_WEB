@@ -383,6 +383,7 @@
 			</div>
 
 			</div>
+            @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
         }
         <div class="clearfix"></div>
         </div>
@@ -1735,6 +1736,61 @@
         document.getElementById("PermanentFaxPhoneNumber_error").innerHTML = "";
     }
 
+    if (document.getElementById("IncomeTaxPan").value.trim() == "") 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else 
+        {
+            
+             document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+                         
+            var panNumber = document.getElementById("IncomeTaxPan").value;
+            let forthdigitPan = panNumber.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P') 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (!$('#IncomeTaxPan').val().match(pancard)) 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else 
+            {
+                if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("INVALIDPAN") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+                }
+            }
+
+        }
+
     console.log(ret);
     return ret;
 }
@@ -1919,5 +1975,129 @@ $("#PermanentLocation").on("blur", function ()
     }
 
   });
+
+  $("#IncomeTaxPan").keydown(function (e) {
+        var k = e.keyCode || e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 9 || //tab
+            k == 46 || //del
+            k == 8 || // backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // only 0-9 (ignore SHIFT options)
+
+        if (!ok || (e.ctrlKey && e.altKey)) {
+            e.preventDefault();
+        }
+    });
+
+    $("#IncomeTaxPan").on("blur", function () 
+    {
+        debugger;
+        var panNumber = document.getElementById("IncomeTaxPan").value.trim();
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        localStorage.setItem("INVALIDPAN", "1");
+
+        if (panNumber == "") 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+        
+        if ($('#IncomeTaxPan').val().match(pancard)) 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+            document.getElementById("incomeTaxPan_error").className = "error text-success";
+        }
+        else 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            return (false);
+        }
+
+        let forthdigitPan = panNumber.substr(3, 1);
+        console.log(forthdigitPan);
+        if (forthdigitPan != 'P') 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+            document.getElementById("incomeTaxPan_error").className = "error text-success";
+        }
+
+        var OrgName = $('#IndividualOrgName').val();
+        var correctPANName = "";
+
+        var externalPANAPIStatus="Y";
+
+        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+        console.log(externalPANAPIStatus);
+
+        //if(externalPANAPIStatus=="Y")
+        //{
+        //    $.ajax({
+        //        type: 'POST',
+        //        url: '@Url.Action("PANValidation", "MyHpOTCCardCustomer")',
+        //        data: { PANNumber: panNumber },
+        //        dataType: "json",
+        //        success: function (data, status, xhr) 
+        //        {
+        //            //debugger;
+        //            var jsonData = JSON.parse(data);
+        //             console.log(jsonData);
+        //            if (status == 'success' && jsonData['status-code'] == '101') 
+        //            {
+        //                correctPANName = jsonData["result"]["name"];
+        //                if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+        //                {
+        //                    localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        //                }
+        //                else 
+        //                {
+        //                    document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+        //                    document.getElementById("incomeTaxPan_error").className = "error";
+        //                    localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+        //                }
+        //                console.log(OrgName);
+        //                console.log(correctPANName);
+        //                console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
+        //            }
+        //            else 
+        //            {
+        //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        //                document.getElementById("incomeTaxPan_error").className = "error";
+        //                localStorage.setItem("INVALIDPAN", "0");
+        //            }
+        //        },
+        //        error: function (jqXhr, textStatus, errorMessage) 
+        //        {
+        //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        //            document.getElementById("incomeTaxPan_error").className = "error";
+        //            localStorage.setItem("INVALIDPAN", "0");
+        //        }
+        //    });
+        //}
+        //else
+        //{
+        //    localStorage.setItem("INVALIDPAN", "1");
+        //    localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        //}
+
+
+    });
 
 </script>
