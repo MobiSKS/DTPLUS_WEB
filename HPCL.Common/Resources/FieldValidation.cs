@@ -67,7 +67,7 @@
         public const string ValidRemarks = @"^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$";
         public const string ValidRemarksErrMsg = "Invalid Remarks";
 
-        public const string ValidHeadOfcCode = @"^[0-9]{4}$";
+        public const string ValidHeadOfcCode = @"^[0-9]{1,4}$";
         public const string ValidHeadOfcCodeErrMsg = "Invalid Head Office Code";
         #endregion
 
