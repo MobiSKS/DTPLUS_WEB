@@ -69,7 +69,7 @@
                                         <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
                                     </div>
                                     <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                        <a class="btn btn_primary" href="#" id="btnCancel" name="cancel">UPLOAD EXCEL</a>
+                                        <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="exportReportToExcel()">UPLOAD EXCEL</a>
                                     </div>
                                 </div>
                             </fieldset>
@@ -143,7 +143,19 @@
 @using Microsoft.AspNetCore.Http;
 <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
+@*<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+*@
 <script>
+
+    //function exportReportToExcel() {
+    //  let table = document.getElementsByTagName("table"); // you can use document.getElementById('tableId') as well by providing id to the table tag
+    //  TableToExcel.convert(table[0], { // html code may contain multiple tables so here we are refering to 1st table tag
+    //    name: `export.xls`, // fileName you could use any name
+    //    sheet: {
+    //      name: 'Sheet 1' // sheetName
+    //    }
+    //  });
+    //}
 
     $(document).ready(function () {
 
@@ -480,7 +492,7 @@
         }
     }
 
-     function saletxnlimitChange(o, rowSelected){
+    function saletxnlimitChange(o, rowSelected){
         var txnVal = o.value;
         var cashPurseLimitVal = $('#cashpurselimitid_'+rowSelected).val();
         console.log("cashpurselimitid_", cashPurseLimitVal);
@@ -491,8 +503,8 @@
             return;
         }
         else{
-             if(txnVal.trim()!='')
-             {
+                if(txnVal.trim()!='')
+                {
                 if (!txnVal.match(number))
                 {
                     document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
@@ -516,9 +528,9 @@
                 }
             }
         }
-     }
+    }
 
-     function dailySalelimitChange(o, rowSelected){
+    function dailySalelimitChange(o, rowSelected){
         var dailySaleVal = o.value;
         var saleTxnLimitVal = $('#saletxnlimitid_'+rowSelected).val();
         var monthlySaleLimitVal = $('#monthlySalelimitid_'+rowSelected).val();
@@ -531,8 +543,8 @@
             return;
         }
         else{
-             if(dailySaleVal.trim()!='')
-             {
+                if(dailySaleVal.trim()!='')
+                {
                 if (!dailySaleVal.match(number))
                 {
                     document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
@@ -561,9 +573,9 @@
                 }
             }
         }
-     }
+    }
 
-     function monthlySalelimitChange(o, rowSelected){
+    function monthlySalelimitChange(o, rowSelected){
         var monthlySale = o.value;
         if(monthlySale.trim()==''){
             document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
@@ -571,7 +583,7 @@
             return;
         }
         else{
-             if(monthlySale.trim()!=''){
+                if(monthlySale.trim()!=''){
                 if (!monthlySale.match(number)){
                     document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
                     document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
@@ -594,7 +606,76 @@
                 }
             }
         }
-     }
+    }
+
+     function exportReportToExcel() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+
+        if (rows.length > 0) {
+
+            for (var i = 0; i < rows.length; i++) {
+
+                // Get each column data
+                var cols = rows[i].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    //csvrow.push(cols[j].innerHTML);
+                    //console.log(cols.length);
+                    console.log(cols[j].firstChild);
+                    var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                    console.log("sel",sel);
+                    csvrow.push("'" + cols[j].firstChild);
+                }
+                //console.log(i, csvrow);
+                //console.log(csvrow);
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            }
+
+            // Combine each row data with new line character
+            csv_data = csv_data.join('\n');
+
+            // Call this function to download csv file
+            downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "SetSaleLimit.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
 </script>
 
 @*<style>

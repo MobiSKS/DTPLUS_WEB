@@ -107,7 +107,7 @@
                                 <button class="btn btn_primary py-2 px-4" id="btnSearch" type="submit">Search</button>
                             </div>
                             <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                <button class="btn btn_primary py-2 px-4" type="button" onclick="clearDetails()">Reset</button>
+                                <button class="btn btn_primary py-2 px-4" type="button" onclick="location.href='@Url.Action("Details", "ValidateNewCards")'">Reset</button>
                             </div>
                         </div>
                     </div>
@@ -250,6 +250,11 @@
        $("#btnSearch").on("click", (function (e) {
            var flag="Y";
          var FormNumber = $("#FormNumber").val();
+           var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
          if (FormNumber != "") {
              if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" )){
                  $("#formNo_error").attr("style", "display:block");
@@ -265,6 +270,7 @@
              $("#formNo_error").attr("style", "display:none");
              $("#formNo_error").html("");
          }
+         
          if (flag == "N")
              e.preventDefault();
              

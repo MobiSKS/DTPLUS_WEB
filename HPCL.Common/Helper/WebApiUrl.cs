@@ -278,7 +278,7 @@
         public static string GetMangeRbeMappingUrl = "api/dtplus/RBE/change_rbe_mapping";
         public static string GetRbeUserListUrl = "api/dtplus/RBE/manage_rbe_user";
         public static string getCustomerRbeId = "api/dtplus/RBE/get_rbe_id";
-        public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/rbe_deviceid_reset_request";
+        public static string GetRbeDeviceIdResetRequest = "api/dtplus/RBE/get_rbe_deviceid_reset_request";
         public static string ChangeRbeMappingByUserNameUrl = "api/dtplus/RBE/request_to_change_rbe_mapping";
         public static string UserNameVerifyOtpUrl = "api/dtplus/RBE/validate_otp_rbe_mapping";
         public static string GetRbeMappingStatusUrl = "api/dtplus/RBE/get_rbe_mapping_status";
@@ -292,6 +292,8 @@
         public static string GetDeviceIdResetRequestUrl = "api/dtplus/RBE/get_rbe_deviceid_reset_request";
         public static string GetOtpRbeDeviceResetUrl = "api/dtplus/RBE/send_otp_reset_rbe_device";
         public static string ValidateOtpRbeDeviceResetUrl = "api/dtplus/RBE/validate_otp_reset_rbe_device";
+        public static string GetApproveDeviceIdResetRequestUrl = "api/dtplus/RBE/get_approve_change_rbe_device_reset";
+        public static string GetApproveRejectDeviceResetUrl = "api/dtplus/RBE/approve_reject_changed_rbe_device_reset";
         #endregion
 
         #region Application Form Data Entry
