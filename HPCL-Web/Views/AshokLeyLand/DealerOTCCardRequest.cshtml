@@ -135,46 +135,52 @@
 
     });
 
-
-    function CheckValidations() {
+    function CheckValidations() 
+    {
         debugger;
 
-        var ret = false;
+        var ret = true;
 
-        if (document.getElementById('DealerCode').value.trim() == "") {
+        if (document.getElementById('DealerCode').value.trim() == "") 
+        {
             document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
-            document.getElementById('DealerCode').focus();
-            return ret;
+            ret = false;
         }
-        else {
-            document.getElementById("DealerCode_error").innerHTML = "";
-        }
-
-
-        if (document.getElementById('NoofCards').value.trim() == "" || document.getElementById('NoofCards').value.trim() == "0") {
-            document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
-            document.getElementById('NoofCards').focus();
-            return ret;
-        }
-        else {
-            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 125) {
-                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
-                document.getElementById('NoofCards').focus();
-                return ret;
+        else 
+        {
+            if (localStorage.getItem("DEALERFOUND") == 0) 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                ret = false;
             }
-            else {
+            else 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "";
+            }
+        }
+
+        if (document.getElementById('NoofCards').value.trim() == "" || document.getElementById('NoofCards').value.trim() == "0") 
+        {
+            document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
+            ret = false;
+        }
+        else 
+        {
+            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 125) 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                ret = false;
+            }
+            else 
+            {
                 document.getElementById("NoofCards_error").innerHTML = "";
             }
         }
-
-        if (localStorage.getItem("DEALERFOUND") == 0) {
-            document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-            return (false);
-        }
-        else {
-            document.getElementById("DealerCode_error").innerHTML = "";
-        }
-
-        return true;
+        
+        return ret;
     }
+    $('#NoofCards').on("cut copy paste",function(e) 
+    {
+          e.preventDefault();
+     });
 </script>
