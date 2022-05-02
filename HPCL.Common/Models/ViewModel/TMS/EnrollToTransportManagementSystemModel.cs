@@ -15,6 +15,7 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public int StatusCode { get; set; }
         public int Internel_Status_Code { get; set; }
         public Boolean AgreeTermsAndConditions { get; set; }
+        public string Reason { get; set; }
 
     }
 }

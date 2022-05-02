@@ -59,14 +59,17 @@ namespace HPCL_Web.Controllers
         {
             var Model = await _tmsService.EnrollToTransportManagementSystem(model);
 
-            //if (Model.StatusCode == 1000)
-            //{
-            //    model.Status = Model.Status;
-            //    model.StatusCode = Model.StatusCode;
-            //    return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = Model.CustomerReferenceNo, Message = Model.Reason });
-            //}
+            if (Model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessEnrollToTMS", new { Message = Model.Message });
+            }
 
             return View(Model);
+        }
+        public async Task<IActionResult> SuccessEnrollToTMS(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }

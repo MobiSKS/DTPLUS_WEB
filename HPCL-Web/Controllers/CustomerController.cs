@@ -661,10 +661,15 @@ namespace HPCL_Web.Controllers
 
             if (model.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = model.Remarks });
+                return RedirectToAction("SuccessRedirectUpdateAddress", new { Message = model.Remarks });
             }
 
             return View(modals);
+        }
+        public async Task<IActionResult> SuccessRedirectUpdateAddress(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }

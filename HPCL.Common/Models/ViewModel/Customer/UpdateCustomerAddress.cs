@@ -59,7 +59,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Pin code is Required under communication Address")]
         public string CommunicationPinCode { get; set; }
         [Required(ErrorMessage = "State is Required under communication Address")]
-        public int CommunicationStateID { get; set; }
+        public int CommunicationStateId { get; set; }
 
         [Required(ErrorMessage = "State is Required under communication Address")]
         public string CommunicationState { get; set; }
@@ -97,12 +97,12 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string PermanentCityName { get; set; }
         [Required(ErrorMessage = "Pin code is Required under Permanent/Registered Address")]
         public string PermanentPincode { get; set; }
-        [Required(ErrorMessage = "State is Required under communication Address")]
-        public int PerOrRegAddressStateID { get; set; }
-        [Required(ErrorMessage = "State is Required under Permanent/Registered Address")]
+        [Required(ErrorMessage = "State is Required")]
+        public int PermanentStateId { get; set; }
+        [Required(ErrorMessage = "State is Required")]
 
         public string PerOrRegAddressState { get; set; }
-        [Required(ErrorMessage = "District is Required under Permanent/Registered Address")]
+        [Required(ErrorMessage = "District is Required")]
         public string PerOrRegAddressDistrict { get; set; }
 
         public int PermanentDistrictId { get; set; }
