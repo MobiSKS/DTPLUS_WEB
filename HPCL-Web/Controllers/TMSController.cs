@@ -41,11 +41,9 @@ namespace HPCL_Web.Controllers
         public FileResult DownloadFile(string fileName)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string contentRootPath = _hostingEnvironment.ContentRootPath;
-
+   
             string path = "";
-            path = Path.Combine(contentRootPath, "Views\\TMS");
-            path = Path.Combine(path, fileName);
+            path = Path.Combine(webRootPath, "MyStaticFiles", fileName);
 
             //Read the File data into Byte Array.
             byte[] bytes = System.IO.File.ReadAllBytes(path);
