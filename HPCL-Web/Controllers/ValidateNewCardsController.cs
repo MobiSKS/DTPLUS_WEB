@@ -30,6 +30,13 @@ namespace HPCL_Web.Controllers
             _validateNewCardsService = validateNewCardsService;
             _commonActionService = commonActionService;
         }
+        [HttpPost]
+        public async Task<IActionResult> Details()
+        {
+            ValidateNewCardsModel validateNewCardsModel = new ValidateNewCardsModel();
+            var modals = await _validateNewCardsService.Details(validateNewCardsModel);
+            return View(modals);
+        }
         public async Task<IActionResult> Details(ValidateNewCardsModel validateNewCardsMdl)
         {
             var modals = await _validateNewCardsService.Details(validateNewCardsMdl);

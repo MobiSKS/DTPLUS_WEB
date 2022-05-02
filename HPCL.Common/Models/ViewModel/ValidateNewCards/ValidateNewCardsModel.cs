@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ViewModel.Officers;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ViewModel.ValidateNewCards
@@ -24,6 +25,8 @@ namespace HPCL.Common.Models.ViewModel.ValidateNewCards
                 StateID = 0,
                 StateName = "--Select--"
             });
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         public string FormNumber { get; set; }
         public string FromDate { get; set; }
