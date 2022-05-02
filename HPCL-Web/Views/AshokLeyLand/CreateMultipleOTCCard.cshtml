@@ -497,7 +497,7 @@
 
                 document.getElementById("NoOfCardsTbl").deleteTHead();
 
-                $('#NoOfCardsTbl').append('<thead><tr><th>Card No</th><th>Add Card</th><th>Vehicle No</th><th>Validate VehicleNo</th><th>Vehicle Type</th><th>VIN No</th><th>Mobile No</th><th></th></tr></thead>');
+                $('#NoOfCardsTbl').append('<thead><tr><th>Card No.</th><th>Add Card</th><th>Vehicle No.</th><th>Validate</th><th>Vehicle Type</th><th>VIN No.</th><th>Mobile No.</th><th></th></tr></thead>');
 
 
 
@@ -687,7 +687,12 @@
 
             if (stdCode.length < 2 || stdCode.length > 4) 
             {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else if (!stdCode.match(number))
+            {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
                 ret = false;
             }
             else 
@@ -705,17 +710,17 @@
         {
             if (phno.charAt(0) == "0") 
             {
-                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no can not start with 0";
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
                 ret = false;
             }
-            else 
+            else if (phno.length < 6 || phno.length > 8) 
             {
-                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                ret = false;
             }
-
-            if (phno.length < 6 || phno.length > 8) 
+            else if (!phno.match(number))
             {
-                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Phone no length 6 to 8 digits";
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
                 ret = false;
             }
             else 
@@ -735,7 +740,12 @@
 
             if (faxCode.length < 2 || faxCode.length > 4) 
             {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "Length 2 to 4 digits";
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else if(!faxCode.match(number))
+            {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
                 ret = false;
             }
             else 
@@ -753,24 +763,23 @@
         {
             if (phno.charAt(0) == "0") 
             {
-                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no can not start with 0";
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else if (faxphno.length < 6 || faxphno.length > 8) 
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else if (!faxphno.match(number))
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
                 ret = false;
             }
             else 
             {
                 document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
             }
-
-            if (faxphno.length < 6 || faxphno.length > 8) 
-            {
-                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Fax no length 6 to 8 digits";
-                ret = false;
-            }
-            else 
-            {
-                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
-            }
-
         }
         else 
         {
@@ -840,6 +849,11 @@
             document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
             ret = false;
         }
+        else if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            ret = false;
+        }
         else 
         {
             document.getElementById("comm_address1_error").innerHTML = "";
@@ -851,6 +865,11 @@
         if (document.getElementById("CommunicationAddress2").value.trim() == "") 
         {
             document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
             ret = false;
         }
         else 
@@ -894,6 +913,7 @@
         if (count <= 1) 
         {
             alert("Add atleast 1 card Details");
+            ret = false;
             return false;
         }
         document.getElementById("NoOfCards_error").innerHTML = "";
@@ -906,6 +926,7 @@
             if (cardNo.length < 2) {
                 document.getElementById("NoOfCards_error").innerHTML = "Card No is required for all rows";
                 DetailsNotFound = true;
+                 ret = false;
                 return false;
             }
         });
@@ -918,8 +939,9 @@
         $('#NoOfCardsTbl td:nth-child(3) input').filter(function () {
             var VehicleNo = $(this).val().trim();
             if (VehicleNo == "") {
-                document.getElementById("NoOfCards_error").innerHTML = "Vehicle No is required for all rows";
+                document.getElementById("NoOfCards_error").innerHTML = "Vehicle No. is required for all rows";
                 DetailsNotFound = true;
+                ret = false;
                 return false;
             }
         });
@@ -932,8 +954,9 @@
         $('#NoOfCardsTbl td:nth-child(6) input').filter(function () {
             var VINNo = $(this).val().trim();
             if (VINNo == "") {
-                document.getElementById("NoOfCards_error").innerHTML = "VIN No is required for all rows";
+                document.getElementById("NoOfCards_error").innerHTML = "VIN No. is required for all rows";
                 DetailsNotFound = true;
+                ret = false;
                 return false;
             }
         });
@@ -948,6 +971,7 @@
             if (MobileNo == "") {
                 document.getElementById("NoOfCards_error").innerHTML = "Please Enter Mobile Number for all rows";
                 DetailsNotFound = true;
+                ret = false;
                 return false;
             }
         });
@@ -969,6 +993,7 @@
                     console.log('Found Duplicate Card No');
                     console.log($(this).val());
                     DuplicateFound = true;
+                    ret = false;
                     return false;
                 }
             });
@@ -978,7 +1003,7 @@
             return false;
         }
 
-        console.log('Duplicate Vehicle No check');
+        console.log('Duplicate Vehicle No. check');
 
         var DuplicateFound = false;
 
@@ -987,10 +1012,11 @@
             console.log(value);
             $('#NoOfCardsTbl td:nth-child(3) input').not(this).each(function () {
                 if ($(this).val() == value) {
-                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Vehicle No " + $(this).val() + " Found";
-                    console.log('Found Duplicate Vehicle No');
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate Vehicle No. " + $(this).val() + " Found";
+                    console.log('Found Duplicate Vehicle No.');
                     console.log($(this).val());
                     DuplicateFound = true;
+                    ret = false;
                     return false;
                 }
             });
@@ -1000,7 +1026,7 @@
             return false;
         }
 
-        console.log('Duplicate VIN No check');
+        console.log('Duplicate VIN No. check');
 
         var DuplicateFound = false;
 
@@ -1009,10 +1035,11 @@
             console.log(value);
             $('#NoOfCardsTbl td:nth-child(6) input').not(this).each(function () {
                 if ($(this).val() == value) {
-                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate VIN No " + $(this).val() + " Found";
-                    console.log('Found Duplicate VIN No');
+                    document.getElementById("NoOfCards_error").innerHTML = "Duplicate VIN No. " + $(this).val() + " Found";
+                    console.log('Found Duplicate VIN No.');
                     console.log($(this).val());
                     DuplicateFound = true;
+                    ret = false;
                     return false;
                 }
             });
@@ -1035,6 +1062,7 @@
                     console.log('Found Duplicate Mobile Number');
                     console.log($(this).val());
                     DuplicateFound = true;
+                    ret = false;
                     return false;
                 }
             });
@@ -1046,7 +1074,7 @@
 
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "";
@@ -1054,7 +1082,7 @@
 
         if (!(document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked'))) {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "Select Vehicle Registration Certificate";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
@@ -1062,7 +1090,7 @@
 
         if (document.querySelector('input[name="CopyofDriverLicense"]:checked').value == "No") {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "select Yes option to enable save";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "";
@@ -1070,7 +1098,7 @@
 
         if (document.querySelector('input[name="CopyofVehicleRegistrationCertificate"]:checked').value == "No") {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "select Yes option to enable save";
-            return (false);
+            ret = false;
         }
         else {
             document.getElementById("CopyofVehicleRegistrationCertificate_error").innerHTML = "";
@@ -1379,7 +1407,7 @@
         console.log(vehicleNo);
 
         if (vehicleNo == '') {
-            mycelError.innerHTML = "Enter Vehicle No";
+            mycelError.innerHTML = "Enter Vehicle No.";
             return;
         }
         else {
