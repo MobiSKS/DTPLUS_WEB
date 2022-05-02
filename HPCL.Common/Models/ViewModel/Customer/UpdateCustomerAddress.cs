@@ -125,5 +125,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string PASID { get; set; }
         public string CADID { get; set; }
         public string PADID { get; set; }
+        public int TBEntityId { get; set; }
     }
 }

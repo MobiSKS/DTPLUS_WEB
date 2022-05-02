@@ -1118,7 +1118,6 @@
             //document.getElementById("basicInfo-tab").classList.remove("disable");
             document.getElementById("basicInfo-tab").classList.add("active");
         }
-
         if (reason == "") {
             $("#reason").hide();
         }
@@ -2311,26 +2310,46 @@
         if ($("#RetailOutletStateId").val().length > 0) {
             document.getElementById("retail_state_error").innerHTML = "";
         }
-        if (retailStateID != "0" && retailStateID != null && retailStateID != "") {
-            id = retailStateID;
-        }
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Common")',
-            data: { Stateid: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#RetailOutletDistrictId").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "Select District"
-                                }).html("Select District").appendTo("#RetailOutletDistrictId");
-                            if (data.districtID == retailDistrictID) {
+        //if (retailStateID != "0" && retailStateID != null && retailStateID != "") {
+        //    console.log("inside Retail State");
+        //    console.log(id);
+        //    console.log(retailStateID);
+        //    console.log("outside Retail State");
+        //    id = retailStateID;
+        //}
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#RetailOutletDistrictId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "Select District"
+                                    }).html("Select District").appendTo("#RetailOutletDistrictId");
+                                if (data.districtID == retailDistrictID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#RetailOutletDistrictId");
+                                }
+                            }
+                            else if (data.districtID == retailDistrictID) {
                                 $('<option selected = "selected">',
                                     {
                                         value: data.districtID,
@@ -2344,63 +2363,78 @@
                                         text: data.districtName
                                     }).html(data.districtName).appendTo("#RetailOutletDistrictId");
                             }
-                        }
-                        else if (data.districtID == retailDistrictID) {
-                            $('<option selected = "selected">',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#RetailOutletDistrictId");
-                        }
-                    });
-                    $("#RetailOutletDistrictId")[0].sumo.reload()
+                        });
+                         setTimeout(function(){
+                        $("#RetailOutletDistrictId")[0].sumo.reload();
+                        },500);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-            }
-        });
+            });
+        }
+        else{
+            $("#RetailOutletDistrictId").html('');
+            $("#RetailOutletDistrictId")[0].sumo.reload();
+         }
     };
 
     function getCommDistrict() {
-        debugger;
         var id = $('#CommunicationStateId :selected').val();
 
         //if (commStateID != "0" && commStateID != null && commStateID != "") {
         //    id = commStateID;
         //}
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Common")',
-            data: { Stateid: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#CommunicationDistrictId").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "Select District"
-                                }).html("Select District").appendTo("#CommunicationDistrictId");
-                            if (data.districtID == commDistrictID) {
-                                $('<option selected = "selected">',
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#CommunicationDistrictId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
                                     {
-                                        value: data.districtID,
-                                        text: data.districtName
-                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                        value: 0,
+                                        text: "Select District"
+                                    }).html("Select District").appendTo("#CommunicationDistrictId");
+                                if (data.districtID == commDistrictID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                }
+                            }
+                            else if (commStateID != "") {
+                                if (data.districtID == commDistrictID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                }
                             }
                             else {
                                 $('<option>',
@@ -2409,40 +2443,23 @@
                                         text: data.districtName
                                     }).html(data.districtName).appendTo("#CommunicationDistrictId");
                             }
-                        }
-                        else if (commStateID != "") {
-                            if (data.districtID == commDistrictID) {
-                                $('<option selected = "selected">',
-                                    {
-                                        value: data.districtID,
-                                        text: data.districtName
-                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.districtID,
-                                        text: data.districtName
-                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
-                            }
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#CommunicationDistrictId");
-                        }
-                    });
-                    $("#CommunicationDistrictId")[0].sumo.reload();
+                        });
+                        setTimeout(function(){
+                            $("#CommunicationDistrictId")[0].sumo.reload();
+                        },500);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
+            });
+        }
+        else{
+            $("#CommunicationDistrictId").html('');
+            $("#CommunicationDistrictId")[0].sumo.reload();
             }
-        });
     };
 
     function getMerchantRegionalOfc() {
@@ -3493,5 +3510,5 @@
             document.getElementById("communicationCity_error").innerHTML = "";
         }
     });
-
+     
 </script>
