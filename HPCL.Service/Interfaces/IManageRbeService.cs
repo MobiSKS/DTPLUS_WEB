@@ -23,5 +23,7 @@ namespace HPCL.Service.Interfaces
         Task<GetDeviceIdResetRequestRespose> GetDeviceIdResetRequestSerivce(GetDeviceIdResetRequest entity);
         Task<GetSendOtpChangeRbeMobileResponse> GetOtpRbeDeviceResetService(string mobNo);
         Task<List<SuccessResponse>> ValidateOtpRbeDeviceResetService(string MobileNo, string otp);
+        Task<GetApproveChangeRbeDeviceResetResponse> ApproveRbeDeviceResetRequestSerivce(GetApproveChangeRbeDeviceReset entity);
+        Task<List<ApproveRejectChangedRbeMappingResponse>> GetApproveRejectRbeDeviceResetService(string mobNo, string mappingStatus);
     }
 }
