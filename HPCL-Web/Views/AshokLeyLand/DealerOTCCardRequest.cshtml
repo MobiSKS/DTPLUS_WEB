@@ -66,12 +66,15 @@
 
 <script type="text/javascript">
     
-    function ResetFields() {
-
+    function ResetFields() 
+    {
         $("#NoofCards").val("");
         $("#DealerCode").val("");
         document.getElementById("NoofCards_error").innerHTML = "";
         document.getElementById("DealerCode_error").innerHTML = "";
+        $("#Remarks").html('');
+        $("#dvRemarks").html('');
+        dvRemarks.style.display = 'none';
     };
 
 
@@ -159,7 +162,7 @@
             }
         }
 
-        if (document.getElementById('NoofCards').value.trim() == "" || document.getElementById('NoofCards').value.trim() == "0") 
+        if (document.getElementById('NoofCards').value.trim() == "") 
         {
             document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
             ret = false;
@@ -179,8 +182,37 @@
         
         return ret;
     }
+
     $('#NoofCards').on("cut copy paste",function(e) 
     {
           e.preventDefault();
      });
+
+   $("#NoofCards").on("blur", function () 
+   {
+    //debugger;
+       if (document.getElementById('NoofCards').value.trim() == "") 
+       {
+            document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
+            return false;
+       }
+       else 
+       {
+            if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 125) 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                return false;
+            }
+            else if(!(document.getElementById('NoofCards').value).match(number))
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "";
+            }
+       }
+        
+    });
 </script>
