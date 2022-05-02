@@ -608,7 +608,7 @@
         }
     }
 
-     function exportReportToExcel() {
+    function exportReportToExcel() {
 
         // Variable to store the final csv data
         var csv_data = [];
@@ -631,10 +631,15 @@
                     // of a row and push it to csvrow
                     //csvrow.push(cols[j].innerHTML);
                     //console.log(cols.length);
-                    console.log(cols[j].firstChild);
-                    var sel = document.getElementsByClassName("cpl")[j].defaultValue;
-                    console.log("sel",sel);
-                    csvrow.push("'" + cols[j].firstChild);
+                    const selectElem = cols[j].querySelector('input');
+                    //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                    //console.log("sel",sel);
+                    if (selectElem) {
+                        csvrow.push(selectElem.value);
+                    } else {
+                        csvrow.push(cols[j].innerText);
+                    }
+                    //csvrow.push(selectElem.value);
                 }
                 //console.log(i, csvrow);
                 //console.log(csvrow);
@@ -647,8 +652,8 @@
 
             // Call this function to download csv file
             downloadCSVFile(csv_data);
-        }
     }
+}
 
     function downloadCSVFile(csv_data) {
 
