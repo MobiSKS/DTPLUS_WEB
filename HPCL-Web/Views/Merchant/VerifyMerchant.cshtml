@@ -7,7 +7,7 @@
             <li class="breadcrumb-item font-weight-light">Merchant Approval</li>
         </ul>
         <div id="reason" class="mb-3 text-center displayNone" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;"></div>
-        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1",@class="tobehiddenonSuccess" }))
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "tobehiddenonSuccess" }))
         {
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -17,42 +17,42 @@
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Merchant Approval</p>
                                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">Select Category</label>
-                                        <div class="col-md-7 col-12"> 
-                                            <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.CategoryID, new SelectList(Model.Categories, "CategoryID", "CategoryType"), new { @class = "form-control" })
+                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
+                                            <label class="font-weight-normal col-md-4 col-12 mb-0">Select Category</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.CategoryID, new SelectList(Model.Categories, "CategoryID", "CategoryType"), new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" id="categoryID"></span>
                                             </div>
-                                            <span class="error" id="categoryID"></span>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">From Date</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">From Date</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                </div>
+                                                <span class="error" id="fromDate_error"></span>
                                             </div>
-                                            <span class="error" id="fromDate_error"></span>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">To Date</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select"> 
-                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
+                                            <label class="font-weight-normal col-md-4 col-12">To Date</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                </div>
+                                                <span class="error" id="toDate"></span>
                                             </div>
-                                            <span class="error" id="toDate"></span>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="col-12 d-flex align-items-center justify-content-center">
                                         <div class="px-2">
                                             <button class="btn btn_primary" type="submit" id="searchBtn">Search</button>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("VerifyMerchant", "Merchant")'">Reset</button>
+                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("VerifyMerchant", "Merchant", new { reset="Y" })'">Reset</button>
                                         </div>
                                     </div>
                                 </div>
@@ -64,93 +64,99 @@
                 </div>
             </div>
         }
-        <div id="show_Table" class="mt-2 tobehiddenonSuccess">
-            @if (Model.MerchantApprovalTableDetails.Count() > 0)
-            {<div class="table-responsive">
-                    <table class="table table-striped text-nowrap datatable" id="merchantApprovalDetails">
-                        <thead style="background-color:lightgray;">
-                            <tr>
-                                <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
-                                <th style="width:10%;">ERP Code</th>
-                                <th style="width:10%;">RO</th>
-                                <th style="width:20%;">Retail Outlet Name</th>
-                                <th style="width:10%;">City</th>
-                                <th>Type</th>
-                                <th style="width:10%;">Created Date</th>
-                                <th style="width:10%;">Created By</th>
-                                <th style="width:10%;">Verified Date</th>
-                                <th style="width:10%;">Verified By</th>
-                                <th style="width:10%;">Comments</th>
-                            </tr>
-                        </thead>
-                        <tbody id="searchMerchantTableBody">
-                            @{
-                                int i = 0;
-                            }
-                            @foreach (var item in Model.MerchantApprovalTableDetails)
-                            {
-                                i = i + 1;
-                                string MerchantIDVal = "30" + @item.ErpCode;
+        @if (ViewBag.Reset == "")
+        {
+            <div id="show_Table" class="mt-2 tobehiddenonSuccess">
+                @if (Model.MerchantApprovalTableDetails.Count() > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped text-nowrap datatable" id="merchantApprovalDetails">
+                            <thead style="background-color:lightgray;">
                                 <tr>
-                                    <td><input type="checkbox" id="check_@i" /></td>
-                                    <td><a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID" asp-route-actionFlow="Edit" asp-route-ERPCode="@item.ErpCode">@item.ErpCode</a></td>
-                                    <td>@item.RegionalOfficeName</td>
-                                    <td>@item.RetailOutletName</td>
-                                    <td>@item.City</td>
-                                    <td>@item.MerchantTypeName</td>
-                                    <td>@item.CreatedTime</td>
-                                    <td>@item.CreatedBy</td>
-                                    <td>@item.VerifiedDate</td>
-                                    <td>@item.VerifiedBy</td>
-                                    <td><input type="text" id="comments_@i" class="form-control" /><span class="comment_error"></span></td>
+                                    <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                                    <th style="width:10%;">ERP Code</th>
+                                    <th style="width:10%;">RO</th>
+                                    <th style="width:20%;">Retail Outlet Name</th>
+                                    <th style="width:10%;">City</th>
+                                    <th>Type</th>
+                                    <th style="width:10%;">Created Date</th>
+                                    <th style="width:10%;">Created By</th>
+                                    <th style="width:10%;">Verified Date</th>
+                                    <th style="width:10%;">Verified By</th>
+                                    <th style="width:10%;">Comments</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                @*<div class="container">
+                            </thead>
+                            <tbody id="searchMerchantTableBody">
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model.MerchantApprovalTableDetails)
+                                {
+                                    i = i + 1;
+                                    string MerchantIDVal = "30" + @item.ErpCode;
+                                    <tr>
+                                        <td><input type="checkbox" id="check_@i" /></td>
+                                        <td><a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID" asp-route-actionFlow="Edit" asp-route-ERPCode="@item.ErpCode">@item.ErpCode</a></td>
+                                        <td>@item.RegionalOfficeName</td>
+                                        <td>@item.RetailOutletName</td>
+                                        <td>@item.City</td>
+                                        <td>@item.MerchantTypeName</td>
+                                        <td>@item.CreatedTime</td>
+                                        <td>@item.CreatedBy</td>
+                                        <td>@item.VerifiedDate</td>
+                                        <td>@item.VerifiedBy</td>
+                                        <td><input type="text" id="comments_@i" class="form-control" /><span class="comment_error"></span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @*<div class="container">
                         @if (pager.TotalPages > 0)
                         {
-                            <ul class="pagination justify-content-end">
-                                @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-                                {
-                                    <li class="page-item @(pge == pager.CurrentPage ? " active" : "" )">
-                                        <a class="btn btn_primary px-3 py-2" asp-controller="Merchant" asp-action="VerifyMerchant" asp-route-pg="@pge">@pge</a>
-                                    </li>
-                                }
-                            </ul>
+                        <ul class="pagination justify-content-end">
+                        @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                        {
+                        <li class="page-item @(pge == pager.CurrentPage ? " active" : "" )">
+                        <a class="btn btn_primary px-3 py-2" asp-controller="Merchant" asp-action="VerifyMerchant" asp-route-pg="@pge">@pge</a>
+                        </li>
                         }
-                    </div>*@
-                <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
-                    <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
-                        <div class="pr-2">
-                            <button class="btn btn_primary" type="button" onclick="approvalOrReject('Approve');">APPROVE</button>
-                        </div>
-                        <div class="pl-2">
-                            <button class="btn btn_primary" type="button" onclick="approvalOrReject('Reject');">REJECT</button>
+                        </ul>
+                        }
+                        </div>*@
+                    <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
+                        <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
+                            <div class="pr-2">
+                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Approve');">APPROVE</button>
+                            </div>
+                            <div class="pl-2">
+                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Reject');">REJECT</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            }
-            else
-            {
-                <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
-                    No Record Found
-                </div>
-            }
-        </div>
+                }
+                else
+                {
+
+                    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+                        No Record Found
+                    </div>
+
+                }
+            </div>
+        }
     </div>
 </div>
 <script type="text/javascript">
-    var fromdate = $("#FromDate").val();
-    var todate = $("#ToDate").val();
+    //var fromdate = $("#FromDate").val();
+    //var todate = $("#ToDate").val();
 
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
-  
+
     function approvalOrReject(action) {
         var flag = "Y";
 
@@ -172,7 +178,7 @@
                     ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
                 }
             }
-            
+
         });
         if (ObjApprovalRejectDetail.length == 0){
             $("#reason").removeClass("displayNone");
@@ -219,5 +225,14 @@
             search: true,
             searchText: 'Enter Text here.'
         });
-
+    $("#searchBtn").on("click", (function (e) {
+        var flag="Y";
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+        if (flag == "N")
+            e.preventDefault();
+    }));
 </script>
