@@ -1552,10 +1552,10 @@ namespace HPCL.Service.Services
                 }
 
                 custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-                //custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
-                //custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
-                custMdl.CASID = "78";
-                custMdl.PASID = "66";
+                custMdl.CASID = custMdl.CommunicationStateId.ToString();
+                custMdl.CADID= custMdl.CommunicationDistrictId.ToString();
+                custMdl.PASID = custMdl.PermanentStateId.ToString();
+                custMdl.PADID = custMdl.PermanentDistrictId.ToString();
 
                 if (!string.IsNullOrEmpty(custMdl.CommunicationPhoneNo))
                 {
@@ -1657,7 +1657,7 @@ namespace HPCL.Service.Services
             {
                 model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
             }
-                       
+
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateCustomerAddress);
@@ -1668,22 +1668,26 @@ namespace HPCL.Service.Services
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            //OTCCustomerCardResponse customerResponse = JsonConvert.DeserializeObject<OTCCustomerCardResponse>(response, settings);
+            CustomerAddressUpdateResponse customerResponse = JsonConvert.DeserializeObject<CustomerAddressUpdateResponse>(response, settings);
 
-            //model.Internel_Status_Code = customerResponse.Internel_Status_Code;
-            //model.Remarks = customerResponse.Message;
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Remarks = customerResponse.Message;
 
-            //if (customerResponse.Internel_Status_Code != 1000)
-            //{
-            //    if (customerResponse.Data != null)
-            //        model.Remarks = customerResponse.Data[0].Reason;
-            //    else
-            //        model.Remarks = customerResponse.Message;
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    model.Remarks = customerResponse.Data[0].Reason;
+                else
+                    model.Remarks = customerResponse.Message;
 
-            //    model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-            //    model.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.CommunicationStateID.ToString()));
-            //    model.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.PerOrRegAddressStateID.ToString()));
-            //}
+                model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                model.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.CommunicationStateId.ToString()));
+                model.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.PermanentStateId.ToString()));
+            }
+            else
+            {
+                model.Remarks = customerResponse.Data[0].Reason;
+            }
 
             return model;
         }

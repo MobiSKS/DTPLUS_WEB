@@ -92,16 +92,11 @@ namespace HPCL_Web.Controllers
                 return View(merchantMdl2);
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> VerifyMerchant()
-        {
-            MerchantApprovalModel merchaApprovalMdl = new MerchantApprovalModel();
-            var modals = await _merchantServices.VerifyMerchant(merchaApprovalMdl);
-            return View(modals);
-        }
-        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
+        
+        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl,string reset)
         {
             var modals = await _merchantServices.VerifyMerchant(merchaApprovalMdl);
+            ViewBag.Reset =String.IsNullOrEmpty(reset)?"":reset;
             return View(modals);
         }
         [HttpPost]

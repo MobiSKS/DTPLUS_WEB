@@ -133,7 +133,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control stateType" })
+                                                    @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control stateType" })
                                                 </div>
                                                 <span class="error" id="comm_states_error"></span>
                                             </div>
@@ -312,7 +312,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.PerOrRegAddressStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.PermanentStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                                 </div>
                                                 <span class="error" id="perma_state_error"></span>
                                             </div>
@@ -498,11 +498,12 @@
                     $('#CommunicationAddress1').val(res.customer.communicationAddress1);
                     $('#CommunicationAddress2').val(res.customer.communicationAddress2);
                     $('#CommunicationAddress3').val(res.customer.communicationAddress3);
+                    $('#CommunicationLocation').val(res.customer.communicationLocation);
                     $('#CommunicationCityName').val(res.customer.communicationCityName);
                     $('#CommunicationPinCode').val(res.customer.communicationPinCode);
 
-                    $('#CommunicationStateID')[0].sumo.selectItem(res.customer.casid);
-                    $('#PerOrRegAddressStateID')[0].sumo.selectItem(res.customer.pasid);
+                    $('#CommunicationStateId')[0].sumo.selectItem(res.customer.casid);
+                    $('#PermanentStateId')[0].sumo.selectItem(res.customer.pasid);
 
 
                     $('#CommunicationDialCode').val(res.customer.communicationDialCode);
@@ -519,10 +520,6 @@
                     $('#PermanentCityName').val(res.customer.permanentCityName);
                     $('#PermanentPincode').val(res.customer.permanentPincode);
                     $('#PermanentLocation').val(res.customer.permanentLocation);
-
-                    //var pDistrict = $('<option value="' + res.customer.permanentDistrictName + '">' + res.customer.permanentDistrictName + '</option>');
-                    //$('#PerOrRegAddressDistrict').append(pDistrict);
-                    //$("#PerOrRegAddressDistrict")[0].sumo.reload();
 
                     $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
                     $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPhoneNumber);
@@ -548,9 +545,9 @@
                                 });
                                 $("#CommunicationDistrictId")[0].sumo.reload();
 
-                                //setTimeout(function(){
-                               //$('#CommunicationDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
-                               //},500);
+                                setTimeout(function(){
+                                   $('#CommunicationDistrictId')[0].sumo.selectItem(res.customer.cadid);
+                                   },500);
                             }
                             else {
                                 console.log(v);
@@ -581,9 +578,9 @@
                                 });
                                 $("#PermanentDistrictId")[0].sumo.reload();
 
-                                //setTimeout(function(){
-                               //$('#PermanentDistrictId')[0].sumo.selectItem($("#PermanentDistrictId").val());
-                               //},500);
+                                setTimeout(function(){
+                                   $('#PermanentDistrictId')[0].sumo.selectItem(res.customer.padid);
+                                   },500);
                             }
                             else {
                                 console.log(v);
@@ -1100,7 +1097,7 @@
 
         });
 
-        $("#CommunicationStateID").change(function () {
+        $("#CommunicationStateId").change(function () {
             var id = this.value;
 
             if (id != 0) {
@@ -1138,7 +1135,7 @@
 
         });
 
-        $("#PerOrRegAddressStateID").change(function () {
+        $("#PermanentStateId").change(function () {
                 var id = this.value;
              if (id != 0) {
                  $("#perma_state_error").html("");
@@ -1312,7 +1309,7 @@
             }
         }
 
-        if (document.getElementById("CommunicationStateID").value == "0" || document.getElementById("CommunicationStateID").value == "")
+        if (document.getElementById("CommunicationStateId").value == "0" || document.getElementById("CommunicationStateId").value == "")
         {
             document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
             ret = false;
@@ -1612,7 +1609,7 @@
         console.log(pin.match(pincode))
         console.log('After PermanentPincode')
 
-        if (document.getElementById("PerOrRegAddressStateID").value == "0")
+        if (document.getElementById("PermanentStateId").value == "0")
         {
             document.getElementById("perma_state_error").innerHTML = "State field cannot be left blank";
             ret = false;
