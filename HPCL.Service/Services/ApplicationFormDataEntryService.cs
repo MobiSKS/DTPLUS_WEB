@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.ApplicationFormDataEntry;
 using HPCL.Common.Models.ResponseModel.ApplicationFormDataEntry;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
@@ -317,6 +318,27 @@ namespace HPCL.Service.Services
             }
 
             return addAddOnCard;
+        }
+
+        public async Task<CustomerInserCardResponseData> CheckCardIdentifierAlreadyUsed(string cardIdentifier, string customerID)
+        {
+            var requestInfo = new CheckCardIdentifierDuplicationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CardIdentifier = cardIdentifier,
+                CustomerID = customerID
+            };
+
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.checkCardIdentifierNo);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
         }
 
     }
