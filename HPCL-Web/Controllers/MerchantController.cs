@@ -92,9 +92,11 @@ namespace HPCL_Web.Controllers
                 return View(merchantMdl2);
             }
         }
-        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl)
+        
+        public async Task<IActionResult> VerifyMerchant(MerchantApprovalModel merchaApprovalMdl,string reset)
         {
             var modals = await _merchantServices.VerifyMerchant(merchaApprovalMdl);
+            ViewBag.Reset =String.IsNullOrEmpty(reset)?"":reset;
             return View(modals);
         }
         [HttpPost]

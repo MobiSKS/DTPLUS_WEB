@@ -61,25 +61,24 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-            //CustomerInserCardResponse customerInserCardResponse;
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.EnrollTransportManagementSystem);
 
-            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.EnrollTransportManagementSystem);
+            EnrollTMSResponse enrollTMSResponse = JsonConvert.DeserializeObject<EnrollTMSResponse>(response);
+            model.Internel_Status_Code = enrollTMSResponse.Internel_Status_Code;
 
-            //customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
-
-
-            //if (model.Internel_Status_Code == 1000)
-            //{
-            //    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
-            //    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-            //    customerCardInfo.Message = customerInserCardResponse.Message;
-            //    customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
-            //}
-            //else
-            //{
-            //    customerCardInfo.Message = customerInserCardResponse.Message;
-            //    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
-            //}
+            if (model.Internel_Status_Code == 1000)
+            {
+                model.Message = enrollTMSResponse.Message;
+                if (enrollTMSResponse != null && enrollTMSResponse.Data != null)
+                {
+                    model.Message = enrollTMSResponse.Data.message;
+                }
+            }
+            else
+            {
+                model.Message = enrollTMSResponse.Message;
+                model.StatusCode = enrollTMSResponse.Internel_Status_Code;
+            }
 
             return model;
         }

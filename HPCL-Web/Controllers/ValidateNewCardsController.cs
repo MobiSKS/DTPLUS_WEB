@@ -30,9 +30,11 @@ namespace HPCL_Web.Controllers
             _validateNewCardsService = validateNewCardsService;
             _commonActionService = commonActionService;
         }
-        public async Task<IActionResult> Details(ValidateNewCardsModel validateNewCardsMdl)
+       
+        public async Task<IActionResult> Details(ValidateNewCardsModel validateNewCardsMdl,string reset)
         {
             var modals = await _validateNewCardsService.Details(validateNewCardsMdl);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
             List<StateResponseModal> lstState = new List<StateResponseModal>();
             lstState = await _commonActionService.GetStateList();
             modals.States.AddRange(lstState);

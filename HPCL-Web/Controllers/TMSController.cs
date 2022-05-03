@@ -41,11 +41,9 @@ namespace HPCL_Web.Controllers
         public FileResult DownloadFile(string fileName)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string contentRootPath = _hostingEnvironment.ContentRootPath;
-
+   
             string path = "";
-            path = Path.Combine(contentRootPath, "Views\\TMS");
-            path = Path.Combine(path, fileName);
+            path = Path.Combine(webRootPath, "MyStaticFiles", fileName);
 
             //Read the File data into Byte Array.
             byte[] bytes = System.IO.File.ReadAllBytes(path);
@@ -59,14 +57,17 @@ namespace HPCL_Web.Controllers
         {
             var Model = await _tmsService.EnrollToTransportManagementSystem(model);
 
-            //if (Model.StatusCode == 1000)
-            //{
-            //    model.Status = Model.Status;
-            //    model.StatusCode = Model.StatusCode;
-            //    return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = Model.CustomerReferenceNo, Message = Model.Reason });
-            //}
+            if (Model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessEnrollToTMS", new { Message = Model.Message });
+            }
 
             return View(Model);
+        }
+        public async Task<IActionResult> SuccessEnrollToTMS(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }
