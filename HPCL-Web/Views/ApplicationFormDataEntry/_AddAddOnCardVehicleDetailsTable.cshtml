@@ -153,6 +153,7 @@
 									<th>Card Identifier</th>
 									<th>Mobile No</th>
                                     <td style="display:none;"></td>
+                                    <td style="display:none;"></td>
 								}
 								@if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
 								{
@@ -169,6 +170,7 @@
 									<td style="display:none;"></td>
 									<td style="display:none;"></td>
 									<td style="display:none;"></td>
+                                    <td style="display:none;"></td>
 								}
 							</tr>
 						</thead>
@@ -194,6 +196,7 @@
                                                     @Model.ObjCardDetail[i].MobileNoMsg
                                                 </span>
                                             </td>
+                                            <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                         }
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
@@ -238,6 +241,7 @@
                                             <td style="display:none;">
                                                 @Model.ObjCardDetail[i].Verified
                                             </td>
+                                            <td style="display:none;">0</td>
                                         }
                                     </tr>
                                 }
@@ -255,6 +259,7 @@
                                                 <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this,@i)'>
                                                 <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
                                             </td>
+                                            <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                         }
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909")
@@ -288,6 +293,7 @@
                                                 <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjCardDetail[@i].MobileNo" onchange='MobileNoChange(this,@i)'>
                                                 <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
                                             </td>
+                                            <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
@@ -424,35 +430,34 @@
           mytablebody = tbl.getElementsByTagName("tbody")[0];
           myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
 
-          var mycel;
           var mycelStatus;
-          if (customerTypeId == "901" || customerTypeId == "906") {
-              if (selected.toUpperCase() == "CARDLESS") {
-                  mycel = myrow.getElementsByTagName("td")[7];
+          if (customerTypeId == "901" || customerTypeId == "906") 
+          {
+              if (selected.toUpperCase() == "CARDLESS") 
+              {
                   mycelStatus=myrow.getElementsByTagName("td")[8];
               }
-              else {
-                  mycel = myrow.getElementsByTagName("td")[6];
+              else 
+              {
                   mycelStatus=myrow.getElementsByTagName("td")[7];
               }
           }
-          else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-              if (selected.toUpperCase() == "CARDLESS") {
-                  mycel = myrow.getElementsByTagName("td")[8];
+          else if (customerTypeId == "905" || customerTypeId == "909") //Attached,Generic
+          {
+              if (selected.toUpperCase() == "CARDLESS") 
+              {
                   mycelStatus=myrow.getElementsByTagName("td")[9];
               }
-              else {
-                  mycel = myrow.getElementsByTagName("td")[7];
+              else 
+              {
                   mycelStatus=myrow.getElementsByTagName("td")[8];
               }
           }
-          console.log(mycel);
           console.log(mycelStatus);
           console.log(rowSelected);
           
           if (vehicleNo == '') 
           {
-              //mycel.innerHTML = "Enter Vehicle No.";
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
               mycelStatus.innerHTML = "0";
               isValid=false;
@@ -461,7 +466,6 @@
           else 
           {
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
-              //mycel.innerHTML = "";
               mycelStatus.innerHTML = "0";
           }
 
@@ -1037,6 +1041,64 @@
 
         }
 
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+
+          var mycelStatus;
+          if (customerTypeId == "902" || customerTypeId == "917") //Corporate,Non Fleet
+          {
+              mycelStatus=myrow.getElementsByTagName("td")[4];
+          }
+          else if (customerTypeId == "901" || customerTypeId == "906") //Fleet,Credit
+          {
+             mycelStatus=myrow.getElementsByTagName("td")[10];
+          }
+          else if (customerTypeId == "905" || customerTypeId == "909") //Attached,Generic
+          {
+                 mycelStatus=myrow.getElementsByTagName("td")[11];
+          }
+
+        if(isValid)
+        {
+            $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
+                data: { MobileNo: mobile }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') 
+                    {
+                        console.log('Test');
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") 
+                        {
+                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile No. already exists";
+                            mycelStatus.innerHTML = "1";
+                        }
+                        else 
+                        {
+                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "";
+                            mycelStatus.innerHTML = "0";
+                        }
+                    }
+                    else 
+                    {
+                        document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile No. already exists";
+                        mycelStatus.innerHTML = "1";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile No. already exists";
+                    mycelStatus.innerHTML = "1";
+                }
+            });
+        }
 
      }
 
