@@ -81,7 +81,7 @@
     <div class="clearfix"></div>
     <div class="d-flex align-items-center justify-content-center mt-3 mb-4">
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="AddCardTbl()">ADD</button>
+            <button class="btn btn_primary" type="button" id="btnAdd" onclick="AddCardTbl()">ADD</button>
         </div>
         <div class="px-2">
             <button class="btn btn_primary" type="button" onclick="ResetClick()" style="display:none">RESET</button>
@@ -433,6 +433,24 @@ function setFromDateFormat(){
             }
         }
 
+        if (document.getElementById("RBEId").value != "") 
+        {
+            if(document.getElementById("RbeNameVal").value=="")
+            {
+              document.getElementById("RbeValErrMsg").innerHTML = "Invalid RBE ID";
+              document.getElementById("RBEId").focus();
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("RbeValErrMsg").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("RbeValErrMsg").innerHTML = "";
+        }
+
         if(ret==false)
         {
            return ret;
@@ -524,7 +542,8 @@ function setFromDateFormat(){
             dataType: "html",
             success: function (data, status, xhr) {
                     var v = data;
-                    if (status == 'success') {
+                    if (status == 'success') 
+                    {
                         document.getElementById("ViewNoOfCardsTbl").style.display = "block";
                         $("#ViewNoOfCardsTbl").html(data);
                         $('html, body').animate({
@@ -536,11 +555,13 @@ function setFromDateFormat(){
                         $('#NoofVechileforAllCards').attr("readonly", true);
                         $('#FeePaymentDate').attr("readonly", true);
                         $('#FeePaymentNo').attr("readonly", true);
-
+                        $("#btnAdd").attr("disabled", true);
                     }
                 },
-            error: function (jqXhr, textStatus, errorMessage) {
+            error: function (jqXhr, textStatus, errorMessage) 
+            {
                 $("#ViewNoOfCardsTbl").html("");
+                $("#btnAdd").attr("disabled", false);
             }
         });
     }
@@ -778,6 +799,7 @@ function RemoveSpecialChar(txtName)
             if(document.getElementById("RbeNameVal").value=="")
             {
               document.getElementById("RbeValErrMsg").innerHTML = "Invalid RBE ID";
+              document.getElementById("RBEId").focus();
               ret = false;
             }
             else
@@ -1152,7 +1174,7 @@ function RemoveSpecialChar(txtName)
                 {
                     if(row.cells[8].innerHTML.trim()=="1")
                     {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
+                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                        ret=false;
                     }
                     cnt=cnt+1;
@@ -1209,7 +1231,7 @@ function RemoveSpecialChar(txtName)
                 {
                     if(row.cells[7].innerHTML.trim()=="1")
                     {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
+                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                        ret=false;
                     }
                     cnt=cnt+1;
@@ -1847,5 +1869,29 @@ function RemoveSpecialChar(txtName)
         console.log(ret);
         return ret;
     }
+
+    $('#VehicleVerifiedManually').click(function()
+    {
+          var customerTypeId = document.getElementById("CustomerTypeId").value;
+          console.log(customerTypeId);
+          if ($(this).prop("checked"))
+          {
+             //$(".verify").addClass("disabled");
+
+            var cnt = 0;
+
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                //var row = $(this);
+                document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                cnt=cnt+1;
+             });
+          }
+          else
+          {
+              //$('.verify').removeClass("disabled");
+          }
+
+    });
 
 </script>
