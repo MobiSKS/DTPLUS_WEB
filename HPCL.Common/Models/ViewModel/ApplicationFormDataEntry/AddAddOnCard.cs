@@ -54,6 +54,7 @@ namespace HPCL.Common.Models.ViewModel.ApplicationFormDataEntry
         public string VehicleVerifiedManually { get; set; }
         public string VehicleNoMsg { get; set; }
         public string MobileNoMsg { get; set; }
+        public string CardIdentMsg { get; set; }
         public string Verified { get; set; }
         public ObjCardDetail()
         {

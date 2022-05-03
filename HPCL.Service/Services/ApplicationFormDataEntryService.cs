@@ -235,9 +235,19 @@ namespace HPCL.Service.Services
                 {
                     cardDetails.VehicleNoMsg = "";
                     cardDetails.MobileNoMsg = "";
+                    cardDetails.CardIdentMsg = "";
                 }
 
-                if (customerInserCardResponse.Message.Contains("Vehicle No."))
+                addAddOnCard.Message = customerInserCardResponse.Message;
+                if (customerInserCardResponse.Message.Contains("No Record Found"))
+                {
+                    if (customerInserCardResponse.Data != null && customerInserCardResponse.Data.Count > 0)
+                    {
+                        addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
+                    }
+                }
+
+                if (addAddOnCard.Message.Contains("Vehicle No."))
                 {
                     foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
                     {
@@ -251,7 +261,7 @@ namespace HPCL.Service.Services
                     }
                 }
 
-                if (customerInserCardResponse.Message.Contains("Mobile No."))
+                if (addAddOnCard.Message.Contains("Mobile No."))
                 {
                     foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
                     {
@@ -260,6 +270,20 @@ namespace HPCL.Service.Services
                             if (cardDetails.MobileNo == responseData.Reason)
                             {
                                 cardDetails.MobileNoMsg = "Mobile No. already exists";
+                            }
+                        }
+                    }
+                }
+
+                if (addAddOnCard.Message.Contains("Card Identifier"))
+                {
+                    foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                    {
+                        foreach (HPCL.Common.Models.ViewModel.ApplicationFormDataEntry.ObjCardDetail cardDetails in addAddOnCard.ObjCardDetail)
+                        {
+                            if (cardDetails.CardIdentifier.ToUpper() == responseData.Reason.ToUpper())
+                            {
+                                cardDetails.CardIdentMsg = "Card Identifier already exists";
                             }
                         }
                     }
@@ -275,7 +299,7 @@ namespace HPCL.Service.Services
             }
             else
             {
-                addAddOnCard.Message = customerInserCardResponse.Message;
+                //addAddOnCard.Message = customerInserCardResponse.Message;
                 addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
                 addAddOnCard.FeePaymentDate = oldPaymentDate;
 
