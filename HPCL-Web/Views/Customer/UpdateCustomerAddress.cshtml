@@ -214,16 +214,21 @@
                                 </div>
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select" id="dvPan">
-                                                    @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
-                                                    <span class="error" id="incomeTaxPan_error"></span>
-                                                </div>
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-5 col-12" id="dvPan">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                <span class="error" id="incomeTaxPan_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-0">
+                                            <div class="custom_select">
+                                               <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                                      <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
                                             <label class="font-weight-normal col-md-4 col-12" id="lblPanCardRemarks">Pan Card Remarks <sup class="text-danger">*</sup></label>
@@ -543,20 +548,20 @@
                     {
                         $('#lblPanText').text('');
                         $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
-                        //$('#btnVerify').hide();
+                        $('#btnVerify').hide();
                         $('#lblCustPOI').show();
                         document.getElementById('IsDuplicatePanNo').value = "1";
                         document.getElementById("IncomeTaxPan").maxLength = 30;
-                        //document.getElementById("dvPan").className = "col-md-8 col-12";
+                        document.getElementById("dvPan").className = "col-md-7 col-12";
                     }
                     else 
                     {
                         $('#lblPanText').text('');
                         $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
-                        //$('#btnVerify').show();
+                        $('#btnVerify').show();
                         $('#lblCustPOI').hide();
                         document.getElementById("IncomeTaxPan").maxLength = 10;
-                        //document.getElementById("dvPan").className = "col-md-6 col-12";
+                        document.getElementById("dvPan").className = "col-md-6 col-12";
                     }
 
                      $.ajax({
@@ -1844,7 +1849,7 @@
 
                 if (document.getElementById("IncomeTaxPan").value.trim() == "")
                 {
-                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
                     document.getElementById("incomeTaxPan_error").className = "error";
                     ret = false;
                 }
@@ -2154,7 +2159,7 @@
 
             if (panNumber == "")
             {
-                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 
                 document.getElementById("lblPanCardRemarks").style.display = "none";
@@ -2416,5 +2421,116 @@
         }
 
     });
+
+function ValidatePAN()
+{
+    debugger;
+    var panno = $('#IncomeTaxPan').val().trim();
+    //var OrgName = $('#IndividualOrgName').val().trim();
+    var customerTbentityid = $("#TBEntityId").val();
+    var correctPANName = '';
+    console.log('ValidatePAN');
+    if (panno == '')
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+    console.log(panno);
+    //if (OrgName == '')
+    //{
+    //    document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+    //    alert('Individual/Org. Name is required');
+    //    return (false);
+    //}
+
+    if ($('#IncomeTaxPan').val().match(pancard))
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
+    }
+    else
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+
+    //solo Propritorship 4th Char Pan should be 'P'
+    if (customerTbentityid == '2')
+    {
+        let forthdigitPan = panno.substr(3, 1);
+        console.log(forthdigitPan);
+        if (forthdigitPan != 'P')
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            alert('Please Enter Valid Income Tax PAN');
+            return (false);
+        }
+        else
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+            document.getElementById("incomeTaxPan_error").className = "error text-success";
+        }
+    }
+
+    var externalPANAPIStatus = "Y";
+
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+    console.log(externalPANAPIStatus);
+
+    //if (externalPANAPIStatus == "Y")
+    //{
+
+    //    $.ajax({
+    //        type: 'POST',  // http method
+    //        url: '@Url.Action("PANValidation", "Customer")',
+    //        data: { PANNumber: panno },  // data to submit
+    //        dataType: "json",
+    //        success: function (data, status, xhr) {
+    //            //debugger;
+    //            var jsonData = JSON.parse(data);
+    //            if (status == 'success' && jsonData['status-code'] == '101') 
+    //            {
+
+    //                console.log(jsonData);
+    //                //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+    //                correctPANName = jsonData["result"]["name"];
+
+    //                document.getElementById("incomeTaxPan_error").innerHTML = "";
+    //                document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+    //                console.log(correctPANName);
+    //                console.log(OrgName);
+    //                if (correctPANName.toUpperCase() != OrgName.toUpperCase()) 
+    //                {
+    //                    document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+    //                    document.getElementById("incomeTaxPan_error").className = "error";
+    //                }
+    //                else 
+    //                {
+    //                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+    //                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+    //                }
+
+    //            }
+    //            else 
+    //            {
+    //                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+    //                document.getElementById("incomeTaxPan_error").className = "error";
+    //                console.log(jsonData['status-code']);
+    //            }
+    //        },
+    //        error: function (jqXhr, textStatus, errorMessage) {
+    //            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+    //            console.log(jsonData['status-code']);
+    //            document.getElementById("incomeTaxPan_error").className = "error";
+    //        }
+    //    });
+    //}
+    
+}
 
 </script>

@@ -86,7 +86,7 @@
     <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
         <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
             <div class="px-2">
-                <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button">Add</button>
+                <button class="btn btn_primary" onclick="LoadCardDeatils()" id="btnAdd" type="button">Add</button>
             </div>
             <div class="px-2">
                 <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" style="display:none">Reset</button>
@@ -490,6 +490,20 @@
             }
         }
 
+        if (document.getElementById("RBEId").value != "") 
+        {
+            if(document.getElementById("RBEName").value=="")
+            {
+              document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
+              document.getElementById("RBEId").focus();
+              ret=false;
+            }
+        }
+        else 
+        {
+            document.getElementById("RBEId_error").innerHTML = "";
+        }
+
         if(ret==false)
         {
             return ret;
@@ -603,11 +617,13 @@
                         $('#NoofVechileforAllCards').attr("readonly", true);
                         $('#FeePaymentDate').attr("readonly", true);
                         $('#FeePaymentNo').attr("readonly", true);
+                        $("#btnAdd").attr("disabled", true);
 
                     }
                 },
             error: function (jqXhr, textStatus, errorMessage) {
                 $("#ViewNoOfCardsTbl").html("");
+                $("#btnAdd").attr("disabled", false);
             }
         });
 
@@ -749,6 +765,7 @@
             if(document.getElementById("RBEName").value=="")
             {
               document.getElementById("RBEId_error").innerHTML = "Invalid RBE ID";
+              document.getElementById("RBEId").focus();
               ret=false;
             }
         }
@@ -1097,7 +1114,7 @@
                 {
                     if(row.cells[8].innerHTML.trim()=="1")
                     {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
+                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                        ret=false;
                     }
                     cnt=cnt+1;
@@ -1144,6 +1161,20 @@
                         cnt=cnt+1;
                     }
                 }
+
+                console.log('Before Checking Existing Mobile No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[10].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
  
             }
             else
@@ -1155,7 +1186,7 @@
                 {
                     if(row.cells[7].innerHTML.trim()=="1")
                     {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists:";
+                       document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
                        ret=false;
                     }
                     cnt=cnt+1;
@@ -1231,7 +1262,7 @@
                           document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                           ret=false;
                         }
-                        else if(!(cardIdentifier.match(number)))
+                        else if(!(cardIdentifier.match(forVehicleNo)))
                         {
                           document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                           ret=false;
@@ -1395,7 +1426,7 @@
                                   document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                                   ret=false;
                                 }
-                                else if(!(CurIdent.match(number)))
+                                else if(!(CurIdent.match(forVehicleNo)))
                                 {
                                   document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                                   ret=false;
@@ -1549,6 +1580,20 @@
                 }
 
 
+                console.log('Before Checking Existing Mobile No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[11].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
+
             }
             else
             {
@@ -1642,7 +1687,7 @@
                           document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                           ret=false;
                         }
-                        else if(!(cardIdentifier.match(number)))
+                        else if(!(cardIdentifier.match(forVehicleNo)))
                         {
                           document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                           ret=false;
@@ -1723,7 +1768,7 @@
                                   document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                                   ret=false;
                                 }
-                                else if(!(CurIdent.match(number)))
+                                else if(!(CurIdent.match(forVehicleNo)))
                                 {
                                   document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
                                   ret=false;
@@ -1781,6 +1826,20 @@
                 });
 
 
+                console.log('Before Checking Existing Mobile No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[3].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
+
             }
 
         }
@@ -1830,5 +1889,29 @@
         document.getElementById("ViewNoOfCardsTbl").style.display = "none";
         document.getElementById("divSubmit").style.display = "none";
     }
+
+    $('#VehicleNoVerifiedManually').click(function()
+    {
+          var customerTypeId = document.getElementById("CustomerTypeId").value;
+          console.log(customerTypeId);
+          if ($(this).prop("checked"))
+          {
+             //$(".verify").addClass("disabled");
+
+            var cnt = 0;
+
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                //var row = $(this);
+                document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                cnt=cnt+1;
+             });
+          }
+          else
+          {
+              //$('.verify').removeClass("disabled");
+          }
+
+    });
 
 </script>

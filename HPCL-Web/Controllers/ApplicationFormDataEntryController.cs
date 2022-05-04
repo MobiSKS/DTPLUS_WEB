@@ -73,6 +73,13 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        [HttpPost]
+        public async Task<JsonResult> CheckCardIdentifierAlreadyUsed(string cardIdentifier, string customerID)
+        {
+            var Model = await _applicationFormDataEntryService.CheckCardIdentifierAlreadyUsed(cardIdentifier, customerID);
+
+            return Json(Model);
+        }
 
     }
 }
