@@ -75,7 +75,7 @@
                         <div class="col-12 col-md-3">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="AddCardTbl()">ADD</button>
+                                    <button class="btn btn_primary" type="button" id="btnAdd" onclick="AddCardTbl()">ADD</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" onclick="ResetClick()" style="display:none">RESET</button>
@@ -296,11 +296,13 @@
                            document.getElementById("divSubmit").style.display = "block";
 
                            $('#NoOfCards').attr("readonly", true);
-
+                           $("#btnAdd").attr("disabled", true);
                        }
                    },
-               error: function (jqXhr, textStatus, errorMessage) {
+               error: function (jqXhr, textStatus, errorMessage) 
+               {
                    $("#ViewNoOfCardsTbl").html("");
+                   $("#btnAdd").attr("disabled", false);
                }
            });
        }
@@ -775,6 +777,19 @@
                    }
                }
 
+               console.log('Before Checking Existing Mobile No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[10].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
 
            console.log(ret);
            return ret;
@@ -839,4 +854,30 @@
 
 
   });
+
+  $('#VehicleVerifiedManually').click(function()
+    {
+          if ($(this).prop("checked"))
+          {
+             //$(".verify").addClass("disabled");
+
+            var cnt = 0;
+
+            $("#NoOfCardsTbl tbody tr").each(function () 
+            {
+                //var row = $(this);
+                document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                cnt=cnt+1;
+             });
+          }
+          else
+          {
+              //$('.verify').removeClass("disabled");
+          }
+
+    });
+
+    $('#NoOfCards').on("cut copy paste",function(e) {
+        e.preventDefault();
+    });
 </script>
