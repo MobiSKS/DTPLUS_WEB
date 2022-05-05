@@ -105,5 +105,11 @@ namespace HPCL_Web.Controllers
 
             return PartialView("~/Views/TMS/_ViewCustomerTblEnrollments.cshtml", model);
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel)
+        {
+            var result = await _tmsService.UpdateTMSEnrollmentStatus(manageEnrollmentsModel);
+            return Json(result);
+        }
     }
 }

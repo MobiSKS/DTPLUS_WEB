@@ -169,17 +169,16 @@ namespace HPCL.Service.Services
             foreach (EnrollVehicleDetailsModel vehicleDetailsModel in enrollVehicleViewModel.vehicleDetailsModel)
             {
                 vehicleDetailsModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-                vehicleDetailsModel.TMSUserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             }
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(enrollVehicleViewModel), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.insertVehicleEnrollmentStatus);
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.InsertVehicleEnrollmentStatus);
             JObject responseObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
             if (responseObj["Status_Code"].ToString() == "200")
             {
-                var closeRequestResponseJarr = responseObj["Data"].Value<JArray>();
-                List<SuccessResponse> closeRequestResponseList = closeRequestResponseJarr.ToObject<List<SuccessResponse>>();
+                var responseJarr = responseObj["Data"].Value<JArray>();
+                List<SuccessResponse> closeRequestResponseList = responseJarr.ToObject<List<SuccessResponse>>();
                 return closeRequestResponseList.First().Reason.ToString();
             }
             else
@@ -205,9 +204,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Customerid = CustomerId,
+                Customerid = CustomerId
             };
-
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetManageEnrollments);
@@ -215,5 +213,34 @@ namespace HPCL.Service.Services
             viewCardSearch = JsonConvert.DeserializeObject<ViewCustomerSearch>(response);
             return viewCardSearch;
         }
+
+        public async Task<string> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel)
+        {
+            manageEnrollmentsModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            manageEnrollmentsModel.UserIp = CommonBase.userip;
+            manageEnrollmentsModel.UserAgent = CommonBase.useragent;
+
+            foreach (UpdateEnrollmentCustomer enrollmentCustomer in manageEnrollmentsModel.tmsUpdateEnrollmentCustomerList)
+            {
+                enrollmentCustomer.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            }
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(manageEnrollmentsModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.UpdateTmsEnrollmentTmsStatus);
+            JObject responseObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (responseObj["Status_Code"].ToString() == "200")
+            {
+                var responseJarr = responseObj["Data"].Value<JArray>();
+                List<SuccessResponse> closeRequestResponseList = responseJarr.ToObject<List<SuccessResponse>>();
+                return closeRequestResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return responseObj["Message"].ToString();
+            }
+
+        }
+
     }
 }

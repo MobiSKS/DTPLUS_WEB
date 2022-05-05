@@ -21,9 +21,14 @@
         <tbody>
             @{
                 int Sno = 1;
+                string flag = "Y";
             }
             @foreach (var item in Model.Data)
             {
+                @if (item.CustomerName != "Problematic Installation")
+                {
+                    flag = "N";
+                }
                 <tr>
                     @*<td>@Sno</td>*@
                     <td>@item.CustomerName</td>
@@ -40,6 +45,30 @@
             }
         </tbody>
     </table>
+    @if (flag == "N")
+    {
+        <div class="clearfix"></div>
+
+        <div class="clearfix"></div>
+        <div class="d-flex align-items-center justify-content-center mt-3">
+            <div class="px-2">
+                <button class="btn btn_primary" type="button" onclick="submitVehicleEnrollment();">DISABLE CUSTOMER</button>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="clearfix"></div>
+
+        <div class="clearfix"></div>
+        <div class="d-flex align-items-center justify-content-center mt-3">
+            <div class="px-2">
+                <button class="btn btn_primary" type="button" onclick="submitVehicleEnrollment();">ENABLE CUSTOMER</button>
+            </div>
+
+        </div>
+    }
 }
 else
 {
@@ -57,5 +86,60 @@ else
     //        }
     //    });
     //});
+
+       function submitVehicleEnrollment() {
+        //alert("inside submit");
+        vehicleDetail = [];
+         $("#tblCustomer tbody tr").each(function () {
+             //debugger;
+
+            var row = $(this);
+            var tmsUserId = row[0].cells[2].textContent;
+            var tmsStatusID = row[0].cells[3].textContent;
+                 
+            vehicleDetail.push({ CustomerID: $("#CustomerID").val(), TMSUserId: tmsUserId, TMSStatusID:tmsStatusID  });
+         });
+        var flag = "Y";
+        debugger;
+
+        if ($("#CustomerID").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            flag = "N";
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+             flag = "N";
+        }
+        else
+        {
+           $('#CustomerIdValErrMsg').html("");
+        }
+
+        if (vehicleDetail.length > 0 && flag == "Y") 
+        {
+                var reqmodel = { CustomerID: $("#CustomerID").val(), tmsUpdateEnrollmentCustomerList: vehicleDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateTMSEnrollmentStatus", "TMS")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(reqmodel),
+                    success: function (data) 
+                    {
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").hide();
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+        }
+
+
+    };
 
 </script>

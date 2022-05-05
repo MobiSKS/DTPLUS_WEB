@@ -19,5 +19,6 @@ namespace HPCL.Service.Interfaces
         Task<string> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel);
         Task<ManageEnrollmentsModel> ManageEnrollments();
         Task<ViewCustomerSearch> ViewCustomerDetailsForManageEnrollments(string CustomerId);
+        Task<string> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel);
     }
 }
