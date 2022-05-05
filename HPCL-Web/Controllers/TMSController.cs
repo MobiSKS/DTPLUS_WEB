@@ -94,6 +94,16 @@ namespace HPCL_Web.Controllers
             var result = await _tmsService.SubmitVehicleEnrollment(enrollVehicleViewModel);
             return Json(result);
         }
+        public async Task<IActionResult> ManageEnrollments()
+        {
+            var modals = await _tmsService.ManageEnrollments();
+            return View(modals);
+        }
+        public async Task<ActionResult> ViewCustomerDetailsForManageEnrollments(string CustomerId)
+        {
+            var model = await _tmsService.ViewCustomerDetailsForManageEnrollments(CustomerId);
 
+            return PartialView("~/Views/TMS/_ViewCustomerTblEnrollments.cshtml", model);
+        }
     }
 }

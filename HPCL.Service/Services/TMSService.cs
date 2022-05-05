@@ -189,5 +189,31 @@ namespace HPCL.Service.Services
 
         }
 
+        public async Task<ManageEnrollmentsModel> ManageEnrollments()
+        {
+            ManageEnrollmentsModel Model = new ManageEnrollmentsModel();
+            Model.Message = "";
+
+            return Model;
+        }
+        public async Task<ViewCustomerSearch> ViewCustomerDetailsForManageEnrollments(string CustomerId)
+        {
+            ViewCustomerSearch viewCardSearch = new ViewCustomerSearch();
+
+            var requestBody = new ViewCardDetails()
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Customerid = CustomerId,
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetManageEnrollments);
+
+            viewCardSearch = JsonConvert.DeserializeObject<ViewCustomerSearch>(response);
+            return viewCardSearch;
+        }
     }
 }

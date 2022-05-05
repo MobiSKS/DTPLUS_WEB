@@ -1,0 +1,223 @@
+﻿@model HPCL.Common.Models.ViewModel.TMS.ManageEnrollmentsModel
+@using HPCL.Common.Resources;
+@{
+    ViewData["Title"] = "Manage Enrollments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a> </li>
+            <li class="breadcrumb-item font-weight-light"> Manage Enrollments</li>
+        </ul>
+         @using (Html.BeginForm("EnrollToTransportManagementSystem", "TMS", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+         {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Enrollments</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-2 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7 col-12">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary px-4 py-2" type="button" id="btnReset">@Label.Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+                </div>
+                <div class="clearfix"></div>
+                <div id="divSubmit" style="display:none;">
+
+                    <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
+                        <div class="pr-2">
+                            <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">ENABLE CUSTOMER</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+
+    $("#btnReset").click(function () {
+        location.reload();
+    });
+
+    $('#CustomerId').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            $('#btnSearch').click();
+        }
+    });
+
+    $("#CustomerId").on("blur", function ()
+    {
+        if ($("#CustomerId").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+           $('#CustomerIdValErrMsg').html("");
+        }
+
+    })
+
+     $("#btnSearch").on("click", (function (e)
+     {
+
+           var flag="Y";
+            var customerId = $("#CustomerId").val();
+             if (customerId != "")
+             {
+                  if (!customerId.match(mappedCustomerId))
+                  {
+                      $("#CustomerIdValErrMsg").attr("style", "display:block");
+                      $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                      flag = "N";
+                  }
+                  else
+                  {
+                     $("#CustomerIdValErrMsg").attr("style", "display:none");
+                     $("#CustomerIdValErrMsg").html("");
+                  }
+              }
+              else
+              {
+                    $("#CustomerIdValErrMsg").attr("style", "display:block");
+                    $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+                    flag = "N";
+              }
+
+            if(flag=="Y")
+            {
+                  $.ajax({
+                     type: 'GET',  // http method
+                     url: '@Url.Action("ViewCustomerDetailsForManageEnrollments", "TMS")',
+                     contentType: "application/json; charset=utf-8",
+                     dataType: 'text',
+                     data: { CustomerId: customerId},
+                     success: function (data, status, xhr)
+                     {
+                         console.log(data);
+                         var v = data;
+                         if (status == 'success') {
+                             $("#show_Table").html(data);
+                             $('html, body').animate({
+                                 scrollTop: $("#show_Table").offset().top
+                             }, 2000);
+                         }
+                         else
+                         {
+                             console.log(v);
+                         }
+
+                        var count = $('#tblCustomer tr').length;
+                        console.log(count);
+                        if(count>1)
+                        {
+                            document.getElementById("divSubmit").style.display = "block";
+                             $('#CustomerId').attr("readonly", true);
+                        }
+                        else
+                        {
+                            document.getElementById("divSubmit").style.display = "none";
+                             $('#CustomerId').attr("readonly", false);
+                        }
+                     },
+                     error: function (jqXhr, textStatus, errorMessage)
+                     {
+                         alert("Error"+ errorMessage);
+                     }
+                    });
+
+
+            }
+
+
+
+    }));
+
+   function SubmitValidations()
+   {
+    debugger;
+
+    var ret=true;
+
+     var customerId = $("#CustomerId").val();
+        if (customerId != "")
+        {
+            if (!customerId.match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                 ret=false;
+            }
+            else
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:none");
+                $("#CustomerIdValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+             ret=false;
+        }
+
+     if (!$(AgreeTermsAndConditions).prop("checked"))
+     {
+         ret=false;
+         alert('Select I Agree to Terms & Conditions');
+     }
+
+    console.log(ret);
+    return ret;
+
+   }
+
+</script>
