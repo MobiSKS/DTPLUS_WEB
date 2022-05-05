@@ -46,6 +46,7 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public virtual List<OfficerZoneModel> OfficerZoneMdl { get; set; }
         public virtual List<OfficerRegionModel> OfficerRegionMdl { get; set; }
         public virtual List<OfficerHqModel> OfficerHqMdl { get; set; }
+        public string Location { get; set; }
 
     }
 }

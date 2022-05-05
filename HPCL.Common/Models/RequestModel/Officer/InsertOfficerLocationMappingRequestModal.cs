@@ -11,6 +11,6 @@ namespace HPCL.Common.Models.RequestModel.Officer
         public string UserName { get; set; }
         public int ZO { get; set; }
         public int RO { get; set; }
-        public string Createdby { get; set; }
+        //public string Createdby { get; set; }
     }
 }
