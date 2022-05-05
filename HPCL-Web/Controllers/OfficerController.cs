@@ -30,6 +30,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+  
         public async Task<IActionResult> Details(string officerType, string location, string reason)
         {
             var modals = await _officerService.Details(officerType, location);
@@ -83,8 +84,8 @@ namespace HPCL_Web.Controllers
 
             ViewBag.Message = Tuple.Item1;
             var modals = Tuple.Item2;
-
-            return View(modals);
+            return RedirectToAction("Details", "Officer", new { reason = Tuple.Item1 });
+           // return View(modals);
         }
         public async Task<IActionResult> Delete(string officerID)
         {

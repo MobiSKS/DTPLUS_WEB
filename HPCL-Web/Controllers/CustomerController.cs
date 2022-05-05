@@ -671,6 +671,10 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public IActionResult Request()
+        {
+            return View();
+        }
 
     }
 }

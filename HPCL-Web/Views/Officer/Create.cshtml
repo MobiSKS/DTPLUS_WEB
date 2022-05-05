@@ -6,241 +6,244 @@
         <li class="breadcrumb-item"><a href="@Url.Action("Details", "Officer")" class="text_primary">Manage Officers</a> </li>
         <li class="breadcrumb-item font-weight-light">Add Officer</li>
     </ul>
-    <h5>Manage Officers</h5>
     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", name = "form1" }))
     {
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                <div class="w-100">
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                        <div class="border-1 rounded border-grey">
-                            @if (Model.Error != "")
-                            {
-                                <div id="error" class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Error</div>
-                            }
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officer Details</p>
-                            <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.FirstName <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
+        <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                <div class="border-1 rounded border-grey">
+                    @if (Model.Error != "")
+                    {
+                        <div id="error" class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Error</div>
+                    }
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officer Details</p>
+                    <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.FirstName <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })*@
+                                    </div>
+                                    <span class="error" id="firstName_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.LastName</label>
+                                <div class="col-md-7 col-12">
+                                    <div class="row">
+                                        <div class="col-4 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-                                                @*@Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })*@
+                                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
                                             </div>
-                                            <span class="error" id="firstName_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">@Label.LastName</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="lastName_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100" id="userNamediv">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0" id="userNameLabel">@Label.UserName <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                                                @*@Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })*@
-                                            </div>
-                                            <span class="error" id="userName_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">@Label.OfficerType <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control", onchange = "getLocation()" })
-                                            <span class="error" id="officerType_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Location <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select id="location" class="form-control"></select>
-                                            </div>
-                                            <span class="error" id="location_error"></span>
+                                            <span class="error" id="lastName_error"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         </div>
-                    </div>
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2" id="commAddressForm">
-                        <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
-                            <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address1 <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Address1, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.Address1, "", new { @class = "text-danger" })
-                                            </div>
-                                            <span class="error" id="address1_error"></span>
-                                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100" id="userNamediv">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0" id="userNameLabel">@Label.UserName<sup class="text-danger">*</sup></label>
+                                <label class="font-weight-normal col-md-4 col-12 mb-0" id="empIDLabel" style="display:none;">Emp ID<sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })*@
                                     </div>
+                                    <span class="error" id="userName_error"></span>
                                 </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address2</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.Address2, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="address2_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address3</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Address3, new { @class = "form-control" })
-                                            </div>
-                                            <span class="error" id="address3_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Mobile<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
-                                                <span class="error" id="mobile_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Email<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                                            <span class="error" id="email_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.City</label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
-                                            <span class="error" id="city_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100" id="statediv">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.State <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
-                                            <span class="error" id="state_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100" id="districtdiv">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.District <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <select id="district" class="form-control"></select>
-                                            </div>
-                                            <span class="error" id="district_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                @*<div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                        <div class="form-group d-flex align-items-center flex-wrap w-100" id="statediv">
-                                            <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.State <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
-                                                <span class="error" id="state_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>*@
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Pin</label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Pin, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                            @Html.ValidationMessageFor(m => m.Pin, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Phone</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                            </div>
-                                            <span class="error" id="phone_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
-                                    <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Fax</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Fax, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                            </div>
-                                            <span class="error" id="fax_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
                             </div>
-                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12  mb-0">@Label.OfficerType <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    @Html.DropDownListFor(m => m.OfficerTypeID, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control", onchange = "getLocation()" })
+                                    <span class="error" id="officerType_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <div class="col-md-7 col-12">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Location <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        <select id="location" class="form-control"></select>
+                                    </div>
+                                    <span class="error" id="location_error"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div style="display:none;">@Html.TextBoxFor(m => m.LocationID)</div>
-                    <div style="display:none;">@Html.TextBoxFor(m => m.DistrictID)</div>
-                    <div style="display:none;">@Html.TextBoxFor(m => m.OfficerTypeName)</div>
-                    @*<div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>*@
                     <div class="clearfix"></div>
-
-                    <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100 mb-3">
-                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                            <button class="btn btn_primary" type="submit" onclick="CreateOfficer();">@Label.Add</button>
-                        </div>
-                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                            <a asp-controller="Officer" asp-action="Details" class="btn btn_primary" type="button">@Label.Cancel</a>
-                        </div>
-                    </div>
                 </div>
-                <div class="clearfix"></div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2" id="commAddressForm">
+                <div class="border-1 rounded border-grey">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                    <div class="py-3 d-flex align-items-center justify-content-start flex-wrap">
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address1 <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Address1, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Address1, "", new { @class = "text-danger" })
+                                    </div>
+                                    <span class="error" id="address1_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address2</label>
+                                <div class="col-md-7 col-12">
+                                    <div class="row">
+                                        <div class="col-4 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Address2, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="address2_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Address3</label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Address3, new { @class = "form-control" })
+                                    </div>
+                                    <span class="error" id="address3_error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Mobile<sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                        @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
+                                        <span class="error" id="mobile_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Email<sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    <span class="error" id="email_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.City</label>
+                                <div class="col-md-7 col-12">
+                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                                    <span class="error" id="city_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100" id="statediv">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.State <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
+                                    <span class="error" id="state_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100" id="districtdiv">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.District <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        <select id="district" class="form-control"></select>
+                                    </div>
+                                    <span class="error" id="district_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100" id="statediv">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.State <sup class="text-danger">*</sup></label>
+                            <div class="col-md-7 col-12">
+                            @Html.DropDownListFor(m => m.State, new SelectList(Model.OfficerStateMdl, "StateID", "StateName"), new { @class = "form-control", onchange = "getDistrict()" })
+                            <span class="error" id="state_error"></span>
+                            </div>
+                            </div>
+                            </div>*@
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Pin</label>
+                                <div class="col-md-7 col-12">
+                                    @Html.TextBoxFor(m => m.Pin, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                    @Html.ValidationMessageFor(m => m.Pin, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Phone</label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                    </div>
+                                    <span class="error" id="phone_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center justify-content-start flex-wrap">
+                            <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-4 col-12 mb-0">@Label.Fax</label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Fax, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                    </div>
+                                    <span class="error" id="fax_error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.LocationID)</div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.DistrictID)</div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.OfficerTypeName)</div>
+            @*<div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>*@
+            <div class="clearfix"></div>
+
+            <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100 mb-3">
+                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                    <button class="btn btn_primary" type="submit" onclick="CreateOfficer();">@Label.Add</button>
+                </div>
+                <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                    <a asp-controller="Officer" asp-action="Details" class="btn btn_primary" type="button">@Label.Cancel</a>
+                </div>
             </div>
         </div>
+        <div class="clearfix"></div>
+
     }
 </div>
 
@@ -324,7 +327,7 @@
             });
             ret = "N";
         }
-        else if (!document.form1.FirstName.value.match(nameCheck)) {
+        else if (!(document.form1.FirstName.value.match(nameWithNumCheck))|| !(document.form1.FirstName.value.match(atLeastOneAlphabet))) {
             document.getElementById("firstName_error").innerHTML = "First Name has invalid characters";
             if (ret != "N") {
                 document.form1.FirstName.focus();
@@ -338,18 +341,9 @@
             document.getElementById("firstName_error").innerHTML = "";
         }
 
-        if (document.form1.LastName.value != "") {
-            if (document.form1.LastName.value.trim() == ""){
-                document.getElementById("lastName_error").innerHTML = "Spaces are not allowed in Last Name";
-                if (ret != "N") {
-                    document.form1.LastName.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
-            }
-            else if (!document.form1.LastName.value.match(nameCheck)) {
+        if (document.form1.LastName.value.trim() != "") {
+            
+            if (!(document.form1.LastName.value.match(nameWithNumCheck))|| !(document.form1.LastName.value.match(atLeastOneAlphabet))) {
                 document.getElementById("lastName_error").innerHTML = "Last Name has invalid characters";
                 if (ret != "N") {
                     document.form1.LastName.focus();
@@ -381,9 +375,11 @@
             });
             ret = "N";
         }
-        else if (!document.form1.UserName.value.match(notOnlySpecialChars)){
+        else if (!document.form1.UserName.value.match(userNameCheck)){
+
             if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
-                document.getElementById("userName_error").innerHTML = "User Name is Invalid";
+                document.getElementById("userName_error").innerHTML = "Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.";
+
                 if (ret != "N") {
                     document.form1.UserName.focus();
                 }
@@ -393,7 +389,7 @@
                 ret = "N";
             }
             else if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM") {
-                document.getElementById("userName_error").innerHTML = "Emp ID is Invalid";
+                document.getElementById("userName_error").innerHTML = "Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.";
                 if (ret != "N") {
                     document.form1.UserName.focus();
                 }
@@ -448,7 +444,7 @@
         if ($('#OfficerTypeID :selected').text() != "RBE") {
 
             if (document.form1.Address1.value.trim() == "") {
-                document.getElementById("address1_error").innerHTML = "Address 1 field cannot be left blank";
+                document.getElementById("address1_error").innerHTML = "Address 1 is required";
                 if (ret != "N") {
                     document.form1.Address1.focus();
                 }
@@ -468,7 +464,7 @@
                 ret = "N";
             }
             else if (document.form1.Address1.value.match(onlyNumbers)){
-                document.getElementById("address1_error").innerHTML = "Only Numbers not allowed";
+                document.getElementById("address1_error").innerHTML = "Address 1 is Invalid";
                 if (ret != "N") {
                     document.form1.Address1.focus();
                 }
@@ -493,7 +489,7 @@
                     ret = "N";
                 }
                 else if (document.form1.Address2.value.match(onlyNumbers)){
-                    document.getElementById("address2_error").innerHTML = "Only Numbers not allowed";
+                    document.getElementById("address2_error").innerHTML = "Address 2 is Invalid";
                     if (ret != "N") {
                         document.form1.Address2.focus();
                     }
@@ -519,7 +515,7 @@
                     ret = "N";
                 }
                 else if (document.form1.Address3.value.match(onlyNumbers)){
-                    document.getElementById("address3_error").innerHTML = "Only Numbers not allowed";
+                    document.getElementById("address3_error").innerHTML = "Address 3 is Invalid";
                     if (ret != "N") {
                         document.form1.Address3.focus();
                     }
@@ -625,86 +621,106 @@
         }
         var confirmstring = "Are you sure ?";
         if (ret == "Y") {
-            if (confirm(confirmstring)) {
+            //if (confirm(confirmstring)) {
                 $("#form1").unbind().submit();
-            }
+            //}
         }
     };
 
     function getLocation() {
         var id = $('#OfficerTypeID :selected').val();
         var name = $('#OfficerTypeID :selected').text();
-
+        $("#userName_error").html("");
         if (name == "RBE") {
-            $("#userNameLabel").html("Emp. ID *");
+            $("#userNameLabel").attr("style","display:none;");
+            $("#empIDLabel").attr("style","display:block;");
             $("#commAddressForm").hide();
-            if($("#UserName").val().trim() == ""){
-                $("#userName_error").html("Emp ID is required");
-            }
-            else{
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("ValidateUserName", "Common")',
-                    data: { userName: $("#UserName").val().trim() },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success' && v == '0') {
-                            $("#userName_error").html("Emp ID already Exists");
+
+            if($("#UserName").val().trim() != ""){
+                if(!($("#UserName").val().match(userNameCheck)))
+                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.");
+                else{
+                    $("#userName_error").html("");
+            //    $("#userName_error").html("Emp ID is required");
+            //}
+            //else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Common")',
+                        data: { userName: $("#UserName").val().trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("Emp ID already Exists");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                            }
                         }
-                        else {
-                            $("#userName_error").html("");
-                        }
-                    }
-                });
+                    });
+                }
             }
         }
         else if (name == "RSM"){
-            $("#userNameLabel").html("Emp. ID *");
+            $("#userNameLabel").attr("style","display:none;");
+            $("#empIDLabel").attr("style","display:block;");
             $("#commAddressForm").show();
-            if($("#UserName").val().trim() == ""){
-                $("#userName_error").html("Emp ID is required");
-            }
-            else{
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("ValidateUserName", "Common")',
-                    data: { userName: $("#UserName").val().trim() },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success' && v == '0') {
-                            $("#userName_error").html("Emp ID already Exists");
+            if($("#UserName").val().trim() != ""){
+                if(!($("#UserName").val().match(userNameCheck)))
+                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.");
+                else{
+                    $("#userName_error").html("");
+            //    $("#userName_error").html("Emp ID is required");
+            //}
+            //else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Common")',
+                        data: { userName: $("#UserName").val().trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("Emp ID already Exists");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                            }
                         }
-                        else {
-                            $("#userName_error").html("");
-                        }
-                    }
-                });
+                    });
+                }
             }
         }
         else {
-            $("#userNameLabel").html("User Name *");
+            //$("#userNameLabel").html("User Name");
+            $("#userNameLabel").attr("style","display:block;");
+            $("#empIDLabel").attr("style","display:none;");
             $("#commAddressForm").show();
-            if($("#UserName").val().trim() == ""){
-                $("#userName_error").html("User Name is required");
-            }
-            else{
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("ValidateUserName", "Common")',
-                    data: { userName: $("#UserName").val().trim() },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success' && v == '0') {
-                            $("#userName_error").html("User Name already Exists");
+            if($("#UserName").val().trim() != ""){
+                if(!($("#UserName").val().match(userNameCheck)))
+                    $("#userName_error").html("Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Username should not start with special character and 2 consecutive special characters are not allowed.");
+                else{
+                    $("#userName_error").html("");
+            //    $("#userName_error").html("User Name is required");
+            //}
+            //else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Common")',
+                        data: { userName: $("#UserName").val().trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                            }
                         }
-                        else {
-                            $("#userName_error").html("");
-                        }
-                    }
-                });
+                    });
+                }
             }
         }
 
@@ -864,25 +880,38 @@
 
         if (id != 0) {
             $("#state_error").html("");
-        }
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Common")',
-            data: { Stateid: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#district").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "Select District"
-                                }).html("Select District").appendTo("#district");
-                            if (data.districtID == districtID) {
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#district").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "Select District"
+                                    }).html("Select District").appendTo("#district");
+                                if (data.districtID == districtID) {
+                                    $('<option selected = "selected">',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#district");
+                                }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.districtID,
+                                            text: data.districtName
+                                        }).html(data.districtName).appendTo("#district");
+                                }
+                            }
+                            else if (data.districtID == districtID) {
                                 $('<option selected = "selected">',
                                     {
                                         value: data.districtID,
@@ -896,32 +925,22 @@
                                         text: data.districtName
                                     }).html(data.districtName).appendTo("#district");
                             }
-                        }
-                        else if (data.districtID == districtID) {
-                            $('<option selected = "selected">',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#district");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#district");
-                        }
-                    });
-                    $("#district")[0].sumo.reload()
+                        });
+                        $("#district")[0].sumo.reload()
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating District Data");
-            }
-        });
+            });
+        }
+        else{
+            $("#district").html('');
+            $("#district")[0].sumo.reload();
+        }
     };
 
     $("#location").change(function () {
@@ -936,51 +955,55 @@
 
     $("#UserName").on("blur", function () {
         var UserName = this.value;
-        if (UserName != "") {
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("ValidateUserName", "Common")',
-                data: { userName: UserName },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success' && v == '0') {
-                        //$("#userNamediv").addClass("btmMargin");
-                        if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM"){
-                            $("#userName_error").html("Emp Id already Exists");
+        if (UserName.trim() != "") {
+            var errorMsg="";
+
+            if($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")
+                errorMsg="Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.";
+            else
+                errorMsg="Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.";
+            if(!(UserName.match(userNameCheck)))
+                $("#userName_error").html(errorMsg);
+            else{
+                $("#userName_error").html("");
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateUserName", "Common")',
+                    data: { userName: UserName },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success' && v == '0') {
+                            //$("#userNamediv").addClass("btmMargin");
+                            if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM"){
+                                $("#userName_error").html("Emp Id already Exists");
+                            }
+                            else{
+                                $("#userName_error").html("User Name already Exists");
+                            }
                         }
-                        else{
-                            $("#userName_error").html("User Name already Exists");
+                        else {
+                            $("#userName_error").html("");
+                            console.log(v);
                         }
                     }
-                    else {
-                        $("#userName_error").html("");
-                        console.log(v);
-                    }
-                }
-            });
+                });
+            }
         }
         else{
             if (document.form1.UserName.value.trim() == "" && $('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
                 document.getElementById("userName_error").innerHTML = "User Name is required";
-                if (ret != "N") {
-                    document.form1.UserName.focus();
-                }
+                
                 $("#form1").submit(function (e) {
                     e.preventDefault();
                 });
-                ret = "N";
             }
             else if (document.form1.UserName.value.trim() == "" && ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")) {
                 document.getElementById("userName_error").innerHTML = "Emp ID is required";
-                if (ret != "N") {
-                    document.form1.UserName.focus();
-                }
+                
                 $("#form1").submit(function (e) {
                     e.preventDefault();
-                });
-                ret = "N";
-            }
+                });            }
             else {
                 document.getElementById("userName_error").innerHTML = "";
             }
@@ -991,50 +1014,29 @@
         if (document.form1.FirstName.value.trim() == "") {
             document.getElementById("firstName_error").innerHTML = "First Name is required";
             document.form1.FirstName.focus();
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+           
         }
-        else if (!document.form1.FirstName.value.match(nameCheck)) {
+        else if (!(document.form1.FirstName.value.match(nameWithNumCheck)) || !(document.form1.FirstName.value.match(atLeastOneAlphabet))) {
             document.getElementById("firstName_error").innerHTML = "First Name has invalid characters";
-            if (ret != "N") {
-                document.form1.FirstName.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            
         }
         else {
             document.getElementById("firstName_error").innerHTML = "";
         }
     });
-    $("#OfficerTypeID").on("blur", function () {
+    $("#OfficerTypeID").on("change", function () {
         if (document.form1.OfficerTypeID.value == "" || document.form1.OfficerTypeID.value == "0") {
             document.getElementById("officerType_error").innerHTML = "Officer Type is required";
-            if (ret != "N") {
-                document.form1.OfficerTypeID.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+           
         }
         else {
             document.getElementById("officerType_error").innerHTML = "";
         }
     });
-    $("#location").on("blur", function () {
+    $("#location").on("change", function () {
         if (document.form1.location.value.trim() == "" || document.form1.location.value == "0") {
             document.getElementById("location_error").innerHTML = "Location is required";
-            if (ret != "N") {
-                document.form1.location.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+           
         }
         else {
             document.getElementById("location_error").innerHTML = "";
@@ -1042,120 +1044,72 @@
     });
     $("#Address1").on("blur", function () {
         if (document.form1.Address1.value.trim() == "") {
-            document.getElementById("address1_error").innerHTML = "Address 1 field cannot be left blank";
-            if (ret != "N") {
-                document.form1.Address1.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            document.getElementById("address1_error").innerHTML = "Address 1 is required";
+            
         }
         else if (checkForSpecialChars(document.form1.Address1.value.trim())){
             document.getElementById("address1_error").innerHTML = "Address 1 is Invalid";
-            if (ret != "N") {
-                document.form1.Address1.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+          
         }
         else if (document.form1.Address1.value.match(onlyNumbers)){
-            document.getElementById("address1_error").innerHTML = "Only Numbers not allowed";
-            if (ret != "N") {
-                document.form1.Address1.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            document.getElementById("address1_error").innerHTML = "Address 1 is Invalid";
+            
         }
         else {
             document.getElementById("address1_error").innerHTML = "";
         }
     });
-    
+
     $("#Address2").on("blur", function() {
         if (document.form1.Address2.value.trim() != "") {
             if (checkForSpecialChars(document.form1.Address2.value.trim())){
                 document.getElementById("address2_error").innerHTML = "Address 2 is Invalid";
-                if (ret != "N") {
-                    document.form1.Address2.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+               
             }
             else if (document.form1.Address2.value.match(onlyNumbers)){
-                document.getElementById("address2_error").innerHTML = "Only Numbers not allowed";
-                if (ret != "N") {
-                    document.form1.Address2.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+                document.getElementById("address2_error").innerHTML = "Address 2 is Invalid";
+               
             }
             else {
                 document.getElementById("address2_error").innerHTML = "";
             }
         }
+        else {
+                document.getElementById("address2_error").innerHTML = "";
+            }
     });
 
     $("#Address3").on("blur", function() {
         if (document.form1.Address3.value.trim() != "") {
             if (checkForSpecialChars(document.form1.Address3.value.trim())){
                 document.getElementById("address3_error").innerHTML = "Address 3 is Invalid";
-                if (ret != "N") {
-                    document.form1.Address3.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+               
             }
             else if (document.form1.Address3.value.match(onlyNumbers)){
-                document.getElementById("address3_error").innerHTML = "Only Numbers not allowed";
-                if (ret != "N") {
-                    document.form1.Address3.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+                document.getElementById("address3_error").innerHTML = "Address 3 is Invalid";
+               
             }
             else {
                 document.getElementById("address3_error").innerHTML = "";
             }
         }
+         else {
+                document.getElementById("address3_error").innerHTML = "";
+            }
     });
-    $("#State").on("blur", function () {
+    $("#State").on("change", function () {
         if (document.form1.State.value == "" || document.form1.State.value == "0") {
             document.getElementById("state_error").innerHTML = "State is required";
-            if (ret != "N") {
-                document.form1.State.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            
         }
         else {
             document.getElementById("state_error").innerHTML = "";
         }
     });
-    $("#district").on("blur", function () {
+    $("#district").on("change", function () {
         if (document.form1.district.value == "" || document.form1.district.value == "0") {
             document.getElementById("district_error").innerHTML = "District is required";
-            if (ret != "N") {
-                document.form1.district.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            
         }
         else {
             document.getElementById("district_error").innerHTML = "";
@@ -1165,23 +1119,11 @@
         if (document.form1.Mobile.value.trim() == "") {
             document.getElementById("mobile_error").innerHTML = "Mobile Number is required";
             $("#Mobile").val("");
-            if (ret != "N") {
-                document.form1.Mobile.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+         
         }
         else if (!document.form1.Mobile.value.match(phoneno)) {
             document.getElementById("mobile_error").innerHTML = "Mobile Number is Invalid";
-            if (ret != "N") {
-                document.form1.Mobile.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+          
         }
         else {
             document.getElementById("mobile_error").innerHTML = "";
@@ -1191,50 +1133,25 @@
         if (document.form1.Email.value.trim() == "") {
             document.getElementById("email_error").innerHTML = "Email Id is required";
             $("#Email").val("");
-            if (ret != "N") {
-                document.form1.Email.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+            
         }
         else if (!document.form1.Email.value.match(email)) {
             document.getElementById("email_error").innerHTML = "Invalid Email Address";
-            if (ret != "N") {
-                document.form1.Email.focus();
-            }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
+           
         }
         else {
             document.getElementById("email_error").innerHTML = "";
         }
     });
     $("#LastName").on("blur", function(){
-        if (document.form1.LastName.value != "") {
-            if (document.form1.LastName.value.trim() == ""){
-                document.getElementById("lastName_error").innerHTML = "Spaces are not allowed in Last Name";
-                $("#LastName").val("");
-                if (ret != "N") {
-                    document.form1.LastName.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
-            }
-            else if (!document.form1.LastName.value.match(nameCheck)) {
+        if (document.form1.LastName.value.trim() != "") {
+          
+            if (!(document.form1.LastName.value.match(nameWithNumCheck)) || !(document.form1.LastName.value.match(atLeastOneAlphabet))) {
                 document.getElementById("lastName_error").innerHTML = "Last Name has invalid characters";
-                if (ret != "N") {
-                    document.form1.LastName.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+             
+            }
+            else{
+                document.getElementById("lastName_error").innerHTML = "";
             }
         }
         else{
@@ -1245,13 +1162,7 @@
         if (document.form1.City.value.trim() != "") {
             if (!document.form1.City.value.match(CitynameCheck)){
                 document.getElementById("city_error").innerHTML = "City is Invalid";
-                if (ret != "N") {
-                    document.form1.City.focus();
-                }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
+            
             }
             else {
                 document.getElementById("city_error").innerHTML = "";
