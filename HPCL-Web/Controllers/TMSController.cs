@@ -69,6 +69,31 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<IActionResult> EnrollVehicle()
+        {
+            var modals = await _tmsService.EnrollVehicle();
+            return View(modals);
+        }
+        public async Task<IActionResult> GetEnrollVehicleManagementDetail(string customerId, int enrollmentStatus, string vehicleNo, string cardNo)
+        {
+            var modals = await _tmsService.GetEnrollVehicleManagementDetail(customerId, enrollmentStatus, vehicleNo, cardNo);
+            return PartialView("~/Views/TMS/_EnrollVehicleTbl.cshtml", modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerDetailsForView(string CustomerId)
+        {
+            var model = await _tmsService.ViewCustomerDetails(CustomerId);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
+        {
+            var result = await _tmsService.SubmitVehicleEnrollment(enrollVehicleViewModel);
+            return Json(result);
+        }
 
     }
 }

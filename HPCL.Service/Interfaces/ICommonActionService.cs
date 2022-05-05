@@ -67,5 +67,6 @@ namespace HPCL.Service.Interfaces
         Task<string> ValidateMappedMerchantId(string mappedMerchantId);
         Task<List<RbeMappingStatusResponse>> RbeMappingStatusService();
         Task<List<StatusModal>> GetStatusTypeforTerminal();
+        Task<List<StatusResponseModal>> GetVehicleEnrollmentStatusList();
     }
 }
