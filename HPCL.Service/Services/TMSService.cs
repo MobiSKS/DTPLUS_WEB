@@ -134,7 +134,14 @@ namespace HPCL.Service.Services
             {
                 if (sortedtList.Count == 1)
                 {
-                    model.Message = sortedtList[0].Reason;
+                    if (string.IsNullOrEmpty(sortedtList[0].VehicleNo))
+                    {
+                        model.Message = sortedtList[0].Reason;
+                    }
+                    else
+                    {
+                        model.vehicleDetailsModel = sortedtList;
+                    }
                 }
                 else
                 {
