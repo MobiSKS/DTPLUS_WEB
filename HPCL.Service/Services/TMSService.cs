@@ -117,8 +117,8 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<EnrollVehicleDetailsModel> limitType = jarr.ToObject<List<EnrollVehicleDetailsModel>>();
-            var sortedtList = limitType.OrderBy(x => x.CardNo).ToList();
+            List<EnrollVehicleDetailsModel> vehicleDetails = jarr.ToObject<List<EnrollVehicleDetailsModel>>();
+            var sortedtList = vehicleDetails.OrderBy(x => x.CardNo).ToList();
 
             model.CustomerID = customerId;
 
@@ -127,6 +127,10 @@ namespace HPCL.Service.Services
                 if (string.IsNullOrEmpty(details.VehicleNo))
                 {
                     details.VehicleNo = "";
+                }
+                if (string.IsNullOrEmpty(details.TMSUserId))
+                {
+                    details.TMSUserId = "";
                 }
             }
 
