@@ -11,6 +11,10 @@ using HPCL.Common.Helper;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Newtonsoft.Json;
+using HPCL.Common.Models.RequestModel.TMS;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.CommonEntity;
 
 namespace HPCL.Service.Services
 {
@@ -18,11 +22,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
-
-        public TMSService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        private readonly ICommonActionService _commonActionService;
+        
+        public TMSService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem()
@@ -81,6 +87,95 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+
+        public async Task<EnrollVehicleViewModel> EnrollVehicle()
+        {
+            EnrollVehicleViewModel Model = new EnrollVehicleViewModel();
+            Model.Message = "";
+            Model.StatusList = await _commonActionService.GetVehicleEnrollmentStatusList();
+
+            return Model;
+        }
+        public async Task<EnrollVehicleViewModel> GetEnrollVehicleManagementDetail(string customerId, int enrollmentStatus, string vehicleNo, string cardNo)
+        {
+            EnrollVehicleViewModel model = new EnrollVehicleViewModel();
+
+            var request = new GetEnrollVehicleManagementDetailRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = customerId,
+                EnrollmentStatus = enrollmentStatus,
+                VehicleNo = string.IsNullOrEmpty(vehicleNo) ? "" : vehicleNo,
+                CardNo = string.IsNullOrEmpty(cardNo) ? "" : cardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetVehicleEnrollmentDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<EnrollVehicleDetailsModel> limitType = jarr.ToObject<List<EnrollVehicleDetailsModel>>();
+            var sortedtList = limitType.OrderBy(x => x.CardNo).ToList();
+
+            model.CustomerID = customerId;
+
+            foreach (EnrollVehicleDetailsModel details in sortedtList)
+            {
+                if (string.IsNullOrEmpty(details.VehicleNo))
+                {
+                    details.VehicleNo = "";
+                }
+            }
+
+            if (sortedtList.Count > 0)
+            {
+                if (sortedtList.Count == 1)
+                {
+                    model.Message = sortedtList[0].Reason;
+                }
+                else
+                {
+                    model.vehicleDetailsModel = sortedtList;
+                }
+            }
+            else
+            {
+                model.Message = "Vehicle Not Found";
+            }
+
+            return model;
+        }
+
+        public async Task<string> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
+        {
+            enrollVehicleViewModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            enrollVehicleViewModel.UserIp = CommonBase.userip;
+            enrollVehicleViewModel.UserAgent = CommonBase.useragent;
+
+            foreach (EnrollVehicleDetailsModel vehicleDetailsModel in enrollVehicleViewModel.vehicleDetailsModel)
+            {
+                vehicleDetailsModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+                vehicleDetailsModel.TMSUserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            }
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(enrollVehicleViewModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.insertVehicleEnrollmentStatus);
+            JObject responseObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (responseObj["Status_Code"].ToString() == "200")
+            {
+                var closeRequestResponseJarr = responseObj["Data"].Value<JArray>();
+                List<SuccessResponse> closeRequestResponseList = closeRequestResponseJarr.ToObject<List<SuccessResponse>>();
+                return closeRequestResponseList.First().Reason.ToString();
+            }
+            else
+            {
+                return responseObj["Message"].ToString();
+            }
+
         }
 
     }
