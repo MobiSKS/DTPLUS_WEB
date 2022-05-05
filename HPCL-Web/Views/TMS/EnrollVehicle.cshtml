@@ -4,7 +4,7 @@
     ViewData["Title"] = "Enroll Vehicle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 } 
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
     <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
         <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a></li>
@@ -47,7 +47,7 @@
                      <label class="font-weight-normal col-md-4 col-12">Vehicle Number</label>
                      <div class="col-md-7 col-12">
                         <div class="custom_select">
-                           @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control", @id = "VehicleNo", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                           @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control", @id = "VehicleNo", maxlength = "10", onkeypress = "return AlowNumberAndAlphabetKey(event)" })
                            @Html.ValidationMessageFor(m => m.VehicleNo, "", new { @class = "text-danger", @id = "VehicleNoValErrMsg" })
                         </div>
                      </div>
@@ -140,9 +140,65 @@
 
     })
 
+    $("#VehicleNo").on("blur", function ()
+    {
+         var vhNo = $("#VehicleNo").val().trim();
+
+         if(vhNo!='')
+         {
+            if (!(vhNo.match(forVehicleNo))) 
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else if (!vhNo.match(atLeastOneAlphabet)) 
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else if(vhNo.length<6 || vhNo.length>10)
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else
+            {
+                $("#VehicleNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#VehicleNoValErrMsg").html("");
+        }
+
+    })
+
+    $("#CardNo").on("blur", function ()
+    {
+         var cardNo = $("#CardNo").val().trim();
+
+         if(cardNo!='')
+         {
+            if(cardNo.length<16)
+            {
+                $("#CardNoValErrMsg").attr("style", "display:block");
+                $("#CardNoValErrMsg").html("Invalid Card Number");
+            }
+            else
+            {
+                $("#CardNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CardNoValErrMsg").html("");
+        }
+
+    })
+
 	$("#btnSearch").on("click", (function (e)
      {
-
+        debugger;
            var flag="Y";
             var customerId = $("#CustomerID").val();
              if (customerId != "")
@@ -166,9 +222,58 @@
                     flag = "N";
               }
 
+               var vhNo = $("#VehicleNo").val();
+
+              if(vhNo.trim()!='')
+              {
+                if (!(vhNo.match(forVehicleNo))) 
+                {
+                    $("#VehicleNoValErrMsg").attr("style", "display:block");
+                    $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                    flag = "N";
+                }
+                else if (!vhNo.match(atLeastOneAlphabet)) 
+                {
+                    $("#VehicleNoValErrMsg").attr("style", "display:block");
+                    $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                    flag = "N";
+                }
+                else if(vhNo.length<6 || vhNo.length>10)
+                {
+                   $("#VehicleNoValErrMsg").attr("style", "display:block");
+                   $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                   flag = "N";
+                }
+                else
+                {
+                    $("#VehicleNoValErrMsg").html("");
+                }
+            }
+            else
+            {
+                $("#VehicleNoValErrMsg").html("");
+            }
+
               var enrollStatus = $("#EnrollmentStatus").val();
-              var vhNo = $("#VehicleNo").val();
               var cardNo = $("#CardNo").val();
+
+         if(cardNo!='')
+         {
+            if(cardNo.length<16)
+            {
+                $("#CardNoValErrMsg").attr("style", "display:block");
+                $("#CardNoValErrMsg").html("Invalid Card Number");
+                flag = "N";
+            }
+            else
+            {
+                $("#CardNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CardNoValErrMsg").html("");
+        }
 
             if(flag=="Y")
             {
@@ -254,5 +359,15 @@
 
 
     }));
+
+    function AlowNumberAndAlphabetKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31
+            && (charCode < 48 || charCode > 57) && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122))
+            return false;
+
+        return true;
+    }
 
 </script>
