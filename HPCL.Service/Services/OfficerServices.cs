@@ -205,7 +205,7 @@ namespace HPCL.Service.Services
                 UserName = ofcrLocationMdl.UserName,
                 ZO = ofcrLocationMdl.ZoneOfcID,
                 RO = ofcrLocationMdl.RegionalOfcID,
-                Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent officerLocationMappingInsertContent = new StringContent(JsonConvert.SerializeObject(officerLocationMappingInsertForms), Encoding.UTF8, "application/json");

@@ -79,7 +79,7 @@
                     <td>@item.LastName</td>
                     <td>@item.EmailId</td>
                     <td>@item.MobileNo</td>
-                    <td>@item.LocationName</td>
+                    <td>@item.Location</td>
                     <td>
                         <div class="d-flex align-items-center justify-content-center">
                             <a asp-action="EditOfficer" asp-route-OfficerID="@item.OfficerID" class="d-block" data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
@@ -87,7 +87,7 @@
                             {
                                 <a asp-action="EditLocation" asp-route-OfficerID="@item.OfficerID" class="d-block" data-toggle="tooltip" title="" tooltip="Edit Location"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
                             }
-                            <a asp-action="Delete" class="d-block" asp-route-OfficerID="@item.OfficerID" onclick="return confirm('Are sure wants to delete?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a asp-action="Delete" class="d-block" asp-route-OfficerID="@item.OfficerID" onclick="return confirm('Are you sure you want to delete this Officer?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </div>
                     </td>
                 </tr>
@@ -117,6 +117,7 @@
             url: '@Url.Action("GetOfficerTypeDetails", "Common")',
             dataType: "json",
             success: function (data, status, xhr) {
+                debugger;
                 var v = data;
                 if (status == 'success') {
                     $("#officerType").html("");
@@ -152,12 +153,8 @@
                                     text: data.officerTypeName
                                 }).html(data.officerTypeName).appendTo("#officerType");
                         }
+                         $("#officerType")[0].sumo.reload();
                     });
-                    $('<option>',
-                        {
-                            value: 0,
-                            text: "All"
-                        }).html(data.regionName).appendTo("#location");
                 }
                 else {
                     console.log(v);
@@ -167,18 +164,18 @@
                 alert("Error Populating Location Data");
             }
         });
-        if (ofcType != "" && ofcType != "0" && ofcType != null) {
-            getLocationFunc();
-        }
+        //if (ofcType != "" && ofcType != "0" && ofcType != null) {
+        //    getLocationFunc();
+        //}
         
     });
 
     function getLocationFunc() {
         var id = $('#officerType :selected').val();
 
-        if (ofcType != "" && ofcType != "0" && ofcType != null) {
-            id = ofcType;
-        }
+        //if (ofcType != "" && ofcType != "0" && ofcType != null) {
+        //    id = ofcType;
+        //}
 
         $.ajax({
             type: 'POST',  // http method
@@ -306,6 +303,7 @@
                                 text: "All"
                             }).html("All").appendTo("#location");
                     }
+                     $("#location")[0].sumo.reload();
                 }
                 else {
                     console.log(v);

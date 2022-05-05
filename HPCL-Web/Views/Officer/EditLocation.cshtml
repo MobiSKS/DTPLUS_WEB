@@ -3,121 +3,122 @@
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
-        <h5>Officer Details</h5>
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Officer")" class="text_primary">Manage Officers</a> </li>
+            <li class="breadcrumb-item font-weight-light">Location Mapping</li>
+        </ul>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
         {
-            <div class="tab-content mt-3" id="myTabContent">
-                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tlab">
-                    <div class="w-100">
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                            <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Location Mapping</p>
-                            <div class="col-lg-12 col-md-12 col-12 pl-0 px-4 py-3">
-                                <table class="table table-bordered table-striped d-md-table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>@Label.Regions</th>
-                                            <th>@Label.UserName</th>
-                                            <th>@Label.Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                            foreach (var item in Model.LocationMappings)
-                                            {
-                                                <tr>
-                                                    <td>@item.ROName</td>
-                                                    <td>@Model.UserName</td>
-                                                    <td>
-                                                        <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID="@Model.OfficerID" onclick="return confirm('Are sure wants to delete?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                    </td>
-                                                </tr>
-                                            }
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Location Mapping</p>
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 px-4 py-3">
+                            <table class="table table-bordered table-striped d-md-table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>@Label.Regions</th>
+                                        <th>@Label.UserName</th>
+                                        <th>@Label.Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.LocationMappings)
+                                        {
+                                            <tr>
+                                                <td>@item.ROName</td>
+                                                <td>@Model.UserName</td>
+                                                <td>
+                                                    <a asp-action="DeleteLocation" asp-route-userName="@Model.UserName" asp-route-zonalID="@item.ZOId" asp-route-regionalID="@item.ROId" asp-route-officerID="@item.OfficerId" onclick="return confirm('Are you sure you want to delete location mapping?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                </td>
+                                            </tr>
                                         }
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="clearfix"></div>
-                            </div>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                            <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">@Label.AddLocation</p>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">@Label.ZoneOfc <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.ZoneOfcID, new SelectList(Model.ZoneOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
-                                                </div>
-                                                <span class="error" id="zonalOffice_error"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">@Label.AddLocation</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.ZoneOfc <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.ZoneOfcID, new SelectList(Model.ZoneOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    <select id="regionalOffice" class="form-control"></select>
-                                                </div>
-                                                <span class="error" id="regionalOffice_error"></span>
-                                            </div>
-                                        </div>
-                                     </div>
-                                     </div>
-                                     <div class="d-flex align-items-center flex-wrap">
-                                         <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">@Label.IsNewUser</label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control", @style = "width: 5%" })
-                                            </div>
-                                        </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">@Label.UserName <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                                                <span class="error" id="userName_error"></span>
-                                            </div>
-                                        </div>
+                                            <span class="error" id="zonalOffice_error"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.RegionalOfc <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <select id="regionalOffice" class="form-control"></select>
+                                            </div>
+                                            <span class="error" id="regionalOffice_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.IsNewUser</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.CheckBoxFor(m => m.IsNewUser, new { @class = "form-control", @style = "width: 5%" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">@Label.UserName <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                            <span class="error" id="userName_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div style="display:none;">@Html.TextBoxFor(m => m.UserName, new { id = "userNameValue" })</div>
-                        <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
-                        <div style="display:none;">@Html.TextBoxFor(m => m.OfficerID)</div>
-                        <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcID)</div>
                         <div class="clearfix"></div>
-                        <div class="d-flex align-items-center justify-content-center mt-3">
-                            <div class="px-2">
-                                @*<button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;" onclick="addLocation()">@Label.AddLocation</button>*@
-                                <button class="btn btn_primary" type="submit" onclick="addLocationOfficer()">@Label.AddLocation</button>
-                                @*<button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>*@
-                            </div>
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="submit">@Label.Reset</button>
-                            </div>
-                        </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-           
+            </div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.UserName, new { id = "userNameValue" })</div>
+            <div id="Error" style="font-size: 14px; color: #dc3545 !important; text-align: center;">@Html.Raw(ViewBag.Message)</div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.OfficerID)</div>
+            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcID)</div>
+            <div class="clearfix"></div>
+            <div class="d-flex align-items-center justify-content-center mt-3">
+                <div class="px-2">
+                    @*<button class="btn" type="submit" name="submit" style="background-color:#084693;color:white;" onclick="addLocation()">@Label.AddLocation</button>*@
+                    <button class="btn btn_primary" type="submit" onclick="addLocationOfficer()">@Label.AddLocation</button>
+                    @*<button class="btn" type="submit" name="cancel" style="background-color:#084693;color:white;">@Label.Reset</button>*@
+                </div>
+                <div class="px-2">
+                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
         }
     </div>
 </div>
 <script type="text/javascript">
     var message = "@ViewBag.Message";
     var zonalId = $("#ZoneOfcID").val();
-
+    var regionalID=$("#RegionalOfcID").val();
     $(document).ready(function () {
         getRegionalOfc();
     });
@@ -135,37 +136,41 @@
     function addLocationOfficer() {
         var ret = "Y";
 
-        if (document.form1.ZoneOfcID.value == "" || document.form1.ZoneOfcID.value == "0") {
+        if ($("#ZoneOfcID").val() == "" || $("#ZoneOfcID").val()  == "0") {
             document.getElementById("zonalOffice_error").innerHTML = "Zonal Office is required";
-            document.form1.ZoneOfcID.focus();
+            $("#ZoneOfcID").focus();
             ret = "N";
         }
         else {
             document.getElementById("zonalOffice_error").innerHTML = "";
         }
 
-        if (document.form1.regionalOffice.value == "" || document.form1.regionalOffice.value == "0") {
+        if ($("#regionalOffice").val()  == "" || $("#regionalOffice").val() == "0") {
             document.getElementById("regionalOffice_error").innerHTML = "Regional Office is required";
-            document.form1.regionalOffice.focus();
+            $("#regionalOffice").focus();
             ret = "N";
         }
         else {
             document.getElementById("regionalOffice_error").innerHTML = "";
         }
 
-        if (document.form1.UserName.value == "") {
+        if ($("#UserName").val() == "") {
             document.getElementById("userName_error").innerHTML = "User Name is required";
-            document.form1.UserName.focus();
+            $("#UserName").focus();
             ret = "N";
         }
         else {
-            document.getElementById("userName_error").innerHTML = "";
+            if(!($("#UserName").val().match(userNameCheck))){
+                document.getElementById("userName_error").innerHTML = "Invalid User Name.";
+                $("#UserName").focus();
+                ret = "N";
+            }
+            else
+                document.getElementById("userName_error").innerHTML = "";
         }
-        alert(ret);
-        if (ret == "Y") {
-            $("#form1").unbind().submit();
-        }
-        else {
+        //alert(ret);
+        if (ret == "N") {
+
             $("#form1").submit(function (e) {
                 e.preventDefault();
             });
@@ -182,50 +187,116 @@
         if (zonalId != 0 && zonalId != "" && zonalId != null) {
             id = zonalId;
         }
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfcID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#regionalOffice").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "--Select--"
+                                    }).html("--Select--").appendTo("#regionalOffice");
+                                if (data.regionalOfficeID == regionalID) {
+                                     $('<option selected = "selected">',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                                 }
+                                 else {
+                                     $('<option>',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                                 }
+                             }
+                             else if (data.regionalOfficeID == regionalID) {
+                                 $('<option selected = "selected">',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                             }
+                             else {
+                                 $('<option>',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                             }
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#district").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "--Select--"
-                                }).html("--Select--").appendTo("#regionalOffice");
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
-                        }
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
-                        }
-                    });
+                        });
+                        $("#regionalOffice")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office Data");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
-            }
-        });
+            });
+        }
+        else{
+            $("#regionalOffice").html('');
+            $("#regionalOffice")[0].sumo.reload();
+        }
     };
 
     $("#regionalOffice").change(function () {
         var id = this.value;
+         if ($("#regionalOffice").val() == "" || $("#regionalOffice").val() == "0") {
+            document.getElementById("regionalOffice_error").innerHTML = "Regional Office is required";
+
+        }
+        else {
+            document.getElementById("regionalOffice_error").innerHTML = "";
+        }
         $("#RegionalOfcID").val(id);
     });
+
+    $("#ZoneOfcID").change(function () {
+        if ($("#ZoneOfcID").val() == "" || $("#ZoneOfcID").val() == "0") {
+            document.getElementById("zonalOffice_error").innerHTML = "Zonal Office is required";
+
+        }
+        else {
+            document.getElementById("zonalOffice_error").innerHTML = "";
+        }
+    });
+    $("#UserName").on("blur", function () {
+        var UserName = this.value;
+
+        if (UserName.trim() != "") {
+            if(!(UserName.match(userNameCheck)))
+                $("#userName_error").html("Invalid User Name.");
+            else{
+                $("#userName_error").html("");
+
+            }
+        }
+        else{
+            document.getElementById("userName_error").innerHTML = "User Name is required";
+
+        }
+    });
+     $("#btnReset").click(function () {
+
+       window.location.reload(true);
+    });
+      $('select').SumoSelect({
+             placeholder: '-Select-',
+             search: true,
+             searchText: 'Enter Text here.'
+         });
+
 </script>
