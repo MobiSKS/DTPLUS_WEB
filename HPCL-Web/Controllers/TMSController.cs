@@ -111,5 +111,11 @@ namespace HPCL_Web.Controllers
             var result = await _tmsService.UpdateTMSEnrollmentStatus(manageEnrollmentsModel);
             return Json(result);
         }
+        public async Task<IActionResult> SwitchToCargoFL()
+        {
+            var modals = await _tmsService.SwitchToCargoFL();
+            return View(modals);
+        }
+        
     }
 }

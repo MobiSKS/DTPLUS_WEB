@@ -254,6 +254,13 @@ namespace HPCL.Service.Services
             }
 
         }
+        public async Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL()
+        {
+            NavigateToTransportManagementSystemModel Model = new NavigateToTransportManagementSystemModel();
+            Model.Message = "";
+
+            return Model;
+        }
 
     }
 }
