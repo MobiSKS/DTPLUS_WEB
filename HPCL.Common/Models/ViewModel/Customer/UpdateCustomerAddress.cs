@@ -36,8 +36,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
                 districtName = "Select District"
             });
         }
-                
         public string CustomerId { get; set; }
+        public string IndividualOrgName { get; set; }
 
         public virtual List<StateResponseModal> CustomerStateMdl { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }

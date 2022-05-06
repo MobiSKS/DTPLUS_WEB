@@ -4,14 +4,14 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="#" class="text_primary">Officer</a> </li>
-            <li class="breadcrumb-item font-weight-light">Officer Details</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Officer")" class="text_primary">Officer</a> </li>
+            <li class="breadcrumb-item font-weight-light">View Officer Details</li>
         </ul>
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officer Details</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Officer Details</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -65,7 +65,7 @@
                                     <button class="btn btn_primary" type="button" onclick="searchOfficerDetailsTbl()">@Label.Search</button>
                                 </div>
                                 <div class="px-2 mb-3">
-                                    <button class="btn btn_primary" type="button" onclick="return showregAddress()">@Label.Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                 </div>
                                 <div class="px-2 mb-3">
                                     <button class="btn btn_primary" type="button" onclick="">@Label.ExportToExcel</button>
@@ -93,19 +93,13 @@
     //var districtId = $("#DistrictIdVal").val();
 
     $(document).ready(function () {
-        $('<option>',
-            {
-                value: "0",
-                text: "--All--"
-            }).html("--All--").appendTo("#regionalOffice");
-
-        $('<option>',
-            {
-                value: "0",
-                text: "--All--"
-            }).html("--All--").appendTo("#district");
+        $('select').SumoSelect({
+            placeholder: '-ALL-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
     });
-
+     
 
     function searchOfficerDetailsTbl() {
         var zoID = $("#ZonalOfcID").val();
@@ -138,54 +132,53 @@
     };
 
     function getRegionalOfc() {
-        var id = $('#ZoneOfcID :selected').val();
+        var id = $('#ZonalOfcID :selected').val();
         $("#RegionalOfcIdVal").val("0");
         //if (zonalOfcId != "" && zonalOfcId != "0") {
         //    id = zonalOfcId;
         //}
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { ZonalOfcID: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#regionalOffice").html("");
-                    $.each(data, function (i, data) {
-                        if (i == "0") {
-                            $('<option>',
-                                {
-                                    value: "0",
-                                    text: "--All--"
-                                }).html("--All--").appendTo("#regionalOffice");
-                        }
-                        //else if (data.regionalOfficeID == regionalOfcId){
-                        //    $('<option selected = "selected">',
-                        //        {
-                        //            value: data.regionalOfficeID,
-                        //            text: data.regionalOfficeName
-                        //        }).html(data.regionalOfficeName).appendTo("#regionalOffice");
-                        //}
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo("#regionalOffice");
-                        }
-                    });
-                    $("#regionalOffice")[0].sumo.reload();
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfcID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#regionalOffice").html("");
+                        $.each(data, function (i, data) {
+                            if (i == "0") {
+                                $('<option>',
+                                    {
+                                        value: "0",
+                                        text: "--All--"
+                                    }).html("--All--").appendTo("#regionalOffice");
+                            }
+                            
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#regionalOffice");
+                            }
+                        });
+                        $("#regionalOffice")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office Data");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office Data");
-            }
-        });
+            });
+        }
+        else{
+            $("#regionalOffice").html('');
+            $("#regionalOffice")[0].sumo.reload();
+         }
     };
 
     function getDistrict() {
@@ -195,49 +188,54 @@
         //if (stateId != "" && stateId != "0") {
         //    id = stateId;
         //}
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetDistrictDetails", "Common")',
-            data: { Stateid: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#district").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        if (i == "0"){
-                            $('<option>',
-                                {
-                                    value: "0",
-                                    text: "--All--"
-                                }).html("--All--").appendTo("#district");
-                        }
-                        //else if (data.districtID == districtId) {
-                        //    $('<option selected = "selected">',
-                        //        {
-                        //            value: data.districtID,
-                        //            text: data.districtName
-                        //        }).html(data.districtName).appendTo("#district");
-                        //}
-                        else {
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#district");
-                        }
-                    });
-                     $("#district")[0].sumo.reload();
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetDistrictDetails", "Common")',
+                data: { Stateid: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#district").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == "0"){
+                                $('<option>',
+                                    {
+                                        value: "0",
+                                        text: "--All--"
+                                    }).html("--All--").appendTo("#district");
+                            }
+                            //else if (data.districtID == districtId) {
+                            //    $('<option selected = "selected">',
+                            //        {
+                            //            value: data.districtID,
+                            //            text: data.districtName
+                            //        }).html(data.districtName).appendTo("#district");
+                            //}
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#district");
+                            }
+                        });
+                         $("#district")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating District Data");
                 }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating District Data");
-            }
-        });
+            });
+        }
+        else{
+            $("#district").html('');
+            $("#district")[0].sumo.reload();
+         }
     };
 
     function tableToCSV() {
@@ -348,5 +346,8 @@
     $("#district").change(function () {
         var id = this.value;
         $("#DistrictIdVal").val(id);
+    });
+     $("#btnReset").click(function(){
+        window.location.reload(true);
     });
 </script>

@@ -8,7 +8,7 @@
             <li class="breadcrumb-item font-weight-light">Map Tatkal Cards To Tatkal Customer</li>
         </ul>
 
-        <div id="reason" class="mb-3 text-center alert alert-success" style=""></div>
+        <div id="reason" class="mb-3 text-center alert alert-success" style="display:none;"></div>
         <form class="toBeHiddenOnSuccess">
             <div class="w-100"> 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -102,7 +102,7 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    var searchCustomerId="";
     $("#btnSearch").click(function () {
 
         var customerId = $("#CustomerId").val();
@@ -266,6 +266,7 @@
                     data: JSON.stringify(model),
                     success: function (data) {
                         $("#reason").html(data);
+                        $("#reason").attr("style","display:block");
                         $(".toBeHiddenOnSuccess").hide();
 
                     },
@@ -276,5 +277,38 @@
             }
             //}
          });
-
+        $("#CustomerId").on("blur", function () {
+            var customerId = $("#CustomerId").val();
+            if (customerId != "") {
+                if(searchCustomerId!=""){
+                    if(searchCustomerId!=customerId){
+                        $("#CardDetailsTbl td").parent().remove();
+                        $("#divtable").attr("style", "display:none");
+                         $("#customerId_error").attr("style", "display:none");
+                        $("#customerId_error").html("");
+                    }
+                }
+                searchCustomerId=customerId;
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#customerId_error").attr("style", "display:block");
+                    $("#customerId_error").html("Invalid Customer ID");
+                    $("#CustomerId").focus();
+                }
+                //else{
+                //    $("#customerId_error").attr("style", "display:none");
+                //    $("#customerId_error").html("");
+                //}
+            }
+            else{
+                $("#customerId_error").attr("style", "display:block");
+                $("#customerId_error").html("Enter Customer ID");
+                $("#CardDetailsTbl td").parent().remove();
+                $("#divtable").attr("style", "display:none");
+            }
+            
+             
+        
+             
+         
+     });
 </script>

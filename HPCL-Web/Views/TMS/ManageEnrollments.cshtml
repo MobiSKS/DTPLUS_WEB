@@ -1,7 +1,7 @@
-﻿@model HPCL.Common.Models.ViewModel.TMS.EnrollToTransportManagementSystemModel
+﻿@model HPCL.Common.Models.ViewModel.TMS.ManageEnrollmentsModel
 @using HPCL.Common.Resources;
 @{
-    ViewData["Title"] = "Enroll To Transport Management System";
+    ViewData["Title"] = "Manage Enrollments";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,14 +9,15 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a> </li>
-            <li class="breadcrumb-item font-weight-light"> Enroll To Transport Management System</li>
+            <li class="breadcrumb-item font-weight-light"> Manage Enrollments</li>
         </ul>
-         @using (Html.BeginForm("EnrollToTransportManagementSystem", "TMS", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
          {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Enroll To Transport Management System</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Enrollments</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-12 col-12">
@@ -24,8 +25,8 @@
                                         <label class="font-weight-normal col-md-2 col-12">Customer ID<sup class="text-danger">*</sup></label>
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id = "CustomerID", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                         <div class="col-lg-7 col-12">
@@ -42,8 +43,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap">
-                                        <p class="mb-3 px-3">Note:- If you find details are not correct please <a class="text_primary" href="@Url.Action("UpdateCustomerAddress","Customer")">click here</a> to update.</p>
-                                        <p class="mb-0 px-3">@Html.CheckBoxFor(m=>m.AgreeTermsAndConditions,new {@checked = false}) I Agree to <a class="text_primary" href="@Url.Action("DownloadFile","TMS", new { fileName = "TermAndCondition.pdf" })">Terms &amp; Conditions</a></p>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -56,15 +56,15 @@
                 <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
                 </div>
                 <div class="clearfix"></div>
-                <div id="divSubmit" style="display:none;">
+                @*<div id="divSubmit" style="display:none;">
 
                     <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
                         <div class="pr-2">
-                            <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">ENROLL TO TRANSPORT MANAGEMENT SYSTEM</button>
+                            <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">ENABLE CUSTOMER</button>
                         </div>
                     </div>
 
-                </div>
+                </div>*@
             </div>
 
         }
@@ -81,20 +81,20 @@
         location.reload();
     });
 
-    $('#CustomerId').keypress(function (e) {
+    $('#CustomerID').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
             $('#btnSearch').click();
         }
     });
 
-    $("#CustomerId").on("blur", function ()
+    $("#CustomerID").on("blur", function ()
     {
-        if ($("#CustomerId").val().trim() == "")
+        if ($("#CustomerID").val().trim() == "")
         {
             $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
             return false;
         }
-        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
         {
             $("#CustomerIdValErrMsg").attr("style", "display:block");
             $("#CustomerIdValErrMsg").html("Invalid Customer ID");
@@ -111,7 +111,7 @@
      {
 
            var flag="Y";
-            var customerId = $("#CustomerId").val();
+            var customerId = $("#CustomerID").val();
              if (customerId != "")
              {
                   if (!customerId.match(mappedCustomerId))
@@ -137,7 +137,7 @@
             {
                   $.ajax({
                      type: 'GET',  // http method
-                     url: '@Url.Action("ViewCustomerDetails", "TMS")',
+                     url: '@Url.Action("ViewCustomerDetailsForManageEnrollments", "TMS")',
                      contentType: "application/json; charset=utf-8",
                      dataType: 'text',
                      data: { CustomerId: customerId},
@@ -160,13 +160,13 @@
                         console.log(count);
                         if(count>1)
                         {
-                            document.getElementById("divSubmit").style.display = "block";
-                             $('#CustomerId').attr("readonly", true);
+                            //document.getElementById("divSubmit").style.display = "block";
+                             $('#CustomerID').attr("readonly", true);
                         }
                         else
                         {
-                            document.getElementById("divSubmit").style.display = "none";
-                             $('#CustomerId').attr("readonly", false);
+                            //document.getElementById("divSubmit").style.display = "none";
+                             $('#CustomerID').attr("readonly", false);
                         }
                      },
                      error: function (jqXhr, textStatus, errorMessage)
@@ -181,44 +181,5 @@
 
 
     }));
-
-   function SubmitValidations()
-   {
-    debugger;
-
-    var ret=true;
-
-     var customerId = $("#CustomerId").val();
-        if (customerId != "")
-        {
-            if (!customerId.match(mappedCustomerId))
-            {
-                $("#CustomerIdValErrMsg").attr("style", "display:block");
-                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
-                 ret=false;
-            }
-            else
-            {
-                $("#CustomerIdValErrMsg").attr("style", "display:none");
-                $("#CustomerIdValErrMsg").html("");
-            }
-        }
-        else
-        {
-            $("#CustomerIdValErrMsg").attr("style", "display:block");
-            $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
-             ret=false;
-        }
-
-     if (!$(AgreeTermsAndConditions).prop("checked"))
-     {
-         ret=false;
-         alert('Select I Agree to Terms & Conditions');
-     }
-
-    console.log(ret);
-    return ret;
-
-   }
-
+      
 </script>

@@ -25,7 +25,9 @@ namespace HPCL.Common.Models.ResponseModel.TMS
         public string State { get; set; }
         public string Pincode { get; set; }
         public string Email { get; set; }
-       
+        public string TMSUserId { get; set; }
+        public string TMSStatus { get; set; }
+        public string TMSStatusID { get; set; }
     }
 
 }

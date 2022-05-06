@@ -1,0 +1,373 @@
+﻿@model HPCL.Common.Models.ViewModel.TMS.EnrollVehicleViewModel
+@using HPCL.Common.Resources;
+@{
+    ViewData["Title"] = "Enroll Vehicle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+    <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a></li>
+        <li class="breadcrumb-item font-weight-light">Enroll Vehicle</li>
+    </ul>
+    <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+     @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+     {
+       <div class="w-100">
+   <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+      <div class="border-1 rounded border-grey pb-3">
+         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Enroll Vehicle</p>
+         <div class="col-lg-12 col-md-12 col-12 py-3">
+            <div class="d-flex align-items-center flex-wrap">
+               <div class="col-lg-6 col-12">
+                  <div class="d-flex align-items-center flex-wrap mb-3">
+                     <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                     <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                           @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id = "CustomerID", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                           @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-12">
+                  <div class="d-flex align-items-center flex-wrap mb-3">
+                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Enrollment Status <sup class="text-danger">*</sup></label>
+                     <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                           @Html.DropDownListFor(m => m.EnrollmentStatus, new SelectList(Model.StatusList, "StatusId", "StatusName"), new { @class = "form-control" })
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="d-flex align-items-center flex-wrap">
+               <div class="col-lg-6 col-12">
+                  <div class="d-flex align-items-center flex-wrap mb-3">
+                     <label class="font-weight-normal col-md-4 col-12">Vehicle Number</label>
+                     <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                           @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control", @id = "VehicleNo", maxlength = "10", onkeypress = "return AlowNumberAndAlphabetKey(event)" })
+                           @Html.ValidationMessageFor(m => m.VehicleNo, "", new { @class = "text-danger", @id = "VehicleNoValErrMsg" })
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-12">
+                  <div class="d-flex align-items-center flex-wrap mb-3">
+                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number</label>
+                     <div class="col-md-7 col-12">
+                        <div class="custom_select">
+                           @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @id = "CardNo", maxlength = "16", onkeypress = "return isNumberKey(event)" })
+                           @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger", @id = "CardNoValErrMsg" })
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="d-flex align-items-center justify-content-center mt-0">
+               <div class="px-2">
+                  <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+               </div>
+               <div class="px-2">
+                  <button class="btn btn_primary px-4 py-2" type="button" id="btnReset">@Label.Reset</button>
+               </div>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+         <div id="dvCustomerName" style="display:none">
+             <div class="d-flex align-items-center flex-wrap">
+                <div class="col-lg-6 col-12">
+                   <div class="d-flex align-items-center flex-wrap mb-3">
+                      <label class="font-weight-normal col-md-4 col-12">Customer Name</label>
+                      <div class="col-md-7 col-12">
+                         <div class="custom_select">
+                            @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @id = "CustomerName", @readonly = "readonly" })
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                   <div class="d-flex align-items-center flex-wrap mb-3">
+                      <div class="col-md-7 col-12">
+                         <div class="custom_select">
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+</div>
+     }
+    <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<script>
+	$("#btnReset").click(function () {
+        location.reload();
+    });
+
+    $('#CustomerID').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            $('#btnSearch').click();
+        }
+    });
+
+    $("#CustomerID").on("blur", function ()
+    {
+        if ($("#CustomerID").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+           $('#CustomerIdValErrMsg').html("");
+        }
+
+    })
+
+    $("#VehicleNo").on("blur", function ()
+    {
+         var vhNo = $("#VehicleNo").val().trim();
+
+         if(vhNo!='')
+         {
+            if (!(vhNo.match(forVehicleNo))) 
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else if (!vhNo.match(atLeastOneAlphabet)) 
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else if(vhNo.length<6 || vhNo.length>10)
+            {
+                $("#VehicleNoValErrMsg").attr("style", "display:block");
+                $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+            }
+            else
+            {
+                $("#VehicleNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#VehicleNoValErrMsg").html("");
+        }
+
+    })
+
+    $("#CardNo").on("blur", function ()
+    {
+         var cardNo = $("#CardNo").val().trim();
+
+         if(cardNo!='')
+         {
+            if(cardNo.length<16)
+            {
+                $("#CardNoValErrMsg").attr("style", "display:block");
+                $("#CardNoValErrMsg").html("Invalid Card Number");
+            }
+            else
+            {
+                $("#CardNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CardNoValErrMsg").html("");
+        }
+
+    })
+
+	$("#btnSearch").on("click", (function (e)
+     {
+        debugger;
+           var flag="Y";
+            var customerId = $("#CustomerID").val();
+             if (customerId != "")
+             {
+                  if (!customerId.match(mappedCustomerId))
+                  {
+                      $("#CustomerIdValErrMsg").attr("style", "display:block");
+                      $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                      flag = "N";
+                  }
+                  else
+                  {
+                     $("#CustomerIdValErrMsg").attr("style", "display:none");
+                     $("#CustomerIdValErrMsg").html("");
+                  }
+              }
+              else
+              {
+                    $("#CustomerIdValErrMsg").attr("style", "display:block");
+                    $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+                    flag = "N";
+              }
+
+               var vhNo = $("#VehicleNo").val();
+
+              if(vhNo.trim()!='')
+              {
+                if (!(vhNo.match(forVehicleNo))) 
+                {
+                    $("#VehicleNoValErrMsg").attr("style", "display:block");
+                    $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                    flag = "N";
+                }
+                else if (!vhNo.match(atLeastOneAlphabet)) 
+                {
+                    $("#VehicleNoValErrMsg").attr("style", "display:block");
+                    $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                    flag = "N";
+                }
+                else if(vhNo.length<6 || vhNo.length>10)
+                {
+                   $("#VehicleNoValErrMsg").attr("style", "display:block");
+                   $("#VehicleNoValErrMsg").html("Invalid Vehicle Number");
+                   flag = "N";
+                }
+                else
+                {
+                    $("#VehicleNoValErrMsg").html("");
+                }
+            }
+            else
+            {
+                $("#VehicleNoValErrMsg").html("");
+            }
+
+              var enrollStatus = $("#EnrollmentStatus").val();
+              var cardNo = $("#CardNo").val();
+
+         if(cardNo!='')
+         {
+            if(cardNo.length<16)
+            {
+                $("#CardNoValErrMsg").attr("style", "display:block");
+                $("#CardNoValErrMsg").html("Invalid Card Number");
+                flag = "N";
+            }
+            else
+            {
+                $("#CardNoValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CardNoValErrMsg").html("");
+        }
+
+            if(flag=="Y")
+            {
+                  $.ajax({
+                     type: 'GET',  // http method
+                     url: '@Url.Action("GetEnrollVehicleManagementDetail", "TMS")',
+                     contentType: "application/json; charset=utf-8",
+                     dataType: 'text',
+                     data: { customerId: customerId, enrollmentStatus:enrollStatus, vehicleNo:vhNo, cardNo:cardNo},
+                     success: function (data, status, xhr)
+                     {
+                         console.log(data);
+                         var v = data;
+                         if (status == 'success') {
+                             $("#show_Table").html(data);
+                             $('html, body').animate({
+                                 scrollTop: $("#show_Table").offset().top
+                             }, 2000);
+                         }
+                         else
+                         {
+                             console.log(v);
+                         }
+
+                        var count = $('#VehicleDetailsTbl tr').length;
+                        console.log(count);
+                        if(count>1)
+                        {
+                             $('#CustomerID').attr("readonly", true);
+                             $("#EnrollmentStatus").prop("disabled", true);
+                        }
+                        else
+                        {
+                             $('#CustomerID').attr("readonly", false);
+                             $("#EnrollmentStatus").prop("disabled", false);
+                        }
+                     },
+                     error: function (jqXhr, textStatus, errorMessage)
+                     {
+                         alert("Error"+ errorMessage);
+                         $('#CustomerID').attr("readonly", false);
+                             $("#EnrollmentStatus").prop("disabled", false);
+                     }
+                    });
+
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("GetCustomerDetailsForView", "TMS")',
+                        data: { CustomerId: customerId },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) 
+                        {
+
+                            var v = data;
+                            console.log(data);
+                            console.log(status);
+
+                            if (status == 'success')
+                            {
+                                if(data.internel_Status_Code==1000)
+                                {
+                                    document.getElementById("CustomerName").value = data.data[0].customerName;
+                                    document.getElementById("dvCustomerName").style.display="block";
+                                }
+                                else
+                                {
+                                    document.getElementById("CustomerName").value = "";
+                                    document.getElementById("dvCustomerName").style.display="none";
+                                }
+                            }
+                            else 
+                            {
+                                document.getElementById("CustomerName").value = "";
+                                document.getElementById("dvCustomerName").style.display="none";
+                            }
+                        }
+                    });
+
+
+            }
+
+
+
+    }));
+
+    function AlowNumberAndAlphabetKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31
+            && (charCode < 48 || charCode > 57) && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122))
+            return false;
+
+        return true;
+    }
+
+</script>
