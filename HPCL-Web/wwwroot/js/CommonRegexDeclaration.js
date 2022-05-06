@@ -29,4 +29,5 @@ var notOnlySpecialChars = /^[A-Za-z0-9]{1,50}$/;
 var nameWithSpaceCheck = /^[a-zA-Z0-9\s]*$/;
 var CitynameCheck = /^[A-Za-z ]{2,40}$/;
 var fastTagNoCheck = /^[a-zA-Z0-9]{16}$/;
-var userNameCheck =/^(?![@_.])(?!.*[@_.]{2})[a-zA-Z0-9@_.]{6,30}$/;
+var userNameCheck = /^(?![@_.])(?!.*[@_.]{2})[a-zA-Z0-9@_.]{6,30}$/;
+var tatkalCustomerCheck = /^(?=(23))[0-9]{10}$/;

@@ -258,7 +258,7 @@ namespace HPCL.Service.Services
 
             
         }
-        public async Task<string> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
+        public async Task<List<string>> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
         {
             var RequestForms = new MapTatkalCardtoCustomerUpdateModel
             {
@@ -273,17 +273,21 @@ namespace HPCL.Service.Services
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForms), Encoding.UTF8, "application/json");
             var mapResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatemaptatkalcardstotatkalcustomer);
             JObject mapResponseObj = JObject.Parse(JsonConvert.DeserializeObject(mapResponse).ToString());
-
+            List<string> messageList = new List<string>();
             if (mapResponseObj["Status_Code"].ToString() == "200")
             {
                 var mapResponseJarr = mapResponseObj["Data"].Value<JArray>();
                 List<SuccessResponse> mapResponseList = mapResponseJarr.ToObject<List<SuccessResponse>>();
-                return mapResponseList.First().ActionName.ToString();
+                messageList.Add(mapResponseList[0].Status.ToString());
+                foreach (var item in mapResponseList)
+                    messageList.Add(item.ActionName);
+                
             }
             else
             {
-                return mapResponseObj["Message"].ToString();
+                messageList.Add(mapResponseObj["Message"].ToString());
             }
+            return messageList;
         }
         public async Task<ViewTatkalCardsResponseModel> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity)
         {
