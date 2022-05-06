@@ -27,7 +27,7 @@
                                             <span class="error" id="firstName_error"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                    @*<div class="form-group d-flex align-items-center flex-wrap">
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                     </div>
@@ -36,7 +36,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                    </div>
+                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -63,12 +63,12 @@
                                             <span class="error" style="font-size: 14px; color: #dc3545 !important " id="officerType_error"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                    @*<div class="form-group d-flex align-items-center flex-wrap">
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                    </div>
+                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.Phone</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             </div>
                                             <span class="error" id="phone_error"></span>
                                         </div>
@@ -201,7 +201,7 @@
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3">
                     <div class="px-2">
-                        <button class="btn btn_primary" type="submit" id="btnAdd" name="submit"  onclick="return confirm('Are you sure you want to update this officer ?')">@Label.Save</button>
+                        <button class="btn btn_primary" type="submit" id="btnAdd" name="submit" >@Label.Save</button>
                     </div>
                     <div class="px-2">
                         <a asp-action="Details" class="btn btn_primary" type="button" id="btnCancel" name="cancel">@Label.Cancel</a>
@@ -303,7 +303,7 @@
                 }
             }
             if ($("#State").val() == 0) {
-                $("#statediv").addClass("btmMargin");
+                //$("#statediv").addClass("btmMargin");
                 $("#state_error").html("State is required");
                 flag = 'N';
             }
@@ -311,17 +311,32 @@
                 $("#state_error").html("");
             }
             if ($("#district").val() == 0) {
-                $("#districtdiv").addClass("btmMargin");
+                //$("#districtdiv").addClass("btmMargin");
                 $("#district_error").html("District is required");
                 flag = 'N';
             }
             else {
                 $("#district_error").html("");
             }
+            if ($("#Phone").val().trim() != "") {
+                if (!$("#Phone").val().match(number)) {
+                    document.getElementById("phone_error").innerHTML = "Phone Number is invalid";
+                    flag="N";
+                }
+            }
+            else {
+                document.getElementById("phone_error").innerHTML = "";
+            }
             if (flag == 'N') {
                 $("#form1").submit(function (e) {
                     e.preventDefault();
                 });
+            }
+            var confirmstring = "Are you sure you want to update this officer ?";
+            if (flag == "Y") {
+                if (confirm(confirmstring)) {
+                    $("#form1").unbind().submit();
+                }
             }
         });
 
@@ -577,5 +592,15 @@
                 document.getElementById("city_error").innerHTML = "";
             }
         }
+    });
+       $("#Phone").on("blur", function(){
+        if ($("#Phone").val().trim() != "") {
+                if (!$("#Phone").val().match(number)) {
+                    document.getElementById("phone_error").innerHTML = "Phone Number is invalid";
+                }
+            }
+            else {
+                document.getElementById("phone_error").innerHTML = "";
+            }
     });
 </script>

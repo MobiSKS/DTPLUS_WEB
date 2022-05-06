@@ -118,7 +118,7 @@
            {
                 $("#customerId_error").attr("style", "display:none");
                 flag="Y";
-                if (!customerId.match(mappedCustomerId))
+                if (!customerId.match(tatkalCustomerCheck))
                 {
                     $("#customerId_error").attr("style", "display:block");
                     $("#customerId_error").html("Invalid Customer ID");
@@ -240,7 +240,7 @@
            {
                 $("#customerId_error").attr("style", "display:none");
                 flag="Y";
-                if (!customerId.match(mappedCustomerId))
+                if (!customerId.match(tatkalCustomerCheck))
                 {
                     $("#customerId_error").attr("style", "display:block");
                     $("#customerId_error").html("Invalid Customer ID");
@@ -265,9 +265,23 @@
                     dataType: 'json',
                     data: JSON.stringify(model),
                     success: function (data) {
-                        $("#reason").html(data);
-                        $("#reason").attr("style","display:block");
-                        $(".toBeHiddenOnSuccess").hide();
+                        
+                        if(data.length>0){
+                            $("#reason").html("");
+                            for(var i=1;i<data.length;i++){
+                                $("#reason").append("<span>" + data[i] + "</span></br>");
+                            }
+                            if(data[0]=="0"){
+                                $("#reason").addClass("alert-danger");
+                                $("#reason").removeClass("alert-success");
+                            }
+                            else{
+                                $("#reason").addClass("alert-success");
+                                $("#reason").removeClass("alert-danger");
+                            }
+                            $("#reason").attr("style","display:block");
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
 
                     },
                   error: function (jqXhr, textStatus, errorMessage) {
@@ -280,6 +294,7 @@
         $("#CustomerId").on("blur", function () {
             var customerId = $("#CustomerId").val();
             if (customerId != "") {
+               
                 if(searchCustomerId!=""){
                     if(searchCustomerId!=customerId){
                         $("#CardDetailsTbl td").parent().remove();
@@ -288,16 +303,15 @@
                         $("#customerId_error").html("");
                     }
                 }
-                searchCustomerId=customerId;
-                if (!customerId.match(mappedCustomerId)) {
+                else{
+                     $("#customerId_error").attr("style", "display:none");
+                     $("#customerId_error").html("");
+                }
+                 if (!customerId.match(tatkalCustomerCheck)) {
                     $("#customerId_error").attr("style", "display:block");
                     $("#customerId_error").html("Invalid Customer ID");
                     $("#CustomerId").focus();
                 }
-                //else{
-                //    $("#customerId_error").attr("style", "display:none");
-                //    $("#customerId_error").html("");
-                //}
             }
             else{
                 $("#customerId_error").attr("style", "display:block");
@@ -305,6 +319,7 @@
                 $("#CardDetailsTbl td").parent().remove();
                 $("#divtable").attr("style", "display:none");
             }
+            searchCustomerId=customerId;
             
              
         
