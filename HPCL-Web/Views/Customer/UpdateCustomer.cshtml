@@ -194,7 +194,7 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="return showregAddress()">Next</button>
+                                <button class="btn btn_primary" type="button" id="btnshowregAddress" onclick="return showregAddress()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -1572,15 +1572,22 @@
 
     });
 
+    $("#CustomerIncomeTaxPan").focus(function()
+    {
+        $("#btnshowregAddress").attr("disabled", true);
+    });
+
     $("#CustomerIncomeTaxPan").on("blur", function () {
         //debugger;
         var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+        $("#btnshowregAddress").attr("disabled", true);
 
         var customerTbentityid = $("#CustomerTbentityID").val();
         localStorage.setItem("PANNOALREADYUSED", "1");
         localStorage.setItem("DUPLICATEPANUSED", "1");
 
-        if (customerTbentityid == 10) {
+        if (customerTbentityid == 10) 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
             document.getElementById("IsDuplicatePanNo").value = "1";
             $('#AllowPanDuplication').val('N');
@@ -1588,44 +1595,55 @@
             if (panNumber == "") {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
                 document.getElementById("incomeTaxPan_error").className = "error";
-                return (false);
             }
-            else {
+            else 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
             }
+            $("#btnshowregAddress").attr("disabled", false);
             return (false);
         }
 
-        if (panNumber == "") {
+        if (panNumber == "") 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
             document.getElementById("incomeTaxPan_error").className = "error";
+            $("#btnshowregAddress").attr("disabled", false);
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "";
         }
 
         document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
 
-        if ($('#CustomerIncomeTaxPan').val().match(pancard)) {
+        if ($('#CustomerIncomeTaxPan').val().match(pancard)) 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
             document.getElementById("incomeTaxPan_error").className = "error text-success";
         }
-        else {
+        else 
+        {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
+            $("#btnshowregAddress").attr("disabled", false);
             return (false);
         }
 
-        if (customerTbentityid == 2) {
+        if (customerTbentityid == 2) 
+        {
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') {
+            if (forthdigitPan != 'P') 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
-                return;
+                 $("#btnshowregAddress").attr("disabled", false);
+                 return (false);
             }
-            else {
+            else 
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
                 document.getElementById("incomeTaxPan_error").className = "error text-success";
             }
@@ -1642,6 +1660,7 @@
         externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
 
         console.log(externalPANAPIStatus);
+        var customerReferenceNo = $("#CustomerReferenceNo").val();
 
 if(externalPANAPIStatus=="Y")
 {
@@ -1682,8 +1701,8 @@ if(externalPANAPIStatus=="Y")
 
                         $.ajax({
                             type: 'POST',  // http method
-                            url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
-                            data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
+                            url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                            data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo},
                             dataType: "json",
                             success: function (data, status, xhr) 
                             {
@@ -1721,15 +1740,12 @@ if(externalPANAPIStatus=="Y")
                                     $("#PanCardRemarks").prop('readonly', true);
                                 }
                             },
-                            error: function (xhr, ajaxOptions, thrownError) {
+                            error: function (xhr, ajaxOptions, thrownError) 
+                            {
                                 document.getElementById("lblPanCardRemarks").style.display = "none";
                                 document.getElementById("PanCardRemarks").style.display = "none";
                                 document.getElementById("PanCardRemarks").value = "";
                                 $("#PanCardRemarks").prop('readonly', true);
-                            },
-                            statusCode: {
-                                1024: function () {
-                                }
                             }
                         });
                     }
@@ -1774,19 +1790,20 @@ else
             $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
-                data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo },  // data to submit
+                data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo },  
                 dataType: "json",
                 success: function (data, status, xhr) {
                     console.log(data);
                     console.log(status);
                     var v = data;
-                    if (status == 'success') {
-
+                    if (status == 'success') 
+                    {
                         console.log('Test');
                         console.log(data);
                         console.log(data.status);
                         console.log(data.reason);
-                        if (data.status == "0") {
+                        if (data.status == "0") 
+                        {
                             //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
@@ -1794,7 +1811,8 @@ else
                             document.getElementById("PanCardRemarks").style.display = "block";
                             $("#PanCardRemarks").prop('readonly', false);
                         }
-                        else {
+                        else 
+                        {
                             localStorage.setItem("DUPLICATEPANUSED", "1");
                             document.getElementById('IsDuplicatePanNo').value = "1";
                             document.getElementById("comm_district_error").innerHTML = "";
@@ -1804,22 +1822,20 @@ else
                             $("#PanCardRemarks").prop('readonly', true);
                         }
                     }
-                    else {
+                    else 
+                    {
                         document.getElementById("lblPanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").value = "";
                         $("#PanCardRemarks").prop('readonly', true);
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
                     document.getElementById("lblPanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").value = "";
                     $("#PanCardRemarks").prop('readonly', true);
-                },
-                statusCode: {
-                    1024: function () {
-                    }
                 }
             });
 
@@ -1827,6 +1843,7 @@ else
 
 }
 
+    $("#btnshowregAddress").attr("disabled", false);
 
     });
 
