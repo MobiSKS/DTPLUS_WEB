@@ -84,5 +84,26 @@ namespace HPCL_Web.Controllers
             var searchList = await _customerFinancialService.ViewAccountStatement(entity);
             return Json(new { searchList = searchList});
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CCMSToCardBalanceTransferAmount(string customerId, string ccmsToCardTransfer)
+        {
+            var reasonList = await _customerFinancialService.CCMSToCardAmtTransfer(customerId, ccmsToCardTransfer);
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CardToCardBalanceTransferAmount(string customerId, string cardToCardTransfer)
+        {
+            var reasonList = await _customerFinancialService.CardToCardAmtTransfer(customerId, cardToCardTransfer);
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CardToCCMSBalanceTransferAmount(string customerId, string cardToCCMSTransfer)
+        {
+            var reasonList = await _customerFinancialService.CardToCCMSAmtTransfer(customerId, cardToCCMSTransfer);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }
