@@ -211,6 +211,19 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetManageEnrollments);
 
             viewCardSearch = JsonConvert.DeserializeObject<ViewCustomerSearch>(response);
+
+            if (viewCardSearch != null && viewCardSearch.Data != null && viewCardSearch.Data.Count > 0)
+            {
+                if (viewCardSearch.Data[0].TMSStatus == "2")
+                {
+                    viewCardSearch.Data[0].TMSStatusID = "4";
+                }
+                else if (viewCardSearch.Data[0].TMSStatus == "4")
+                {
+                    viewCardSearch.Data[0].TMSStatusID = "2";
+                }
+            }
+
             return viewCardSearch;
         }
 

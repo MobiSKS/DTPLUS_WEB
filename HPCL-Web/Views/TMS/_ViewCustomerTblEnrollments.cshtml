@@ -16,6 +16,8 @@
                 <th>State</th>
                 <th>Pin Code</th>
                 <th>Email</th>
+                <th style="display:none">TMSStatus</th>
+                <th style="display:none">TMSStatusID</th>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +27,7 @@
             }
             @foreach (var item in Model.Data)
             {
-                @if (item.CustomerName != "Problematic Installation")
+                @if (item.TMSStatus == "2")
                 {
                     flag = "N";
                 }
@@ -40,6 +42,8 @@
                     <td>@item.State</td>
                     <td>@item.Pincode</td>
                     <td>@item.Email</td>
+                    <th style="display:none">@item.TMSStatus</th>
+                    <th style="display:none">@item.TMSStatusID</th>
                 </tr>
                 Sno++;
             }
@@ -48,7 +52,6 @@
     @if (flag == "N")
     {
         <div class="clearfix"></div>
-
         <div class="clearfix"></div>
         <div class="d-flex align-items-center justify-content-center mt-3">
             <div class="px-2">
@@ -60,7 +63,6 @@
     else
     {
         <div class="clearfix"></div>
-
         <div class="clearfix"></div>
         <div class="d-flex align-items-center justify-content-center mt-3">
             <div class="px-2">
@@ -95,8 +97,7 @@ else
 
             var row = $(this);
             var tmsUserId = row[0].cells[2].textContent;
-            var tmsStatusID = row[0].cells[3].textContent;
-                 
+            var tmsStatusID = row[0].cells[10].textContent;     
             vehicleDetail.push({ CustomerID: $("#CustomerID").val(), TMSUserId: tmsUserId, TMSStatusID:tmsStatusID  });
          });
         var flag = "Y";
