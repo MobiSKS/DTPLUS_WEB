@@ -259,8 +259,72 @@ namespace HPCL.Service.Services
             NavigateToTransportManagementSystemModel Model = new NavigateToTransportManagementSystemModel();
             Model.Message = "";
 
+            if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "CUSTOMER")
+            {
+                Model.CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            }
+            else
+            {
+                Model.CustomerId = "";
+            }
+
             return Model;
         }
+        public async Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL(NavigateToTransportManagementSystemModel model)
+        {
+            if (string.IsNullOrEmpty(model.CustomerId))
+            {
+                model.Message = "Logged in user is not a customer";
+            }
+            else
+            {
+                model.UserAgent = CommonBase.useragent;
+                model.UserIp = CommonBase.userip;
+                model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+                model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.GetTransportManagementSystemUrl);
+
+                GetTMSUrlResponse tmsUrlResponse = JsonConvert.DeserializeObject<GetTMSUrlResponse>(responseCustomer);
+
+                model.url = "";
+                model.access_token = "";
+                model.refresh_token = "";
+                model.Message = "";
+                if (tmsUrlResponse.Internel_Status_Code == 1000)
+                {
+                    model.StatusCode = tmsUrlResponse.Internel_Status_Code;
+                    model.Message = tmsUrlResponse.Message;
+
+                    if (tmsUrlResponse != null && tmsUrlResponse.Data != null && tmsUrlResponse.Data.Count > 0)
+                    {
+                        model.Status = tmsUrlResponse.Data[0].Status;
+                        model.Reason = tmsUrlResponse.Data[0].Reason;
+                        model.Message = tmsUrlResponse.Data[0].Reason;
+                        model.url = tmsUrlResponse.Data[0].url;
+                        model.access_token = tmsUrlResponse.Data[0].access_token;
+                        model.refresh_token = tmsUrlResponse.Data[0].refresh_token;
+                    }
+                }
+                else
+                {
+                    model.Message = tmsUrlResponse.Message;
+                    model.StatusCode = tmsUrlResponse.Internel_Status_Code;
+
+                    if (tmsUrlResponse != null && tmsUrlResponse.Data != null && tmsUrlResponse.Data.Count > 0)
+                    {
+                        model.Status = tmsUrlResponse.Data[0].Status;
+                        model.Reason = tmsUrlResponse.Data[0].Reason;
+                        model.Message = tmsUrlResponse.Data[0].Reason;
+                    }
+                }
+            }
+
+            return model;
+        }
+
 
     }
 }

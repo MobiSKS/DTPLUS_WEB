@@ -322,6 +322,7 @@
         public static string InsertVehicleEnrollmentStatus = "api/dtplus/TMS/insert_vehicle_enrollment_status";
         public static string GetManageEnrollments = "api/dtplus/TMS/get_manage_enrollments";
         public static string UpdateTmsEnrollmentTmsStatus = "api/dtplus/TMS/update_tms_enrollment_tms_status";
+        public static string GetTransportManagementSystemUrl = "api/dtplus/TMS/get_transport_management_system_url";
         #endregion
     }
 }
