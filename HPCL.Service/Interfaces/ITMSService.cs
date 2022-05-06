@@ -20,5 +20,6 @@ namespace HPCL.Service.Interfaces
         Task<ManageEnrollmentsModel> ManageEnrollments();
         Task<ViewCustomerSearch> ViewCustomerDetailsForManageEnrollments(string CustomerId);
         Task<string> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel);
+        Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL();
     }
 }
