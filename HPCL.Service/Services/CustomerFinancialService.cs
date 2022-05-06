@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.CustomerFinancial;
 using HPCL.Common.Models.ViewModel.CustomerFinancial;
 using HPCL.Service.Interfaces;
@@ -220,6 +221,69 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetViewAccountStatementResponse searchList = obj.ToObject<GetViewAccountStatementResponse>();
             return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer)
+        {
+            ccmsToCardTransfer[] arrs = JsonConvert.DeserializeObject<ccmsToCardTransfer[]>(ccmsToCardTransfer);
+
+            var reqBody = new CCMSToCardsAmountTransfer
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                customerId = customerId,
+                ccmsToCardTransfer = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CCMSToCardsAmtTransferUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+
+        public async Task<List<SuccessResponse>> CardToCardAmtTransfer(string customerId, string cardToCardTransfer)
+        {
+            cardToCardTransfer[] arrs = JsonConvert.DeserializeObject<cardToCardTransfer[]>(cardToCardTransfer);
+
+            var reqBody = new CardToCardAmountTransfer
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                customerId = customerId,
+                cardToCardTransfer = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CardToCardsAmtTransferUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+
+        public async Task<List<SuccessResponse>> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer)
+        {
+            cardToCCMSTransfer[] arrs = JsonConvert.DeserializeObject<cardToCCMSTransfer[]>(cardToCCMSTransfer);
+
+            var reqBody = new CardToCCMSAmtTransfer
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                cardToCCMSTransfer = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CardToCCMSsAmtTransferUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
         }
     }
 }
