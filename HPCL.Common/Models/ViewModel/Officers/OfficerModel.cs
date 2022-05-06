@@ -70,6 +70,7 @@ namespace HPCL.Common.Models.ViewModel.Officers
         public string Mobile { get; set; }
         [StringLength(10)]
         public string MobileNo { get; set; }
+        [StringLength(12)]
         public string Phone { get; set; }
         //[Required(ErrorMessage = "Email is Required")]
         //[EmailAddress(ErrorMessage = "Invalid Email Address")]
