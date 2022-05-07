@@ -28,7 +28,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
             _commonActionService = commonActionService;
         }
-        public async Task<string> ApplyHotlistorReactivate([FromBody] HotlistorReactivateViewModel hotlistorReactivateViewModel)
+        public async Task<List<string>> ApplyHotlistorReactivate([FromBody] HotlistorReactivateViewModel hotlistorReactivateViewModel)
         {
             var hotlistRequest = new HotlistingRequestModel
             {
@@ -47,17 +47,19 @@ namespace HPCL.Service.Services
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
             var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatehotlistorreactivate);
             JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
-
+            List<string> messageList = new List<string>();
             if (ResponseObj["Status_Code"].ToString() == "200")
             {
                 var responseJarr = ResponseObj["Data"].Value<JArray>();
                 List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
-                return responseList.First().ActionName.ToString();
+                messageList.Add(responseList[0].Status.ToString());
+                messageList.Add(responseList[0].ActionName.ToString());
             }
             else
             {
-                return ResponseObj["Message"].ToString();
+                messageList.Add(ResponseObj["Message"].ToString());
             }
+            return messageList;
         }
         public async Task<ViewHotlistingorReactivateResponse> GetHotlistedorReactivatedData(string EntityTypeId, string EntityId)
         {

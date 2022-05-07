@@ -7,8 +7,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Hotlisting")" class="text_primary">Hotlisting</a> </li>
             <li class="breadcrumb-item font-weight-light">Hotlist/Reactivate</li>
         </ul>
-
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none;"></div>
         <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -62,7 +61,7 @@
                                                 <div class="custom_select">
                                                     @Html.DropDownListFor(m => m.ActionId, new SelectList(Model.HotlistStatus, "StatusId", "StatusName"), new { @class = "form-control", onchange = "getReasonList()" })
                                                     <span class="error" id="action_error"></span>
-                                                    
+
                                                 </div>
                                             </div>
 
@@ -146,7 +145,7 @@
                 $(".terminal").attr("style", "display:none");
                 $(".cardNo").attr("style", "display:none");
             }
-            else if ($('#EntityTypeId :selected').text() == "Card") {       
+            else if ($('#EntityTypeId :selected').text() == "Card") {
                 $(".customer").attr("style", "display:none");
                 $(".merchant").attr("style", "display:none");
                 $(".terminal").attr("style", "display:none");
@@ -275,7 +274,7 @@
                                     }).html(data.statusName).appendTo("#ReasonId");
                             }
                         });
-                        
+
                     }
                     //else {
                     //    $('<option>',
@@ -295,7 +294,7 @@
             }
         });
     };
-      
+
     function showReasonDetails() {
 
         var reason = $('#ReasonId :selected').text();
@@ -318,7 +317,7 @@
             if (customerId != "") {
                 if (!customerId.match(mappedCustomerId)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Customer ID");
                     flag = "N";
                 }
                 else {
@@ -327,13 +326,18 @@
                 }
                 entityIdVal = customerId;
             }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Customer ID");
+                flag = "N";
+            }
         }
         else if ($('#EntityTypeId :selected').text() == "Merchant") {
             merchantId = $("#MerchantId").val();
             if (merchantId != "") {
                 if (!merchantId.match(mappedMerchantID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Merchant ID");
                     flag = "N";
                 }
                 else {
@@ -342,13 +346,18 @@
                 }
                 entityIdVal = merchantId;
             }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Merchant ID");
+                flag = "N";
+            }
         }
         else if ($('#EntityTypeId :selected').text() == "Card") {
             cardNo = $("#CardNo").val();
             if (cardNo != "") {
                 if (cardNo.length!=16 || !(cardNo.match(number))) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Card Number");
                     flag = "N";
                 }
                 else {
@@ -357,6 +366,11 @@
                 }
                 entityIdVal = cardNo;
             }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Card Number");
+                flag = "N";
+            }
         }
 
         else {
@@ -364,7 +378,7 @@
             if (terminalId != "") {
                 if (!terminalId.match(mappedterminalID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Terminal ID");
                     flag = "N";
                 }
                 else {
@@ -373,12 +387,13 @@
                 }
                 entityIdVal = terminalId;
             }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Terminal ID");
+                flag = "N";
+            }
         }
-        if (merchantId == "" && terminalId == "" && customerId == "" && cardNo == "") {
-            $("#entityid_error").attr("style", "display:block");
-            $("#entityid_error").html("Enter Entity ID");
-            flag = "N";
-        }
+
 
         var actionId = $('#ActionId :selected').val();
         if (actionId == "0" ) {
@@ -401,7 +416,7 @@
             $("#reason_error").html("");
         }
         var remarks = $("#Remarks").val();
-        if (remarks == "") {
+        if (remarks.trim() == "") {
             $("#remarks_error").attr("style", "display:block");
             $("#remarks_error").html("Please enter Remarks");
             flag = "N";
@@ -414,7 +429,7 @@
         var reason = $('#ReasonId :selected').text();
         if (reason == "Others") {
             reasonDetails = $('#ReasonDetails').val();
-            if (reasonDetails == "") {
+            if (reasonDetails.trim() == "") {
                 $("#reason_error").attr("style", "display:block");
                 $("#reason_error").html("Please enter Reason");
                 flag = "N";
@@ -432,7 +447,7 @@
             var remarks = $('#Remarks').val();
             var model = { EntityTypeId: entityTypeId, EntityIdVal: entityIdVal, ActionId: actionId, ReasonId: reasonId, ReasonDetails: reasonDetails, Remarks: remarks };
             if (actionText == "Permanent Hotlisted" || actionId == "7") {
-                if (confirm("Entity Once Permanent Hotlisted cannot be reactived.Are you sure you want to continue?")) {
+                if (confirm("Entity Once Permanent Hotlisted cannot be Reactived. Are you sure you want to continue?")) {
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
@@ -440,9 +455,21 @@
                         dataType: 'json',
                         data: JSON.stringify(model),
                         success: function (data) {
-                            $("#reason").html(data);
-                            $(".toBeHiddenOnSuccess").hide();
-
+                            if(data.length>0){
+                                
+                                $("#reason").html("");
+                                $("#reason").append("<span>" + data[1] + "</span></br>");
+                                if(data[0]=="0"){
+                                    $("#reason").addClass("alert-danger");
+                                    $("#reason").removeClass("alert-success");
+                                }
+                                else{
+                                    $("#reason").addClass("alert-success");
+                                    $("#reason").removeClass("alert-danger");
+                                }
+                                $("#reason").attr("style","display:block");
+                                $(".toBeHiddenOnSuccess").hide();
+                            }
                         },
                         error: function (ex) {
                             alert('Error.' + ex);
@@ -458,8 +485,21 @@
                         dataType: 'json',
                         data: JSON.stringify(model),
                         success: function (data) {
-                            $("#reason").html(data);
-                            $(".toBeHiddenOnSuccess").hide();
+                           if(data.length>0){
+                               
+                                $("#reason").html("");
+                                $("#reason").append("<span>" + data[1] + "</span></br>");
+                                if(data[0]=="0"){
+                                    $("#reason").addClass("alert-danger");
+                                    $("#reason").removeClass("alert-success");
+                                }
+                                else{
+                                    $("#reason").addClass("alert-success");
+                                    $("#reason").removeClass("alert-danger");
+                                }
+                                $("#reason").attr("style","display:block");
+                                $(".toBeHiddenOnSuccess").hide();
+                            }
 
                         },
                         error: function (ex) {
@@ -484,7 +524,7 @@
           if (merchantId != "") {
                 if (!merchantId.match(mappedMerchantID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Merchant ID");
                 }
                 else {
                     $("#entityid_error").attr("style", "display:none");
@@ -493,7 +533,7 @@
          }
          else{
              $("#entityid_error").attr("style", "display:block");
-              $("#entityid_error").html("Enter Entity ID");
+              $("#entityid_error").html("Enter Merchant ID");
          }
      });
      $("#TerminalId").on("blur", function () {
@@ -501,7 +541,7 @@
         if (terminalId != "") {
                 if (!terminalId.match(mappedterminalID)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Terminal ID");
                 }
                 else {
                     $("#entityid_error").attr("style", "display:none");
@@ -510,7 +550,7 @@
          }
          else{
               $("#entityid_error").attr("style", "display:block");
-              $("#entityid_error").html("Enter Entity ID");
+              $("#entityid_error").html("Enter Terminal ID");
          }
      });
      $("#CardNo").on("blur", function () {
@@ -518,7 +558,7 @@
             if (cardNo != "") {
                 if (cardNo.length!=16 || !(cardNo.match(number))) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Card Number");
                 }
                 else {
                     $("#entityid_error").attr("style", "display:none");
@@ -527,7 +567,7 @@
             }
          else{
               $("#entityid_error").attr("style", "display:block");
-              $("#entityid_error").html("Enter Entity ID");
+              $("#entityid_error").html("Enter Card Number");
          }
      });
      $("#CustomerId").on("blur", function () {
@@ -535,7 +575,7 @@
             if (customerId != "") {
                 if (!customerId.match(mappedCustomerId)) {
                     $("#entityid_error").attr("style", "display:block");
-                    $("#entityid_error").html("Invalid Customer/Card/Merchant/Terminal ID");
+                    $("#entityid_error").html("Invalid Customer ID");
                 }
                 else {
                     $("#entityid_error").attr("style", "display:none");
@@ -544,7 +584,52 @@
             }
          else{
              $("#entityid_error").attr("style", "display:block");
-              $("#entityid_error").html("Enter Entity ID");
+              $("#entityid_error").html("Enter Customer ID");
          }
      });
+     $("#Remarks").on("blur", function () {
+            var remarks = $("#Remarks").val();
+             if (remarks.trim() == "") {
+            $("#remarks_error").attr("style", "display:block");
+            $("#remarks_error").html("Please enter Remarks");
+        }
+        else {
+            $("#remarks_error").attr("style", "display:none");
+            $("#remarks_error").html("");
+        }
+     });
+      $("#ReasonDetails").on("blur", function () {
+            var reasonDetails = $("#ReasonDetails").val();
+            if (reasonDetails.trim() == "") {
+                $("#reason_error").attr("style", "display:block");
+                $("#reason_error").html("Please enter Reason");
+            }
+            else {
+                $("#reason_error").attr("style", "display:none");
+                $("#reason_error").html("");
+            }
+     });
+      $("#ActionId").on("change", function () {
+        var actionId = $('#ActionId :selected').val();
+        if (actionId == "0" ) {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+        }
+        else {
+            $("#action_error").attr("style", "display:none");
+            $("#action_error").html("");
+        }
+    });
+    $("#ReasonId").on("change", function () {
+       var reasonId = $('#ReasonId :selected').val();
+        if (reasonId == "0") {
+            $("#reason_error").attr("style", "display:block");
+            $("#reason_error").html("Please Select Reason");
+            flag = "N";
+        }
+        else {
+            $("#reason_error").attr("style", "display:none");
+            $("#reason_error").html("");
+        }
+    });
 </script>

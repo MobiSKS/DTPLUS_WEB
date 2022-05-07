@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
 {
     public interface IHotlistingService
     {
-        Task<string> ApplyHotlistorReactivate([FromBody] HotlistorReactivateViewModel HotlistorReactivateViewModel);
+        Task<List<string>> ApplyHotlistorReactivate([FromBody] HotlistorReactivateViewModel HotlistorReactivateViewModel);
         Task<ViewHotlistingorReactivateResponse> GetHotlistedorReactivatedData(string EntityTypeId, string EntityId);
         Task<GetHotlistApprovalResponse> GetHotlistApproval(string EntityTypeId, string ActionId, string FromDate, string ToDate);
         Task<string> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest);

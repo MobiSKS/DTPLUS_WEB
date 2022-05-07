@@ -15,7 +15,7 @@ namespace HPCL_Web.Controllers
         {
             _cardService = cardServices;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -224,6 +224,11 @@ namespace HPCL_Web.Controllers
             var reason = await _cardService.SaveCustomerMappingMerchant(objCardMerchantMaps, status);
             ModelState.Clear();
             return Json(reason);
+        }
+
+        public IActionResult LimitUpdateForSingleRechargeCards()
+        {
+            return View();
         }
     }
 }
