@@ -35,8 +35,8 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-3">Card Number</label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -48,8 +48,8 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-3">Mobile No</label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -72,11 +72,7 @@
 
                     </div>
 
-                    <div>
-                        <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
-                        </div>
-                    </div>
-
+                    <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
 
                     <div id="searchResSection" style="display:none;">
 
@@ -198,16 +194,16 @@
                     var isDts;
                     var expDts;
 
-                    if(((girdList[i].issueDate) == "01/01/0001 00:00:00") || ((girdList[i].issueDate) == "01/01/1900 00:00:00")){
+                    if(((girdList[i].issueDate) == "01/01/0001 00:00:00") || ((girdList[i].issueDate) == "01/01/1900 00:00:00") || ((girdList[i].issueDate) == null)){
                         isDts = "";
                     }else{
-                        isDts = moment(new Date(girdList[i].issueDate)).format('DD-MM-YYYY');
+                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
 
-                    if(((girdList[i].expiryDate) == "01/01/0001 00:00:00") || ((girdList[i].expiryDate) == "01/01/1900 00:00:00")){
+                    if(((girdList[i].expiryDate) == "01/01/0001 00:00:00") || ((girdList[i].expiryDate) == "01/01/1900 00:00:00") || ((girdList[i].expiryDate) == null)){
                         expDts = "";
                     }else{
-                        expDts = moment(new Date(girdList[i].expiryDate)).format('DD-MM-YYYY');
+                        expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
 
                     var srNumber = (i + 1);
@@ -255,6 +251,7 @@
         }
         if (!$(this).is(':checked')) {
             currentRow.find('input:text').attr("readonly", true);
+            currentRow.find('.errss').css("display", "none");
         }
     });
 

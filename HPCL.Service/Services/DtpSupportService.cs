@@ -82,6 +82,12 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res[0].Reason;
         }
+        public async Task<UnblockUserModel> UnblockUser()
+        {
+            UnblockUserModel model = new UnblockUserModel();
+            model.Message = "";
+            return model;
+        }
 
     }
 }

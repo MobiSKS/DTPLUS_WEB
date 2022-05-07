@@ -36,8 +36,8 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number </label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger", onkeypress = "return isNumberKey(event)" })
+                                            @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -49,8 +49,8 @@
                                     <label class="font-weight-normal col-md-4 col-12">Mobile No</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger", onkeypress = "return isNumberKey(event)" })
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -72,10 +72,8 @@
                     <div class="clearfix"></div>
                 </div>
 
-                <div>
-                    <div class="alert alert-warning" role="alert" style="display:none;" id="noRecord">
-                    </div>
-                </div>
+                <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
+
                 <div class="clearfix"></div>
 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="searchResult" style="display:none;">
@@ -184,16 +182,16 @@
                     var isDts;
                     var expDts;
 
-                    if(((girdList[i].issueDate) == "01/01/0001 00:00:00") || ((girdList[i].issueDate) == "01/01/1900 00:00:00")){
+                    if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
                         isDts = "";
                     }else{
-                        isDts = moment(new Date(girdList[i].issueDate)).format('DD-MM-YYYY');
+                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
 
-                    if(((girdList[i].expiryDate) == "01/01/0001 00:00:00") || ((girdList[i].expiryDate) == "01/01/1900 00:00:00")){
+                    if(((girdList[i].expiryDate) == "01-01-0001 00:00:00") || ((girdList[i].expiryDate) == "01-01-1900 00:00:00") || ((girdList[i].expiryDate) == null)){
                         expDts = "";
                     }else{
-                        expDts = moment(new Date(girdList[i].expiryDate)).format('DD-MM-YYYY');
+                        expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
 
                     var srNumber = (i + 1);
@@ -205,7 +203,7 @@
                     var expiryDate = expDts;
                     var status = (girdList[i].status || '');
                     var cardBalance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance)+"</span>";
-                    var ToCardNumber = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='16' onchange='toCardNoChange(this," + (i) + ")' class='form-control newCardNo cgl' id='toCardNoId_"+i+"' name='ToCardNumber' type='text' value='' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='toCardNo_error_"+i+"' aria-hidden='true'></i></div>";
+                    var ToCardNumber = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='16' onchange='toCardNoChange(this," + (i) + ")' class='form-control newCardNo cgl' id='toCardNoId_"+i+"' name='ToCardNumber' type='text' value='' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='toCardNo_error_"+i+"' aria-hidden='true'></i></div>";
                     var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
                     tbl.row.add([
@@ -243,6 +241,8 @@
         }
         if (!$(this).is(':checked')) {
             currentRow.find('input:text').attr("readonly", true);
+            currentRow.find('.errs').css("display", "none");
+            currentRow.find('.errss').css("display", "none");
         }
     });
 

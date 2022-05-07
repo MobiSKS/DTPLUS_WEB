@@ -11,5 +11,12 @@ namespace HPCL.Common.Models.ViewModel.TMS
     {
         public string CustomerId { get; set; }
         public string Message { get; set; }
+        public string url { get; set; }
+        public string access_token { get; set; }
+        public string refresh_token { get; set; }
+        public string tmsUserId { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
+        public int StatusCode { get; set; }
     }
 }
