@@ -116,6 +116,43 @@ namespace HPCL_Web.Controllers
             var modals = await _tmsService.SwitchToCargoFL();
             return View(modals);
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> SwitchToCargoFL(NavigateToTransportManagementSystemModel model)
+        {
+            var Model = await _tmsService.SwitchToCargoFL(model);
+
+            if (Model.StatusCode == 1000)
+            {
+                if (!string.IsNullOrEmpty(Model.url))
+                {
+                    string url = Model.url;
+
+                    if (!(url.Contains("http:")))
+                    {
+                        if (!url.Contains("https:"))
+                        {
+                            url = "http://" + url;
+                        }
+                    }
+                    if (!(url.Contains("https:")))
+                    {
+                        if (!url.Contains("http:"))
+                        {
+                            url = "http://" + url;
+                        }
+                    }
+
+                    return Redirect(url);
+                }
+                else
+                {
+                    return View(Model);
+                }
+            }
+
+            return View(Model);
+        }
+
     }
 }

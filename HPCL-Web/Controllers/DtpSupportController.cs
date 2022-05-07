@@ -45,6 +45,10 @@ namespace HPCL_Web.Controllers
             var searchResult = await _dtpSupportService.GetCardBalanceTransferDetails(CardNo);
             return Json(searchResult);
         }
-        
+        public async Task<IActionResult> UnblockUser()
+        {
+            var modals = await _dtpSupportService.UnblockUser();
+            return View(modals);
+        }
     }
 }
