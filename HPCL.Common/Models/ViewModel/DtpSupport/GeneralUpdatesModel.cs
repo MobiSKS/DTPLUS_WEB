@@ -20,9 +20,9 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
             });
 
             EntityFieldMdl = new List<GetEntityFieldModel>();
-            SalesAreaMdl = new List<SalesAreaModel>();
+            SalesAreaMdl = new List<SalesAreaResponseModal>();
 
-            SalesAreaMdl.Add(new SalesAreaModel
+            SalesAreaMdl.Add(new SalesAreaResponseModal
             {
                 SalesAreaID = 0,
                 SalesAreaName = "Select"
@@ -30,7 +30,7 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
         }
         public virtual List<GetEntityModel> EntityMdl { get; set; }
         public virtual List<GetEntityFieldModel> EntityFieldMdl { get; set; }
-        public virtual List<SalesAreaModel> SalesAreaMdl { get; set; }
+        public virtual List<SalesAreaResponseModal> SalesAreaMdl { get; set; }
         public string Message { get; set; }
         public int EntityTypeId { get; set; }
         public int EntityFieldId { get; set; }

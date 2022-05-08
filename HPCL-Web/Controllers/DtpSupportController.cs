@@ -94,6 +94,19 @@ namespace HPCL_Web.Controllers
             
             return View(Model);
         }
+        [HttpPost]
+        public async Task<JsonResult> GetsalesAreaList(String RegionID)
+        {
+            List<SalesAreaResponseModal> lst = new List<SalesAreaResponseModal>();
+            lst = await _commonActionService.GetSalesAreaList(RegionID);
+            lst.Insert(0, new SalesAreaResponseModal
+            {
+                SalesAreaID = 0,
+                SalesAreaName = "Select"
+            });
+
+            return Json(lst);
+        }
 
     }
 }

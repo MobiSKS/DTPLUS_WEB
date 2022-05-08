@@ -110,7 +110,8 @@
                                   <label class="font-weight-normal col-md-4 col-12" id="lblNewValue">New Value </label>
                                   <div class="col-md-7 col-12">
                                      <div class="custom_select">
-                                        @Html.TextBoxFor(m => m.NewValue, new { @id = "NewValue", @class = "form-control", maxlength = "80" })
+                                        @Html.TextBoxFor(m => m.NewValue, new { @id = "NewValue", @class = "form-control", maxlength = "50" })
+                                        @Html.ValidationMessageFor(m => m.NewValue, "", new { @id = "NewValueErrorMsg", @class = "text-danger" })
                                      </div>
                                   </div>
                                </div>
@@ -200,18 +201,34 @@
                 searchText: 'Enter Text here.'
             });
 
+    $("#EntityFieldId").change(function () 
+     {
+         var id = this.value;
+
+        if (id != 0) 
+        {
+            $("#EntityFieldId_error").html("");
+            $("#salesArea_error").html("");
+            $("#NewValueErrorMsg").html("");
+        }
+            
+     });
+
      $("#EntityTypeId").change(function () 
      {
             var id = this.value;
 
             if (id != 0) 
             {
-                $("#EntityFieldId_error").html("");
+                $("#EntityTypeId_error").html("");
+                $("#salesArea_error").html("");
+                $("#NewValueErrorMsg").html("");
                 document.getElementById("dvEntityFields").style.display="block";
             }
             else
             {
                 document.getElementById("dvEntityFields").style.display="none";
+                document.getElementById("dvUpdateFields").style.display="none";
             }
 
             document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
@@ -470,11 +487,40 @@
                                $('#lblNewValue').append(newValue);
                                $('#lblSalesArea').text('');
                                $('#lblSalesArea').append(newValue);
-
+                               $('#NewValue').val("");
+                               
                                if(entityTypeId=="1" && entityFieldId=="4")
                                {
                                    dvSalesArea.style.display = "block";
                                    dvNewValue.style.display = "none";
+
+                                   $.ajax({
+                                        type: 'POST',  // http method
+                                        url: '@Url.Action("GetsalesAreaList", "DtpSupport")',
+                                        data: { RegionID: 0 },  // data to submit
+                                        dataType: "json",
+                                        success: function (data, status, xhr) {
+                                            var v = data;
+                                            if (status == 'success') {
+                                                $("#CustomerSalesAreaID").html("");
+                                                $.each(data, function (i, data) { // bind the dropdown list using json result
+                                                    $('<option>',
+                                                        {
+                                                            value: data.salesAreaID,
+                                                            text: data.salesAreaName
+                                                        }).html(data.salesAreaName).appendTo("#CustomerSalesAreaID");
+                                                });
+                                                $("#CustomerSalesAreaID")[0].sumo.reload();
+                                            }
+                                            else {
+                                                console.log(v);
+                                            }
+                                        },
+                                        error: function (jqXhr, textStatus, errorMessage) {
+                                            alert("Error Populating Sales Area");
+                                        }
+                                    });
+
                                }
                                else
                                {
@@ -524,107 +570,144 @@
 
     var ret=true;
 
-        //var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
-        //var entityTypeId = $("#EntityTypeId").val();
-        //var entityFieldId = $("#EntityFieldId").val();
+        var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+        var entityTypeId = $("#EntityTypeId").val();
+        var entityFieldId = $("#EntityFieldId").val();
 
-        //if(entityTypeId=="0")
-        //{
+        if(entityTypeId=="0")
+        {
+            document.getElementById("EntityTypeId_error").innerHTML = "Please select an Entity Type";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("EntityTypeId_error").innerHTML = "";
+        }
 
-        //}
-        //else
-        //{
+        if(entityFieldId=="0")
+        {
+            document.getElementById("EntityFieldId_error").innerHTML = "Please select an Entity Fields";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("EntityFieldId_error").innerHTML = "";
+        }
 
-        //}
+           
+        if (CustomerId == "") 
+        {
+            if(entityTypeId=="1")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Customer ID";
+                ret=false;
+            }
+            else if(entityTypeId=="2")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Merchant ID";
+                ret=false;
+            }
+            else if(entityTypeId=="3")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Card PAN";
+                ret=false;
+            }
+        }
+        else 
+        {
+            if(entityTypeId=="1")
+            {
+                if (!CustomerId.match(mappedCustomerId))
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Customer ID");
+                    ret=false;
+                }
+                else
+                {
+                    $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                }
+            }
+            else if(entityTypeId=="2")
+            {
+                if (!CustomerId.match(mappedMerchantID))
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Merchant ID");
+                    ret=false;
+                }
+                else
+                {
+                    $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                }
+            }
+            else if(entityTypeId=="3")
+            {
+                if (CustomerId.substring(0, 1) != "7") 
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                    ret=false;
+                }
+                else if (CustomerId.length < 16) 
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                    ret=false;
+                }
+                else if (!(CustomerId.match(number))) 
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                }
+            }
 
-        //    if(entityTypeId!="0")
-        //    {
-        //        if (CustomerId == "") 
-        //        {
-        //            if(entityTypeId=="1")
-        //            {
-        //              document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Customer ID";
-        //              ret=false;
-        //            }
-        //            else if(entityTypeId=="2")
-        //            {
-        //              document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Merchant ID";
-        //              ret=false;
-        //            }
-        //            else if(entityTypeId=="3")
-        //            {
-        //              document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Card PAN";
-        //              ret=false;
-        //            }
-        //        }
-        //        else 
-        //        {
-        //            if(entityTypeId=="1")
-        //            {
-        //                if (!CustomerId.match(mappedCustomerId))
-        //                {
-        //                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-        //                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Customer ID");
-        //                    ret=false;
-        //                }
-        //                else
-        //                {
-        //                   $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
-        //                }
-        //            }
-        //            else if(entityTypeId=="2")
-        //            {
-        //                if (!CustomerId.match(mappedMerchantID))
-        //                {
-        //                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-        //                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Merchant ID");
-        //                    flag="N";
-        //                }
-        //                else
-        //                {
-        //                   $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
-        //                }
-        //            }
-        //            else if(entityTypeId=="3")
-        //            {
-        //                if (CustomerId.substring(0, 1) != "7") 
-        //                {
-        //                  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-        //                  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-        //                  flag="N";
-        //                }
-        //                else if (CustomerId.length < 16) 
-        //                {
-        //                  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-        //                  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-        //                  flag="N";
-        //                }
-        //                else if (!(CustomerId.match(number))) 
-        //                {
-        //                   $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-        //                   $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-        //                   flag="N";
-        //                }
-        //                else
-        //                    document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
-        //            }
+            if(entityTypeId=="1")
+            {
+                if(entityFieldId=="4")
+                {
+                    var entityFieldId = $("#CustomerSalesAreaID").val();
+                    if(entityFieldId=="0")
+                    {
+                        $("#salesArea_error").attr("style", "display:block");
+                        $("#salesArea_error").html("Select Sales Area");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#salesArea_error").html("");
+                    }
+                }
+                else
+                {
+                    if(document.getElementById("NewValue").value.trim()=="")
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Please enter value");
+                        ret=false;
+                    }
+                    else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Invalid value");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#NewValueErrorMsg").html("");
+                    }
+                }
+            }
 
-        //        }
+        }
 
-        //        if(entityFieldId=="0")
-        //        {
-        //            document.getElementById("EntityFieldId_error").innerHTML = "Please Select an Entity Fields";
-        //            flag="N";
-        //        }
-        //        else
-        //        {
-        //            document.getElementById("EntityFieldId_error").innerHTML = "";
-        //        }
-        //    }
-
- 
-
-    return ret;
+   
+     return ret;
    }
 
 </script>
