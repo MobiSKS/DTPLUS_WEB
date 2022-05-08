@@ -681,6 +681,7 @@
                     else
                     {
                         $("#salesArea_error").html("");
+                        document.getElementById("NewValue").value = entityFieldId;
                     }
                 }
                 else
@@ -690,6 +691,12 @@
                         $("#NewValueErrorMsg").attr("style", "display:block");
                         $("#NewValueErrorMsg").html("Please enter value");
                         ret=false;
+                    }
+                    else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                    {
+                      $("#NewValueErrorMsg").attr("style", "display:block");
+                      $("#NewValueErrorMsg").html("Invalid value");
+                      return false;
                     }
                     else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
                     {
@@ -709,5 +716,43 @@
    
      return ret;
    }
+
+   $("#NewValue").on("blur", function () 
+   {
+    debugger;
+      var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+      var entityTypeId = $("#EntityTypeId").val();
+      var entityFieldId = $("#EntityFieldId").val();
+
+        if(entityTypeId=="1")
+        {
+            if(entityFieldId!="4")
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    return false;
+                }
+                else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                {
+                  $("#NewValueErrorMsg").attr("style", "display:block");
+                  $("#NewValueErrorMsg").html("Invalid value");
+                  return false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    return false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
+        }
+
+   });
 
 </script>
