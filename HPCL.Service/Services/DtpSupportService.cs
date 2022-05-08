@@ -107,6 +107,7 @@ namespace HPCL.Service.Services
                 }
             }
             model.EntityMdl.AddRange(newList);
+            model.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
             model.Message = "";
             model.UpdateStatus = "";
             return model;
@@ -160,6 +161,7 @@ namespace HPCL.Service.Services
             }
             model.EntityMdl.AddRange(newList);
             model.EntityFieldMdl.AddRange(await _commonActionService.GetEntityFieldModelList(model.EntityTypeId.ToString()));
+            model.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
             model.UpdateStatus = "";
             if (updateResponse.Internel_Status_Code == 1000)
             {

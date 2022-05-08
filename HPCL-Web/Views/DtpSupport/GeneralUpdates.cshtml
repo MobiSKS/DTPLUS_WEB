@@ -153,6 +153,32 @@
                             </div>
                          </div>
 
+                         <div class="clearfix"></div>
+
+                         <div id="dvOutletTypes" style="display:none">
+                            <div class="d-flex align-items-center flex-wrap">
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <label class="font-weight-normal col-md-4 col-12" id="lblOutletTypes">New Value </label>
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                           @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control" })
+                                           <span class="error" id="merchantType_error"></span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+
                          <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-2">
                                <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return SubmitValidations()">@Label.Update</button>
@@ -211,6 +237,7 @@
             $("#EntityFieldId_error").html("");
             $("#salesArea_error").html("");
             $("#NewValueErrorMsg").html("");
+            $("#merchantType_error").html("");
         }
             
      });
@@ -224,6 +251,7 @@
                 $("#EntityTypeId_error").html("");
                 $("#salesArea_error").html("");
                 $("#NewValueErrorMsg").html("");
+                $("#merchantType_error").html("");
                 document.getElementById("dvEntityFields").style.display="block";
                 document.getElementById("dvUpdateFields").style.display="none";
             }
@@ -483,10 +511,11 @@
                      success: function (res) 
                      {
                          console.log(res);
-                         console.log(res.searchResult.data[0].status);
+                         
                          if (res.searchResult.data.length > 0)
                          {
-                       
+                            console.log(res.searchResult.data[0].status);
+
                             if (res.searchResult.data[0].status == 1)
                             {
                                document.getElementById("OldValue").value = res.searchResult.data[0].oldValue;
@@ -501,11 +530,14 @@
                                $("#dvRemarks").addClass("alert-success");
                                dvRemarks.style.display = "none";
                                $('#dvRemarks').html("");
+                               $('#lblOutletTypes').text('');
+                               $('#lblOutletTypes').append(newValue);
                                
-                               if(entityTypeId=="1" && entityFieldId=="4")
+                               if(entityTypeId=="1" && entityFieldId=="4")//Sales Area
                                {
                                    dvSalesArea.style.display = "block";
                                    dvNewValue.style.display = "none";
+                                   dvOutletTypes.style.display = "none";
 
                                    $.ajax({
                                         type: 'POST',  // http method
@@ -535,9 +567,16 @@
                                     });
 
                                }
+                               else if(entityTypeId=="2" && entityFieldId=="6")//Outlet Type
+                               {
+                                   dvSalesArea.style.display = "none";
+                                   dvNewValue.style.display = "none";
+                                   dvOutletTypes.style.display = "block";
+                               }
                                else
                                {
                                    dvSalesArea.style.display = "none";
+                                   dvOutletTypes.style.display = "none";
                                    dvNewValue.style.display = "block";
                                }
 
@@ -562,14 +601,19 @@
                          {
                              document.getElementById("OldValue").value = "";
                              dvUpdateFields.style.display = "none";
+                             $("#dvRemarks").addClass("alert-danger");
+                             $('#dvRemarks').html(res.searchResult.message);
                              alert(res.searchResult.message);
                          }
                      },
                      error: function (xhr, ajaxOptions, thrownError) 
                      {
                          dvUpdateFields.style.display = "none";
-                         console.log(xhr);
+                         console.log('Not success');
                          alert(xhr);
+                         $("#dvRemarks").addClass("alert-danger");
+                         dvRemarks.style.display = "block";
+                         $('#dvRemarks').html(xhr);
                      }
                  });
 
@@ -683,12 +727,12 @@
                 }
             }
 
-            if(entityTypeId=="1")
+            if(entityTypeId=="1")//Customer
             {
-                if(entityFieldId=="4")
+                if(entityFieldId=="4")//Sales Area
                 {
-                    var entityFieldId = $("#CustomerSalesAreaID").val();
-                    if(entityFieldId=="0")
+                    var salesAreaID = $("#CustomerSalesAreaID").val();
+                    if(salesAreaID=="0")
                     {
                         $("#salesArea_error").attr("style", "display:block");
                         $("#salesArea_error").html("Select Sales Area");
@@ -697,7 +741,50 @@
                     else
                     {
                         $("#salesArea_error").html("");
-                        document.getElementById("NewValue").value = entityFieldId;
+                        document.getElementById("NewValue").value = salesAreaID;
+                    }
+                }
+                else
+                {
+                    if(document.getElementById("NewValue").value.trim()=="")
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Please enter value");
+                        ret=false;
+                    }
+                    else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                    {
+                      $("#NewValueErrorMsg").attr("style", "display:block");
+                      $("#NewValueErrorMsg").html("Invalid value");
+                      return false;
+                    }
+                    else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Invalid value");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#NewValueErrorMsg").html("");
+                    }
+                }
+            }
+            else if(entityTypeId=="2")//Merchant
+            {
+                if(entityFieldId=="6")//Outlet Type
+                {
+                    var merchantTypeId = $("#MerchantTypeId").val();
+                    if(merchantTypeId=="0")
+                    {
+                        $("#merchantType_error").attr("style", "display:block");
+                        $("#merchantType_error").html("Select Outlet Type");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#merchantType_error").html("");
+                        document.getElementById("NewValue").value = merchantTypeId;
                     }
                 }
                 else
@@ -780,6 +867,34 @@
                     $("#NewValueErrorMsg").attr("style", "display:block");
                     $("#NewValueErrorMsg").html("Invalid value");
                     return false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
+        }
+        else if(entityTypeId=="2")//Merchant
+        {
+            if(entityFieldId!="6")//Outlet Type
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    ret=false;
+                }
+                else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    return false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    ret=false;
                 }
                 else
                 {
