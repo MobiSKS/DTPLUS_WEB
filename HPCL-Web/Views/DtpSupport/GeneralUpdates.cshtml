@@ -168,6 +168,7 @@
          
       }
       <div>@Html.HiddenFor(m => m.UpdateStatus)</div>
+      <div>@Html.HiddenFor(m => m.Message)</div>
       <div class="clearfix"></div>
    </div>
 </div>
@@ -224,6 +225,7 @@
                 $("#salesArea_error").html("");
                 $("#NewValueErrorMsg").html("");
                 document.getElementById("dvEntityFields").style.display="block";
+                document.getElementById("dvUpdateFields").style.display="none";
             }
             else
             {
@@ -340,18 +342,19 @@
                     }
                     else if(entityTypeId=="3")
                     {
-                        if (CustomerId.substring(0, 1) != "7") 
+                        
+                        if (CustomerId.length < 16) 
                         {
                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
                           return false;
                         }
-                        else if (CustomerId.length < 16) 
-                        {
-                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-                          return false;
-                        }
+                        //else if (CustomerId.substring(0, 1) != "7") 
+                        //{
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                        //  return false;
+                        //}
                         else if (!(CustomerId.match(number))) 
                         {
                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
@@ -359,7 +362,9 @@
                            return false;
                         }
                         else
+                        {
                             document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                        }
                     }
 
                 }
@@ -412,6 +417,7 @@
                         {
                            $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
                         }
+                        document.getElementById("NewValue").maxLength = 50;
                     }
                     else if(entityTypeId=="2")
                     {
@@ -425,21 +431,22 @@
                         {
                            $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
                         }
+                        document.getElementById("NewValue").maxLength = 50;
                     }
                     else if(entityTypeId=="3")
                     {
-                        if (CustomerId.substring(0, 1) != "7") 
+                        if (CustomerId.length < 16) 
                         {
                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
                           flag="N";
                         }
-                        else if (CustomerId.length < 16) 
-                        {
-                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-                          flag="N";
-                        }
+                        //else if (CustomerId.substring(0, 1) != "7") 
+                        //{
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                        //  flag="N";
+                        //}
                         else if (!(CustomerId.match(number))) 
                         {
                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
@@ -447,7 +454,10 @@
                            flag="N";
                         }
                         else
+                        {
                             document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                        }
+                        document.getElementById("NewValue").maxLength = 24;
                     }
 
                 }
@@ -488,6 +498,9 @@
                                $('#lblSalesArea').text('');
                                $('#lblSalesArea').append(newValue);
                                $('#NewValue').val("");
+                               $("#dvRemarks").addClass("alert-success");
+                               dvRemarks.style.display = "none";
+                               $('#dvRemarks').html("");
                                
                                if(entityTypeId=="1" && entityFieldId=="4")
                                {
@@ -539,6 +552,9 @@
                                 $('#lblNewValue').append('New Value');
                                 $('#lblSalesArea').text('');
                                 $('#lblSalesArea').append('New Value');
+                                $("#dvRemarks").addClass("alert-danger");
+                                dvRemarks.style.display = "block";
+                                $('#dvRemarks').html(res.searchResult.data[0].reason);
                             }
 
                          }
@@ -643,18 +659,18 @@
             }
             else if(entityTypeId=="3")
             {
-                if (CustomerId.substring(0, 1) != "7") 
+                if (CustomerId.length < 16) 
                 {
                     $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
                     $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
                     ret=false;
                 }
-                else if (CustomerId.length < 16) 
-                {
-                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
-                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
-                    ret=false;
-                }
+                //else if (CustomerId.substring(0, 1) != "7") 
+                //{
+                //    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                //    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                //    ret=false;
+                //}
                 else if (!(CustomerId.match(number))) 
                 {
                     $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
@@ -710,6 +726,25 @@
                     }
                 }
             }
+            else if(entityTypeId=="3")//Card
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    ret=false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    ret=false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
 
         }
 
@@ -724,7 +759,7 @@
       var entityTypeId = $("#EntityTypeId").val();
       var entityFieldId = $("#EntityFieldId").val();
 
-        if(entityTypeId=="1")
+        if(entityTypeId=="1")//Customer
         {
             if(entityFieldId!="4")
             {
@@ -750,6 +785,25 @@
                 {
                     $("#NewValueErrorMsg").html("");
                 }
+            }
+        }
+        else if(entityTypeId=="3")//Card
+        {
+            if(document.getElementById("NewValue").value.trim()=="")
+            {
+                $("#NewValueErrorMsg").attr("style", "display:block");
+                $("#NewValueErrorMsg").html("Please enter value");
+                return false;
+            }
+            else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
+            {
+                $("#NewValueErrorMsg").attr("style", "display:block");
+                $("#NewValueErrorMsg").html("Invalid value");
+                return false;
+            }
+            else
+            {
+                $("#NewValueErrorMsg").html("");
             }
         }
 
