@@ -124,6 +124,12 @@
         window.location.reload(true);
     }
 
+    $('input').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
         $(document).ready(function () {
 
             function isNumberKey(evt) {
@@ -282,6 +288,8 @@
             var balance = row.find('.balanceAmt').text();
             var cashPurseLimit = row.find('.cashPurseLimit').text();
 
+            var totalVal = (+transferAmount) + (+balance);
+
             updateArray.push({
                 cardNo: cardNo,
                 transferAmount: transferAmount
@@ -294,7 +302,7 @@
             }
 
             if(transferAmount.trim() != ''){
-                if(!((transferAmount + balance) < cashPurseLimit)){
+                if(!(totalVal < cashPurseLimit)){
                     document.getElementById('amtToTrans_error_'+indexS).title="Card Balance should not be exceeded the Cash Purse Limit";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
