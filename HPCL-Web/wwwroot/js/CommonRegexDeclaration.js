@@ -31,3 +31,4 @@ var CitynameCheck = /^[A-Za-z ]{2,40}$/;
 var fastTagNoCheck = /^[a-zA-Z0-9]{16}$/;
 var userNameCheck = /^(?![@_.])(?!.*[@_.]{2})[a-zA-Z0-9@_.]{6,30}$/;
 var tatkalCustomerCheck = /^(?=(23))[0-9]{10}$/;
+var dealerNameCheck = /^[A-Za-z ]{2,50}$/;
