@@ -16,6 +16,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
+using HPCL.Common.Models.ViewModel.CustomerManage;
 
 namespace HPCL.Service.Services
 {
@@ -219,6 +220,14 @@ namespace HPCL.Service.Services
                // List<SearchGridResponse> searchList = JsonConvert.DeserializeObject<List<SearchGridResponse>>(contentString);
                 return searchList;
             }
+        }
+
+        public async Task<AddOnCustomerModel> AddOnCustomer()
+        {
+            AddOnCustomerModel custMdl = new AddOnCustomerModel();
+            custMdl.Remarks = "";
+
+            return custMdl;
         }
     }
 }

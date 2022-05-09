@@ -92,5 +92,12 @@ namespace HPCL_Web.Controllers
 
 
         #endregion
+
+        public async Task<IActionResult> AddOnCustomer()
+        {
+            var modals = await _customerManageService.AddOnCustomer();
+            return View(modals);
+        }
+
     }
 }
