@@ -147,6 +147,7 @@
         public static string updateCustomer = "api/dtplus/customer/update_customer";
         public static string checkPanCardByDistrictIdAndCustomerReferenceno = "api/dtplus/customer/check_pan_card_by_district_id_and_customer_reference_no";
         public static string checkVechileNo = "api/dtplus/card/check_vechile_no";
+        public static string customerAddOnUser = "api/dtplus/customer/customer_add_on_user";
         #endregion
 
         #region Login

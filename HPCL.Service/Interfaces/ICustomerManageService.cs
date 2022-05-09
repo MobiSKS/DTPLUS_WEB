@@ -21,5 +21,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId);
         Task<List<SearchGridResponse>> CardDetails(String CustomerId);
         Task<AddOnCustomerModel> AddOnCustomer();
+        Task<AddOnCustomerModel> AddOnCustomer(AddOnCustomerModel model);
     }
 }

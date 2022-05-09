@@ -344,8 +344,57 @@ namespace HPCL.Service.Services
         {
             AddOnCustomerModel custMdl = new AddOnCustomerModel();
             custMdl.Remarks = "";
+            custMdl.Success = "";
+            custMdl.Message = "";
 
             return custMdl;
         }
+        public async Task<AddOnCustomerModel> AddOnCustomer(AddOnCustomerModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            CustomerInserCardResponse updateResponse;
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.customerAddOnUser);
+
+            updateResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+                        
+            model.Success = "";
+            if (updateResponse.Internel_Status_Code == 1000)
+            {
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                model.Message = updateResponse.Message;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+
+                    if (model.Status == 1)
+                    {
+                        model.Success = updateResponse.Data[0].Reason;
+                        model.Message = "";
+                    }
+                }
+            }
+            else
+            {
+                model.Message = updateResponse.Message;
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+                    model.Success = "";
+                }
+            }
+
+            return model;
+        }
+
     }
 }
