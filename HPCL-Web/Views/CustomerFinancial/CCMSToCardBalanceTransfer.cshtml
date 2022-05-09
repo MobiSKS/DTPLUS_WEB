@@ -24,7 +24,7 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-3">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)", onpaste="validatePaste(this, event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -122,6 +122,15 @@
 
     function resetClick() {
         window.location.reload(true);
+    }
+
+    function validatePaste(el, e) {
+        var regex = /^\d+$/;
+        var key = e.clipboardData.getData('text')
+        if (!regex.test(key)) {
+            e.preventDefault();
+            return false;
+        }
     }
 
         $(document).ready(function () {
@@ -282,6 +291,8 @@
             var balance = row.find('.balanceAmt').text();
             var cashPurseLimit = row.find('.cashPurseLimit').text();
 
+            var totalVal = (+transferAmount) + (+balance);
+
             updateArray.push({
                 cardNo: cardNo,
                 transferAmount: transferAmount
@@ -294,7 +305,7 @@
             }
 
             if(transferAmount.trim() != ''){
-                if(!((transferAmount + balance) < cashPurseLimit)){
+                if(!(totalVal < cashPurseLimit)){
                     document.getElementById('amtToTrans_error_'+indexS).title="Card Balance should not be exceeded the Cash Purse Limit";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
