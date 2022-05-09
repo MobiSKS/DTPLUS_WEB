@@ -25,7 +25,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Reference Number<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control restrictPaste", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                             @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -228,6 +228,12 @@
          $("#CustomerReferenceNoId").prop('readonly', false);
           window.location.href = '@Url.Action("UploadDoc", "Customer", new { customerReferenceNo = "" })';
      };
+
+     $('.restrictPaste').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
 
      var idFront;
      var idBack;
