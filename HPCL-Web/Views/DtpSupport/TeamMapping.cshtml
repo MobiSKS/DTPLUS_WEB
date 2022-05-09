@@ -197,6 +197,7 @@
 
 <script type="text/javascript">
     var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click 
+    var activeRow="";
     $(document).ready(function () {
         
 
@@ -408,14 +409,17 @@
      });
 
      $("#TeamMapSearch").on('click', '.edit', function () {
-        currentRow = $(this).closest("tr");
-        currentRow.find('td.editCell').each(function(){
-                      $(this).prop('contenteditable', true)
-                  });
-       currentRow.focus();
-       currentRow.find('.edit').attr("style","display:none");
-       currentRow.find('.save').attr("style","display:block");
-       currentRow.find('.cancel').attr("style","display:block");
+        if(activeRow==""){
+            currentRow = $(this).closest("tr");
+            activeRow=currentRow;
+            currentRow.find('td.editCell').each(function(){
+                          $(this).prop('contenteditable', true)
+                      });
+           currentRow.focus();
+           currentRow.find('.edit').attr("style","display:none");
+           currentRow.find('.save').attr("style","display:block");
+           currentRow.find('.cancel').attr("style","display:block");
+       }
     });
      $("#TeamMapSearch").on('click', '.cancel', function () {
           currentRow = $(this).closest("tr");
@@ -425,6 +429,7 @@
        currentRow.find('.edit').attr("style","display:block");
        currentRow.find('.save').attr("style","display:none");
        currentRow.find('.cancel').attr("style","display:none");
+       activeRow="";
      });
      $("#TeamMapSearch").on('click', '.save', function () {
           row = $(this).closest("tr");
