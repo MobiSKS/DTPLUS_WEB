@@ -188,9 +188,9 @@ namespace HPCL.Service.Services
 
                 if (customerProfileResponse != null && customerProfileResponse.Count > 0)
                 {
-                    foreach(CustomerProfileResponse response in customerProfileResponse)
+                    foreach (CustomerProfileResponse response in customerProfileResponse)
                     {
-                        if(string.IsNullOrEmpty(response.AreaOfOperation))
+                        if (string.IsNullOrEmpty(response.AreaOfOperation))
                         {
                             response.AreaOfOperation = "";
                         }
@@ -290,6 +290,17 @@ namespace HPCL.Service.Services
                             }
                         }
 
+                        if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                            response.FleetSizeNoOfVechileOwnedHCV = "";
+                        response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                            response.FleetSizeNoOfVechileOwnedLCV = "";
+                        response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                            response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                            response.FleetSizeNoOfVechileOwnedCarJeep = "";
                     }
                 }
                 
