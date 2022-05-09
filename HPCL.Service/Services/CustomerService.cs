@@ -739,7 +739,7 @@ namespace HPCL.Service.Services
                 CustomerReferenceNo = CustomerReferenceNo,
                 Comments = Comments,
                 Approvalstatus = Approvalstatus,
-                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
