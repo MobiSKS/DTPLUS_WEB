@@ -4,6 +4,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.RequestModel.DtpSupport;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
@@ -1247,6 +1248,48 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<StatusResponseModal> limitType = jarr.ToObject<List<StatusResponseModal>>();
             var sortedtList = limitType.OrderBy(x => x.StatusId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<GetEntityModel>> GetEntityModelList()
+        {
+            var request = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetEntity);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetEntityModel> limitType = jarr.ToObject<List<GetEntityModel>>();
+            var sortedtList = limitType.OrderBy(x => x.EntityId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<GetEntityFieldModel>> GetEntityFieldModelList(string EntityTypeId)
+        {
+            var request = new GetEntityFieldRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EntityTypeId = EntityTypeId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetEntityFieldByEntityTypeId);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetEntityFieldModel> limitType = jarr.ToObject<List<GetEntityFieldModel>>();
+            var sortedtList = limitType.OrderBy(x => x.entityFieldId).ToList();
+            sortedtList.Insert(0, new GetEntityFieldModel
+            {
+                entityFieldId = 0,
+                entityFieldName = "Select"
+            });
             return sortedtList;
         }
 

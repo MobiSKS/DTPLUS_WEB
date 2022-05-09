@@ -71,6 +71,7 @@
         public const string Verify = "VERIFY";
         public const string Validate = "VALIDATE";
         public const string Reject = "REJECT";
+        public const string Update = "UPDATE";
         #endregion
 
         #region "Common Fields"

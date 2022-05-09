@@ -1,0 +1,927 @@
+﻿@model HPCL.Common.Models.ViewModel.DtpSupport.GeneralUpdatesModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 p-4 p-md-4">
+   <div class="bg-white p-2 p-md-4">
+      <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
+         <li class="breadcrumb-item font-weight-light">General Updates</li>
+      </ul>
+       @using (Html.BeginForm("GeneralUpdates", "DtpSupport", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+       {
+         <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+               <div class="border-1 rounded border-grey pb-3">
+                  <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">General Updates</p>
+                   <div class="alert" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+                        @Html.DisplayFor(m => m.Message)
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-12 py-3">
+                     <div class="d-flex align-items-center flex-wrap">
+                        <div class="col-lg-6 col-12">
+                           <div class="d-flex align-items-center flex-wrap mb-3">
+                              <label class="font-weight-normal col-md-4 col-12">Entity Type <sup class="text-danger">*</sup></label>
+                              <div class="col-md-7 col-12">
+                                 <div class="custom_select">
+                                    @Html.DropDownListFor(m => m.EntityTypeId, new SelectList(Model.EntityMdl, "EntityId", "EntityName"), new { @class = "form-control" })
+                                 </div>
+                                 <span class="error" id="EntityTypeId_error"></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                           <div class="d-flex align-items-center flex-wrap mb-3">
+                              <div class="col-md-7 col-12">
+                                 <div class="custom_select">
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div id="dvEntityFields" style="display:none">
+                     <div class="d-flex align-items-center flex-wrap">
+                        <div class="col-lg-6 col-12">
+                           <div class="d-flex align-items-center flex-wrap mb-3">
+                              <label class="font-weight-normal col-md-4 col-12">Entity Fields <sup class="text-danger">*</sup></label>
+                              <div class="col-md-7 col-12">
+                                 <div class="custom_select">
+                                    @Html.DropDownListFor(m => m.EntityFieldId, new SelectList(Model.EntityFieldMdl, "entityFieldId", "entityFieldName"), new { @class = "form-control" })
+                                 </div>
+                                 <span class="error" id="EntityFieldId_error"></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                           <div class="d-flex align-items-center flex-wrap mb-3">
+                              <div class="col-md-7 col-12">
+                                 <div class="custom_select">
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="d-flex align-items-center flex-wrap">
+                        <div class="col-lg-6 col-12">
+                           <div class="d-flex align-items-center flex-wrap mb-3">
+                              <label class="font-weight-normal col-md-4 col-12" id="lblCustomerId">Customer ID <sup class="text-danger">*</sup></label>
+                              <div class="col-md-7 col-12">
+                                 <div class="custom_select">
+                                     @Html.TextBoxFor(m => m.CustomerIdOrCardOrMerchantId, new { @id = "CustomerIdOrCardOrMerchantId", @class = "form-control",onkeypress = "return isNumberKey(event)" })
+                                     @Html.ValidationMessageFor(m => m.CustomerIdOrCardOrMerchantId, "", new { @id = "CustomerIdOrCardOrMerchantIdErrorMsg", @class = "text-danger" })
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="clearfix"></div>
+                     <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-2">
+                           <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+                        </div>
+                     </div>
+                     </div>
+
+                     <div id="dvUpdateFields" style="display:none">
+                         <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-6 col-12">
+                               <div class="d-flex align-items-center flex-wrap mb-3">
+                                  <label class="font-weight-normal col-md-4 col-12" id="lblOldValue">Old Value </label>
+                                  <div class="col-md-7 col-12">
+                                     <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.OldValue, new { @id = "OldValue", @class = "form-control", @readonly = "readonly" })
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                               <div class="d-flex align-items-center flex-wrap mb-3">
+                                  <div class="col-md-7 col-12">
+                                     <div class="custom_select">
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+
+                         <div id="dvNewValue" style="display:none">
+                         <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-6 col-12">
+                               <div class="d-flex align-items-center flex-wrap mb-3">
+                                  <label class="font-weight-normal col-md-4 col-12" id="lblNewValue">New Value </label>
+                                  <div class="col-md-7 col-12">
+                                     <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.NewValue, new { @id = "NewValue", @class = "form-control", maxlength = "50" })
+                                        @Html.ValidationMessageFor(m => m.NewValue, "", new { @id = "NewValueErrorMsg", @class = "text-danger" })
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                               <div class="d-flex align-items-center flex-wrap mb-3">
+                                  <div class="col-md-7 col-12">
+                                     <div class="custom_select">
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         </div>
+
+                         <div class="clearfix"></div>
+
+                         <div id="dvSalesArea" style="display:none">
+                            <div class="d-flex align-items-center flex-wrap">
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <label class="font-weight-normal col-md-4 col-12" id="lblSalesArea">New Value </label>
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                           @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
+                                           <span class="error" id="salesArea_error"></span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+
+                         <div class="clearfix"></div>
+
+                         <div id="dvOutletTypes" style="display:none">
+                            <div class="d-flex align-items-center flex-wrap">
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <label class="font-weight-normal col-md-4 col-12" id="lblOutletTypes">New Value </label>
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                           @Html.DropDownListFor(m => m.MerchantTypeId, new SelectList(Model.MerchantTypes, "MerchantTypeCode", "MerchantTypeName"), new { @class = "form-control" })
+                                           <span class="error" id="merchantType_error"></span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="col-lg-6 col-12">
+                                  <div class="d-flex align-items-center flex-wrap mb-3">
+                                     <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+
+                         <div class="d-flex align-items-center justify-content-center mt-0">
+                            <div class="px-2">
+                               <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return SubmitValidations()">@Label.Update</button>
+                            </div>
+                         </div>
+                    </div>
+
+                  </div>
+                  <div class="clearfix"></div>
+               </div>
+            </div>
+         </div>
+         
+      }
+      <div>@Html.HiddenFor(m => m.UpdateStatus)</div>
+      <div>@Html.HiddenFor(m => m.Message)</div>
+      <div class="clearfix"></div>
+   </div>
+</div>
+<div class="clearfix"></div>
+
+<script>
+    $(document).ready(function () 
+    {
+        console.log(document.getElementById("UpdateStatus").value);
+        console.log($("#dvRemarks").html().trim());
+        if($("#dvRemarks").html().trim()!="")
+        {
+           if(document.getElementById("UpdateStatus").value=="UPDATED")
+           {
+             dvUpdateFields.style.display = "none";
+             dvEntityFields.style.display = "block";
+             $("#dvRemarks").addClass("alert-success");
+           }
+           else
+           {
+               dvEntityFields.style.display = "block";
+               dvUpdateFields.style.display = "block";
+               $("#dvRemarks").addClass("alert-danger");
+           }
+        }
+    });
+
+     $('select').SumoSelect({
+                placeholder: '--Select--',
+                search: true,
+                searchText: 'Enter Text here.'
+            });
+
+    $("#EntityFieldId").change(function () 
+     {
+         var id = this.value;
+
+        if (id != 0) 
+        {
+            $("#EntityFieldId_error").html("");
+            $("#salesArea_error").html("");
+            $("#NewValueErrorMsg").html("");
+            $("#merchantType_error").html("");
+        }
+            
+     });
+
+     $("#EntityTypeId").change(function () 
+     {
+            var id = this.value;
+
+            if (id != 0) 
+            {
+                $("#EntityTypeId_error").html("");
+                $("#salesArea_error").html("");
+                $("#NewValueErrorMsg").html("");
+                $("#merchantType_error").html("");
+                document.getElementById("dvEntityFields").style.display="block";
+                document.getElementById("dvUpdateFields").style.display="none";
+            }
+            else
+            {
+                document.getElementById("dvEntityFields").style.display="none";
+                document.getElementById("dvUpdateFields").style.display="none";
+            }
+
+            document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+            $("#CustomerIdOrCardOrMerchantId").val('');
+
+            if (id == 1) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Customer ID <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 10;
+            }
+            else if (id == 2) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Merchant ID <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 10;
+            }
+            else if (id == 3) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Card PAN <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 16;
+            }
+
+            $("#EntityFieldId").html("");
+
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetEntityFieldModelList", "DtpSupport")',
+                data: { EntityTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.entityFieldId,
+                                    text: data.entityFieldName
+                                }).html(data.entityFieldName).appendTo("#EntityFieldId");
+                        });
+                        $("#EntityFieldId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Entity Fields");
+                }
+            });
+
+        });
+
+        $("#CustomerIdOrCardOrMerchantId").on("blur", function () 
+        {
+            debugger;
+            var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+            var entityTypeId = $("#EntityTypeId").val();
+
+            if(entityTypeId!="0")
+            {
+                if (CustomerId == "") 
+                {
+                    if(entityTypeId=="1")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Customer ID";
+                      return (false);
+                    }
+                    else if(entityTypeId=="2")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Merchant ID";
+                      return (false);
+                    }
+                    else if(entityTypeId=="3")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Card PAN";
+                      return (false);
+                    }
+                }
+                else 
+                {
+                    if(entityTypeId=="1")
+                    {
+                        if (!CustomerId.match(mappedCustomerId))
+                        {
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Customer ID");
+                            return false;
+                        }
+                        else
+                        {
+                           $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                        }
+                    }
+                    else if(entityTypeId=="2")
+                    {
+                        if (!CustomerId.match(mappedMerchantID))
+                        {
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Merchant ID");
+                            return false;
+                        }
+                        else
+                        {
+                           $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                        }
+                    }
+                    else if(entityTypeId=="3")
+                    {
+                        
+                        if (CustomerId.length < 16) 
+                        {
+                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                          return false;
+                        }
+                        //else if (CustomerId.substring(0, 1) != "7") 
+                        //{
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                        //  return false;
+                        //}
+                        else if (!(CustomerId.match(number))) 
+                        {
+                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                           return false;
+                        }
+                        else
+                        {
+                            document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                        }
+                    }
+
+                }
+            }
+
+        });
+
+     $("#btnSearch").on("click", (function (e)
+     {
+
+           var flag="Y";
+            var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+            var entityTypeId = $("#EntityTypeId").val();
+            var entityFieldId = $("#EntityFieldId").val();
+            var selectedText = $("#EntityFieldId").find("option:selected").text();
+            var oldValue= selectedText + ' [Old Value]';
+            var newValue= selectedText + ' [New Value]';
+
+            if(entityTypeId!="0")
+            {
+                if (CustomerId == "") 
+                {
+                    if(entityTypeId=="1")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Customer ID";
+                      flag="N";
+                    }
+                    else if(entityTypeId=="2")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Merchant ID";
+                      flag="N";
+                    }
+                    else if(entityTypeId=="3")
+                    {
+                      document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Card PAN";
+                      flag="N";
+                    }
+                }
+                else 
+                {
+                    if(entityTypeId=="1")
+                    {
+                        if (!CustomerId.match(mappedCustomerId))
+                        {
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Customer ID");
+                            flag="N";
+                        }
+                        else
+                        {
+                           $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                        }
+                        document.getElementById("NewValue").maxLength = 50;
+                    }
+                    else if(entityTypeId=="2")
+                    {
+                        if (!CustomerId.match(mappedMerchantID))
+                        {
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                            $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Merchant ID");
+                            flag="N";
+                        }
+                        else
+                        {
+                           $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                        }
+                        document.getElementById("NewValue").maxLength = 50;
+                    }
+                    else if(entityTypeId=="3")
+                    {
+                        if (CustomerId.length < 16) 
+                        {
+                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                          $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                          flag="N";
+                        }
+                        //else if (CustomerId.substring(0, 1) != "7") 
+                        //{
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                        //  $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                        //  flag="N";
+                        //}
+                        else if (!(CustomerId.match(number))) 
+                        {
+                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                           $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                           flag="N";
+                        }
+                        else
+                        {
+                            document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                        }
+                        document.getElementById("NewValue").maxLength = 24;
+                    }
+
+                }
+
+                if(entityFieldId=="0")
+                {
+                    document.getElementById("EntityFieldId_error").innerHTML = "Please Select an Entity Fields";
+                    flag="N";
+                }
+                else
+                {
+                    document.getElementById("EntityFieldId_error").innerHTML = "";
+                }
+            }
+
+            if(flag=="Y")
+            {
+                  $.ajax({
+                     type: 'POST',  // http method
+                     url: '@Url.Action("GetEntityOldFieldValue", "DtpSupport")',
+                     data: { EntityTypeId: entityTypeId,EntityFieldId: entityFieldId, CustomerIdOrCardOrMerchantId: CustomerId },  // data to submit
+                     dataType: "json",
+                     success: function (res) 
+                     {
+                         console.log(res);
+                         
+                         if (res.searchResult.data.length > 0)
+                         {
+                            console.log(res.searchResult.data[0].status);
+
+                            if (res.searchResult.data[0].status == 1)
+                            {
+                               document.getElementById("OldValue").value = res.searchResult.data[0].oldValue;
+                               dvUpdateFields.style.display = "block";
+                               $('#lblOldValue').text('');
+                               $('#lblOldValue').append(oldValue);
+                               $('#lblNewValue').text('');
+                               $('#lblNewValue').append(newValue);
+                               $('#lblSalesArea').text('');
+                               $('#lblSalesArea').append(newValue);
+                               $('#NewValue').val("");
+                               $("#dvRemarks").addClass("alert-success");
+                               dvRemarks.style.display = "none";
+                               $('#dvRemarks').html("");
+                               $('#lblOutletTypes').text('');
+                               $('#lblOutletTypes').append(newValue);
+                               
+                               if(entityTypeId=="1" && entityFieldId=="4")//Sales Area
+                               {
+                                   dvSalesArea.style.display = "block";
+                                   dvNewValue.style.display = "none";
+                                   dvOutletTypes.style.display = "none";
+
+                                   $.ajax({
+                                        type: 'POST',  // http method
+                                        url: '@Url.Action("GetsalesAreaList", "DtpSupport")',
+                                        data: { RegionID: 0 },  // data to submit
+                                        dataType: "json",
+                                        success: function (data, status, xhr) {
+                                            var v = data;
+                                            if (status == 'success') {
+                                                $("#CustomerSalesAreaID").html("");
+                                                $.each(data, function (i, data) { // bind the dropdown list using json result
+                                                    $('<option>',
+                                                        {
+                                                            value: data.salesAreaID,
+                                                            text: data.salesAreaName
+                                                        }).html(data.salesAreaName).appendTo("#CustomerSalesAreaID");
+                                                });
+                                                $("#CustomerSalesAreaID")[0].sumo.reload();
+                                            }
+                                            else {
+                                                console.log(v);
+                                            }
+                                        },
+                                        error: function (jqXhr, textStatus, errorMessage) {
+                                            alert("Error Populating Sales Area");
+                                        }
+                                    });
+
+                               }
+                               else if(entityTypeId=="2" && entityFieldId=="6")//Outlet Type
+                               {
+                                   dvSalesArea.style.display = "none";
+                                   dvNewValue.style.display = "none";
+                                   dvOutletTypes.style.display = "block";
+                               }
+                               else
+                               {
+                                   dvSalesArea.style.display = "none";
+                                   dvOutletTypes.style.display = "none";
+                                   dvNewValue.style.display = "block";
+                               }
+
+                            }
+                            else
+                            {
+                                document.getElementById("OldValue").value = "";
+                                dvUpdateFields.style.display = "none";
+                                $('#lblOldValue').text('');
+                                $('#lblOldValue').append('Old Value');
+                                $('#lblNewValue').text('');
+                                $('#lblNewValue').append('New Value');
+                                $('#lblSalesArea').text('');
+                                $('#lblSalesArea').append('New Value');
+                                $("#dvRemarks").addClass("alert-danger");
+                                dvRemarks.style.display = "block";
+                                $('#dvRemarks').html(res.searchResult.data[0].reason);
+                            }
+
+                         }
+                         else
+                         {
+                             document.getElementById("OldValue").value = "";
+                             dvUpdateFields.style.display = "none";
+                             $("#dvRemarks").addClass("alert-danger");
+                             $('#dvRemarks').html(res.searchResult.message);
+                             alert(res.searchResult.message);
+                         }
+                     },
+                     error: function (xhr, ajaxOptions, thrownError) 
+                     {
+                         dvUpdateFields.style.display = "none";
+                         console.log('Not success');
+                         alert(xhr);
+                         $("#dvRemarks").addClass("alert-danger");
+                         dvRemarks.style.display = "block";
+                         $('#dvRemarks').html(xhr);
+                     }
+                 });
+
+
+            }
+
+
+
+    }));
+
+   function SubmitValidations()
+   {
+    debugger;
+
+    var ret=true;
+
+        var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+        var entityTypeId = $("#EntityTypeId").val();
+        var entityFieldId = $("#EntityFieldId").val();
+
+        if(entityTypeId=="0")
+        {
+            document.getElementById("EntityTypeId_error").innerHTML = "Please select an Entity Type";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("EntityTypeId_error").innerHTML = "";
+        }
+
+        if(entityFieldId=="0")
+        {
+            document.getElementById("EntityFieldId_error").innerHTML = "Please select an Entity Fields";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("EntityFieldId_error").innerHTML = "";
+        }
+
+           
+        if (CustomerId == "") 
+        {
+            if(entityTypeId=="1")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Customer ID";
+                ret=false;
+            }
+            else if(entityTypeId=="2")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Merchant ID";
+                ret=false;
+            }
+            else if(entityTypeId=="3")
+            {
+                document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "Please enter Card PAN";
+                ret=false;
+            }
+        }
+        else 
+        {
+            if(entityTypeId=="1")
+            {
+                if (!CustomerId.match(mappedCustomerId))
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Customer ID");
+                    ret=false;
+                }
+                else
+                {
+                    $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                }
+            }
+            else if(entityTypeId=="2")
+            {
+                if (!CustomerId.match(mappedMerchantID))
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Merchant ID");
+                    ret=false;
+                }
+                else
+                {
+                    $('#CustomerIdOrCardOrMerchantIdErrorMsg').html("");
+                }
+            }
+            else if(entityTypeId=="3")
+            {
+                if (CustomerId.length < 16) 
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                    ret=false;
+                }
+                //else if (CustomerId.substring(0, 1) != "7") 
+                //{
+                //    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                //    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                //    ret=false;
+                //}
+                else if (!(CustomerId.match(number))) 
+                {
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdOrCardOrMerchantIdErrorMsg").html("Invalid Card PAN");
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("CustomerIdOrCardOrMerchantIdErrorMsg").innerHTML = "";
+                }
+            }
+
+            if(entityTypeId=="1")//Customer
+            {
+                if(entityFieldId=="4")//Sales Area
+                {
+                    var salesAreaID = $("#CustomerSalesAreaID").val();
+                    if(salesAreaID=="0")
+                    {
+                        $("#salesArea_error").attr("style", "display:block");
+                        $("#salesArea_error").html("Select Sales Area");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#salesArea_error").html("");
+                        document.getElementById("NewValue").value = salesAreaID;
+                    }
+                }
+                else
+                {
+                    if(document.getElementById("NewValue").value.trim()=="")
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Please enter value");
+                        ret=false;
+                    }
+                    else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                    {
+                      $("#NewValueErrorMsg").attr("style", "display:block");
+                      $("#NewValueErrorMsg").html("Invalid value");
+                      return false;
+                    }
+                    else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Invalid value");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#NewValueErrorMsg").html("");
+                    }
+                }
+            }
+            else if(entityTypeId=="2")//Merchant
+            {
+                if(entityFieldId=="6")//Outlet Type
+                {
+                    var merchantTypeId = $("#MerchantTypeId").val();
+                    if(merchantTypeId=="0")
+                    {
+                        $("#merchantType_error").attr("style", "display:block");
+                        $("#merchantType_error").html("Select Outlet Type");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#merchantType_error").html("");
+                        document.getElementById("NewValue").value = merchantTypeId;
+                    }
+                }
+                else
+                {
+                    if(document.getElementById("NewValue").value.trim()=="")
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Please enter value");
+                        ret=false;
+                    }
+                    else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                    {
+                      $("#NewValueErrorMsg").attr("style", "display:block");
+                      $("#NewValueErrorMsg").html("Invalid value");
+                      return false;
+                    }
+                    else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("Invalid value");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#NewValueErrorMsg").html("");
+                    }
+                }
+            }
+            else if(entityTypeId=="3")//Card
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    ret=false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    ret=false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
+
+        }
+
+   
+     return ret;
+   }
+
+   $("#NewValue").on("blur", function () 
+   {
+    debugger;
+      var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
+      var entityTypeId = $("#EntityTypeId").val();
+      var entityFieldId = $("#EntityFieldId").val();
+
+        if(entityTypeId=="1")//Customer
+        {
+            if(entityFieldId!="4")
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    return false;
+                }
+                else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                {
+                  $("#NewValueErrorMsg").attr("style", "display:block");
+                  $("#NewValueErrorMsg").html("Invalid value");
+                  return false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    return false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
+        }
+        else if(entityTypeId=="2")//Merchant
+        {
+            if(entityFieldId!="6")//Outlet Type
+            {
+                if(document.getElementById("NewValue").value.trim()=="")
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Please enter value");
+                    ret=false;
+                }
+                else if (!isNaN(document.getElementById("NewValue").value.trim())) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    return false;
+                }
+                else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
+                {
+                    $("#NewValueErrorMsg").attr("style", "display:block");
+                    $("#NewValueErrorMsg").html("Invalid value");
+                    ret=false;
+                }
+                else
+                {
+                    $("#NewValueErrorMsg").html("");
+                }
+            }
+        }
+        else if(entityTypeId=="3")//Card
+        {
+            if(document.getElementById("NewValue").value.trim()=="")
+            {
+                $("#NewValueErrorMsg").attr("style", "display:block");
+                $("#NewValueErrorMsg").html("Please enter value");
+                return false;
+            }
+            else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
+            {
+                $("#NewValueErrorMsg").attr("style", "display:block");
+                $("#NewValueErrorMsg").html("Invalid value");
+                return false;
+            }
+            else
+            {
+                $("#NewValueErrorMsg").html("");
+            }
+        }
+
+   });
+
+</script>

@@ -68,5 +68,7 @@ namespace HPCL.Service.Interfaces
         Task<List<RbeMappingStatusResponse>> RbeMappingStatusService();
         Task<List<StatusModal>> GetStatusTypeforTerminal();
         Task<List<StatusResponseModal>> GetVehicleEnrollmentStatusList();
+        Task<List<GetEntityModel>> GetEntityModelList();
+        Task<List<GetEntityFieldModel>> GetEntityFieldModelList(string EntityTypeId);
     }
 }
