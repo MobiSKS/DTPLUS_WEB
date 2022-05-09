@@ -16,6 +16,7 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
         public string RBEID { get; set; }
         public string RBEName { get; set; } 
         public string Location { get; set; }
+        public string TeamMappingId { get; set; }   
         public virtual List<TeamMappingSearchResponseData> Data { get; set; }
     }
     public class TeamMappingSearchResponseData

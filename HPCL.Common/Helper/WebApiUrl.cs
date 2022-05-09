@@ -316,6 +316,8 @@
         public static string UpdateGeneralEntityField = "api/dtplus/dtp/update_general_entity_field";
         public static string GetTeamMapping = "api/dtplus/dtp/get_team_mapping ";
         public static string InsertTeamMapping = "api/dtplus/dtp/insert_team_mapping ";
+        public static string DeleteTeamMapping = "api/dtplus/dtp/delete_team_mapping ";
+        public static string updateteammapping = "api/dtplus/dtp/update_team_mapping ";
 
         #endregion
 

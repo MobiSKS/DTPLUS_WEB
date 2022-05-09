@@ -109,10 +109,12 @@ namespace HPCL_Web.Controllers
             return Json(lst);
         }
 
-        public async Task<IActionResult> TeamMapping(TeamMappingViewModel teamMappingViewModel, string reset)
-        {
+        public async Task<IActionResult> TeamMapping(TeamMappingViewModel teamMappingViewModel, string reset,string success,string error)
+        { 
             var searchResult = await _dtpSupportService.TeamMappingSearch(teamMappingViewModel);
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
             return View(searchResult);
         }
         [HttpPost]
@@ -121,6 +123,22 @@ namespace HPCL_Web.Controllers
             var searchResult = await _dtpSupportService.AddTeamMapping(teamMappingViewModel);
             return Json(searchResult);
         }
-
+        public async Task<IActionResult> DeleteTeamMapping(string teamMappingId)
+        {
+            var searchResult = await _dtpSupportService.DeleteTeamMapping(teamMappingId);
+            string succesMsg = "", errorMsg = "";
+            if(searchResult[0].Status==1)
+                succesMsg = searchResult[0].Reason;
+            else if (searchResult[0].Status==0)
+                errorMsg = searchResult[0].Reason;
+            return RedirectToAction("TeamMapping", "DtpSupport",new { success = succesMsg,error=errorMsg});
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateTeamMapping([FromBody]TeamMappingViewModel teamMappingViewModel)
+        {
+            var searchResult = await _dtpSupportService.UpdateTeamMapping(teamMappingViewModel);
+            return Json(searchResult);
+           
+        }
     }
 }

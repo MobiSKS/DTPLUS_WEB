@@ -240,6 +240,49 @@ namespace HPCL.Service.Services
 
             return res;
         }
+        public async Task<List<SuccessResponse>> DeleteTeamMapping(string teamMappingId)
+        {
+            var reqBody = new TeamMappingSearchRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TeamMappingId=teamMappingId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
 
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteTeamMapping);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
+        public async Task<List<SuccessResponse>> UpdateTeamMapping(TeamMappingViewModel teamMappingViewModel)
+        {
+            var reqBody = new TeamMappingSearchRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZBMID = teamMappingViewModel.ZBMID,
+                ZBMName = teamMappingViewModel.ZBMName,
+                RSMID = teamMappingViewModel.RSMID,
+                RSMName = teamMappingViewModel.RSMName,
+                RBEID = teamMappingViewModel.RBEID,
+                RBEName = teamMappingViewModel.RBEName,
+                Location = teamMappingViewModel.Location,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TeamMappingId=teamMappingViewModel.TeamMappingId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateteammapping);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+
+            return res;
+        }
     }
 }
