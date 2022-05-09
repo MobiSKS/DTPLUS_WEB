@@ -1,5 +1,7 @@
-﻿using HPCL.Common.Models.ResponseModel.DtpSupport;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.DtpSupport;
 using HPCL.Common.Models.ViewModel.DtpSupport;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL.Service.Interfaces
@@ -13,5 +15,8 @@ namespace HPCL.Service.Interfaces
         Task<GeneralUpdatesModel> GeneralUpdates();
         Task<GetEntityOldFieldValueResponse> GetEntityOldFieldValue(string EntityTypeId, string EntityFieldId, string CustomerIdOrCardOrMerchantId);
         Task<GeneralUpdatesModel> GeneralUpdates(GeneralUpdatesModel model);
+        Task<TeamMappingViewModel> TeamMappingSearch(TeamMappingViewModel teamMappingViewModel);
+        Task<List<SuccessResponse>> AddTeamMapping(TeamMappingViewModel teamMappingViewModel);
+
     }
 }

@@ -3,6 +3,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.DtpSupport;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.RequestModel.DtpSupport;
 using HPCL.Common.Models.ResponseModel.DtpSupport;
 using HPCL.Common.Models.ViewModel.DtpSupport;
 using HPCL.Service.Interfaces;
@@ -190,6 +191,54 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+        public async Task<TeamMappingViewModel> TeamMappingSearch(TeamMappingViewModel teamMappingViewModel)
+        {
+            var reqBody = new TeamMappingSearchRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZBMID = teamMappingViewModel.ZBMID,
+                ZBMName = teamMappingViewModel.ZBMName,
+                RSMID = teamMappingViewModel.RSMID,
+                RSMName = teamMappingViewModel.RSMName,
+                RBEID = teamMappingViewModel.RBEID,
+                RBEName = teamMappingViewModel.RBEName,
+                Location = teamMappingViewModel.Location,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetTeamMapping);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            TeamMappingViewModel res = obj.ToObject<TeamMappingViewModel>();
+            return res;
+        }
+        public async Task<List<SuccessResponse>> AddTeamMapping(TeamMappingViewModel teamMappingViewModel)
+        {
+            var reqBody = new TeamMappingSearchRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ZBMID = teamMappingViewModel.ZBMID,
+                ZBMName = teamMappingViewModel.ZBMName,
+                RSMID = teamMappingViewModel.RSMID,
+                RSMName = teamMappingViewModel.RSMName,
+                RBEID = teamMappingViewModel.RBEID,
+                RBEName = teamMappingViewModel.RBEName,
+                Location = teamMappingViewModel.Location,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.InsertTeamMapping);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+
+            return res;
         }
 
     }

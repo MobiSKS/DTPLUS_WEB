@@ -4,6 +4,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -106,6 +107,19 @@ namespace HPCL_Web.Controllers
             });
 
             return Json(lst);
+        }
+
+        public async Task<IActionResult> TeamMapping(TeamMappingViewModel teamMappingViewModel, string reset)
+        {
+            var searchResult = await _dtpSupportService.TeamMappingSearch(teamMappingViewModel);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            return View(searchResult);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddTeamMapping(TeamMappingViewModel teamMappingViewModel)
+        {
+            var searchResult = await _dtpSupportService.AddTeamMapping(teamMappingViewModel);
+            return Json(searchResult);
         }
 
     }

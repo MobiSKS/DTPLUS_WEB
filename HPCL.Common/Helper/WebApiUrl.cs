@@ -314,6 +314,9 @@
         public static string GetEntityFieldByEntityTypeId = "api/dtplus/dtp/get_entity_field_by_entity_type_id";
         public static string GetEntityOldFieldValue = "api/dtplus/dtp/get_entity_old_field_value";
         public static string UpdateGeneralEntityField = "api/dtplus/dtp/update_general_entity_field";
+        public static string GetTeamMapping = "api/dtplus/dtp/get_team_mapping ";
+        public static string InsertTeamMapping = "api/dtplus/dtp/insert_team_mapping ";
+
         #endregion
 
         #region TMS
