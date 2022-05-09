@@ -7,8 +7,14 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
             <li class="breadcrumb-item font-weight-light">Team Mapping</li>
         </ul>
-
-        <div id="reason" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage!=null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage!=null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
         <form id="formValid" class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -126,7 +132,7 @@
                 @if (Model.Data.Count() > 0)
                 {
 
-                    <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;" id="TeamMapSearch">
+                    <table class="datatable table table-striped table-bordered table-responsive d-md-table" style="width:100%;" id="TeamMapSearch">
                         <thead style="background-color:lightgray;">
                             <tr>
 
@@ -138,7 +144,7 @@
                                 <th>RBE Name</th>
                                 <th>Location</th>
                                 <th>Action</th>
-
+                                <th style="display:none">ID</th>
 
                             </tr>
                         </thead>
@@ -159,12 +165,12 @@
                                     <td class="editCell">@item.RBEName</td>
                                     <td class="editCell">@item.Location</td>
 
-                                    
+
                                     <td>
                                         <div class="d-flex align-items-center justify-content-start">
                                             <a class="d-block edit" data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
-                                                <a class="d-block save" data-toggle="tooltip" title="" tooltip="Update" ><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
-                                                <a class="d-block cancel" data-toggle="tooltip" title="" tooltip="Cancel" ><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                            <a class="d-block save" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
+                                            <a class="d-block cancel" data-toggle="tooltip" title="" tooltip="Cancel"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
                                             <a asp-action="DeleteTeamMapping" class="d-block" asp-route-TeamMappingId="@item.TeamMappingId" onclick="return confirm('Do you want to delete this record ?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                         </div>
                                     </td>
@@ -190,15 +196,9 @@
 </div>
 
 <script type="text/javascript">
-    var pageStatus="@ViewBag.Reset";
+    var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click 
     $(document).ready(function () {
-        $('.table').DataTable({
-            "lengthMenu": [ 10, 20, 50, 100, 200, 500],
-            "oLanguage": {
-                "sLengthMenu": "Display _MENU_ Records",
-                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-            }
-        });
+        
 
         if(pageStatus=="A"){
            if(!$("label.teamAdd").hasClass("Required")){
@@ -270,7 +270,14 @@
                     data:reqData,
                     dataType: 'json',
                     success: function (data) {
-                       window.location.href='@Html.Raw(@Url.Action("TeamMapping", "DtpSupport", new { reset = "A"}))';
+                        var successMsg="",errorMsg="";
+                        if(data[0].status==1)
+                            successMsg=data[0].reason;
+                        else if(data[0].status==0)
+                            errorMsg=data[0].reason;
+                        var url = '@Html.Raw(@Url.Action("TeamMapping", "DtpSupport",new { reset = "A", success = "mm", error = "ee" }))';
+                        url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                       window.location.href=url;
                     },
                     error: function (ex) {
                         alert('Error.' + ex);
@@ -427,9 +434,27 @@
           var RSMName = row[0].cells[3].textContent;
           var RBEId = row[0].cells[4].textContent;
           var RBEName = row[0].cells[5].textContent;
-          var Location = row[0].cells[6].textContent;
-          var TeamMappingID = row[0].cells[8].textContent;
-                  
+          var location = row[0].cells[6].textContent;
+          var teamMappingID = row[0].cells[8].textContent;
+          var reqmodel={ ZBMID: zbmId, ZBMName: zbmName, RSMID: RSMId,RSMName:RSMName,RBEId:RBEId,RBEName:RBEName,Location:location,TeamMappingID:teamMappingID};
+           $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateTeamMapping", "DtpSupport")',
+                    contentType: "application/json; charset=utf-8",
+                    data:JSON.stringify(reqmodel),
+                    dataType: 'json',
+                    success: function (data) {
+                        var successMsg="",errorMsg="";
+                        if(data[0].status==1)
+                            successMsg=data[0].reason;
+                        else if(data[0].status==0)
+                            errorMsg=data[0].reason;
+                       window.location.href='@Url.Action("TeamMapping", "DtpSupport",new {success = "successMsg", error = "errorMsg" })'.replace("successMsg",successMsg,"errorMsg",errorMsg);
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
      });
 
 </script>

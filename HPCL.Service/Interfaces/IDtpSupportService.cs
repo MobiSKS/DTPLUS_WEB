@@ -17,6 +17,7 @@ namespace HPCL.Service.Interfaces
         Task<GeneralUpdatesModel> GeneralUpdates(GeneralUpdatesModel model);
         Task<TeamMappingViewModel> TeamMappingSearch(TeamMappingViewModel teamMappingViewModel);
         Task<List<SuccessResponse>> AddTeamMapping(TeamMappingViewModel teamMappingViewModel);
-
+        Task<List<SuccessResponse>> DeleteTeamMapping(string teamMappingId);
+        Task<List<SuccessResponse>> UpdateTeamMapping(TeamMappingViewModel teamMappingViewModel);
     }
 }
