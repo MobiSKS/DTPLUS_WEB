@@ -24,7 +24,7 @@
                                         <label class="font-weight-normal col-md-4 col-12 mb-3">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)", onpaste="validatePaste(this, event)" })
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -124,14 +124,11 @@
         window.location.reload(true);
     }
 
-    function validatePaste(el, e) {
-        var regex = /^\d+$/;
-        var key = e.clipboardData.getData('text')
-        if (!regex.test(key)) {
-            e.preventDefault();
-            return false;
+    $('input').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
         }
-    }
+    });
 
         $(document).ready(function () {
 
