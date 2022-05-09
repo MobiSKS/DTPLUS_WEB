@@ -1,5 +1,7 @@
-﻿using HPCL.Common.Models.ResponseModel.DtpSupport;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.DtpSupport;
 using HPCL.Common.Models.ViewModel.DtpSupport;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL.Service.Interfaces
@@ -10,5 +12,8 @@ namespace HPCL.Service.Interfaces
         Task<string> UpdateCustomerCcmsAccountStatus (BlockUnblockCustomerCcmsAccount entity);
         Task<string> GetCardBalanceTransferDetails(string CardNo);
         Task<UnblockUserModel> UnblockUser();
+        Task<TeamMappingViewModel> TeamMappingSearch(TeamMappingViewModel teamMappingViewModel);
+        Task<List<SuccessResponse>> AddTeamMapping(TeamMappingViewModel teamMappingViewModel);
+
     }
 }
