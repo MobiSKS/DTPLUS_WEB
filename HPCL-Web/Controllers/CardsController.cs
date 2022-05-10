@@ -230,5 +230,13 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> LimitUpdateForSingleRechargeCards(GetLimitUpdateForSingleRechargeCards entity)
+        {
+            var searchList = await _cardService.LimitUpdateForSingleRechargeCardsService(entity);
+            return Json(new { searchList = searchList });
+        }
+
     }
 }
