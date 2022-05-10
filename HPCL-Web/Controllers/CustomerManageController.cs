@@ -16,6 +16,7 @@ using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ViewModel.CustomerManage;
 
 namespace HPCL_Web.Controllers
 {
@@ -97,6 +98,14 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _customerManageService.AddOnCustomer();
             return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOnCustomer(AddOnCustomerModel model)
+        {
+            var Model = await _customerManageService.AddOnCustomer(model);
+
+            return View(Model);
         }
 
     }

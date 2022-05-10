@@ -184,9 +184,127 @@ namespace HPCL.Service.Services
                 var jarr = customerResponse["Data"].Value<JObject>();
 
                 var customerResult = jarr["GetCustomerDetails"].Value<JArray>();
-                List<CustomerProfileResponse> CustomerProfileResponse = customerResult.ToObject<List<CustomerProfileResponse>>();
+                List<CustomerProfileResponse> customerProfileResponse = customerResult.ToObject<List<CustomerProfileResponse>>();
 
-                return CustomerProfileResponse;
+                if (customerProfileResponse != null && customerProfileResponse.Count > 0)
+                {
+                    foreach (CustomerProfileResponse response in customerProfileResponse)
+                    {
+                        if (string.IsNullOrEmpty(response.AreaOfOperation))
+                        {
+                            response.AreaOfOperation = "";
+                        }
+                        if (!string.IsNullOrEmpty(response.CommunicationPhoneNo))
+                        {
+                            string[] subs = response.CommunicationPhoneNo.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.CommunicationDialCode = subs[0].ToString();
+                                response.CommunicationPhoneNo = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.CommunicationDialCode = "";
+                                response.CommunicationPhoneNo = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.CommunicationFax))
+                        {
+                            string[] subs = response.CommunicationFax.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.CommunicationFaxCode = subs[0].ToString();
+                                response.CommunicationFax = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.CommunicationFaxCode = "";
+                                response.CommunicationFax = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.PermanentPhoneNo))
+                        {
+                            string[] subs = response.PermanentPhoneNo.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.PerOrRegAddressDialCode = subs[0].ToString();
+                                response.PermanentPhoneNo = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.PerOrRegAddressDialCode = "";
+                                response.PermanentPhoneNo = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.PermanentFax))
+                        {
+                            string[] subs = response.PermanentFax.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.PermanentFaxCode = subs[0].ToString();
+                                response.PermanentFax = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.PermanentFaxCode = "";
+                                response.PermanentFax = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialFax))
+                        {
+                            string[] subs = response.KeyOfficialFax.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.KeyOffFaxCode = subs[0].ToString();
+                                response.KeyOffFax = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.KeyOffFaxCode = "";
+                                response.KeyOffFax = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialPhoneNo))
+                        {
+                            string[] subs = response.KeyOfficialPhoneNo.Split("-");
+
+                            if (subs.Count() > 1)
+                            {
+                                response.KeyOffDialCode = subs[0].ToString();
+                                response.KeyOfficialPhoneNo = subs[1].ToString();
+                            }
+                            else
+                            {
+                                response.KeyOffDialCode = "";
+                                response.KeyOfficialPhoneNo = "";
+                            }
+                        }
+
+                        if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                            response.FleetSizeNoOfVechileOwnedHCV = "";
+                        response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                            response.FleetSizeNoOfVechileOwnedLCV = "";
+                        response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                            response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                            response.FleetSizeNoOfVechileOwnedCarJeep = "";
+                    }
+                }
+                
+                return customerProfileResponse;
             }
         }
         public async Task<List<SearchGridResponse>> CardDetails(String CustomerId)
@@ -226,8 +344,57 @@ namespace HPCL.Service.Services
         {
             AddOnCustomerModel custMdl = new AddOnCustomerModel();
             custMdl.Remarks = "";
+            custMdl.Success = "";
+            custMdl.Message = "";
 
             return custMdl;
         }
+        public async Task<AddOnCustomerModel> AddOnCustomer(AddOnCustomerModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            CustomerInserCardResponse updateResponse;
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.customerAddOnUser);
+
+            updateResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+                        
+            model.Success = "";
+            if (updateResponse.Internel_Status_Code == 1000)
+            {
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                model.Message = updateResponse.Message;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+
+                    if (model.Status == 1)
+                    {
+                        model.Success = updateResponse.Data[0].Reason;
+                        model.Message = "";
+                    }
+                }
+            }
+            else
+            {
+                model.Message = updateResponse.Message;
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+                    model.Success = "";
+                }
+            }
+
+            return model;
+        }
+
     }
 }
