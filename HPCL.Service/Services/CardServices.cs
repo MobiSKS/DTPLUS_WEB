@@ -201,7 +201,7 @@ namespace HPCL.Service.Services
                     MobileNo = entity.MobileNo
                 };
             }
-            else if(_httpContextAccessor.HttpContext.Session.GetString("AcDccustId") != "")
+            else if (_httpContextAccessor.HttpContext.Session.GetString("AcDccustId") != "")
             {
                 searchBody = new SearchCards
                 {
@@ -218,7 +218,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAllCardStatusUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-           
+
             SearchCardsResponse searchList = obj.ToObject<SearchCardsResponse>();
             return searchList;
         }
@@ -350,7 +350,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerId = _httpContextAccessor.HttpContext.Session.GetString("CCMSCustomerId"),
-                LimitType=limitype,
+                LimitType = limitype,
                 Amount = amountVal,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -484,10 +484,10 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                MerchantID=entity.MerchantID,
-                StateID =entity.StateID,
+                MerchantID = entity.MerchantID,
+                StateID = entity.StateID,
                 DistrictID = entity.DistrictID,
-                City=entity.City,
+                City = entity.City,
                 HighwayName = entity.HighwayName,
                 HighwayNo1 = "",
                 HighwayNo2 = entity.HighwayNo2
@@ -575,6 +575,27 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             LimitUpdateForSingleRechargeCardsRes searchList = obj.ToObject<LimitUpdateForSingleRechargeCardsRes>();
             return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> LimitUpdateForSingleRecharge(string objCCMSLimits)
+        {
+            ObjCCMSLimitsRec[] arrs = JsonConvert.DeserializeObject<ObjCCMSLimitsRec[]>(objCCMSLimits);
+
+            var reqBody = new LimitUpdateForSingleRechargeReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                objCCMSLimits = arrs,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.LimitUpdateForSingleRechargeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
         }
     }
 }

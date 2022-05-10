@@ -498,13 +498,13 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
 
             List<StatusResponseModal> lsts = new List<StatusResponseModal>();
-            lsts.Add(new StatusResponseModal { StatusId = -1, StatusName = "All" });
+            //lsts.Add(new StatusResponseModal { StatusId = -1, StatusName = "All" });
 
             if (status == "ManageCard")
             {
                 foreach (var item in lst)
                 {
-                    if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7)
+                    if (item.StatusId == 4)
                     {
                         lsts.Add(item);
                     }
@@ -514,7 +514,7 @@ namespace HPCL.Service.Services
             {
                 foreach (var item in lst)
                 {
-                    if (item.StatusId == 4 || item.StatusId == 1)
+                    if (item.StatusId == 4)
                     {
                         lsts.Add(item);
                     }

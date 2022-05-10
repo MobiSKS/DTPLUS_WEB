@@ -238,5 +238,12 @@ namespace HPCL_Web.Controllers
             return Json(new { searchList = searchList });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> LimitUpdateForSingleRecharge(string objCCMSLimits)
+        {
+            var reasonList = await _cardService.LimitUpdateForSingleRecharge(objCCMSLimits);
+            return Json(new { reasonList = reasonList });
+        }
+
     }
 }
