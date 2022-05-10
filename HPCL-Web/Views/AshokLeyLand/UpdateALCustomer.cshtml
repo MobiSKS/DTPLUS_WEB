@@ -65,7 +65,7 @@
                                     <div class="row">
                                        <div class="col-md-4 col-12">
                                           <div class="custom_select">
-                                             @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                            @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
                                              new SelectListItem(){ Text = "Title", Value = "0" },
                                              new SelectListItem(){ Text = "Mr", Value = "Mr"},
                                              new SelectListItem(){ Text = "Ms", Value = "Ms"},
@@ -388,7 +388,8 @@ $("#btnReset").click(function ()
                         $('#CommunicationMobileNo').val(res.customer.communicationMobileNo);
                         $('#CommunicationEmailid').val(res.customer.communicationEmailid);
                         console.log(res.customer.individualOrgNameTitle);
-                        //$('#IndividualOrgNameTitle').sumo.selectItem(res.customer.individualOrgNameTitle);
+                        $('#IndividualOrgNameTitle')[0].sumo.selectItem(res.customer.individualOrgNameTitle);
+
 
                          $.ajax({
                             type: 'POST',  // http method
@@ -1239,5 +1240,40 @@ function ValidateMandatoryFields()
         }
 
       });
+
+      $("#CommunicationStateId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_states_error").html("");
+        }
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetDistrictDetails", "Customer")',
+            data: { Stateid: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#CommunicationDistrictId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.districtID,
+                                text: data.districtName
+                            }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            $("#CommunicationDistrictId")[0].sumo.reload(); 
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating District Data");
+            }
+        });
+    });
 
 </script>
