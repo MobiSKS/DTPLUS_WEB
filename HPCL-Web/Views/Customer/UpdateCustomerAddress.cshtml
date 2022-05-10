@@ -510,10 +510,141 @@
 
                     if(res.customer.communicationAddress1!="")
                     {
-                      document.getElementById("dvAddress").style.display="block";
-                      document.getElementById("dvNoData").style.display = "none";
-                      document.getElementById("dvNoData").innerHTML="";
-                      $("#CustomerId").prop('readonly', true);
+                        document.getElementById("dvAddress").style.display="block";
+                        document.getElementById("dvNoData").style.display = "none";
+                        document.getElementById("dvNoData").innerHTML="";
+                        $("#CustomerId").prop('readonly', true);
+
+                        $('#IncomeTaxPan').val(res.customer.incomeTaxPan);
+
+                        $('#CommunicationAddress1').val(res.customer.communicationAddress1);
+                        $('#CommunicationAddress2').val(res.customer.communicationAddress2);
+                        $('#CommunicationAddress3').val(res.customer.communicationAddress3);
+                        $('#CommunicationLocation').val(res.customer.communicationLocation);
+                        $('#CommunicationCityName').val(res.customer.communicationCityName);
+                        $('#CommunicationPinCode').val(res.customer.communicationPinCode);
+                        $('#TBEntityId').val(res.customer.tbEntityId);
+                        $('#CustomerReferenceNo').val(res.customer.customerReferenceNo);
+                        $('#IndividualOrgName').val(res.customer.individualOrgName);
+                                                            
+                        console.log($('#TBEntityId').val());
+
+                        $('#CommunicationStateId')[0].sumo.selectItem(res.customer.casid);
+                        $('#PermanentStateId')[0].sumo.selectItem(res.customer.pasid);
+
+
+                        $('#CommunicationDialCode').val(res.customer.communicationDialCode);
+                        $('#CommunicationPhonePart2').val(res.customer.communicationPhonePart2);
+                        $('#CommunicationFaxCode').val(res.customer.communicationFaxCode);
+                        $('#CommunicationFaxPart2').val(res.customer.communicationFaxPart2);
+                        $('#CommunicationMobileNo').val(res.customer.communicationMobileNo);
+                        $('#CommunicationEmailid').val(res.customer.communicationEmailid);
+
+
+                        $('#PermanentAddress1').val(res.customer.permanentAddress1);
+                        $('#PermanentAddress2').val(res.customer.permanentAddress2);
+                        $('#PermanentAddress3').val(res.customer.permanentAddress3);
+                        $('#PermanentCityName').val(res.customer.permanentCityName);
+                        $('#PermanentPincode').val(res.customer.permanentPincode);
+                        $('#PermanentLocation').val(res.customer.permanentLocation);
+
+                        $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
+                        $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPhoneNumber);
+                        $('#PermanentFaxCode').val(res.customer.permanentFaxCode);
+                        $('#PermanentFaxPhoneNumber').val(res.customer.permanentFaxPhoneNumber);
+                        $('#PanCardRemarks').val(res.customer.panCardRemarks);
+                    
+
+                        $('#lblPanCardRemarks').hide();
+                        $('#PanCardRemarks').hide();
+                        document.getElementById("PanCardRemarks_error").innerHTML="";
+
+                        if(res.customer.tbEntityId==10)
+                        {
+                            $('#lblPanText').text('');
+                            $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                            $('#btnVerify').hide();
+                            $('#lblCustPOI').show();
+                            document.getElementById('IsDuplicatePanNo').value = "1";
+                            document.getElementById("IncomeTaxPan").maxLength = 30;
+                            document.getElementById("dvPan").className = "col-md-7 col-12";
+                            $('#PanCardRemarks').val('');
+                        }
+                        else 
+                        {
+                            $('#lblPanText').text('');
+                            $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                            $('#btnVerify').show();
+                            $('#lblCustPOI').hide();
+                            document.getElementById("IncomeTaxPan").maxLength = 10;
+                            document.getElementById("dvPan").className = "col-md-6 col-12";
+                        }
+
+                         $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetDistrictDetails", "Customer")',
+                            data: { Stateid: res.customer.casid },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success')
+                                {
+                                    $("#CommunicationDistrictId").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.districtID,
+                                                text: data.districtName
+                                            }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                    });
+                                    $("#CommunicationDistrictId")[0].sumo.reload();
+
+                                    setTimeout(function(){
+                                       $('#CommunicationDistrictId')[0].sumo.selectItem(res.customer.cadid);
+                                       },500);
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating District Data");
+                            }
+                        });
+
+
+                         $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetDistrictDetails", "Customer")',
+                            data: { Stateid: res.customer.pasid },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success')
+                                {
+                                    $("#PermanentDistrictId").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.districtID,
+                                                text: data.districtName
+                                            }).html(data.districtName).appendTo("#PermanentDistrictId");
+                                    });
+                                    $("#PermanentDistrictId")[0].sumo.reload();
+
+                                    setTimeout(function(){
+                                       $('#PermanentDistrictId')[0].sumo.selectItem(res.customer.padid);
+                                       },500);
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating District Data");
+                            }
+                        });
+
                     }
                     else
                     {
@@ -523,146 +654,16 @@
                         $("#CustomerId").prop('readonly', false);
                     }
                     
-                    $('#IncomeTaxPan').val(res.customer.incomeTaxPan);
+ 
+                 },
+                 error: function (ex)
+                 {
+                    alert('Failed' + ex);
+                    document.getElementById("dvAddress").style.display = "none";
+                    document.getElementById("dvNoData").style.display = "block";
+                    document.getElementById("dvNoData").innerHTML= res.customer.message;
+                 }
 
-                    //Address Tab
-                    $('#CommunicationAddress1').val(res.customer.communicationAddress1);
-                    $('#CommunicationAddress2').val(res.customer.communicationAddress2);
-                    $('#CommunicationAddress3').val(res.customer.communicationAddress3);
-                    $('#CommunicationLocation').val(res.customer.communicationLocation);
-                    $('#CommunicationCityName').val(res.customer.communicationCityName);
-                    $('#CommunicationPinCode').val(res.customer.communicationPinCode);
-                    $('#TBEntityId').val(res.customer.tbEntityId);
-                    $('#CustomerReferenceNo').val(res.customer.customerReferenceNo);
-                    $('#IndividualOrgName').val(res.customer.individualOrgName);
-                                                            
-                    console.log($('#TBEntityId').val());
-
-                    $('#CommunicationStateId')[0].sumo.selectItem(res.customer.casid);
-                    $('#PermanentStateId')[0].sumo.selectItem(res.customer.pasid);
-
-
-                    $('#CommunicationDialCode').val(res.customer.communicationDialCode);
-                    $('#CommunicationPhonePart2').val(res.customer.communicationPhonePart2);
-                    $('#CommunicationFaxCode').val(res.customer.communicationFaxCode);
-                    $('#CommunicationFaxPart2').val(res.customer.communicationFaxPart2);
-                    $('#CommunicationMobileNo').val(res.customer.communicationMobileNo);
-                    $('#CommunicationEmailid').val(res.customer.communicationEmailid);
-
-
-                    $('#PermanentAddress1').val(res.customer.permanentAddress1);
-                    $('#PermanentAddress2').val(res.customer.permanentAddress2);
-                    $('#PermanentAddress3').val(res.customer.permanentAddress3);
-                    $('#PermanentCityName').val(res.customer.permanentCityName);
-                    $('#PermanentPincode').val(res.customer.permanentPincode);
-                    $('#PermanentLocation').val(res.customer.permanentLocation);
-
-                    $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
-                    $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPhoneNumber);
-                    $('#PermanentFaxCode').val(res.customer.permanentFaxCode);
-                    $('#PermanentFaxPhoneNumber').val(res.customer.permanentFaxPhoneNumber);
-                    $('#PanCardRemarks').val(res.customer.panCardRemarks);
-                    
-
-                    $('#lblPanCardRemarks').hide();
-                    $('#PanCardRemarks').hide();
-                    document.getElementById("PanCardRemarks_error").innerHTML="";
-
-                    if(res.customer.tbEntityId==10)
-                    {
-                        $('#lblPanText').text('');
-                        $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
-                        $('#btnVerify').hide();
-                        $('#lblCustPOI').show();
-                        document.getElementById('IsDuplicatePanNo').value = "1";
-                        document.getElementById("IncomeTaxPan").maxLength = 30;
-                        document.getElementById("dvPan").className = "col-md-7 col-12";
-                        $('#PanCardRemarks').val('');
-                    }
-                    else 
-                    {
-                        $('#lblPanText').text('');
-                        $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
-                        $('#btnVerify').show();
-                        $('#lblCustPOI').hide();
-                        document.getElementById("IncomeTaxPan").maxLength = 10;
-                        document.getElementById("dvPan").className = "col-md-6 col-12";
-                    }
-
-                     $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("GetDistrictDetails", "Customer")',
-                        data: { Stateid: res.customer.casid },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success')
-                            {
-                                $("#CommunicationDistrictId").html("");
-                                $.each(data, function (i, data) { // bind the dropdown list using json result
-                                    $('<option>',
-                                        {
-                                            value: data.districtID,
-                                            text: data.districtName
-                                        }).html(data.districtName).appendTo("#CommunicationDistrictId");
-                                });
-                                $("#CommunicationDistrictId")[0].sumo.reload();
-
-                                setTimeout(function(){
-                                   $('#CommunicationDistrictId')[0].sumo.selectItem(res.customer.cadid);
-                                   },500);
-                            }
-                            else {
-                                console.log(v);
-                            }
-                        },
-                        error: function (jqXhr, textStatus, errorMessage) {
-                            alert("Error Populating District Data");
-                        }
-                    });
-
-
-                     $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("GetDistrictDetails", "Customer")',
-                        data: { Stateid: res.customer.pasid },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success')
-                            {
-                                $("#PermanentDistrictId").html("");
-                                $.each(data, function (i, data) { // bind the dropdown list using json result
-                                    $('<option>',
-                                        {
-                                            value: data.districtID,
-                                            text: data.districtName
-                                        }).html(data.districtName).appendTo("#PermanentDistrictId");
-                                });
-                                $("#PermanentDistrictId")[0].sumo.reload();
-
-                                setTimeout(function(){
-                                   $('#PermanentDistrictId')[0].sumo.selectItem(res.customer.padid);
-                                   },500);
-                            }
-                            else {
-                                console.log(v);
-                            }
-                        },
-                        error: function (jqXhr, textStatus, errorMessage) {
-                            alert("Error Populating District Data");
-                        }
-                    });
-
-
-                    },
-                    error: function (ex)
-                    {
-                        alert('Failed' + ex);
-                        document.getElementById("dvAddress").style.display = "none";
-                        document.getElementById("dvNoData").style.display = "block";
-                        document.getElementById("dvNoData").innerHTML= res.customer.message;
-                    }
             });
             clearValidations();
         };
