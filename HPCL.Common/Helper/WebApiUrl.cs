@@ -65,10 +65,10 @@
         public static string TerminalInstallationRequestUrl = "api/dtplus/terminal/search_for_terminal_installation_request";
         public static string InsertInstallationRequestUrl = "api/dtplus/terminal/insert_terminal_installation_request";
         public static string MappingAllowedCardsToMerchantUrl = "api/dtplus/customer/get_mapping_user_cards_to_merchants";
-
         public static string GetTerminalInstallReqAppUrl = "api/dtplus/terminal/get_terminal_installation_request_approval";
         public static string ApproveRejectTerminalUrl= "api/dtplus/terminal/insert_terminal_installation_request_approval";
         public static string searchcardmappingdetailswithblankmobile = "api/dtplus/card/search_card_mapping_details_with_blank_mobile";
+        public static string LimitUpdateForSingleRechargeCardsUrl = "api/dtplus/card/get_cards_for_limit_update_for_single_recharge";
         #endregion
 
         #region Merchant

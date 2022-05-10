@@ -542,5 +542,39 @@ namespace HPCL.Service.Services
             SearchAllowedMerchantResponse searchList = obj.ToObject<SearchAllowedMerchantResponse>();
             return searchList;
         }
+
+        public async Task<LimitUpdateForSingleRechargeCardsRes> LimitUpdateForSingleRechargeCardsService(GetLimitUpdateForSingleRechargeCards entity)
+        {
+            var searchBody = new GetLimitUpdateForSingleRechargeCards();
+
+            if (entity.CustomerID != null)
+            {
+                searchBody = new GetLimitUpdateForSingleRechargeCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = entity.CustomerID,
+                    Cardno = entity.Cardno ?? ""
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetLimitUpdateForSingleRechargeCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    Cardno = entity.Cardno ?? ""
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.LimitUpdateForSingleRechargeCardsUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            LimitUpdateForSingleRechargeCardsRes searchList = obj.ToObject<LimitUpdateForSingleRechargeCardsRes>();
+            return searchList;
+        }
     }
 }
