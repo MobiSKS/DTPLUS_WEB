@@ -278,7 +278,7 @@
                      <button class="btn btn_primary" type="button" onclick="ViewCustomerDetails()">Back</button>
                   </div>
                   <div class="px-2">
-                     <button class="btn btn_primary" type="submit" id="btnSubmit">Update</button>
+                     <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return ValidateMandatoryFields()">Update</button>
                   </div>
                </div>
             </div>
@@ -421,7 +421,7 @@ $("#btnReset").click(function ()
                                 alert("Error Populating District Data");
                             }
                         });
-
+                        document.getElementById("DealerCode").blur();
                     }
                     else
                     {
@@ -430,9 +430,6 @@ $("#btnReset").click(function ()
                         document.getElementById("dvNoData").innerHTML= res.customer.message;
                         $("#CustomerID").prop('readonly', false);
                     }
-                    
-                    
-                    
 
                 },
                 error: function (ex)
@@ -447,27 +444,800 @@ $("#btnReset").click(function ()
             clearValidations();
         };
 
-        function clearValidations()
+function clearValidations()
+{
+    document.getElementById("CustomerIdValErrMsg").innerHTML="";
+    document.getElementById("salutaion_error").innerHTML="";
+    document.getElementById("IndividualOrgName_error").innerHTML="";
+    document.getElementById("nameOnCard_error").innerHTML="";
+    document.getElementById("communicationCityName_error").innerHTML="";
+    document.getElementById("communicationPincode_error").innerHTML="";
+    document.getElementById("comm_states_error").innerHTML="";
+    document.getElementById("comm_district_error").innerHTML="";
+    document.getElementById("CommunicationDialCode_error").innerHTML="";
+    document.getElementById("CommunicationPhonePart2_error").innerHTML="";
+    document.getElementById("CommunicationFaxCode_error").innerHTML="";
+    document.getElementById("CommunicationFaxPart2_error").innerHTML="";
+    document.getElementById("comm_mobileNumber_error").innerHTML="";
+    document.getElementById("comm_email_error").innerHTML="";
+    document.getElementById("comm_address1_error").innerHTML="";
+    document.getElementById("comm_address2_error").innerHTML="";
+    document.getElementById("DealerCode_error").innerHTML="";
+    document.getElementById("SalesExecutiveEmployeeID_error").innerHTML="";
+
+}
+function ValidateMandatoryFields() 
+    {
+        debugger;
+
+        var ret = true;
+
+        if (document.getElementById("IndividualOrgNameTitle").value == "0") 
         {
-           document.getElementById("CustomerIdValErrMsg").innerHTML="";
-           document.getElementById("salutaion_error").innerHTML="";
-           document.getElementById("IndividualOrgName_error").innerHTML="";
-           document.getElementById("nameOnCard_error").innerHTML="";
-           document.getElementById("communicationCityName_error").innerHTML="";
-           document.getElementById("communicationPincode_error").innerHTML="";
-           document.getElementById("comm_states_error").innerHTML="";
-           document.getElementById("comm_district_error").innerHTML="";
-           document.getElementById("CommunicationDialCode_error").innerHTML="";
-           document.getElementById("CommunicationPhonePart2_error").innerHTML="";
-           document.getElementById("CommunicationFaxCode_error").innerHTML="";
-           document.getElementById("CommunicationFaxPart2_error").innerHTML="";
-           document.getElementById("comm_mobileNumber_error").innerHTML="";
-           document.getElementById("comm_email_error").innerHTML="";
-           document.getElementById("comm_address1_error").innerHTML="";
-           document.getElementById("comm_address2_error").innerHTML="";
-           document.getElementById("DealerCode_error").innerHTML="";
-           document.getElementById("SalesExecutiveEmployeeID_error").innerHTML="";
+            document.getElementById("salutaion_error").innerHTML = "Select Title";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgName").value.trim() == "") 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            ret = false;
+        }
+        else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value.trim() == "") 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("NameOnCard").value.trim())) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            ret = false;
+        }
+        else if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationCityName").value.trim() == "") 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationCityName").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPincode").value.trim() == "") 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            ret = false;
+        }
+        else
+        {
+            var pin = document.getElementById("CommunicationPincode").value.trim();
+            if (pin.substring(0, 1) == "0") 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else if (pin.length < 6) 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else if (!pin.match(pincode)) 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "";
+            }
+        }
+
+
+        if (document.getElementById("CommunicationStateId").value == "0") {
+            document.getElementById("comm_states_error").innerHTML = "State is required";
+            ret = false;
+        }
+        else {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationDistrictId").value == "0") {
+            document.getElementById("comm_district_error").innerHTML = "District is required";
+            ret = false;
+        }
+        else {
+            document.getElementById("comm_district_error").innerHTML = "";
+        }
+
+        var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        if (stdCode != "") 
+        {
+
+            if (stdCode.length < 2 || stdCode.length > 4) 
+            {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else if (!stdCode.match(number))
+            {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        }
+
+        var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        if (phno != "") 
+        {
+            if (phno.charAt(0) == "0") 
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                ret = false;
+            }
+            else if (phno.length < 6 || phno.length > 8) 
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                ret = false;
+            }
+            else if (!phno.match(number))
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        }
+
+
+        var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+        if (faxCode != "") 
+        {
+
+            if (faxCode.length < 2 || faxCode.length > 4) 
+            {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else if(!faxCode.match(number))
+            {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        }
+
+        var faxphno = document.getElementById("CommunicationFaxPart2").value.trim();
+        if (faxphno != "") 
+        {
+            if (phno.charAt(0) == "0") 
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else if (faxphno.length < 6 || faxphno.length > 8) 
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else if (!faxphno.match(number))
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number cannot be left blank";
+            ret = false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.length < 10) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") 
+        {
+            document.getElementById("comm_email_error").innerHTML = "Email cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationEmailid").value.trim().match(email)) 
+        {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "";
+        }
+
+        if (document.getElementById('DealerCode').value.trim() == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            ret = false;
+        }
+        else 
+        {
+            if (localStorage.getItem("DEALERFOUND") == 0) 
+            {
+             document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+             ret = false;
+            }
+            else 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "";
+            }
+        }
+        
+        if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") 
+        {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        }
+
+        return ret;
+    }
+
+        $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number cannot be left blank";
+            return (false);
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.length < 10) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+    });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "Email cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (communicationEmail.match(email)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            return (false);
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+    });
+
+        $("#DealerCode").on("blur", function () {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+
+        var dealerCode = document.getElementById("DealerCode").value;
+        if (dealerCode == "") {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            $("#DealerCode").focus;
+            return (false);
+        }
+        else {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+            data: { DealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                console.log(data.status);
+
+                if (status == 'success') {
+                    if (data.status == 1) {
+                        document.getElementById("DealerCode_error").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "1");
+                    }
+                    else {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+
+                    if (data == "Failed to load Dealer Details") {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+                }
+                else {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                localStorage.setItem("DEALERFOUND", "0");
+            },
+            statusCode: {
+                1024: function () {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            }
+        });
+
+
+    });
+
+    $("#CommunicationPincode").on("blur", function () 
+    {
+        debugger;
+        var pinCode = document.getElementById("CommunicationPincode").value.trim();
+        if (pinCode == "") {
+            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            return (false);
+        }
+        else if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+        else if (document.getElementById("CommunicationPincode").value.length < 6) 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationPincode").value.match(pincode)) 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "";
+        }
+    });
+
+       $("#IndividualOrgName").on("blur", function () {
+        //debugger;
+        var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
+        if (individualOrgName == "") {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+            return (false);
+        }
+        else {
+             document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+
+         if (!isNaN(individualOrgName)) {
+                document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+                return false;
+             }
+            else {
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
+            }
+
+        if (!individualOrgName.match(nameWithSpaceCheck)) {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            return false;
+        }
+        else {
+            document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+    });
+
+    $("#NameOnCard").on("blur", function () {
+        //debugger;
+        var nameOnCard = document.getElementById("NameOnCard").value.trim();
+        if (nameOnCard == "") {
+            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+    });
+
+    $("#CommunicationCityName").on("blur", function () {
+        //debugger;
+        var cityName = document.getElementById("CommunicationCityName").value.trim();
+        if (cityName == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+    });
+
+    $("#CommunicationAddress1").on("blur", function () {
+        //debugger;
+        var address = document.getElementById("CommunicationAddress1").value.trim();
+        if (address == "") {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
+                document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+
+            if (address.match(atLeastOneAlphabet)) {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                return (false);
+            }
+        }     
+
+    });
+
+    $("#CommunicationAddress2").on("blur", function () {
+        //debugger;
+        var address = document.getElementById("CommunicationAddress2").value.trim();
+        if (address == "") {
+            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
+                document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+
+            if (address.match(atLeastOneAlphabet)) {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                return (false);
+            }
+        }       
+
+    });
+
+    $("#CommunicationDistrictId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_district_error").html("");
+        }
+    });
+
+    $("#IndividualOrgNameTitle").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#salutaion_error").html("");
+        }
+    });
+
+     $('#NoOfCards').on("cut copy paste",function(e) {
+          e.preventDefault();
+        });
+
+    $("#SalesExecutiveEmployeeID").on("blur", function () {
+        //debugger;
+        if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") 
+        {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        }      
+
+    });
+
+     $("#CommunicationDialCode").on("blur", function ()
+        {
+            //debugger;
+            var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+            if (stdCode != "")
+            {
+
+                if (stdCode.length < 2 || stdCode.length > 4)
+                {
+                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                    return false;
+                }
+                else
+                {
+                    if (!stdCode.match(number))
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                    }
+                }
+            }
+            else
+            {
+                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            }
+
+      });
+
+      $("#CommunicationPhonePart2").on("blur", function ()
+       {
+            //debugger;
+            var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+            if (phno != "")
+            {
+                if (phno.charAt(0) == "0")
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                    return false;
+                }
+                else if (phno.length < 6 || phno.length > 8)
+                {
+                    document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                    return false;
+                }
+                else
+                {
+                    if (!phno.match(number))
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+                    }
+                }
+
+            }
+            else
+            {
+                document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+            }
+
+      });
+
+      $("#CommunicationFaxCode").on("blur", function ()
+       {
+            //debugger;
+        var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+        if (faxCode != "") {
+            if (faxCode.length < 2 || faxCode.length > 4) {
+                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                return false;
+            }
+            else
+            {
+                if (!faxCode.match(number))
+                {
+                    document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                    return false;
+                }
+                else {
+                    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+                }
+            }
 
         }
+        else {
+            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        }
+
+      });
+
+      $("#CommunicationFaxPart2").on("blur", function ()
+      {
+            //debugger;
+        var faxphno = document.getElementById("CommunicationFaxPart2").value.trim();
+        if (faxphno != "") {
+            if (faxphno.charAt(0) == "0") {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                return false;
+            }
+            else if (faxphno.length < 6 || faxphno.length > 8) {
+                document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                return false;
+            }
+            else
+            {
+                if (!faxphno.match(number))
+                {
+                    document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+                }
+            }
+
+        }
+        else
+        {
+            document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        }
+
+      });
 
 </script>
