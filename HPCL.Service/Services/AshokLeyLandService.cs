@@ -17,6 +17,8 @@ using System;
 using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.RequestModel.TMS;
+using System.Linq;
 
 namespace HPCL.Service.Services
 {
@@ -525,5 +527,123 @@ namespace HPCL.Service.Services
             return customerCardInfo;
         }
 
+        public async Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer()
+        {
+            AshokLeylandCustomerUpdateModel model = new AshokLeylandCustomerUpdateModel();
+            model.Message = "";
+            model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            return model;
+        }
+        public async Task<AshokLeylandCustomerUpdateModel> GetCustomerAddress(string CustomerId)
+        {
+            AshokLeylandCustomerUpdateModel custMdl = new AshokLeylandCustomerUpdateModel();
+            custMdl.Message = "";
+
+            var request = new GetEnrollVehicleManagementDetailRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getAlCustomerDetail);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<AshokLeylandCustomerUpdateModel> lst = jarr.ToObject<List<AshokLeylandCustomerUpdateModel>>();
+
+            if (lst != null && lst.Count > 0)
+            {
+                custMdl = lst[0];
+
+                custMdl.CASID = custMdl.CommunicationStateId.ToString();
+                custMdl.CADID = custMdl.CommunicationDistrictId.ToString();
+
+                if (!string.IsNullOrEmpty(custMdl.CommunicationPhoneNo))
+                {
+                    string[] subs = custMdl.CommunicationPhoneNo.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.CommunicationDialCode = subs[0].ToString();
+                        custMdl.CommunicationPhonePart2 = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.CommunicationPhonePart2 = custMdl.CommunicationPhoneNo;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(custMdl.CommunicationFax))
+                {
+                    string[] subs = custMdl.CommunicationFax.Split('-');
+
+                    if (subs.Count() > 1)
+                    {
+                        custMdl.CommunicationFaxCode = subs[0].ToString();
+                        custMdl.CommunicationFaxPart2 = subs[1].ToString();
+                    }
+                    else
+                    {
+                        custMdl.CommunicationFaxPart2 = custMdl.CommunicationFax;
+                    }
+                }
+            }
+            else
+            {
+                custMdl.Message = obj["Message"].ToString();
+                custMdl.CommunicationAddress1 = "";
+            }
+
+            return custMdl;
+        }
+
+        public async Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer(AshokLeylandCustomerUpdateModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CommunicationPhoneNo = (string.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
+            model.CommunicationFax = (string.IsNullOrEmpty(model.CommunicationFaxCode) ? "" : model.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(model.CommunicationFaxPart2) ? "" : model.CommunicationFaxPart2);
+       
+            if (!string.IsNullOrEmpty(model.CommunicationEmailid))
+            {
+                model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
+            }
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCustomerDetail);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            CustomerAddressUpdateResponse customerResponse = JsonConvert.DeserializeObject<CustomerAddressUpdateResponse>(response, settings);
+
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Message = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    model.Message = customerResponse.Data[0].Reason;
+                else
+                    model.Message = customerResponse.Message;
+
+                model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                model.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.CommunicationStateId.ToString()));
+            }
+            else
+            {
+                model.Message = customerResponse.Data[0].Reason;
+            }
+
+            return model;
+        }
     }
 }

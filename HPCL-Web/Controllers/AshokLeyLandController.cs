@@ -187,5 +187,37 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UpdateALCustomer()
+        {
+            var modals = await _ashokLeyLandService.UpdateALCustomer();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerAddress(string CustomerId)
+        {
+            var modals = await _ashokLeyLandService.GetCustomerAddress(CustomerId);
+            return Json(new { customer = modals });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateALCustomer(AshokLeylandCustomerUpdateModel model)
+        {
+
+            var modals = await _ashokLeyLandService.UpdateALCustomer(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectUpdateALCustomer", new { Message = model.Message });
+            }
+
+            return View(modals);
+        }
+        public async Task<IActionResult> SuccessRedirectUpdateALCustomer(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
     }
 }
