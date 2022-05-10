@@ -28,7 +28,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">ZBM ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ZBMID, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ZBMID, new { @class = "form-control",maxlength="30" })
                                                 <span style="display:none" class="error" id="ZBMId_error"></span>
                                             </div>
                                         </div>
@@ -39,7 +39,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">ZBM Name</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.ZBMName, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.ZBMName, new { @class = "form-control",maxlength="30" })
                                                 <span style="display:none" class="error" id="ZBMName_error"></span>
                                             </div>
                                         </div>
@@ -50,7 +50,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">RSM ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.RSMID, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.RSMID, new { @class = "form-control" ,maxlength="30"})
                                                 <span style="display:none" class="error" id="RSMId_error"></span>
                                             </div>
                                         </div>
@@ -61,7 +61,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">RSM Name</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.RSMName , new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.RSMName , new { @class = "form-control" ,maxlength="30"})
                                                 <span style="display:none" class="error" id="RSMName_error"></span>
                                             </div>
                                         </div>
@@ -72,7 +72,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">RBE ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.RBEID, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.RBEID, new { @class = "form-control" ,maxlength="30"})
                                                 <span style="display:none" class="error" id="RBEId_error"></span>
                                             </div>
                                         </div>
@@ -83,7 +83,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">RBE Name</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.RBEName, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.RBEName, new { @class = "form-control" ,maxlength="30"})
                                                 <span style="display:none" class="error" id="RBEName_error"></span>
                                             </div>
                                         </div>
@@ -94,7 +94,7 @@
                                         <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 teamAdd">Location</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.Location, new { @class = "form-control" ,maxlength="30" })
                                                 <span style="display:none" class="error" id="Location_error"></span>
                                             </div>
                                         </div>
@@ -109,11 +109,13 @@
                                     <button class="btn btn_primary" type="button" id="btnAdd">ADD</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSearch">SEARCH</button>
+                                    <button class="btn btn_primary teamSearch" type="submit" id="btnSearch">SEARCH</button>
                                 </div>
-
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("TeamMapping", "DtpSupport", new { reset="Y" })'">RESET</button>
+                                </div>
+                                  <div class="px-2 teamAdd" style="display:none;">
+                                    <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("TeamMapping", "DtpSupport")'",id="btnSearch">SEARCH</button>
                                 </div>
                             </div>
 
@@ -135,7 +137,8 @@
                     <table class="datatable table table-striped table-bordered table-responsive d-md-table" style="width:100%;" id="TeamMapSearch">
                         <thead style="background-color:lightgray;">
                             <tr>
-
+                                
+                                <th style="display:none">Sl No.</th>
                                 <th>ZBM ID</th>
                                 <th>ZBM Name</th>
                                 <th>RSM ID</th>
@@ -157,16 +160,17 @@
                                 i = i + 1;
 
                                 <tr >
-                                    <td class="editCell editZBMId" >@item.ZBMId</td>
-                                    <td class="editCell editZBMName" >@item.ZBMName</td>
-                                    <td class="editCell editRSMId">@item.RSMId</td>
-                                    <td class="editCell editRSMName">@item.RSMName</td>
-                                    <td class="editCell editRBEId">@item.RBEId</td>
-                                    <td class="editCell editRBEName">@item.RBEName</td>
-                                    <td class="editCell editLocation">@item.Location</td>
+                                    <td  style="display:none" >@i</td>
+                                    <td class="editCell" id="tdZBMId" >@item.ZBMId</td>
+                                    <td class="editCell" id="tdZBMName"  >@item.ZBMName</td>
+                                    <td class="editCell" id="tdRSMId">@item.RSMId</td>
+                                    <td class="editCell" id="tdRSMName">@item.RSMName</td>
+                                    <td class="editCell" id="tdRBEId">@item.RBEId</td>
+                                    <td class="editCell" id="tdRBEName">@item.RBEName</td>
+                                    <td class="editCell" id="tdLocation" >@item.Location</td>
 
 
-                                    <td>
+                                    <td  style="width:8px" >
                                         <div class="d-flex align-items-center justify-content-start">
                                             <a class="d-block edit" data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
                                             <a class="d-block save" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
@@ -198,6 +202,7 @@
 <script type="text/javascript">
     var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click 
     var activeRow="";
+     var pZBMId = "", pZBMName = "", pRSMId = "",pRSMName = "", pRBEId = "", pRBEName = "",plocation ="";
     $(document).ready(function () {
         
 
@@ -208,6 +213,7 @@
            }
            $("#Status").val("ADD");
            $(".teamAdd").attr("style","display:block");
+           $(".teamSearch").attr("style","display:none");
         }
         else{
              $("#Status").val("");
@@ -222,6 +228,8 @@
          }
 
         $(".teamAdd").attr("style","display:block");
+        $(".teamSearch").attr("style","display:none");
+        
         $("#Status").val("ADD");
     });
     $("#btnAdd").click(function(){
@@ -412,11 +420,21 @@
         if(activeRow==""){
             currentRow = $(this).closest("tr");
             activeRow=currentRow;
+            var i = currentRow[0].cells[0].textContent;
+            pZBMId = currentRow[0].cells[1].textContent;
+           pZBMName = currentRow[0].cells[2].textContent;
+           pRSMId = currentRow[0].cells[3].textContent;
+           pRSMName = currentRow[0].cells[4].textContent;
+           pRBEId = currentRow[0].cells[5].textContent;
+           pRBEName = currentRow[0].cells[6].textContent;
+           plocation = currentRow[0].cells[7].textContent;
             currentRow.find('td.editCell').each(function(){
-                          $(this).prop('contenteditable', true)
+                          
+                          $(this)[0].innerHTML=('<input type="text" onblur="validateText(this);" maxlength="30" class="form-control" value="'+ $(this)[0].textContent + '" id="'+$(this)[0].id+'_'+i+'"><span class="field-validation-error text-danger" id="'+$(this)[0].id+'_error'+i+'"></span>');
                       });
-           currentRow.find('td.editZBMId').focus();
+           $('#tdZBMId_'+i).focus();
            
+
            currentRow.find('.edit').attr("style","display:none");
            currentRow.find('.save').attr("style","display:block");
            currentRow.find('.cancel').attr("style","display:block");
@@ -424,27 +442,65 @@
     });
      $("#TeamMapSearch").on('click', '.cancel', function () {
           currentRow = $(this).closest("tr");
-        currentRow.find('td.editCell').each(function(){
-                      $(this).prop('contenteditable', false)
-                  });
- 
+          //currentRow.find('td.editCell').each(function(){
+          //             $(this).removeClass('edit-feild');
+          //        });
+          currentRow[0].cells[1].textContent=pZBMId;
+          currentRow[0].cells[2].textContent=pZBMName;
+          currentRow[0].cells[3].textContent=pRSMId;
+          currentRow[0].cells[4].textContent=pRSMName;
+          currentRow[0].cells[5].textContent=pRBEId;
+          currentRow[0].cells[6].textContent=pRBEName;
+          currentRow[0].cells[7].textContent=plocation;
+         
        currentRow.find('.edit').attr("style","display:block");
        currentRow.find('.save').attr("style","display:none");
        currentRow.find('.cancel').attr("style","display:none");
        activeRow="";
      });
      $("#TeamMapSearch").on('click', '.save', function () {
+         var flag="Y";
           row = $(this).closest("tr");
-          var zbmId = row[0].cells[0].textContent;
-          var zbmName = row[0].cells[1].textContent;
-          var RSMId = row[0].cells[2].textContent;
-          var RSMName = row[0].cells[3].textContent;
-          var RBEId = row[0].cells[4].textContent;
-          var RBEName = row[0].cells[5].textContent;
-          var location = row[0].cells[6].textContent;
-          var teamMappingID = row[0].cells[8].textContent;
-          var reqmodel={ ZBMID: zbmId, ZBMName: zbmName, RSMID: RSMId,RSMName:RSMName,RBEId:RBEId,RBEName:RBEName,Location:location,TeamMappingID:teamMappingID};
-           $.ajax({
+          var i = row[0].cells[0].textContent;
+          var zbmId = $('#tdZBMId_'+i).val();
+          var zbmName= $('#tdZBMName_'+i).val();
+          var RSMId =  $('#tdRSMId_'+i).val();
+          var RSMName = $('#tdRSMName_'+i).val();
+          var RBEId = $('#tdRBEId_'+i).val();
+          var RBEName = $('#tdRBEName_'+i).val();
+          var location = $('#tdLocation_'+i).val();
+          var teamMappingID = row[0].cells[9].textContent;
+          if(zbmId.trim()==""){
+              $('#tdZBMId_error'+i).html("ZBM ID is required");
+              flag="N";
+          }
+          if(zbmName.trim()==""){
+              $('#tdZBMName_error'+i).html("ZBM Name is required");
+              flag="N";
+          }
+          if(RSMId.trim()==""){
+              $('#tdRSMId_error'+i).html("RSM ID is required");
+              flag="N";
+          }
+          if(RSMName.trim()==""){
+              $('#tdRSMName_error'+i).html("RSM Name is required");
+              flag="N";
+          }
+          if(RBEId.trim()==""){
+              $('#tdRBEId_error'+i).html("RBE ID is required");
+              flag="N";
+          }
+          if(RBEName.trim()==""){
+              $('#tdRBEName_error'+i).html("RBE Name is required");
+              flag="N";
+          }
+          if(location.trim()==""){
+              $('#tdLocation_error'+i).html("Location is required");
+              flag="N";
+          }
+          if(flag=="Y"){
+             var reqmodel={ ZBMID: zbmId, ZBMName: zbmName, RSMID: RSMId,RSMName:RSMName,RBEId:RBEId,RBEName:RBEName,Location:location,TeamMappingID:teamMappingID};
+             $.ajax({
                     type: 'POST',
                     url: '@Url.Action("UpdateTeamMapping", "DtpSupport")',
                     contentType: "application/json; charset=utf-8",
@@ -456,12 +512,70 @@
                             successMsg=data[0].reason;
                         else if(data[0].status==0)
                             errorMsg=data[0].reason;
-                       window.location.href='@Url.Action("TeamMapping", "DtpSupport",new {success = "successMsg", error = "errorMsg" })'.replace("successMsg",successMsg,"errorMsg",errorMsg);
+                        var url = '@Html.Raw(@Url.Action("TeamMapping", "DtpSupport",new {  success = "mm", error = "ee" }))';
+                        url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                        window.location.href=url;
                     },
                     error: function (ex) {
                         alert('Error.' + ex);
                     }
-                });
+             });
+           }
      });
-
+     function validateText(e){
+         if(activeRow!=""){
+             var text=e.value;
+             var id=e.id;
+             var i = activeRow[0].cells[0].textContent;
+             if(id=="tdZBMId_"+i){
+                 if(text.trim()==""){
+                      $('#tdZBMId_error'+i).html("ZBM ID is required");
+                  }
+                  else
+                   $('#tdZBMId_error'+i).html("");
+              }
+              if(id=="tdZBMName_"+i){
+                 if(text.trim()==""){
+                      $('#tdZBMName_error'+i).html("ZBM Name is required");
+                  }
+                  else
+                      $('#tdZBMName_error'+i).html("");
+              }
+              if(id=="tdRSMId_"+i){
+                 if(text.trim()==""){
+                      $('#tdRSMId_error'+i).html("RSM ID is required");
+                  }
+                  else
+                      $('#tdRSMId_error'+i).html("");
+              }
+              if(id=="tdRSMName_"+i){
+                 if(text.trim()==""){
+                      $('#tdRSMName_error'+i).html("RSM Name is required");
+                  }
+                  else
+                      $('#tdRSMName_error'+i).html("");
+              }
+             if(id=="tdRBEId_"+i){
+                 if(text.trim()==""){
+                      $('#tdRBEId_error'+i).html("RBE ID is required");
+                  }
+                  else
+                      $('#tdRBEId_error'+i).html("");
+              }
+             if(id=="tdRBEName_"+i){
+                 if(text.trim()==""){
+                      $('#tdRBEName_error'+i).html("RBE Name is required");
+                  }
+                  else
+                      $('#tdRBEName_error'+i).html("");
+              }
+              if(id=="tdLocation_"+i){
+                 if(text.trim()==""){
+                      $('#tdLocation_error'+i).html("Location is required");
+                  }
+                  else
+                      $('#tdLocation_error'+i).html("");
+              }
+          }
+     }
 </script>

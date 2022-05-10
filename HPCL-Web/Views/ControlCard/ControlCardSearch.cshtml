@@ -24,14 +24,14 @@
                                         <label class="font-weight-normal col-md-2 col-12">@Label.CustomerId <sup class="text-danger">*</sup></label>
                                         <div class="col-sm-3 col-md-3 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                 <span class="error" id="Customer_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center flex-wrap">
                                                 <div class="px-0">
-                                                    <button class="btn btn_primary regrate_btn" type="submit" onclick="showGrid()" id="btnSave" name="submit">Regenerate IAC</button>
+                                                    <button class="btn btn_primary regrate_btn" type="submit" id="btnSave" name="submit">Regenerate IAC</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -74,14 +74,14 @@
     </div>
 </div>
 <script type="text/javascript">
-    function showGrid() {
-        if ($("input:text").val() == "") {
-            document.getElementById('OfficerTable').style.display = 'none';
-        }
-        if (($("input:text").val() != "")) {
-            document.getElementById('OfficerTable').style.display = 'inline-table';
-        }
-    }
+    //function showGrid() {
+    //    if ($("input:text").val() == "") {
+    //        document.getElementById('OfficerTable').style.display = 'none';
+    //    }
+    //    if (($("input:text").val() != "")) {
+    //        document.getElementById('OfficerTable').style.display = 'inline-table';
+    //    }
+    //}
 
 
     function resetFields() {
@@ -98,31 +98,36 @@
 
         console.log(data);
 
+        if(data.searchList.length>0){
+
+            $("#OfficerTable td").parent().remove();
+
+            for (var i = 0; i < data.searchList.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td>" + (data.searchList[i].zonalOfficeName || '') + "</td>"
+                    + "<td>" + (data.searchList[i].regionalOfficeName || '') + "</td>"
+                    + "<td>" + (data.searchList[i].customerID || '') + "</td>"
+                    + "<td>" + (data.searchList[i].customerName || '') + "</td>"
+                    + "<td>" + (data.searchList[i].controlCardNo || '') + "</td>"
+                    + "</tr ></tbody > ";
+
+                $('#OfficerTable').append(rows);
 
 
-        $("#OfficerTable td").parent().remove();
+            }
+            document.getElementById('OfficerTable').style.display = 'inline-table';
 
-        for (var i = 0; i < data.searchList.length; i++) {
+            let tableData = $('#OfficerTable').html();
+            sessionStorage.setItem("tableData", tableData);
 
-            var rows = "<tbody><tr>"
-                + "<td>" + (data.searchList[i].zonalOfficeName || '') + "</td>"
-                + "<td>" + (data.searchList[i].regionalOfficeName || '') + "</td>"
-                + "<td>" + (data.searchList[i].customerID || '') + "</td>"
-                + "<td>" + (data.searchList[i].customerName || '') + "</td>"
-                + "<td>" + (data.searchList[i].controlCardNo || '') + "</td>"
-                + "</tr ></tbody > ";
-
-            $('#OfficerTable').append(rows);
-
-
+            let custmId = $('.cusId').html();
+            sessionStorage.setItem("cusmId", custmId);
+            $("#NoRecord").attr("style", "display:none");
         }
-
-
-        let tableData = $('#OfficerTable').html();
-        sessionStorage.setItem("tableData", tableData);
-
-        let custmId = $('.cusId').html();
-        sessionStorage.setItem("cusmId", custmId);
+        else{
+            $("#NoRecord").attr("style", "display:block");
+        }
     }
 
     function OnFailure(data) {
@@ -143,59 +148,43 @@
         }
     }
 
-    $('#CustomerId').on("input", function (evt) {
-        var self = $(this);
-        self.val(self.val().replace(/\D/g, ""));
-        if ((evt.which < 48 || evt.which > 57)) {
-            evt.preventDefault();
-        }
+    $('#CustomerId').on("blur", function (evt) {
+         var customerid = $("#CustomerId").val();
+         if(customerid.trim()!=""){
+             if(!customerid.match(mappedCustomerId)){
+                 $("#Customer_error").html("Invalid Customer ID");
+                 $("#Customer_error").attr("style","display:block");
+             }
+             else{
+                 $("#Customer_error").html("");
+                 $("#Customer_error").attr("style","display:none");
+             }
+         }
+         else{
+             $("#Customer_error").html("Enter Customer ID");
+             $("#Customer_error").attr("style","display:block");
+         }
     });
 
    $("#btnSave").on('click', function (e) {
 
-       var customerid = $("#Customerid").val();
-
-        $("#OfficerTable td").parent().remove();
+       var customerid = $("#CustomerId").val();
 
         console.log(customerid);
-
-        $.ajax({
-            url: "@Url.Action("ControlCardSearch", "ViewCard")",
-            type: "POST",
-            dataType: "JSON",
-            data: { customerId: customerId },
-            success: function (res) {
-                console.log(res, "res");
-                
-                if (res.searchList.length > 0) {
-
-                    for (var i = 0; i < res.searchList.length; i++) {
-                        $("#OfficerTable").show();
-
-                        var rows = "<tbody><tr>"
-                            + "<td>" + (res.searchList[i].zonalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].regionalOfficeName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerID || '') + "</td>"
-                            + "<td>" + (res.searchList[i].customerName || '') + "</td>"
-                            + "<td>" + (res.searchList[i].controlCardNo || '') + "</td>"
-                            + "</tr ></tbody > ";
-
-                        $("#OfficerTable").append(rows);
-
-
-                    }
-                } else {
-                    $("#OfficerTable").hide();
-                    $("#NoRecord").attr("style", "display:block");
-                }
-
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-
-        });
-
+        if(customerid.trim()!=""){
+            if(!customerid.match(mappedCustomerId)){
+                 $("#Customer_error").html("Invalid Customer ID");
+                 $("#Customer_error").attr("style","display:block");
+                 e.preventDefault();
+             }
+            
+        }
+        else
+        {
+            $("#Customer_error").html("Enter Customer ID");
+            $("#Customer_error").attr("style","display:block");
+            e.preventDefault();
+        }
     });
 
 </script>
