@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.Cards;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,5 +28,6 @@ namespace HPCL.Service.Interfaces
         Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status);
         Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity);
         Task<LimitUpdateForSingleRechargeCardsRes> LimitUpdateForSingleRechargeCardsService(GetLimitUpdateForSingleRechargeCards entity);
+        Task<List<SuccessResponse>> LimitUpdateForSingleRecharge(string objCCMSLimits);
     }
 }
