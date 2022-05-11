@@ -284,7 +284,10 @@ namespace HPCL.Service.Services
 
             if (customerResponse != null && customerResponse.Data != null)
             {
-                GetCustomerDetails = customerResponse.Data.GetCustomerNameAndNameOnCard[0];
+                if (customerResponse.Data.GetCustomerNameAndNameOnCard != null && customerResponse.Data.GetCustomerNameAndNameOnCard.Count > 0)
+                {
+                    GetCustomerDetails = customerResponse.Data.GetCustomerNameAndNameOnCard[0];
+                }
                 if (String.IsNullOrEmpty(GetCustomerDetails.CustomerOrgName))
                 {
                     GetCustomerDetails.CustomerOrgName = "";
