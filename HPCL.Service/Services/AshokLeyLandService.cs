@@ -288,7 +288,26 @@ namespace HPCL.Service.Services
                 if (String.IsNullOrEmpty(GetCustomerDetails.CustomerOrgName))
                 {
                     GetCustomerDetails.CustomerOrgName = "";
-                    GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                    if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
+                    {
+                        GetCustomerDetails.Reason = "Customer Id not found";
+                    }
+                    else
+                    {
+                        GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                    }
+                }
+                else if (GetCustomerDetails.CustomerOrgName.Trim() == "")
+                {
+                    GetCustomerDetails.CustomerOrgName = "";
+                    if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
+                    {
+                        GetCustomerDetails.Reason = "Customer Id not found";
+                    }
+                    else
+                    {
+                        GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                    }
                 }
                 if (String.IsNullOrEmpty(GetCustomerDetails.NameOnCard))
                 {
