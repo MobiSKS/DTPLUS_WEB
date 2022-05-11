@@ -29,7 +29,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -68,7 +68,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", @id = "FormNumber", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                             </div>
-                                            @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger", @id = "formNameValErrMsg" })
+                                            @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "error", @id = "formNameValErrMsg" })
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NoOfCards, new {@id="NoOfCards", @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)" })
                                             </div>
-                                            @Html.ValidationMessageFor(m => m.NoOfCards, "", new { @class = "text-danger", @id = "NoOfCardsErrMsg" })
+                                            @Html.ValidationMessageFor(m => m.NoOfCards, "", new { @class = "error", @id = "NoOfCardsErrMsg" })
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NoofVechileforAllCards, new { @id = "NoofVechileforAllCards", @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)", @style = "display:none", autocomplete = "off" })
-                                                @Html.ValidationMessageFor(m => m.NoofVechileforAllCards, "", new { @class = "text-danger", @id = "NoofVechileforAllCardsErrMsg" })
+                                                @Html.ValidationMessageFor(m => m.NoofVechileforAllCards, "", new { @class = "error", @id = "NoofVechileforAllCardsErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.RBEId, new { @class = "form-control", @id = "RBEId" })
                                             </div>
-                                            @Html.ValidationMessageFor(m => m.RBEId, "", new { @class = "text-danger", @id = "RbeValErrMsg" })
+                                            @Html.ValidationMessageFor(m => m.RBEId, "", new { @class = "error", @id = "RbeValErrMsg" })
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.RBEName, new { @class = "form-control", @id = "RbeNameVal", @readonly = "readonly" })
                                             </div>
-                                            @Html.ValidationMessageFor(m => m.RBEName, "", new { @class = "text-danger", @id = "RBENameErrMsg"  })
+                                            @Html.ValidationMessageFor(m => m.RBEName, "", new { @class = "error", @id = "RBENameErrMsg"  })
                                         </div>
                                     </div>
                                 </div>
@@ -176,6 +176,9 @@
             @Html.HiddenFor(model => Model.VehicleVerifiedManually)
             @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
         }
+        <div class="clearfix"></div>
+        <div style="background-color: #fee4e4;text-align:center;font-weight:bold;display:none;" class="alert alert-danger mt-3" id="dvNoRecord">
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>
@@ -420,7 +423,8 @@
                              document.getElementById("NoOfCards").value = "";
                              $("#NoOfCards").prop('readonly', false);
                          }
-
+                          dvNoRecord.style.display = "none";
+                          $("#dvNoRecord").html('');
                  }
                  else
                  {
@@ -431,7 +435,9 @@
                      $("#RBEId").prop('readonly', false);
                      $("#CustomerId").prop('readonly', false);
                      ViewCardDetailsTbl.style.display = "none";
-                     alert(res.searchResult.message);
+                     //alert(res.searchResult.message);
+                     dvNoRecord.style.display = "block";
+                     $("#dvNoRecord").html(res.searchResult.message);
                  }
              },
              error: function (xhr, ajaxOptions, thrownError) {
@@ -574,7 +580,8 @@
          $("#Remarks").html('');
          $("#dvRemarks").html('');
          dvRemarks.style.display = 'none';
-         //window.location.reload(true);
+         dvNoRecord.style.display = "none";
+         $("#dvNoRecord").html('');
     });
 
     $('#NoOfCards').on("cut copy paste",function(e) {
@@ -584,5 +591,84 @@
     $('#NoofVechileforAllCards').on("cut copy paste",function(e) {
        e.preventDefault();
      });
+
+     $("#CustomerId").on("blur", function () 
+     {
+         if ($("#CustomerId").val().trim() == "") 
+         {
+             $('#CustomerIdValErrMsg').text("Customer ID should not be Empty");
+             return false;
+         } 
+         else 
+         {
+             if (!$("#CustomerId").val().match(mappedCustomerId)) 
+             {
+                 $("#CustomerIdValErrMsg").attr("style", "display:block");
+                 $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                 return false;
+             }
+             else
+             {
+                $('#CustomerIdValErrMsg').text("");
+             }
+         }
+         
+     });
+
+   $("#NoOfCards").on("blur", function () 
+   {
+    //debugger;
+       if (document.getElementById('NoOfCards').value.trim() == "") 
+       {
+            document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards cannot be left blank";
+            return false;
+       }
+       else 
+       {
+            if (Number(document.getElementById('NoOfCards').value) <= 0 || Number(document.getElementById('NoOfCards').value) > 10) 
+            {
+                document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards may be 1 to 10";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("NoOfCardsErrMsg").innerHTML = "";
+            }
+       }
+        
+    });
+
+   $("#NoofVechileforAllCards").on("blur", function () 
+   {
+    //debugger;
+       var noofCards = document.getElementById('NoOfCards').value.trim();
+       if(noofCards=="") noofCards = 0;
+       if (document.getElementById('NoofVechileforAllCards').value.trim() == "") 
+       {
+            document.getElementById("NoofVechileforAllCardsErrMsg").innerHTML = "No. of Vehicles cannot be left blank";
+            return false;
+       }
+       else 
+       {
+            if (Number(document.getElementById('NoofVechileforAllCards').value) <= 0 || Number(document.getElementById('NoofVechileforAllCards').value) > 10) 
+            {
+                document.getElementById("NoofVechileforAllCardsErrMsg").innerHTML = "No. of Vehicles may be 1 to 10";
+                return false;
+            }
+            else 
+            {
+                if (Number(document.getElementById('NoofVechileforAllCards').value) < noofCards) 
+                {
+                     document.getElementById("NoofVechileforAllCardsErrMsg").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
+                }
+                else
+                {
+                    document.getElementById("NoofVechileforAllCardsErrMsg").innerHTML = "";
+                }
+                
+            }
+       }
+        
+    });
 
 </script>
