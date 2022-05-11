@@ -27,6 +27,7 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
         public int StatusCode { get; set; }
         public int Status { get; set; }
         public string UserName1 { get; set; }
+        public int BloackUnblockStatus { get; set; }
 
     }
 }

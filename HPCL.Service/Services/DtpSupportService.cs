@@ -312,6 +312,7 @@ namespace HPCL.Service.Services
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.BloackUnblockStatus = 0;
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
