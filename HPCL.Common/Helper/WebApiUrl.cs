@@ -322,7 +322,8 @@
         public static string InsertTeamMapping = "api/dtplus/dtp/insert_team_mapping ";
         public static string DeleteTeamMapping = "api/dtplus/dtp/delete_team_mapping ";
         public static string updateteammapping = "api/dtplus/dtp/update_team_mapping ";
-
+        public static string getDetailForUserUnblockByCustomeridOrUsername = "api/dtplus/dtp/get_detail_for_user_unblock_by_customerid_or_username";
+        public static string userUnblock = "api/dtplus/dtp/user_unblock";
         #endregion
 
         #region TMS

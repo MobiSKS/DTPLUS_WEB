@@ -140,5 +140,19 @@ namespace HPCL_Web.Controllers
             return Json(searchResult);
            
         }
+        [HttpPost]
+        public async Task<JsonResult> GetDetailForUserUnblock(string CustomerId, string UserName)
+        {
+            var searchResult = await _dtpSupportService.GetDetailForUserUnblock(CustomerId, UserName);
+            return Json(new { searchResult = searchResult });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UnblockUser(UnblockUserModel model)
+        {
+            var Model = await _dtpSupportService.UnblockUser(model);
+
+            return View(Model);
+        }
+
     }
 }
