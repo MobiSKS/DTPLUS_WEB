@@ -224,7 +224,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off", @readonly = "readonly" })
                                                 <span class="error" id="SalesExecutiveEmployeeID_error"></span>
                                             </div>
                                         </div>
@@ -262,7 +262,7 @@
                                     </div>
                                     <div class="col-md-2 col-12">
                                         <div class="custom_select mb-2">
-                                            <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()">Reset</button>
+                                            <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" style="display:none">Reset</button>
                                         </div>
                                         <span class="error"></span>
                                     </div>
@@ -472,14 +472,23 @@
     function LoadCardDeatils() {
 
         debugger;
-
-        var noOfCards = document.getElementById("NoOfCards").value;
-        if (noOfCards == "0" || noOfCards == "") {
-            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards is required";
+               
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("No. of Cards cannot be left blank");
+            $("#NoOfCards_error").attr("style", "display:block");
             return (false);
         }
-        else {
-            document.getElementById("NoOfCards_error").innerHTML = "";
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
+        {
+            $('#NoOfCards_error').text("No. of Cards may be 1 to 10");
+            $("#NoOfCards_error").attr("style", "display:block");
+            return (false);
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
         }
 
 
@@ -825,23 +834,7 @@
             document.getElementById("comm_email_error").innerHTML = "";
         }
 
-
-        //if (localStorage.getItem("MOBILENUMBERREADYUSED") == 0) {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
-        //    return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_mobileNumber_error").innerHTML = "";
-        //}
-
-        //if (localStorage.getItem("EMAILIDALREADYUSED") == 0) {
-        //    document.getElementById("comm_email_error").innerHTML = "Email already exists";
-        //    return (false);
-        //}
-        //else {
-        //    document.getElementById("comm_email_error").innerHTML = "";
-        //}
-
+        
         if (document.getElementById("CommunicationAddress1").value.trim() == "") 
         {
             document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
@@ -901,6 +894,24 @@
         else 
         {
             document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        }
+
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("No. of Cards cannot be left blank");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret = false;
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
+        {
+            $('#NoOfCards_error').text("No. of Cards may be 1 to 10");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret = false;
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
         }
 
 
@@ -1250,20 +1261,25 @@
     }
 
 
-    $("#DealerCode").on("blur", function () {
+    $("#DealerCode").on("blur", function () 
+    {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
 
         var dealerCode = document.getElementById("DealerCode").value;
-        if (dealerCode == "") {
+        if (dealerCode == "") 
+        {
             document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
-            $("#DealerCode").focus;
+            document.getElementById("SalesExecutiveEmployeeID").value="";
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
+        document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
 
         $.ajax({
             type: 'POST',  // http method
@@ -1275,12 +1291,61 @@
                 console.log(status);
                 console.log(data.status);
 
-                if (status == 'success') {
-                    if (data.status == 1) {
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "";
                         localStorage.setItem("DEALERFOUND", "1");
+
+                         $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetAlSalesExeEmpIdAddOnOTCCardMapping", "AshokLeyLand")',
+                            data: { dealerCode: dealerCode },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                                console.log(status);
+                                if (status == 'success') 
+                                {
+                                    document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+  
+                                    if(data.statusCode==1000)
+                                    {
+                                        document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                                        document.getElementById("DealerCode_error").innerHTML ="";
+                                    }
+                                    else
+                                    {
+                                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                    }
+
+                                    if (data == "Failed to load Customer Details")
+                                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                                else 
+                                {
+                                    $("#DealerCode_error").html("");
+                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) 
+                            {
+                                document.getElementById("SalesExecutiveEmployeeID").value = "";
+                            },
+                            statusCode: 
+                            {
+                                1024: function () 
+                                {
+                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                            }
+                        });
+
                     }
-                    else {
+                    else 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                         localStorage.setItem("DEALERFOUND", "0");
                     }
@@ -1756,5 +1821,28 @@
         }
 
       });
+
+      $("#NoOfCards").on("blur", function ()
+      {
+
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("No. of Cards cannot be left blank");
+            $("#NoOfCards_error").attr("style", "display:block");
+            return (false);
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
+        {
+            $('#NoOfCards_error').text("No. of Cards may be 1 to 10");
+            $("#NoOfCards_error").attr("style", "display:block");
+            return (false);
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
+        }
+
+     });
 
 </script>

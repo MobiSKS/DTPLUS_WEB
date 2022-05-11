@@ -261,7 +261,7 @@
                                  <label class="font-weight-normal offset-md-1 col-md-5 col-12">Sales Executive Employee ID <sup class="text-danger">*</sup></label>
                                  <div class="col-md-6 col-12">
                                     <div class="custom_select">
-                                       @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                       @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off", @readonly = "readonly" })
                                        <span class="error" id="SalesExecutiveEmployeeID_error"></span>
                                     </div>
                                  </div>
@@ -848,20 +848,25 @@ function ValidateMandatoryFields()
 
     });
 
-        $("#DealerCode").on("blur", function () {
+    $("#DealerCode").on("blur", function () 
+    {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
 
-        var dealerCode = document.getElementById("DealerCode").value;
-        if (dealerCode == "") {
+        var dealerCode = document.getElementById("DealerCode").value.trim();
+        if (dealerCode == "") 
+        {
             document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
-            $("#DealerCode").focus;
+            document.getElementById("SalesExecutiveEmployeeID").value="";
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
+        document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
 
         $.ajax({
             type: 'POST',  // http method
@@ -873,12 +878,62 @@ function ValidateMandatoryFields()
                 console.log(status);
                 console.log(data.status);
 
-                if (status == 'success') {
-                    if (data.status == 1) {
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "";
                         localStorage.setItem("DEALERFOUND", "1");
+
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetAlSalesExeEmpIdAddOnOTCCardMapping", "AshokLeyLand")',
+                            data: { dealerCode: dealerCode },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                                console.log(status);
+                                if (status == 'success') 
+                                {
+                                    document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+  
+                                    if(data.statusCode==1000)
+                                    {
+                                        document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                                        document.getElementById("DealerCode_error").innerHTML ="";
+                                    }
+                                    else
+                                    {
+                                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                    }
+
+                                    if (data == "Failed to load Customer Details")
+                                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                                else 
+                                {
+                                    $("#DealerCode_error").html("");
+                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) 
+                            {
+                                document.getElementById("SalesExecutiveEmployeeID").value = "";
+                            },
+                            statusCode: 
+                            {
+                                1024: function () 
+                                {
+                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                            }
+                        });
+
+
                     }
-                    else {
+                    else 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                         localStorage.setItem("DEALERFOUND", "0");
                     }
@@ -888,16 +943,19 @@ function ValidateMandatoryFields()
                         localStorage.setItem("DEALERFOUND", "0");
                     }
                 }
-                else {
+                else 
+                {
                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                     localStorage.setItem("DEALERFOUND", "0");
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function (xhr, ajaxOptions, thrownError) 
+            {
                 document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                 localStorage.setItem("DEALERFOUND", "0");
             },
-            statusCode: {
+            statusCode: 
+            {
                 1024: function () {
                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                     localStorage.setItem("DEALERFOUND", "0");
