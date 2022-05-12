@@ -301,6 +301,34 @@ namespace HPCL.Service.Services
                         response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
                         if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
                             response.FleetSizeNoOfVechileOwnedCarJeep = "";
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
+                        {
+                            if (!response.KeyOfficialDOA.Contains("1900"))
+                            {
+                                string[] subs = response.KeyOfficialDOA.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                response.KeyOfficialDOA = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                response.KeyOfficialDOA = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
+                        {
+                            if (!response.KeyOfficialDOB.Contains("1900"))
+                            {
+                                string[] subs = response.KeyOfficialDOB.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                response.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                response.KeyOfficialDOB = "";
+                            }
+                        }
                     }
                 }
                 

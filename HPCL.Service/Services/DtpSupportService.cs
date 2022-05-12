@@ -3,7 +3,6 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.DtpSupport;
 using HPCL.Common.Models.ResponseModel.Customer;
-using HPCL.Common.Models.RequestModel.DtpSupport;
 using HPCL.Common.Models.ResponseModel.DtpSupport;
 using HPCL.Common.Models.ViewModel.DtpSupport;
 using HPCL.Service.Interfaces;
@@ -92,6 +91,7 @@ namespace HPCL.Service.Services
         {
             UnblockUserModel model = new UnblockUserModel();
             model.Message = "";
+            model.Success = "";
             return model;
         }
         public async Task<GeneralUpdatesModel> GeneralUpdates()
@@ -284,5 +284,77 @@ namespace HPCL.Service.Services
 
             return res;
         }
+
+        public async Task<GetDetailForUserUnblockResponse> GetDetailForUserUnblock(string CustomerId, string UserName)
+        {
+            var searchBody = new GetDetailForUserUnblockRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                UserName = string.IsNullOrEmpty(UserName) ? "" : UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDetailForUserUnblockByCustomeridOrUsername);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            GetDetailForUserUnblockResponse searchList = obj.ToObject<GetDetailForUserUnblockResponse>();
+
+            return searchList;
+        }
+        public async Task<UnblockUserModel> UnblockUser(UnblockUserModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.BloackUnblockStatus = 0;
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            CustomerInserCardResponse updateResponse;
+
+            var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.userUnblock);
+
+            updateResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+            model.UpdateStatus = "";
+            model.Success = "";
+            model.Message = "";
+            if (updateResponse.Internel_Status_Code == 1000)
+            {
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                model.Message = updateResponse.Message;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+
+                    if (model.Status == 1)
+                    {
+                        model.UpdateStatus = "UPDATED";
+                        model.Success = updateResponse.Data[0].Reason;
+                        model.Message = "";
+                    }
+                }
+            }
+            else
+            {
+                model.Message = updateResponse.Message;
+                model.StatusCode = updateResponse.Internel_Status_Code;
+                if (updateResponse != null && updateResponse.Data != null && updateResponse.Data.Count > 0)
+                {
+                    model.Status = updateResponse.Data[0].Status;
+                    model.Message = updateResponse.Data[0].Reason;
+                }
+            }
+
+            return model;
+        }
+
     }
 }

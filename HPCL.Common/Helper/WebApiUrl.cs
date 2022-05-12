@@ -222,6 +222,8 @@
         public static string getAladdonOTCCardMappingCustomerDetails = "api/dtplus/ashokleyland/get_al_addon_otc_card_mapping_customer_details";
         public static string alAddonOTCCard = "api/dtplus/ashokleyland/al_addon_otc_card";
         public static string getAlSalesExeEmpidAddonOtcCardMapping = "api/dtplus/ashokleyland/get_al_sales_exe_empid_addon_otc_card_mapping";
+        public static string getAlCustomerDetail = "api/dtplus/ashokleyland/get_al_customer_detail";
+        public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         #endregion
 
         #region Customer Financial
@@ -320,7 +322,8 @@
         public static string InsertTeamMapping = "api/dtplus/dtp/insert_team_mapping ";
         public static string DeleteTeamMapping = "api/dtplus/dtp/delete_team_mapping ";
         public static string updateteammapping = "api/dtplus/dtp/update_team_mapping ";
-
+        public static string getDetailForUserUnblockByCustomeridOrUsername = "api/dtplus/dtp/get_detail_for_user_unblock_by_customerid_or_username";
+        public static string userUnblock = "api/dtplus/dtp/user_unblock";
         #endregion
 
         #region TMS

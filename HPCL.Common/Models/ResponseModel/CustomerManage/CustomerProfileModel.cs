@@ -351,7 +351,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string KeyOfficialDesignation { get; set; }
         public string KeyOfficialEmail { get; set; }
         public string KeyOfficialPhoneNo { get; set; }
-        public DateTime KeyOfficialDOA { get; set; }
+        public string KeyOfficialDOA { get; set; }
         public string KeyOfficialMobile { get; set; }
         public string KeyOfficialSecretQuestionId { get; set; }
         public string KeyOfficialTypeOfFleetId { get; set; }

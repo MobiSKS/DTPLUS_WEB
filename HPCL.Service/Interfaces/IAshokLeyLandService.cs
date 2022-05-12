@@ -25,5 +25,8 @@ namespace HPCL.Service.Interfaces
         Task<AddonOTCCardMapping> GetAlAddonOTCCardAddCardsPartialView([FromBody] List<AddonOTCCardDetails> arrs);
         Task<AddonOTCCardMapping> AddonOTCCardMapping(AddonOTCCardMapping addAddOnCard);
         Task<AddonOTCCardMapping> GetAlSalesExeEmpIdAddOnOTCCardMapping(string dealerCode);
+        Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer();
+        Task<AshokLeylandCustomerUpdateModel> GetCustomerAddress(string CustomerId);
+        Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer(AshokLeylandCustomerUpdateModel model);
     }
 }

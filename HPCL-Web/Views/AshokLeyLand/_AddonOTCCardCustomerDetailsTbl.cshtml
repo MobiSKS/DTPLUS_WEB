@@ -70,7 +70,7 @@
                             <div class="custom_select">
                                 @Html.TextBoxFor(m => m.NoOfCards, new {@id="NoOfCards", @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)" })
                             </div>
-                            @Html.ValidationMessageFor(m => m.NoOfCards, "", new { @class = "text-danger", @id = "NoOfCardsErrMsg" })
+                            @Html.ValidationMessageFor(m => m.NoOfCards, "", new { @class = "error", @id = "NoOfCardsErrMsg" })
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="d-flex align-items-center justify-content-center">
@@ -879,5 +879,28 @@
 
     $('#NoOfCards').on("cut copy paste",function(e) {
         e.preventDefault();
+    });
+
+   $("#NoOfCards").on("blur", function () 
+   {
+    //debugger;
+       if (document.getElementById('NoOfCards').value.trim() == "") 
+       {
+            document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards cannot be left blank";
+            return false;
+       }
+       else 
+       {
+            if (Number(document.getElementById('NoOfCards').value) <= 0 || Number(document.getElementById('NoOfCards').value) > 10) 
+            {
+                document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards may be 1 to 10";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("NoOfCardsErrMsg").innerHTML = "";
+            }
+       }
+        
     });
 </script>

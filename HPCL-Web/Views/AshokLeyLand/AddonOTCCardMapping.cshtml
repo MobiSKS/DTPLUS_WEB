@@ -28,7 +28,7 @@
                     <div class="col-sm-3 col-md-3 col-12">
                         <div class="custom_select">
                           @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                          @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                          @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                         </div>
                     </div>
 					<div class="col-md-7 col-12">
@@ -96,6 +96,9 @@
       @Html.HiddenFor(model => Model.SalesExecutiveEmployeeID)
       @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
     }
+    <div class="clearfix"></div>
+    <div style="background-color: #fee4e4;text-align:center;font-weight:bold;display:none;" class="alert alert-danger mt-3" id="dvNoRecord">
+    </div>
     <div class="clearfix"></div>
     </div>
 </div>
@@ -197,7 +200,8 @@
                  {
                      $("#CustomerId").prop('readonly', true);
                      ViewCardDetailsTbl.style.display = "block";
-
+                     dvNoRecord.style.display = "none";
+                     $("#dvNoRecord").html('');
 
                         var vehicles = [];
                         var checked="false";
@@ -255,7 +259,8 @@
                  {
                      $("#CustomerId").prop('readonly', false);
                      ViewCardDetailsTbl.style.display = "none";
-                     alert(res.searchResult.reason);
+                     dvNoRecord.style.display = "block";
+                     $("#dvNoRecord").html(res.searchResult.reason);
                  }
              },
              error: function (xhr, ajaxOptions, thrownError) {
@@ -317,6 +322,8 @@ $("#CustomerId").on("blur", function ()
          $("#Remarks").html('');
          $("#dvRemarks").html('');
          dvRemarks.style.display = 'none';
+         dvNoRecord.style.display = "none";
+         $("#dvNoRecord").html('');
     });
 
 </script>
