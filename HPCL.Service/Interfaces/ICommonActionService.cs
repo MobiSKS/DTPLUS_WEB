@@ -70,5 +70,6 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetVehicleEnrollmentStatusList();
         Task<List<GetEntityModel>> GetEntityModelList();
         Task<List<GetEntityFieldModel>> GetEntityFieldModelList(string EntityTypeId);
+        Task<List<StatusResponseModal>> GetStatusType(int EntityTypeId);
     }
 }

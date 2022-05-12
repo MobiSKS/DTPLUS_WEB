@@ -530,6 +530,7 @@ namespace HPCL.Service.Services
                     }
                 }
             }
+            
             return lsts;
         }
 
@@ -1290,6 +1291,27 @@ namespace HPCL.Service.Services
                 entityFieldId = 0,
                 entityFieldName = "Select"
             });
+            return sortedtList;
+        }
+        public async Task<List<StatusResponseModal>> GetStatusType(int EntityTypeId)
+        {
+            var statusType = new StatusRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                EntityTypeId = EntityTypeId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetStatusTypeUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
+            var sortedtList = lst.OrderBy(x => x.StatusId).ToList();
+
             return sortedtList;
         }
 

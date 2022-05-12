@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.RequestModel.TMS;
 using System.Linq;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 
 namespace HPCL.Service.Services
 {
@@ -211,6 +212,13 @@ namespace HPCL.Service.Services
             ashokLeylandCardCreationModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
             ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
 
+            foreach (ALCardEntryDetails cardDetails in ashokLeylandCardCreationModel.ObjALCardEntryDetail)
+            {
+                cardDetails.VehicleNoMsg = "";
+                cardDetails.MobileNoMsg = "";
+                cardDetails.CardNoMsg = "";
+                cardDetails.VINNoMsg = "";
+            }
             if (customerResponse.Internel_Status_Code != 1000)
             {
                 if (customerResponse.Data != null)
@@ -667,5 +675,76 @@ namespace HPCL.Service.Services
 
             return model;
         }
-    }
+
+        public async Task<AshokLeylandCardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<ALCardEntryDetails> arrs)
+        {
+            AshokLeylandCardCreationModel addAddOnCard = new AshokLeylandCardCreationModel();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.DealerCode = arrs[0].DealerCode;
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+                addAddOnCard.ObjALCardEntryDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+
+        public async Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model)
+        {
+            model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            List<StatusResponseModal> mainList = new List<StatusResponseModal>();
+            mainList = await _commonActionService.GetStatusType(1);
+            List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
+
+            foreach (StatusResponseModal item in mainList)
+            {
+                if (item.StatusId == 10 || item.StatusId == 11 || item.StatusId == 12 || item.StatusId == 1 || item.StatusId == 13)
+                {
+                    lstNew.Add(item);
+                }
+            }
+
+            model.StatusResponseMdl.AddRange(lstNew);
+
+            var reqBody = new GetAlCustomerDetailForVerificationRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = model.FormNumber,
+                CustomerName = model.CustomerName,
+                StateID = model.StateID,
+                Status = model.Status
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAlCustomerDetailForVerification);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetAlCustomerDetailForVerificationModel res = obj.ToObject<GetAlCustomerDetailForVerificationModel>();
+
+            if (res != null && res.Data != null && res.Data.Count > 0)
+            {
+                model.Data = res.Data;
+            }
+            else
+            {
+                model.Data = new List<GetAlCustomerDetailForVerificationDetails>();
+            }
+            model.Message = res.Message;
+            model.Internel_Status_Code = res.Internel_Status_Code;
+
+            return model;
+        }
+
+  }
 }

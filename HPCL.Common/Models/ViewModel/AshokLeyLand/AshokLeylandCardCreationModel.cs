@@ -84,6 +84,8 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CommunicationFaxPart2 { get; set; }
         public string NoOfCards { get; set; }
         public int Internel_Status_Code { get; set; }
+        public string Message { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
     }
     public class ALCardEntryDetails
     {
@@ -92,5 +94,13 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string MobileNo { get; set; }
         public string VehicleType { get; set; }
         public string VINNumber { get; set; }
+        public string Message { get; set; }
+        public string NoOfCards { get; set; }
+        public string VehicleNoMsg { get; set; }
+        public string MobileNoMsg { get; set; }
+        public string CardNoMsg { get; set; }
+        public string VINNoMsg { get; set; }
+        public string Verified { get; set; }
+        public string DealerCode { get; set; }
     }
 }

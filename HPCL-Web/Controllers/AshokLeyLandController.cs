@@ -3,6 +3,7 @@ using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -218,6 +219,22 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
-
+        public async Task<IActionResult> GetMultipleOTCCardPartialView([FromBody] List<ALCardEntryDetails> objCardDetails)
+        {
+            var modals = await _ashokLeyLandService.GetMultipleOTCCardPartialView(objCardDetails);
+            return PartialView("~/Views/AshokLeyLand/_MultipleOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model, string reset, string success, string error)
+        {
+            var searchResult = await _ashokLeyLandService.VerifyCustomerDocuments(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.StateID = 0;
+            }
+            return View(searchResult);
+        }
     }
 }
