@@ -1206,7 +1206,7 @@
 
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Customer")',
+                url: '@Url.Action("GetDistrictDetails", "Aggregator")',
                 data: { Stateid: id },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
@@ -1232,14 +1232,14 @@
 
         });
         $("#PerOrRegAddressStateID").change(function () {
+            debugger;
                 var id = this.value;
              if (id != 0) {
                  $("#perma_state_error").html("");
                 }
-
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("GetDistrictDetails", "Customer")',
+                    url: '@Url.Action("GetDistrictDetails", "Aggregator")',
                     data: { Stateid: id },  // data to submit
                     dataType: "json",
                     success: function (data, status, xhr) {
@@ -1266,7 +1266,6 @@
                     }
 
                });
-
         });
 
         function sameAddressAsCommunication() {
@@ -1512,11 +1511,11 @@
                     }
                 }
                 var id = $('#CommunicationStateID').val();
+               
                 $('#PerOrRegAddressStateID')[0].sumo.selectItem($("#CommunicationStateID").val());
-
                 $.ajax({
                     type: 'POST',  // http method
-                    url: "GetDistrictDetails/Customer",
+                    url: '@Url.Action("GetDistrictDetails", "Aggregator")',
                     data: { Stateid: id },  // data to submit
                     dataType: "json",
                     success: function (data, status, xhr) {
@@ -1532,8 +1531,6 @@
                                     }).html(data.districtName).appendTo("#PermanentDistrictId");
                             });
                             $("#PermanentDistrictId")[0].sumo.reload();
-                            //$('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
-                            //document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
                             setTimeout(function(){
                                    $('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
                                },500);
@@ -1546,7 +1543,6 @@
                         alert("Error Populating District Data");
                     }
                 });
-
                 $('#PerOrRegAddress1').val($('#CommunicationAddress1').val());
                 $('#PerOrRegAddress2').val($('#CommunicationAddress2').val());
                 $('#PerOrRegAddress3').val($('#CommunicationAddress3').val());

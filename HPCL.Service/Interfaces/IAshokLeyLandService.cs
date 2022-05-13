@@ -30,5 +30,6 @@ namespace HPCL.Service.Interfaces
         Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer(AshokLeylandCustomerUpdateModel model);
         Task<AshokLeylandCardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<ALCardEntryDetails> arrs);
         Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model);
+        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus);
     }
 }

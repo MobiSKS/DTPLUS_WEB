@@ -1,11 +1,14 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Aggregator;
+using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
+using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -242,6 +245,94 @@ namespace HPCL.Service.Services
 
             return cust;
         }
+       
 
+        public async Task<ValidateAggregatorCustomerModel> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity)
+        {
+            string fromDateOfApplication = "";
+            string toDateOfApplication = "";
+
+            entity.CustomerRegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+
+            if (!string.IsNullOrEmpty(entity.FromDate))
+            {
+                string[] frmDate = entity.FromDate.Split("-");
+                fromDateOfApplication = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+            }
+            if (!string.IsNullOrEmpty(entity.ToDate))
+            {
+                string[] toDate = entity.ToDate.Split("-");
+                toDateOfApplication = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
+            }
+            var request = new GetValidateNewCustomerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RegionalOfficeId = entity.CustomerRegionID > 0 ? entity.CustomerRegionID.ToString() : null,
+                FromDate = fromDateOfApplication,
+                ToDate = toDateOfApplication,
+                FormNumber = entity.FormNumber,
+                StateId = null,
+                CustomerName = null
+            };
+
+            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForApproval);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+
+            entity.SearchCustomerResponseGridLst = searchList;
+            entity.Message = obj["Message"].ToString();
+            return entity;
+        }
+        public async Task<JObject> ViewCustomerDetails(string FormNumber)
+        {
+            _httpContextAccessor.HttpContext.Session.SetString("FormNumberSession", FormNumber);
+
+            var customerBody = new CheckformNumberDuplicationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = FormNumber
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getcustomerdetailsByFormNumber);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+
+            return obj;
+        }
+        public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        {
+            var approvalBody = new AproveCustomerRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerReferenceNo = CustomerReferenceNo,
+                Comments = Comments,
+                Approvalstatus = Approvalstatus,
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.approverejectaggregatorcustomer);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+
+            return insertKyc[0];
+        }
     }
 }

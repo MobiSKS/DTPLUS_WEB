@@ -111,15 +111,14 @@ namespace HPCL_Web.Controllers
 
             if (ashokLeylandCardCreationModel.Internel_Status_Code == 1000)
             {
-                ashokLeylandCardCreationModel.Remarks = "";
-                ViewBag.Message = "Ashok Leyland Card Customer saved successfully";
-                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard");
+                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard", new { Message = ashokLeylandCardCreationModel.Remarks });
             }
 
             return View(ashokLeylandCardCreationModel);
         }
-        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard()
+        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
@@ -235,6 +234,12 @@ namespace HPCL_Web.Controllers
                 model.StateID = 0;
             }
             return View(searchResult);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus)
+        {
+            var updateKycResponse = await _ashokLeyLandService.AproveRejectCustomer(CustomerID, Comments, Approvalstatus);
+            return Json(new { customer = updateKycResponse });
         }
     }
 }
