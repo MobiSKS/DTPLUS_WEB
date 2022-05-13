@@ -198,13 +198,18 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
                     customerModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     customerModel.Remarks = customerResponse.Message;
 
                 customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 customerModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(customerModel.CommunicationStateId.ToString()));
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
             }
 
             return customerModel;
