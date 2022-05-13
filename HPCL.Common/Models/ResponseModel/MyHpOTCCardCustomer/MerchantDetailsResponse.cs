@@ -18,5 +18,7 @@ namespace HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer
         public string RegionalOfficeName { get; set; }
         public string SalesAreaName { get; set; }
         public int RegionalOfficeId { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }

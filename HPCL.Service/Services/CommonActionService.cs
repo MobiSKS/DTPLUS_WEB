@@ -600,6 +600,8 @@ namespace HPCL.Service.Services
                 merchantDetails.RegionalOfficeId = merchant.Data[0].RegionalOfficeId;
                 merchantDetails.Internel_Status_Code = merchant.Internel_Status_Code;
                 merchantDetails.Status_Code = merchant.Status_Code;
+                merchantDetails.Status = merchant.Data[0].Status;
+                merchantDetails.Reason = merchant.Data[0].Reason;
             }
 
             return merchantDetails;

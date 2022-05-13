@@ -54,9 +54,7 @@ namespace HPCL_Web.Controllers
 
             if (customerModel.Internel_Status_Code == 1000)
             {
-                customerModel.Remarks = "";
-                ViewBag.Message = "Driver Card customer saved successfully";
-                return RedirectToAction("SuccessRedirectForDriverCardCustomer");
+                return RedirectToAction("SuccessRedirectForDriverCardCustomer", new { Message = customerModel.Remarks });
             }
 
             return View(customerModel);
@@ -178,8 +176,9 @@ namespace HPCL_Web.Controllers
             }
         }
 
-        public async Task<IActionResult> SuccessRedirectForDriverCardCustomer()
+        public async Task<IActionResult> SuccessRedirectForDriverCardCustomer(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 

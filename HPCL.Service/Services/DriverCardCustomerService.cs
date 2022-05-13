@@ -262,7 +262,6 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(customerModel.UserAgent), "Useragent");
             form.Add(new StringContent(customerModel.UserIp), "Userip");
 
-            //StringContent content = new StringContent(JsonConvert.SerializeObject(form), Encoding.UTF8, "application/json");
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertDriverCardCustomer);
 
             var settings = new JsonSerializerSettings
@@ -278,13 +277,18 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
                     customerModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     customerModel.Remarks = customerResponse.Message;
 
                 customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 customerModel.DocumentTypeMdl.AddRange(await _commonActionService.GetAddressProofList());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
             }
 
             return customerModel;

@@ -591,7 +591,6 @@
             return (false);
         }
 
-        //var found = false;
 
         $.ajax({
             type: 'POST',  // http method
@@ -602,17 +601,10 @@
                 console.log(data);
                 console.log(status);
 
-                if (status == 'success') {
-                    document.getElementById("Zone").value = data.zonalOfficeName;
-                    document.getElementById("RegionalOffice").value = data.regionalOfficeName;
-                    document.getElementById("OutletName").value = data.retailOutletName;
-                    document.getElementById("RegionalOfficeId").value = data.regionalOfficeId;
-                    $("#MerchantId").prop('readonly', true);
-                    dvOtherDetails.style.display = "block";
-                    dvHeaderDetails.style.display = "block";
-                    document.getElementById("MerchantId_error").innerHTML = "";
-
-                    if (data == "Failed to load Merchant Details") {
+                if (status == 'success') 
+                {
+                    if (data == "Failed to load Merchant Details") 
+                    {
                         document.getElementById("Zone").value = "";
                         document.getElementById("RegionalOffice").value = "";
                         document.getElementById("OutletName").value = "";
@@ -622,8 +614,32 @@
                         dvHeaderDetails.style.display = "none";
                         document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                     }
+                    else if(data.status==1)
+                    {
+                        document.getElementById("Zone").value = data.zonalOfficeName;
+                        document.getElementById("RegionalOffice").value = data.regionalOfficeName;
+                        document.getElementById("OutletName").value = data.retailOutletName;
+                        document.getElementById("RegionalOfficeId").value = data.regionalOfficeId;
+                        $("#MerchantId").prop('readonly', true);
+                        dvOtherDetails.style.display = "block";
+                        dvHeaderDetails.style.display = "block";
+                        document.getElementById("MerchantId_error").innerHTML = "";
+                       
+                    }
+                    else
+                    {
+                        document.getElementById("Zone").value = "";
+                        document.getElementById("RegionalOffice").value = "";
+                        document.getElementById("OutletName").value = "";
+                        document.getElementById("RegionalOfficeId").value = "";
+                        $("#MerchantId").prop('readonly', false);
+                        dvOtherDetails.style.display = "none";
+                        dvHeaderDetails.style.display = "none";
+                        document.getElementById("MerchantId_error").innerHTML = data.reason;
+                    }
                 }
-                else {
+                else 
+                {
                     $("#MerchantId_error").html("");
                     document.getElementById("Zone").value = "";
                     document.getElementById("RegionalOffice").value = "";
@@ -635,7 +651,8 @@
                     document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function (xhr, ajaxOptions, thrownError) 
+            {
                 document.getElementById("Zone").value = "";
                 document.getElementById("RegionalOffice").value = "";
                 document.getElementById("OutletName").value = "";
