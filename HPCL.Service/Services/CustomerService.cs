@@ -1691,9 +1691,35 @@ namespace HPCL.Service.Services
 
             return model;
         }
-        public async Task<CustomerModel> ManageAggregator()
+        public async Task<ManageAggregatorViewModel> ManageAggregator(string FromDate ,string ToDate)
         {
-            CustomerModel custMdl = new CustomerModel();
+            ManageAggregatorViewModel custMdl = new ManageAggregatorViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                custMdl.FromDate = await _commonActionService.changeDateFormat(FromDate);
+                custMdl.ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                custMdl.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                custMdl.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new ManageAggregatorRequestModel();
+
+            searchBody = new ManageAggregatorRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = custMdl.FromDate,
+                ToDate = custMdl.ToDate
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatorcustomer);
+
+            custMdl = JsonConvert.DeserializeObject<ManageAggregatorViewModel>(response);
             custMdl.Remarks = "";
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
             custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
@@ -1716,7 +1742,7 @@ namespace HPCL.Service.Services
 
             return custMdl;
         }
-        public async Task<CustomerModel> ManageAggregator(CustomerModel cust)
+        public async Task<ManageAggregatorViewModel> ManageAggregator(ManageAggregatorViewModel cust)
         {
             if (cust.InterState)
             {

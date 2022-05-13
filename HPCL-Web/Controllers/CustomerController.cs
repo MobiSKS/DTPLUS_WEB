@@ -248,7 +248,7 @@ namespace HPCL_Web.Controllers
 
             return View(modals);
         }
-        
+
         [HttpPost]
         public async Task<JsonResult> ReloadUpdatedGrid()
         {
@@ -675,14 +675,14 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        
-        public async Task<IActionResult> ManageAggregator()
+
+        public async Task<IActionResult> ManageAggregator(string FromDate, string ToDate)
         {
-            var modals = await _customerService.ManageAggregator();
+            var modals = await _customerService.ManageAggregator(FromDate, ToDate);
             return View(modals);
         }
         [HttpPost]
-        public async Task<IActionResult> ManageAggregator(CustomerModel cust)
+        public async Task<IActionResult> ManageAggregator(ManageAggregatorViewModel cust)
         {
 
             var modals = await _customerService.ManageAggregator(cust);
@@ -694,6 +694,5 @@ namespace HPCL_Web.Controllers
 
             return View(modals);
         }
-
     }
 }
