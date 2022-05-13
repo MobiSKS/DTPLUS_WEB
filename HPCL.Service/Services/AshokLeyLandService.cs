@@ -221,13 +221,18 @@ namespace HPCL.Service.Services
             }
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
                     ashokLeylandCardCreationModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     ashokLeylandCardCreationModel.Remarks = customerResponse.Message;
                 ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 ashokLeylandCardCreationModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(ashokLeylandCardCreationModel.CommunicationStateId));
                 ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    ashokLeylandCardCreationModel.Remarks = customerResponse.Data[0].Reason;
             }
 
             return ashokLeylandCardCreationModel;
