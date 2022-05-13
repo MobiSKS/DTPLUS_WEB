@@ -151,6 +151,7 @@
         public static string customerAddOnUser = "api/dtplus/customer/customer_add_on_user";
         public static string insertaggregatorcustomer = "api/dtplus/aggregatorcustomer/insert_aggregator_customer";
         public static string getaggregatorcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_customer";
+        public static string approverejectaggregatorcustomer = "api/dtplus/aggregatorcustomer/approve_reject_aggregator_customer";
         #endregion
 
         #region Login
