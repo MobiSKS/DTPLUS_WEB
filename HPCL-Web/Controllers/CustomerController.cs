@@ -676,23 +676,5 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ManageAggregator(string FromDate, string ToDate)
-        {
-            var modals = await _customerService.ManageAggregator(FromDate, ToDate);
-            return View(modals);
-        }
-        [HttpPost]
-        public async Task<IActionResult> ManageAggregator(ManageAggregatorViewModel cust)
-        {
-
-            var modals = await _customerService.ManageAggregator(cust);
-
-            if (cust.Internel_Status_Code == 1000)
-            {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
-            }
-
-            return View(modals);
-        }
     }
 }
