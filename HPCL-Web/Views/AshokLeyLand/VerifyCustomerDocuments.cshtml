@@ -104,8 +104,6 @@
                             <th>Download</th>
                             <th>Action</th>
                             <th>Approval Comment</th>
-                            @*<th style="display:none">ID</th>*@
-
                         </tr>
                     </thead>
                     <tbody id="searchTableBody">
@@ -118,34 +116,26 @@
 
                             <tr>
                                 <td style="display:none" >@i</td>
-                                <td class="editCell" id="tdZBMId">@item.FormNumber</td>
-                                <td class="editCell" id="tdZBMName">@item.CustomerID</td>
-                                <td class="editCell" id="tdRSMId">@item.CustomerName</td>
-                                <td class="editCell" id="tdRSMName">@item.CustomerAddress</td>
-                                <td class="editCell" id="tdRBEId">@item.PhoneNo</td>
-                                <td class="editCell" id="tdRBEName">@item.MobileNo</td>
+                                <td id="tdFormNumber">@item.FormNumber</td>
+                                <td id="tdCustomerID">@item.CustomerID</td>
+                                <td id="tdCustomerName">@item.CustomerName</td>
+                                <td id="tdCustomerAddress">@item.CustomerAddress</td>
+                                <td id="tdPhoneNo">@item.PhoneNo</td>
+                                <td id="tdMobileNo">@item.MobileNo</td>
                                 <td>
                                    <a href="#">
                                       <i class="fa fa-edit text-primary"></i>
                                 </td>
                                 <td><a href="#"><i class="fa fa-eye text-primary"></i></td>
                                 <td><a href="#"><i class="fa fa-download text-primary"></i></td>
-                                <td>
-                                <a href="#"><i class="fa fa-check text-success"></i></a>
-                                <a href="#"><i class="fa fa-ban text-primary"></i></a>
+                                <td class="editCell">
+                                    <input type="text" maxlength="30" class="form-control remarks" onkeydown="return IsAlphaNumeric(event.keyCode)" name="Remarks_@i" id="Remarks_@i" style="display:none">
+                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check text-success verify"></i></a>
+                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban text-primary reject"></i></a>
+                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
                                 </td>
                                 <td>&nbsp;</td>
-
-
-                               @* <td style="width:8px">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <a class="d-block edit" data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
-                                        <a class="d-block save" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
-                                        <a class="d-block cancel" data-toggle="tooltip" title="" tooltip="Cancel"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
-                                        <a asp-action="DeleteTeamMapping" class="d-block" asp-route-TeamMappingId="@item.TeamMappingId" onclick="return confirm('Do you want to delete this record ?');" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>*@
-                                @*<td style="display:none">@item.TeamMappingId</td>*@
                             </tr>
                         }
                     </tbody>
@@ -172,7 +162,6 @@
 <script type="text/javascript">
     var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
     var activeRow="";
-     var pZBMId = "", pZBMName = "", pRSMId = "",pRSMName = "", pRBEId = "", pRBEName = "",plocation ="";
     $(document).ready(function () {
          $('.table').DataTable({
             "lengthMenu": [10, 20, 50, 100, 200, 500],
@@ -184,6 +173,81 @@
 
     });
 
+     $("#TeamMapSearch").on('click', '.reject', function () 
+     {
+        if(activeRow=="")
+        {
+            currentRow = $(this).closest("tr");
+            activeRow=currentRow;
+
+           currentRow.find('.verify').attr("style","display:none");
+           currentRow.find('.reject').attr("style","display:none");
+           currentRow.find('.save').attr("style","display:block");
+           currentRow.find('.cancel').attr("style","display:block");
+           currentRow.find('.remarks').attr("style","display:block");
+       }
+    });
+
+     $("#TeamMapSearch").on('click', '.cancel', function () 
+     {
+       currentRow = $(this).closest("tr");
+
+       currentRow.find('.verify').attr("style","display:block");
+       currentRow.find('.reject').attr("style","display:block");
+       currentRow.find('.save').attr("style","display:none");
+       currentRow.find('.cancel').attr("style","display:none");
+       currentRow.find('.remarks').attr("style","display:none");
+       currentRow.find('input[type="text"]').val('');
+       activeRow="";
+     });
+
+     $("#TeamMapSearch").on('click', '.save', function () {
+         debugger;
+         var flag="Y";
+          row = $(this).closest("tr");
+          var i = row[0].cells[0].textContent;
+          var remarks = $('#Remarks_'+i).val();
+          var customerId = row[0].cells[2].textContent;
+          var approveRejectStatus="13";
+          //alert(customerId);
+          if(remarks.trim()=="")
+          {
+              flag="N";
+              alert("Comment is required to reject verification of a customer.");
+          }
+          
+          if(flag=="Y")
+          {
+            if (confirm('Are you sure to reject verification of this customer?')) 
+            {
+                console.log('Confirm');
+
+                 $.ajax({
+                    url: "@Url.Action("AproveRejectCustomer", "AshokLeyLand")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { CustomerID: customerId, Comments: remarks, Approvalstatus: approveRejectStatus },
+                    success: function (res) {
+ 
+                        if(res.customer.status==1)
+                        {
+                            @*$("#reason").html(res);
+                            $(".toBeHiddenOnSuccess").hide();*@
+                        }
+                    },
+                    error: function (ex) 
+                    {
+                        alert('Failed' + ex);
+                    }
+                });
+             }
+             else
+             {
+                 console.log('Cancelled');
+             }
+         }
+
+     });
 
     $("#FormNumber").on("blur", function () 
     {

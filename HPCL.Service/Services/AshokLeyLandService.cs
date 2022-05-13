@@ -750,6 +750,27 @@ namespace HPCL.Service.Services
 
             return model;
         }
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus)
+        {
+            var approvalBody = new VerifyCustomerDocumentsRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                customerID = CustomerID,
+                customerStatus = Approvalstatus
+            };
 
-  }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCustomerStatus);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> insertKyc = jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+
+            return insertKyc[0];
+        }
+
+    }
 }

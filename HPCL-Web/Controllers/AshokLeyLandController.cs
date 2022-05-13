@@ -235,5 +235,11 @@ namespace HPCL_Web.Controllers
             }
             return View(searchResult);
         }
+        [HttpPost]
+        public async Task<JsonResult> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus)
+        {
+            var updateKycResponse = await _ashokLeyLandService.AproveRejectCustomer(CustomerID, Comments, Approvalstatus);
+            return Json(new { customer = updateKycResponse });
+        }
     }
 }
