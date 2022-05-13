@@ -261,6 +261,8 @@
                      
 
         localStorage.setItem("MERCHANTAVAILABLE", "1");
+        localStorage.setItem("MERCHANTHOTLISTED", "1");
+        localStorage.setItem("MERCHANTHOTLISTEDREASON", "");
 
 
         $.ajax({
@@ -272,74 +274,85 @@
                 console.log(data);
                 console.log(status);
 
-                if (status == 'success') {
+                if (status == 'success') 
+                {
                     document.getElementById("MerchantID_error").innerHTML = "";
 
-                    if (data == "Failed to load Merchant Details") {
+                    if (data == "Failed to load Merchant Details") 
+                    {
                         document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                         localStorage.setItem("MERCHANTAVAILABLE", "0");
                     }
-                    else {
+                    else if(data.status==1)
+                    {
 
-                        $.ajax({
-                            type: 'POST',  // http method
-                            url: '@Url.Action("VerifyMerchantByMerchantidAndRegionalid", "DriverCardCustomer")',
-                            data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
-                            dataType: "json",
-                            success: function (result, status, xhr) {
-                                console.log(result);
-                                console.log(status);
+                            $.ajax({
+                                type: 'POST',  // http method
+                                url: '@Url.Action("VerifyMerchantByMerchantidAndRegionalid", "DriverCardCustomer")',
+                                data: { RegionalId: regionalId, MerchantID: merchantId },  // data to submit
+                                dataType: "json",
+                                success: function (result, status, xhr) {
+                                    console.log(result);
+                                    console.log(status);
 
-                                if (status == 'success') {
+                                    if (status == 'success') {
 
-                                    if (result.status == 0) {
-                                        localStorage.setItem("MERCHANTAVAILABLE", "0");
-                                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
-                                        //document.getElementById("MerchantID").value = "";
-                                    }
-                                    else if (result.status == 1) {
-                                        localStorage.setItem("MERCHANTAVAILABLE", "1");
-                                        document.getElementById("MerchantID_error").innerHTML = "";
-                                        $("#btnSave").removeAttr("disabled");
+                                        if (result.status == 0) {
+                                            localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                            document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                            //document.getElementById("MerchantID").value = "";
+                                        }
+                                        else if (result.status == 1) {
+                                            localStorage.setItem("MERCHANTAVAILABLE", "1");
+                                            document.getElementById("MerchantID_error").innerHTML = "";
+                                            $("#btnSave").removeAttr("disabled");
+                                        }
+                                        else {
+                                            localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                            document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                            //document.getElementById("MerchantID").value = "";
+                                        }
+
+                                        //if (result == "Failed to load Customer Details")
+                                        //    document.getElementById("MerchantID").value = "";
                                     }
                                     else {
                                         localStorage.setItem("MERCHANTAVAILABLE", "0");
                                         document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
                                         //document.getElementById("MerchantID").value = "";
+
                                     }
-
-                                    //if (result == "Failed to load Customer Details")
-                                    //    document.getElementById("MerchantID").value = "";
-                                }
-                                else {
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
                                     localStorage.setItem("MERCHANTAVAILABLE", "0");
                                     document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
                                     //document.getElementById("MerchantID").value = "";
-
+                                },
+                                statusCode: {
+                                    1024: function () {
+                                        localStorage.setItem("MERCHANTAVAILABLE", "0");
+                                        document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
+                                        //document.getElementById("MerchantID").value = "";
+                                    }
                                 }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                localStorage.setItem("MERCHANTAVAILABLE", "0");
-                                document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
-                                //document.getElementById("MerchantID").value = "";
-                            },
-                            statusCode: {
-                                1024: function () {
-                                    localStorage.setItem("MERCHANTAVAILABLE", "0");
-                                    document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not belong to selected region";
-                                    //document.getElementById("MerchantID").value = "";
-                                }
-                            }
-                        });
+                            });
 
                     }
+                    else
+                    {
+                        document.getElementById("MerchantID_error").innerHTML = data.reason;
+                        localStorage.setItem("MERCHANTHOTLISTED", "0");
+                        localStorage.setItem("MERCHANTHOTLISTEDREASON", data.reason);
+                    }
                 }
-                else {
+                else 
+                {
                     document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                     localStorage.setItem("MERCHANTAVAILABLE", "0");
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function (xhr, ajaxOptions, thrownError) 
+            {
                 document.getElementById("MerchantID_error").innerHTML = "Merchant ID does not exist";
                 localStorage.setItem("MERCHANTAVAILABLE", "0");
             },
@@ -408,7 +421,8 @@
         var noofAllocatedCards = document.getElementById("NoofAllocatedCards").value;
 
         var merchantId = document.getElementById("MerchantID").value.trim();
-        if (merchantId == "") {
+        if (merchantId == "") 
+        {
             document.getElementById("MerchantID_error").innerHTML = "Enter Merchant ID";
             ret=false;
         }
@@ -440,10 +454,23 @@
                         msg = document.getElementById("MerchantID_error").innerHTML;
                     }
 
-                    if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
+                    if (localStorage.getItem("MERCHANTHOTLISTED") == 0) 
+                    {
+                        if(localStorage.getItem("MERCHANTHOTLISTEDREASON")=="")
+                        {
+                             alert(msg);
+                             ret=false;
+                        }
+                        else
+                        {
+                            alert(localStorage.getItem("MERCHANTHOTLISTEDREASON"));
+                            ret=false;
+                        }
+                    }
+                    else if (localStorage.getItem("MERCHANTAVAILABLE") == 0) 
                     {
                         alert(msg);
-                        return (false);
+                        ret=false;
                     }
                     else 
                     {
