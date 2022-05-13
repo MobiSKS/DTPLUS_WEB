@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.Customer
+namespace HPCL.Common.Models.ResponseModel.Aggregator
 {
     public class GetAggregatorCustomer:CommonResponseBase
     {

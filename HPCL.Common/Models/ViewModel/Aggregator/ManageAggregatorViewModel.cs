@@ -1,6 +1,8 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ResponseModel.Aggregator;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.Officers;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ViewModel.Customer
+namespace HPCL.Common.Models.ViewModel.Aggregator
 {
     public class ManageAggregatorViewModel
     {

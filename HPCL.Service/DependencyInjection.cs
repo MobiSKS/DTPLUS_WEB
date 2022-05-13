@@ -34,6 +34,7 @@ namespace HPCL.Service
             services.AddTransient<IInterfaceService, InterfaceService>();
             services.AddTransient<IDtpSupportService, DtpSupportService>();
             services.AddTransient<ITMSService, TMSService>();
+            services.AddTransient<IAggregatorService, AggregatorService>();
             return services;
         }
     }

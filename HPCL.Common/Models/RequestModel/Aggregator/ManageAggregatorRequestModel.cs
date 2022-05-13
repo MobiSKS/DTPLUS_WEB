@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.RequestModel.Customer
+namespace HPCL.Common.Models.RequestModel.Aggregator
 {
     public class ManageAggregatorRequestModel:BaseEntity
     {
