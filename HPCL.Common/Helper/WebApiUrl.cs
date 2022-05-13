@@ -226,6 +226,7 @@
         public static string getAlSalesExeEmpidAddonOtcCardMapping = "api/dtplus/ashokleyland/get_al_sales_exe_empid_addon_otc_card_mapping";
         public static string getAlCustomerDetail = "api/dtplus/ashokleyland/get_al_customer_detail";
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
+        public static string getAlCustomerDetailForVerification = "api/dtplus/ashokleyland/get_al_customer_detail_for_verification";
         #endregion
 
         #region Customer Financial

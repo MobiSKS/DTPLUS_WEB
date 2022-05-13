@@ -11,13 +11,15 @@ namespace HPCL.Common.Models.ResponseModel.TMS
     {
         public EnrollTMSResponse()
         {
-            Data = new EnrollTMSResponseData();
+            Data = new List<EnrollTMSResponseData>();
         }
-        public EnrollTMSResponseData Data { get; set; }
+        public List<EnrollTMSResponseData> Data { get; set; }
     }
 
     public class EnrollTMSResponseData
     {
         public string message { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }

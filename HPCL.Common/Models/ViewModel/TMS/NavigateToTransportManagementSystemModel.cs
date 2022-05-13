@@ -18,5 +18,6 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public int Status { get; set; }
         public string Reason { get; set; }
         public int StatusCode { get; set; }
+        public string Success { get; set; }
     }
 }

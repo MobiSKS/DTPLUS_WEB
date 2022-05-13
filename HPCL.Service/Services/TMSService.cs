@@ -75,9 +75,9 @@ namespace HPCL.Service.Services
             if (model.Internel_Status_Code == 1000)
             {
                 model.Message = enrollTMSResponse.Message;
-                if (enrollTMSResponse != null && enrollTMSResponse.Data != null)
+                if (enrollTMSResponse != null && enrollTMSResponse.Data != null && enrollTMSResponse.Data.Count > 0)
                 {
-                    model.Message = enrollTMSResponse.Data.message;
+                    model.Message = enrollTMSResponse.Data[0].message;
                 }
             }
             else
@@ -258,6 +258,7 @@ namespace HPCL.Service.Services
         {
             NavigateToTransportManagementSystemModel Model = new NavigateToTransportManagementSystemModel();
             Model.Message = "";
+            Model.Success = "";
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "CUSTOMER")
             {
@@ -275,6 +276,7 @@ namespace HPCL.Service.Services
             if (string.IsNullOrEmpty(model.CustomerId))
             {
                 model.Message = "Logged in user is not a customer";
+                model.Success = "";
             }
             else
             {
@@ -293,6 +295,7 @@ namespace HPCL.Service.Services
                 model.access_token = "";
                 model.refresh_token = "";
                 model.Message = "";
+                model.Success = "";
                 if (tmsUrlResponse.Internel_Status_Code == 1000)
                 {
                     model.StatusCode = tmsUrlResponse.Internel_Status_Code;
@@ -302,7 +305,7 @@ namespace HPCL.Service.Services
                     {
                         model.Status = tmsUrlResponse.Data[0].Status;
                         model.Reason = tmsUrlResponse.Data[0].Reason;
-                        model.Message = tmsUrlResponse.Data[0].Reason;
+                        model.Success = tmsUrlResponse.Data[0].Reason;
                         model.url = tmsUrlResponse.Data[0].url;
                         model.access_token = tmsUrlResponse.Data[0].access_token;
                         model.refresh_token = tmsUrlResponse.Data[0].refresh_token;

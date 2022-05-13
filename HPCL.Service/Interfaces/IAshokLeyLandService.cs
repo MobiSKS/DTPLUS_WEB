@@ -28,5 +28,7 @@ namespace HPCL.Service.Interfaces
         Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer();
         Task<AshokLeylandCustomerUpdateModel> GetCustomerAddress(string CustomerId);
         Task<AshokLeylandCustomerUpdateModel> UpdateALCustomer(AshokLeylandCustomerUpdateModel model);
+        Task<AshokLeylandCardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<ALCardEntryDetails> arrs);
+        Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model);
     }
 }
