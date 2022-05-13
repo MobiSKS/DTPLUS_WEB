@@ -111,15 +111,14 @@ namespace HPCL_Web.Controllers
 
             if (ashokLeylandCardCreationModel.Internel_Status_Code == 1000)
             {
-                ashokLeylandCardCreationModel.Remarks = "";
-                ViewBag.Message = "Ashok Leyland Card Customer saved successfully";
-                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard");
+                return RedirectToAction("SuccessRedirectCreateMultipleOTCCard", new { Message = ashokLeylandCardCreationModel.Remarks });
             }
 
             return View(ashokLeylandCardCreationModel);
         }
-        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard()
+        public async Task<IActionResult> SuccessRedirectCreateMultipleOTCCard(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
