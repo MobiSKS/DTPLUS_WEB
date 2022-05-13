@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.CustomerModel
+﻿@model HPCL.Common.Models.ViewModel.Customer.ManageAggregatorViewModel
 
 
 <div class="col-lg-12">
@@ -17,7 +17,7 @@
         <form name="applicationForm" method="post" asp-action="ManageAggregator" class="w-100">
 
             <div class="tab-content mt-3" id="myTabContent">
-                
+
                 <div class="tab-pane fade show active" id="viewprofile" role="tabpanel" aria-labelledby="viewprofile-tab">
                     <div class="w-100">
 
@@ -62,6 +62,79 @@
                                 <button class="btn btn_primary" type="button" id="=btnCreate" onclick="ShowBasicInfo()">CREATE AGGREGATOR</button>
                             </div>
                         </div>
+                        @*style="display:none"*@
+                        @if (Model.Data.Count() > 0)
+                        {
+                            <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            S.No.
+                                        </th>
+                                        <th>
+                                            Form No.
+                                        </th>
+                                        <th>
+                                            Customer Ref. No.
+                                        </th>
+                                        <th>
+                                            Customer Name
+                                        </th>
+                                        <th>
+                                            Customer Address
+                                        </th>
+                                        <th>
+                                            Phone No.
+                                        </th>
+                                        <th>
+                                            Mobile No.
+                                        </th>
+
+                                        <th>
+                                            Created By
+                                        </th>
+                                        <th>
+                                            Created Date
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody id="searchMerchantTableBody">
+                                    @{
+                                        int y = 0;
+                                    }
+                                    @foreach (var item in Model.Data)
+                                    {
+                                        y = y + 1;
+                                        <tr>
+                                            <td>@y</td>
+                                            <td>@item.FormNumber</td>
+                                            <td>@item.CustomerReferenceNo</td>
+                                            <td>@item.CustomerName</td>
+                                            <td>@item.CustomerAddress</td>
+                                            @if (@item.PhoneNo == "-")
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td>@item.PhoneNo</td>
+                                            }
+                                            <td>@item.MobileNo</td>
+                                            <td>@item.CreatedBy</td>
+                                            <td>@item.CreatedDate</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
+                                @Model.Message
+                            </div>
+                        }
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -944,57 +1017,7 @@
             localStorage.setItem("PANNOALREADYUSED", "1");
 
 
-            if (notFoundError == "") {
-                //if (custDateOfApplication == "") {
-                //    $("#CustomerDateOfApplication").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    setDates();
-                //}
-                //else {
-                //    $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
 
-                //if (OfficialDOB == "") {
-                //    $("#KeyOfficialDOB").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    //setDates();
-                //}
-                //else {
-                //    $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
-
-                //$('#KeyOffDateOfAnniversary').datepicker({
-                //    dateFormat: 'dd-mm-yy',
-                //    changeMonth: true,
-                //    changeYear: true,
-
-                //    autoclose: "true"
-                //});
-                // if (($('#KeyOffDateOfAnniversary').val() != undefined)  && ($('#KeyOffDateOfAnniversary').val() != "") ){
-                //    var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-                //    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-                //    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-                //    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-                //    $('#KeyOffDateOfAnniversary').val(`${da}-${mo}-${ye}`);
-                // }
-                //if (OffDateOfAnniversary == "") {
-                //    $("#KeyOffDateOfAnniversary").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    //setDates();
-                //}
-                //else {
-                //    $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
-            }
 
             if ($('#AllowPanDuplication').val() == "Y") {
                 document.getElementById("lblPanCardRemarks").style.display = "block";
@@ -1008,40 +1031,29 @@
             }
         });
 
-        //function setDates() {
-        //    var d = new Date();
 
-        //    var month = d.getMonth() + 1;
-        //    var day = d.getDate();
-        //    var output = (day < 10 ? '0' : '') + day + '-' +
-        //        (month < 10 ? '0' : '') + month + '-' +
-        //        d.getFullYear();
-
-        //    $("#CustomerDateOfApplication").val(output);
-        //    //$("#KeyOfficialDOB").val(output);
-
-        //};
-
-        //function setDOB() {
-        //    var d = new Date();
-
-        //    var month = d.getMonth() + 1;
-        //    var day = d.getDate();
-        //    var output = (day < 10 ? '0' : '') + day + '-' +
-        //        (month < 10 ? '0' : '') + month + '-' +
-        //        d.getFullYear();
-
-        //    $("#KeyOfficialDOB").val(output);
-        //    //$("#KeyOfficialDOB").val(output);
-
-        //};
 
         $('select').SumoSelect({
                 placeholder: '--Select--',
                 search: true,
                 searchText: 'Enter Text here.'
             });
+        $("#btnSearch").on("click", (function (e) {
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+             var flag = "Y";
+            if (fromdate != "" && todate != "") {
+                flag = checkDates("fromDate_error");
+            }
+            if (flag == "N")
+                e.preventDefault();
+            else{
+                var url = '@Html.Raw(@Url.Action("ManageAggregator", "Customer",new { FromDate = "aa", ToDate = "mm" }))';
+                url = url.replace("aa", encodeURIComponent(fromdate)).replace("mm", encodeURIComponent(todate));
+                window.location.href=url;
+            }
 
+        }));
         $("#btnAdd").click(function () {
             let flag = 'Y';
             debugger;
