@@ -299,7 +299,7 @@ namespace HPCL.Service.Services
                 if (tmsUrlResponse.Internel_Status_Code == 1000)
                 {
                     model.StatusCode = tmsUrlResponse.Internel_Status_Code;
-                    model.Message = tmsUrlResponse.Message;
+                    model.Success = tmsUrlResponse.Message;
 
                     if (tmsUrlResponse != null && tmsUrlResponse.Data != null && tmsUrlResponse.Data.Count > 0)
                     {
