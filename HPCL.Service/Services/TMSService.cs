@@ -295,6 +295,7 @@ namespace HPCL.Service.Services
                 model.access_token = "";
                 model.refresh_token = "";
                 model.Message = "";
+                model.Success = "";
                 if (tmsUrlResponse.Internel_Status_Code == 1000)
                 {
                     model.StatusCode = tmsUrlResponse.Internel_Status_Code;
@@ -304,7 +305,7 @@ namespace HPCL.Service.Services
                     {
                         model.Status = tmsUrlResponse.Data[0].Status;
                         model.Reason = tmsUrlResponse.Data[0].Reason;
-                        model.Message = tmsUrlResponse.Data[0].Reason;
+                        model.Success = tmsUrlResponse.Data[0].Reason;
                         model.url = tmsUrlResponse.Data[0].url;
                         model.access_token = tmsUrlResponse.Data[0].access_token;
                         model.refresh_token = tmsUrlResponse.Data[0].refresh_token;
