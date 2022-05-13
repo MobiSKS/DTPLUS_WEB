@@ -44,14 +44,11 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel)
         {
-            //MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
             customerModel = await _myHpOTCCardCustomerService.CustomerCardCreation(customerModel);
 
             if (customerModel.Internel_Status_Code == 1000)
             {
-                customerModel.Remarks = "";
-                ViewBag.Message = "OTC Card customer saved successfully";
-                return RedirectToAction("SuccessRedirectForOTCCardCustomer");
+                return RedirectToAction("SuccessRedirectForOTCCardCustomer", new { Message = customerModel.Remarks });
             }
 
             return View(customerModel);
@@ -171,8 +168,9 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
-        public async Task<IActionResult> SuccessRedirectForOTCCardCustomer()
+        public async Task<IActionResult> SuccessRedirectForOTCCardCustomer(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
