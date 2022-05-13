@@ -45,14 +45,14 @@ namespace HPCL.Service.Services
             return pendingList;
         }
 
-        public async Task<BindPendingCustomerRes> BindPendingCustomer(string customerReferenceNo)
+        public async Task<BindPendingCustomerRes> BindPendingCustomer(string FormNumber)
         {
             var forms = new Dictionary<string, string>
             {
                 {"useragent", CommonBase.useragent},
                 {"userip", CommonBase.userip},
                 {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                {"CustomerReferenceNo", customerReferenceNo}
+                {"FormNumber", FormNumber}
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
