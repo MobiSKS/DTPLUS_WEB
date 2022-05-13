@@ -258,6 +258,7 @@ namespace HPCL.Service.Services
         {
             NavigateToTransportManagementSystemModel Model = new NavigateToTransportManagementSystemModel();
             Model.Message = "";
+            Model.Success = "";
 
             if (_httpContextAccessor.HttpContext.Session.GetString("LoginType").ToUpper() == "CUSTOMER")
             {
@@ -275,6 +276,7 @@ namespace HPCL.Service.Services
             if (string.IsNullOrEmpty(model.CustomerId))
             {
                 model.Message = "Logged in user is not a customer";
+                model.Success = "";
             }
             else
             {
