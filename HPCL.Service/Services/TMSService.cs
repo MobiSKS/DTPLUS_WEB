@@ -75,9 +75,9 @@ namespace HPCL.Service.Services
             if (model.Internel_Status_Code == 1000)
             {
                 model.Message = enrollTMSResponse.Message;
-                if (enrollTMSResponse != null && enrollTMSResponse.Data != null)
+                if (enrollTMSResponse != null && enrollTMSResponse.Data != null && enrollTMSResponse.Data.Count > 0)
                 {
-                    model.Message = enrollTMSResponse.Data.message;
+                    model.Message = enrollTMSResponse.Data[0].message;
                 }
             }
             else
