@@ -758,7 +758,8 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 customerID = CustomerID,
-                customerStatus = Approvalstatus
+                customerStatus = Approvalstatus,
+                remarks = Comments
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
