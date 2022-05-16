@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.Aggregator;
+﻿using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,6 +18,11 @@ namespace HPCL.Service.Interfaces
         Task<ValidateAggregatorCustomerModel> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity);
         Task<JObject> ViewCustomerDetails(string FormNumber);
         Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus);
+        Task<ManageAggregatorViewModel> UpdateAggregatorCustomer(string FormNumber);
+        Task<ManageAggregatorViewModel> UpdateAggregatorCustomer(ManageAggregatorViewModel cust);
+        Task<UploadDocResponseBody> UploadDoc(string FormNumber);
+        Task<UploadDocResponse> UploadDoc(UploadDoc entity);
+        Task<string> SaveUploadDoc(UploadDoc entity);
     }
 }
 

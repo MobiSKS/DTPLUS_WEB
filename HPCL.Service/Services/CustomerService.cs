@@ -45,7 +45,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo = entity.CustomerReferenceNo
+                CustomerReferenceNo = entity.CustomerReferenceNo,
+                Type = String.IsNullOrEmpty(entity.Type)?"0":"1",
             };
 
             _httpContextAccessor.HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
