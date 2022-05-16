@@ -88,7 +88,7 @@
             @if (Model.Data.Count() > 0)
             {
 
-                <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="TeamMapSearch">
+                <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="CustomerSearch">
                     <thead style="background-color:lightgray;">
                         <tr>
 
@@ -173,7 +173,7 @@
 
     });
 
-     $("#TeamMapSearch").on('click', '.reject', function () 
+     $("#CustomerSearch").on('click', '.reject', function () 
      {
         if(activeRow=="")
         {
@@ -188,7 +188,7 @@
        }
     });
 
-     $("#TeamMapSearch").on('click', '.cancel', function () 
+     $("#CustomerSearch").on('click', '.cancel', function () 
      {
        currentRow = $(this).closest("tr");
 
@@ -200,8 +200,66 @@
        currentRow.find('input[type="text"]').val('');
        activeRow="";
      });
+          
+     $("#CustomerSearch").on('click', '.verify', function () {
+         debugger;
+         var flag="Y";
+          row = $(this).closest("tr");
+          var i = row[0].cells[0].textContent;
+          @*var remarks = $('#Remarks_'+i).val();*@
+          var customerId = row[0].cells[2].textContent;
+          var approveRejectStatus="4";
+          //alert(customerId);
+          @*if(remarks.trim()=="")
+          {
+              flag="N";
+              alert("Comment is required to reject verification of a customer.");
+          }*@
+          
+          var remarks="";
 
-     $("#TeamMapSearch").on('click', '.save', function () {
+          if(flag=="Y")
+          {
+            if (confirm('Are you sure to approve verification of this customer?')) 
+            {
+                console.log('Confirm');
+
+                 $.ajax({
+                    url: "@Url.Action("AproveRejectCustomer", "AshokLeyLand")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { CustomerID: customerId, Comments: remarks, Approvalstatus: approveRejectStatus },
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.status==1)
+                        {
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("VerifyCustomerDocuments", "AshokLeyLand",new { reset = "A", success = "mm", error = "ee" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                           window.location.href=url;
+                        }
+                    },
+                    error: function (ex) 
+                    {
+                        alert('Failed' + ex);
+                    }
+                });
+             }
+             else
+             {
+                 console.log('Cancelled');
+             }
+         }
+
+     });
+
+     $("#CustomerSearch").on('click', '.save', function () {
          debugger;
          var flag="Y";
           row = $(this).closest("tr");
@@ -227,12 +285,20 @@
                     type: "POST",
                     dataType: "JSON",
                     data: { CustomerID: customerId, Comments: remarks, Approvalstatus: approveRejectStatus },
-                    success: function (res) {
- 
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
                         if(res.customer.status==1)
                         {
-                            @*$("#reason").html(res);
-                            $(".toBeHiddenOnSuccess").hide();*@
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("VerifyCustomerDocuments", "AshokLeyLand",new { reset = "A", success = "mm", error = "ee" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                           window.location.href=url;
                         }
                     },
                     error: function (ex) 
@@ -314,5 +380,10 @@
 
         }));
 
+function IsAlphaNumeric(keyCode)
+{
+    return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 46 ||
+        (keyCode >= 97 && keyCode <= 122) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
+}
  
 </script>
