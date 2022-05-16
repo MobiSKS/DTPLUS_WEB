@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.RequestModel.AshokLeyLand
     {
         public string customerID { get; set; }
         public string customerStatus { get; set; }
+        public string remarks { get; set; }        
     }
 }
