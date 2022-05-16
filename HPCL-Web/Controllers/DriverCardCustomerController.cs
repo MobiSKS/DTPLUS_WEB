@@ -259,16 +259,15 @@ namespace HPCL_Web.Controllers
 
             if (custMdl.Internel_Status_Code == 1000)
             {
-                custMdl.Remarks = "";
-                ViewBag.Message = "Dealer wise Driver card request saved successfully";
-                return RedirectToAction("SuccessRedirectDealerDriverCardRequest");
+                return RedirectToAction("SuccessRedirectDealerDriverCardRequest", new { Message = custMdl.Remarks });
             }
 
             return View(custMdl);
         }
 
-        public async Task<IActionResult> SuccessRedirectDealerDriverCardRequest()
+        public async Task<IActionResult> SuccessRedirectDealerDriverCardRequest(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
