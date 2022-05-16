@@ -103,7 +103,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
                                             <div class="col-md-6 col-12 pr-0">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @readonly = "readonly" })
+                                                    @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @readonly = "readonly", maxlength = "16" })
                                                     <span class="error" id="CardNo_error"></span>
                                                 </div>
                                             </div>
@@ -938,11 +938,23 @@
             document.getElementById("formNumber_error").innerHTML = "";
         }                                       
 
-        if (document.getElementById("CardNo").value.trim() == "") {
+        if (document.getElementById("CardNo").value.trim() == "") 
+        {
             document.getElementById("CardNo_error").innerHTML = "Card Number field cannot be left blank";
             ret = false;
         }
-        else {
+        else if (document.getElementById("CardNo").value.length < 16 || document.getElementById("CardNo").value.length > 16) 
+        {
+            document.getElementById("CardNo_error").innerHTML = "Invalid Card Number. Min-Max 16 digits";
+            return false;
+        }
+        else if (!(document.getElementById("CardNo").value.match(number))) 
+        {
+            document.getElementById("CardNo_error").innerHTML = "Invalid Card Number. Min-Max 16 digits";
+            return false;
+        }
+        else 
+        {
             document.getElementById("CardNo_error").innerHTML = "";
         }
 
@@ -962,12 +974,12 @@
         else {
 
             if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
-                document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name is not valid";
+                document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Driver Name";
                 ret = false;
             }
             else {
                 if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
-                    document.getElementById("IndividualOrgName_error").innerHTML = "Driver Name is not valid";
+                    document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Driver Name";
                     ret = false;
                 }
                 else {
