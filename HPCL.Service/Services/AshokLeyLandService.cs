@@ -709,6 +709,8 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> mainList = new List<StatusResponseModal>();
             mainList = await _commonActionService.GetStatusType(1);
             List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
+            if (model.Status == 0)
+                model.Status = 10;//Unverified
 
             foreach (StatusResponseModal item in mainList)
             {
