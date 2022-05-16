@@ -222,7 +222,7 @@
                     var status = (girdList[i].status || '');
                     var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance)+"</span>";
                     var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit)+"</span>";
-                    var ccmsLimit = (girdList[i].ccmsLimit);
+                    var ccmsLimit = (girdList[i].ccmsLimitValue);
                     var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
                     tbl.row.add([
@@ -308,11 +308,11 @@
             }
 
             if(transferAmount.trim() != ''){
-                if(!(totalVal < cashPurseLimit)){
+                if(!(parseFloat(totalVal) < parseFloat(cashPurseLimit))){
                     document.getElementById('amtToTrans_error_'+indexS).title="Card Balance should not be exceeded the Cash Purse Limit";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(!(transferAmount < RestBal)){
+                }else if(!(parseFloat(transferAmount) < parseFloat(RestBal))){
                     document.getElementById('amtToTrans_error_'+indexS).title="Amount is greater than available CCMS Balance";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
@@ -385,11 +385,11 @@
          }
 
          if(amountVal.trim() !=''){
-             if(!(total < cashPurseLimit)){
+             if(!(parseFloat(total) < parseFloat(cashPurseLimit))){
                     document.getElementById('amtToTrans_error_'+rowSelected).title="Card Balance should not be exceeded the Cash Purse Limit";
                     document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
                     return false;
-             }else if(!(amountVal < RestBal)){
+             }else if(!(parseFloat(amountVal) < parseFloat(RestBal))){
                     document.getElementById('amtToTrans_error_'+rowSelected).title="Amount is greater than available CCMS Balance";
                     document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
                     return false;

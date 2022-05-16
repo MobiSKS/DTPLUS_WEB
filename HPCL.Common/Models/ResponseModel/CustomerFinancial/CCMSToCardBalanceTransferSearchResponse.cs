@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
@@ -16,7 +17,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
 
     public class AvailableCcmsBalanceModelOutput
     { 
-        public decimal AvailableCcmsBalance { get; set; }
+        public Decimal AvailableCcmsBalance { get; set; }
     }
 
     public class GetCcmsToCardBalanceTransferDetailModelOutput
@@ -28,8 +29,9 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public string IssueDate { get; set; }
         public string ExpiryDate { get; set; }
         public string Status { get; set; }
-        public decimal Balance { get; set; }
-        public decimal CashPurseLimit { get; set; }
+        public Decimal Balance { get; set; }
+        public Decimal CashPurseLimit { get; set; }
         public string CCMSLimit { get; set; }
+        public Decimal CCMSLimitValue { get; set; }
     }
 }
