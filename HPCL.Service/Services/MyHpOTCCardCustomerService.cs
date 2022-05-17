@@ -209,7 +209,13 @@ namespace HPCL.Service.Services
             else
             {
                 if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                {
                     customerModel.Remarks = customerResponse.Data[0].Reason;
+                    if (customerResponse.Data[0].Status != 1)
+                    {
+                        customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
+                    }
+                }
             }
 
             return customerModel;
