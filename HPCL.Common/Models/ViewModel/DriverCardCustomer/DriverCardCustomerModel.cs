@@ -36,7 +36,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         [Required(ErrorMessage = "Driver Name is Required")]
         public string IndividualOrgName { get; set; }
 
-        [Required(ErrorMessage = "Income Tax Pan is Required")]
+        //[Required(ErrorMessage = "Income Tax Pan is Required")]
         public string IncomeTaxPan { get; set; }
 
         [Required(ErrorMessage = "Communication Address is Required")]

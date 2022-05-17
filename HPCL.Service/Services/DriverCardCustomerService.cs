@@ -239,7 +239,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(customerModel.IndividualOrgName), "IndividualOrgName");
             form.Add(new StringContent(customerModel.IndividualOrgNameTitle), "IndividualOrgNameTitle");
-            form.Add(new StringContent(customerModel.IncomeTaxPan), "IncomeTaxPan");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.IncomeTaxPan) ? "" : customerModel.IncomeTaxPan), "IncomeTaxPan");
             form.Add(new StringContent(customerModel.CommunicationAddress1), "CommunicationAddress1");
             form.Add(new StringContent(customerModel.CommunicationCityName), "CommunicationCityName");
             form.Add(new StringContent(customerModel.CommunicationPincode), "CommunicationPincode");
@@ -308,9 +308,9 @@ namespace HPCL.Service.Services
 
             var customerReqinfo = new GetCustomerNameModel()
             {
-                UserAgent= CommonBase.useragent,
-                UserIp= CommonBase.userip,
-                UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
 
@@ -320,14 +320,19 @@ namespace HPCL.Service.Services
 
             customerInfo = JsonConvert.DeserializeObject<GetCustomerNameByIdResponse>(responseCustomer);
 
-            customerInfo.CustomerName = "";
-            if (customerInfo.Internel_Status_Code == 1000 && customerInfo.Data != null && customerInfo.Data.Count > 0)
+            if (customerInfo != null && customerInfo.Data != null && customerInfo.Data.Count > 0)
             {
-                customerInfo.CustomerName = customerInfo.Data[0].CustomerName;
+                if (string.IsNullOrEmpty(customerInfo.Data[0].CustomerName))
+                {
+                    customerInfo.Data[0].CustomerName = "";
+                }
+                if (string.IsNullOrEmpty(customerInfo.Data[0].PanCardNo))
+                {
+                    customerInfo.Data[0].PanCardNo = "";
+                }
             }
 
             return customerInfo;
-
         }
 
         public async Task<ViewDriverCardResponse> GetAllViewDriverCard(RequestForViewDriverCard entity)

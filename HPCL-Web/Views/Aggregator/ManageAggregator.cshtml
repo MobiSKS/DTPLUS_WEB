@@ -188,7 +188,7 @@
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
                                                         <select name="CustomerSubTypeID" id="CustomerSubTypeID" class="form-control" disabled>
-                                                            <option value="AggregatorCustomer">Aggregator Customer</option>
+                                                            <option value="AggregatorCustomer">Aggregator Parent</option>
                                                         </select>
                                                     </div>
                                                     <span class="error" id="customerSubType_error"></span>
@@ -673,7 +673,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
@@ -741,7 +741,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -1001,8 +1001,28 @@
                 document.getElementById("officialDetails-tab").click();
                 document.getElementById("officialDetails-tab").classList.remove("disable");
             }
+        function setDateFormat(){
+            $(".nodefault").attr("readonly", true);
+            $('.nodefault').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: new Date(today),
+                autoclose: "true",
+                yearRange: "-100:+0"
+            });
+            if (($('.nodefault').val() != undefined)  && ($('.nodefault').val() != "") ){
+                var d1 = stringToDate($('.nodefault').val(),"dd-mm-yyyy");
+                var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
+            }
+        }
         $(document).ready(function () {
-
+            if ($('.nodefault').val() != undefined){
+                setDateFormat();
+            }
             var customerTbentityID = $('#CustomerTbentityID').val();
             console.log(customerTbentityID);
             if (customerTbentityID == "10") {
