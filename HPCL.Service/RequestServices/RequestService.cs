@@ -115,6 +115,9 @@ namespace HPCL.Service
                             if (access_token.Result != null)
                             {
                                 HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                            }
+                            else
+                            {
                                 goto Start;
                             }
                         }
