@@ -245,5 +245,23 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
+        public IActionResult EmergencyAddOnCard()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EmergencyAddOnCard(GetEmergencyAddOnCard entity)
+        {
+            var searchList = await _cardService.EmergencyAddOnCard(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> MapEmergencyAddOnCard(string objCards)
+        {
+            var reasonList = await _cardService.MapEmergencyAddOnCard(objCards);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }

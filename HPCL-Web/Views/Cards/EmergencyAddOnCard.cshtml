@@ -1,0 +1,323 @@
+﻿@model HPCL.Common.Models.ViewModel.Cards.GetEmergencyAddOnCard
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+
+<div class="bg-white p-2 p-md-4">
+    <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Cards</a> </li>
+        <li class="breadcrumb-item font-weight-light">Emergency Replacement Cards</li>
+    </ul>
+    <form id="formVal" method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="EmergencyAddOnCard" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                <div class="border-1 rounded border-grey pb-3">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Emergency Replacement Cards</p>
+                    <div class="col-lg-12 col-md-12 col-12 pt-3">
+
+                        <div id="successUpdate" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+
+                        <div id="errMsg" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
+
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-6 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">No. of Tatkal Cards <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.NoOfTatkalCards, new { @id = "NoOfTatkalCards", @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(m => m.NoOfTatkalCards, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="submit">Add</button>
+                        </div>
+                    </div>
+
+                    <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="cardMapSection" style="display:none;">
+                <div class="border-1 rounded border-grey pb-0">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Select Existing Card Number(s)<sup class="text-danger">*</sup></p>
+                    <div class="col-lg-12 col-md-12 col-12 pt-3">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-12 col-12 px-0">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <div style="width: 100%;overflow-y: auto;height: 300px;">
+                                        <div id="bindCheckBox">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                    <p class="py-2 m-0 font-weight-bold">New Card Number(s)</p>
+                                    <div class="row" style="width:100%;" id="cardsTxtBox">
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="ReplacedToNewCard()">Map</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="clearfix"></div>
+</div>
+
+
+<script>
+
+    $('#CustomerDefaultVal').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+    function resetClick(){
+        location.reload();
+    }
+
+    $(document).ready(function () {
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+     });
+
+    function OnSuccess(res) {
+        console.log(res, "data");
+
+        if (res.searchList.success == true) {
+
+            $("#bindCheckBox").html('');
+            $("#cardsTxtBox").html('');
+
+            document.getElementById("noRecord").style.display = "none";
+            document.getElementById("successUpdate").style.display = "none";
+            document.getElementById("errMsg").style.display = "none";
+
+            for(var i =0; i < res.searchList.data.length; i++){
+                if ( i%5 == 0 )
+                {
+                   $("#bindCheckBox").append("<br>");
+                }
+                $("#bindCheckBox").append("<div class='form-check form-check-inline'><input class='form-check-input' type='checkbox'  id='cardNumerId"+i+"' value='"+res.searchList.data[i].cardNo+"' /><label class='form-check-label' for='cardNumerId"+i+"'>"+res.searchList.data[i].cardNo+"</label></div>");
+            }
+
+            var noOfCards = $("#NoOfTatkalCards").val();
+
+            console.log("noOfCards",noOfCards)
+
+            for(var j = 0; j<noOfCards; j++){
+                if ( j%5 == 0 )
+                {
+                    $("#cardsTxtBox").append("<br>");
+                }
+                $("#cardsTxtBox").append("<div style='margin-top:2%' class='col-6 col-md-3'><input class='form-control cardsBox' maxlength='16' id='cardEntryFieldId"+j+"' onkeypress='return isNumberKey(event)' onchange='cardEntryFieldChange(this," + (j) + ")' name='formnumber' type='text' width='24px'><span style='display:none' class='error' id='cardEntryFieldErr"+j+"'></span></div>");
+            }
+
+            $("#CustomerDefaultVal").attr("readonly", true);
+            $("#NoOfTatkalCards").attr("readonly", true);
+
+            document.getElementById("cardMapSection").style.display = "block";
+        }else{
+            document.getElementById("cardMapSection").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+    }
+
+
+    function cardEntryFieldChange(o, itemSelected){
+        var cardNo = o.value;
+
+        console.log("cardNo",cardNo);
+
+        if(cardNo.trim() == ''){
+            $("#cardEntryFieldErr"+itemSelected).html("Please Enter Card Number");
+            document.getElementById('cardEntryFieldErr'+itemSelected).style.display = "block";
+            return false;
+        }
+
+        if(cardNo.trim() != ''){
+            if(!cardNo.match(/^\d{16}$/)){
+               $("#cardEntryFieldErr"+itemSelected).html("Card Number is a 16 digit number");
+                document.getElementById('cardEntryFieldErr'+itemSelected).style.display = "block";
+                return false;
+            }else{
+                document.getElementById('cardEntryFieldErr'+itemSelected).style.display = "none";
+            }
+        }
+    }
+
+    function ReplacedToNewCard(){
+        var flag = "Y";
+        var cardArray = new Array();
+
+        var noOfCards = $("#NoOfTatkalCards").val();
+        var numberOfChecked = $('input[type=checkbox]:checked').length;
+
+        $('.cardsBox').each(function(index) {
+            console.log("curr val : ",$("#cardEntryFieldId"+index).val());
+
+            var cardNo = $("#cardEntryFieldId"+index).val();
+
+            if(cardNo.trim() == ''){
+                $("#cardEntryFieldErr"+index).html("Please Enter Card Number");
+                document.getElementById('cardEntryFieldErr'+index).style.display = "block";
+                flag = "N";
+            }
+
+            if(cardNo.trim() != ''){
+                if(!cardNo.match(/^\d{16}$/)){
+                   $("#cardEntryFieldErr"+index).html("Card Number is a 16 digit number");
+                    document.getElementById('cardEntryFieldErr'+index).style.display = "block";
+                    flag = "N";
+                }
+            }
+        });
+
+        var txtBx = document.getElementsByClassName("cardsBox");
+        console.log("txtBx",txtBx);
+
+          var i=0;
+
+          $(".cardsBox").each(function () {
+               var newCards = $(this).val();
+               if(newCards != ''){
+                   if(newCards.match(/^\d{16}$/)){
+                       i++;
+                   }
+               }
+          });
+
+          if(i == noOfCards){
+            if(numberOfChecked == 0){
+                document.getElementById("noRecord").style.display = "none";
+                document.getElementById("successUpdate").style.display = "none";
+                $("#errMsg").html("");
+                $("#errMsg").append("<span>Please select atleast one Existing card.</span>");
+                document.getElementById("errMsg").style.display = "block";
+                flag = "N";
+            }
+          }
+
+        if(numberOfChecked != 0){
+            if(noOfCards != numberOfChecked){
+                document.getElementById("noRecord").style.display = "none";
+                document.getElementById("successUpdate").style.display = "none";
+                $("#errMsg").html("");
+                $("#errMsg").append("<span>No. of Tatkal Cards and Selected Existing Card Number(s) are mismatched</span>");
+                document.getElementById("errMsg").style.display = "block";
+                flag = "N";
+            }
+        }
+
+        var oldCard;
+        var newCard;
+
+        var customerId = $("#CustomerDefaultVal").val();
+
+        var oldCardArr = [];
+        for(var n=0; n<numberOfChecked;n++){
+            $("input[type=checkbox]:checked").each(function () {
+               oldCard = $(this).val();
+               oldCardArr.push({oldCard: $(this).val()});
+            });
+
+            $(".cardsBox").each(function () {
+               newCard = $(this).val();
+            });
+
+            cardArray.push({
+                CustomerId:customerId,
+                OldCardNo:oldCard,
+                NewCardNo:newCard
+            });
+
+            console.log("cardArray",cardArray);
+        }
+
+         $(".cardsBox").each(function () {
+               newCard = $(this).val();
+
+               var oldCard;
+               for(var i = 0;  i < oldCardArr.length; i++){
+                   if($(this).val() == oldCardArr[i].oldCard){
+                        document.getElementById("successUpdate").style.display = "none";
+                        document.getElementById("noRecord").style.display = "none";
+                        $("#errMsg").html('');
+                        $("#errMsg").append("<span>New Card Number(s) : "+$(this).val()+" not a Tatkal New Card(s)</span>");
+                        document.getElementById("errMsg").style.display = "block";
+                        flag = "N";
+                    }
+               }
+          });
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+              $.ajax({
+                url: "@Url.Action("MapEmergencyAddOnCard", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                data: { objCards: JSON.stringify(cardArray)},
+                success: function (res) {
+                    if(res.reasonList[0].status == 1){
+                        document.getElementById("errMsg").style.display = "none";
+                        document.getElementById("noRecord").style.display = "none";
+                        $("#successUpdate").html('');
+                        $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span>");
+                        document.getElementById("successUpdate").style.display = "block";
+                    }else{
+                        document.getElementById("successUpdate").style.display = "none";
+                        document.getElementById("noRecord").style.display = "none";
+                        $("#errMsg").html('');
+                        $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span>");
+                        document.getElementById("errMsg").style.display = "block";
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+
+    }
+</script>

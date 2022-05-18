@@ -70,6 +70,8 @@
         public static string searchcardmappingdetailswithblankmobile = "api/dtplus/card/search_card_mapping_details_with_blank_mobile";
         public static string LimitUpdateForSingleRechargeCardsUrl = "api/dtplus/card/get_cards_for_limit_update_for_single_recharge";
         public static string LimitUpdateForSingleRechargeUrl = "api/dtplus/card/limit_update_for_single_recharge";
+        public static string GetEmergencyAddOnCardUrl = "api/dtplus/card/get_detail_for_emergency_replacement_cards";
+        public static string MapEmergencyAddOnCardUrl = "api/dtplus/card/emergency_replacement_cards";
         #endregion
 
         #region Merchant

@@ -29,5 +29,7 @@ namespace HPCL.Service.Interfaces
         Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity);
         Task<LimitUpdateForSingleRechargeCardsRes> LimitUpdateForSingleRechargeCardsService(GetLimitUpdateForSingleRechargeCards entity);
         Task<List<SuccessResponse>> LimitUpdateForSingleRecharge(string objCCMSLimits);
+        Task<GetEmergencyAddOnCardResponse> EmergencyAddOnCard(GetEmergencyAddOnCard entity);
+        Task<List<SuccessResponse>> MapEmergencyAddOnCard(string objCards);
     }
 }
