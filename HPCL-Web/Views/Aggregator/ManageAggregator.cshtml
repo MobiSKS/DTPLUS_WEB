@@ -65,7 +65,7 @@
                         @*style="display:none"*@
                         @if (Model.Data.Count() > 0)
                         {
-                            <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                            <table id="CustomerSearch" class="datatable table table-striped table-bordered table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
                                 <thead>
                                     <tr>
                                         <th>
@@ -131,7 +131,7 @@
                         }
                         else
                         {
-                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
+                            <div class="col-12 text-center alert alert-danger p-2 mt-3" id="NoRecord">
                                 @Model.Message
                             </div>
                         }
@@ -188,7 +188,7 @@
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
                                                         <select name="CustomerSubTypeID" id="CustomerSubTypeID" class="form-control" disabled>
-                                                            <option value="AggregatorCustomer">Aggregator Customer</option>
+                                                            <option value="AggregatorCustomer">Aggregator Parent</option>
                                                         </select>
                                                     </div>
                                                     <span class="error" id="customerSubType_error"></span>
@@ -673,7 +673,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
@@ -741,7 +741,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -1001,8 +1001,28 @@
                 document.getElementById("officialDetails-tab").click();
                 document.getElementById("officialDetails-tab").classList.remove("disable");
             }
+        function setDateFormat(){
+            $(".nodefault").attr("readonly", true);
+            $('.nodefault').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: new Date(today),
+                autoclose: "true",
+                yearRange: "-100:+0"
+            });
+            if (($('.nodefault').val() != undefined)  && ($('.nodefault').val() != "") ){
+                var d1 = stringToDate($('.nodefault').val(),"dd-mm-yyyy");
+                var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
+            }
+        }
         $(document).ready(function () {
-
+            if ($('.nodefault').val() != undefined){
+                setDateFormat();
+            }
             var customerTbentityID = $('#CustomerTbentityID').val();
             console.log(customerTbentityID);
             if (customerTbentityID == "10") {
@@ -3345,5 +3365,111 @@
         }
 
       });
+      $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim())> 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+        }
 
+      });
+      $("#FleetSizeNoOfVechileOwnedLCV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+        }
+
+      });
+    $("#FleetSizeNoOfVechileOwnedMUVSUV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+        }
+
+      });
+
+    
+       $("#FleetSizeNoOfVechileOwnedCarJeep").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+        }
+
+      });
+    
 </script>

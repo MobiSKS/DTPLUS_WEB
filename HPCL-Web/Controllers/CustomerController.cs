@@ -201,7 +201,7 @@ namespace HPCL_Web.Controllers
             if (!string.IsNullOrEmpty(customerReferenceNo))
             {
                 uploadDoc.CustomerReferenceNo = customerReferenceNo;
-
+                uploadDoc.Type = "1";
                 if (!string.IsNullOrEmpty(FormNumber))
                 {
                     var response = await _customerService.UploadDoc(FormNumber);
@@ -218,6 +218,7 @@ namespace HPCL_Web.Controllers
                         uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
                         //uploadDoc.AddressProofFront = response.AddressProofFront;
                         //uploadDoc.AddressProofBack = response.AddressProofBack;
+                        
                     }
                 }
             }

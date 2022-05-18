@@ -1,249 +1,198 @@
-﻿@model HPCL.Common.Models.CustomerModel
+﻿@model HPCL.Common.Models.ViewModel.Aggregator.ManageAggregatorViewModel
 
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
-        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollments</a> </li>
-            <li class="breadcrumb-item font-weight-light">Add New Customer</li>
-        </ul>
-        <h5>Customer Enrollment</h5>
+        <h5>Customer Update</h5>
         <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Information</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="officialDetails-tab" data-toggle="tab" href="#officialDetails" role="tab" aria-controls="officialDetails" aria-selected="false">Key Official Details</a> </li>
-            @*<li class="nav-item"> <a class="nav-link disable" id="cardDetails-tab" data-toggle="tab" href="#cardDetails" role="tab" aria-controls="cardDetails" aria-selected="false">Card Details</a> </li>*@
-            @*<li class="nav-item"> <a class="nav-link disable" id="uploadDocuments-tab" data-toggle="tab" href="#uploadDocuments" role="tab" aria-controls="uploadDocuments" aria-selected="false">Upload Documents</a> </li>*@
         </ul>
-        @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-        <form name="applicationForm" method="post" asp-action="OnlineForm" class="w-100">
-            @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
-                {*@
+        <form name="applicationForm" method="post" asp-action="UpdateAggregatorCustomer" class="w-100">
+
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="w-100">
-                        <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
-                            @Html.DisplayFor(m => m.Remarks)
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 py-2">
+                        <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
                             <div class="border-1 rounded border-grey">
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
-                                <div class="col-lg-12 col-md-12 col-12 pt-3">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="formNumber_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Customer Type <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerTypeID, new SelectList(Model.CustomerTypeMdl, "CustomerTypeID", "CustomerTypeName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="customerType_error"></span>
-                                                </div>
-                                            </div>
+                                <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                                    @Html.DisplayFor(m => m.Remarks)
+                                </div>
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off", @readonly = "readonly" })
+                                            <span class="error" id="formNumber_error"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerSubTypeID, new SelectList(Model.CustomerSubTypeMdl, "CustomerSubTypeID", "CustomerSubTypeName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="customerSubType_error"></span>
-                                                </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+
+                                                <select name="CustomerTypeID" id="CustomerTypeID" class="form-control" disabled>
+                                                    <option value="Aggregator">Aggregator</option>
+                                                </select>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
-                                                    <span class="error" id="applicationDate_error"></span>
-                                                </div>
-                                            </div>
+                                            <span class="error" id="customerType_error"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="zonalOffice_error"></span>
-                                                </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                <select name="CustomerSubTypeID" id="CustomerSubTypeID" class="form-control" disabled>
+                                                    <option value="AggregatorCustomer">Aggregator Parent</option>
+                                                </select>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="regionalOffice_error"></span>
-                                                </div>
-                                            </div>
+                                            <span class="error" id="customerSubType_error"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
-                                                    <span class="error" id="salesArea_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
-                                                        new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
-                                                        new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
-                                                        new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
-                                                        new SelectListItem(){ Text = "New Customer", Value = "3"},
-                                                        }, null, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="typeOfCustomer_error"></span>
-                                                </div>
-                                            </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", autocomplete = "off" })
+                                            <span class="error" id="applicationDate_error"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
-                                                        new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
-                                                        new SelectListItem(){ Text = "1", Value = "1"},
-                                                        new SelectListItem(){ Text = "2", Value = "2"},
-                                                        new SelectListItem(){ Text = "3", Value = "3"},
-                                                        }, null, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="tierOfCustomer_error"></span>
-                                                </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
                                             </div>
+                                            <span class="error" id="zonalOffice_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="regionalOffice_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
+                                            <span class="error" id="salesArea_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
+                                                new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
+                                                new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
+                                                new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
+                                                new SelectListItem(){ Text = "New Customer", Value = "3"},
+                                                }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="typeOfCustomer_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
+                                                new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
+                                                new SelectListItem(){ Text = "1", Value = "1"},
+                                                new SelectListItem(){ Text = "2", Value = "2"},
+                                                new SelectListItem(){ Text = "3", Value = "3"},
+                                                }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="tierOfCustomer_error"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
                             </div>
                         </div>
-
-                        <div class="col-lg-12 col-md-12 col-12 pr-0 pl-0 py-2">
+                        <div class="col-lg-6 col-md-12 col-12 pr-0 pl-md-2 pl-0 py-2">
                             <div class="border-1 rounded border-grey h-100">
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Personal Details</p>
-                                <div class="col-lg-12 col-md-12 col-12 pt-3">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <div class="custom_select">
-                                                                @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
-                                                                new SelectListItem(){ Text = "Title", Value = "-1" },
-                                                                new SelectListItem(){ Text = "Mr", Value = "Mr"},
-                                                                new SelectListItem(){ Text = "Ms", Value = "Ms"},
-                                                                new SelectListItem(){ Text = "M/s", Value = "M/s"},
-                                                                }, null, new { @class = "form-control px-0" })
-                                                            </div>
-                                                            <span class="error" id="salutaion_error"></span>
-                                                        </div>
-                                                        <div class="col-8 pl-0">
-                                                            @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder = "Individual/Org. Name", @class = "form-control", autocomplete = "off", maxlength = "80" })
-                                                            <span class="error" id="individualName_error"></span>
-                                                        </div>
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                        new SelectListItem(){ Text = "Title", Value = "-1" },
+                                                        new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                        new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                        new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                        }, null, new { @class = "form-control px-0" })
                                                     </div>
+                                                    <span class="error" id="salutaion_error"></span>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerNameOnCard, new { placeholder = "Name on Card", @class = "form-control", autocomplete = "off", maxlength = "22" })
-                                                    <span class="error" id="nameOnCard_error"></span>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder = "Individual/Org. Name", @class = "form-control", autocomplete = "off", maxlength = "80" })
+                                                    <span class="error" id="individualName_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="typeOfbusiness_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Residence Status<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
-                                                        new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
-                                                        new SelectListItem(){ Text = "Indian", Value = "Indian"},
-                                                        new SelectListItem(){ Text = "NRI", Value = "NRI"},
-                                                        }, null, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="residenceStatus_error"></span>
-                                                </div>
-                                            </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerNameOnCard, new { placeholder = "Name on Card", @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                            <span class="error" id="nameOnCard_error"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-6 col-12" id="dvPan">
-                                                    @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
-                                                    <span class="error" id="incomeTaxPan_error"></span>
-                                                </div>
-                                                <div class="col-md-2 col-12 pl-md-0">
-                                                    <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
-                                                </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
-                                                    </div>
-                                                    <span class="error" id="PanCardRemarks_error"></span>
-                                                </div>
-                                            </div>
+                                            <span class="error" id="typeOfbusiness_error"></span>
                                         </div>
                                     </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Residence Status<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
+                                                new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
+                                                new SelectListItem(){ Text = "Indian", Value = "Indian"},
+                                                new SelectListItem(){ Text = "NRI", Value = "NRI"},
+                                                }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="residenceStatus_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-6 col-12" id="dvPan">
+                                            @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
+                                            <span class="error" id="incomeTaxPan_error"></span>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-md-0">
+                                            <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
                                         <p class="alert alert-info" style="padding: 5px 10px;">** Please provide the document details that you are going to upload as POI.</p>
                                     </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanCardRemarks" style="display:none;">Pan Card Remarks<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
+                                            </div>
+                                            <span class="error" id="PanCardRemarks_error"></span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="clearfix"></div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -528,21 +477,63 @@
                 <div class="tab-pane fade" id="officialDetails" role="tabpanel" aria-labelledby="officialDetails-tab">
                     <div class="border-1 rounded border-grey w-100">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
-
-                        <div class="col-lg-12 col-md-12 col-12 pt-3">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-start justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Individual Initials </label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                             <span class="error" id="KeyOffIndividualInitials_error"></span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">First Name <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Middle Name </label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffMiddleName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", autocomplete = "off" })
+                                            <span class="error" id="KeyOfficialDOB_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
+                                            <span class="error" id="KeyOffEmail_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Designation <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="official_designation_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFax_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">First Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -561,86 +552,32 @@
                                                     <span class="error" id="official_fName_error"></span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Middle Name </label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                            <span class="error" id="KeyOffMiddleName_error"></span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
+
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Name</label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Last Name</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOffLastName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
                                             <span class="error" id="KeyOffLastName_error"></span>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Date of Birth</label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
-                                            <span class="error" id="KeyOfficialDOB_error"></span>
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control anniversaryDate", @placeholder="dd-mm-yyyy" , autocomplete = "off" })
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12 px-0">Date of Anniversary</label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Email</label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
-                                            <span class="error" id="KeyOffEmail_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             <span class="error" id="official_mobile_error"></span>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Designation <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
-                                            <span class="error" id="official_designation_error"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Phone (Office)</label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office)</label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -656,28 +593,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Fax</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="KeyOffFaxCode_error"></span>
-                                                </div>
-                                                <div class="col-8 pl-0">
-                                                    @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                    <span class="error" id="KeyOffFax_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
-
                     </div>
                     <div class="border-1 rounded border-grey w-100 mt-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Other Details</p>
@@ -890,59 +807,51 @@
             }
 
             localStorage.setItem("PANNOALREADYUSED", "1");
+            localStorage.setItem("FORMNOALREADYUSED", "1");
+            localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+            localStorage.setItem("EMAILIDALREADYUSED", "1");
+            localStorage.setItem("DUPLICATEPANUSED", "1");
+            setDOAFormat();
 
+            //if (notFoundError == "") {
+            //    if (custDateOfApplication == "") {
+            //        $("#CustomerDateOfApplication").datepicker({
+            //            "setDate": new Date(),
+            //            "autoclose": true,
+            //            dateFormat: 'dd-mm-yy'
+            //        });
+            //        setDates();
+            //    }
+            //    else {
+            //        $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
+            //    }
 
-            if (notFoundError == "") {
-                //if (custDateOfApplication == "") {
-                //    $("#CustomerDateOfApplication").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    setDates();
-                //}
-                //else {
-                //    $("#CustomerDateOfApplication").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
+            //    if (OfficialDOB == "") {
+            //        $("#KeyOfficialDOB").datepicker({
+            //            "setDate": new Date(),
+            //            "autoclose": true,
+            //            dateFormat: 'dd-mm-yy'
+            //        });
+            //        //setDates();
+            //    }
+            //    else {
+            //        $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
+            //    }
 
-                //if (OfficialDOB == "") {
-                //    $("#KeyOfficialDOB").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    //setDates();
-                //}
-                //else {
-                //    $("#KeyOfficialDOB").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
+            //    if (OffDateOfAnniversary == "") {
+            //        $("#KeyOffDateOfAnniversary").datepicker({
+            //            "setDate": new Date(),
+            //            "autoclose": true,
+            //            dateFormat: 'dd-mm-yy'
+            //        });
+            //        //setDates();
+            //    }
+            //    else {
+            //        $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
+            //    }
+            //}
 
-                //$('#KeyOffDateOfAnniversary').datepicker({
-                //    dateFormat: 'dd-mm-yy',
-                //    changeMonth: true,
-                //    changeYear: true,
-
-                //    autoclose: "true"
-                //});
-                // if (($('#KeyOffDateOfAnniversary').val() != undefined)  && ($('#KeyOffDateOfAnniversary').val() != "") ){
-                //    var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-                //    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-                //    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-                //    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-                //    $('#KeyOffDateOfAnniversary').val(`${da}-${mo}-${ye}`);
-                // }
-                //if (OffDateOfAnniversary == "") {
-                //    $("#KeyOffDateOfAnniversary").datepicker({
-                //        "setDate": new Date(),
-                //        "autoclose": true,
-                //        dateFormat: 'dd-mm-yy'
-                //    });
-                //    //setDates();
-                //}
-                //else {
-                //    $("#KeyOffDateOfAnniversary").datepicker({ dateFormat: 'dd-mm-yy' });
-                //}
-            }
+            $("#CustomerIncomeTaxPan").focus();
 
             if ($('#AllowPanDuplication').val() == "Y") {
                 document.getElementById("lblPanCardRemarks").style.display = "block";
@@ -954,7 +863,26 @@
                 document.getElementById("PanCardRemarks").style.display = "none";
                 $("#PanCardRemarks").prop('readonly', true);
             }
+
         });
+
+        function setDOAFormat(){
+            $(".anniversaryDate").attr("readonly", true);
+            $('.anniversaryDate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: new Date(today),
+                autoclose: "true"
+            });
+            if (($('.anniversaryDate').val() != undefined)  && ($('.anniversaryDate').val() != "") ){
+                var d1 = stringToDate($('.anniversaryDate').val(),"dd-mm-yyyy");
+                var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                $('.anniversaryDate').val(`${da1}-${mo1}-${ye1}`);
+            }
+        }
 
         //function setDates() {
         //    var d = new Date();
@@ -980,7 +908,6 @@
         //        d.getFullYear();
 
         //    $("#KeyOfficialDOB").val(output);
-        //    //$("#KeyOfficialDOB").val(output);
 
         //};
 
@@ -1048,6 +975,7 @@
                                 }).html(data.customerSubTypeName).appendTo("#CustomerSubTypeID");
                         });
                         $("#CustomerSubTypeID")[0].sumo.reload();
+
                     }
                     else {
                         console.log(v);
@@ -1127,45 +1055,41 @@
                         alert("Error Populating Sales Area");
                     }
                 });
-
         });
 
         $("#CommunicationStateID").change(function () {
-            var id = this.value;
+                var id = this.value;
 
-            if (id != 0) {
-                $("#comm_states_error").html("");
-            }
-
-            $("#CommunicationDistrictId").html("");
-
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Customer")',
-                data: { Stateid: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo("#CommunicationDistrictId");
-                        });
-                        $("#CommunicationDistrictId")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating District Data");
+                if (id != 0) {
+                    $("#comm_states_error").html("");
                 }
-            });
 
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetDistrictDetails", "Customer")',
+                    data: { Stateid: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $("#CommunicationDistrictId").html("");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            });
+                            $("#CommunicationDistrictId")[0].sumo.reload();
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating District Data");
+                    }
+                });
         });
         $("#PerOrRegAddressStateID").change(function () {
                 var id = this.value;
@@ -1191,7 +1115,6 @@
                                     }).html(data.districtName).appendTo("#PermanentDistrictId");
                             });
                             $("#PermanentDistrictId")[0].sumo.reload();
-
                         }
                         else {
                             console.log(v);
@@ -1294,110 +1217,6 @@
                     document.getElementById("comm_district_error").innerHTML = "";
                 }
 
-                 var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
-                if (stdCode != "") {
-
-                if (stdCode.length < 2 || stdCode.length > 4) {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!stdCode.match(number))
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
-                    }
-                }
-
-            }
-            else {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "";
-            }
-
-            var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
-            if (phno != "") {
-                if (phno.charAt(0) == "0") {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else if (phno.length < 6 || phno.length > 8) {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else
-                {
-                    if (!phno.match(number))
-                    {
-                        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                        return false;
-                    }
-                    else {
-                        document.getElementById("comm_officePhone_error").innerHTML = "";
-                    }
-                }
-
-            }
-            else {
-                document.getElementById("comm_officePhone_error").innerHTML = "";
-            }
-
-
-            var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
-            if (faxCode != "") {
-                if (faxCode.length < 2 || faxCode.length > 4) {
-                    document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!faxCode.match(number))
-                    {
-                        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else {
-                        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-                    }
-                }
-
-            }
-            else {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-            }
-
-            var faxphno = document.applicationForm.CommunicationFax.value.trim();
-            if (faxphno != "") {
-                if (faxphno.charAt(0) == "0") {
-                    document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else if (faxphno.length < 6 || faxphno.length > 8) {
-                    document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else
-                {
-                    if (!faxphno.match(number))
-                    {
-                        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("CommunicationFax_error").innerHTML = "";
-                    }
-                }
-
-            }
-            else
-            {
-                document.getElementById("CommunicationFax_error").innerHTML = "";
-            }
 
 
                 if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
@@ -1510,7 +1329,6 @@
 
                 //var Distrid = $('#CommunicationDistrictId').val();
                 //var DistrictName = $("#CommunicationDistrictId option:selected").text();
-                //$('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
 
                 //$('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
                 //$("#PerOrRegAddressStateID")[0].sumo.disable();
@@ -1522,6 +1340,7 @@
                 }
                 // sameas = true;
 
+                //document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
             }
             else {
 
@@ -1536,7 +1355,7 @@
                 $('#PerOrRegAddressDialCode').val('');
                 $('#PermanentFaxCode').val('');
                 //$('#PermanentDistrictId')[0].selectedIndex = 0;
-                $("#PermanentDistrictId")[0].sumo.selectItem(0);
+                 $("#PermanentDistrictId")[0].sumo.selectItem(0);
                 $('#PerOrRegAddressPhoneNumber').val('');
                 $('#PermanentFax').val('');
 
@@ -1610,83 +1429,6 @@
 
         });
 
-
-        $("#FormNumber").on("blur", function () {
-            debugger;
-            var formNumber = document.getElementById("FormNumber").value;
-            if (formNumber == "") {
-                document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
-                return (false);
-            }
-            else {
-                if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                return false;
-                }
-
-                else if (document.getElementById("FormNumber").value.length < 10) {
-                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                    return false;
-                }
-                else if (!(document.getElementById("FormNumber").value.match(number))) {
-                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                    return false;
-                }
-                else
-                    document.getElementById("formNumber_error").innerHTML = "";
-            }
-
-
-            var fromNumberUsed = false;
-            localStorage.setItem("FORMNOALREADYUSED", "1");
-
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("CheckformnumberDuplication", "Customer")',
-                    data: { FormNumber: formNumber },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        console.log(data);
-                        console.log(status);
-                        var v = data;
-                        if (status == 'success') {
-
-                            if (data.status == "0") {
-                                fromNumberUsed = true;
-                                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-                                localStorage.setItem("FORMNOALREADYUSED", "0");
-                            }
-                            else {
-                                fromNumberUsed = false;
-                                document.getElementById("formNumber_error").innerHTML = "";
-                            }
-                        }
-                        else {
-                            //console.log(v);
-                            fromNumberUsed = true;
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        //document.getElementById("RBEName").value = "";
-                    },
-                    statusCode: {
-                        1024: function () {
-                            //document.getElementById("RBEName").value = "";
-                        }
-                    }
-                });
-
-            //console.log(fromNumberUsed);
-            if (fromNumberUsed == true) {
-                document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
-                //return (false);
-            }
-            else {
-                document.getElementById("formNumber_error").innerHTML = "";
-                console.log('SAM');
-            }
-
-        });
 
         $("#CommunicationEmail").on("blur", function () {
             //debugger;
@@ -1788,7 +1530,6 @@
                 return false;
             }
 
-
             var mobileNoUsed = false;
             localStorage.setItem("MOBILENUMBERREADYUSED", "1");
 
@@ -1837,7 +1578,7 @@
 
         $("#CustomerIncomeTaxPan").focus(function()
         {
-           $("#btnshowregAddress").attr("disabled", true);
+            $("#btnshowregAddress").attr("disabled", true);
         });
 
         $("#CustomerIncomeTaxPan").on("blur", function () {
@@ -1846,20 +1587,16 @@
             $("#btnshowregAddress").attr("disabled", true);
 
             var customerTbentityid = $("#CustomerTbentityID").val();
-            var panNumberUsed = false;
             localStorage.setItem("PANNOALREADYUSED", "1");
             localStorage.setItem("DUPLICATEPANUSED", "1");
-            localStorage.setItem("PANNAMEMATCHING", "1");
-            localStorage.setItem("INVALIDPAN", "1");
-            document.getElementById('IsDuplicatePanNo').value = "1";
-            var correctPANName = '';
 
             if (customerTbentityid == 10)
             {
                 document.getElementById("incomeTaxPan_error").innerHTML = "";
+                document.getElementById("IsDuplicatePanNo").value = "1";
                 $('#AllowPanDuplication').val('N');
-                if (panNumber == "")
-                {
+                localStorage.setItem("IsDuplicatePanNo", "1");
+                if (panNumber == "") {
                     document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
                     document.getElementById("incomeTaxPan_error").className = "error";
                 }
@@ -1898,7 +1635,7 @@
                 return (false);
             }
 
-            if (customerTbentityid == 2) //solo Propritorship 4th Char Pan should be 'P'
+            if (customerTbentityid == 2)
             {
                 let forthdigitPan = panNumber.substr(3, 1);
                 console.log(forthdigitPan);
@@ -1906,8 +1643,8 @@
                 {
                     document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                     document.getElementById("incomeTaxPan_error").className = "error";
-                    $("#btnshowregAddress").attr("disabled", false);
-                    return (false);
+                     $("#btnshowregAddress").attr("disabled", false);
+                     return (false);
                 }
                 else
                 {
@@ -1916,19 +1653,23 @@
                 }
             }
 
-            var OrgName = $('#IndividualOrgName').val().trim();
+            var panNumberUsed = false;
+
+
             var districtId = $("#CommunicationDistrictId").val();
+            var customerReferenceNo = $("#CustomerReferenceNo").val();
 
             var externalPANAPIStatus="Y";
 
             externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
 
             console.log(externalPANAPIStatus);
+            var customerReferenceNo = $("#CustomerReferenceNo").val();
 
     if(externalPANAPIStatus=="Y")
     {
 
-           $.ajax({
+          $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("PANValidation", "Customer")',
             data: { PANNumber: panNumber },  // data to submit
@@ -1958,13 +1699,14 @@
                         document.getElementById("incomeTaxPan_error").innerHTML = "";
                         document.getElementById("incomeTaxPan_error").className = "error text-success";
 
+
                         if (districtId != 0 && customerTbentityid != "10")
                         {
 
                             $.ajax({
                                 type: 'POST',  // http method
-                                url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
-                                data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
+                                url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                                data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo},
                                 dataType: "json",
                                 success: function (data, status, xhr)
                                 {
@@ -2002,15 +1744,12 @@
                                         $("#PanCardRemarks").prop('readonly', true);
                                     }
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function (xhr, ajaxOptions, thrownError)
+                                {
                                     document.getElementById("lblPanCardRemarks").style.display = "none";
                                     document.getElementById("PanCardRemarks").style.display = "none";
                                     document.getElementById("PanCardRemarks").value = "";
                                     $("#PanCardRemarks").prop('readonly', true);
-                                },
-                                statusCode: {
-                                    1024: function () {
-                                    }
                                 }
                             });
                         }
@@ -2046,78 +1785,69 @@
     }
     else
     {
-        localStorage.setItem("INVALIDPAN", "1");
-        localStorage.setItem("PANNAMEMATCHING", "1");
+            localStorage.setItem("INVALIDPAN", "1");
+            localStorage.setItem("PANNAMEMATCHING", "1");
 
-        if (districtId != 0 && customerTbentityid != "10")
-        {
+            if (districtId != 0 && customerTbentityid != "10")
+            {
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
-                data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr)
-                {
-                    console.log(data);
-                    console.log(status);
-                    var v = data;
-                    if (status == 'success') {
-
-                        console.log('Test');
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                    data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo },
+                    dataType: "json",
+                    success: function (data, status, xhr) {
                         console.log(data);
-                        console.log(data.status);
-                        console.log(data.reason);
-                        if (data.status == "0") {
-                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
-                            localStorage.setItem("DUPLICATEPANUSED", "0");
-                            document.getElementById('IsDuplicatePanNo').value = "0";
-                            document.getElementById("lblPanCardRemarks").style.display = "block";
-                            document.getElementById("PanCardRemarks").style.display = "block";
-                            $("#PanCardRemarks").prop('readonly', false);
+                        console.log(status);
+                        var v = data;
+                        if (status == 'success')
+                        {
+                            console.log('Test');
+                            console.log(data);
+                            console.log(data.status);
+                            console.log(data.reason);
+                            if (data.status == "0")
+                            {
+                                //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                localStorage.setItem("DUPLICATEPANUSED", "0");
+                                document.getElementById('IsDuplicatePanNo').value = "0";
+                                document.getElementById("lblPanCardRemarks").style.display = "block";
+                                document.getElementById("PanCardRemarks").style.display = "block";
+                                $("#PanCardRemarks").prop('readonly', false);
+                            }
+                            else
+                            {
+                                localStorage.setItem("DUPLICATEPANUSED", "1");
+                                document.getElementById('IsDuplicatePanNo').value = "1";
+                                document.getElementById("comm_district_error").innerHTML = "";
+                                document.getElementById("lblPanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").value = "";
+                                $("#PanCardRemarks").prop('readonly', true);
+                            }
                         }
-                        else {
-                            localStorage.setItem("DUPLICATEPANUSED", "1");
-                            document.getElementById('IsDuplicatePanNo').value = "1";
-                            document.getElementById("comm_district_error").innerHTML = "";
+                        else
+                        {
                             document.getElementById("lblPanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").value = "";
                             $("#PanCardRemarks").prop('readonly', true);
                         }
-                    }
-                    else {
+                    },
+                    error: function (xhr, ajaxOptions, thrownError)
+                    {
                         document.getElementById("lblPanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").value = "";
                         $("#PanCardRemarks").prop('readonly', true);
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    document.getElementById("lblPanCardRemarks").style.display = "none";
-                    document.getElementById("PanCardRemarks").style.display = "none";
-                    document.getElementById("PanCardRemarks").value = "";
-                    $("#PanCardRemarks").prop('readonly', true);
-                },
-                statusCode: {
-                    1024: function () {
-                    }
-                }
-            });
-        }
-        else
-        {
-            document.getElementById("lblPanCardRemarks").style.display = "none";
-            document.getElementById("PanCardRemarks").style.display = "none";
-            document.getElementById("PanCardRemarks").value = "";
-            $("#PanCardRemarks").prop('readonly', true);
-        }
+                });
+
+            }
 
     }
 
-
         $("#btnshowregAddress").attr("disabled", false);
-
 
         });
 
@@ -2161,8 +1891,7 @@
             else {
                  document.getElementById("comm_pincode_error").innerHTML = "";
             }
-            console.log('Before CommunicationPincode check');
-            console.log(document.applicationForm.CommunicationPinCode.value);
+
             if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
                 document.getElementById("comm_pincode_error").innerHTML = "";
             }
@@ -2170,7 +1899,6 @@
                 document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
                 return false;
             }
-            console.log('After CommunicationPincode check');
         });
 
         $("#PerOrRegAddressPinCode").on("blur", function () {
@@ -2192,7 +1920,7 @@
             }
 
             if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
-                document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                document.getElementById("perma_pincode_error").innerHTML = "Pin code length must be 6 digit";
                 return false;
             }
             else {
@@ -2229,7 +1957,7 @@
             }
 
             if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
-                document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                document.getElementById("official_mobile_error").innerHTML = "Mobile Number length must be 10 digit";
                 return false;
             }
             else {
@@ -2243,15 +1971,15 @@
                 document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                 return false;
             }
-
         });
 
         $("#KeyOffEmail").on("blur", function () {
             //debugger;
+            var OffEmail = document.getElementById("KeyOffEmail").value.trim();
 
-            if (document.getElementById("KeyOffEmail").value.trim() != "") {
+            if (OffEmail != "") {
 
-                if (document.getElementById("KeyOffEmail").value.match(email)) {
+                if (OffEmail.match(email)) {
                     document.getElementById("KeyOffEmail_error").innerHTML = "";
                     //return true
                 }
@@ -2273,30 +2001,28 @@
                 document.getElementById("applicationDate_error").innerHTML = "";
             }
 
-
         });
 
         $("#CommunicationDistrictId").change(function () {
             debugger;
             localStorage.setItem("DUPLICATEPANUSED", "1");
             var id = this.value;
-
             if (id != 0) {
                 $("#comm_district_error").html("");
             }
-
             var panno = $('#CustomerIncomeTaxPan').val().trim();
             var customerTbentityID = $('#CustomerTbentityID').val();
 
             document.getElementById('IsDuplicatePanNo').value = "1";
             document.getElementById('AllowPanDuplication').value = "N";
+            var customerReferenceNo = $("#CustomerReferenceNo").val();
 
             if (id != 0 && customerTbentityID != "10") {
 
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
-                    data: { DistrictId: id, IncomeTaxPan: panno },  // data to submit
+                    url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                    data: { DistrictId: id, IncomeTaxPan: panno, CustomerReferenceNo: customerReferenceNo},  // data to submit
                     dataType: "json",
                     success: function (data, status, xhr) {
                         console.log(data);
@@ -2464,52 +2190,59 @@
 
         $("#CommunicationAddress1").on("blur", function () {
             //debugger;
-            var Address = document.getElementById("CommunicationAddress1").value.trim();
-            if (Address == "") {
+            if (document.getElementById("CommunicationAddress1").value.trim() == "")
+            {
                 document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("CommunicationAddress1").value.trim()))
+                {
                     document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address1_error").innerHTML = "";
                 }
-
-                if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address1_error").innerHTML = "";
                 }
-
             }
         });
 
         $("#CommunicationAddress2").on("blur", function () {
             //debugger;
-            var Address = document.getElementById("CommunicationAddress2").value.trim();
-            if (Address == "") {
+            if (document.getElementById("CommunicationAddress2").value.trim() == "")
+            {
                 document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("CommunicationAddress2").value.trim()))
+                {
                     document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address2_error").innerHTML = "";
                 }
-
-                if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address2_error").innerHTML = "";
                 }
             }
@@ -2517,50 +2250,56 @@
 
         $("#CommunicationAddress3").on("blur", function () {
             //debugger;
-            if (document.getElementById("CommunicationAddress3").value.trim() != "") {
+            if (document.getElementById("CommunicationAddress3").value.trim() != "")
+            {
                 if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) {
                     document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address3_error").innerHTML = "";
                 }
-
-                if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_address3_error").innerHTML = "";
                 }
-
             }
-            else {
+            else
+            {
                 document.getElementById("comm_address3_error").innerHTML = "";
             }
         });
 
         $("#CommunicationCity").on("blur", function () {
             //debugger;
-            var city = document.getElementById("CommunicationCity").value.trim();
-            if (city == "") {
+            if (document.getElementById("CommunicationCity").value.trim() == "")
+            {
                 document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
                 return (false);
             }
             else {
-                if (!isNaN(document.getElementById("CommunicationCity").value.trim())) {
+                if (!isNaN(document.getElementById("CommunicationCity").value.trim()))
+                {
                     document.getElementById("comm_city_error").innerHTML = "Invalid City";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_city_error").innerHTML = "";
                 }
-
-                if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("comm_city_error").innerHTML = "Invalid City";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_city_error").innerHTML = "";
                 }
             }
@@ -2568,52 +2307,59 @@
 
         $("#PerOrRegAddress1").on("blur", function () {
             //debugger;
-            var Address = document.getElementById("PerOrRegAddress1").value.trim();
-            if (Address == "") {
+            if (document.getElementById("PerOrRegAddress1").value.trim() == "")
+            {
                 document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim()))
+                {
+                    document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("perma_address1_error").innerHTML = "";
+                }
+                if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
                     return false;
                 }
                 else {
                     document.getElementById("perma_address1_error").innerHTML = "";
                 }
-
-                if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet)) {
-                    document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
-                    return false;
-                }
-                else {
-                    document.getElementById("perma_address1_error").innerHTML = "";
-                }
-
             }
         });
 
         $("#PerOrRegAddress2").on("blur", function () {
             //debugger;
-            var Address = document.getElementById("PerOrRegAddress2").value.trim();
-            if (Address == "") {
+            if (document.getElementById("PerOrRegAddress2").value.trim() == "")
+            {
                 document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim()))
+                {
                     document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_address2_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_address2_error").innerHTML = "";
                 }
             }
@@ -2621,25 +2367,30 @@
 
         $("#PerOrRegAddress3").on("blur", function () {
             //debugger;
-            if (document.getElementById("PerOrRegAddress3").value.trim() != "") {
-                if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim())) {
+            if (document.getElementById("PerOrRegAddress3").value.trim() != "")
+            {
+                if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim()))
+                {
                     document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_address3_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_address3_error").innerHTML = "";
                 }
-
             }
-            else {
+            else
+            {
                 document.getElementById("perma_address3_error").innerHTML = "";
             }
 
@@ -2647,25 +2398,30 @@
 
         $("#PerOrRegAddressCity").on("blur", function () {
             //debugger;
-            var city = document.getElementById("PerOrRegAddressCity").value.trim();
-            if (city == "") {
+            if (document.getElementById("PerOrRegAddressCity").value.trim() == "")
+            {
                 document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim()))
+                {
                     document.getElementById("perma_city_error").innerHTML = "Invalid City";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_city_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("perma_city_error").innerHTML = "Invalid City";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_city_error").innerHTML = "";
                 }
             }
@@ -2673,48 +2429,60 @@
 
         $("#CommunicationLocation").on("blur", function () {
             //debugger;
-            if (document.getElementById("CommunicationLocation").value.trim() != "") {
-                if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) {
+            if (document.getElementById("CommunicationLocation").value.trim() != "")
+            {
+                if (!isNaN(document.getElementById("CommunicationLocation").value.trim()))
+                {
                     document.getElementById("comm_location_error").innerHTML = "Invalid Location";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_location_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("comm_location_error").innerHTML = "Invalid Location";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("comm_location_error").innerHTML = "";
                 }
             }
-            else {
+            else
+            {
                 document.getElementById("comm_location_error").innerHTML = "";
             }
         });
 
         $("#PerOrRegAddressLocation").on("blur", function () {
             //debugger;
-            if (document.getElementById("PerOrRegAddressLocation").value.trim() != "") {
-                if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim())) {
+            if (document.getElementById("PerOrRegAddressLocation").value.trim() != "")
+            {
+                if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim()))
+                {
                     document.getElementById("perma_location_error").innerHTML = "Invalid Location";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_location_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet)) {
+                if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet))
+                {
                     document.getElementById("perma_location_error").innerHTML = "Invalid Location";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("perma_location_error").innerHTML = "";
                 }
             }
-            else {
+            else
+            {
                 document.getElementById("perma_location_error").innerHTML = "";
             }
         });
@@ -2725,12 +2493,15 @@
                 document.getElementById("official_fName_error").innerHTML = "First Name is required";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("KeyOffFirstName").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("KeyOffFirstName").value.trim()))
+                {
                     document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("official_fName_error").innerHTML = "";
                 }
 
@@ -2752,20 +2523,25 @@
                 document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
                 return (false);
             }
-            else {
-                if (!isNaN(document.getElementById("KeyOffDesignation").value.trim())) {
+            else
+            {
+                if (!isNaN(document.getElementById("KeyOffDesignation").value.trim()))
+                {
                     document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("official_designation_error").innerHTML = "";
                 }
 
-                if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck)) {
+                if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck))
+                {
                     document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
                     return false;
                 }
-                else {
+                else
+                {
                     document.getElementById("official_designation_error").innerHTML = "";
                 }
             }
@@ -2775,6 +2551,7 @@
         //$("#KeyOfficialDOB").on("change", function () {
         //    //debugger;
         //    var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
+        //    console.log(selectedDate);
 
         //    if (selectedDate != "") {
         //        var today = new Date();
@@ -2802,8 +2579,8 @@
             {
                 if (!isNaN(document.getElementById("KeyOffLastName").value.trim()))
                 {
-                   document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
-                   return false;
+                    document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                    return false;
                 }
                 else
                 {
@@ -2879,7 +2656,7 @@
 
         });
 
-        $("#PanCardRemarks").on("blur", function () {
+         $("#PanCardRemarks").on("blur", function () {
             //debugger;
            if (document.getElementById("PanCardRemarks").value.trim() == "")
            {
@@ -3285,5 +3062,110 @@
         }
 
       });
+       $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim())> 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+        }
 
+      });
+      $("#FleetSizeNoOfVechileOwnedLCV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+        }
+
+      });
+    $("#FleetSizeNoOfVechileOwnedMUVSUV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+        }
+
+      });
+
+    
+       $("#FleetSizeNoOfVechileOwnedCarJeep").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+        }
+
+      });
 </script>

@@ -329,9 +329,13 @@ namespace HPCL.Service.Services
                                 response.KeyOfficialDOB = "";
                             }
                         }
+                        if (string.IsNullOrEmpty(response.NameOnCard))
+                        {
+                            response.NameOnCard = "";
+                        }
                     }
                 }
-                
+
                 return customerProfileResponse;
             }
         }

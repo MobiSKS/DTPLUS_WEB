@@ -154,6 +154,12 @@
         public static string insertaggregatorcustomer = "api/dtplus/aggregatorcustomer/insert_aggregator_customer";
         public static string getaggregatorcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_customer";
         public static string approverejectaggregatorcustomer = "api/dtplus/aggregatorcustomer/approve_reject_aggregator_customer";
+        public static string getunverfiedaggregatorcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_customer_detail_by_form_number";
+        public static string bindunverfiedaggregatorcustomer = "api/dtplus/aggregatorcustomer/bind_unverfied_aggregator_customer";
+        public static string updateaggregatorcustomer = "api/dtplus/aggregatorcustomer/update_aggregator_customer";
+        public static string uploadaggregatorcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_customer_kyc";
+        public static string getaggregatornameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_name_and_form_number_by_reference_no";
+
         #endregion
 
         #region Login

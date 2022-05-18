@@ -21,13 +21,13 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-2 col-12 px-0">Form Number<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-3 col-12">
-                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                    @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger", @id = "FormNumberErrMsg" })
                                                 </div>
                                                 <div class="col-md-7 col-12 px-0">
                                                     <div class="form-group d-flex align-items-center flex-wrap mb-0">
                                                         <div class="px-2">
-                                                            <button class="btn btn_primary" type="submit" id="btnSave" name="submit">SEARCH</button>
+                                                            <button class="btn btn_primary" type="submit" id="btnSave" onclick="return SubmitValidations()" name="submit">SEARCH</button>
                                                         </div>
                                                         <div class="px-2">
                                                             <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
@@ -879,4 +879,62 @@
         }
 
     }
+
+    $("#FormNumber").on("blur", function () 
+    {
+        debugger;
+        var formNumber = document.getElementById("FormNumber").value.trim();
+        if (formNumber != "")
+        {
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+            {
+                document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                return false;
+            }
+            else if (document.getElementById("FormNumber").value.length < 10) 
+            {
+                document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                return false;
+            }
+            else if (!(document.getElementById("FormNumber").value.match(number))) 
+            {
+                document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                return false;
+            }
+            else
+                document.getElementById("FormNumberErrMsg").innerHTML = "";
+        }
+
+});
+
+function SubmitValidations()
+{
+    debugger;
+
+    var ret=true;
+
+    var formNumber = document.getElementById("FormNumber").value.trim();
+    if (formNumber != "")
+    {
+        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else if (document.getElementById("FormNumber").value.length < 10) 
+        {
+            document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else if (!(document.getElementById("FormNumber").value.match(number))) 
+        {
+            document.getElementById("FormNumberErrMsg").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else
+            document.getElementById("FormNumberErrMsg").innerHTML = "";
+    }
+
+    return ret;
+}
 </script>

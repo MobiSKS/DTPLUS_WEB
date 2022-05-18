@@ -76,11 +76,11 @@ namespace HPCL_Web.Controllers
             JObject obj = await _aggregatorService.ViewCustomerDetails(FormNumber);
 
             var searchRes = obj["Data"].Value<JObject>();
-            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
+            var customerResult = searchRes["GetAggregatorCustomerDetails"].Value<JArray>();
 
-            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
+            var customerKYCDetailsResult = searchRes["AggregatorCustomerKYCDetails"].Value<JArray>();
 
-            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
+            List<CustomerFullDetails> customerList = customerResult.ToObject<List<CustomerFullDetails>>();
 
             List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
 
@@ -288,6 +288,84 @@ namespace HPCL_Web.Controllers
                 });
             }
             return Json(lstDistrict);
+        }
+
+        public async Task<IActionResult> UpdateAggregatorCustomer(string FormNumber)
+        {
+            var modals = await _aggregatorService.UpdateAggregatorCustomer(FormNumber);
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAggregatorCustomer(ManageAggregatorViewModel cust)
+        {
+
+            var modals = await _aggregatorService.UpdateAggregatorCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("ValidateAggregatorCustomer");
+            }
+
+            return View(modals);
+        }
+        public async Task<IActionResult> UploadAggregatorDoc(string customerReferenceNo, string FormNumber)
+        {
+            UploadDoc uploadDoc = new UploadDoc();
+            uploadDoc.CustomerReferenceNo = "";
+            uploadDoc.FormNumber = "";
+            uploadDoc.IdProofType = 0;
+            uploadDoc.AddressProofType = 0;
+            uploadDoc.IdProofDocumentNo = "";
+            uploadDoc.AddressProofDocumentNo = "";
+
+            if (!string.IsNullOrEmpty(customerReferenceNo))
+            {
+                uploadDoc.CustomerReferenceNo = customerReferenceNo;
+                uploadDoc.Type = "1";
+                if (!string.IsNullOrEmpty(FormNumber))
+                {
+                    var response = await _aggregatorService.UploadDoc(FormNumber);
+
+                    if (response != null)
+                    {
+                        uploadDoc.FormNumber = FormNumber;
+                        uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
+                        uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
+                        uploadDoc.IdProofFrontSRC = response.IdProofFront;
+                        //uploadDoc.IdProofFront = response.IdProofFront;
+                        //uploadDoc.IdProofBack = response.IdProofBack;
+                        uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
+                        uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
+                        //uploadDoc.AddressProofFront = response.AddressProofFront;
+                        //uploadDoc.AddressProofBack = response.AddressProofBack;
+                    }
+                }
+            }
+            return View(uploadDoc);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadAggregatorDoc(UploadDoc entity)
+        {
+            var searchCustomer = _aggregatorService.UploadDoc(entity);
+
+            ModelState.Clear();
+            return Json(new { searchCustomer = searchCustomer });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveUploadDoc(UploadDoc entity)
+        {
+            var reason = await _aggregatorService.SaveUploadDoc(entity);
+
+            ModelState.Clear();
+            return Json(reason);
+        }
+        public async Task<IActionResult> SuccessUploadRedirect(string customerReferenceNo)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            return View();
         }
     }
 }

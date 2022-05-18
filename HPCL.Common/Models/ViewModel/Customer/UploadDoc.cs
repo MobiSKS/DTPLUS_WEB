@@ -48,6 +48,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string FormNumber { get; set; }
         public string CustomerName { get; set; }
         public string IdProofFrontSRC { get; set; }
+        public string CustomerTypeId { get; set; }
+        public string Type { get; set; }
 
     }
 
@@ -62,6 +64,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string FormNumber { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string CustomerTypeId { get; set; }
     }
 
     public class UpdateKycResponse

@@ -71,6 +71,7 @@
 
         $("#btnSearch").click(function () {
             //debugger;
+            var ret=true;
             if (document.getElementById("MerchantId").value.trim() == "") 
             {
                 document.getElementById("MerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
@@ -112,20 +113,82 @@
                 url: '@Url.Action("GetMerchantDetailsByMerchantId", "MyHpOTCCardCustomer")',
                 data: { MerchantID: merchantId },  // data to submit
                 dataType: "json",
-                success: function (data, status, xhr) {
+                success: function (data, status, xhr) 
+                {
                     console.log(data);
                     console.log(status);
 
-                    if (status == 'success') {
-                        document.getElementById("MerchantId_error").innerHTML = "";
-                        viewOTCCardMerchantAllocationTbl.style.display = "block";
-
-                        if (data == "Failed to load Merchant Details") {
+                    if (status == 'success') 
+                    {
+                        if (data == "Failed to load Merchant Details") 
+                        {
                             document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                             viewOTCCardMerchantAllocationTbl.style.display = "none";
                         }
+                        else if(data.status==1)
+                        {
+                            document.getElementById("MerchantId_error").innerHTML = "";
+                            viewOTCCardMerchantAllocationTbl.style.display = "block";
+
+                            var cardNumber = document.getElementById("CardNumber").value.trim();
+                            
+                            if (cardNumber != "") 
+                            {
+                                if(!(document.getElementById('CardNumber').value).match(number))
+                                {
+                                    document.getElementById("CardNumber_error").innerHTML = "Invalid Card Number";
+                                    ret=false;
+                                }
+                                else if (cardNumber.length < 16) 
+                                {
+                                    document.getElementById("CardNumber_error").innerHTML = "Card Number should be 16 digit number";
+                                    ret=false;
+                                }
+                                else 
+                                {
+                                    document.getElementById("CardNumber_error").innerHTML = "";
+                                }
+                            }
+                            else 
+                            {
+                                document.getElementById("CardNumber_error").innerHTML = "";
+                            }
+
+                            if(ret==true)
+                            {
+                                $.ajax({
+                                    type: 'GET',  // http method
+                                    url: '@Url.Action("GetViewOTCCardMerchantAllocation", "MyHpOTCCardCustomer")',
+                                    contentType: "application/json; charset=utf-8",
+                                    data: { MerchantId: merchantId, CardNo: cardNumber },
+                                    dataType: "text",
+                                    success: function (data, status, xhr) {
+                                        var v = data;
+                                        if (status == 'success') {
+                                            $("#viewOTCCardMerchantAllocationTbl").html(data);
+                                            $('html, body').animate({
+                                                scrollTop: $("#viewOTCCardMerchantAllocationTbl").offset().top
+                                            }, 2000);
+                                        }
+                                        else {
+                                            console.log(v);
+                                        }
+                                    },
+                                    error: function (jqXhr, textStatus, errorMessage) {
+                                        alert("Error");
+                                    }
+                                });
+                            }
+
+                        }
+                        else
+                        {
+                            document.getElementById("MerchantId_error").innerHTML = data.reason;
+                            viewOTCCardMerchantAllocationTbl.style.display = "none";
+                        }
                     }
-                    else {
+                    else 
+                    {
                         $("#MerchantId_error").html("");
                         document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                         viewOTCCardMerchantAllocationTbl.style.display = "none";
@@ -142,59 +205,9 @@
                     }
                 }
             });
+                       
 
-            var cardNumber = document.getElementById("CardNumber").value.trim();
-
-            if (cardNumber != "") 
-            {
-                if(!(document.getElementById('CardNumber').value).match(number))
-                {
-                    document.getElementById("CardNumber_error").innerHTML = "Invalid Card Number";
-                    return (false);
-                }
-                else if (cardNumber.length < 16) 
-                {
-                    document.getElementById("CardNumber_error").innerHTML = "Card Number should be 16 digit number";
-                    return (false);
-                }
-                else 
-                {
-                    document.getElementById("CardNumber_error").innerHTML = "";
-                }
-            }
-            else 
-            {
-                document.getElementById("CardNumber_error").innerHTML = "";
-            }
-
-            //var found = false;
-            //viewOTCCardMerchantAllocationTbl.style.display = "block";
-
-            $.ajax({
-                type: 'GET',  // http method
-                url: '@Url.Action("GetViewOTCCardMerchantAllocation", "MyHpOTCCardCustomer")',
-                contentType: "application/json; charset=utf-8",
-                data: { MerchantId: merchantId, CardNo: cardNumber },
-                dataType: "text",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $("#viewOTCCardMerchantAllocationTbl").html(data);
-                        $('html, body').animate({
-                            scrollTop: $("#viewOTCCardMerchantAllocationTbl").offset().top
-                        }, 2000);
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error");
-                }
-            });
-
-
-        });
+    });
 
    $("#CardNumber").on("blur", function () 
    {
@@ -215,9 +228,14 @@
 
    });
 
+    $("#MerchantId").focus(function(){
+       $("#btnSearch").attr("disabled", true);
+    });
+
    $("#MerchantId").on("blur", function () 
    {
     //debugger;
+    $("#btnSearch").attr("disabled", true);
         if (document.getElementById("MerchantId").value.trim() == "") 
         {
             document.getElementById("MerchantId_error").innerHTML = "Merchant ID field cannot be left blank";
@@ -263,22 +281,36 @@
                     console.log(data);
                     console.log(status);
 
-                    if (status == 'success') {
+                    if (status == 'success') 
+                    {
                         document.getElementById("MerchantId_error").innerHTML = "";
 
-                        if (data == "Failed to load Merchant Details") {
+                        if (data == "Failed to load Merchant Details") 
+                        {
                             document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                         }
+                        else if(data.status==1)
+                        {
+                            document.getElementById("MerchantId_error").innerHTML = "";
+                            $("#btnSearch").removeAttr("disabled");
+                        }
+                        else
+                        {
+                            document.getElementById("MerchantId_error").innerHTML = data.reason;
+                        }
                     }
-                    else {
+                    else 
+                    {
                         $("#MerchantId_error").html("");
                         document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
                     document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                 },
-                statusCode: {
+                statusCode: 
+                {
                     1024: function () {
                         document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                     }
