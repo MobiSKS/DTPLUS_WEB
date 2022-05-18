@@ -597,5 +597,58 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<GetEmergencyAddOnCardResponse> EmergencyAddOnCard(GetEmergencyAddOnCard entity)
+        {
+            var searchBody = new GetEmergencyAddOnCard();
+
+            if (entity.CustomerId != null)
+            {
+                searchBody = new GetEmergencyAddOnCard
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = entity.CustomerId
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetEmergencyAddOnCard
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetEmergencyAddOnCardUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetEmergencyAddOnCardResponse searchList = obj.ToObject<GetEmergencyAddOnCardResponse>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> MapEmergencyAddOnCard(string objCards)
+        {
+            objEmergencyReplacementCards[] arrs = JsonConvert.DeserializeObject<objEmergencyReplacementCards[]>(objCards);
+
+            var reqBody = new MapEmergencyAddOnCardReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                objEmergencyReplacementCards = arrs,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.MapEmergencyAddOnCardUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
     }
 }
