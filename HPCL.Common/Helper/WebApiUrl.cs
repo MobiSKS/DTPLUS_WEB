@@ -355,5 +355,9 @@
         #region "Customer Requests"
         public static string GetSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/get_sms_alert_for_multiple_mobile_detail";
         #endregion
+        
+        #region Configure
+        public static string getSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
+        #endregion
     }
 }
