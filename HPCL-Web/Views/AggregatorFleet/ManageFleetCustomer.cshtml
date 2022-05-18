@@ -4,21 +4,21 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Profile","Aggregator")" class="text_primary">Profile</a> </li>
-            <li class="breadcrumb-item font-weight-light">Manage Aggregator Profile</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","AggregatorFleet")" class="text_primary">Aggregator Fleet</a> </li>
+            <li class="breadcrumb-item font-weight-light">Manage Fleet Customer</li>
         </ul>
         <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
-            <li class="nav-item"> <a class="nav-link active" id="viewprofile-tab" data-toggle="tab" href="#viewprofile" onclick="ShowSearchProfile();" role="tab" aria-controls="viewprofile" aria-selected="true">View Customer Profile</a> </li>
-            <li class="nav-item"> <a class="nav-link disable" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="false">Basic Information</a> </li>
+            @*<li class="nav-item"> <a class="nav-link active" id="viewprofile-tab" data-toggle="tab" href="#viewprofile" onclick="ShowSearchProfile();" role="tab" aria-controls="viewprofile" aria-selected="true">View Customer Profile</a> </li>*@
+            <li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="false">Basic Information</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="officialDetails-tab" data-toggle="tab" href="#officialDetails" role="tab" aria-controls="officialDetails" aria-selected="false">Key Official Details</a> </li>
 
         </ul>
-        <form name="applicationForm" method="post" asp-action="ManageAggregator" class="w-100">
+        <form name="applicationForm" method="post" asp-action="ManageFleetCustomer" class="w-100">
 
             <div class="tab-content mt-3" id="myTabContent">
 
-                <div class="tab-pane fade show active" id="viewprofile" role="tabpanel" aria-labelledby="viewprofile-tab">
+                <div class="tab-pane fade" id="viewprofile" style="display:none;" role="tabpanel" aria-labelledby="viewprofile-tab">
                     <div class="w-100">
 
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 py-2">
@@ -59,16 +59,16 @@
                                 <button class="btn btn_primary" type="button" id="btnSearch">SEARCH</button>
                             </div>
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button" id="=btnCreate" onclick="ShowBasicInfo()">CREATE AGGREGATOR</button>
+                                <button class="btn btn_primary" type="button" id="=btnCreate" onclick="ShowBasicInfo()">CREATE FLEET CUSTOMER</button>
                             </div>
                         </div>
                         @*style="display:none"*@
                         @if (Model.Data.Count() > 0)
                         {
-                            <table id="CustomerSearch" class="datatable table table-striped d-md-table table-bordered table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
+                            <table id="CustomerSearch" class="datatable table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
                                 <thead>
                                     <tr>
-                                        <th style="width:30px;">
+                                        <th>
                                             S.No.
                                         </th>
                                         <th>
@@ -80,7 +80,7 @@
                                         <th>
                                             Customer Name
                                         </th>
-                                        <th style="width:80px;">
+                                        <th>
                                             Customer Address
                                         </th>
                                         <th>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="tab-pane fade" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="tab-pane fade  show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="w-100">
                         <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
                             @Html.DisplayFor(m => m.Remarks)
@@ -175,7 +175,7 @@
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
                                                         <select name="CustomerTypeID" id="CustomerTypeID" class="form-control" disabled>
-                                                            <option value="Aggregator">Aggregator</option>
+                                                            <option value="Fleet">Fleet</option>
                                                         </select>
                                                     </div>
                                                     <span class="error" id="customerType_error"></span>
@@ -187,9 +187,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
-                                                        <select name="CustomerSubTypeID" id="CustomerSubTypeID" class="form-control" disabled>
-                                                            <option value="AggregatorCustomer">Aggregator Parent</option>
-                                                        </select>
+                                                        @Html.DropDownListFor(m => m.CustomerSubTypeID, new SelectList(Model.CustomerSubTypeMdl, "CustomerSubTypeID", "CustomerSubTypeName"), new { @class = "form-control" })
                                                     </div>
                                                     <span class="error" id="customerSubType_error"></span>
                                                 </div>
@@ -231,42 +229,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
-                                                        new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
-                                                        new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
-                                                        new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
-                                                        new SelectListItem(){ Text = "New Customer", Value = "3"},
-                                                        }, null, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="typeOfCustomer_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
-                                                        new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
-                                                        new SelectListItem(){ Text = "1", Value = "1"},
-                                                        new SelectListItem(){ Text = "2", Value = "2"},
-                                                        new SelectListItem(){ Text = "3", Value = "3"},
-                                                        }, null, new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="tierOfCustomer_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -374,7 +339,7 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-3">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button" id="btnshowregAddress" onclick="return showregAddress()">Next</button>
+                                <button class="btn btn_primary" type="button" id="btnshowregAddress" onclick="return showregAddressFleet()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -1001,24 +966,24 @@
                 document.getElementById("officialDetails-tab").click();
                 document.getElementById("officialDetails-tab").classList.remove("disable");
             }
-        function setDateFormat(){
-            $(".nodefault").attr("readonly", true);
-            $('.nodefault').datepicker({
-                dateFormat: 'dd-mm-yy',
-                changeMonth: true,
-                changeYear: true,
-                maxDate: new Date(today),
-                autoclose: "true",
-                yearRange: "-100:+0"
-            });
-            if (($('.nodefault').val() != undefined)  && ($('.nodefault').val() != "") ){
-                var d1 = stringToDate($('.nodefault').val(),"dd-mm-yyyy");
-                var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-                var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-                var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-                $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
+            function setDateFormat(){
+                $(".nodefault").attr("readonly", true);
+                $('.nodefault').datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    maxDate: new Date(today),
+                    autoclose: "true",
+                    yearRange: "-100:+0"
+                });
+                if (($('.nodefault').val() != undefined)  && ($('.nodefault').val() != "") ){
+                    var d1 = stringToDate($('.nodefault').val(),"dd-mm-yyyy");
+                    var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                    var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                    var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                    $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
+                }
             }
-        }
         $(document).ready(function () {
             if ($('.nodefault').val() != undefined){
                 setDateFormat();
@@ -1068,7 +1033,7 @@
             if (flag == "N")
                 e.preventDefault();
             else{
-                var url = '@Html.Raw(@Url.Action("ManageAggregator", "Aggregator",new { FromDate = "aa", ToDate = "mm" }))';
+                var url = '@Html.Raw(@Url.Action("ManageFleetCustomer", "AggregatorFleet",new { FromDate = "aa", ToDate = "mm" }))';
                 url = url.replace("aa", encodeURIComponent(fromdate)).replace("mm", encodeURIComponent(todate));
                 window.location.href=url;
             }
@@ -1226,7 +1191,7 @@
 
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Aggregator")',
+                url: '@Url.Action("GetDistrictDetails", "AggregatorFleet")',
                 data: { Stateid: id },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
@@ -1259,7 +1224,7 @@
                 }
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("GetDistrictDetails", "Aggregator")',
+                    url: '@Url.Action("GetDistrictDetails", "AggregatorFleet")',
                     data: { Stateid: id },  // data to submit
                     dataType: "json",
                     success: function (data, status, xhr) {
@@ -1535,7 +1500,7 @@
                 $('#PerOrRegAddressStateID')[0].sumo.selectItem($("#CommunicationStateID").val());
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("GetDistrictDetails", "Aggregator")',
+                    url: '@Url.Action("GetDistrictDetails", "AggregatorFleet")',
                     data: { Stateid: id },  // data to submit
                     dataType: "json",
                     success: function (data, status, xhr) {
@@ -2494,21 +2459,21 @@
             }
         });
 
-        $("#TypeOfCustomerID").change(function () {
-            var id = this.value;
+        //$("#TypeOfCustomerID").change(function () {
+        //    var id = this.value;
 
-            if (id != 0) {
-                $("#typeOfCustomer_error").html("");
-            }
-        });
+        //    if (id != 0) {
+        //        $("#typeOfCustomer_error").html("");
+        //    }
+        //});
 
-        $("#TierOfCustomerID").change(function () {
-            var id = this.value;
+        //$("#TierOfCustomerID").change(function () {
+        //    var id = this.value;
 
-            if (id != 0) {
-                $("#tierOfCustomer_error").html("");
-            }
-        });
+        //    if (id != 0) {
+        //        $("#tierOfCustomer_error").html("");
+        //    }
+        //});
 
         $("#CustomerResidenceStatus").change(function () {
             var id = this.value;
@@ -3365,7 +3330,306 @@
         }
 
       });
-      $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
+      function showregAddressFleet() {
+    debugger;
+
+    var ret = true;
+
+    if (document.applicationForm.FormNumber.value.trim() == "") {
+        document.getElementById("formNumber_error").innerHTML = "Form Number field cannot be left blank";
+        ret = false;
+    }
+    else {
+
+        if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+            document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else
+        {
+            if (document.applicationForm.FormNumber.value.length < 10)
+            {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                ret = false;
+            }
+            else
+            {
+                if (!(document.getElementById("FormNumber").value.match(number))) {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                    ret = false;
+                }
+                else{
+                    if (localStorage.getItem("FORMNOALREADYUSED") == 0) {
+                        document.getElementById("formNumber_error").innerHTML = "Form Number already exists";
+                        ret = false;
+                    }
+                    else {
+                        document.getElementById("formNumber_error").innerHTML = "";
+                    }
+                }
+               
+            }
+        }
+    }
+
+    if (document.applicationForm.CustomerTypeID.value == "0") {
+        document.getElementById("customerType_error").innerHTML = "Customer Type field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("customerType_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerSubTypeID.value == "0" || document.applicationForm.CustomerSubTypeID.value == "") {
+        document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("customerSubType_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerDateOfApplication.value == "") {
+        document.getElementById("applicationDate_error").innerHTML = "Date of Application field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("applicationDate_error").innerHTML = "";
+    }
+
+
+    if (document.applicationForm.CustomerZonalOfficeID.value == "0") {
+        document.getElementById("zonalOffice_error").innerHTML = "Zonal Office field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("zonalOffice_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerRegionID.value == "0") {
+        document.getElementById("regionalOffice_error").innerHTML = "Regional Office field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("regionalOffice_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerSalesAreaID.value == "0") {
+        document.getElementById("salesArea_error").innerHTML = "Sales Area field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("salesArea_error").innerHTML = "";
+    }
+
+    //if (document.applicationForm.TypeOfCustomerID.value == "0") {
+    //    document.getElementById("typeOfCustomer_error").innerHTML = "Type Of Customer field cannot be left blank";
+    //    ret = false;
+    //}
+    //else {
+    //    document.getElementById("typeOfCustomer_error").innerHTML = "";
+    //}
+
+    //if (document.applicationForm.TierOfCustomerID.value == "0") {
+    //    document.getElementById("tierOfCustomer_error").innerHTML = "Tier Of Customer field cannot be left blank";
+    //    ret = false;
+    //}
+    //else {
+    //    document.getElementById("tierOfCustomer_error").innerHTML = "";
+    //}
+
+    if (document.applicationForm.IndividualOrgNameTitle.value == "-1") {
+        document.getElementById("salutaion_error").innerHTML = "Select Title";
+        ret = false;
+    }
+    else {
+        document.getElementById("individualName_error").innerHTML = "";
+    }
+
+
+    if (document.applicationForm.IndividualOrgName.value.trim() == "") {
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        ret = false;
+    }
+    else {
+
+        if (!isNaN(document.applicationForm.IndividualOrgName.value.trim())) {
+            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            ret = false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+
+        if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
+            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            ret = false;
+        }
+        else {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+    }
+        
+
+    if (document.applicationForm.CustomerNameOnCard.value.trim() == "") {
+        document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+        ret = false;
+    }
+    else {
+        if (!isNaN(document.applicationForm.CustomerNameOnCard.value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+    }
+    
+
+    if (document.applicationForm.CustomerTbentityID.value == "0") {
+        document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
+        ret = false;
+    }
+    else {
+        document.getElementById("typeOfbusiness_error").innerHTML = "";
+    }
+
+    if (document.applicationForm.CustomerResidenceStatus.value == "-1") {
+        document.getElementById("residenceStatus_error").innerHTML = "Residential Status field cannot be left blank";
+        ret = false;
+    }
+    else {
+        document.getElementById("residenceStatus_error").innerHTML = "";
+    }
+
+
+    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
+
+    if (TypeofBusinessEntityId != 10)
+    {
+        var panno = document.applicationForm.CustomerIncomeTaxPan.value.trim();
+
+        if (panno != "")
+        {
+            panno = panno.toUpperCase();
+        }
+
+        if (panno == "")
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else if (!panno.match(pancard))
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else if (panno.length < 10)
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else if (TypeofBusinessEntityId == 2)
+        {
+            let forthdigitPan = panno.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P')
+            {
+                console.log('Inside forthdigitPan');
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (localStorage.getItem("INVALIDPAN") == 0)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (localStorage.getItem("PANNAMEMATCHING") == 0)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+        }
+        else if (localStorage.getItem("INVALIDPAN") == 0)
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else if (localStorage.getItem("PANNAMEMATCHING") == 0)
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        if (document.applicationForm.CustomerIncomeTaxPan.value.trim() == "")
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+    }
+
+
+    if (localStorage.getItem("DUPLICATEPANUSED") == 0)
+    {
+        if (document.getElementById("PanCardRemarks").value.trim() == "")
+        {
+            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("PanCardRemarks_error").innerHTML = "";
+        }
+    }
+    else
+    {
+        document.getElementById("PanCardRemarks_error").innerHTML = "";
+    }
+
+    console.log(ret);
+    if (ret == false)
+        return ret;
+
+    document.getElementById("address-tab").click();
+    document.getElementById("address-tab").classList.remove("disable");
+    localStorage.setItem("showregAddressFleet", true)
+    document.getElementById("basicInfo-tab").classList.add("disable");
+
+
+    return ret;
+
+}
+   $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
        {
             //debugger;
        if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
@@ -3471,5 +3735,4 @@
         }
 
       });
-    
 </script>

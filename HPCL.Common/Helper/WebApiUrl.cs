@@ -159,6 +159,9 @@
         public static string updateaggregatorcustomer = "api/dtplus/aggregatorcustomer/update_aggregator_customer";
         public static string uploadaggregatorcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_customer_kyc";
         public static string getaggregatornameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_name_and_form_number_by_reference_no";
+        public static string insertaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/insert_aggregator_normal_fleet_customer";
+        public static string getaggregatorfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_customer";
+        public static string uploadaggregatornormalfleetcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_normal_fleet_customer_kyc";
 
         #endregion
 
