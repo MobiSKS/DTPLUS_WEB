@@ -159,6 +159,9 @@
         public static string updateaggregatorcustomer = "api/dtplus/aggregatorcustomer/update_aggregator_customer";
         public static string uploadaggregatorcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_customer_kyc";
         public static string getaggregatornameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_name_and_form_number_by_reference_no";
+        public static string insertaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/insert_aggregator_normal_fleet_customer";
+        public static string getaggregatorfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_customer";
+        public static string uploadaggregatornormalfleetcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_normal_fleet_customer_kyc";
 
         #endregion
 
@@ -352,6 +355,10 @@
         public static string GetTransportManagementSystemUrl = "api/dtplus/TMS/get_transport_management_system_url";
         #endregion
 
+        #region "Customer Requests"
+        public static string GetSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/get_sms_alert_for_multiple_mobile_detail";
+        #endregion
+        
         #region Configure
         public static string getSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
         #endregion
