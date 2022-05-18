@@ -349,5 +349,9 @@
         public static string UpdateTmsEnrollmentTmsStatus = "api/dtplus/TMS/update_tms_enrollment_tms_status";
         public static string GetTransportManagementSystemUrl = "api/dtplus/TMS/get_transport_management_system_url";
         #endregion
+
+        #region Configure
+        public static string getSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
+        #endregion
     }
 }
