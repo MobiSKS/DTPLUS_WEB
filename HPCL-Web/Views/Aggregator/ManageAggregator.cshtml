@@ -63,77 +63,80 @@
                             </div>
                         </div>
                         @*style="display:none"*@
-                        @if (Model.Data.Count() > 0)
+                        @if (Model.Remarks == "")
                         {
-                            <table id="CustomerSearch" class="datatable table table-striped d-md-table table-bordered table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
-                                <thead>
-                                    <tr>
-                                        <th style="width:30px;">
-                                            S.No.
-                                        </th>
-                                        <th>
-                                            Form No.
-                                        </th>
-                                        <th>
-                                            Customer Ref. No.
-                                        </th>
-                                        <th>
-                                            Customer Name
-                                        </th>
-                                        <th style="width:80px;">
-                                            Customer Address
-                                        </th>
-                                        <th>
-                                            Phone No.
-                                        </th>
-                                        <th>
-                                            Mobile No.
-                                        </th>
-
-                                        <th>
-                                            Created By
-                                        </th>
-                                        <th>
-                                            Created Date
-                                        </th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody id="searchMerchantTableBody">
-                                    @{
-                                        int y = 0;
-                                    }
-                                    @foreach (var item in Model.Data)
-                                    {
-                                        y = y + 1;
+                            @if (Model.Data.Count() > 0)
+                            {
+                                <table id="CustomerSearch" class="datatable table table-striped d-md-table table-bordered table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
+                                    <thead>
                                         <tr>
-                                            <td>@y</td>
-                                            <td>@item.FormNumber</td>
-                                            <td>@item.CustomerReferenceNo</td>
-                                            <td>@item.CustomerName</td>
-                                            <td>@item.CustomerAddress</td>
-                                            @if (@item.PhoneNo == "-")
-                                            {
-                                                <td></td>
-                                            }
-                                            else
-                                            {
-                                                <td>@item.PhoneNo</td>
-                                            }
-                                            <td>@item.MobileNo</td>
-                                            <td>@item.CreatedBy</td>
-                                            <td>@item.CreatedDate</td>
+                                            <th style="width:30px;">
+                                                S.No.
+                                            </th>
+                                            <th>
+                                                Form No.
+                                            </th>
+                                            <th>
+                                                Customer Ref. No.
+                                            </th>
+                                            <th>
+                                                Customer Name
+                                            </th>
+                                            <th style="width:80px;">
+                                                Customer Address
+                                            </th>
+                                            <th>
+                                                Phone No.
+                                            </th>
+                                            <th>
+                                                Mobile No.
+                                            </th>
+
+                                            <th>
+                                                Created By
+                                            </th>
+                                            <th>
+                                                Created Date
+                                            </th>
+
+
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <div class="col-12 text-center alert alert-danger p-2 mt-3" id="NoRecord">
-                                @Model.Message
-                            </div>
+                                    </thead>
+                                    <tbody id="searchMerchantTableBody">
+                                        @{
+                                            int y = 0;
+                                        }
+                                        @foreach (var item in Model.Data)
+                                        {
+                                            y = y + 1;
+                                            <tr>
+                                                <td>@y</td>
+                                                <td>@item.FormNumber</td>
+                                                <td>@item.CustomerReferenceNo</td>
+                                                <td>@item.CustomerName</td>
+                                                <td>@item.CustomerAddress</td>
+                                                @if (@item.PhoneNo == "-")
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.PhoneNo</td>
+                                                }
+                                                <td>@item.MobileNo</td>
+                                                <td>@item.CreatedBy</td>
+                                                <td>@item.CreatedDate</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <div class="col-12 text-center alert alert-danger p-2 mt-3" id="NoRecord">
+                                    @Model.Message
+                                </div>
+                            }
                         }
                     </div>
                     <div class="clearfix"></div>
@@ -967,6 +970,7 @@
         var OfficialDOB = $("#KeyOfficialDOB").val();
         var OffDateOfAnniversary = $("#KeyOffDateOfAnniversary").val();
         var notFoundError = "@ViewBag.NotFoundError";
+        var success="@ViewBag.Success";
            function ShowSearchProfile()
             {
                 document.getElementById("viewprofile-tab").classList.remove("disable");
@@ -1020,6 +1024,9 @@
             }
         }
         $(document).ready(function () {
+            if(success=="false"){
+                ShowBasicInfo();
+            }
             if ($('.nodefault').val() != undefined){
                 setDateFormat();
             }
