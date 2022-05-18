@@ -50,7 +50,10 @@ namespace HPCL_Web.Controllers
             {
                 return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
             }
-
+            else
+            {
+                ViewBag.Success = "false";
+            }
             return View(modals);
         }
         public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message)
