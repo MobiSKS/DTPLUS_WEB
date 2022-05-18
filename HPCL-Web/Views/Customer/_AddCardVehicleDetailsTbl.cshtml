@@ -725,57 +725,60 @@
             }
         } 
 
-        if(isValid)
+        if (customerTypeId == "902" || customerTypeId == "917") //Corporate,Non Fleet
         {
-            var j=0;i=0;
-            var cnt=0;
-            console.log('Before Checking For Duplicate Card Identifier');
-            $("#NoOfCardsTbl tbody tr").each(function () 
+            if(isValid)
             {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
+                var j=0;i=0;
+                var cnt=0;
+                console.log('Before Checking For Duplicate Card Identifier');
                 $("#NoOfCardsTbl tbody tr").each(function () 
                 {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
+                    var row = $(this);
+                    j=0;
+                    i=i+1;
+                    cnt = 0;
+                    $("#NoOfCardsTbl tbody tr").each(function () 
                     {
-                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+                        var row1 = $(this);
 
-                        if(PrevIdent!="" && CurIdent!="")
+                        j=j+1;
+                        if(i>0 && j>1 && j>i)
                         {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                            var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                            var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                            if(PrevIdent!="" && CurIdent!="")
                             {
+                                if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                                {
 
-                                if(CurIdent.length<2 || CurIdent.length>16)
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else if(!CurIdent.match(forVehicleNo))
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  flag = "N";
-                                }
-                                else
-                                {
-                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
-                                    flag = "N";
-                                }
+                                    if(CurIdent.length<2 || CurIdent.length>16)
+                                    {
+                                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                      flag = "N";
+                                    }
+                                    else if(!CurIdent.match(forVehicleNo))
+                                    {
+                                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                      flag = "N";
+                                    }
+                                    else
+                                    {
+                                        document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
+                                        flag = "N";
+                                    }
 
+                                }
                             }
                         }
-                    }
 
-                    cnt=cnt+1;
+                        cnt=cnt+1;
+                    });
+
                 });
 
-            });
-
+            }
         }
 
      }

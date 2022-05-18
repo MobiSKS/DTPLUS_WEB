@@ -593,6 +593,10 @@ namespace HPCL.Service.Services
             {
                 customerCardInfo.Message = customerInserCardResponse.Message;
                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                if (customerInserCardResponse != null && customerInserCardResponse.Data != null && customerInserCardResponse.Data.Count > 0)
+                {
+                    customerCardInfo.Message = customerInserCardResponse.Data[0].Reason;
+                }
                 foreach (CardDetails cardDetails in customerCardInfo.ObjCardDetail)
                 {
                     if (customerCardInfo.VehicleNoVerifiedManually)
