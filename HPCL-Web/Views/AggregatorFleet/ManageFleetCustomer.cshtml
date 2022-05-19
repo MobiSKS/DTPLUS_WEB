@@ -519,7 +519,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('nodefaultDate','KeyOfficialDOB_error');" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
@@ -587,7 +587,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefault",@placeholder="dd-mm-yyyy", @autocomplete = "off" })
+                                             @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" , @onchange = "validateDate('nodefaultDate','KeyOffDateOfAnniversary_error');"})
+                                             <span class="error" id="KeyOffDateOfAnniversary_error"></span>
                                         </div>
                                     </div>
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -847,28 +848,9 @@
                 document.getElementById("officialDetails-tab").click();
                 document.getElementById("officialDetails-tab").classList.remove("disable");
             }
-            function setDateFormat(){
-                $(".nodefault").attr("readonly", true);
-                $('.nodefault').datepicker({
-                    dateFormat: 'dd-mm-yy',
-                    changeMonth: true,
-                    changeYear: true,
-                    maxDate: new Date(today),
-                    autoclose: "true",
-                    yearRange: "-100:+0"
-                });
-                if (($('.nodefault').val() != undefined)  && ($('.nodefault').val() != "") ){
-                    var d1 = stringToDate($('.nodefault').val(),"dd-mm-yyyy");
-                    var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-                    var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-                    var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-                    $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
-                }
-            }
+            
         $(document).ready(function () {
-            if ($('.nodefault').val() != undefined){
-                setDateFormat();
-            }
+            
             var customerTbentityID = $('#CustomerTbentityID').val();
             console.log(customerTbentityID);
             if (customerTbentityID == "10") {
@@ -3337,11 +3319,8 @@
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
             ret = false;
         }
-        else {
-            document.getElementById("individualName_error").innerHTML = "";
-        }
-
-        if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
+       
+        else if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
             ret = false;
         }
@@ -3360,11 +3339,8 @@
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }
-        else {
-            document.getElementById("nameOnCard_error").innerHTML = "";
-        }
-
-        if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
+        
+        else if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }

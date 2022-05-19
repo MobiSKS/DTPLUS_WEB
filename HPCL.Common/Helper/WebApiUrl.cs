@@ -162,7 +162,8 @@
         public static string insertaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/insert_aggregator_normal_fleet_customer";
         public static string getaggregatorfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_customer";
         public static string uploadaggregatornormalfleetcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_normal_fleet_customer_kyc";
-
+        public static string getfleetcustomernameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no";
+        public static string getunverfiedfleetcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_normal_fleet_customer_detail_by_form_number";
         #endregion
 
         #region Login

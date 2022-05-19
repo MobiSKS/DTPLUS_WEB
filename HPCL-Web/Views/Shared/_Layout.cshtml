@@ -743,7 +743,9 @@
         if ($('.toDate').val() != undefined){
             setToDateFormat();
         }
-
+        if ($('.nodefaultDate').val() != undefined){
+                setDateFormat();
+            }
         $('select').SumoSelect({
             placeholder: '-Select-',
             search: true,
@@ -801,17 +803,27 @@
         if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined) && ($('.fromDate').val() != "") && ($('.toDate').val() != "")){
 
             var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-            var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
-            var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
-            var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
-            //$('.fromDate').val(`${mo}-${da}-${ye}`);
-
+            if(d!="Invalid Date"){
+                var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+                var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+                var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+                //$('.fromDate').val(`${mo}-${da}-${ye}`);
+            }
+            else{
+                dateflag = "N";
+                return dateflag;
+            }
             var d1 = stringToDate($('.toDate').val(),"dd-mm-yyyy");
-            var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
-            var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
-            var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
-            //$('.toDate').val(`${mo1}-${da1}-${ye1}`);
-            
+            if(d1!="Invalid Date"){
+                var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                //$('.toDate').val(`${mo1}-${da1}-${ye1}`);
+            }
+            else{
+                dateflag = "N";
+                return dateflag;
+            }
             var fromD =d;
             var toD =  d1;           
             
@@ -885,7 +897,52 @@
             return true;
         }
     }
-     
+    function setDateFormat(){
+        $(".nodefaultDate").attr("readonly", true);
+        $('.nodefaultDate').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date(today),
+            autoclose: "true",
+            yearRange: "-100:+0"
+        });
+        if (($('.nodefaultDate').val() != undefined)  && ($('.nodefaultDate').val() != "") ){
+            var d1 = stringToDate($('.nodefaultDate').val(),"dd-mm-yyyy");
+            var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+            var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+            var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+            $('.nodefault').val(`${da1}-${mo1}-${ye1}`);
+        }
+    }
+    function validateDate(dateClass,dateId) {
+        var dateflag="Y";
+        if (($("." + dateClass + "").val() != undefined) && ($("." + dateClass + "").val() != "")){
+            var d = stringToDate($("." + dateClass + "").val(),"dd-mm-yyyy");
+            if(d!="Invalid Date"){
+                if(d>today){
+                    $("#" + dateId + "").attr("style", "display:block");
+                    $("#" + dateId + "").html("Date should be less than Today");
+                    dateflag = "N";
+                }
+                else
+                {
+                    $("#" + dateId + "").attr("style", "display:none");
+                    $("#" + dateId + "").html("");
+                }
+                
+            }
+            else{
+                $("#" + dateId + "").attr("style", "display:block");
+                $("#" + dateId + "").html("Invalid Date");
+                dateflag = "N";
+            }
+        }
+
+        return dateflag;
+    }
+
+        
 </script>
 
 <script>
