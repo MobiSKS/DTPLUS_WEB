@@ -584,10 +584,22 @@ namespace HPCL.Service.Services
 
             if (customerInserCardResponse.Internel_Status_Code == 1000)
             {
-                customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
                 customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
                 customerCardInfo.Message = customerInserCardResponse.Message;
-                customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
+
+                if (customerInserCardResponse != null && customerInserCardResponse.Data != null
+                    && customerInserCardResponse.Data.Count > 0 && customerInserCardResponse.Data[0].Status != 1)
+                {
+                    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+                    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code + 1;
+                    customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
+                }
+                else if (customerInserCardResponse != null && customerInserCardResponse.Data != null && customerInserCardResponse.Data.Count > 0)
+                {
+                    customerCardInfo.Status = customerInserCardResponse.Data[0].Status;
+                    customerCardInfo.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                    customerCardInfo.Reason = customerInserCardResponse.Data[0].Reason;
+                }
             }
             else
             {

@@ -365,17 +365,22 @@
                             //alert(data.status);
                             if(data.status==0)
                             {
-                                //document.getElementById("divDetails").style.display = "none";
-                                //document.getElementById("divSubmit").style.display = "none";
                                 ViewCardDetailsTbl.style.display = "none";
-                                //alert(data.reason);
                                  dvNoRecord.style.display = "block";
                                  $("#dvNoRecord").html(data.reason);
-                                //$("#noRecord").html("");
-                                //$("#noRecord").append("<span>" + data.reason + "</span>");
-                                //document.getElementById("noRecord").style.display = "block";
-                                //document.getElementById("divNoRecord").style.display = "block";
-                                
+                                $('#NoOfVehiclesAllCards').attr("readonly", true);
+                                $('#NoOfCards').attr("readonly", true);
+                                $('#NoOfCards').addClass("FORREADONLY");
+                                $('#NoOfVehiclesAllCards').addClass("FORREADONLY");
+                                $('#RBEId').attr("readonly", true);
+                                $('#NoOfCards_error').html("");
+                                $('#NoOfVehiclesAllCards_error').html("");
+                                $('#RBEId_error').html("");
+                                $('#NoOfCards').val("");
+                                $('#NoOfVehiclesAllCards').val("");
+                                $('#RBEId').val("");
+                                $('#RBEName').val("");
+                                $('#RBEName_error').html("");
                             }
                             else
                             {
@@ -384,6 +389,8 @@
                                 //document.getElementById("divDetails").style.display = "block";
                                 //document.getElementById("divSubmit").style.display = "none";
                                 ViewCardDetailsTbl.style.display = "block";
+                                $('#NoOfCards').removeClass("FORREADONLY");
+                                $('#NoOfVehiclesAllCards').removeClass("FORREADONLY");
                                 //document.getElementById("noRecord").style.display = "none";
                                 //document.getElementById("divNoRecord").style.display = "none";
                                 document.getElementById("CustomerTypeId").value = data.customerTypeId;
@@ -491,19 +498,21 @@
                             //     document.getElementById("divVehicleNoVerifiedManually").style.display = "block";
                             //}
 
-                            if (data.rbeId != "") 
+                            if(data.status==1)
                             {
-                                document.getElementById("RBEId").value = data.rbeId;
-                                document.getElementById("RBEName").value = data.rbeName;
-                                $("#RBEId").prop('readonly', true);
+                                if (data.rbeId != "") 
+                                {
+                                    document.getElementById("RBEId").value = data.rbeId;
+                                    document.getElementById("RBEName").value = data.rbeName;
+                                    $("#RBEId").prop('readonly', true);
+                                }
+                                else 
+                                {
+                                    document.getElementById("RBEId").value = "";
+                                    document.getElementById("RBEName").value = "";
+                                    $("#RBEId").prop('readonly', false);
+                                }
                             }
-                            else 
-                            {
-                                document.getElementById("RBEId").value = "";
-                                document.getElementById("RBEName").value = "";
-                                $("#RBEId").prop('readonly', false);
-                            }
-
                        }
                     }
                     else {
@@ -1067,7 +1076,7 @@
 
       function IsAlphaNumeric(keyCode) {
            return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 46 ||
-                    (keyCode >= 97 && keyCode <= 122) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
+                    (keyCode >= 96 && keyCode <= 105) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
       }
 
       function ValidateVehicleNo(rowSelected) 
@@ -1190,23 +1199,26 @@
    $("#NoOfCards").on("blur", function () 
    {
     //debugger;
-       if (document.getElementById('NoOfCards').value.trim() == "") 
-       {
-            document.getElementById("NoOfCards_error").innerHTML = "No. of Cards cannot be left blank";
-            return false;
-       }
-       else 
-       {
-            if (Number(document.getElementById('NoOfCards').value) <= 0 || Number(document.getElementById('NoOfCards').value) > 10) 
-            {
-                document.getElementById("NoOfCards_error").innerHTML = "No. of Cards may be 1 to 10";
+    if(!$("#NoOfCards").hasClass("FORREADONLY"))
+    {
+           if (document.getElementById('NoOfCards').value.trim() == "") 
+           {
+                document.getElementById("NoOfCards_error").innerHTML = "No. of Cards cannot be left blank";
                 return false;
-            }
-            else 
-            {
-                document.getElementById("NoOfCards_error").innerHTML = "";
-            }
-       }
+           }
+           else 
+           {
+                if (Number(document.getElementById('NoOfCards').value) <= 0 || Number(document.getElementById('NoOfCards').value) > 10) 
+                {
+                    document.getElementById("NoOfCards_error").innerHTML = "No. of Cards may be 1 to 10";
+                    return false;
+                }
+                else 
+                {
+                    document.getElementById("NoOfCards_error").innerHTML = "";
+                }
+           }
+     }
         
     });
 
@@ -1215,30 +1227,34 @@
     //debugger;
        var noofCards = document.getElementById('NoOfCards').value.trim();
        if(noofCards=="") noofCards = 0;
-       if (document.getElementById('NoOfVehiclesAllCards').value.trim() == "") 
+
+       if(!$("#NoOfVehiclesAllCards").hasClass("FORREADONLY"))
        {
-            document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannot be left blank";
-            return false;
-       }
-       else 
-       {
-            if (Number(document.getElementById('NoOfVehiclesAllCards').value) <= 0 || Number(document.getElementById('NoOfVehiclesAllCards').value) > 10) 
-            {
-                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles may be 1 to 10";
+           if (document.getElementById('NoOfVehiclesAllCards').value.trim() == "") 
+           {
+                document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannot be left blank";
                 return false;
-            }
-            else 
-            {
-                if (Number(document.getElementById('NoOfVehiclesAllCards').value) < noofCards) 
+           }
+           else 
+           {
+                if (Number(document.getElementById('NoOfVehiclesAllCards').value) <= 0 || Number(document.getElementById('NoOfVehiclesAllCards').value) > 10) 
                 {
-                     document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
+                    document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles may be 1 to 10";
+                    return false;
                 }
-                else
+                else 
                 {
-                    document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
-                }
+                    if (Number(document.getElementById('NoOfVehiclesAllCards').value) < noofCards) 
+                    {
+                         document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "No. of Vehicles cannnot be less than No. of Cards";
+                    }
+                    else
+                    {
+                        document.getElementById("NoOfVehiclesAllCards_error").innerHTML = "";
+                    }
                 
-            }
+                }
+           }
        }
         
     });
