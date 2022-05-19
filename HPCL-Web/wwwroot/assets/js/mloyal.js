@@ -1371,12 +1371,12 @@ function showCardDetails() {
         document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
     }
     if (document.getElementById("KeyOfficialDOB").value.trim() != "") {
-        var flag = validateDate("nodefaultDate", "KeyOfficialDOB_error");
+        var flag = validateDate("KeyOfficialDOB", "KeyOfficialDOB_error");
         if (flag == "N")
             ret = false;
     }
     if (document.getElementById("KeyOffDateOfAnniversary").value.trim() != "") {
-        var flag = validateDate("nodefaultDate", "KeyOffDateOfAnniversary_error");
+        var flag = validateDate("KeyOffDateOfAnniversary", "KeyOffDateOfAnniversary_error");
         if (flag == "N")
             ret = false;
     }
