@@ -219,9 +219,8 @@ namespace HPCL.Service.Services
 
             if (cust.Internel_Status_Code != 1000)
             {
-                cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-
-                cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(cust.CustomerTypeID));
+                //cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
+                cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(901));
 
                 cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
