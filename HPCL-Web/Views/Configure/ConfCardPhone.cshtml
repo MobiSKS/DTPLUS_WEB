@@ -58,7 +58,6 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
-                @*<div id="dvDetails">*@
 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
 
@@ -163,7 +162,6 @@
 
                    
                 </div>
-                @*</div>*@
             </div>
         }
         <div class="clearfix"></div>
@@ -308,7 +306,7 @@
      function UpdateSMSAlertstoIndividualCardUsers() {
         //alert("inside submit");
         var flag = "Y";
-        merchantDetail = [];
+        smsAlertDetail = [];
          $("#CardEdit tbody tr").each(function () {
              //debugger;
 
@@ -318,7 +316,6 @@
                  var i = row[0].cells[0].textContent;
                  var cardNumber = row.find("td.cardNo").text();
                  var mobileNo = $('#MobileNo_'+i).val();
-                 //var merchantId = row[0].cells[1].textContent;
                  var vechileNo = row.find("td.vechileNo").text();
 
                 if(mobileNo.trim()=='')
@@ -349,15 +346,15 @@
                     }
                 }
 
-                 merchantDetail.push({ CardNo: cardNumber, MobileNo: mobileNo, VechileNo: vechileNo });
+                 smsAlertDetail.push({ CardNo: cardNumber, MobileNo: mobileNo, VechileNo: vechileNo });
             }
          });
                 
 
-        if (merchantDetail.length > 0 && flag == "Y") {
+        if (smsAlertDetail.length > 0 && flag == "Y") {
             if (confirm('Are you sure! you want to process the selected record(s)?')) {
                 $("#reason_error").html("");
-                var updateReqmodel = { CustomerID: $("#CustomerID").val(), TypeSMSAlertsToIndividualCardUsers: merchantDetail };
+                var updateReqmodel = { CustomerID: $("#CustomerID").val(), TypeSMSAlertsToIndividualCardUsers: smsAlertDetail };
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("SubmitSMSAlertstoIndividualCardUsers", "Configure")',
