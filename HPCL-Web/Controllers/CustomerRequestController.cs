@@ -32,5 +32,19 @@ namespace HPCL_Web.Controllers
             var searchList = await _customerRequestService.GetSmsAlertForMultipleMobileDetail(entity);
             return Json(new { searchList = searchList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateSmsAlertForMultipleMobileDetail(string customerDetailForSmsAlert)
+        {
+            var reasonList = await _customerRequestService.UpdateSmsAlertForMultipleMobileDetail(customerDetailForSmsAlert);
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteSmsAlertForMultipleMobileDetail(string CustomerID, string MobileNo)
+        {
+            var reasonList = await _customerRequestService.DeleteSmsAlertForMultipleMobileDetail(CustomerID,MobileNo);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }
