@@ -220,11 +220,8 @@ function showregAddress() {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
             ret = false;
         }
-        else {
-            document.getElementById("individualName_error").innerHTML = "";
-        }
 
-        if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
+        else if (!document.applicationForm.IndividualOrgName.value.match(nameWithSpaceCheck)) {
             document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
             ret = false;
         }
@@ -243,11 +240,8 @@ function showregAddress() {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }
-        else {
-            document.getElementById("nameOnCard_error").innerHTML = "";
-        }
-
-        if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
+        
+        else if (!document.applicationForm.CustomerNameOnCard.value.match(nameWithSpaceCheck)) {
             document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }
@@ -1376,7 +1370,17 @@ function showCardDetails() {
     {
         document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
     }
-
+    if (document.getElementById("KeyOfficialDOB").value.trim() != "") {
+        var flag = validateDate("nodefaultDate", "KeyOfficialDOB_error");
+        if (flag == "N")
+            ret = false;
+    }
+    if (document.getElementById("KeyOffDateOfAnniversary").value.trim() != "") {
+        var flag = validateDate("nodefaultDate", "KeyOffDateOfAnniversary_error");
+        if (flag == "N")
+            ret = false;
+    }
+    
     if (localStorage.getItem("DUPLICATEPANUSED") == 0)
     {
         if (document.getElementById("PanCardRemarks").value.trim() == "")
