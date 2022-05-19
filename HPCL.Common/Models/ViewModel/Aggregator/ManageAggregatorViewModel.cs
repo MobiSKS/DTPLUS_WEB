@@ -25,12 +25,12 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
 
             });
             CustomerSubTypeMdl = new List<CustomerSubTypeModel>();
-            CustomerSubTypeMdl.Add(new CustomerSubTypeModel
-            {
-                CustomerSubTypeID = 0,
-                CustomerSubTypeName = "Select Sub Type"
+            //CustomerSubTypeMdl.Add(new CustomerSubTypeModel
+            //{
+            //    CustomerSubTypeID = 0,
+            //    CustomerSubTypeName = "Select Sub Type"
 
-            });
+            //});
             CustomerZonalOfficeMdl = new List<CustomerZonalOfficeModel>();
             CustomerZonalOfficeMdl.Add(new CustomerZonalOfficeModel
             {
