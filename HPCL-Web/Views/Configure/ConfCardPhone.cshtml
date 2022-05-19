@@ -48,7 +48,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSearch">Search</button>
+                                    <button class="btn btn_primary" type="submit" id="btnSearch" onclick="return SubmitValidations()">Search</button>
                                 </div>
                             </div>
                         </div>
@@ -290,6 +290,7 @@
 
      function UpdateSMSAlertstoIndividualCardUsers() {
         //alert("inside submit");
+        var flag = "Y";
         merchantDetail = [];
          $("#CardEdit tbody tr").each(function () {
              //debugger;
@@ -302,34 +303,39 @@
                  var mobileNo = $('#MobileNo_'+i).val();
                  //var merchantId = row[0].cells[1].textContent;
                  var vechileNo = row.find("td.vechileNo").text();
+
+                if(mobileNo.trim()=='')
+                {
+                    document.getElementById('MobileNo_error_'+i).innerHTML="Enter Mobile No.";
+                    flag="N";
+                }
+                else
+                {
+                    if (mobileNo.charAt(0) == "0") 
+                    {
+                        document.getElementById('MobileNo_error_'+i).innerHTML="Invalid Mobile No.";
+                        flag="N";
+                    }
+                    else if (mobileNo.length < 10) 
+                    {
+                        document.getElementById('MobileNo_error_'+i).innerHTML="Invalid Mobile No.";
+                        flag="N";
+                    }
+                    else if(!mobileNo.match(phoneno)) 
+                    {
+                        document.getElementById('MobileNo_error_'+i).innerHTML="Invalid Mobile No.";
+                        flag="N";
+                    }
+                    else
+                    {
+                        document.getElementById('MobileNo_error_'+i).innerHTML="";
+                    }
+                }
+
                  merchantDetail.push({ CardNo: cardNumber, MobileNo: mobileNo, VechileNo: vechileNo });
             }
          });
-        var flag = "Y";
-        //debugger;
-        //var comments = "";
-        //var ReasonId = $('#Reason :selected').val();
-        //var Status = $("input[name='Status']:checked").val();
-        //if ($("#deinstall").is(":checked"))
-        //    comments = $('#txtComments').val();
-        //else if ($("#pblminstall").is(":checked"))
-        //    comments = $('#Reason :selected').val();
-
-        //if (merchantDetail.length == 0) {
-        //    alert("Please select at least one request to process.");
-        //    return;
-        //}
-
-        //if ($("#deinstall").is(":checked") && comments.trim() == "") {
-        //    flag = "N";
-        //    $("#reason_error").html("Please enter a comment for Deinstallation");
-        //    return;
-        //}
-        //if ($("#pblminstall").is(":checked") && ReasonId == "0")  {
-        //    flag = "N";
-        //    $("#reason_error").html("Select Reason");
-        //    return;
-        //}
+                
 
         if (merchantDetail.length > 0 && flag == "Y") {
             if (confirm('Are you sure! you want to process the selected record(s)?')) {
@@ -403,4 +409,76 @@
         }
         
     }
+
+     function SubmitValidations()
+     {
+           debugger;
+           var ret=true;
+
+        if (document.getElementById("CustomerID").value.trim() == "")
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+            ret=false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            ret=false;
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").html("");
+        }
+
+        if(document.getElementById("CardNo").value.trim() != "")
+        {
+            if (document.getElementById("CardNo").value.length < 16) 
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "Invalid Card No. Min-Max 16 digits";
+                ret=false;
+            }
+            else if (!document.getElementById("CardNo").value.match(number))
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "Invalid Card No. Min-Max 16 digits";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "";
+            }
+        }
+  
+        console.log(ret);
+        return ret;
+    }
+
+    $("#CardNo").on("blur", function ()
+    {
+        //debugger;
+        if(document.getElementById("CardNo").value.trim() != "")
+        {
+            if (document.getElementById("CardNo").value.length < 16) 
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "Invalid Card No. Min-Max 16 digits";
+                ret=false;
+            }
+            else if (!document.getElementById("CardNo").value.match(number))
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "Invalid Card No. Min-Max 16 digits";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("CardNoValErrMsg").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("CardNoValErrMsg").innerHTML = "";
+        }
+
+    });
+
 </script>
