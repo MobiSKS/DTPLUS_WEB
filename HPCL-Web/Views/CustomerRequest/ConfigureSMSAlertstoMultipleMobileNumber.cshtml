@@ -184,8 +184,10 @@
                     var Mob = row.find('.mbNo').val();
                     if(Mob == ''){
                         row.find('.dlt').css("display", "none");
+                        row.find('.mbNo').attr("readonly", false);
                     }else{
                         row.find('.dlt').css("display", "block");
+                        row.find('.mbNo').attr("readonly", true);
                     }
              });
 
@@ -261,6 +263,7 @@
                         if(res.reasonList[0].status == 1){
                              document.getElementById("updateSection").style.display = "none";
                              document.getElementById("noRecord").style.display = "none";
+                             $("#CustomerDefaultVal").val('');
                              $("#successUpdate").html("");
                              $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
                              document.getElementById("successUpdate").style.display = "block";
@@ -307,30 +310,7 @@
 
                     if(res.reasonList[0].status == 1){
                             document.getElementById("alternameMobSection").deleteRow(indexS);
-                            //var table = document.getElementById("alternameMobSection");
-                            //var newIndex = table.rows.length - 1;
-                            ////var newIndex = table.rows.length + 1;
-                            //var row = table.insertRow(newIndex);
-                            
-
-                            ////console.log(index+"           "+newIndex);
-
-                            //row.innerHTML = "<tr>"
-                            //     + "<td>Mobile Number</td>"
-                            //     + "<td style='display:flex;'><input type='text' id='MobNoId_"+newIndex+"' maxlength='10' onkeypress='return isNumberKey(event)' onchange='mobNoChange(this," + (newIndex) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+newIndex+"' aria-hidden='true'></i></td>" 
-                            //     + "<td>Name</td>"
-                            //     + "<td><input type='text' id='NameId_"+newIndex+"' style='width:50%;' class='form-control nm'/></td>"
-                            //     + "<td>Designation</td>"
-                            //     + "<td><input type='text' id='DesignationId_"+newIndex+"' style='width:50%;' class='form-control desgn'/></td>"
-                            //     + "<td class='deleteButton'><button class='btn btn_primary' type='button' style='height:20px;display:none;'>Delete</button></td>"
-                            //     + "</tr>";
-
-                            //$("#successDelete").html("");
-                            //$("#successDelete").append("<span>" + res.reasonList[0].reason + "</span>");
-                            //document.getElementById("successDelete").style.display = "block";
-
-                              //var CustomerID = $("#CustomerDefaultVal").val();
-
+                          
                               $.ajax({
                                 url: "@Url.Action("ConfigureSMSAlertstoMultipleMobileNumber", "CustomerRequest")",
                                 type: "POST",
@@ -371,14 +351,12 @@
                                             var Mob = row.find('.mbNo').val();
                                             if(Mob == ''){
                                                 row.find('.dlt').css("display", "none");
+                                                row.find('.mbNo').attr("readonly", false);
                                             }else{
                                                 row.find('.dlt').css("display", "block");
+                                                row.find('.mbNo').attr("readonly", true);
                                             }
                                      });
-
-
-
-
                                 },
                                 error: function (ex) {
                                     alert('Failed' + ex);
@@ -403,18 +381,18 @@
         }
     });
 
-      function mobNoChange(o, rowSelected){
+    function mobNoChange(o, rowSelected){
         var mobNo = o.value;
 
-         if(mobNo.trim() != ''){
-            if(!mobNo.match(/^[6789]\d{9}$/)){
-                document.getElementById('mobNoErr'+rowSelected).title="Invalid Mobile Number";
-                document.getElementById('mobNoErr'+rowSelected).style.display = "block";
-                return false;
-            }else{
-                document.getElementById('mobNoErr'+rowSelected).style.display = "none";
-            }
-         }
+        if(mobNo.trim() != ''){
+        if(!mobNo.match(/^[6789]\d{9}$/)){
+            document.getElementById('mobNoErr'+rowSelected).title="Invalid Mobile Number";
+            document.getElementById('mobNoErr'+rowSelected).style.display = "block";
+            return false;
+        }else{
+            document.getElementById('mobNoErr'+rowSelected).style.display = "none";
+        }
+        }
 
     }
 </script>
