@@ -1,0 +1,406 @@
+﻿@model HPCL.Common.Models.ViewModel.Configure.SMSAlertstoIndividualCardUsersModel
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Requests</a> </li>
+            <li class="breadcrumb-item font-weight-light">SMS Alerts to Individual Card Users</li>
+        </ul>
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "formValid", @class = "toBeHiddenOnSuccess" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">SMS Alerts to Individual Card Users</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-sm-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id = "CustomerID", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number </label>
+                                        <div class="col-sm-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", @id = "CardNo", maxlength = "16", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "error", @id = "CardNoValErrMsg" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSearch">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                @*<div id="dvDetails">*@
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+
+
+                    @if (ViewBag.Reset != "Y")
+                    {
+                        @if (Model.Data.CardDetails.Count() > 0)
+                        {
+                            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                                <div class="border-1 rounded border-grey pb-0">
+                                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Information</p>
+                                    <div class="col-lg-12 col-md-12 col-12 pt-3">
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <div class="col-lg-6 col-12">
+                                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                                    <label class="font-weight-normal col-md-4 col-12">Customer Name <sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <div class="custom_select">
+                                                            @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", @id = "IndividualOrgName", @readonly="readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <div class="custom_select">
+                                                            @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", @id = "NameOnCard", @readonly="readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="CardEdit">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+                                        <th style="display:none">S.No.</th>
+                                        <th><input type="checkbox" id="checkAll" /></th>
+                                        <th>Card Number</th>
+                                        <th>Vehicle No</th>
+                                        <th>Mobile No</th>
+                                        <th>Action</th>
+                                        <th style="display:none">Mobile No</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchTableBody">
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Data.CardDetails)
+                                    {
+                                        i = i + 1;
+
+                                        <tr>
+                                            <td style="display:none" >@i</td>
+                                            <td><input type="checkbox" id="check_@i" /></td>
+                                            <td class='cardNo'>@item.cardNo</td>
+                                            <td class='vechileNo'>@item.VechileNo</td>
+                                             <td class='mobileNo'>
+                                                <input type="text" class="form-control mobileNo" maxlength="10" onkeypress="return isNumberKey(event)" name="MobileNo_@i" id="MobileNo_@i" value="@item.Mobileno" onchange='MobileNoChange(this,@i)' disabled>
+                                                <span class='field-validation-error text-danger mobileerror' id='MobileNo_error_@i'></span>
+                                             </td>
+                                             <td>
+                                                 @if(@item.Mobileno!="")
+                                                 {
+                                                   <a href='#' class='delete'>Delete</a><span class='field-validation-error text-danger '></span>
+                                                 }
+                                             </td>
+                                             <td class='mobileno1' style="display:none">@item.Mobileno</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <div class="clearfix"></div>
+
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="UpdateSMSAlertstoIndividualCardUsers();">Submit</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            if (Model.CustomerID != "")
+                            {
+                                <div class="mb-3 text-center alert alert-danger">
+                                    @Model.Message
+                                </div>
+                            }
+
+                        }
+
+                    }
+
+                   
+                </div>
+                @*</div>*@
+            </div>
+        }
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<script>
+    var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
+    var activeRow="";
+    $(document).ready(function () {
+         $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+
+    });
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+
+        $("#CardEdit tbody tr").each(function () {
+             //debugger;
+
+            var row = $(this);
+            var i = row[0].cells[0].textContent;
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                $('#MobileNo_'+i).prop('disabled', false);
+                $('#MobileNo_error_'+i).html("");
+            }
+            else
+            {
+                $('#MobileNo_'+i).prop('disabled', true);
+                $('#MobileNo_error_'+i).html("");
+            }
+         });
+    });
+
+    $('td input[type="checkbox"]').change(function () {
+      $(this).closest('tr').find('input[type="text"]').prop('disabled', !this.checked);
+      var row = $(this).closest('tr');
+      var i = row[0].cells[0].textContent;
+      var mNo = row[0].cells[6].textContent;
+      $('#MobileNo_error_'+i).html("");
+      if(!this.checked)
+      {
+          $('#MobileNo_'+i).val(mNo);
+      }
+    }).change();
+
+    $('#CustomerID').keypress(function (e)
+    {
+        if (e.keyCode == 13) // detect the enter key
+        {
+            //e.preventDefault();
+            $('#btnSearch').click();
+        }
+    });
+
+    $("#CustomerID").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerID").value.trim() == "")
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").html("");
+        }
+
+    });
+
+    $("#CardEdit").on('click', '.delete', function () {
+         currentRow = $(this).closest("tr");
+         var i = currentRow[0].cells[0].textContent;
+         var cardNumber = "";
+         var mobileNo = $('#MobileNo_'+i).val();
+         cardNumber = currentRow.find("td.cardNo").text();
+
+             var confirmText="Are you sure you want to Delete the record?";
+
+
+             if(confirm(confirmText)){
+               $.ajax({
+                     url: "@Url.Action("DeleteSMSAlertsToIndividualCardUsers", "Configure")",
+                     type: "POST",
+                     dataType: "json",
+                     data: { customerID: $("#CustomerID").val(), cardNo: cardNumber, mobileNo: mobileNo },
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.status==1)
+                        {
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("ConfCardPhone", "Configure",new { reset = "A", success = "mm", error = "ee" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                           window.location.href=url;
+                        }
+                    },
+                     error: function (ex) {
+                         alert('Failed' + ex);
+                     }
+                 });
+             }
+             else
+                 return false;
+
+     });
+
+     function UpdateSMSAlertstoIndividualCardUsers() {
+        //alert("inside submit");
+        merchantDetail = [];
+         $("#CardEdit tbody tr").each(function () {
+             //debugger;
+
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                 var i = row[0].cells[0].textContent;
+                 var cardNumber = row.find("td.cardNo").text();
+                 var mobileNo = $('#MobileNo_'+i).val();
+                 //var merchantId = row[0].cells[1].textContent;
+                 var vechileNo = row.find("td.vechileNo").text();
+                 merchantDetail.push({ CardNo: cardNumber, MobileNo: mobileNo, VechileNo: vechileNo });
+            }
+         });
+        var flag = "Y";
+        //debugger;
+        //var comments = "";
+        //var ReasonId = $('#Reason :selected').val();
+        //var Status = $("input[name='Status']:checked").val();
+        //if ($("#deinstall").is(":checked"))
+        //    comments = $('#txtComments').val();
+        //else if ($("#pblminstall").is(":checked"))
+        //    comments = $('#Reason :selected').val();
+
+        //if (merchantDetail.length == 0) {
+        //    alert("Please select at least one request to process.");
+        //    return;
+        //}
+
+        //if ($("#deinstall").is(":checked") && comments.trim() == "") {
+        //    flag = "N";
+        //    $("#reason_error").html("Please enter a comment for Deinstallation");
+        //    return;
+        //}
+        //if ($("#pblminstall").is(":checked") && ReasonId == "0")  {
+        //    flag = "N";
+        //    $("#reason_error").html("Select Reason");
+        //    return;
+        //}
+
+        if (merchantDetail.length > 0 && flag == "Y") {
+            if (confirm('Are you sure! you want to process the selected record(s)?')) {
+                $("#reason_error").html("");
+                var updateReqmodel = { CustomerID: $("#CustomerID").val(), TypeSMSAlertsToIndividualCardUsers: merchantDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitSMSAlertstoIndividualCardUsers", "Configure")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(updateReqmodel),
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.status==1)
+                        {
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("ConfCardPhone", "Configure",new { reset = "A", success = "mm", error = "ee", CustomerID="xxx", CardNo="yyy" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                            url = url.replace("xxx", encodeURIComponent($("#CustomerID").val())).replace("yyy", encodeURIComponent($("#CardNo").val()));
+                           window.location.href=url;
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
+
+    function MobileNoChange(o, rowSelected) 
+    {
+         var mobile = o.value;
+         console.log(mobile);
+
+        if(mobile.trim()=='')
+        {
+            document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Enter Mobile No.";
+            isValid = false;
+        }
+        else
+        {
+            if (mobile.charAt(0) == "0") 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if (mobile.length < 10) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else if(!mobile.match(phoneno)) 
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="Invalid Mobile No.";
+                isValid = false;
+            }
+            else
+            {
+                document.getElementById('MobileNo_error_'+rowSelected).innerHTML="";
+            }
+        }
+        
+    }
+</script>

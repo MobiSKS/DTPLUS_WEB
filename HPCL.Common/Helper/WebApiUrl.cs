@@ -360,7 +360,9 @@
         #endregion
         
         #region Configure
-        public static string getSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
+        public static string GetSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
+        public static string DeleteSmsAlertsToIndividualCardUsers = "api/dtplus/configure/delete_sms_alerts_to_individual_card_users";
+        public static string UpdateSmsAlertsToIndividualCardUsers = "api/dtplus/configure/update_sms_alerts_to_individual_card_users";
         #endregion
     }
 }

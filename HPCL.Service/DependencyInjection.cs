@@ -37,6 +37,7 @@ namespace HPCL.Service
             services.AddTransient<IAggregatorService, AggregatorService>();
             services.AddTransient<ICustomerRequestService, CustomerRequestService>();
             services.AddTransient<IFleetService, FleetService>();
+            services.AddTransient<IConfigureService, ConfigureService>();
             return services;
         }
     }
