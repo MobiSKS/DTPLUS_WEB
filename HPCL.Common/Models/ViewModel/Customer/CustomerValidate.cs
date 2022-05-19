@@ -100,6 +100,8 @@ namespace HPCL.Common.Models.ViewModel.Customer
             CustomerDateOfApplication = DateTime.Now.ToString("dd-MM-yyyy");
 
             SearchCustomerResponseGridLst = new List<SearchCustomerResponseGrid>();
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }

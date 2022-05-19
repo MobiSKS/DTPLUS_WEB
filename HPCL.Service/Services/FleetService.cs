@@ -261,7 +261,7 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornameandformnumberbyreferenceno);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getfleetcustomernameandformnumberbyreferenceno);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             UploadDocResponse searchCustomer = obj.ToObject<UploadDocResponse>();
@@ -331,7 +331,7 @@ namespace HPCL.Service.Services
 
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
-            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getunverfiedaggregatorcustomerbyformnumber);
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getunverfiedfleetcustomerbyformnumber);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
 
             return obj;
