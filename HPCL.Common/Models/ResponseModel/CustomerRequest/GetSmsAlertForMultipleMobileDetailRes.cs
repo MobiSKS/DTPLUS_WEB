@@ -5,6 +5,11 @@ namespace HPCL.Common.Models.ResponseModel.CustomerRequest
 {
     public class GetSmsAlertForMultipleMobileDetailRes : ResponseMsg
     {
+        public GetSmsAlertForMultipleMobileDetailResData data { get; set; }
+    }
+
+    public class GetSmsAlertForMultipleMobileDetailResData
+    {
         public List<CustomerMultipleMobileDetail> CustomerMultipleMobileDetail { get; set; }
         public List<CustomerDetail> CustomerDetail { get; set; }
     }
