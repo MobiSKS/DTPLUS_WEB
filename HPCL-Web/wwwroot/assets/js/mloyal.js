@@ -1091,6 +1091,24 @@ function showCardDetails() {
     else {
         document.getElementById("officialTitle_error").innerHTML = "";
     }
+
+    if (document.getElementById("KeyOffIndividualInitials").value.trim() != "")
+    {
+        if (!isNaN(document.getElementById("KeyOffIndividualInitials").value.trim()))
+        {
+            document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+            ret = false;
+        }
+        else if (!document.getElementById("KeyOffIndividualInitials").value.match(nameWithSpaceCheck))
+        {
+            document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+        }
+    }
     
     if (document.applicationForm.KeyOffFirstName.value.trim() == "") {
         document.getElementById("official_fName_error").innerHTML = "First Name is required";
