@@ -61,10 +61,27 @@ namespace HPCL.Service.Services
 
                 Model.Message = res.Message;
                 Model.Internel_Status_Code = res.Internel_Status_Code;
-                if(res!= null && res.Data!=null && res.Data.CustomerDetails.Count>0)
+                if (res != null && res.Data != null && res.Data.CustomerDetails.Count > 0 && res.Data.CustomerDetails[0].Status == 1)
                 {
                     Model.IndividualOrgName = res.Data.CustomerDetails[0].IndividualOrgName;
                     Model.NameOnCard = res.Data.CustomerDetails[0].NameOnCard;
+                }
+                else if (res != null && res.Data != null && res.Data.CustomerDetails.Count > 0 && res.Data.CustomerDetails[0].Status == 0)
+                {
+                    Model.IndividualOrgName = "";
+                    Model.NameOnCard = "";
+                    Model.Message = res.Data.CustomerDetails[0].Reason;
+                    Model.Data = new SMSAlertDetails();
+                }
+                if (Model.Data != null)
+                {
+                    foreach(CustCardDetails card in Model.Data.CardDetails)
+                    {
+                        if(string.IsNullOrEmpty(card.Mobileno))
+                        {
+                            card.Mobileno = "";
+                        }
+                    }
                 }
             }
             else
