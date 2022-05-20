@@ -368,11 +368,18 @@ namespace HPCL.Service.Services
 
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewOtcCardMerchantAllocation);
 
-            OTCCardMerchantAllocationResponse otcCardMerchantAllocationResponse = new OTCCardMerchantAllocationResponse();
+            OTCCardMerchantAllocationResponse responseData = new OTCCardMerchantAllocationResponse();
 
-            otcCardMerchantAllocationResponse = JsonConvert.DeserializeObject<OTCCardMerchantAllocationResponse>(ResponseContent);
+            responseData = JsonConvert.DeserializeObject<OTCCardMerchantAllocationResponse>(ResponseContent);
 
-            return otcCardMerchantAllocationResponse;
+            if (responseData != null && responseData.Data != null && responseData.Data.ObjMerchantTotalCardDetail != null
+                && responseData.Data.ObjMerchantTotalCardDetail.Count > 0 && responseData.Data.ObjMerchantTotalCardDetail[0].Status == 0)
+            {
+                responseData.Message = responseData.Data.ObjMerchantTotalCardDetail[0].Reason;
+                responseData.Data.ObjMerchantViewCardDetail = new List<OTCCardMerchantViewCardDetail>();
+            }
+
+            return responseData;
         }
 
         public async Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation()

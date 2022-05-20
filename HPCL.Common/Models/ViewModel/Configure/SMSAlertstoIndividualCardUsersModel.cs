@@ -33,6 +33,8 @@ namespace HPCL.Common.Models.ViewModel.Configure
     {
         public string IndividualOrgName { get; set; }
         public string NameOnCard { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
     public class CustCardDetails
     {
