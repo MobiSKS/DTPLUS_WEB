@@ -218,14 +218,18 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         [StringLength(10)]
         public string CustomerId { get; set; }
         public string NameonCard { get; set; }
+
         public string ExistingCustomerId { get; set; }
-        public string BeneficiaryName { get; set; }
-        public string RelationwithBeneficiary { get; set; }
-        public string BeneficiaryMobile { get; set; }
-        public string DrivingLicence { get; set; }
+
         public string CustomerName { get; set; }
+
         public string IncomeTaxPan { get; set; }
-        
+
+        public string BeneficiaryName { get; set; }
+
+        public string RelationwithBeneficiary { get; set; }
+
+        public string BeneficiaryMobile { get; set; }
     }
 
 
