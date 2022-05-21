@@ -62,10 +62,11 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
-        public async Task<IActionResult> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity)
+      
+        public async Task<IActionResult> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity,string reset)
         {
             var modals = await _aggregatorService.ValidateAggregatorCustomer(entity);
-
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
             return View(modals);
         }
 
