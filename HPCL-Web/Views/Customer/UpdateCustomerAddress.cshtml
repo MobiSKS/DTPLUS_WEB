@@ -14,6 +14,9 @@
         @using (Html.BeginForm("UpdateCustomerAddress", "Customer", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             <div class="w-100">
+                <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                    @Html.DisplayFor(m => m.Remarks)
+                </div>
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Update Customer Details</p>
@@ -441,7 +444,35 @@
 <script>
         $(document).ready(function ()
         {
+            if($("#dvRemarks").html().trim()!="")
+            {
+                document.getElementById("dvAddress").style.display="block";
+                document.getElementById("dvNoData").style.display = "none";
+                document.getElementById("dvNoData").innerHTML="";
+                $("#CustomerId").prop('readonly', true);
 
+                var tbentityid = document.getElementById("TBEntityId").value;
+                if(tbentityid==10)
+                {
+                    $('#lblPanText').text('');
+                    $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                    $('#btnVerify').hide();
+                    $('#lblCustPOI').show();
+                    document.getElementById('IsDuplicatePanNo').value = "1";
+                    document.getElementById("IncomeTaxPan").maxLength = 30;
+                    document.getElementById("dvPan").className = "col-md-7 col-12";
+                    $('#PanCardRemarks').val('');
+                }
+                else 
+                {
+                    $('#lblPanText').text('');
+                    $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                    $('#btnVerify').show();
+                    $('#lblCustPOI').hide();
+                    document.getElementById("IncomeTaxPan").maxLength = 10;
+                    document.getElementById("dvPan").className = "col-md-6 col-12";
+                }
+            }
         });
 
         $('select').SumoSelect({
