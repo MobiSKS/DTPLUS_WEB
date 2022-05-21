@@ -676,6 +676,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> UpdateContactPersonDetails()
+        {
+            var modals = await _customerService.UpdateContactPersonDetails();
+            return View(modals);
+        }
 
     }
 }

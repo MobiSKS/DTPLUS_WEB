@@ -1708,6 +1708,14 @@ namespace HPCL.Service.Services
 
             return model;
         }
-      
+
+        public async Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails()
+        {
+            UpdateContactPersonDetailsModel custMdl = new UpdateContactPersonDetailsModel();
+            custMdl.Remarks = "";
+
+            return custMdl;
+        }
+
     }
 }
