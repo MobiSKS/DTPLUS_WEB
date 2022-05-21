@@ -339,9 +339,9 @@ namespace HPCL.Service.Services
                 return customerProfileResponse;
             }
         }
-        public async Task<List<SearchGridResponse>> CardDetails(String CustomerId)
+        public async Task<List<SearchGridResponse>> CardDetails(String CustomerId, String CustomerTypeId)
         {
-         
+
 
             var searchBody = new Dictionary<string, string>
             {
@@ -357,7 +357,7 @@ namespace HPCL.Service.Services
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-               // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
                 var contentString = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardUrl);
@@ -366,8 +366,18 @@ namespace HPCL.Service.Services
                 var jarr = obj["Data"].Value<JArray>();
                 List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
 
+                if (CustomerTypeId == "927")//DriverCard
+                {
+                    if (searchList != null && searchList.Count > 0)
+                    {
+                        foreach (SearchGridResponse item in searchList)
+                        {
+                            item.VechileNo = "DRIVER CARD";
+                        }
+                    }
+                }
 
-               // List<SearchGridResponse> searchList = JsonConvert.DeserializeObject<List<SearchGridResponse>>(contentString);
+                // List<SearchGridResponse> searchList = JsonConvert.DeserializeObject<List<SearchGridResponse>>(contentString);
                 return searchList;
             }
         }

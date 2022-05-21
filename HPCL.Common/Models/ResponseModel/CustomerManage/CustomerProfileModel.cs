@@ -81,6 +81,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
           
         }
         public string CustomertypeId { get; set; }
+        public string CustomerSubTypeID { get; set; }
+        
         public string CustomerZonalOfficeID { get; set; }
         public string SalesArea { get; set; }
 
