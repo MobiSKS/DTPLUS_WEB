@@ -243,10 +243,10 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
 
-        public async Task<IActionResult> ValidateNewCustomer(CustomerValidate entity)
+        public async Task<IActionResult> ValidateNewCustomer(CustomerValidate entity,string reset)
         {
             var modals = await _customerService.ValidateNewCustomer(entity);
-
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
             return View(modals);
         }
 

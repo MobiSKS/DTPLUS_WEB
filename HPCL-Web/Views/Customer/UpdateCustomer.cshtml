@@ -479,7 +479,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
                                             <span class="error" id="KeyOffIndividualInitials_error"></span>
                                         </div>
                                     </div>
@@ -493,7 +493,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
                                         <div class="col-md-7 col-12">
-                                           @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('nodefaultDate','KeyOfficialDOB_error');" })
+                                           @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('KeyOfficialDOB','KeyOfficialDOB_error');" })
                                             <span class="error" id="KeyOfficialDOB_error"></span>
                                         </div>
                                     </div>
@@ -562,7 +562,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" , @onchange = "validateDate('nodefaultDate','KeyOffDateOfAnniversary_error');"})
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" , @onchange = "validateDate('KeyOffDateOfAnniversary','KeyOffDateOfAnniversary_error');"})
                                              <span class="error" id="KeyOffDateOfAnniversary_error"></span>
                                         </div>
                                     </div>
@@ -1618,6 +1618,7 @@
         }
 
         document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
+        panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
 
         if ($('#CustomerIncomeTaxPan').val().match(pancard)) 
         {
@@ -1632,16 +1633,41 @@
             return (false);
         }
 
-        if (customerTbentityid == 2) 
+        //solo Propritorship 4th Char Pan should be 'P'--> 2
+        //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
+        //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
+        //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
+        if (customerTbentityid == 2 || customerTbentityid == 3|| customerTbentityid == 4|| customerTbentityid == 8) 
         {
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') 
+            if (customerTbentityid == 2 && forthdigitPan != 'P')
             {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
-                 $("#btnshowregAddress").attr("disabled", false);
-                 return (false);
+                $("#btnshowregAddress").attr("disabled", false);
+                return (false);
+            }
+            else if (customerTbentityid == 3 && forthdigitPan != 'C')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                $("#btnshowregAddress").attr("disabled", false);
+                return (false);
+            }
+            else if (customerTbentityid == 4 && forthdigitPan != 'H')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                $("#btnshowregAddress").attr("disabled", false);
+                return (false);
+            }
+            else if (customerTbentityid == 8 && forthdigitPan != 'A')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                $("#btnshowregAddress").attr("disabled", false);
+                return (false);
             }
             else 
             {
@@ -3059,5 +3085,132 @@ else
     }
 
   });
+       $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim())> 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+        }
 
+      });
+      $("#FleetSizeNoOfVechileOwnedLCV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+        }
+
+      });
+    $("#FleetSizeNoOfVechileOwnedMUVSUV").on("blur", function ()
+       {
+            //debugger;
+        if (document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+        }
+
+      });
+
+    
+       $("#FleetSizeNoOfVechileOwnedCarJeep").on("blur", function ()
+       {
+            //debugger;
+       if (document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim() != "")
+        {
+            if (!(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim().match(number)))
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim()) > 250)
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+        }
+
+      });
+
+      $("#KeyOffIndividualInitials").on("blur", function () 
+      {
+        //debugger;
+        if (document.getElementById("KeyOffIndividualInitials").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("KeyOffIndividualInitials").value.trim())) {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else if (!document.getElementById("KeyOffIndividualInitials").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+            }
+        }
+
+     });
 </script>

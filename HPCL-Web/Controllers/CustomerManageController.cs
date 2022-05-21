@@ -49,11 +49,11 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CardDetails(String CustomerId)
+        public async Task<JsonResult> CardDetails(String CustomerId, String CustomerTypeId)
         {
             //List<SearchGridResponse> customerCardInfo = new List<SearchGridResponse>();
 
-            var customerCardInfo = await _customerManageService.CardDetails(CustomerId);
+            var customerCardInfo = await _customerManageService.CardDetails(CustomerId, CustomerTypeId);
             ModelState.Clear();
             return Json(customerCardInfo);
         }
