@@ -25,7 +25,7 @@
                                             <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +69,7 @@
                                         <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
                                     </div>
                                     <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                        <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="exportReportToExcel()">UPLOAD EXCEL</a>
+                                        <a class="btn btn_primary" href="#aa" id="btnUploadExcel">UPLOAD EXCEL</a>
                                     </div>
                                 </div>
                             </fieldset>
@@ -143,11 +143,9 @@
 @using Microsoft.AspNetCore.Http;
 <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
-@*<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
-*@
 <script>
 
-      $('.restrictPaste').on('paste', function (event) {
+    $('.restrictPaste').on('paste', function (event) {
         if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
             event.preventDefault();
         }
@@ -604,86 +602,35 @@
         }
     }
 
-    function exportReportToExcel() {
+    $("#btnUploadExcel").on('click', function (e) {
 
-        // Variable to store the final csv data
-        var csv_data = [];
+        var custId = $("#CustomerDefaultVal").val();
 
-        // Get each row data
-        var rows = document.getElementsByTagName('tr');
-
-        if (rows.length > 0) {
-
-            for (var i = 0; i < rows.length; i++) {
-
-                // Get each column data
-                var cols = rows[i].querySelectorAll('td,th');
-
-                // Stores each csv row data
-                var csvrow = [];
-                for (var j = 0; j < cols.length; j++) {
-
-                    //cols[j] = cols[j].slice(1);
-                    // Get the text data of each cell
-                    // of a row and push it to csvrow
-                    //csvrow.push(cols[j].innerHTML);
-                    console.log("cols[j]", cols[j]);
-                    const selectElem = cols[j].querySelector('input');
-                    const cardSpan = cols[j].querySelector('span');
-
-                    console.log("cardSpan       :",cardSpan);
-                    //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
-                    //console.log("sel",sel);
-                    if (selectElem) {
-                        csvrow.push(selectElem.value);
-                    }else if(cardSpan){
-                        csvrow.push(cardSpan.innerText);
-                    }else {
-                        csvrow.push(cols[j].innerText);
-                    }
-                    
+        var flag = "Y";
+        if(custId.trim()==''){
+            $("#CustomerIdErr").attr("style", "display:block");
+            $("#CustomerIdErr").html("Customer ID should not be left empty");
+            flag = "N";
+        }
+        else{
+            if(custId.trim()!=''){
+                if (!custId.match(mappedCustomerId)){
+                    $("#CustomerIdErr").attr("style", "display:block");
+                    $("#CustomerIdErr").html("Invalid Customer ID");
+                    flag = "N";
                 }
-                //console.log(i, csvrow);
-                //console.log(csvrow);
-                // Combine each column value with comma
-                csv_data.push(csvrow.join(","));
             }
+        }
 
-            // Combine each row data with new line character
-            csv_data = csv_data.join('\n');
+        if (flag == "N")
+            e.preventDefault();
 
-            // Call this function to download csv file
-            downloadCSVFile(csv_data);
-    }
-}
-
-    function downloadCSVFile(csv_data) {
-
-        // Create CSV file object and feed
-        // our csv_data into it
-        CSVFile = new Blob([csv_data], {
-            type: "text/csv",
-            width: "900"
-        });
-
-        // Create to temporary link to initiate
-        // download process
-        var temp_link = document.createElement('a');
-
-        // Download csv file
-        temp_link.download = "SetSaleLimit.csv";
-        var url = window.URL.createObjectURL(CSVFile);
-        temp_link.href = url;
-
-        // This link should not be displayed
-        temp_link.style.display = "none";
-        document.body.appendChild(temp_link);
-
-        // Automatically click the link to
-        // trigger download
-        temp_link.click();
-        document.body.removeChild(temp_link);
-    }
+        if(flag == "Y"){
+            var url = '@Html.Raw(@Url.Action("SetCardLimitViaExcelFileUpload", new { customerId = "dd" }))';
+            url = url.replace("dd", encodeURIComponent(custId));
+            $(this).attr('href', url);
+        }
+    });
 </script>
 
 <style>
