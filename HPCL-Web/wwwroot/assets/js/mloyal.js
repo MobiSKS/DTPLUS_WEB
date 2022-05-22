@@ -206,7 +206,7 @@ function showregAddress() {
         ret = false;
     }
     else {
-        document.getElementById("individualName_error").innerHTML = "";
+        document.getElementById("salutaion_error").innerHTML = "";
     }
 
 
