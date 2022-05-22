@@ -44,5 +44,7 @@ namespace HPCL.Service.Interfaces
         Task<UpdateCustomerAddress> UpdateCustomerAddress();
         Task<UpdateCustomerAddress> UpdateCustomerAddress(UpdateCustomerAddress model);
         Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails();
+        Task<UpdateContactPersonResponseDetails> GetUpdateContactPersonDetails(string CustomerId);
+        Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails(UpdateContactPersonDetailsModel model);
     }
 }

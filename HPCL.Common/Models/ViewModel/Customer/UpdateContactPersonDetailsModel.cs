@@ -10,38 +10,38 @@ namespace HPCL.Common.Models.ViewModel.Customer
 {
     public class UpdateContactPersonDetailsModel : BaseEntity
     {
-        public string CustomerId { get; set; }
+        public string CustomerID { get; set; }
 
         [Required(ErrorMessage = "Title is Required")]
-        public string KeyOffTitle { get; set; }
+        public string KeyOfficialTitle { get; set; }
 
         [Required(ErrorMessage = "First Name is Required")]
-        public string KeyOffFirstName { get; set; }
+        public string KeyOfficialFirstName { get; set; }
 
-        public string KeyOffIndividualInitials { get; set; }
-        public string KeyOffLastName { get; set; }
-        public string KeyOffMiddleName { get; set; }
+        public string KeyOfficialIndividualInitial { get; set; }
+        public string KeyOfficialLastName { get; set; }
+        public string KeyOfficialMiddleName { get; set; }
         [Required(ErrorMessage = "Designation is Required")]
-        public string KeyOffDesignation { get; set; }
+        public string KeyOfficialDesignation { get; set; }
         public string KeyOffFaxCode { get; set; }
-        public string KeyOffFax { get; set; }
-
-        public string KeyOffDialCode { get; set; }
-
+        public string KeyOffFaxPart2 { get; set; }
+        public string KeyOfficialFax { get; set; }        
         public string KeyOffPhoneCode { get; set; }
+        public string KeyOffPhonePart2 { get; set; }
 
         //[Required(ErrorMessage = "Phone Number is Required under communication Address")]
         //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
-        public string KeyOffPhoneNumber { get; set; }
+        public string KeyOfficialPhoneNo { get; set; }
 
-        [Required(ErrorMessage = "Mobile Phone number is Required under communication Address")]
+        [Required(ErrorMessage = "Mobile Phone number is Required")]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Numeric value only")]
-        public string KeyOffMobileNumber { get; set; }
+        public string KeyOfficialMobile { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string KeyOffEmail { get; set; }
-        public string KeyOffDateOfAnniversary { get; set; }
+        public string KeyOfficialEmail { get; set; }
+        public string KeyOfficialDOA { get; set; }
         public string KeyOfficialDOB { get; set; }
         public string Remarks { get; set; }
+        public int Internel_Status_Code { get; set; }
     }
 }

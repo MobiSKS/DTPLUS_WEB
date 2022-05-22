@@ -1716,6 +1716,128 @@ namespace HPCL.Service.Services
 
             return custMdl;
         }
+        public async Task<UpdateContactPersonResponseDetails> GetUpdateContactPersonDetails(string CustomerId)
+        {
+            UpdateContactPersonResponseDetails custMdl = new UpdateContactPersonResponseDetails();
+            custMdl.Message = "";
+
+            var request = new EnrollToTransportManagementSystemModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getUpdateContactPersonDetails);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<UpdateContactPersonResponseDetails> lst = jarr.ToObject<List<UpdateContactPersonResponseDetails>>();
+
+            if (lst != null && lst.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(lst[0].FirstName))
+                {
+                    custMdl = lst[0];
+
+                    if (!string.IsNullOrEmpty(custMdl.Ph_Office))
+                    {
+                        string[] subs = custMdl.Ph_Office.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.KeyOffPhoneCode = subs[0].ToString();
+                            custMdl.KeyOffPhonePart2 = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.KeyOffPhonePart2 = custMdl.Ph_Office;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(custMdl.Fax))
+                    {
+                        string[] subs = custMdl.Fax.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.KeyOffFaxCode = subs[0].ToString();
+                            custMdl.KeyOffFaxPart2 = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.KeyOffFaxPart2 = custMdl.Fax;
+                        }
+                    }
+                }
+                else
+                {
+                    custMdl.Message = lst[0].Reason;
+                    custMdl.FirstName = "";
+                }
+            }
+            else
+            {
+                custMdl.Message = obj["Message"].ToString();
+                custMdl.FirstName = "";
+            }
+
+            return custMdl;
+        }
+        public async Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails(UpdateContactPersonDetailsModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.KeyOfficialPhoneNo = (string.IsNullOrEmpty(model.KeyOffPhoneCode) ? "" : model.KeyOffPhoneCode) + "-" + (string.IsNullOrEmpty(model.KeyOffPhonePart2) ? "" : model.KeyOffPhonePart2);
+            model.KeyOfficialFax = (string.IsNullOrEmpty(model.KeyOffFaxCode) ? "" : model.KeyOffFaxCode) + "-" + (string.IsNullOrEmpty(model.KeyOffFaxPart2) ? "" : model.KeyOffFaxPart2);
+
+            if (!string.IsNullOrEmpty(model.KeyOfficialEmail))
+            {
+                model.KeyOfficialEmail = model.KeyOfficialEmail.ToLower();
+            }
+
+            if (!string.IsNullOrEmpty(model.KeyOfficialDOA))
+            {
+                string KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(model.KeyOfficialDOA);
+            }
+
+            if (!string.IsNullOrEmpty(model.KeyOfficialDOB))
+            {
+                string KeyOfficialDOB = await _commonActionService.changeDateFormat(model.KeyOfficialDOB);
+            }
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateContactPersonDetails);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            CustomerAddressUpdateResponse customerResponse = JsonConvert.DeserializeObject<CustomerAddressUpdateResponse>(response, settings);
+
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null)
+                    model.Remarks = customerResponse.Data[0].Reason;
+                else
+                    model.Remarks = customerResponse.Message;
+            }
+            else
+            {
+                model.Remarks = customerResponse.Data[0].Reason;
+            }
+
+            return model;
+        }
 
     }
 }

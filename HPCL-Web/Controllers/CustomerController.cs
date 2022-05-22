@@ -681,6 +681,25 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.UpdateContactPersonDetails();
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> GetUpdateContactPersonDetails(string CustomerId)
+        {
+            var modals = await _customerService.GetUpdateContactPersonDetails(CustomerId);
+            return Json(new { customer = modals });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateContactPersonDetails(UpdateContactPersonDetailsModel model)
+        {
+
+            var modals = await _customerService.UpdateContactPersonDetails(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectUpdateAddress", new { Message = model.Remarks });
+            }
+
+            return View(modals);
+        }
 
     }
 }

@@ -6,8 +6,12 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","CustomerRequest")" class="text_primary">Requests</a> </li>
             <li class="breadcrumb-item font-weight-light">Update Customer Details</li>
         </ul>
-        <form>
+        @using (Html.BeginForm("UpdateContactPersonDetails", "Customer", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
             <div class="w-100">
+                <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                    @Html.DisplayFor(m => m.Remarks)
+                </div>
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Update Customer Details</p>
@@ -18,13 +22,14 @@
                                         <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id = "CustomerID", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center mt-0">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button">Search</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSearch" onclick="ViewCustomerDetails()">Search</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -37,158 +42,644 @@
                     </div>
                 </div>
 
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-3">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Individual Initials <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="text" value="">
+                <div class="clearfix"></div>
+                <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center">
+                </div>
+
+                <div id="dvDetails" style="display:none">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
+                            <div class="col-lg-12 col-md-12 col-12 pt-3">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Individual Initials <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialIndividualInitial, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="KeyOffIndividualInitials_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">First Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-12 col-md-4">
-                                                    <select class="form-control">
-                                                        <option>Title</option>
-                                                        <option>Mr</option>
-                                                        <option>Ms</option>
-                                                        <option>M/s</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12 col-md-8">
-                                                    <div class="custom_select">
-                                                        <input class="form-control" id="" name="" type="text" value="">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">First Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-4">
+                                                        @Html.DropDownListFor(x => x.KeyOfficialTitle, new[]{
+                                                    new SelectListItem(){ Text = "Title", Value = "-1"},
+                                                    new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                    new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                    new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                    }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                    <span class="error" id="officialTitle_error"></span>
+                                                    <div class="col-12 col-md-8">
+                                                        <div class="custom_select">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialFirstName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                            <span class="error" id="official_fName_error"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Middle Name </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Name </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Designation <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="city" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Date of Birth <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="date" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph(Office) <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input class="form-control" id="" name="" type="text" value="">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Middle Name </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="KeyOffMiddleName_error"></span>
                                                 </div>
-                                                <div class="col-8 pl-0">
-                                                    <input class="form-control" id="" name="" type="text" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Name </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialLastName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="KeyOffLastName_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <input class="form-control" id="" name="" type="text" value="">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Designation <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="official_designation_error"></span>
                                                 </div>
-                                                <div class="col-8 pl-0">
-                                                    <input class="form-control" id="" name="" type="text" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Date of Birth <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('KeyOfficialDOB','KeyOfficialDOB_error');" })
+                                                    <span class="error" id="KeyOfficialDOB_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Ph(Office) <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="KeyOffPhoneCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.KeyOffPhonePart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="KeyOffPhonePart2_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="KeyOffFaxCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.KeyOffFaxPart2, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="KeyOffFaxPart2_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Date of Anniversary </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialDOA, new { @id = "KeyOfficialDOA", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" , @onchange = "validateDate('KeyOfficialDOA','KeyOfficialDOA_error');"})
+                                                    <span class="error" id="KeyOfficialDOA_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
+                                                    <span class="error" id="KeyOfficialEmail_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.KeyOfficialMobile, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="official_mobile_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Date of Anniversary </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="" type="date" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="mobile" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                    <div class="px-2">
-                        <button class="btn btn_primary" type="button">Update</button>
-                    </div>
-                    <div class="px-2">
-                        <button class="btn btn_primary" type="button">Reset</button>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="submit">UPDATE</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" onclick="ViewCustomerDetails()">RESET</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </form>
+        }
         <div class="clearfix"></div>
     </div>
 </div>
 <div class="clearfix"></div>
+<script>
+    $('#CustomerID').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            e.preventDefault();
+            $('#btnSearch').click();
+        }
+    });
+
+    $('select').SumoSelect({
+            placeholder: '--Select--',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
+    $("#CustomerID").on("blur", function ()
+    {
+        if ($("#CustomerID").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $('#CustomerIdValErrMsg').html("");
+        }
+
+    })
+
+    function ViewCustomerDetails()
+    {
+            debugger;
+            if ($("#CustomerID").val().trim() == "")
+            {
+                $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+                return false;
+            }
+            else if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+               $('#CustomerIdValErrMsg').html("");
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("GetUpdateContactPersonDetails", "Customer")",
+                type: "POST",
+                dataType: "JSON",
+                data: { CustomerId: $("#CustomerID").val() },
+                success: function (res)
+                {
+                    console.log("customer", res.customer);
+
+                    if(res.customer.firstName!="")
+                    {
+                        document.getElementById("dvDetails").style.display="block";
+                        document.getElementById("dvNoData").style.display = "none";
+                        document.getElementById("dvNoData").innerHTML="";
+                        $("#CustomerID").prop('readonly', true);
+
+                        $('#KeyOfficialIndividualInitial').val(res.customer.individualInitial);
+                        $('#KeyOfficialFirstName').val(res.customer.firstName);
+                        $('#KeyOfficialMiddleName').val(res.customer.middleName);
+                        $('#KeyOfficialLastName').val(res.customer.lastName);
+                        $('#KeyOfficialDesignation').val(res.customer.designation);
+                        $('#KeyOfficialEmail').val(res.customer.email);
+                        $('#KeyOfficialMobile').val(res.customer.mobile);
+
+                        $('#KeyOfficialTitle')[0].sumo.selectItem(res.customer.title);
+
+                        $('#KeyOffPhoneCode').val(res.customer.keyOffPhoneCode);
+                        $('#KeyOffPhonePart2').val(res.customer.keyOffPhonePart2);
+                        $('#KeyOffFaxCode').val(res.customer.keyOffFaxCode);
+                        $('#KeyOffFaxPart2').val(res.customer.keyOffFaxPart2);
+
+                    }
+                    else
+                    {
+                        document.getElementById("dvDetails").style.display = "none";
+                        document.getElementById("dvNoData").style.display = "block";
+                        document.getElementById("dvNoData").innerHTML= res.customer.message;
+                        $("#CustomerID").prop('readonly', false);
+                    }
+
+
+                 },
+                 error: function (ex)
+                 {
+                    alert('Failed' + ex);
+                    document.getElementById("dvDetails").style.display = "none";
+                    document.getElementById("dvNoData").style.display = "block";
+                    document.getElementById("dvNoData").innerHTML= res.customer.message;
+                 }
+
+            });
+            clearValidations();
+        };
+
+        function clearValidations()
+        {
+            document.getElementById("KeyOffIndividualInitials_error").innerHTML="";
+            document.getElementById("officialTitle_error").innerHTML="";
+            document.getElementById("official_fName_error").innerHTML="";
+            document.getElementById("KeyOffMiddleName_error").innerHTML="";
+            document.getElementById("KeyOffLastName_error").innerHTML="";
+            document.getElementById("official_designation_error").innerHTML="";
+
+            document.getElementById("KeyOfficialDOB_error").innerHTML="";
+            document.getElementById("KeyOffPhoneCode_error").innerHTML="";
+            document.getElementById("KeyOffPhonePart2_error").innerHTML="";
+            document.getElementById("KeyOffFaxCode_error").innerHTML="";
+            document.getElementById("KeyOffFaxPart2_error").innerHTML="";
+            document.getElementById("KeyOfficialDOA_error").innerHTML="";
+            document.getElementById("KeyOfficialEmail_error").innerHTML="";
+            document.getElementById("official_mobile_error").innerHTML="";
+        }
+
+       $("#KeyOfficialMobile").on("blur", function ()
+       {
+            //debugger;
+            var OfficialMobile = document.getElementById("KeyOfficialMobile").value.trim();
+            if (OfficialMobile == "") 
+            {
+                document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
+                return false;
+            }
+            else if (OfficialMobile.substring(0, 1) == "0") 
+            {
+                document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                return false;
+            }
+            else if (OfficialMobile.length < 10) 
+            {
+                document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                return false;
+            }
+            else if (!OfficialMobile.match(phoneno)) 
+            {
+                document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("official_mobile_error").innerHTML = "";
+            }
+
+        });
+
+        $("#KeyOfficialEmail").on("blur", function () 
+        {
+            //debugger;
+            var OfficialEmail = document.getElementById("KeyOfficialEmail").value.trim();
+            if (OfficialEmail != "") 
+            {
+                if (!OfficialEmail.match(email)) 
+                {
+                    document.getElementById("KeyOfficialEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                    return (false);
+                }
+                else 
+                {
+                    document.getElementById("KeyOfficialEmail_error").innerHTML = "";
+                }
+            }
+        });
+
+      $("#KeyOfficialIndividualInitial").on("blur", function () 
+      {
+        //debugger;
+        if (document.getElementById("KeyOfficialIndividualInitial").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("KeyOfficialIndividualInitial").value.trim())) {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else if (!document.getElementById("KeyOfficialIndividualInitial").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+            }
+        }
+
+     });
+
+    $("#KeyOfficialTitle").change(function () {
+        var id = this.value;
+
+        if (id != -1) {
+            $("#officialTitle_error").html("");
+        }
+    });
+
+    $("#KeyOfficialFirstName").on("blur", function () {
+            //debugger;
+            if (document.getElementById("KeyOfficialFirstName").value.trim() == "") 
+            {
+                document.getElementById("official_fName_error").innerHTML = "First Name is required";
+                return (false);
+            }
+            else 
+            {
+                if (!isNaN(document.getElementById("KeyOfficialFirstName").value.trim())) 
+                {
+                    document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                    return false;
+                }
+                else if (!document.getElementById("KeyOfficialFirstName").value.match(nameWithSpaceCheck)) 
+                {
+                    document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                    return false;
+                }
+                else 
+                {
+                    document.getElementById("official_fName_error").innerHTML = "";
+                }
+            }
+
+        });
+
+     $("#KeyOfficialMiddleName").on("blur", function () {
+            //debugger;
+            if (document.getElementById("KeyOfficialMiddleName").value.trim() != "")
+            {
+                if (!isNaN(document.getElementById("KeyOfficialMiddleName").value.trim()))
+                {
+                    document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                    return false;
+                }
+                else if (!document.getElementById("KeyOfficialMiddleName").value.match(nameWithSpaceCheck))
+                {
+                    document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+                }
+            }
+            else
+            {
+                document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+            }
+
+        });
+
+        $("#KeyOfficialLastName").on("blur", function () {
+            //debugger;
+            if (document.getElementById("KeyOfficialLastName").value.trim() != "")
+            {
+                if (!isNaN(document.getElementById("KeyOfficialLastName").value.trim()))
+                {
+                   document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                   return false;
+                }
+                else if (!document.getElementById("KeyOfficialLastName").value.match(nameWithSpaceCheck))
+                {
+                    document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("KeyOffLastName_error").innerHTML = "";
+                }
+            }
+            else
+            {
+                document.getElementById("KeyOffLastName_error").innerHTML = "";
+            }
+
+        });
+
+         $("#KeyOfficialDesignation").on("blur", function () 
+         {
+            //debugger;
+            var designation = document.getElementById("KeyOfficialDesignation").value.trim();
+            if (designation == "") {
+                document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
+                return (false);
+            }
+            else 
+            {
+                if (!isNaN(document.getElementById("KeyOfficialDesignation").value.trim())) {
+                    document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
+                    return false;
+                }
+                else if (!document.getElementById("KeyOfficialDesignation").value.match(nameWithSpaceCheck)) 
+                {
+                    document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
+                    return false;
+                }
+                else 
+                {
+                    document.getElementById("official_designation_error").innerHTML = "";
+                }
+            }
+
+        });
+
+        $("#KeyOffPhoneCode").on("blur", function ()
+        {
+            //debugger;
+            var stdCode = document.getElementById("KeyOffPhoneCode").value.trim();
+            if (stdCode != "")
+            {
+
+                if (stdCode.length < 2 || stdCode.length > 4)
+                {
+                    document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+                    return false;
+                }
+                else
+                {
+                    if (!stdCode.match(number))
+                    {
+                        document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+                    }
+                }
+            }
+            else
+            {
+                document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+            }
+
+      });
+
+      $("#KeyOffPhonePart2").on("blur", function ()
+       {
+            //debugger;
+            var phno = document.getElementById("KeyOffPhonePart2").value.trim();
+            if (phno != "")
+            {
+                if (phno.charAt(0) == "0")
+                {
+                    document.getElementById("KeyOffPhonePart2_error").innerHTML = "Invalid Phone Number";
+                    return false;
+                }
+                else if (phno.length < 6 || phno.length > 8)
+                {
+                    document.getElementById("KeyOffPhonePart2_error").innerHTML = "Invalid Phone Number";
+                    return false;
+                }
+                else
+                {
+                    if (!phno.match(number))
+                    {
+                        document.getElementById("KeyOffPhonePart2_error").innerHTML = "Invalid Phone Number";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffPhonePart2_error").innerHTML = "";
+                    }
+                }
+
+            }
+            else
+            {
+                document.getElementById("KeyOffPhonePart2_error").innerHTML = "";
+            }
+
+      });
+
+       $("#KeyOffFaxCode").on("blur", function ()
+       {
+            //debugger;
+        var faxCode = document.getElementById("KeyOffFaxCode").value.trim();
+        if (faxCode != "") {
+            if (faxCode.length < 2 || faxCode.length > 4) {
+                document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+                return false;
+            }
+            else
+            {
+                if (!faxCode.match(number))
+                {
+                    document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+                    return false;
+                }
+                else {
+                    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+                }
+            }
+
+        }
+        else {
+            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+        }
+
+      });
+
+      $("#KeyOffFaxPart2").on("blur", function ()
+      {
+            //debugger;
+        var faxphno = document.getElementById("KeyOffFaxPart2").value.trim();
+        if (faxphno != "") {
+            if (faxphno.charAt(0) == "0") {
+                document.getElementById("KeyOffFaxPart2_error").innerHTML = "Invalid Fax Number";
+                return false;
+            }
+            else if (faxphno.length < 6 || faxphno.length > 8) {
+                document.getElementById("KeyOffFaxPart2_error").innerHTML = "Invalid Fax Number";
+                return false;
+            }
+            else
+            {
+                if (!faxphno.match(number))
+                {
+                    document.getElementById("KeyOffFaxPart2_error").innerHTML = "Invalid Fax Number";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("KeyOffFaxPart2_error").innerHTML = "";
+                }
+            }
+
+        }
+        else
+        {
+            document.getElementById("KeyOffFaxPart2_error").innerHTML = "";
+        }
+
+      });
+
+</script>
