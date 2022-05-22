@@ -139,7 +139,7 @@
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Ph(Office) <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-4 col-12">Ph(Office) </label>
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
@@ -156,7 +156,7 @@
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax </label>
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
@@ -226,7 +226,7 @@
                     <div class="clearfix"></div>
                     <div class="d-flex align-items-center justify-content-center mt-3">
                         <div class="px-2">
-                            <button class="btn btn_primary" type="submit">UPDATE</button>
+                            <button class="btn btn_primary" type="submit" onclick="return SubmitValidations()">UPDATE</button>
                         </div>
                         <div class="px-2">
                             <button class="btn btn_primary" type="button" onclick="ViewCustomerDetails()">RESET</button>
@@ -681,5 +681,66 @@
         }
 
       });
+
+      function SubmitValidations()
+      {
+        debugger;
+        var ret = true;
+
+        if (document.getElementById("KeyOfficialIndividualInitial").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("KeyOfficialIndividualInitial").value.trim())) 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                ret = false;
+            }
+            else if (!document.getElementById("KeyOfficialIndividualInitial").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+            }
+        }
+
+        if (document.getElementById("KeyOfficialTitle").value == "-1") 
+        {
+            document.getElementById("officialTitle_error").innerHTML = "Select Title";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("officialTitle_error").innerHTML = "";
+        }
+
+        if (document.getElementById("KeyOfficialFirstName").value.trim() == "") 
+        {
+            document.getElementById("official_fName_error").innerHTML = "First Name is required";
+            ret = false;
+        }
+        else 
+        {
+            if (!isNaN(document.getElementById("KeyOfficialFirstName").value.trim())) 
+            {
+                document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                ret = false;
+            }
+            else if (!document.getElementById("KeyOfficialFirstName").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("official_fName_error").innerHTML = "";
+            }
+        }
+
+        
+        console.log(ret);
+        return ret;
+    }
 
 </script>
