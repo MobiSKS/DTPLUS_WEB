@@ -1799,16 +1799,23 @@ namespace HPCL.Service.Services
                 model.KeyOfficialEmail = model.KeyOfficialEmail.ToLower();
             }
 
-            if (!string.IsNullOrEmpty(model.KeyOfficialDOA))
+            if (!string.IsNullOrEmpty(model.KeyDOA))
             {
-                string KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(model.KeyOfficialDOA);
+                model.KeyOfficialDOA = await _commonActionService.changeDateFormat(model.KeyDOA);
+            }
+            else
+            {
+                model.KeyOfficialDOA = "1900-01-01";
             }
 
-            if (!string.IsNullOrEmpty(model.KeyOfficialDOB))
+            if (!string.IsNullOrEmpty(model.KeyDOB))
             {
-                string KeyOfficialDOB = await _commonActionService.changeDateFormat(model.KeyOfficialDOB);
+                model.KeyOfficialDOB = await _commonActionService.changeDateFormat(model.KeyDOB);
             }
-
+            else
+            {
+                model.KeyOfficialDOB = "1900-01-01";
+            }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.updateContactPersonDetails);
@@ -1826,14 +1833,25 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                {
                     model.Remarks = customerResponse.Data[0].Reason;
-                else
-                    model.Remarks = customerResponse.Message;
+                    model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+                }
             }
             else
             {
-                model.Remarks = customerResponse.Data[0].Reason;
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0 && customerResponse.Data[0].Status != 1)
+                {
+                    model.Remarks = customerResponse.Data[0].Reason;
+                    model.Status = customerResponse.Data[0].Status;
+                    model.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
+                }
+                else if (customerResponse.Data != null && customerResponse.Data.Count > 0 && customerResponse.Data[0].Status == 1)
+                {
+                    model.Remarks = customerResponse.Data[0].Reason;
+                    model.Status = customerResponse.Data[0].Status;
+                }
             }
 
             return model;

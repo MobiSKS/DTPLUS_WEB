@@ -40,8 +40,11 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string KeyOfficialEmail { get; set; }
         public string KeyOfficialDOA { get; set; }
+        public string KeyDOA { get; set; }
         public string KeyOfficialDOB { get; set; }
+        public string KeyDOB { get; set; }
         public string Remarks { get; set; }
         public int Internel_Status_Code { get; set; }
+        public int Status { get; set; }
     }
 }

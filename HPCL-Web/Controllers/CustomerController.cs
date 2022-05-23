@@ -695,10 +695,15 @@ namespace HPCL_Web.Controllers
 
             if (model.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirectUpdateAddress", new { Message = model.Remarks });
+                return RedirectToAction("SuccessUpdateContactPersonDetails", new { Message = model.Remarks });
             }
 
             return View(modals);
+        }
+        public async Task<IActionResult> SuccessUpdateContactPersonDetails(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }
