@@ -183,7 +183,7 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse.Data != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
                     customerModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     customerModel.Remarks = customerResponse.Message;
@@ -192,6 +192,21 @@ namespace HPCL.Service.Services
                 customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
                 customerModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
                 customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(customerModel.ZonalOffice));
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                {
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+                    if (customerResponse.Data[0].Status != 1)
+                    {
+                        customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
+                        customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                        customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+                        customerModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                        customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(customerModel.ZonalOffice));
+                    }
+                }
             }
 
             return customerModel;

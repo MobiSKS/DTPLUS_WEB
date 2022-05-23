@@ -39,6 +39,8 @@ namespace HPCL.Common.Models.ResponseModel.DriverCardCustomer
         public string TotalAllocatedCards { get; set; }
         public string TotalMappedCards { get; set; }
         public string TotalUnmappedCards { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 
 }

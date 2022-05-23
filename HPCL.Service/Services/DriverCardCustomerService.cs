@@ -398,11 +398,18 @@ namespace HPCL.Service.Services
 
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewDriverCardMerchantAllocation);
 
-            DriverCardMerchantAllocationResponse driverCardMerchantAllocationResponse = new DriverCardMerchantAllocationResponse();
+            DriverCardMerchantAllocationResponse responseData = new DriverCardMerchantAllocationResponse();
 
-            driverCardMerchantAllocationResponse = JsonConvert.DeserializeObject<DriverCardMerchantAllocationResponse>(ResponseContent);
+            responseData = JsonConvert.DeserializeObject<DriverCardMerchantAllocationResponse>(ResponseContent);
 
-            return driverCardMerchantAllocationResponse;
+            if (responseData != null && responseData.Data != null && responseData.Data.ObjMerchantTotalCardDetail != null
+               && responseData.Data.ObjMerchantTotalCardDetail.Count > 0 && responseData.Data.ObjMerchantTotalCardDetail[0].Status == 0)
+            {
+                responseData.Message = responseData.Data.ObjMerchantTotalCardDetail[0].Reason;
+                responseData.Data.ObjMerchantViewCardDetail = new List<DriverCardMerchantViewCardDetail>();
+            }
+
+            return responseData;
         }
 
 

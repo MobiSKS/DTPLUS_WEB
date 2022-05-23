@@ -164,6 +164,8 @@
         public static string uploadaggregatornormalfleetcustomerkyc = "api/dtplus/aggregatorcustomer/upload_aggregator_normal_fleet_customer_kyc";
         public static string getfleetcustomernameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no";
         public static string getunverfiedfleetcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_normal_fleet_customer_detail_by_form_number";
+        public static string getUpdateContactPersonDetails = "api/dtplus/customer/get_update_contact_person_details";
+        public static string updateContactPersonDetails = "api/dtplus/customer/update_contact_person_details";
         #endregion
 
         #region Login
