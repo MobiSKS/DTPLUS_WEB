@@ -206,7 +206,7 @@ function showregAddress() {
         ret = false;
     }
     else {
-        document.getElementById("individualName_error").innerHTML = "";
+        document.getElementById("salutaion_error").innerHTML = "";
     }
 
 
@@ -297,13 +297,30 @@ function showregAddress() {
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else if (TypeofBusinessEntityId == 2)
+        else if (TypeofBusinessEntityId == 2 || TypeofBusinessEntityId == 3 || TypeofBusinessEntityId == 4 || TypeofBusinessEntityId == 8)
         {
             let forthdigitPan = panno.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P')
+            if (TypeofBusinessEntityId == 2 && forthdigitPan != 'P')
             {
-                console.log('Inside forthdigitPan');
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 3 && forthdigitPan != 'C')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 4 && forthdigitPan != 'H')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 8 && forthdigitPan != 'A')
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
@@ -966,6 +983,7 @@ function showOfficialDetails() {
             document.getElementById("PanCardRemarks").value = "";
             document.getElementById("lblPanCardRemarks").style.display = "none";
             document.getElementById("PanCardRemarks").style.display = "none";
+            document.getElementById("PanCardRemarks_error").innerHTML = "";
         }
     }
 
@@ -2069,6 +2087,7 @@ function GetClientConfirmation(o) {
         $("#PanCardRemarks").prop('readonly', true);
         document.getElementById("lblPanCardRemarks").style.display = "none";
         document.getElementById("PanCardRemarks").style.display = "none";
+        document.getElementById("PanCardRemarks_error").innerHTML = "";
         //document.getElementById("address-tab").click();
         //document.getElementById("address-tab").classList.remove("disable");
         showregAddressInfo();
@@ -2112,16 +2131,40 @@ function ValidatePAN()
         return (false);
     }
 
-    //solo Propritorship 4th Char Pan should be 'P'
-    if (customerTbentityid == '2')
+    //solo Propritorship 4th Char Pan should be 'P'--> 2
+    //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
+    //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
+    //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
+    if (customerTbentityid == 2 || customerTbentityid == 3 || customerTbentityid == 4 || customerTbentityid == 8)
     {
         let forthdigitPan = panno.substr(3, 1);
         console.log(forthdigitPan);
-        if (forthdigitPan != 'P')
+        if (customerTbentityid == 2 && forthdigitPan != 'P')
         {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";
-            alert('Please Enter Valid Income Tax PAN');
+            $('#PANErrorMsg').modal('show');
+            return (false);
+        }
+        else if (customerTbentityid == 3 && forthdigitPan != 'C')
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            $('#PANErrorMsg').modal('show');
+            return (false);
+        }
+        else if (customerTbentityid == 4 && forthdigitPan != 'H')
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            $('#PANErrorMsg').modal('show');
+            return (false);
+        }
+        else if (customerTbentityid == 8 && forthdigitPan != 'A')
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            $('#PANErrorMsg').modal('show');
             return (false);
         }
         else
@@ -2183,4 +2226,12 @@ function ValidatePAN()
         });
     }
     
+}
+
+function HidePANErrorMsgPopup(o)
+{
+    debugger;
+    //var selectedButton = o.innerText;
+
+    $('#PANErrorMsg').modal('hide');
 }

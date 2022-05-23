@@ -263,5 +263,12 @@ namespace HPCL_Web.Controllers
             var reasonList = await _cardService.MapEmergencyAddOnCard(objCards);
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult SetCardLimitViaExcelFileUpload(string CustomerId)
+        {
+            GetSetCardLimitViaExcelFileUpload uploadExcel = new GetSetCardLimitViaExcelFileUpload();
+            uploadExcel.CustomerId = CustomerId;
+            return View(uploadExcel);
+        }
     }
 }

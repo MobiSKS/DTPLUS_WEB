@@ -136,15 +136,14 @@ namespace HPCL_Web.Controllers
 
             if (customerModel.Internel_Status_Code == 1000)
             {
-                customerModel.Remarks = "";
-                ViewBag.Message = "Tatkal Card customer saved successfully";
-                return RedirectToAction("SuccessRedirectForTatkalCardCustomer");
+                return RedirectToAction("SuccessRedirectForTatkalCardCustomer", new { Message = customerModel.Remarks });
             }
 
             return View(customerModel);
         }
-        public async Task<IActionResult> SuccessRedirectForTatkalCardCustomer()
+        public async Task<IActionResult> SuccessRedirectForTatkalCardCustomer(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
