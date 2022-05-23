@@ -43,7 +43,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", })
+                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10" })
                                             @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
@@ -52,8 +52,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Name on Card:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.NameonCard, new {@id="nameOnCard", @class = "form-control", @readonly = true })
-                                            @Html.ValidationMessageFor(m => m.NameonCard, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.NameOnCard, new {@id="nameOnCard", @class = "form-control", maxlength = "30" })
+                                            @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -1057,22 +1057,31 @@
     function searchCards(){
         debugger;
         var custtId = $("#CustomerId").val();
-        //var nameOnCard = $("#nameOnCard").val();
+        var nameOnCard = $("#nameOnCard").val();
         document.getElementById("CardSearch").style.display = "none";
         document.getElementById("lblCardDetails").style.display = "none";
         var flag = "Y";
-        if (custtId == "") {
-            $("#custErrMsg").attr("style", "display:block");
-            $("#custErrMsg").html("Customer ID should not be Empty");
+        if(custtId == "" && nameOnCard == "")
+        {
+            $("#NameOnCardErrMsg").attr("style", "display:block");
+            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
             flag = "N";
         }
-        if (custtId != "") {
-            if (!custtId.match(mappedCustomerId)) {
+        else if(custtId != "")
+        {
+            if (!custtId.match(mappedCustomerId)) 
+            {
                 $("#custErrMsg").attr("style", "display:block");
-                $("#custErrMsg").html("start with 2 and contains 10 digits");
+                $("#custErrMsg").html("Invalid Customer ID");
                 flag = "N";
             }
         }
+        else
+        {
+            $("#custErrMsg").html("");
+            $("#NameOnCardErrMsg").html("");
+        }
+
         if (flag == "N")
             e.preventDefault();
 
@@ -1083,7 +1092,7 @@
                   url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
                   type: "POST",
                   dataType: "JSON",
-                  data: { CustomerId: custtId },
+                  data: { CustomerId: custtId,NameOnCard:nameOnCard },
                   success: function (res){
 debugger;
                       console.log("res", res);
@@ -1179,6 +1188,63 @@ debugger;
         if ((evt.which < 48 || evt.which > 57)) {
             evt.preventDefault();
         }
+    });
+
+    $("#nameOnCard").on("blur", function () 
+    {
+        //debugger;
+        if (document.getElementById("nameOnCard").value.trim() != "") 
+        {
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+    });
+
+    $("#CustomerId").on("blur", function () 
+    {
+        var ret=true;
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() != "") 
+        {
+            if (!document.getElementById("CustomerId").value.match(mappedCustomerId)) 
+            {
+                $("#custErrMsg").attr("style", "display:block");
+                $("#custErrMsg").html("Invalid Customer ID");
+                ret=false;
+            }
+            else
+            {
+                $("#custErrMsg").html("");
+            }
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+
+        var custtId = $("#CustomerId").val();
+        var nameOnCard = $("#nameOnCard").val();
+
+        if(custtId == "" && nameOnCard == "")
+        {
+            $("#NameOnCardErrMsg").attr("style", "display:block");
+            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
+        }
+        else if(custtId != "")
+        {
+            if (!custtId.match(mappedCustomerId)) 
+            {
+                $("#custErrMsg").attr("style", "display:block");
+                $("#custErrMsg").html("Invalid Customer ID");
+            }
+            else
+            {
+                $("#custErrMsg").html("");
+                $("#NameOnCardErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#custErrMsg").html("");
+            $("#NameOnCardErrMsg").html("");
+        }
+
     });
 
 
