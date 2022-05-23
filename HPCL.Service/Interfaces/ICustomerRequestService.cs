@@ -11,5 +11,7 @@ namespace HPCL.Service.Interfaces
         Task<GetSmsAlertForMultipleMobileDetailRes> GetSmsAlertForMultipleMobileDetail(GetSmsAlertForMultipleMobileDetailReq entity);
         Task<List<SuccessResponse>> UpdateSmsAlertForMultipleMobileDetail(string customerDetailForSmsAlert);
         Task<List<SuccessResponse>> DeleteSmsAlertForMultipleMobileDetail(string CustomerID, string MobileNo);
+        Task<GetCardRenwalRequestListRes> GetCardRenwalRequest(GetCardRenwalRequestList entity);
+        Task<List<SuccessResponse>> UpdateCardRenwalRequest(string CustomerId, string updatePostArray);
     }
 }

@@ -360,6 +360,8 @@
         public static string GetSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/get_sms_alert_for_multiple_mobile_detail";
         public static string UpdateSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/update_sms_alert_for_multiple_mobiledetail";
         public static string DeleteSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/delete_sms_alert_for_multiple_mobiledetail";
+        public static string GetCardRenwalRequestUrl = "api/dtplus/card/get_card_renewal_request_detail";
+        public static string UpdateCardRenwalRequestUrl = "api/dtplus/card/update_card_renewal_request";
         #endregion
 
         #region Configure

@@ -143,6 +143,9 @@
         }
      });
 
+
+     var mobNoArr = [];
+     var mobN;
      function OnSuccess(res){
          console.log(res);
          if (res.searchList.success == true) {
@@ -177,6 +180,7 @@
                  $("#MobNoId_"+j).val(alternameMobDetails[j].mobileNo);
                  $("#NameId_"+j).val(alternameMobDetails[j].name);
                  $("#DesignationId_"+j).val(alternameMobDetails[j].designation);
+                 mobNoArr.push({mobN:alternameMobDetails[j].mobileNo});
              }
 
              $("#alternameMobSection .deleteButton").each(function () {
@@ -212,7 +216,7 @@
 
          var updateArray = new Array();
          var flag = "Y";
-
+         var cnt = 0;
          $("#alternameMobSection .deleteButton").each(function () {
 
                 var row = $(this).closest("tr");
@@ -244,7 +248,20 @@
                     }
                 }
 
+                console.log("mobNoArr",mobNoArr);
+
+                
+                for(var i = 0;  i < mobNoArr.length; i++){
+                    if(MobileNo == mobNoArr[i].mobN){
+                        cnt++;    
+                    }
+                }
          });
+
+        if(cnt > 0){
+            alert("Dublicate Mobile Number.");
+            flag = "N";
+        }
 
          console.log("updateArray",updateArray);
 

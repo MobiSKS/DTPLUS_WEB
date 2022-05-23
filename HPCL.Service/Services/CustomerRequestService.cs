@@ -94,5 +94,61 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<GetCardRenwalRequestListRes> GetCardRenwalRequest(GetCardRenwalRequestList entity)
+        {
+            var searchBody = new GetCardRenwalRequestList();
+
+            if (entity.CustomerId != null)
+            {
+                searchBody = new GetCardRenwalRequestList
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = entity.CustomerId,
+                    CardNo = entity.CardNo ?? ""
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetCardRenwalRequestList
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CardNo = entity.CardNo ?? ""
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCardRenwalRequestUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetCardRenwalRequestListRes searchList = obj.ToObject<GetCardRenwalRequestListRes>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> UpdateCardRenwalRequest(string CustomerId, string updatePostArray)
+        {
+            TypeCardRenewalRequest[] arrs = JsonConvert.DeserializeObject<TypeCardRenewalRequest[]>(updatePostArray);
+
+            var reqBody = new UpdateCardRenwalRequestPost
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                TypeCardRenewalRequest = arrs,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateCardRenwalRequestUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
     }
 }
