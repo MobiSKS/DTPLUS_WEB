@@ -505,7 +505,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
                                             <span class="error" id="KeyOffIndividualInitials_error"></span>
                                         </div>
                                     </div>
@@ -804,6 +804,36 @@
                 </div>
             </div>
             <!-- Modal : Dialog -->
+            
+            <!-- Modal : Dialog -->
+            <!-- PAN ErrorMsg Modal -->
+            <div class="modal fade" id="PANErrorMsg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12 col-12">
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
+                                    <p class="mb-0">Entered PAN No. does not match with selected Type of Business Entity</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="HidePANErrorMsgPopup(this)">OK</button>
+                                </div>
+                                <div class="px-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal : Dialog -->
         </form>
 
 
@@ -875,6 +905,7 @@
             else {
                 document.getElementById("lblPanCardRemarks").style.display = "none";
                 document.getElementById("PanCardRemarks").style.display = "none";
+                document.getElementById("PanCardRemarks_error").innerHTML ="";
                 $("#PanCardRemarks").prop('readonly', true);
             }
         });
@@ -1748,8 +1779,8 @@
            $("#btnshowregAddress").attr("disabled", true);
         });
 
-        $("#CustomerIncomeTaxPan").on("blur", function () {
-            //debugger;
+  $("#CustomerIncomeTaxPan").on("blur", function () {
+            debugger;
             var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
             $("#btnshowregAddress").attr("disabled", true);
 
@@ -1807,15 +1838,44 @@
                 return (false);
             }
 
-            if (customerTbentityid == 2) //solo Propritorship 4th Char Pan should be 'P'
+            //solo Propritorship 4th Char Pan should be 'P'--> 2
+            //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
+            //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
+            //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
+            if (customerTbentityid == 2 || customerTbentityid == 3|| customerTbentityid == 4|| customerTbentityid == 8) 
             {
                 let forthdigitPan = panNumber.substr(3, 1);
                 console.log(forthdigitPan);
-                if (forthdigitPan != 'P')
+                if (customerTbentityid == 2 && forthdigitPan != 'P')
                 {
                     document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                     document.getElementById("incomeTaxPan_error").className = "error";
                     $("#btnshowregAddress").attr("disabled", false);
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 3 && forthdigitPan != 'C')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $("#btnshowregAddress").attr("disabled", false);
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 4 && forthdigitPan != 'H')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $("#btnshowregAddress").attr("disabled", false);
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 8 && forthdigitPan != 'A')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $("#btnshowregAddress").attr("disabled", false);
+                    $('#PANErrorMsg').modal('show');
                     return (false);
                 }
                 else
@@ -1902,6 +1962,7 @@
                                             document.getElementById("PanCardRemarks").style.display = "none";
                                             document.getElementById("PanCardRemarks").value = "";
                                             $("#PanCardRemarks").prop('readonly', true);
+                                            document.getElementById("PanCardRemarks_error").innerHTML ="";
                                         }
                                     }
                                     else {
@@ -1909,6 +1970,7 @@
                                         document.getElementById("PanCardRemarks").style.display = "none";
                                         document.getElementById("PanCardRemarks").value = "";
                                         $("#PanCardRemarks").prop('readonly', true);
+                                        document.getElementById("PanCardRemarks_error").innerHTML ="";
                                     }
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
@@ -1916,6 +1978,7 @@
                                     document.getElementById("PanCardRemarks").style.display = "none";
                                     document.getElementById("PanCardRemarks").value = "";
                                     $("#PanCardRemarks").prop('readonly', true);
+                                    document.getElementById("PanCardRemarks_error").innerHTML ="";
                                 },
                                 statusCode: {
                                     1024: function () {
@@ -1929,6 +1992,7 @@
                             document.getElementById("PanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").value = "";
                             $("#PanCardRemarks").prop('readonly', true);
+                            document.getElementById("PanCardRemarks_error").innerHTML ="";
                         }
 
 
@@ -1993,6 +2057,7 @@
                             document.getElementById("PanCardRemarks").style.display = "none";
                             document.getElementById("PanCardRemarks").value = "";
                             $("#PanCardRemarks").prop('readonly', true);
+                            document.getElementById("PanCardRemarks_error").innerHTML ="";
                         }
                     }
                     else {
@@ -2000,6 +2065,7 @@
                         document.getElementById("PanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").value = "";
                         $("#PanCardRemarks").prop('readonly', true);
+                        document.getElementById("PanCardRemarks_error").innerHTML ="";
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -2007,6 +2073,7 @@
                     document.getElementById("PanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").value = "";
                     $("#PanCardRemarks").prop('readonly', true);
+                    document.getElementById("PanCardRemarks_error").innerHTML ="";
                 },
                 statusCode: {
                     1024: function () {
@@ -2020,10 +2087,10 @@
             document.getElementById("PanCardRemarks").style.display = "none";
             document.getElementById("PanCardRemarks").value = "";
             $("#PanCardRemarks").prop('readonly', true);
+            document.getElementById("PanCardRemarks_error").innerHTML ="";
         }
 
     }
-
 
         $("#btnshowregAddress").attr("disabled", false);
 
@@ -3368,7 +3435,7 @@
     }
 
 
-    var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
+     var TypeofBusinessEntityId = document.applicationForm.CustomerTbentityID.value;
 
     if (TypeofBusinessEntityId != 10)
     {
@@ -3397,13 +3464,30 @@
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else if (TypeofBusinessEntityId == 2)
+        else if (TypeofBusinessEntityId == 2 || TypeofBusinessEntityId == 3 || TypeofBusinessEntityId == 4 || TypeofBusinessEntityId == 8)
         {
             let forthdigitPan = panno.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P')
+            if (TypeofBusinessEntityId == 2 && forthdigitPan != 'P')
             {
-                console.log('Inside forthdigitPan');
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 3 && forthdigitPan != 'C')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 4 && forthdigitPan != 'H')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId == 8 && forthdigitPan != 'A')
+            {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
                 ret = false;
@@ -3593,4 +3677,25 @@
         }
 
       });
+      $("#KeyOffIndividualInitials").on("blur", function () 
+      {
+        //debugger;
+        if (document.getElementById("KeyOffIndividualInitials").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("KeyOffIndividualInitials").value.trim())) {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else if (!document.getElementById("KeyOffIndividualInitials").value.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+            }
+        }
+
+     });
 </script>
