@@ -705,6 +705,18 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<IActionResult> CCMSBalanceAlert()
+        {
+            var modals = await _customerService.CCMSBalanceAlert();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCCMSBalAlertConfiguration(string CustomerId)
+        {
+            var modals = await _customerService.GetCCMSBalAlertConfiguration(CustomerId);
+            return Json(new { customer = modals });
+        }
 
     }
 }
