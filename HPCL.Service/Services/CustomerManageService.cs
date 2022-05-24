@@ -147,22 +147,12 @@ namespace HPCL.Service.Services
 
 
         }
-        public async Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId)
+        public async Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId, string NameOnCard)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 var searchBody = new CustomerProfileModel();
-                if (CustomerId != null)
-                {
-                    searchBody = new CustomerProfileModel
-                    {
-                        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                        UserAgent = CommonBase.useragent,
-                        UserIp = CommonBase.userip,
-                        CustomerId = CustomerId
-                    };
-                }
-                else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+                if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
                 {
                     searchBody = new CustomerProfileModel
                     {
@@ -172,6 +162,18 @@ namespace HPCL.Service.Services
                         CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                     };
                 }
+                else
+                {
+                    searchBody = new CustomerProfileModel
+                    {
+                        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                        UserAgent = CommonBase.useragent,
+                        UserIp = CommonBase.userip,
+                        CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                        NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
+                    };
+                }
+
                 //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");

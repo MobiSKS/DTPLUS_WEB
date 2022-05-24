@@ -38,14 +38,14 @@ namespace HPCL_Web.Controllers
         }
         #region Customer Manage Profile
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetails(string CustomerId)
+        public async Task<JsonResult> BindCustomerDetails(string CustomerId, string NameOnCard)
         {
             //List<CustomerProfileResponse> customerCardInfo = new List<CustomerProfileResponse>();
 
-            var customerCardInfo = await _customerManageService.BindCustomerDetails(CustomerId);
+            var customerCardInfo = await _customerManageService.BindCustomerDetails(CustomerId, NameOnCard);
             ModelState.Clear();
             return Json(customerCardInfo);
-           // return Json(new { customerCardInfo = customerCardInfo });
+            // return Json(new { customerCardInfo = customerCardInfo });
         }
 
         [HttpPost]

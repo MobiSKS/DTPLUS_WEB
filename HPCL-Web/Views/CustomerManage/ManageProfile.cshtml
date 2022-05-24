@@ -27,7 +27,7 @@
                     <li id="KeyOfficialDetails" class="nav-item">
                         <a class="nav-link disabled" id="OfficialDetails-tab" data-toggle="tab" href="#OfficialDetails" role="tab">Key Official Details</a>
                     </li>
-                    <li id="KeyOtherDetails" class="nav-item" style="display:none"> 
+                    <li id="KeyOtherDetails" class="nav-item" style="display:none">
                         <a class="nav-link disabled" id="OtherDetails-tab" data-toggle="tab" href="#OtherDetails" role="tab">Other Details</a>
                     </li>
                 </ul>
@@ -43,7 +43,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", })
+                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10" })
                                             @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
@@ -52,8 +52,8 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Name on Card:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.NameonCard, new {@id="nameOnCard", @class = "form-control", @readonly = true })
-                                            @Html.ValidationMessageFor(m => m.NameonCard, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.NameOnCard, new {@id="nameOnCard", @class = "form-control", maxlength = "30" })
+                                            @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -376,7 +376,7 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Pin code:<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12" id="lblCPinCode">Pin code:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.CommunicationPinCode, new { @id = "CommunicationPinCode", @class = "form-control", @readonly = true })
                                                     <span class="error" id="perma_pincode_error"></span>
@@ -425,7 +425,7 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Mobile:<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12" id="lblCMobile">Mobile:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @id = "CommunicationMobileNumber", @class = "form-control", @readonly = true })
                                                     <div class="error" id="comm_mobileNumber_error"></div>
@@ -450,7 +450,7 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Email:<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12" id="lblCEmail">Email:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.CommunicationEmail, new { @id = "CommunicationEmail", @class = "form-control", @readonly = true })
                                                     @*<input type="email" name="comm_email" class="form-control">*@
@@ -968,6 +968,9 @@
                               document.getElementById("divDistrict").style.display = "none";
                               //document.getElementById("KeyOtherDetails").style.display = "block";
                               //document.getElementById("OtherDetails-tab").style.display = "block";
+                              document.getElementById("lblCPinCode").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCMobile").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCEmail").className = "offset-md-1 col-md-4 col-12";
                           }
                           else
                           {
@@ -983,6 +986,9 @@
                               document.getElementById("divDistrict").style.display = "block";
                               document.getElementById("KeyOtherDetails").style.display = "none";
                               document.getElementById("OtherDetails-tab").style.display = "none";
+                              document.getElementById("lblCPinCode").className = "col-md-5 col-12";
+                              document.getElementById("lblCMobile").className = "col-md-5 col-12";
+                              document.getElementById("lblCEmail").className = "col-md-5 col-12";
                           }
 
                           var rows = "<tbody>"
@@ -1051,22 +1057,31 @@
     function searchCards(){
         debugger;
         var custtId = $("#CustomerId").val();
-        //var nameOnCard = $("#nameOnCard").val();
+        var nameOnCard = $("#nameOnCard").val();
         document.getElementById("CardSearch").style.display = "none";
         document.getElementById("lblCardDetails").style.display = "none";
         var flag = "Y";
-        if (custtId == "") {
-            $("#custErrMsg").attr("style", "display:block");
-            $("#custErrMsg").html("Customer ID should not be Empty");
+        if(custtId == "" && nameOnCard == "")
+        {
+            $("#NameOnCardErrMsg").attr("style", "display:block");
+            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
             flag = "N";
         }
-        if (custtId != "") {
-            if (!custtId.match(mappedCustomerId)) {
+        else if(custtId != "")
+        {
+            if (!custtId.match(mappedCustomerId)) 
+            {
                 $("#custErrMsg").attr("style", "display:block");
-                $("#custErrMsg").html("start with 2 and contains 10 digits");
+                $("#custErrMsg").html("Invalid Customer ID");
                 flag = "N";
             }
         }
+        else
+        {
+            $("#custErrMsg").html("");
+            $("#NameOnCardErrMsg").html("");
+        }
+
         if (flag == "N")
             e.preventDefault();
 
@@ -1077,7 +1092,7 @@
                   url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
                   type: "POST",
                   dataType: "JSON",
-                  data: { CustomerId: custtId },
+                  data: { CustomerId: custtId,NameOnCard:nameOnCard },
                   success: function (res){
 debugger;
                       console.log("res", res);
@@ -1103,6 +1118,9 @@ debugger;
                               document.getElementById("divDistrict").style.display = "none";
                               //document.getElementById("KeyOtherDetails").style.display = "block";
                               //document.getElementById("OtherDetails-tab").style.display = "block";
+                              document.getElementById("lblCPinCode").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCMobile").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCEmail").className = "offset-md-1 col-md-4 col-12";
                           }
                           else
                           {
@@ -1118,6 +1136,9 @@ debugger;
                               document.getElementById("divDistrict").style.display = "block";
                               document.getElementById("KeyOtherDetails").style.display = "none";
                               document.getElementById("OtherDetails-tab").style.display = "none";
+                              document.getElementById("lblCPinCode").className = "col-md-5 col-12";
+                              document.getElementById("lblCMobile").className = "col-md-5 col-12";
+                              document.getElementById("lblCEmail").className = "col-md-5 col-12";
                           }
 
                           var rows = "<tbody>"
@@ -1167,6 +1188,63 @@ debugger;
         if ((evt.which < 48 || evt.which > 57)) {
             evt.preventDefault();
         }
+    });
+
+    $("#nameOnCard").on("blur", function () 
+    {
+        //debugger;
+        if (document.getElementById("nameOnCard").value.trim() != "") 
+        {
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+    });
+
+    $("#CustomerId").on("blur", function () 
+    {
+        var ret=true;
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() != "") 
+        {
+            if (!document.getElementById("CustomerId").value.match(mappedCustomerId)) 
+            {
+                $("#custErrMsg").attr("style", "display:block");
+                $("#custErrMsg").html("Invalid Customer ID");
+                ret=false;
+            }
+            else
+            {
+                $("#custErrMsg").html("");
+            }
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+
+        var custtId = $("#CustomerId").val();
+        var nameOnCard = $("#nameOnCard").val();
+
+        if(custtId == "" && nameOnCard == "")
+        {
+            $("#NameOnCardErrMsg").attr("style", "display:block");
+            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
+        }
+        else if(custtId != "")
+        {
+            if (!custtId.match(mappedCustomerId)) 
+            {
+                $("#custErrMsg").attr("style", "display:block");
+                $("#custErrMsg").html("Invalid Customer ID");
+            }
+            else
+            {
+                $("#custErrMsg").html("");
+                $("#NameOnCardErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#custErrMsg").html("");
+            $("#NameOnCardErrMsg").html("");
+        }
+
     });
 
 
@@ -1381,6 +1459,7 @@ debugger;
                               GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
                               GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
                               //GetSubType(res[i].customerTypeId, res[i].customerSubtypeId);
+                              customerType=res[i].customerTypeName;
 debugger;
                           if(res[i].customerTypeName=="Driver")
                           {
@@ -1396,6 +1475,9 @@ debugger;
                               document.getElementById("divDistrict").style.display = "none";
                               //document.getElementById("KeyOtherDetails").style.display = "block";
                               //document.getElementById("OtherDetails-tab").style.display = "block";
+                              document.getElementById("lblCPinCode").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCMobile").className = "offset-md-1 col-md-4 col-12";
+                              document.getElementById("lblCEmail").className = "offset-md-1 col-md-4 col-12";
                           }
                           else
                           {
@@ -1411,6 +1493,9 @@ debugger;
                               document.getElementById("divDistrict").style.display = "block";
                               document.getElementById("KeyOtherDetails").style.display = "none";
                               document.getElementById("OtherDetails-tab").style.display = "none";
+                              document.getElementById("lblCPinCode").className = "col-md-5 col-12";
+                              document.getElementById("lblCMobile").className = "col-md-5 col-12";
+                              document.getElementById("lblCEmail").className = "col-md-5 col-12";
                           }
 
                               $('#customet-id').val(res[i].customerID);
@@ -1555,9 +1640,10 @@ debugger;
                               $('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
                           }
                       }
-                      
-
-                      if(customerType == "OTC" || customerType == "Tatkal" || customerType == "Driver"){
+console.log(customerType);                     
+debugger;
+                      if(customerType == "OTC" || customerType == "Tatkal" || customerType == "Driver")
+                      {
                         $("#CustomerProfile-tab").removeClass("disabled");
                         $("#Address-tab").removeClass("disabled");
                         $("#BasicInfo-tab").removeClass("disabled");
@@ -1566,12 +1652,14 @@ debugger;
                         document.getElementById("OfficialDetails-tab").style.display = "none";
                         document.getElementById("PermanentOfcAddress").style.display = "none";
                         document.getElementById("OfficialDetails").style.display = "none";
+                        $("#OtherDetails-tab").removeClass("disabled");
                       }else{
                         $("#CustomerProfile-tab").removeClass("disabled");
                         $("#Address-tab").removeClass("disabled");
                         $("#BasicInfo-tab").removeClass("disabled");
                         $("#OfficialDetails-tab").removeClass("disabled");
                         $('#BasicInfo-tab').tab('show');
+                        $("#OtherDetails-tab").addClass("disabled");
                       }
                   }
 
