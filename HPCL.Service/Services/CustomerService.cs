@@ -335,7 +335,8 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    CustomerReferenceNo = customerReferenceNo
+                    CustomerReferenceNo = customerReferenceNo,
+                    Type = "0"
                 };
 
                 CustomerResponseByReferenceNo customerResponseByReferenceNo;
@@ -1403,7 +1404,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = customerReferenceNo
+                CustomerReferenceNo = customerReferenceNo,
+                Type = "0"
             };
 
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
