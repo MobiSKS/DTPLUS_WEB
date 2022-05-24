@@ -166,6 +166,8 @@
         public static string getunverfiedfleetcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_normal_fleet_customer_detail_by_form_number";
         public static string getUpdateContactPersonDetails = "api/dtplus/customer/get_update_contact_person_details";
         public static string updateContactPersonDetails = "api/dtplus/customer/update_contact_person_details";
+        public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
+
         #endregion
 
         #region Login

@@ -127,5 +127,48 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
+        public async Task<IActionResult> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> objCardDetails)
+        {
+            var modals = await _fleetService.GetCustomerAddCardsPartialView(objCardDetails);
+            return PartialView("~/Views/AggregatorFleet/_AddFleetCustomerCardDetailsView.cshtml", modals);
+        }
+        public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
+        {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo = await _fleetService.AddCardDetails(customerReferenceNo);
+            customerCardInfo.Message = "";
+
+            return View(customerCardInfo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCardDetails(CustomerCardInfo customerCardInfo)
+        {
+            var Model = await _fleetService.AddCardDetails(customerCardInfo);
+
+            if (Model.StatusCode == 1000)
+            {
+                customerCardInfo.Status = Model.Status;
+                customerCardInfo.StatusCode = Model.StatusCode;
+                return RedirectToAction("SuccessAddCardRedirect", new { customerReferenceNo = Model.CustomerReferenceNo, Message = Model.Reason });
+            }
+
+            return View(Model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerDetailsForAddCard(string customerReferenceNo)
+        {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+
+            customerCardInfo = await _fleetService.GetCustomerDetailsForAddCard(customerReferenceNo);
+
+            return Json(customerCardInfo);
+        }
+        public async Task<IActionResult> SuccessAddCardRedirect(string customerReferenceNo, string Message)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.Message = Message;
+            return View();
+        }
     }
 }
