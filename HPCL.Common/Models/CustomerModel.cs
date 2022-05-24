@@ -309,6 +309,7 @@ namespace HPCL.Common.Models
         public string ToDate { get; set; }
         public string ExternalPANAPIStatus { get; set; }
         public string SignedOn { get; set; }    
+        public string Type { get; set; }
 
     }
 
