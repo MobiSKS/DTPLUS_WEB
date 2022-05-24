@@ -378,7 +378,7 @@ function showregAddress() {
     {
         if (document.getElementById("PanCardRemarks").value.trim() == "")
         {
-            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            document.getElementById("PanCardRemarks_error").innerHTML = "PAN Card Remarks field cannot be left blank";
             ret = false;
         }
         else
@@ -1421,7 +1421,7 @@ function showCardDetails() {
     {
         if (document.getElementById("PanCardRemarks").value.trim() == "")
         {
-            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            document.getElementById("PanCardRemarks_error").innerHTML = "PAN Card Remarks field cannot be left blank";
             ret = false;
         }
         else
