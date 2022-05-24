@@ -335,7 +335,8 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    CustomerReferenceNo = customerReferenceNo
+                    CustomerReferenceNo = customerReferenceNo,
+                    Type = "0"
                 };
 
                 CustomerResponseByReferenceNo customerResponseByReferenceNo;
@@ -1403,7 +1404,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = customerReferenceNo
+                CustomerReferenceNo = customerReferenceNo,
+                Type = "0"
             };
 
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
@@ -1856,6 +1858,57 @@ namespace HPCL.Service.Services
 
             return model;
         }
+        public async Task<LowCCMSBalanceAlertConfigurationModel> CCMSBalanceAlert()
+        {
+            LowCCMSBalanceAlertConfigurationModel model = new LowCCMSBalanceAlertConfigurationModel();
+            model.Remarks = "";
 
+            return model;
+        }
+        public async Task<LowCCMSBalanceAlertConfigurationModel> GetCCMSBalAlertConfiguration(string CustomerID)
+        {
+            GetCCMSBalAlertConfigurationResponse configurationResponse = new GetCCMSBalAlertConfigurationResponse();
+            LowCCMSBalanceAlertConfigurationModel returnValue = new LowCCMSBalanceAlertConfigurationModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getCcmsBalAlertConfiguration);
+
+            configurationResponse = JsonConvert.DeserializeObject<GetCCMSBalAlertConfigurationResponse>(response);
+
+            if (configurationResponse != null && configurationResponse.Data != null)
+            {
+                if (configurationResponse.Data.CCMSCustomerDetail != null && configurationResponse.Data.CCMSCustomerDetail.Count > 0)
+                {
+                    returnValue.IndividualOrgName = "";
+                    returnValue.NameOnCard = "";
+                    if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSCustomerDetail[0].IndividualOrgName))
+                        returnValue.IndividualOrgName = configurationResponse.Data.CCMSCustomerDetail[0].IndividualOrgName;
+                    if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSCustomerDetail[0].NameOnCard))
+                        returnValue.NameOnCard = configurationResponse.Data.CCMSCustomerDetail[0].NameOnCard;
+                }
+
+                if (configurationResponse.Data.CCMSAmountDetail != null && configurationResponse.Data.CCMSAmountDetail.Count > 0)
+                {
+                    returnValue.Reason = "";
+                    returnValue.Amount = "";
+                    returnValue.Status = configurationResponse.Data.CCMSAmountDetail[0].Status;
+                    if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSAmountDetail[0].Reason))
+                        returnValue.Reason = configurationResponse.Data.CCMSAmountDetail[0].Reason;
+                    if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSAmountDetail[0].Amount))
+                        returnValue.Amount = configurationResponse.Data.CCMSAmountDetail[0].Amount;
+                }
+            }
+
+            return returnValue;
+        }
     }
 }

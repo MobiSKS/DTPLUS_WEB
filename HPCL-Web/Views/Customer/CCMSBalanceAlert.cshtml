@@ -1,0 +1,227 @@
+﻿@model HPCL.Common.Models.ViewModel.Customer.LowCCMSBalanceAlertConfigurationModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","CustomerRequest")" class="text_primary">Requests</a> </li>
+            <li class="breadcrumb-item font-weight-light"> Low CCMS Balance Alert Configuration</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold"> Low CCMS Balance Alert Configuration</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-sm-3 col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", @id = "CustomerID", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary regrate_btn" type="button" id="btnSearch" onclick="ViewCustomerDetails()">@Label.Search</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary regrate_btn" type="button" id="btnReset">@Label.Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center">
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvCustomerInformation" style="display:none">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Information</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", @readonly="readonly" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", @readonly="readonly" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvBalanceDetails" style="display:none">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Set Low Balance Alert Amount</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Minimum CCMS Balance for receiving Alert <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-5 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", maxlength="5" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12">
+                                            <div class="px-0 py-3">
+                                                <button class="btn btn_primary" type="button">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button">Start SMS Alert</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button">Stop SMS Alert</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script>
+    $('#CustomerID').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            e.preventDefault();
+            $('#btnSearch').click();
+        }
+    });
+
+    $("#CustomerID").on("blur", function ()
+    {
+        if ($("#CustomerID").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $('#CustomerIdValErrMsg').html("");
+        }
+
+    })
+
+     $("#btnReset").click(function () 
+     {
+           window.location.href = '@Url.Action("CCMSBalanceAlert", "Customer")';
+     });
+
+    function ViewCustomerDetails()
+    {
+            debugger;
+            if ($("#CustomerID").val().trim() == "")
+            {
+                $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+                return false;
+            }
+            else if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+               $('#CustomerIdValErrMsg').html("");
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("GetCCMSBalAlertConfiguration", "Customer")",
+                type: "POST",
+                dataType: "JSON",
+                data: { CustomerId: $("#CustomerID").val() },
+                success: function (res)
+                {
+                    console.log("customer", res.customer);
+
+                    if(res.customer.status==0)
+                    {
+                        document.getElementById("dvBalanceDetails").style.display = "none";
+                        document.getElementById("dvCustomerInformation").style.display = "none";
+                        document.getElementById("dvNoData").style.display = "block";
+                        document.getElementById("dvNoData").innerHTML= res.customer.reason;
+                        $("#CustomerID").prop('readonly', false);
+
+                        if(res.customer.individualOrgName!="")
+                        {
+                            $('#IndividualOrgName').val(res.customer.individualOrgName);
+                            $('#NameOnCard').val(res.customer.nameOnCard);
+                            document.getElementById("dvCustomerInformation").style.display = "block";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("dvBalanceDetails").style.display = "none";
+                        document.getElementById("dvCustomerInformation").style.display = "none";
+                        document.getElementById("dvNoData").style.display = "none";
+                        document.getElementById("dvNoData").innerHTML= "";
+
+                        if(res.customer.individualOrgName!="")
+                        {
+                            $('#IndividualOrgName').val(res.customer.individualOrgName);
+                            $('#NameOnCard').val(res.customer.nameOnCard);
+                            $('#Amount').val(res.customer.Amount);
+                        
+                            document.getElementById("dvCustomerInformation").style.display = "block";
+                            document.getElementById("dvBalanceDetails").style.display = "block";
+                            $("#CustomerID").prop('readonly', true);
+                        }
+                    }
+
+                 },
+                 error: function (ex)
+                 {
+                    alert('Failed' + ex);
+                    document.getElementById("dvCustomerInformation").style.display = "none";
+                    document.getElementById("dvBalanceDetails").style.display = "block";
+                    document.getElementById("dvNoData").innerHTML= res.customer.reason;
+                 }
+
+            });
+            clearValidations();
+        };
+</script>

@@ -378,7 +378,7 @@ function showregAddress() {
     {
         if (document.getElementById("PanCardRemarks").value.trim() == "")
         {
-            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            document.getElementById("PanCardRemarks_error").innerHTML = "PAN Card Remarks field cannot be left blank";
             ret = false;
         }
         else
@@ -1421,7 +1421,7 @@ function showCardDetails() {
     {
         if (document.getElementById("PanCardRemarks").value.trim() == "")
         {
-            document.getElementById("PanCardRemarks_error").innerHTML = "Pan Card Remarks field cannot be left blank";
+            document.getElementById("PanCardRemarks_error").innerHTML = "PAN Card Remarks field cannot be left blank";
             ret = false;
         }
         else
@@ -2115,7 +2115,7 @@ function ValidatePAN()
     if (OrgName == '')
     {
         document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
-        alert('Individual/Org. Name is required');
+        //alert('Individual/Org. Name is required');
         return (false);
     }
 

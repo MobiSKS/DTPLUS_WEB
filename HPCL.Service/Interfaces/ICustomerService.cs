@@ -46,5 +46,7 @@ namespace HPCL.Service.Interfaces
         Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails();
         Task<UpdateContactPersonResponseDetails> GetUpdateContactPersonDetails(string CustomerId);
         Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails(UpdateContactPersonDetailsModel model);
+        Task<LowCCMSBalanceAlertConfigurationModel> CCMSBalanceAlert();
+        Task<LowCCMSBalanceAlertConfigurationModel> GetCCMSBalAlertConfiguration(string CustomerID);
     }
 }
