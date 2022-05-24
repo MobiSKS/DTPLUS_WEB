@@ -393,6 +393,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string BeneficiaryMobile { get; set; }
         public string DrivingLicence { get; set; }
         public string CustomerName { get; set; }
+        public string SignedOn { get; set; }
     }
     public class SearchGridResponse
     {

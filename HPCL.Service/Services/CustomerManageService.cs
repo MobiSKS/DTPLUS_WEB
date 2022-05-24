@@ -340,8 +340,13 @@ namespace HPCL.Service.Services
                         {
                             string[] subs = response.DateOfApplication.Split(' ');
                             string[] date = subs[0].Split('/');
-                            //response.CustomerDateOfApplication = date[1] + "-" + date[0] + "-" + date[2];
                             response.CustomerApplicationDate = date[1] + "-" + date[0] + "-" + date[2];
+                        }
+                        if (!string.IsNullOrEmpty(response.SignedOn))
+                        {
+                            string[] subs = response.SignedOn.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            response.SignedOn = date[1] + "-" + date[0] + "-" + date[2];
                         }
                     }
                 }
