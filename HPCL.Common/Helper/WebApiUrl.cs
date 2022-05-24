@@ -366,6 +366,7 @@
         public static string DeleteSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/delete_sms_alert_for_multiple_mobiledetail";
         public static string GetCardRenwalRequestUrl = "api/dtplus/card/get_card_renewal_request_detail";
         public static string UpdateCardRenwalRequestUrl = "api/dtplus/card/update_card_renewal_request";
+        public static string GetConfigureSmsAlertsUrl = "api/dtplus/configure/get_configure_sms_alerts_details_by_customerid";
         #endregion
 
         #region Configure

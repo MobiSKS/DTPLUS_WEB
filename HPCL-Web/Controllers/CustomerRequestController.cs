@@ -65,5 +65,17 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerRequestService.UpdateCardRenwalRequest(CustomerId, updatePostArray);
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult ConfigureSMSAlerts()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ConfigureSMSAlerts(GetConfigureSmsAlerts entity)
+        {
+            var searchList = await _customerRequestService.GetSmsAlertsConfigure(entity);
+            return Json(new { searchList = searchList });
+        }
     }
 }

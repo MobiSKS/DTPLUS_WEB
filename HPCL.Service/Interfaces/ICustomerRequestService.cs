@@ -13,5 +13,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> DeleteSmsAlertForMultipleMobileDetail(string CustomerID, string MobileNo);
         Task<GetCardRenwalRequestListRes> GetCardRenwalRequest(GetCardRenwalRequestList entity);
         Task<List<SuccessResponse>> UpdateCardRenwalRequest(string CustomerId, string updatePostArray);
+        Task<ConfigureSmsAlertsRes> GetSmsAlertsConfigure(GetConfigureSmsAlerts entity);
     }
 }

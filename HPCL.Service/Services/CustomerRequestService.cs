@@ -150,5 +150,37 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<ConfigureSmsAlertsRes> GetSmsAlertsConfigure(GetConfigureSmsAlerts entity)
+        {
+            var searchBody = new GetConfigureSmsAlerts();
+
+            if (entity.CustomerID != null)
+            {
+                searchBody = new GetConfigureSmsAlerts
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = entity.CustomerID
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetConfigureSmsAlerts
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetConfigureSmsAlertsUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ConfigureSmsAlertsRes searchList = obj.ToObject<ConfigureSmsAlertsRes>();
+            return searchList;
+        }
     }
 }
