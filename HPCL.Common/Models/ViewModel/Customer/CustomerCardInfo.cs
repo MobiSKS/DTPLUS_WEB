@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using HPCL.Common.Models.CommonEntity;
+using Microsoft.AspNetCore.Http;
 
 namespace HPCL.Common.Models.ViewModel.Customer
 {
@@ -64,6 +65,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string VehicleNoMsg { get; set; }
         public string MobileNoMsg { get; set; }
         public string Verified { get; set; }
+        public IFormFile RCCopy { get; set; }
         public CardDetails()
         {
             VehicleNoVerifiedManually = "false";
