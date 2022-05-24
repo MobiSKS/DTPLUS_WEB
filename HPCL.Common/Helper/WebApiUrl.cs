@@ -166,6 +166,8 @@
         public static string getunverfiedfleetcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_normal_fleet_customer_detail_by_form_number";
         public static string getUpdateContactPersonDetails = "api/dtplus/customer/get_update_contact_person_details";
         public static string updateContactPersonDetails = "api/dtplus/customer/update_contact_person_details";
+        public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
+
         #endregion
 
         #region Login
@@ -362,6 +364,8 @@
         public static string GetSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/get_sms_alert_for_multiple_mobile_detail";
         public static string UpdateSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/update_sms_alert_for_multiple_mobiledetail";
         public static string DeleteSmsAlertForMultipleMobileDetailUrl = "api/dtplus/configure/delete_sms_alert_for_multiple_mobiledetail";
+        public static string GetCardRenwalRequestUrl = "api/dtplus/card/get_card_renewal_request_detail";
+        public static string UpdateCardRenwalRequestUrl = "api/dtplus/card/update_card_renewal_request";
         #endregion
 
         #region Configure

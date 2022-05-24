@@ -46,5 +46,24 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerRequestService.DeleteSmsAlertForMultipleMobileDetail(CustomerID,MobileNo);
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult CardRenewalRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CardRenewalRequest(GetCardRenwalRequestList entity)
+        {
+            var searchList = await _customerRequestService.GetCardRenwalRequest(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateCardRenwalRequest(string CustomerId, string updatePostArray)
+        {
+            var reasonList = await _customerRequestService.UpdateCardRenwalRequest(CustomerId, updatePostArray);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }

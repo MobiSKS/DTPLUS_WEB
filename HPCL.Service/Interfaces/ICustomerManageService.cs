@@ -18,7 +18,7 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerTypeOfFleetModel>> GetCustomerTypeofFlee();
 
        // Task<List<CustomerProfileResponse>> BindCustomerDetails(String CustomerId);
-        Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId);
+        Task<List<CustomerProfileResponse>> BindCustomerDetails(string CustomerId, string NameOnCard);
         Task<List<SearchGridResponse>> CardDetails(String CustomerId, String CustomerTypeId);
         Task<AddOnCustomerModel> AddOnCustomer();
         Task<AddOnCustomerModel> AddOnCustomer(AddOnCustomerModel model);

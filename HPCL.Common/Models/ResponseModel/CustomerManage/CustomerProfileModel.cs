@@ -217,7 +217,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string CustomerRegionalOfficeID { get; set; }
         [StringLength(10)]
         public string CustomerId { get; set; }
-        public string NameonCard { get; set; }
+        public string NameOnCard { get; set; }
 
         public string ExistingCustomerId { get; set; }
 
