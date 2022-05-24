@@ -328,7 +328,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string ZonalOfficeName { get; set; }
         public string RegionalOfficeID { get; set; }
         public string RegionalOfficeName { get; set; }
-        public DateTime DateOfApplication { get; set; }
+        public string DateOfApplication { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public object ModifiedBy { get; set; }
