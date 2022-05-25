@@ -45,7 +45,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo" id='VechileNo_@i'>
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
                                                     @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
@@ -88,7 +88,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" id='VechileNo_@i'>
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
@@ -179,7 +179,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo" id='VechileNo_@i'>
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
                                                     @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
@@ -239,7 +239,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" id='VechileNo_@i'>
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
@@ -347,7 +347,7 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
-          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+          //$("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
           var isValid=true;
@@ -363,7 +363,6 @@
         {
             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
             isValid=false;
-            return false;
         }
         else
         {
@@ -373,19 +372,16 @@
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else if (!vehicleNo.match(atLeastOneAlphabet)) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else if(vehicleNo.length<6 || vehicleNo.length>10)
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else
                 {
@@ -403,22 +399,28 @@
 
           var mycel;
           var mycelStatus;
-          if (customerTypeId == "901" || customerTypeId == "906") {
-              if (selected.toUpperCase() == "CARDLESS") {
+          if (customerTypeId == "901" || customerTypeId == "906") 
+          {
+              if (selected.toUpperCase() == "CARDLESS") 
+              {
                   mycel = myrow.getElementsByTagName("td")[7];
                   mycelStatus=myrow.getElementsByTagName("td")[8];
               }
-              else {
+              else 
+              {
                   mycel = myrow.getElementsByTagName("td")[6];
                   mycelStatus=myrow.getElementsByTagName("td")[7];
               }
           }
-          else if (customerTypeId == "905" || customerTypeId == "909") {//Attached,Generic
-              if (selected.toUpperCase() == "CARDLESS") {
+          else if (customerTypeId == "905" || customerTypeId == "909") //Attached,Generic
+          {
+              if (selected.toUpperCase() == "CARDLESS") 
+              {
                   mycel = myrow.getElementsByTagName("td")[8];
                   mycelStatus=myrow.getElementsByTagName("td")[9];
               }
-              else {
+              else 
+              {
                   mycel = myrow.getElementsByTagName("td")[7];
                   mycelStatus=myrow.getElementsByTagName("td")[8];
               }
@@ -432,39 +434,50 @@
               document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
               mycelStatus.innerHTML = "0";
               isValid=false;
-              return false;
           }
           else 
           {
-              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+              //document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
               mycelStatus.innerHTML = "0";
           }
 
+          if(isValid)
+          {
+              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
 
-          $.ajax({
-              type: 'POST',  // http method
-              url: '@Url.Action("CheckVechileNoUsed", "Customer")',
-              data: { VechileNo: vehicleNo },  // data to submit
-              dataType: "json",
-              success: function (data, status, xhr) {
-                  console.log(data);
-                  if (data.status == "0") {
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("CheckVechileNoUsed", "Customer")',
+                  data: { VechileNo: vehicleNo },  // data to submit
+                  dataType: "json",
+                  success: function (data, status, xhr) {
+                      console.log(data);
+                      if (data.status == "0") 
+                      {
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                          mycelStatus.innerHTML = "1";
+                          isValid=false;
+                      }
+                      else 
+                      {
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                          mycelStatus.innerHTML = "0";
+                      }
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) 
+                  {
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
                       mycelStatus.innerHTML = "1";
                       isValid=false;
-                  }
-                  else {
-                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
-                      mycelStatus.innerHTML = "0";
-                  }
-              },
-              error: function (jqXhr, textStatus, errorMessage) {
-                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
-                  mycelStatus.innerHTML = "1";
-                  isValid=false;
 
-              }
-          });
+                  }
+              });
+          }
+          else
+          {
+              mycelStatus.innerHTML = "0";
+              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+          }
 
 
         setTimeout(function()
