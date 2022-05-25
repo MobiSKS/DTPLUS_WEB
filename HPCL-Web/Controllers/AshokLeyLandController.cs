@@ -223,7 +223,7 @@ namespace HPCL_Web.Controllers
             var modals = await _ashokLeyLandService.GetMultipleOTCCardPartialView(objCardDetails);
             return PartialView("~/Views/AshokLeyLand/_MultipleOTCCardVehicleDetailsTbl.cshtml", modals);
         }
-        public async Task<IActionResult> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model, string reset, string success, string error)
+        public async Task<IActionResult> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model, string reset, string success, string error, string StateID, string FormNumber, string CustomerName, string Status)
         {
             var searchResult = await _ashokLeyLandService.VerifyCustomerDocuments(model);
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;

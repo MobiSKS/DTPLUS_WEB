@@ -335,6 +335,19 @@ namespace HPCL.Service.Services
                         {
                             response.NameOnCard = "";
                         }
+
+                        if (!string.IsNullOrEmpty(response.DateOfApplication))
+                        {
+                            string[] subs = response.DateOfApplication.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            response.CustomerApplicationDate = date[1] + "-" + date[0] + "-" + date[2];
+                        }
+                        if (!string.IsNullOrEmpty(response.SignedOn))
+                        {
+                            string[] subs = response.SignedOn.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            response.SignedOn = date[1] + "-" + date[0] + "-" + date[2];
+                        }
                     }
                 }
 
