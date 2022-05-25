@@ -369,6 +369,7 @@
         public static string UpdateCardRenwalRequestUrl = "api/dtplus/card/update_card_renewal_request";
         public static string GetConfigureSmsAlertsUrl = "api/dtplus/configure/get_configure_sms_alerts_details_by_customerid";
         public static string UpdateConfigureSmsAlertsUrl = "api/dtplus/configure/update_configure_sms_alerts";
+        public static string UpdateDndSmsAlertsConfigureUrl = "api/dtplus/configure/update_dnd_configure_sms_alerts";
         #endregion
 
         #region Configure

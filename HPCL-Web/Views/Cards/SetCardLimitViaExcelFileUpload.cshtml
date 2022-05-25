@@ -50,7 +50,7 @@
                                         <div class="col-lg-3 col-12">
                                             <div class="d-flex align-items-start justify-content-start mb-0">
                                                 <div class="px-0">
-                                                    <button class="btn btn_primary" type="button">Upload Card(s) Limits Excel File</button>
+                                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()">Upload Card(s) Limits Excel File</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -64,7 +64,33 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+
                             <div style='background-color:#f8d7da;color:#721c24;border-color:#f5c6cb;display:none;margin-top:1%' class='mb-3 text-center' id="ExcelDataError"></div>
+
+                            <div id="successUpdate" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+
+
+
+
+                            <div class="row" id="reponseErr" style="display:none;">
+                                <div class="d-inline-block">
+                                    <div class="border-1 rounded border-grey pb-0">
+                                        <p style="background-color: #3399FF;font-weight:bold;">
+                                            Successful Transactions
+                                        </p>
+                                        <div style='background-color:#f8d7da;color:#721c24;border-color:#f5c6cb;' id="checkRecord"></div>
+                                    </div>
+                                </div>
+                                <div class="d-inline-block" style="margin-top:2%">
+                                    <div class="border-1 rounded border-grey pb-0">
+                                        <p style="background-color: #FF5050;font-weight:bold;">
+                                            Unsuccessful Transactions
+                                        </p>
+                                        <div id="excel_data"></div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -76,213 +102,291 @@
 </div>
 
 
-<div id="excel_data"></div>
+
 
 
 <script>
 
-    function resetClick(){
-        $("#uploadSection").hide();
-        $("#CustomerDefaultVal").attr("readonly",false);
-        $("#CustomerDefaultVal").val('');
-        document.getElementById("ExcelDataError").style.display = "none";
-    }
+        function resetClick(){
+            $("#uploadSection").hide();
+            $("#CustomerDefaultVal").attr("readonly",false);
+            $("#CustomerDefaultVal").val('');
+            document.getElementById("ExcelDataError").style.display = "none";
+        }
 
-    function exportReportToExcel() {
-        var csv_data = [];
-        var csvrow = [];
-        csvrow.push("Card Number", "Sale Transaction Limit", "Daily Sale Limit", "Monthly Sale Limit");
-        csv_data.push(csvrow.join(","));
-        csv_data = csv_data.join('\n');
-        downloadCSVFile(csv_data);
-    }
+        function exportReportToExcel() {
+            var csv_data = [];
+            var csvrow = [];
+            csvrow.push("Card Number", "Sale Transaction Limit", "Daily Sale Limit", "Monthly Sale Limit");
+            csv_data.push(csvrow.join(","));
+            csv_data = csv_data.join('\n');
+            downloadCSVFile(csv_data);
+        }
 
-    function downloadCSVFile(csv_data) {
+        function downloadCSVFile(csv_data) {
 
-        // Create CSV file object and feed
-        // our csv_data into it
-        CSVFile = new Blob([csv_data], {
-            type: "text/csv",
-            width: "900"
-        });
+            // Create CSV file object and feed
+            // our csv_data into it
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv",
+                width: "900"
+            });
 
-        // Create to temporary link to initiate
-        // download process
-        var temp_link = document.createElement('a');
+            // Create to temporary link to initiate
+            // download process
+            var temp_link = document.createElement('a');
 
-        // Download csv file
-        temp_link.download = "SetSaleLimit.csv";
-        var url = window.URL.createObjectURL(CSVFile);
-        temp_link.href = url;
+            // Download csv file
+            temp_link.download = "SetSaleLimit.csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
 
-        // This link should not be displayed
-        temp_link.style.display = "none";
-        document.body.appendChild(temp_link);
+            // This link should not be displayed
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
 
-        // Automatically click the link to
-        // trigger download
-        temp_link.click();
-        document.body.removeChild(temp_link);
-    }
+            // Automatically click the link to
+            // trigger download
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
 
-     
-$("#excel_file").change(function () {
 
-    var fileUpload = document.getElementById("excel_file");
-        var regex = /(.*?)\.(csv)$/;
-        if (regex.test(fileUpload.value)) {
-            if (typeof (FileReader) != "undefined") {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    var table = document.createElement("table");
-                    table.setAttribute("id", "ExcelTable");
-                   
-                    table.classList.add("table");
-                    table.classList.add("table-striped");
-                    table.classList.add("d-block");
-                    table.classList.add("table-bordered");
-                    table.classList.add("table-responsive");
-                    table.classList.add("nowrap");
-                    table.classList.add("mt-3");
+    $("#excel_file").change(function () {
 
-                    var rows = e.target.result.split("\n");
-                    for (var i = 0; i < rows.length; i++) {
-                        var cells = rows[i].split(",");
-                        if (cells.length > 1) {
-                            var row = table.insertRow(-1);
-                            for (var j = 0; j < cells.length; j++) {
-                                var cell = row.insertCell(-1);
-                                cell.innerHTML = cells[j];
+        document.getElementById("successUpdate").style.display = "none";
+
+        var fileUpload = document.getElementById("excel_file");
+            var regex = /(.*?)\.(csv)$/;
+            if (regex.test(fileUpload.value)) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var table = document.createElement("table");
+                        table.setAttribute("id", "ExcelTable");
+
+                        table.classList.add("table");
+                        table.classList.add("table-striped");
+                        table.classList.add("d-block");
+                        table.classList.add("table-bordered");
+                        table.classList.add("table-responsive");
+                        table.classList.add("nowrap");
+                        table.classList.add("mt-3");
+
+                        var rows = e.target.result.split("\n");
+                        for (var i = 0; i < rows.length; i++) {
+                            var cells = rows[i].split(",");
+                            if (cells.length > 1) {
+                                var row = table.insertRow(-1);
+                                for (var j = 0; j < cells.length; j++) {
+                                    var cell = row.insertCell(-1);
+                                    cell.innerHTML = cells[j];
+                                }
                             }
                         }
-                    }
-                    var dvCSV = document.getElementById("excel_data");
-                    dvCSV.innerHTML = "";
-                    dvCSV.appendChild(table);
+                        var dvCSV = document.getElementById("excel_data");
+                        dvCSV.innerHTML = "";
+                        dvCSV.appendChild(table);
 
-                    var rows = document.getElementById('ExcelTable').rows;
+                        var rows = document.getElementById('ExcelTable').rows;
 
-                    console.log("rows",rows.length);
+                        console.log("rows",rows.length);
 
-                    $("tr:first").append("<td>Error Msg</td>");
-	                $("tr:not(:first)").append("<td></td>");
+                        $("tr:first").append("<td class ='errMsg'>Error Msg</td>");
+                        $("tr:not(:first)").append("<td class ='errMsg'></td>");
 
 
-                    if(rows.length != 0){
-                        $('#ExcelTable tr:gt(0)').each(function(index, tr) {   
-                            var cardno = $(tr).find(':nth-child(1)').text();
-                            var saletxnlimit = $(tr).find(':nth-child(2)').text();
-                            var dailysalelimit = $(tr).find(':nth-child(3)').text();
-                            var monthlysalelimit = $(tr).find(':nth-child(4)').text();
+                        if(rows.length != 0){
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                                var cardno = $(tr).find(':nth-child(1)').text();
+                                var saletxnlimit = $(tr).find(':nth-child(2)').text();
+                                var dailysalelimit = $(tr).find(':nth-child(3)').text();
+                                var monthlysalelimit = $(tr).find(':nth-child(4)').text();
 
-                            console.log(cardno+"         "+saletxnlimit+"      "+dailysalelimit+"      "+monthlysalelimit);
-                            
-                            var currentIndex = index + 1;
+                                console.log(cardno+"         "+saletxnlimit+"      "+dailysalelimit+"      "+monthlysalelimit);
 
-                            if(cardno == ''){
-                                $("#ExcelDataError").html('');
-                                $("#ExcelDataError").append("<span>Enter Card Number</span>");
-                                $("#excel_file").val('');
-                                document.getElementById("ExcelDataError").style.display = "block";
-                                return false;
-                            }
+                                var currentIndex = index + 1;
 
-                            if(cardno != ''){
-                                if(!cardno.match(/^\d{16}$/)){
+                                if(cardno == ''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Invalid Card Number</span>");
+                                    $("#ExcelDataError").append("<span>Enter Card Number</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }
-                            }
 
-                            if(saletxnlimit==''){
-                                $("#ExcelDataError").html('');
-                                $("#ExcelDataError").append("<span>Sale Txn limit should should not blank</span>");
-                                $("#excel_file").val('');
-                                document.getElementById("ExcelDataError").style.display = "block";
-                                return false;
-                            }
-                            else{
-                                if(saletxnlimit !=''){
-                                    if (!saletxnlimit.match(number)){
-                                            $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Sale Txn limit should be Numeric</span>");
-                                            $("#excel_file").val('');
-                                            document.getElementById("ExcelDataError").style.display = "block";
-                                            $(tr).find(':nth-child(5)').text("Record No. "+currentIndex+" :- Sale Txn limit should be Numeric");
-                                            return false;
-                                    }else if(saletxnlimit == 0){
-                                            $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Sale Txn limit should be more than 0</span>");
-                                            $("#excel_file").val('');
-                                            document.getElementById("ExcelDataError").style.display = "block";
-                                            return false;
-                                    }
-                                }
-                            }
-
-
-                            if(dailysalelimit.trim()==''){
-                                $("#ExcelDataError").html('');
-                                $("#ExcelDataError").append("<span>Daily Sale Limit should not blank</span>");
-                                $("#excel_file").val('');
-                                document.getElementById("ExcelDataError").style.display = "block";
-                                return false;
-                            }
-                            else{
-                                if(dailysalelimit !=''){
-                                    if (!dailysalelimit.match(number)){
+                                if(cardno != ''){
+                                    if(!cardno.match(/^\d{16}$/)){
                                         $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>Daily Sale Limit should be Numeric</span>");
-                                        $("#excel_file").val('');
-                                        document.getElementById("ExcelDataError").style.display = "block";
-                                        return false;
-                                    }else if(dailysalelimit == 0){
-                                        $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>Daily Sale Limit should be more than 0</span>");
-                                        $("#excel_file").val('');
-                                        document.getElementById("ExcelDataError").style.display = "block";
-                                        return false;
-                                    }
-                                } 
-                            }
-
-
-                            if(monthlysalelimit ==''){
-                                $("#ExcelDataError").html('');
-                                $("#ExcelDataError").append("<span>MonthlySaleLimit should not blank</span>");
-                                $("#excel_file").val('');
-                                document.getElementById("ExcelDataError").style.display = "block";
-                                return false;
-                            }
-                            else{
-                                if(monthlysalelimit !=''){
-                                    if (!monthlysalelimit.match(number)){
-                                        $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>MonthlySaleLimit should be Numeric</span>");
-                                        $("#excel_file").val('');
-                                        document.getElementById("ExcelDataError").style.display = "block";
-                                        return false;
-                                    }else if(monthlysalelimit == 0){
-                                        $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>MonthlySaleLimit should be more than 0</span>");
+                                        $("#ExcelDataError").append("<span>Invalid Card Number</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
                                         return false;
                                     }
                                 }
-                            }
-                        })
+
+                                if(saletxnlimit==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Sale Txn limit should should not blank</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if(saletxnlimit !=''){
+                                        if (!saletxnlimit.match(number)){
+                                                $("#ExcelDataError").html('');
+                                                $("#ExcelDataError").append("<span>Sale Txn limit should be Numeric</span>");
+                                                $("#excel_file").val('');
+                                                document.getElementById("ExcelDataError").style.display = "block";
+                                                //$(tr).find(':nth-child(5)').text("Record No. "+currentIndex+" :- Sale Txn limit should be Numeric");
+                                                return false;
+                                        }else if(saletxnlimit == 0){
+                                                $("#ExcelDataError").html('');
+                                                $("#ExcelDataError").append("<span>Sale Txn limit should be more than 0</span>");
+                                                $("#excel_file").val('');
+                                                document.getElementById("ExcelDataError").style.display = "block";
+                                                return false;
+                                        }
+                                    }
+                                }
+
+
+                                if(dailysalelimit.trim()==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Daily Sale Limit should not blank</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if(dailysalelimit !=''){
+                                        if (!dailysalelimit.match(number)){
+                                            $("#ExcelDataError").html('');
+                                            $("#ExcelDataError").append("<span>Daily Sale Limit should be Numeric</span>");
+                                            $("#excel_file").val('');
+                                            document.getElementById("ExcelDataError").style.display = "block";
+                                            return false;
+                                        }else if(dailysalelimit == 0){
+                                            $("#ExcelDataError").html('');
+                                            $("#ExcelDataError").append("<span>Daily Sale Limit should be more than 0</span>");
+                                            $("#excel_file").val('');
+                                            document.getElementById("ExcelDataError").style.display = "block";
+                                            return false;
+                                        }
+                                    }
+                                }
+
+
+                                //if(monthlysalelimit ==''){
+                                //    $("#ExcelDataError").html('');
+                                //    $("#ExcelDataError").append("<span>MonthlySaleLimit should not blank</span>");
+                                //    $("#excel_file").val('');
+                                //    document.getElementById("ExcelDataError").style.display = "block";
+                                //    return false;
+                                //}
+                                //else{
+                                //    if(monthlysalelimit !=''){
+                                //        if (!monthlysalelimit.match(number)){
+                                //            $("#ExcelDataError").html('');
+                                //            console.log("monthlysalelimit",monthlysalelimit);
+                                //            $("#ExcelDataError").append("<span>MonthlySaleLimit should be Numeric</span>");
+                                //            $("#excel_file").val('');
+                                //            document.getElementById("ExcelDataError").style.display = "block";
+                                //            return false;
+                                //        }else if(monthlysalelimit == 0){
+                                //            $("#ExcelDataError").html('');
+                                //            $("#ExcelDataError").append("<span>MonthlySaleLimit should be more than 0</span>");
+                                //            $("#excel_file").val('');
+                                //            document.getElementById("ExcelDataError").style.display = "block";
+                                //            return false;
+                                //        }
+                                //    }
+                                //}
+                            })
+                        }
                     }
+                    reader.readAsText(fileUpload.files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
                 }
-                reader.readAsText(fileUpload.files[0]);
             } else {
-                alert("This browser does not support HTML5.");
+                alert("Please upload a valid CSV file.");
             }
-        } else {
-            alert("Please upload a valid CSV file.");
-        }   
-});
+    });
+
+    function uploadBulkLimitRow(){
+
+        document.getElementById("reponseErr").style.display = "none";
+
+        if($("#excel_file").val() != ''){
+
+            var updateArray = [];
+            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                var Cardno = $(tr).find(':nth-child(1)').text();
+                var Saletxn = $(tr).find(':nth-child(2)').text();
+                var Dailysale = $(tr).find(':nth-child(3)').text();
+                var Monthlysale = $(tr).find(':nth-child(4)').text();
+                var Cashpurse = parseFloat("100000");
+
+                updateArray.push({
+                    Cardno:Cardno,
+                    Cashpurse:Cashpurse,
+                    Saletxn:Saletxn,
+                    Dailysale:Dailysale,
+                    Monthlysale:Monthlysale
+                });
+            })
+
+            $.ajax({
+                url: "@Url.Action("UpdateCards", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                data: { limitArray: updateArray},
+                success: function (res) {
+
+                    console.log("res",res);
+
+                    if(res.updateResponse.data[0].status == 1){
+                        $("#successUpdate").html('');
+                        $("#successUpdate").append("<span>"+res.updateResponse.data[0].reason+"</span>");
+                        $("#excel_file").val('');
+                        document.getElementById("successUpdate").style.display = "block";
+                    }else{
+
+                        $("#checkRecord").html('');
+                        $("#checkRecord").append("<span>"+res.updateResponse.message+"</span>")
+                        $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+
+                            var currentIndex = index + 1;
+
+                            var Cardno = $(tr).find(':nth-child(1)').text();
+                            for(var i =0;i<res.updateResponse.data.length;i++){
+                                if(res.updateResponse.data[i].status == 0){
+                                    if(Cardno == res.updateResponse.data[i].cardno){
+                                        $(tr).find(':nth-child(5)').text(res.updateResponse.data[i].reason);
+                                    }
+                                }
+                            }
+                        });
+
+                        $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                            var err = $(tr).find(':nth-child(5)').text();
+                            if(err == ''){
+                                $(this).hide();
+                            }
+                        });
+
+                        $("#excel_file").val('');
+                        document.getElementById("reponseErr").style.display = "grid";
+
+                    }
+
+                },
+                error: function (ex) {
+                    console.log('Failed' + ex);
+                }
+            });
+        }
+    }
 </script>

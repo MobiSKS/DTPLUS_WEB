@@ -65,11 +65,18 @@
                                 </tr>
                             </thead>
                         </table>
+                        <div class="col-md-7 col-12">
+                            <div class="d-flex align-items-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="updateSmsAlert()">Save</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-7 col-12">
                         <div class="d-flex align-items-center mt-0">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="updateSmsAlert()">Save</button>
+                                <button class="btn btn_primary" type="button" onclick="updateDndSmsAlert()">Save DND</button>
                             </div>
                         </div>
                     </div>
@@ -230,6 +237,39 @@
             type: "POST",
             traditional: true,
             data: { CustomerId: CustomerID, SmsAlertList: JSON.stringify(updateArray) },
+            success: function (res) {
+
+               console.log("res",res);
+
+               if(res.reasonList[0].status == 1){
+                    document.getElementById("noRecord").style.display = "none";
+                    document.getElementById("UpdateGrid").style.display = "none";
+                    $("#successUpdate").html("");
+                    $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
+                    document.getElementById("successUpdate").style.display = "block";
+                }else{
+                    document.getElementById("UpdateGrid").style.display = "none";
+                    document.getElementById("successUpdate").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.reasonList[0].reason + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+         });
+    }
+
+    function updateDndSmsAlert(){
+
+        var CustomerID = $("#CustomerDefaultVal").val();
+
+         $.ajax({
+            url: "@Url.Action("UpdateDndSmsAlertsConfigure", "CustomerRequest")",
+            type: "POST",
+            traditional: true,
+            data: { CustomerId: CustomerID },
             success: function (res) {
 
                console.log("res",res);
