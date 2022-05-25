@@ -33,9 +33,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo)
+        public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo, string formNumber)
         {
-            var searchList = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo);
+            var searchList = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo, formNumber);
 
             ModelState.Clear();
             return Json(new { searchList = searchList });
