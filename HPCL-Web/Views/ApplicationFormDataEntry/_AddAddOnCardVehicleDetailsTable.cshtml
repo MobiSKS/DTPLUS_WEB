@@ -63,7 +63,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo" id="VechileNo_@i">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
                                                     @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
@@ -114,7 +114,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" id="VechileNo_@i">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
@@ -211,7 +211,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" value="@Model.ObjCardDetail[i].VechileNo" id="VechileNo_@i">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'>
                                                     @Model.ObjCardDetail[i].VehicleNoMsg
                                                 </span>
@@ -272,7 +272,7 @@
                                         @if (Model.CustomerTypeId == "905" || Model.CustomerTypeId == "909" || Model.CustomerTypeId == "901" || Model.CustomerTypeId == "906")
                                         {
                                             <td>
-                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo">
+                                                <input type="text" maxlength="10" style="text-transform:uppercase" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" onchange="CheckVechileNoUsed(this,@i)" name="ObjCardDetail[@i].VechileNo" id="VechileNo_@i">
                                                 <span class='field-validation-error text-danger' id='VechileNo_error_@i'></span>
                                             </td>
                                             <td><button class="btn btn_primary px-4 py - 2" onclick="ValidateVehicleNo(@i)" type="button" name="btnVechileCheck0" id='VechileNo_Vefirybtn_@i' disabled>Verify</button></td>
@@ -376,7 +376,7 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
-          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+          //$("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
           var isValid=true;
@@ -392,7 +392,6 @@
         {
             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
             isValid=false;
-            return false;
         }
         else
         {
@@ -402,19 +401,16 @@
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else if (!vehicleNo.match(atLeastOneAlphabet)) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else if(vehicleNo.length<6 || vehicleNo.length>10)
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else
                 {
@@ -465,39 +461,48 @@
           }
           else 
           {
-              document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+              //document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
               mycelStatus.innerHTML = "0";
           }
 
+          if(isValid)
+          {
+              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
 
-          $.ajax({
-              type: 'POST',  // http method
-              url: '@Url.Action("CheckVechileNoUsed", "Customer")',
-              data: { VechileNo: vehicleNo },  // data to submit
-              dataType: "json",
-              success: function (data, status, xhr) 
-              {
-                  console.log(data);
-                  if (data.status == "0") 
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("CheckVechileNoUsed", "Customer")',
+                  data: { VechileNo: vehicleNo },  // data to submit
+                  dataType: "json",
+                  success: function (data, status, xhr) 
+                  {
+                      console.log(data);
+                      if (data.status == "0") 
+                      {
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                          isValid=false;
+                          mycelStatus.innerHTML = "1";
+                      }
+                      else 
+                      {
+                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                          mycelStatus.innerHTML = "0";
+                      }
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) 
                   {
                       document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
                       isValid=false;
                       mycelStatus.innerHTML = "1";
-                  }
-                  else 
-                  {
-                      document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
-                      mycelStatus.innerHTML = "0";
-                  }
-              },
-              error: function (jqXhr, textStatus, errorMessage) 
-              {
-                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
-                  isValid=false;
-                  mycelStatus.innerHTML = "1";
 
-              }
-          });
+                  }
+              });
+          }
+          else
+          {
+              mycelStatus.innerHTML = "0";
+              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+          }
 
 
         setTimeout(function()
@@ -758,54 +763,57 @@
             }
         } 
 
-        if(isValid)
+        if (customerTypeId == "902" || customerTypeId == "917") //Corporate,Non Fleet
         {
-            var j=0;i=0;
-            var cnt=0;
-            console.log('Before Checking For Duplicate Card Identifier');
-            $("#NoOfCardsTbl tbody tr").each(function () 
+            if(isValid)
             {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
+                var j=0;i=0;
+                var cnt=0;
+                console.log('Before Checking For Duplicate Card Identifier');
                 $("#NoOfCardsTbl tbody tr").each(function () 
                 {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
+                    var row = $(this);
+                    j=0;
+                    i=i+1;
+                    cnt = 0;
+                    $("#NoOfCardsTbl tbody tr").each(function () 
                     {
-                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+                        var row1 = $(this);
 
-                        if(PrevIdent!="" && CurIdent!="")
+                        j=j+1;
+                        if(i>0 && j>1 && j>i)
                         {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                            var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                            var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                            if(PrevIdent!="" && CurIdent!="")
                             {
+                                if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                                {
 
-                                if(CurIdent.length<2 || CurIdent.length>16)
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                }
-                                else if(!CurIdent.match(forVehicleNo))
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                }
-                                else
-                                {
-                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
-                                }
+                                    if(CurIdent.length<2 || CurIdent.length>16)
+                                    {
+                                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                    }
+                                    else if(!CurIdent.match(forVehicleNo))
+                                    {
+                                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+                                    }
+                                    else
+                                    {
+                                        document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
+                                    }
 
+                                }
                             }
                         }
-                    }
 
-                    cnt=cnt+1;
+                        cnt=cnt+1;
+                    });
+
                 });
 
-            });
-
+            }
         }
 
           var tbl = document.getElementById('NoOfCardsTbl');
@@ -988,57 +996,60 @@
             }
         }
         
-        if(isValid)
+        if (customerTypeId == "902" || customerTypeId == "917" || customerTypeId == "901" || customerTypeId == "906") //Corporate,Non Fleet,Fleet,Credit
         {
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate MobileNo');
-            $("#NoOfCardsTbl tbody tr").each(function () 
+            if(isValid)
             {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
+                j=0;i=0;
+                cnt=0;
+                console.log('Before Checking For Duplicate MobileNo');
                 $("#NoOfCardsTbl tbody tr").each(function () 
                 {
-                    var row1 = $(this);
-
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
+                    var row = $(this);
+                    j=0;
+                    i=i+1;
+                    cnt = 0;
+                    $("#NoOfCardsTbl tbody tr").each(function () 
                     {
-                        var PrevMobile = row.find("td:eq(2) input[type='text']").val();
-                        var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+                        var row1 = $(this);
 
-                        if (customerTypeId == "905" || customerTypeId == "909")
+                        j=j+1;
+                        if(i>0 && j>1 && j>i)
                         {
-                            PrevMobile = row.find("td:eq(7) input[type='text']").val();
-                            CurMobile =  row1.find("td:eq(7) input[type='text']").val();
-                        }
-                        else if (customerTypeId == "901" || customerTypeId == "906")
-                        {
-                            PrevMobile = row.find("td:eq(6) input[type='text']").val();
-                            CurMobile =  row1.find("td:eq(6) input[type='text']").val();
-                        }
-                        else
-                        {
-                            PrevMobile = row.find("td:eq(2) input[type='text']").val();
-                            CurMobile =  row1.find("td:eq(2) input[type='text']").val();
-                        }
+                            var PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                            var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
 
-                        if(PrevMobile!="" && CurMobile!="")
-                        {
-                            if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
+                            if (customerTypeId == "905" || customerTypeId == "909")
                             {
-                                document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                                PrevMobile = row.find("td:eq(7) input[type='text']").val();
+                                CurMobile =  row1.find("td:eq(7) input[type='text']").val();
+                            }
+                            else if (customerTypeId == "901" || customerTypeId == "906")
+                            {
+                                PrevMobile = row.find("td:eq(6) input[type='text']").val();
+                                CurMobile =  row1.find("td:eq(6) input[type='text']").val();
+                            }
+                            else
+                            {
+                                PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                                CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+                            }
+
+                            if(PrevMobile!="" && CurMobile!="")
+                            {
+                                if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
+                                {
+                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                                }
                             }
                         }
-                    }
 
-                    cnt=cnt+1;
+                        cnt=cnt+1;
+                    });
+
                 });
 
-            });
-
+            }
         }
 
           var tbl = document.getElementById('NoOfCardsTbl');
