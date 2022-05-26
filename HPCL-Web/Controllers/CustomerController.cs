@@ -718,5 +718,12 @@ namespace HPCL_Web.Controllers
             return Json(new { customer = modals });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> UpdateCCMSBalAlertConfiguration(string CustomerID, string Amount, string ActionType)
+        {
+            var modals = await _customerService.UpdateCCMSBalAlertConfiguration(CustomerID, Amount, ActionType);
+            return Json(new { customer = modals });
+        }
+
     }
 }

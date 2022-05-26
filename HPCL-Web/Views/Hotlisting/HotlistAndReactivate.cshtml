@@ -28,9 +28,9 @@
                                 </div>
                                 <div class="col-lg-6 col-12 divshowDetails">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label id="lblMerchantId" class="font-weight-normal col-md-3 col-12 merchant" style="display:none">Merchant Id<sup class="text-danger">*</sup></label>
-                                        <label id="lblTerminalId" class="font-weight-normal col-md-3 col-12 terminal" style="display:none">Terminal Id<sup class="text-danger">*</sup></label>
-                                        <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 customer" style="display:none">Customer Id<sup class="text-danger">*</sup></label>
+                                        <label id="lblMerchantId" class="font-weight-normal col-md-3 col-12 merchant" style="display:none">Merchant ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblTerminalId" class="font-weight-normal col-md-3 col-12 terminal" style="display:none">Terminal ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12 customer" style="display:none">Customer ID<sup class="text-danger">*</sup></label>
                                         <label id="lblCardNo" class="font-weight-normal col-md-3 col-12 cardNo" style="display:none">Card Number<sup class="text-danger">*</sup></label>
 
                                         <div class="col-md-7 col-12">
@@ -75,7 +75,7 @@
                                                     @Html.DropDownListFor(m => m.ReasonId, new SelectList(Model.HotlistReason, "StatusId", "StatusName"), new { @class = "form-control", onchange = "showReasonDetails()" })
                                                     <span class="error" id="reason_error"></span>
                                                     <div class="custom_select" id="divReasonDetails" style="display:none">
-                                                        @Html.TextBoxFor(m => m.ReasonDetails, new { @class = "form-control" })
+                                                        @Html.TextBoxFor(m => m.ReasonDetails, new { @class = "form-control", maxlength = "100" })
                                                     </div>
                                                 </div>
 
@@ -92,7 +92,7 @@
                                             <label class="font-weight-normal col-md-3 col-12">Remarks<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "3", @cols = "50" })
+                                                    @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "3", @cols = "50" , maxlength = "100" })
                                                     <span class="error" id="remarks_error"></span>
                                                 </div>
                                             </div>
@@ -422,8 +422,15 @@
             flag = "N";
         }
         else {
-            $("#remarks_error").attr("style", "display:none");
-            $("#remarks_error").html("");
+            if(remarks.length>100){
+                $("#remarks_error").attr("style", "display:block");
+                $("#remarks_error").html("Maximum length of Remarks is 100");
+                flag = "N";
+            }
+            else{
+                $("#remarks_error").attr("style", "display:none");
+                $("#remarks_error").html("");
+            }
         }
         var reasonDetails = "";
         var reason = $('#ReasonId :selected').text();
@@ -435,8 +442,15 @@
                 flag = "N";
             }
             else {
-                $("#reason_error").attr("style", "display:none");
-                $("#reason_error").html("");
+                if(reasonDetails.length>100){
+                    $("#reason_error").attr("style", "display:block");
+                    $("#reason_error").html("Maximum length of reason is 100");
+                    flag = "N";
+                }
+                else{
+                    $("#reason_error").attr("style", "display:none");
+                    $("#reason_error").html("");
+                }
             }
         }
         if (flag == "N")
