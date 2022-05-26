@@ -869,6 +869,7 @@
          var customerTypeId = document.getElementById("CustomerTypeId").value;
          var PrevMobile = "";
          var CurMobile =  "";
+         var isMobileNoAlreadyExists=false;
 
         if(mobile.trim()=='')
         {
@@ -898,65 +899,7 @@
             }
         }
         
-
-
-        if (customerTypeId == "902" || customerTypeId == "917" || customerTypeId == "901" || customerTypeId == "906") //Corporate,Non Fleet,Fleet,Credit
-        {
-            if(isValid)
-            {
-                j=0;i=0;
-                cnt=0;
-                console.log('Before Checking For Duplicate MobileNo');
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row = $(this);
-                    j=0;
-                    i=i+1;
-                    cnt = 0;
-                    $("#NoOfCardsTbl tbody tr").each(function () 
-                    {
-                        var row1 = $(this);
-
-                        j=j+1;
-                        if(i>0 && j>1 && j>i)
-                        {
-                            var PrevMobile = row.find("td:eq(2) input[type='text']").val();
-                            var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
-
-                            if (customerTypeId == "905" || customerTypeId == "909")
-                            {
-                                PrevMobile = row.find("td:eq(7) input[type='text']").val();
-                                CurMobile =  row1.find("td:eq(7) input[type='text']").val();
-                            }
-                            else if (customerTypeId == "901" || customerTypeId == "906")
-                            {
-                                PrevMobile = row.find("td:eq(6) input[type='text']").val();
-                                CurMobile =  row1.find("td:eq(6) input[type='text']").val();
-                            }
-                            else
-                            {
-                                PrevMobile = row.find("td:eq(2) input[type='text']").val();
-                                CurMobile =  row1.find("td:eq(2) input[type='text']").val();
-                            }
-
-                            if(PrevMobile!="" && CurMobile!="")
-                            {
-                                if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
-                                {
-                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
-                                }
-                            }
-                        }
-
-                        cnt=cnt+1;
-                    });
-
-                });
-
-            }
-        }
-
-         var tbl = document.getElementById('NoOfCardsTbl');
+          var tbl = document.getElementById('NoOfCardsTbl');
           mytablebody = tbl.getElementsByTagName("tbody")[0];
           myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
 
@@ -994,6 +937,7 @@
                         {
                             document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
                             mycelStatus.innerHTML = "1";
+                            isMobileNoAlreadyExists=true;
                         }
                         else 
                         {
@@ -1019,6 +963,67 @@
             mycelStatus.innerHTML = "0";
         }
 
+        setTimeout(function()
+        {
+
+            if (customerTypeId == "902" || customerTypeId == "917" || customerTypeId == "901" || customerTypeId == "906") //Corporate,Non Fleet,Fleet,Credit
+            {
+                if(isValid && !isMobileNoAlreadyExists)
+                {
+                    j=0;i=0;
+                    cnt=0;
+                    console.log('Before Checking For Duplicate MobileNo');
+                    $("#NoOfCardsTbl tbody tr").each(function () 
+                    {
+                        var row = $(this);
+                        j=0;
+                        i=i+1;
+                        cnt = 0;
+                        $("#NoOfCardsTbl tbody tr").each(function () 
+                        {
+                            var row1 = $(this);
+
+                            j=j+1;
+                            if(i>0 && j>1 && j>i)
+                            {
+                                var PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                                var CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+
+                                if (customerTypeId == "905" || customerTypeId == "909")
+                                {
+                                    PrevMobile = row.find("td:eq(7) input[type='text']").val();
+                                    CurMobile =  row1.find("td:eq(7) input[type='text']").val();
+                                }
+                                else if (customerTypeId == "901" || customerTypeId == "906")
+                                {
+                                    PrevMobile = row.find("td:eq(6) input[type='text']").val();
+                                    CurMobile =  row1.find("td:eq(6) input[type='text']").val();
+                                }
+                                else
+                                {
+                                    PrevMobile = row.find("td:eq(2) input[type='text']").val();
+                                    CurMobile =  row1.find("td:eq(2) input[type='text']").val();
+                                }
+
+                                if(PrevMobile!="" && CurMobile!="")
+                                {
+                                    if(PrevMobile.trim().toUpperCase()==CurMobile.trim().toUpperCase())
+                                    {
+                                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                                    }
+                                }
+                            }
+
+                            cnt=cnt+1;
+                        });
+
+                    });
+
+                }
+            }
+
+
+         },500);
      }
 
 </script>
