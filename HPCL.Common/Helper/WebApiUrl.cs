@@ -72,6 +72,7 @@
         public static string LimitUpdateForSingleRechargeUrl = "api/dtplus/card/limit_update_for_single_recharge";
         public static string GetEmergencyAddOnCardUrl = "api/dtplus/card/get_detail_for_emergency_replacement_cards";
         public static string MapEmergencyAddOnCardUrl = "api/dtplus/card/emergency_replacement_cards";
+        public static string getlistcreditcloselimittype = "api/dtplus/dealercredit/get_list_credit_close_limit_type";
         #endregion
 
         #region Merchant
@@ -374,6 +375,13 @@
         public static string GetSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
         public static string DeleteSmsAlertsToIndividualCardUsers = "api/dtplus/configure/delete_sms_alerts_to_individual_card_users";
         public static string UpdateSmsAlertsToIndividualCardUsers = "api/dtplus/configure/update_sms_alerts_to_individual_card_users";
+        #endregion
+
+        #region Dealer
+        public static string getdealercreditmappingdetails = "api/dtplus/dealercredit/get_dealer_credit_mapping_details";
+        public static string insertmapdealerforcreditsale = "api/dtplus/dealercredit/insert_map_dealer_for_credit_sale";
+        public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
+        public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
         #endregion
     }
 }
