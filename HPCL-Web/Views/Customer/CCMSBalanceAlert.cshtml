@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", @readonly="readonly" })
@@ -81,7 +81,7 @@
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Set Low Balance Alert Amount</p>
                         <div class="col-lg-12 col-md-12 col-12 pt-3">
-                            <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-start flex-wrap">
                                 <div class="col-lg-9 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Minimum CCMS Balance for receiving Alert <sup class="text-danger">*</sup></label>
@@ -96,18 +96,21 @@
                                                 <button class="btn btn_primary" type="button" id="btnEdit">Edit</button>
                                             </div>
                                         </div>
-                                        <p style="padding-left:264px; margin-bottom: 0;">**You will receive SMS alert as soon as your CCMS Balance reaches below this amount.</p>
+                                        <p style="padding-left:264px; margin-top:15px;">**You will receive SMS alert as soon as your CCMS Balance reaches below this amount.</p>
+                                    </div> 
+                                </div>
+                                 <div class="col-lg-3 col-12">
+                                     <div class="d-flex align-items-end justify-content-end mb-3">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnStartSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StartSMS')">START SMS ALERT</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnStopSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StopSMS')">STOP SMS ALERT</button>
+                                        </div>
                                     </div>
-                                </div>
+                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mb-3">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnStartSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StartSMS')">START SMS ALERT</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnStopSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StopSMS')">STOP SMS ALERT</button>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -150,6 +153,24 @@
      $("#btnReset").click(function () 
      {
            window.location.href = '@Url.Action("CCMSBalanceAlert", "Customer")';
+     });
+
+     $("#btnEdit").click(function () 
+     {
+         debugger;
+         var btnText=document.getElementById("btnEdit").innerHTML;
+         //alert(btnText);
+         if(btnText=="Edit")
+         {
+             $("#Amount").prop('readonly', false);
+             document.getElementById("btnEdit").innerHTML="Cancel";
+         }
+         else
+         {
+             $("#Amount").prop('readonly', true);
+             document.getElementById("Amount").value=document.getElementById("AmountOld").value;
+             document.getElementById("btnEdit").innerHTML="Edit";
+         }
      });
 
     function ViewCustomerDetails()
@@ -218,11 +239,13 @@
                             {
                                 document.getElementById("btnStopSMSAlert").style.display = "none";
                                 document.getElementById("btnEdit").style.display = "none";
+                                $("#Amount").prop('readonly', false);
                             }
                             else
                             {
                                 document.getElementById("btnStopSMSAlert").style.display = "block";
                                 document.getElementById("btnEdit").style.display = "block";
+                                $("#Amount").prop('readonly', true);
                             }
                         }
                     }
