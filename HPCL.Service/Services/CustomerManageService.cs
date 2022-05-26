@@ -49,9 +49,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerTypeModel> lstCustomerType = jarr.ToObject<List<CustomerTypeModel>>();
 
-            return lstCustomerType;
-
-          
+            return lstCustomerType;         
 
         }
         public async Task<List<CustomerZonalOfficeModel>> GetZonalOffice()
@@ -73,9 +71,31 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerZonalOfficeModel> lstZonalOffice = jarr.ToObject<List<CustomerZonalOfficeModel>>();
 
-            return lstZonalOffice;
+            List<CustomerZonalOfficeModel> zonalOfficeLstCopy = lstZonalOffice.ToList();
 
-          
+            string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+            char flag = 'N';
+
+            foreach (var item in zonalOfficeLstCopy)
+            {
+                flag = 'N';
+
+                for (int i = 0; i < AssignedZones.Length; i++)
+                {
+                    if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                    {
+                        flag = 'Y';
+                        break;
+                    }
+                }
+                if (flag == 'N')
+                {
+                    lstZonalOffice.Remove(item);
+                }
+            }
+
+            return lstZonalOffice;          
         }
 
         public async Task<List<CustomerTbentityModel>> GetCustomerTbentityModel()
