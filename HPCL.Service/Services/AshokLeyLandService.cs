@@ -202,6 +202,10 @@ namespace HPCL.Service.Services
             {
                 ashokLeylandCardCreationModel.CommunicationEmailid = ashokLeylandCardCreationModel.CommunicationEmailid.ToLower();
             }
+            foreach (ALCardEntryDetails cardDetails in ashokLeylandCardCreationModel.ObjALCardEntryDetail)
+            {
+                cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+            }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.insertAlCustomer);
