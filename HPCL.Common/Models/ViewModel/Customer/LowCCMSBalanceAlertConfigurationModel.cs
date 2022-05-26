@@ -17,5 +17,6 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string NameOnCard { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string AmountOld { get; set; }
     }
 }
