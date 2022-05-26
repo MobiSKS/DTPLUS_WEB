@@ -1915,5 +1915,28 @@ namespace HPCL.Service.Services
 
             return returnValue;
         }
+
+        public async Task<UpdateKycResponse> UpdateCCMSBalAlertConfiguration(string CustomerID, string Amount, string ActionType)
+        {
+            var approvalBody = new UpdateCCMSBalAlertConfigurationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID,
+                Amount = Amount,
+                ActionType = ActionType
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.updateCcmsbalAlertConfiguration);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+
+            return insertKyc[0];
+        }
     }
 }

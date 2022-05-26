@@ -74,8 +74,8 @@
                 </div>
 
                 <div class="clearfix"></div>
-                <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center">
-                </div>
+                 <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center"></div>
+                 <div id="dvSuccess" style="display:none;" class="mb-3 text-center alert alert-success"></div>
 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvBalanceDetails" style="display:none">
                     <div class="border-1 rounded border-grey pb-0">
@@ -88,6 +88,7 @@
                                         <div class="col-md-5 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", maxlength="13", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="Amount_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12">
@@ -101,10 +102,10 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-center mb-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnStartSMSAlert">START SMS ALERT</button>
+                                    <button class="btn btn_primary" type="button" id="btnStartSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StartSMS')">START SMS ALERT</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnStopSMSAlert">STOP SMS ALERT</button>
+                                    <button class="btn btn_primary" type="button" id="btnStopSMSAlert" onclick="UpdateCCMSBalAlertConfiguration('StopSMS')">STOP SMS ALERT</button>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +115,7 @@
             </div>
          </form>
          <div class="clearfix"></div>
+         @Html.HiddenFor(model => Model.AmountOld)
     </div>  
 </div>
 <div class="clearfix"></div>
@@ -152,7 +154,7 @@
 
     function ViewCustomerDetails()
     {
-            debugger;
+       debugger;
             if ($("#CustomerID").val().trim() == "")
             {
                 $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
@@ -206,6 +208,7 @@
                             $('#IndividualOrgName').val(res.customer.individualOrgName);
                             $('#NameOnCard').val(res.customer.nameOnCard);
                             $('#Amount').val(res.customer.Amount);
+                            $('#AmountOld').val(res.customer.Amount);
                         
                             document.getElementById("dvCustomerInformation").style.display = "block";
                             document.getElementById("dvBalanceDetails").style.display = "block";
@@ -234,6 +237,123 @@
                  }
 
             });
-            clearValidations();
+            //clearValidations();
         };
+
+    $("#Amount").on("blur", function () 
+    {
+        debugger;
+        var amount = document.getElementById("Amount").value.trim();
+        if (amount == "") 
+        {
+            document.getElementById("Amount_error").innerHTML = "Please enter Valid Amount";
+            return (false);
+        }
+        else 
+        {
+            if (!(document.getElementById("Amount").value.match(number))) 
+            {
+                document.getElementById("Amount_error").innerHTML = "Amount must be greater than or equal to 1 lakh";
+                return false;
+            }
+            else if (Number(document.getElementById("Amount").value.match(number))<100000) 
+            {
+                document.getElementById("Amount_error").innerHTML = "Amount must be greater than or equal to 1 lakh";
+                return false;
+            }
+            else
+                document.getElementById("Amount_error").innerHTML = "";
+        }
+
+   })
+
+    function UpdateCCMSBalAlertConfiguration(ActionType)
+    {
+        debugger;
+        console.log(ActionType);
+         var amount = document.getElementById("Amount").value.trim();
+        if (amount == "") 
+        {
+            document.getElementById("Amount_error").innerHTML = "Please enter Valid Amount";
+            return (false);
+        }
+        else 
+        {
+            if (!(document.getElementById("Amount").value.match(number))) 
+            {
+                document.getElementById("Amount_error").innerHTML = "Amount must be greater than or equal to 1 lakh";
+                return false;
+            }
+            else if (Number(document.getElementById("Amount").value.match(number))<100000) 
+            {
+                document.getElementById("Amount_error").innerHTML = "Amount must be greater than or equal to 1 lakh";
+                return false;
+            }
+            else
+                document.getElementById("Amount_error").innerHTML = "";
+        }
+
+        if ($("#CustomerID").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $('#CustomerIdValErrMsg').html("");
+        }
+
+        var remarks="";
+
+        if(ActionType="StartSMS")
+        {
+            remarks="Are you sure you want to Start SMS Alert?";
+        }
+        else
+        {
+            remarks="Are you sure you want to Stop SMS Alert?";
+        }
+
+        if (confirm(remarks)) 
+        {
+
+            $.ajax({
+                url: "@Url.Action("UpdateCCMSBalAlertConfiguration", "Customer")",
+                type: "POST",
+                dataType: "JSON",
+                data: { CustomerID: $("#CustomerID").val(), Amount: $("#Amount").val(), ActionType: ActionType },
+                success: function (res) 
+                {
+                    console.log(res);
+                    if(res.customer.status==1)
+                    {
+                      $("#dvSuccess").html(res.customer.reason);
+                      document.getElementById("dvSuccess").style.display = "block";
+                      document.getElementById("dvNoData").style.display = "none";
+                      document.getElementById("dvBalanceDetails").style.display = "none";
+                    }
+                    else
+                    {
+                       $("#dvNoData").html(res.customer.reason);
+                       document.getElementById("dvSuccess").style.display = "none";
+                       document.getElementById("dvNoData").style.display = "block";
+                       document.getElementById("dvBalanceDetails").style.display = "none";
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+
+       }
+
+
+    };
+
 </script>
