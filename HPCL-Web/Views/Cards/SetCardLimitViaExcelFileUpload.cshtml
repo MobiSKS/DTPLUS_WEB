@@ -69,16 +69,16 @@
 
                             <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
-                            <div class="row" id="reponseErr" style="display:none;">
-                                <div class="d-inline-block">
+                            <div class="row" id="reponseErr" style="display:block;">
+                                <div class="col">
                                     <div class="border-1 rounded border-grey pb-0">
                                         <p style="background-color: #3399FF;font-weight:bold;">
                                             Successful Transactions
                                         </p>
-                                        <div class="mb-3 text-center alert alert-danger" style="display:none;" id="checkRecord"></div>
+                                        <div class="mb-3 text-center alert alert-danger" id="checkRecord"></div>
                                     </div>
                                 </div>
-                                <div class="d-inline-block" style="margin-top:2%">
+                                <div class="col" style="margin-top:2%">
                                     <div class="border-1 rounded border-grey pb-0">
                                         <p style="background-color: #FF5050;font-weight:bold;">
                                             Unsuccessful Transactions
@@ -204,18 +204,18 @@
 
                                 var currentIndex = index + 1;
 
-                                if(cardno == ''){
+                                if(cardno.trim() == ''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Enter Card Number</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Enter Card Number</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }
 
-                                if(cardno != ''){
+                                if(cardno.trim() != ''){
                                     if(!cardno.match(/^\d{16}$/)){
                                         $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>Invalid Card Number</span>");
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Card Number</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
                                         return false;
@@ -224,23 +224,22 @@
 
                                 if(saletxnlimit==''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Sale Txn limit should should not blank</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Sale Txn limit should should not blank</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }
                                 else{
                                     if(saletxnlimit !=''){
-                                        if (!saletxnlimit.match(number)){
+                                        if (!saletxnlimit.trim().match(number)){
                                                 $("#ExcelDataError").html('');
-                                                $("#ExcelDataError").append("<span>Sale Txn limit should be Numeric</span>");
+                                                $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Sale Txn limit should be Numeric</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
-                                                //$(tr).find(':nth-child(5)').text("Record No. "+currentIndex+" :- Sale Txn limit should be Numeric");
                                                 return false;
-                                        }else if(saletxnlimit == 0){
+                                        }else if(saletxnlimit.trim() == 0){
                                                 $("#ExcelDataError").html('');
-                                                $("#ExcelDataError").append("<span>Sale Txn limit should be more than 0</span>");
+                                                $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Sale Txn limit should be more than 0</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
                                                 return false;
@@ -251,22 +250,22 @@
 
                                 if(dailysalelimit.trim()==''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Daily Sale Limit should not blank</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Daily Sale Limit should not blank</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }
                                 else{
-                                    if(dailysalelimit !=''){
-                                        if (!dailysalelimit.match(number)){
+                                    if(dailysalelimit.trim() !=''){
+                                        if (!dailysalelimit.trim().match(number)){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Daily Sale Limit should be Numeric</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Daily Sale Limit should be Numeric</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
-                                        }else if(dailysalelimit == 0){
+                                        }else if(dailysalelimit.trim() == 0){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Daily Sale Limit should be more than 0</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Daily Sale Limit should be more than 0</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
@@ -275,31 +274,31 @@
                                 }
 
 
-                                //if(monthlysalelimit ==''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>MonthlySaleLimit should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}
-                                //else{
-                                //    if(monthlysalelimit !=''){
-                                //        if (!monthlysalelimit.match(number)){
-                                //            $("#ExcelDataError").html('');
-                                //            console.log("monthlysalelimit",monthlysalelimit);
-                                //            $("#ExcelDataError").append("<span>MonthlySaleLimit should be Numeric</span>");
-                                //            $("#excel_file").val('');
-                                //            document.getElementById("ExcelDataError").style.display = "block";
-                                //            return false;
-                                //        }else if(monthlysalelimit == 0){
-                                //            $("#ExcelDataError").html('');
-                                //            $("#ExcelDataError").append("<span>MonthlySaleLimit should be more than 0</span>");
-                                //            $("#excel_file").val('');
-                                //            document.getElementById("ExcelDataError").style.display = "block";
-                                //            return false;
-                                //        }
-                                //    }
-                                //}
+                                if(monthlysalelimit.trim()==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Monthly Sale Limit should not blank</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if(monthlysalelimit.trim() !=''){
+                                        if (!monthlysalelimit.trim().match(number)){
+                                            $("#ExcelDataError").html('');
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Monthly Sale Limit should be Numeric</span>");
+                                            $("#excel_file").val('');
+                                            document.getElementById("ExcelDataError").style.display = "block";
+                                            return false;
+                                        }else if(monthlysalelimit.trim() == 0){
+                                            $("#ExcelDataError").html('');
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Monthly Sale Limit should be more than 0</span>");
+                                            $("#excel_file").val('');
+                                            document.getElementById("ExcelDataError").style.display = "block";
+                                            return false;
+                                        }
+                                    }
+                                }
+
                             })
                         }
                     }
@@ -361,9 +360,16 @@
                             for(var i =0;i<res.updateResponse.data.length;i++){
                                 if(res.updateResponse.data[i].status == 0){
                                     if(Cardno == res.updateResponse.data[i].cardno){
-                                        $(tr).find(':nth-child(5)').text(res.updateResponse.data[i].reason);
+
+                                        var aaa = "<span>"+(res.updateResponse.data[i].reason)+"</span><br>";
+
+                                        //$(tr).find(':nth-child(5)').text("Record No "+currentIndex+":- "+res.updateResponse.data[i].reason);
+
+                                        $(tr).find(':nth-child(5)').append(aaa);
                                     }
                                 }
+                                
+
                             }
                         });
 
