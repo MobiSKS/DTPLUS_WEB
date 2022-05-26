@@ -110,10 +110,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> UpdateCards(ObjCardLimits[] limitArray)
         {
-            var reason = await _cardService.UpdateCards(limitArray);
+            var updateResponse = await _cardService.UpdateCards(limitArray);
 
             ModelState.Clear();
-            return Json(reason);
+            return Json(new { updateResponse  = updateResponse });
         }
 
         public IActionResult SetCcmsLimitForAllCards()

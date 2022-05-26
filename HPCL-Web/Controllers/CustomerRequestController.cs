@@ -77,5 +77,19 @@ namespace HPCL_Web.Controllers
             var searchList = await _customerRequestService.GetSmsAlertsConfigure(entity);
             return Json(new { searchList = searchList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateSmsAlertsConfigure(string CustomerId, string SmsAlertList)
+        {
+            var reasonList = await _customerRequestService.UpdateSmsAlertsConfigure(CustomerId, SmsAlertList);
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateDndSmsAlertsConfigure(string CustomerId)
+        {
+            var reasonList = await _customerRequestService.UpdateDndSmsAlertsConfigure(CustomerId);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }

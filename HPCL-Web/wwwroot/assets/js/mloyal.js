@@ -297,7 +297,7 @@ function showregAddress() {
             document.getElementById("incomeTaxPan_error").className = "error";
             ret = false;
         }
-        else if (TypeofBusinessEntityId == 2 || TypeofBusinessEntityId == 3 || TypeofBusinessEntityId == 4 || TypeofBusinessEntityId == 8)
+        else if (TypeofBusinessEntityId != 10)
         {
             let forthdigitPan = panno.substr(3, 1);
             console.log(forthdigitPan);
@@ -320,6 +320,12 @@ function showregAddress() {
                 ret = false;
             }
             else if (TypeofBusinessEntityId == 8 && forthdigitPan != 'A')
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if ((TypeofBusinessEntityId == 1 || TypeofBusinessEntityId == 5 || TypeofBusinessEntityId == 6 || TypeofBusinessEntityId == 7 || TypeofBusinessEntityId == 9) && (forthdigitPan == 'A' || forthdigitPan == 'P' || forthdigitPan == 'C' || forthdigitPan == 'H'))
             {
                 document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("incomeTaxPan_error").className = "error";
@@ -2135,7 +2141,7 @@ function ValidatePAN()
     //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
     //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
     //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
-    if (customerTbentityid == 2 || customerTbentityid == 3 || customerTbentityid == 4 || customerTbentityid == 8)
+    if (customerTbentityid != 10)
     {
         let forthdigitPan = panno.substr(3, 1);
         console.log(forthdigitPan);
@@ -2161,6 +2167,13 @@ function ValidatePAN()
             return (false);
         }
         else if (customerTbentityid == 8 && forthdigitPan != 'A')
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            $('#PANErrorMsg').modal('show');
+            return (false);
+        }
+        else if ((customerTbentityid == 1 || customerTbentityid == 5 || customerTbentityid == 6 || customerTbentityid == 7 || customerTbentityid == 9) && (forthdigitPan == 'A' || forthdigitPan == 'P' || forthdigitPan == 'C' || forthdigitPan == 'H'))
         {
             document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
             document.getElementById("incomeTaxPan_error").className = "error";

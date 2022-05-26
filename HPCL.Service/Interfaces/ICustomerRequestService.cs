@@ -14,5 +14,7 @@ namespace HPCL.Service.Interfaces
         Task<GetCardRenwalRequestListRes> GetCardRenwalRequest(GetCardRenwalRequestList entity);
         Task<List<SuccessResponse>> UpdateCardRenwalRequest(string CustomerId, string updatePostArray);
         Task<ConfigureSmsAlertsRes> GetSmsAlertsConfigure(GetConfigureSmsAlerts entity);
+        Task<List<SuccessResponse>> UpdateSmsAlertsConfigure(string CustomerId, string SmsAlertList);
+        Task<List<SuccessResponse>> UpdateDndSmsAlertsConfigure(string CustomerId);
     }
 }

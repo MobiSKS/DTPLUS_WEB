@@ -8,19 +8,9 @@
     return true;
 }
 
-function getNumberOfDays(start, end) {
+function IsAlphaNumeric(keyCode)
+{
     debugger;
-    const date1 = new Date(start);
-    const date2 = new Date(end);
-
-    // One day in milliseconds
-    const oneDay = 1000 * 60 * 60 * 24;
-
-    // Calculating the time difference between two dates
-    const diffInTime = date2.getTime() - date1.getTime();
-
-    // Calculating the no. of days between two dates
-    const diffInDays = Math.round(diffInTime / oneDay);
-
-    return diffInDays;
+    return ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || keyCode == 8 || keyCode == 9 || keyCode == 46 ||
+        (keyCode >= 96 && keyCode <= 105) || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40);
 }

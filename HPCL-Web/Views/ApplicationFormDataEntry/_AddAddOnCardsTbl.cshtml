@@ -14,6 +14,7 @@
                         @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless" }) <span class="ml-2"> Cardless </span>
                     </div>
                 </div>
+                <span class="error" id="CardPreference_error"></span>
             </div>
         </div>
     </fieldset>
@@ -188,7 +189,7 @@
                         document.getElementById("rbtnCard").checked = false;
                         $("#rbtnCard").prop('disabled', false);
                         $("#FeePaymentNo").prop('readonly', false);
-                        $("#FeePaymentDate").prop('readonly', false);
+                        //$("#FeePaymentDate").prop('readonly', false);
                         $('#lblChequeNo').text('');
                         $('#lblChequeNo').append("Approval Email From<sup class='text-danger'>*</sup>");
                         $('#lblChequeDate').text('');
@@ -269,7 +270,8 @@ function setFromDateFormat(){
             changeMonth: true,
             changeYear: true,
             maxDate: new Date(today),
-            autoclose: "true"
+            autoclose: "true",
+            yearRange: "-100:+0"
         });
         
          if (($('.fromDate').val() != undefined)  && ($('.fromDate').val() != "") ){
@@ -375,7 +377,8 @@ function setFromDateFormat(){
 
         if (!(document.querySelector('input[name="CardPreference"]:checked'))) 
         {
-            alert("Please select Card Preference");
+            //alert("Please select Card Preference");
+            document.getElementById("CardPreference_error").innerHTML="Please select Card Preference";
             ret = false;
         }
 
@@ -388,7 +391,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentNoErrMsg').text("Approval Email From cannot be left blank");
                     $("#FeePaymentNoErrMsg").attr("style", "display:block");
-                    ret=false;
+                    //ret=false;
                 }
                 else 
                 {
@@ -399,7 +402,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentDateErrMsg').text("Approval Email Date cannot be left blank");
                     $("#FeePaymentDateErrMsg").attr("style", "display:block");
-                    ret=false;
+                    //ret=false;
                 }
                 else 
                 {
@@ -413,7 +416,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentNoErrMsg').text("Payment Source cannot be left blank");
                     $("#FeePaymentNoErrMsg").attr("style", "display:block");
-                    ret=false;
+                    //ret=false;
                 }
                 else 
                 {
@@ -424,7 +427,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentDateErrMsg').text("Payment Date cannot be left blank");
                     $("#FeePaymentDateErrMsg").attr("style", "display:block");
-                    ret=false;
+                    //ret=false;
                 }
                 else 
                 {
@@ -555,8 +558,8 @@ function setFromDateFormat(){
 
                         $('#NoOfCards').attr("readonly", true);
                         $('#NoofVechileforAllCards').attr("readonly", true);
-                        $('#FeePaymentDate').attr("readonly", true);
-                        $('#FeePaymentNo').attr("readonly", true);
+                        //$('#FeePaymentDate').attr("readonly", true);
+                        //$('#FeePaymentNo').attr("readonly", true);
                         $("#btnAdd").attr("disabled", true);
                     }
                 },
@@ -598,7 +601,8 @@ $('input[name="CardPreference"]:radio').change(function ()
 
     var selected = $("input[name='CardPreference']:checked").val()
     //alert(selected);
-    if (selected == "Cardless") {
+    if (selected == "Cardless") 
+    {
         $('#lblChequeNo').hide();
         $('#lblChequeDate').hide();
         $("#FeePaymentNo").val('');
@@ -610,8 +614,10 @@ $('input[name="CardPreference"]:radio').change(function ()
         $('#lblReceivedAmount').hide();
         document.getElementById("rbtnFeeWaiver").checked = false;
         document.getElementById("rbtnOnline").checked = false;
+        document.getElementById("CardPreference_error").innerHTML="";
     }
-    else if (selected == "Card") {
+    else if (selected == "Card") 
+    {
         $('#lblChequeNo').show();
         $('#lblChequeDate').show();
         $("#FeePaymentNo").val('');
@@ -632,9 +638,17 @@ $('input[name="CardPreference"]:radio').change(function ()
             $('#lblReceivedAmount').hide();
             $('#ReceivedAmount').hide();
         }
+        document.getElementById("CardPreference_error").innerHTML="";
     }
 
-    //LoadCardDeatils();
+    var count = $('#NoOfCardsTbl tr').length;
+
+    //alert(count);
+
+    if (count > 0) 
+    {
+        AddCardTbl();
+    }
 
 });
 
@@ -705,7 +719,7 @@ function RemoveSpecialChar(txtName)
    {
         $('#NoOfCards').attr("readonly", false);
         $('#NoofVechileforAllCards').attr("readonly", false);
-        $('#FeePaymentDate').attr("readonly", false);
+        //$('#FeePaymentDate').attr("readonly", false);
         $('#FeePaymentNo').attr("readonly", false);
 
         $("#ViewNoOfCardsTbl").html("");
@@ -906,7 +920,8 @@ function RemoveSpecialChar(txtName)
 
         if (!(document.querySelector('input[name="CardPreference"]:checked'))) 
         {
-            alert("Please select Card Preference");
+            //alert("Please select Card Preference");
+            document.getElementById("CardPreference_error").innerHTML="Please select Card Preference";
             ret=false;
         }
 
@@ -1062,24 +1077,24 @@ function RemoveSpecialChar(txtName)
 
                     if(mobile.trim()=='')
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile Number";
                         ret=false;
                     }
                     else
                     {
                         if (mobile.charAt(0) == "0") 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if (mobile.length < 10) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if(!mobile.match(phoneno)) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else
@@ -1230,7 +1245,7 @@ function RemoveSpecialChar(txtName)
                 {
                     if(row.cells[10].innerHTML.trim()=="1")
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile Number already exists";
                         ret=false;
                     }
    
@@ -1428,24 +1443,24 @@ function RemoveSpecialChar(txtName)
 
                     if(mobile.trim()=='')
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile Number";
                         ret=false;
                     }
                     else
                     {
                         if (mobile.charAt(0) == "0") 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if (mobile.length < 10) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if(!mobile.match(phoneno)) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else
@@ -1463,54 +1478,54 @@ function RemoveSpecialChar(txtName)
             });
 
 
-            j=0;i=0;
-            cnt=0;
-            console.log('Before Checking For Duplicate Card Identifier');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
+            //j=0;i=0;
+            //cnt=0;
+            //console.log('Before Checking For Duplicate Card Identifier');
+            //$("#NoOfCardsTbl tbody tr").each(function () 
+            //{
+            //    var row = $(this);
+            //    j=0;
+            //    i=i+1;
+            //    cnt = 0;
+            //    $("#NoOfCardsTbl tbody tr").each(function () 
+            //    {
+            //        var row1 = $(this);
 
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
-                    {
-                        var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+            //        j=j+1;
+            //        if(i>0 && j>1 && j>i)
+            //        {
+            //            var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+            //            var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
 
-                        if(PrevIdent!="" && CurIdent!="")
-                        {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
-                            {
+            //            if(PrevIdent!="" && CurIdent!="")
+            //            {
+            //                if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+            //                {
 
-                                if(CurIdent.length<2 || CurIdent.length>16)
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  ret=false;
-                                }
-                                else if(!CurIdent.match(forVehicleNo))
-                                {
-                                  document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
-                                  ret=false;
-                                }
-                                else
-                                {
-                                    document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
-                                    ret=false;
-                                }
+            //                    if(CurIdent.length<2 || CurIdent.length>16)
+            //                    {
+            //                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+            //                      ret=false;
+            //                    }
+            //                    else if(!CurIdent.match(forVehicleNo))
+            //                    {
+            //                      document.getElementById('CardIdentifier_error_'+cnt).innerHTML ="Invalid Card Identifier";
+            //                      ret=false;
+            //                    }
+            //                    else
+            //                    {
+            //                        document.getElementById('CardIdentifier_error_'+cnt).innerHTML="Duplicate Card Identifier";
+            //                        ret=false;
+            //                    }
                                 
-                            }
-                        }
-                    }
+            //                }
+            //            }
+            //        }
 
-                    cnt=cnt+1;
-                });
+            //        cnt=cnt+1;
+            //    });
 
-            });
+            //});
 
            
             j=0;i=0;
@@ -1552,36 +1567,36 @@ function RemoveSpecialChar(txtName)
             {
                 j=0;i=0;
                 cnt=0;
-                console.log('Before Checking For Duplicate MobileNo');
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row = $(this);
-                    j=0;
-                    i=i+1;
-                    cnt = 0;
-                    $("#NoOfCardsTbl tbody tr").each(function () 
-                    {
-                        var row1 = $(this);
+                //console.log('Before Checking For Duplicate MobileNo');
+                //$("#NoOfCardsTbl tbody tr").each(function () 
+                //{
+                //    var row = $(this);
+                //    j=0;
+                //    i=i+1;
+                //    cnt = 0;
+                //    $("#NoOfCardsTbl tbody tr").each(function () 
+                //    {
+                //        var row1 = $(this);
 
-                        j=j+1;
-                        if(i>0 && j>1 && j>i)
-                        {
-                            var PrevMbno = row.find("td:eq(7) input[type='text']").val();
-                            var CurMbno =  row1.find("td:eq(7) input[type='text']").val();
+                //        j=j+1;
+                //        if(i>0 && j>1 && j>i)
+                //        {
+                //            var PrevMbno = row.find("td:eq(7) input[type='text']").val();
+                //            var CurMbno =  row1.find("td:eq(7) input[type='text']").val();
 
-                            if(PrevMbno!="" && CurMbno!="")
-                            {
-                                if(PrevMbno.trim()==CurMbno.trim())
-                                {
-                                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile No";
-                                    ret=false;
-                                }
-                            }
-                        }
+                //            if(PrevMbno!="" && CurMbno!="")
+                //            {
+                //                if(PrevMbno.trim()==CurMbno.trim())
+                //                {
+                //                    document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile No";
+                //                    ret=false;
+                //                }
+                //            }
+                //        }
 
-                        cnt=cnt+1;
-                    });
-                });
+                //        cnt=cnt+1;
+                //    });
+                //});
 
 
                 cnt=-1;
@@ -1653,7 +1668,7 @@ function RemoveSpecialChar(txtName)
                 {
                     if(row.cells[11].innerHTML.trim()=="1")
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile Number already exists";
                         ret=false;
                     }
    
@@ -1797,24 +1812,24 @@ function RemoveSpecialChar(txtName)
 
                     if(mobile.trim()=='')
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile No.";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile Number";
                         ret=false;
                     }
                     else
                     {
                         if (mobile.charAt(0) == "0") 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if (mobile.length < 10) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else if(!mobile.match(phoneno)) 
                         {
-                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile No.";
+                            document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
                             ret=false;
                         }
                         else
@@ -1924,7 +1939,7 @@ function RemoveSpecialChar(txtName)
                 {
                     if(row.cells[4].innerHTML.trim()=="1")
                     {
-                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile No. already exists";
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile Number already exists";
                         ret=false;
                     }
    
@@ -1969,20 +1984,63 @@ function RemoveSpecialChar(txtName)
           console.log(customerTypeId);
           if ($(this).prop("checked"))
           {
-             //$(".verify").addClass("disabled");
-
             var cnt = 0;
 
             $("#NoOfCardsTbl tbody tr").each(function () 
             {
                 //var row = $(this);
                 document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
                 cnt=cnt+1;
              });
           }
           else
           {
-              //$('.verify').removeClass("disabled");
+                var cnt = 0;
+                var vehicleNo = "";
+                var isValid=true;
+
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                    isValid=true;
+                    vehicleNo = "";
+                    vehicleNo=document.getElementById('VechileNo_'+cnt).value;
+                    if(vehicleNo.trim()=='')
+                    {
+                        isValid=false;
+                    }
+                    else
+                    {
+                        if(vehicleNo.trim()!='')
+                        {
+                            if (!(vehicleNo.match(forVehicleNo))) 
+                            {
+                                isValid=false;
+                            }
+                            else if (!vehicleNo.match(atLeastOneAlphabet)) 
+                            {
+                                isValid=false;
+                            }
+                            else if(vehicleNo.length<6 || vehicleNo.length>10)
+                            {
+                                isValid=false;
+                            }
+                        }
+                    } 
+
+                    if(isValid)
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", false);
+                    }
+                    else
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
+                    }
+
+                    cnt=cnt+1;
+
+              });
+
           }
 
     });

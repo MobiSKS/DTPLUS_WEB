@@ -16,7 +16,7 @@ namespace HPCL.Service.Interfaces
         Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity);
         Task<string> UpdateStatus(string cardNo, int Statusflag);
         Task<GetCardLimitResponse> SetSaleLimit(GetCardLimit entity);
-        Task<string> UpdateCards(ObjCardLimits[] limitArray);
+        Task<SetSaleLimitUpdateRes> UpdateCards(ObjCardLimits[] limitArray);
         Task<SearchCcmsLimitAllResponse> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity);
         Task<string> UpdateCcmsLimitAllCards(int limitype, int amountVal);
         Task<IndividualCardResponse> SetCcmsForIndCards(SetIndividualLimit entity);
