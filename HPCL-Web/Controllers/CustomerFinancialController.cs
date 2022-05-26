@@ -105,5 +105,12 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerFinancialService.CardToCCMSAmtTransfer(customerId, cardToCCMSTransfer);
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult CardToCardAmountTransferViaExcel(string CustomerId)
+        {
+            AmountTransferExcel uploadExcel = new AmountTransferExcel();
+            uploadExcel.CustomerId = CustomerId;
+            return View(uploadExcel);
+        }
     }
 }

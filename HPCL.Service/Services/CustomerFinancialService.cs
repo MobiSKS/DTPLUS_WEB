@@ -244,7 +244,7 @@ namespace HPCL.Service.Services
             return reasonList;
         }
 
-        public async Task<List<SuccessResponse>> CardToCardAmtTransfer(string customerId, string cardToCardTransfer)
+        public async Task<CardToCardAmountTransferRes> CardToCardAmtTransfer(string customerId, string cardToCardTransfer)
         {
             cardToCardTransfer[] arrs = JsonConvert.DeserializeObject<cardToCardTransfer[]>(cardToCardTransfer);
 
@@ -260,8 +260,7 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.CardToCardsAmtTransferUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            CardToCardAmountTransferRes reasonList = obj.ToObject<CardToCardAmountTransferRes>();
             return reasonList;
         }
 
