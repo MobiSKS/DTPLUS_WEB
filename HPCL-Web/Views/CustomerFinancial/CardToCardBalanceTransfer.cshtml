@@ -10,7 +10,7 @@
         <li class="breadcrumb-item font-weight-light">Card To Card Balance Transfer</li>
     </ul>
      
-   <div id="successUpdate" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+   <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
     <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerFinancial" data-ajax-action="CardToCardBalanceTransfer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
         <div class="w-100">
@@ -65,7 +65,7 @@
                                 <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
                             </div>
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button">Upload to Excel</button>
+                                <a class="btn btn_primary" href="#aa" id="btnUploadExcel">UPLOAD EXCEL</a>
                             </div>
                         </div>
                     </div>
@@ -371,8 +371,8 @@
                     success: function (res) {
                         console.log("res",res);
                         $("#formVal").hide();
-                        for(var i = 0; i < res.reasonList.length; i++){
-                            $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span><br>");
+                        for(var i = 0; i < res.reasonList.data.length; i++){
+                            $("#successUpdate").append("<span>"+res.reasonList.data[i].reason+"</span><br>");
                         }
                         document.getElementById('successUpdate').style.display = "block";
                     },
@@ -450,6 +450,37 @@
             }
         }
     }
+
+
+    $("#btnUploadExcel").on('click', function (e) {
+
+        var custId = $("#custIdVal").val();
+
+        var flag = "Y";
+        if(custId.trim()==''){
+            $("#CustomerIdErr").attr("style", "display:block");
+            $("#CustomerIdErr").html("Customer ID should not be left empty");
+            flag = "N";
+        }
+        else{
+            if(custId.trim()!=''){
+                if (!custId.match(mappedCustomerId)){
+                    $("#CustomerIdErr").attr("style", "display:block");
+                    $("#CustomerIdErr").html("Invalid Customer ID");
+                    flag = "N";
+                }
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if(flag == "Y"){
+            var url = '@Html.Raw(@Url.Action("SetCardLimitViaExcelFileUpload", new { customerId = "dd" }))';
+            url = url.replace("dd", encodeURIComponent(custId));
+            $(this).attr('href', url);
+        }
+    });
 
 </script>
 

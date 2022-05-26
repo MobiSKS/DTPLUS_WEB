@@ -14,7 +14,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
         Task<GetViewAccountStatementResponse> ViewAccountStatement(GetViewAccountStatement entity);
         Task<List<SuccessResponse>> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer);
-        Task<List<SuccessResponse>> CardToCardAmtTransfer(string customerId, string cardToCardTransfer);
+        Task<CardToCardAmountTransferRes> CardToCardAmtTransfer(string customerId, string cardToCardTransfer);
         Task<List<SuccessResponse>> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer);
     }
 }
