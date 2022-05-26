@@ -1905,6 +1905,11 @@ namespace HPCL.Service.Services
                         returnValue.Reason = configurationResponse.Data.CCMSAmountDetail[0].Reason;
                     if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSAmountDetail[0].Amount))
                         returnValue.Amount = configurationResponse.Data.CCMSAmountDetail[0].Amount;
+
+                    if (returnValue.Amount == "0")
+                    {
+                        returnValue.Amount = "";
+                    }
                 }
             }
 
