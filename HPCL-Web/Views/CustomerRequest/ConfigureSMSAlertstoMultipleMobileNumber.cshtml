@@ -29,6 +29,9 @@
                                             <div class="px-0">
                                                 <button class="btn btn_primary regrate_btn" type="submit">Search</button>
                                             </div>
+                                             <div class="px-0">
+                                                <button class="btn btn_primary regrate_btn" type="button" onclick="resetClick()">Reset</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,6 +125,11 @@
 </div>
 
 <script>
+
+    function resetClick(){
+        location.reload();
+    }
+
     $('#CustomerDefaultVal').on('paste', function (event) {
         if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
             event.preventDefault();
@@ -141,6 +149,12 @@
 
             return true;
         }
+
+        //$("#alternameMobSection .deleteButton").each(function () {
+        //    var row = $(this).closest("tr");
+        //    var MobileNo = row.find('.mbNo').val();
+        //});
+
      });
 
 
@@ -167,9 +181,9 @@
                                  + "<td style='vertical-align:middle'>Mobile Number</td>"
                                  + "<td style='display:flex;'><input type='text' id='MobNoId_"+i+"' maxlength='10' onkeypress='return isNumberKey(event)' onchange='mobNoChange(this," + (i) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+i+"' aria-hidden='true'></i></td>"
                                  + "<td style='vertical-align:middle'>Name</td>"
-                                 + "<td><input type='text' id='NameId_"+i+"' class='form-control nm'/></td>"
+                                 + "<td style='display:flex;'><input type='text' id='NameId_"+i+"' style='width:50%;' onchange='nameOnChange(this," + (i) + ")' class='form-control nm'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='nameErr"+i+"' aria-hidden='true'></i></td>"
                                  + "<td style='vertical-align:middle'>Designation</td>"
-                                 + "<td><input type='text' id='DesignationId_"+i+"' class='form-control desgn'/></td>"
+                                 + "<td style='display:flex;'><input type='text' id='DesignationId_"+i+"' style='width:50%;' onchange='designationOnChange(this," + (i) + ")' class='form-control desgn'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='designationErr"+i+"' aria-hidden='true'></i></td>"
                                  + "<td class='deleteButton'><button class='btn btn_primary dlt' type='button'>Delete</button></td>"
                                  + "</tr></tbody>";
 
@@ -240,6 +254,12 @@
                     })
                 }
 
+                console.log("mobNoArr",mobNoArr);
+
+                
+               
+                
+
                 if(MobileNo.trim() != ''){
                     if(!MobileNo.match(/^[6789]\d{9}$/)){
                         document.getElementById('mobNoErr'+indexS).title="Invalid Mobile Number";
@@ -248,14 +268,31 @@
                     }
                 }
 
-                console.log("mobNoArr",mobNoArr);
-
-                
-                for(var i = 0;  i < mobNoArr.length; i++){
-                    if(MobileNo == mobNoArr[i].mobN){
-                        cnt++;    
+                if(MobileNo.trim() != ''){
+                    for(var i = 0;  i < mobNoArr.length; i++){
+                        if(MobileNo == mobNoArr[i].mobN){
+                            cnt++;    
+                        }
                     }
                 }
+                
+                if(Name.trim() != ''){
+                    if(!Name.match(atLeastOneAlphabet)){
+                        document.getElementById('nameErr'+indexS).title="Invalid Name";
+                        document.getElementById('nameErr'+indexS).style.display = "block";
+                        flag = "N";
+                    }
+                }
+
+                if(Designation.trim() != ''){
+                    if(!Designation.match(atLeastOneAlphabet)){
+                        document.getElementById('designationErr'+indexS).title="Invalid Designation";
+                        document.getElementById('designationErr'+indexS).style.display = "block";
+                        flag = "N";
+                    }
+                }
+
+}
          });
 
         if(cnt > 0){
@@ -308,7 +345,7 @@
 
         var currentRow = $(this).closest("tr");
 
-         var selectedRow = $(this).closest("tr")[0];
+        var selectedRow = $(this).closest("tr")[0];
 
         var indexS = selectedRow.rowIndex;
 
@@ -345,14 +382,14 @@
 
                                      for(var i =0; i<4;i++){
                                          var appendFields = "<tbody><tr>"
-                                                         + "<td>Mobile Number</td>"
-                                                         + "<td style='display:flex;'><input type='text' id='MobNoId_"+i+"' maxlength='10' onkeypress='return isNumberKey(event)' onchange='mobNoChange(this," + (i) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+i+"' aria-hidden='true'></i></td>"
-                                                         + "<td>Name</td>"
-                                                         + "<td><input type='text' id='NameId_"+i+"' style='width:50%;' class='form-control nm'/></td>"
-                                                         + "<td>Designation</td>"
-                                                         + "<td><input type='text' id='DesignationId_"+i+"' style='width:50%;' class='form-control desgn'/></td>"
-                                                         + "<td class='deleteButton'><button class='btn btn_primary dlt' type='button' style='height:20px;'>Delete</button></td>"
-                                                         + "</tr></tbody>";
+                                                             + "<td style='vertical-align:middle'>Mobile Number</td>"
+                                                             + "<td style='display:flex;'><input type='text' id='MobNoId_"+i+"' maxlength='10' onkeypress='return isNumberKey(event)' onchange='mobNoChange(this," + (i) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+i+"' aria-hidden='true'></i></td>"
+                                                             + "<td style='vertical-align:middle'>Name</td>"
+                                                             + "<td style='display:flex;'><input type='text' id='NameId_"+i+"' style='width:50%;' onchange='nameOnChange(this," + (i) + ")' class='form-control nm'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='nameErr"+i+"' aria-hidden='true'></i></td>"
+                                                             + "<td style='vertical-align:middle'>Designation</td>"
+                                                             + "<td style='display:flex;'><input type='text' id='DesignationId_"+i+"' style='width:50%;' onchange='designationOnChange(this," + (i) + ")' class='form-control desgn'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='designationErr"+i+"' aria-hidden='true'></i></td>"
+                                                             + "<td class='deleteButton'><button class='btn btn_primary dlt' type='button'>Delete</button></td>"
+                                                             + "</tr></tbody>";
 
                                         $("#alternameMobSection").append(appendFields);
                                      }
@@ -402,16 +439,40 @@
 
     function mobNoChange(o, rowSelected){
         var mobNo = o.value;
-
         if(mobNo.trim() != ''){
-        if(!mobNo.match(/^[6789]\d{9}$/)){
-            document.getElementById('mobNoErr'+rowSelected).title="Invalid Mobile Number";
-            document.getElementById('mobNoErr'+rowSelected).style.display = "block";
-            return false;
-        }else{
-            document.getElementById('mobNoErr'+rowSelected).style.display = "none";
+            if(!mobNo.match(/^[6789]\d{9}$/)){
+                document.getElementById('mobNoErr'+rowSelected).title="Invalid Mobile Number";
+                document.getElementById('mobNoErr'+rowSelected).style.display = "block";
+                return false;
+            }else{
+                document.getElementById('mobNoErr'+rowSelected).style.display = "none";
+            }
         }
-        }
+    }
 
+    function nameOnChange(o, rowSelected){
+        var name = o.value;
+        if(name.trim() != ''){
+            if(!name.match(atLeastOneAlphabet)){
+                document.getElementById('nameErr'+rowSelected).title="Invalid Name";
+                document.getElementById('nameErr'+rowSelected).style.display = "block";
+                return false;
+            }else{
+                document.getElementById('nameErr'+rowSelected).style.display = "none";
+            }
+        }
+    }
+
+    function designationOnChange(o, rowSelected){
+        var designation = o.value;
+        if(designation.trim() != ''){
+            if(!designation.match(atLeastOneAlphabet)){
+                document.getElementById('designationErr'+rowSelected).title="Invalid Designation";
+                document.getElementById('designationErr'+rowSelected).style.display = "block";
+                return false;
+            }else{
+                document.getElementById('designationErr'+rowSelected).style.display = "none";
+            }
+        }
     }
 </script>
