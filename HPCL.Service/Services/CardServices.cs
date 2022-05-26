@@ -284,7 +284,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<string> UpdateCards(ObjCardLimits[] limitArray)
+        public async Task<SetSaleLimitUpdateRes> UpdateCards(ObjCardLimits[] limitArray)
         {
             var updateServiceBody = new UpdateCardLimit
             {
@@ -300,9 +300,9 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            var updateRes = obj["Data"].Value<JArray>();
-            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
-            return updateResponse[0].Reason;
+            SetSaleLimitUpdateRes updateResponse = obj.ToObject<SetSaleLimitUpdateRes>();
+
+            return updateResponse;
         }
 
         public async Task<SearchCcmsLimitAllResponse> SearchCcmsLimitForAllCards(GetCcmsLimitAll entity)

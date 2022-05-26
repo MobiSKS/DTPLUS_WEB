@@ -8,15 +8,13 @@
         <li class="breadcrumb-item font-weight-light">Limit Update For Single Recharge Cards</li>
     </ul>
 
-    <div id="successUpdate" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
-
     <form id="formVal" method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="LimitUpdateForSingleRechargeCards" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                 <div class="border-1 rounded border-grey h-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Limit Update For Single Recharge Cards</p>
                     <div class="pt-3">
-                        <div class="w-100">
+                        <div class="w-100" id="searchSection">
                             <div class="d-flex align-items-center justify-content-between flex-wrap">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -31,7 +29,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Card Number</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.Cardno, new { @class = "form-control", onkeypress = "return isNumberKey(event)" })
+                                            @Html.TextBoxFor(m => m.Cardno, new {@class = "form-control", onkeypress = "return isNumberKey(event)" })
                                             @Html.ValidationMessageFor(m => m.Cardno, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -48,7 +46,7 @@
 
                         <div class="clearfix"></div>
 
-                        <div id="noRecord" class="mb-3 text-center" style="background-color: #fee4e4;display:none;margin-top:1%"></div>
+                        <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
 
                         <div id="UpdateGrid" class="px-4" style="display:none;">
                             <table id="CardSearch" class="datatable table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
@@ -69,10 +67,45 @@
 
                             <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap px-4 mb-3">
                                 <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <button class="btn btn_primary py-2 px-4" type="button" id="btnSave" name="submit" onclick="RechargeAmount()">NEXT</button>
+                                    <button class="btn btn_primary py-2 px-4" type="button" id="btnSave" name="button" onclick="RechargeAmount()">NEXT</button>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+                        </div>
+
+
+                        <div id="responseTblSection" style="display:none;">
+
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <table id="responseTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Sr. No</th>
+                                        <th>Card Number</th>
+                                        <th>One Time Limit</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <div id="confirmIdBtn" style="display:none;">
+                                <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap px-4 mb-3">
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                        <button class="btn btn_primary py-2 px-4" type="button" name="submit" onclick="updateRechargeConfirm()">CONFIRM</button>
+                                    </div>
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                        <button class="btn btn_primary py-2 px-4" type="button" name="button" onclick="CancelRecharge()">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="okIdBtn" style="display:none;">
+                                <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap px-4 mb-3">
+                                    <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                        <button class="btn btn_primary py-2 px-4" type="button" name="submit" onclick="okRechargeConfirm()">OK</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -108,6 +141,8 @@
         console.log(res, "data");
 
         if (res.searchList.success == true) {
+
+            document.getElementById("responseTblSection").style.display = "none";
 
             document.getElementById("noRecord").style.display = "none";
 
@@ -167,6 +202,16 @@
                     ]).draw();
                 }
 
+                $("#CardSearch input[type=checkbox]").each(function () {
+                    var row = $(this).closest("tr");
+                    var Amount = row.find('.amt').val();
+                    console.log("Amount",Amount);
+
+                    if(Amount > 4999999){
+                        row.find('.checkEnable').attr("disabled", true);
+                    }
+                });
+
                 document.getElementById("UpdateGrid").style.display = "block";
         } else {
             document.getElementById("UpdateGrid").style.display = "none";
@@ -193,14 +238,18 @@
         }
     });
 
+    var updateArray = new Array();
+
     function RechargeAmount(){
 
-        var updateArray = new Array();
+        updateArray.length = 0;
 
         var customerId = $("#custIdVal").val();
 
         var flag = "Y";
         var Cardno;
+        var Limittype;
+        var Amount;
         $("#CardSearch input[type=checkbox]:checked").each(function () {
 
             var selectedRow = $(this).closest("tr")[0];
@@ -211,8 +260,8 @@
             var row = $(this).closest("tr");
 
             Cardno = row.find('.getCard').text();
-            var Limittype = row.find('.limitTyp').val();
-            var Amount = row.find('.amt').val();
+            Limittype = row.find('.limitTyp').val();
+            Amount = row.find('.amt').val();
 
             updateArray.push({
                 Cardno: Cardno,
@@ -231,6 +280,10 @@
                     document.getElementById('ccmslimit_error_'+indexS).title="Please Enter  Value greater than 0";
                     document.getElementById('ccmslimit_error_'+indexS).style.display = "block";
                     flag = "N";
+                }else if(!(Amount < 5000001)){
+                    document.getElementById('ccmslimit_error_'+indexS).title="Invalid CCMS Reload Limit";
+                    document.getElementById('ccmslimit_error_'+indexS).style.display = "block";
+                    flag = "N";
                 }
             }
         });
@@ -246,39 +299,81 @@
             e.preventDefault();
 
          if (flag == "Y") {
-             $("#cardToCCMSSearch input[type=checkbox]:checked").each(function () {
-                var selectedRow = $(this).closest("tr")[0];
-                console.log("index",selectedRow.rowIndex);
-                var indexS = (selectedRow.rowIndex) - 1;
-                document.getElementById('amtTotransId_'+indexS).style.display = "none";
-            });
 
-            if (confirm('Do you want to process the selected record, confirm once')) {
-                console.log('ok');
+            $("#responseTbl td").parent().remove();
 
-                $.ajax({
-                    url: "@Url.Action("LimitUpdateForSingleRecharge", "Cards")",
-                    type: "POST",
-                    traditional: true,
-                    data: { objCCMSLimits: JSON.stringify(updateArray) },
-                    success: function (res) {
-                        console.log("res",res);
-                        $("#formVal").hide();
-                        for(var i = 0; i < res.reasonList.length; i++){
-                        $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span><br>");
-                        }
-                        document.getElementById('successUpdate').style.display = "block";
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-                });
-            } else {
-                console.log('cancel')
+            for (var i = 0; i < updateArray.length; i++) {
+
+                var rows = "<tbody><tr>"
+                    + "<td>"+(i+1)+"</td>"
+                    + "<td><span class='cardNoVal'>" + (updateArray[i].Cardno || '') + "</span></td>"
+                    + "<td>" + (updateArray[i].Amount || '') + "</td>"
+                    + "</tr ></tbody>";
+
+                $('#responseTbl').append(rows);
             }
+
+            document.getElementById("searchSection").style.display = "none";
+            document.getElementById("UpdateGrid").style.display = "none";
+            document.getElementById("okIdBtn").style.display = "none"
+            document.getElementById("confirmIdBtn").style.display = "block"
+            document.getElementById("responseTblSection").style.display = "block";
         }
     }
 
+    function updateRechargeConfirm(){
+        $.ajax({
+            url: "@Url.Action("LimitUpdateForSingleRecharge", "Cards")",
+            type: "POST",
+            traditional: true,
+            data: { objCCMSLimits: JSON.stringify(updateArray) },
+            success: function (res) {
+                console.log("res",res);
+                $("#successUpdate").html('');
+                $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span><br>");
+                document.getElementById("confirmIdBtn").style.display = "none";
+                document.getElementById("okIdBtn").style.display = "block"
+                document.getElementById('successUpdate').style.display = "block";
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    }
+
+    function CancelRecharge(){
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("LimitUpdateForSingleRechargeCards", "Cards")',
+            data: $('#formVal').serialize(),
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                document.getElementById("searchSection").style.display = "block";
+                OnSuccess(data);
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                console.log("Error Populating Status Type");
+            }
+        });
+    }
+
+    function okRechargeConfirm(){
+         $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("LimitUpdateForSingleRechargeCards", "Cards")',
+            data: $('#formVal').serialize(),
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                document.getElementById("searchSection").style.display = "block";
+                OnSuccess(data);
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                console.log("Error Populating Status Type");
+            }
+        });
+    }
 
      function ccmslimitChange(o, rowSelected){
         var amountVal = o.value;
@@ -295,32 +390,14 @@
                 document.getElementById('ccmslimit_error_'+rowSelected).title="Please Enter  Value greater than 0";
                 document.getElementById('ccmslimit_error_'+rowSelected).style.display = "block";
                 return false;
+            }else if(!(amountVal < 5000001)){
+                document.getElementById('ccmslimit_error_'+rowSelected).title="Invalid CCMS Reload Limit";
+                document.getElementById('ccmslimit_error_'+rowSelected).style.display = "block";
+                return false;
             }else{
                 document.getElementById('ccmslimit_error_'+rowSelected).title="";
                 document.getElementById('ccmslimit_error_'+rowSelected).style.display = "none";
             }
          }
-
-        
-
-         //if(amountVal.trim() !=''){
-         //    if(!(parseFloat(total) < parseFloat(cashPurseLimit))){
-         //           document.getElementById('ccmslimit_error_'+rowSelected).title="Card Balance should not be exceeded the Cash Purse Limit";
-         //           document.getElementById('ccmslimit_error_'+rowSelected).style.display = "block";
-         //           return false;
-         //    }else if(!(parseFloat(amountVal) < parseFloat(RestBal))){
-         //           document.getElementById('ccmslimit_error_'+rowSelected).title="Amount is greater than available CCMS Balance";
-         //           document.getElementById('ccmslimit_error_'+rowSelected).style.display = "block";
-         //           return false;
-         //    }else if(amountVal.trim() == 0){
-         //           document.getElementById('ccmslimit_error_'+rowSelected).title="Please Enter  Value greater than 0";
-         //           document.getElementById('ccmslimit_error_'+rowSelected).style.display = "block";
-         //           return false;
-         //    }
-         //    else{
-         //           document.getElementById('ccmslimit_error_'+rowSelected).title="";
-         //           document.getElementById('ccmslimit_error_'+rowSelected).style.display = "none";
-         //    }
-         //}
      }
 </script>

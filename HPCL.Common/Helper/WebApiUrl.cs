@@ -72,6 +72,7 @@
         public static string LimitUpdateForSingleRechargeUrl = "api/dtplus/card/limit_update_for_single_recharge";
         public static string GetEmergencyAddOnCardUrl = "api/dtplus/card/get_detail_for_emergency_replacement_cards";
         public static string MapEmergencyAddOnCardUrl = "api/dtplus/card/emergency_replacement_cards";
+        public static string getlistcreditcloselimittype = "api/dtplus/dealercredit/get_list_credit_close_limit_type";
         #endregion
 
         #region Merchant
@@ -167,8 +168,8 @@
         public static string getUpdateContactPersonDetails = "api/dtplus/customer/get_update_contact_person_details";
         public static string updateContactPersonDetails = "api/dtplus/customer/update_contact_person_details";
         public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
-
         public static string getCcmsBalAlertConfiguration = "api/dtplus/customer/get_ccms_bal_alert_configuration";
+        public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
         #endregion
 
         #region Login
@@ -370,12 +371,20 @@
         public static string UpdateCardRenwalRequestUrl = "api/dtplus/card/update_card_renewal_request";
         public static string GetConfigureSmsAlertsUrl = "api/dtplus/configure/get_configure_sms_alerts_details_by_customerid";
         public static string UpdateConfigureSmsAlertsUrl = "api/dtplus/configure/update_configure_sms_alerts";
+        public static string UpdateDndSmsAlertsConfigureUrl = "api/dtplus/configure/update_dnd_configure_sms_alerts";
         #endregion
 
         #region Configure
         public static string GetSmsAlertsToIndividualCardUsersDetails = "api/dtplus/configure/get_sms_alerts_to_individual_card_users_details";
         public static string DeleteSmsAlertsToIndividualCardUsers = "api/dtplus/configure/delete_sms_alerts_to_individual_card_users";
         public static string UpdateSmsAlertsToIndividualCardUsers = "api/dtplus/configure/update_sms_alerts_to_individual_card_users";
+        #endregion
+
+        #region Dealer
+        public static string getdealercreditmappingdetails = "api/dtplus/dealercredit/get_dealer_credit_mapping_details";
+        public static string insertmapdealerforcreditsale = "api/dtplus/dealercredit/insert_map_dealer_for_credit_sale";
+        public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
+        public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
         #endregion
     }
 }
