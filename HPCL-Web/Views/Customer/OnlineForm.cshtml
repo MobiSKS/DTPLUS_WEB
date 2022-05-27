@@ -862,6 +862,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                             <table id="CustomerDetailsSearch" class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
+                              <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>
+                                        @Html.DisplayName("Customer ID")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Customer Name")
+                                    </th>
+                                </tr>
+                             </thead>
+                           </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2004,7 +2019,7 @@
             data: { PANNumber: panNumber },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
-                //debugger;
+                debugger;
                 var jsonData = JSON.parse(data);
                 console.log(jsonData);
                 if (status == 'success' && jsonData['status-code'] == '101')
@@ -2033,29 +2048,54 @@
 
                             $.ajax({
                                 type: 'POST',  // http method
-                                url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
+                                url: '@Url.Action("CheckPanCardDuplicationByDistrictidWithListOfCustomers", "Customer")',
                                 data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
                                 dataType: "json",
                                 success: function (data, status, xhr)
                                 {
+                                    debugger;
                                     console.log(data);
                                     console.log(status);
                                     var v = data;
-                                    if (status == 'success') {
-
+                                    if (status == 'success') 
+                                    {
                                         console.log('Test');
                                         console.log(data);
-                                        console.log(data.status);
-                                        console.log(data.reason);
-                                        if (data.status == "0") {
-                                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                        //console.log(data.status);
+                                        //console.log(data.reason);
+                                        if (data.customer[0].status == "0") 
+                                        {
                                             localStorage.setItem("DUPLICATEPANUSED", "0");
                                             document.getElementById('IsDuplicatePanNo').value = "0";
                                             document.getElementById("lblPanCardRemarks").style.display = "block";
                                             document.getElementById("PanCardRemarks").style.display = "block";
                                             $("#PanCardRemarks").prop('readonly', false);
+
+                                            if (data.customer.length > 0) 
+                                            {
+
+                                                  $("#CustomerDetailsSearch td").parent().remove();
+                                                  for (var i = 0; i < data.customer.length; i++) 
+                                                  {
+                                                      var rows = "<tbody><tr>"
+                                                          +"<td>"+(i+1)+"</td>"
+                                                          + "<td width='400px'><span class='rowData'>" + data.customer[i].customerID + "</span></td>"
+                                                          + "<td width='400px'><span class='rowData'>" + data.customer[i].customerName + "</span></td>"
+                                                      + "</tr></tbody>";
+
+                                                      $('#CustomerDetailsSearch').append(rows);
+
+                                                  }
+
+                                             }
+                                             else 
+                                             {
+                                                  $("#CustomerDetailsSearch td").parent().remove();
+                                             }
+
                                         }
-                                        else {
+                                        else 
+                                        {
                                             localStorage.setItem("DUPLICATEPANUSED", "1");
                                             document.getElementById('IsDuplicatePanNo').value = "1";
                                             document.getElementById("comm_district_error").innerHTML = "";
@@ -2066,7 +2106,8 @@
                                             document.getElementById("PanCardRemarks_error").innerHTML ="";
                                         }
                                     }
-                                    else {
+                                    else 
+                                    {
                                         document.getElementById("lblPanCardRemarks").style.display = "none";
                                         document.getElementById("PanCardRemarks").style.display = "none";
                                         document.getElementById("PanCardRemarks").value = "";
@@ -2128,7 +2169,7 @@
 
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
+                url: '@Url.Action("CheckPanCardDuplicationByDistrictidWithListOfCustomers", "Customer")',
                 data: { DistrictId: districtId, IncomeTaxPan: panNumber },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr)
@@ -2140,17 +2181,40 @@
 
                         console.log('Test');
                         console.log(data);
-                        console.log(data.status);
-                        console.log(data.reason);
-                        if (data.status == "0") {
-                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                        //console.log(data.status);
+                        //console.log(data.reason);
+                        if (data.customer[0].status == "0") 
+                        {
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
                             document.getElementById("lblPanCardRemarks").style.display = "block";
                             document.getElementById("PanCardRemarks").style.display = "block";
                             $("#PanCardRemarks").prop('readonly', false);
+
+                               if (data.customer.length > 0) 
+                               {
+
+                                    $("#CustomerDetailsSearch td").parent().remove();
+                                    for (var i = 0; i < data.customer.length; i++) 
+                                    {
+                                        var rows = "<tbody><tr>"
+                                            +"<td>"+(i+1)+"</td>"
+                                            + "<td width='400px'><span class='rowData'>" + data.customer[i].customerID + "</span></td>"
+                                            + "<td width='400px'><span class='rowData'>" + data.customer[i].customerName + "</span></td>"
+                                        + "</tr></tbody>";
+
+                                        $('#CustomerDetailsSearch').append(rows);
+
+                                    }
+
+                                }
+                                else 
+                                {
+                                    $("#CustomerDetailsSearch td").parent().remove();
+                                }
                         }
-                        else {
+                        else 
+                        {
                             localStorage.setItem("DUPLICATEPANUSED", "1");
                             document.getElementById('IsDuplicatePanNo').value = "1";
                             document.getElementById("comm_district_error").innerHTML = "";
@@ -2161,7 +2225,8 @@
                             document.getElementById("PanCardRemarks_error").innerHTML ="";
                         }
                     }
-                    else {
+                    else 
+                    {
                         document.getElementById("lblPanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").style.display = "none";
                         document.getElementById("PanCardRemarks").value = "";
@@ -2169,16 +2234,13 @@
                         document.getElementById("PanCardRemarks_error").innerHTML ="";
                     }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
                     document.getElementById("lblPanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").style.display = "none";
                     document.getElementById("PanCardRemarks").value = "";
                     $("#PanCardRemarks").prop('readonly', true);
                     document.getElementById("PanCardRemarks_error").innerHTML ="";
-                },
-                statusCode: {
-                    1024: function () {
-                    }
                 }
             });
         }
@@ -2373,39 +2435,60 @@
 
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("CheckPanCardDuplicationByDistrictid", "Customer")',
+                    url: '@Url.Action("CheckPanCardDuplicationByDistrictidWithListOfCustomers", "Customer")',
                     data: { DistrictId: id, IncomeTaxPan: panno },  // data to submit
                     dataType: "json",
-                    success: function (data, status, xhr) {
+                    success: function (data, status, xhr) 
+                    {
                         console.log(data);
                         console.log(status);
                         var v = data;
-                        if (status == 'success') {
-
+                        if (status == 'success') 
+                        {
                             console.log('Test');
                             console.log(data);
-                            console.log(data.status);
-                            console.log(data.reason);
-                            if (data.status == "0") {
-                                //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                            //console.log(data.status);
+                            //console.log(data.reason);
+                            if (data.customer[0].status == "0") 
+                            {
                                 localStorage.setItem("DUPLICATEPANUSED", "0");
                                 document.getElementById('IsDuplicatePanNo').value = "0";
+
+                                if (data.customer.length > 0) 
+                                {
+
+                                    $("#CustomerDetailsSearch td").parent().remove();
+                                    for (var i = 0; i < data.customer.length; i++) 
+                                    {
+                                        var rows = "<tbody><tr>"
+                                            +"<td>"+(i+1)+"</td>"
+                                            + "<td width='400px'><span class='rowData'>" + data.customer[i].customerID + "</span></td>"
+                                            + "<td width='400px'><span class='rowData'>" + data.customer[i].customerName + "</span></td>"
+                                        + "</tr></tbody>";
+
+                                        $('#CustomerDetailsSearch').append(rows);
+
+                                    }
+
+                                }
+                                else 
+                                {
+                                    $("#CustomerDetailsSearch td").parent().remove();
+                                }
                             }
-                            else {
+                            else 
+                            {
                                 localStorage.setItem("DUPLICATEPANUSED", "1");
                                 document.getElementById('IsDuplicatePanNo').value = "1";
                                 document.getElementById("comm_district_error").innerHTML = "";
                             }
                         }
-                        else {
+                        else 
+                        {
                             //console.log(v);
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                    },
-                    statusCode: {
-                        1024: function () {
-                        }
                     }
                 });
             }
