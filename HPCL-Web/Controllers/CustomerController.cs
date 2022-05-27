@@ -724,6 +724,13 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.UpdateCCMSBalAlertConfiguration(CustomerID, Amount, ActionType);
             return Json(new { customer = modals });
         }
+        [HttpPost]
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidWithListOfCustomers(string DistrictId, string IncomeTaxPan)
+        {
+            var modals = await _commonActionService.CheckPanCardDuplicationByDistrictidWithListOfCustomers(DistrictId, IncomeTaxPan);
+
+            return Json(new { customer = modals });
+        }
 
     }
 }
