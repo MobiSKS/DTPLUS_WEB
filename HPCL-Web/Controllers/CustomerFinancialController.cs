@@ -112,5 +112,19 @@ namespace HPCL_Web.Controllers
             uploadExcel.CustomerId = CustomerId;
             return View(uploadExcel);
         }
+
+        public IActionResult CcmsToCardAmountTransferViaExcel(string CustomerId)
+        {
+            AmountTransferExcel uploadExcel = new AmountTransferExcel();
+            uploadExcel.CustomerId = CustomerId;
+            return View(uploadExcel);
+        }
+
+        public IActionResult CardToCcmsAmountTransferViaExcel(string CustomerId)
+        {
+            AmountTransferExcel uploadExcel = new AmountTransferExcel();
+            uploadExcel.CustomerId = CustomerId;
+            return View(uploadExcel);
+        }
     }
 }
