@@ -71,5 +71,6 @@ namespace HPCL.Service.Interfaces
         Task<List<GetEntityModel>> GetEntityModelList();
         Task<List<GetEntityFieldModel>> GetEntityFieldModelList(string EntityTypeId);
         Task<List<StatusResponseModal>> GetStatusType(int EntityTypeId);
+        Task<List<LimitTypeModal>> GetCreditCloseLimitType();
     }
 }

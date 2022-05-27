@@ -1316,6 +1316,25 @@ namespace HPCL.Service.Services
 
             return sortedtList;
         }
+        public async Task<List<LimitTypeModal>> GetCreditCloseLimitType()
+        {
+            var forms = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+           
+            };
 
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getlistcreditcloselimittype);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<LimitTypeModal> limitType = jarr.ToObject<List<LimitTypeModal>>();
+            var sortedtList = limitType.OrderBy(x => x.LimitId).ToList();
+            return sortedtList;
+        }
     }
 }
