@@ -19,5 +19,8 @@ namespace HPCL.Common.Models.CommonEntity
         public string Today { get; set; }
         public string LocalStorage { get; set; }
         public string UserRole { get; set; }
+        public string BreadCrumbsController { get; set; }
+        public string BreadCrumbsAction { get; set; }
+        public string CurrentAction { get; set; }
     }
 }

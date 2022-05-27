@@ -261,6 +261,9 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId);
                 HttpContext.Session.SetString("Today", SessionMenuModel.sessionList[0].Today);
                 HttpContext.Session.SetString("UserRole", SessionMenuModel.sessionList[0].UserRole);
+                HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "": SessionMenuModel.sessionList[0].BreadCrumbsController);
+                HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
+                HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
             }
             else
             {
@@ -276,6 +279,9 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("UserId", item.UserId);
                     HttpContext.Session.SetString("Today", item.Today);
                     HttpContext.Session.SetString("UserRole", item.UserRole);
+                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController);
+                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction);
+                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction);
                 }
             }
 
@@ -334,6 +340,10 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("MerchantID", SessionMenuModel.sessionList[0].MerchantID);
                 HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId);
                 HttpContext.Session.SetString("Today", SessionMenuModel.sessionList[0].Today);
+                HttpContext.Session.SetString("UserRole", SessionMenuModel.sessionList[0].UserRole);
+                HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsController);
+                HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
+                HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
             }
             else
             {
@@ -348,6 +358,10 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("MerchantID", item.MerchantID);
                     HttpContext.Session.SetString("UserId", item.UserId);
                     HttpContext.Session.SetString("Today", item.Today);
+                    HttpContext.Session.SetString("UserRole", item.UserRole);
+                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController);
+                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction);
+                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction);
                 }
             }
         }
