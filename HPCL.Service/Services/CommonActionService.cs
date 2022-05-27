@@ -1439,6 +1439,36 @@ namespace HPCL.Service.Services
 
             return sortedtList;
         }
+        public async Task<List<CheckPancardbyDistrictIdResponse>> CheckPanCardDuplicationByDistrictidWithListOfCustomers(string DistrictId, string IncomeTaxPan)
+        {
+            var requestinfo = new CheckPancardbyDistrictIdRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DistrictId = DistrictId,
+                IncomeTaxPan = IncomeTaxPan
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkPanCardByDistrictid);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CheckPancardbyDistrictIdResponse> searchList = jarr.ToObject<List<CheckPancardbyDistrictIdResponse>>();
+
+            foreach (CheckPancardbyDistrictIdResponse item in searchList)
+            {
+                item.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+                if (string.IsNullOrEmpty(item.CustomerID))
+                {
+                    item.CustomerID = "";
+                }
+            }
+
+            return searchList;
+        }
 
     }
 }

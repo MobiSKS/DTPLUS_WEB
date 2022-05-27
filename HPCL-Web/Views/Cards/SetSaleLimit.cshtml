@@ -15,7 +15,7 @@
                     <div class="p-2 p-md-4">
                         <div class="w-100">
 
-                            <div id="successUpdate" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
                             <fieldset class="border-1 rounded border-grey pb-3">
                                 <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search Cards</legend>
@@ -78,7 +78,7 @@
 
                         <div class="clearfix"></div>
 
-                        <div id="noRecord" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+                        <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
 
                         <div id="UpdateGrid" style="display:none;margin-top:1%">
                             <div class="table-responsive">
@@ -266,7 +266,7 @@
                 var status = (searchGrid[i].status || '');
                 var issueDate = isDts;
                 var expiryDate = expDts;
-                var cashPurseLimit = "<div style='width:160px;'><input class='form-control cgl cpl' onkeypress='return isNumberKey(event)' id='cashpurselimitid_"+i+"' name='" + (searchGrid[i].cashPurseLimit || '') + "' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'></div>";
+                var cashPurseLimit = "<div style='width:160px;'><input class='form-control cgl' onkeypress='return isNumberKey(event)' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'><span style='display:none;' class='cpl' id='cashpurselimitid_"+i+"'>" + (searchGrid[i].cashPurseLimit || '') + "</span></div>";
                 var saleTxnLimit = "<div style='width:160px;display:flex;'><input maxlength='10' onkeypress='return isNumberKey(event)' class='form-control cgl stl' id='saletxnlimitid_"+i+"' onchange='saletxnlimitChange(this," + (i) + ")' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='saletxn_error_"+i+"' aria-hidden='true'></i></div>";
                 var dailySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' onkeypress='return isNumberKey(event)' class='form-control cgl dsl' onchange='dailySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='dailysale_error_"+i+"' aria-hidden='true'></i></div>";
                 var monthlySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' onkeypress='return isNumberKey(event)' class='form-control cgl msl' id='monthlySalelimitid_"+i+"' onchange='monthlySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errsss' id='monthlysale_error_"+i+"' aria-hidden='true'></i></div>";
@@ -358,7 +358,7 @@
             var row = $(this).closest("tr");
 
             cardNo = row.find('.getCard').text();
-            cashPurse = row.find('.cpl').val();
+            cashPurse = row.find('.cpl').text();
             saleTxn = row.find('.stl').val();
             dailySale = row.find('.dsl').val();
             monthlySale = row.find('.msl').val();
@@ -371,9 +371,14 @@
                 monthlySale: monthlySale
             });
 
-            var cashPurseLimitVal = $('#cashpurselimitid_'+indexS).val();
+            var cashPurseLimitVal = $('#cashpurselimitid_'+indexS).text();
             var saleTxnLimitVal = $('#saletxnlimitid_'+indexS).val();
             var monthlySaleLimitVal = $('#monthlySalelimitid_'+indexS).val();
+
+            console.log(cashPurse+"          "+cashPurseLimitVal);
+
+            var slTxn = parseFloat(saleTxn);
+            var cplVal = parseFloat(cashPurseLimitVal);
 
             if(saleTxn.trim() == ''){
                 document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
@@ -386,13 +391,11 @@
                     document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
-                }
-                else if(saleTxn == 0){
+                }else if(saleTxn == 0){
                     document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
-                }
-                else if(!(saleTxn < 100001)){
+                }else if((slTxn > 100001) || (slTxn > cplVal)){
                     document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
@@ -482,10 +485,14 @@
                 data: { limitArray: updateArray},
                 success: function (res) {
 
-                    document.getElementById("noRecord").style.display = "none";
-                    $("#successUpdate").html("");
-                    $("#successUpdate").append("<span>" + res + "</span>");
-                    document.getElementById("successUpdate").style.display = "block";
+                    console.log("res",res);
+
+                    if(res.updateResponse.data[0].status == 1){
+                        document.getElementById("noRecord").style.display = "none";
+                        $("#successUpdate").html("");
+                        $("#successUpdate").append("<span>" + res.updateResponse.data[0].reason + "</span>");
+                        document.getElementById("successUpdate").style.display = "block";
+                    }
                 },
                 error: function (ex) {
                     alert('Failed' + ex);
@@ -496,8 +503,11 @@
 
     function saletxnlimitChange(o, rowSelected){
         var txnVal = o.value;
-        var cashPurseLimitVal = $('#cashpurselimitid_'+rowSelected).val();
+        var cashPurseLimitVal = $('#cashpurselimitid_'+rowSelected).text();
         console.log("cashpurselimitid_", cashPurseLimitVal);
+
+        var saleTxn = parseFloat(txnVal);
+        cplVal = parseFloat(cashPurseLimitVal);
 
         if(txnVal.trim()==''){
             document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
@@ -514,7 +524,7 @@
                     document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
                     return false;
-                }else if(!(txnVal < 100001)){
+                }else if((saleTxn > 100001) || (saleTxn > cplVal)){
                     document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
                     return false;

@@ -41,5 +41,6 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string MobileNo { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string Remarks { get; set; }
     }
 }

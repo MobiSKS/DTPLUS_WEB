@@ -361,12 +361,21 @@ namespace HPCL.Service.Services
                             string[] subs = response.DateOfApplication.Split(' ');
                             string[] date = subs[0].Split('/');
                             response.CustomerApplicationDate = date[1] + "-" + date[0] + "-" + date[2];
+                            response.DateOfApplication = date[1] + "-" + date[0] + "-" + date[2];
                         }
                         if (!string.IsNullOrEmpty(response.SignedOn))
                         {
                             string[] subs = response.SignedOn.Split(' ');
                             string[] date = subs[0].Split('/');
                             response.SignedOn = date[1] + "-" + date[0] + "-" + date[2];
+                        }
+                        if (string.IsNullOrEmpty(response.RegionalOfficeName))
+                        {
+                            response.RegionalOfficeName = "";
+                        }
+                        if (response.FormNumber == "0")
+                        {
+                            response.FormNumber = "";
                         }
                     }
                 }
@@ -408,6 +417,20 @@ namespace HPCL.Service.Services
                         foreach (SearchGridResponse item in searchList)
                         {
                             item.VechileNo = "DRIVER CARD";
+                        }
+                    }
+                }
+
+                if (CustomerTypeId == "918")//OTC
+                {
+                    if (searchList != null && searchList.Count > 0)
+                    {
+                        foreach (SearchGridResponse item in searchList)
+                        {
+                            if (string.IsNullOrEmpty(item.VechileNo))
+                            {
+                                item.VechileNo = "";
+                            }
                         }
                     }
                 }

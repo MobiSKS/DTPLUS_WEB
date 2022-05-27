@@ -81,7 +81,7 @@
                                         <label class="font-weight-normal col-md-5 col-12 mb-3">Customer Name</label>
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" })
+                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", maxlength = "50" })
                                             </div>
                                             <span class="error" id="Customer_error"></span>
 
@@ -260,26 +260,80 @@
         if (fromdate != "" && todate != "") {
             flag = checkDates("fromDate_error");
         }
-         if (FormNumber != "") {
-             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" )){
+         if (FormNumber != "") 
+         {
+             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" ))
+             {
                  $("#formNo_error").attr("style", "display:block");
                  $("#formNo_error").html("Invalid Form Number");
                  flag="N";
              }
-             else{
+             else
+             {
                  $("#formNo_error").attr("style", "display:none");
                  $("#formNo_error").html("");
              }
          }
-         else{
+         else
+         {
              $("#formNo_error").attr("style", "display:none");
              $("#formNo_error").html("");
          }
 
+        var customerName = document.getElementById("CustomerName").value.trim();
+        if (customerName != "") 
+        {
+            if (!isNaN(customerName)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                flag="N";
+            }
+            else if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                flag="N";
+            }
+            else 
+            {
+                document.getElementById("Customer_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("Customer_error").innerHTML = "";
+        }
+
          if (flag == "N")
              e.preventDefault();
 
-
      })
      );
+
+     $("#CustomerName").on("blur", function () 
+     {
+        debugger;
+        var customerName = document.getElementById("CustomerName").value.trim();
+        if (customerName != "") 
+        {
+            if (!isNaN(customerName)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("Customer_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("Customer_error").innerHTML = "";
+        }
+
+     });
 </script>
