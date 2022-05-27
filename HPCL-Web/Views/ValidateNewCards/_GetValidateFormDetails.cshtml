@@ -2,309 +2,318 @@
 @{
     string CustomerType = ViewBag.CustomerType;
 }
-<div class="w-100 toBeHiddenOnSuccess">
+@if (Model.Count() > 0)
+{
+    <div class="w-100 toBeHiddenOnSuccess">
 
-    <div class="">
-        <div class="bg-white p-2 p-md-4">
-            <form name="addCustomerCardsForm" method="post" asp-action="AddCardDetails" class="w-100">
-                <div class="w-100">
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                        <div class="border-1 rounded border-grey">
-                            <div class="py-3 px-0 px-md-2">
+        <div class="">
+            <div class="bg-white p-2 p-md-4">
 
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">RBE ID </label> @*<sup class="text-danger">*</sup>*@
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m[0].RBEId, new { @id = "RBEId", @class = "form-control", @readonly = "readonly" })
-                                                <span class="error" id="RBEId_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12">RBE Name </label> @*<sup class="text-danger">*</sup>*@
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m[0].RbeName, new { @id = "RBEName", @class = "form-control", @readonly = "readonly" })
-                                                <span class="error" id="RBEName_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <form name="addCustomerCardsForm" method="post" asp-action="AddCardDetails" class="w-100">
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <div class="py-3 px-0 px-md-2">
 
-                                <div class="px-2 px-md-4">
-                                    <fieldset class="border-1 rounded border-grey mb-3">
-                                        <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Preference</legend>
-                                        <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
-                                            <div class="col-md-6 col-12">
-                                                <div class="col-md-7 col-12 d-flex align-items-center justify-content-start mb-3">
-                                                    <label class="d-flex align-items-center justify-content-start">
-                                                        @Html.RadioButtonFor(m => m[0].CardPreference, "Card", new { @id = "rbtnCard", @readonly = "readonly", @disabled = "disabled" })
-                                                        <span class="ml-2">Card</span>
-                                                    </label>
-                                                    <label class="d-flex align-items-center justify-content-start ml-3">
-                                                        @Html.RadioButtonFor(m => m[0].CardPreference, "Cardless", new { @id = "rbtnCardless", @readonly = "readonly", @disabled = "disabled" })
-                                                        <span class="ml-2">Cardless</span>
-                                                    </label>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">RBE ID </label> @*<sup class="text-danger">*</sup>*@
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m[0].RBEId, new { @id = "RBEId", @class = "form-control", @readonly = "readonly" })
+                                                    <span class="error" id="RBEId_error"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="clearfix"></div>
-                                    </fieldset>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">RBE Name </label> @*<sup class="text-danger">*</sup>*@
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m[0].RbeName, new { @id = "RBEName", @class = "form-control", @readonly = "readonly" })
+                                                    <span class="error" id="RBEName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    @if (Model[0].CardPreference == "Card")
-                                    {
-                                        <fieldset class="border-1 rounded border-grey mb-4" id="divFeePaymentDetails">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Fee Payment Details</legend>
+                                    <div class="px-2 px-md-4">
+                                        <fieldset class="border-1 rounded border-grey mb-3">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Preference</legend>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
                                                 <div class="col-md-6 col-12">
-                                                    <div class="col-12">
-                                                        <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                                            <label class="d-flex align-items-center justify-content-start mr-3">
-                                                                @if (Model[0].FeePaymentsCollectorFeeWaiver == "Online")
-                                                                {
-                                                                    @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Online", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
-                                                                }
-                                                                else
-                                                                {
-                                                                    @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Online", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
-                                                                }
-                                                                <span class="ml-2">Online</span>
-                                                            </label>
-                                                            <label class="d-flex align-items-center justify-content-start">
-                                                                @if (Model[0].FeePaymentsCollectorFeeWaiver == "Fee Waiver")
-                                                                {
-                                                                    @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
-                                                                }
-                                                                else
-                                                                {
-                                                                    @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
-                                                                }
-                                                                <span class="ml-2">Fee Waiver</span>
-                                                            </label>
-                                                        </div>
+                                                    <div class="col-md-7 col-12 d-flex align-items-center justify-content-start mb-3">
+                                                        <label class="d-flex align-items-center justify-content-start">
+                                                            @Html.RadioButtonFor(m => m[0].CardPreference, "Card", new { @id = "rbtnCard", @readonly = "readonly", @disabled = "disabled" })
+                                                            <span class="ml-2">Card</span>
+                                                        </label>
+                                                        <label class="d-flex align-items-center justify-content-start ml-3">
+                                                            @Html.RadioButtonFor(m => m[0].CardPreference, "Cardless", new { @id = "rbtnCardless", @readonly = "readonly", @disabled = "disabled" })
+                                                            <span class="ml-2">Cardless</span>
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>
                                         </fieldset>
-                                    }
+
+                                        @if (Model[0].CardPreference == "Card")
+                                        {
+                                            <fieldset class="border-1 rounded border-grey mb-4" id="divFeePaymentDetails">
+                                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Fee Payment Details</legend>
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap pt-3">
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="col-12">
+                                                            <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
+                                                                <label class="d-flex align-items-center justify-content-start mr-3">
+                                                                    @if (Model[0].FeePaymentsCollectorFeeWaiver == "Online")
+                                                                    {
+                                                                        @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Online", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Online", new { id = "rbtnOnline", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                                    }
+                                                                    <span class="ml-2">Online</span>
+                                                                </label>
+                                                                <label class="d-flex align-items-center justify-content-start">
+                                                                    @if (Model[0].FeePaymentsCollectorFeeWaiver == "Fee Waiver")
+                                                                    {
+                                                                        @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @Html.RadioButtonFor(m => m[0].FeePaymentsCollectorFeeWaiver, "Fee Waiver", new { id = "rbtnFeeWaiver", name = "FeePaymentsCollectFeeWaiver", @class = "radio-toolbar", @disabled = "disabled" })
+                                                                    }
+                                                                    <span class="ml-2">Fee Waiver</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </fieldset>
+                                        }
 
 
-                                </div>
+                                    </div>
 
-                                @if (Model[0].CardPreference == "Card")
-                                {
-                                    @if (Model[0].FeePaymentsCollectorFeeWaiver == "Fee Waiver")
+                                    @if (Model[0].CardPreference == "Card")
                                     {
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <div class="col-lg-6 col-12 mb-0">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Approval Email From<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m[0].FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
-                                                        <span class="error" id="FeePaymentNo_error"></span>
+                                        @if (Model[0].FeePaymentsCollectorFeeWaiver == "Fee Waiver")
+                                        {
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="col-lg-6 col-12 mb-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Approval Email From<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m[0].FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            <span class="error" id="FeePaymentNo_error"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-12 mb-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Approval Email Date<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m[0].FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            <span class="error" id="FeePaymentDate_error"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-12 mb-0">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Approval Email Date<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m[0].FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
-                                                        <span class="error" id="FeePaymentDate_error"></span>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="col-lg-6 col-12 mb-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Payment Source<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m[0].FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            <span class="error" id="FeePaymentNo_error"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-12 mb-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Payment Date<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m[0].FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            <span class="error" id="FeePaymentDate_error"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <div class="col-lg-6 col-12 mb-0">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Payment Source<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m[0].FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
-                                                        <span class="error" id="FeePaymentNo_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-12 mb-0">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Payment Date<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m[0].FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
-                                                        <span class="error" id="FeePaymentDate_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
 
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12 mb-3">
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                            <div class="col-md-7 col-12">
-                                                <span class="error" id="Common_error"></span>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12 mb-3">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <div class="col-md-7 col-12">
+                                                    <span class="error" id="Common_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <label class="font-weight-normal col-md-5 col-12">Comments<sup class="text-danger">*</sup></label>
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label class="font-weight-normal col-md-5 col-12">Comments<sup class="text-danger">*</sup></label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;" maxlength="200"></textarea>
+                                    <div class="error" id="comment_error"></div>
+                                    <div style="display:none;" id="custRefNo">@Model[0].CustomerReferenceNo</div>
+                                </div>
                             </div>
-                            <div class="col-lg-6">
-                                <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;" maxlength="200"></textarea>
-                                <div class="error" id="comment_error"></div>
-                                <div style="display:none;" id="custRefNo">@Model[0].CustomerReferenceNo</div>
-                            </div>
+
                         </div>
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
 
-                    </div>
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div id="show_vehicleTable" class="toBeHiddenOnSuccess">
 
-                        <div id="show_vehicleTable" class="toBeHiddenOnSuccess">
-
-                            @if (Model[0].CardPreference == "Card")
-                            {
-                                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" id="NoOfCardsTbl" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No</th>
-                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "902" || CustomerType == "917")
-                                            {
-                                                <th>Card Identifier</th>
-                                            }
-                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
-                                            {
-                                                <th>Vehicle No.</th>
-                                                <th>Vehicle Type</th>
-                                                <th>Vehicle Make</th>
-                                                <th>Year of Reg.</th>
-
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                            int Slno = 1;
-
-                                        }
-                                        @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
-                                        {
-
+                                @if (Model[0].CardPreference == "Card")
+                                {
+                                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" id="NoOfCardsTbl" style="width:100%;">
+                                        <thead>
                                             <tr>
-                                                <td>@Slno</td>
+                                                <th>S.No</th>
                                                 @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "902" || CustomerType == "917")
                                                 {
-                                                    <td>@Model[i].CardIdentifier</td>
+                                                    <th>Card Identifier</th>
                                                 }
                                                 @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
                                                 {
-                                                    <td>@Model[i].VechileNo</td>
-                                                    <td>@Model[i].VehicleType</td>
-                                                    <td>@Model[i].VehicleMake</td>
-                                                    <td>@Model[i].YearofRegistration</td>
+                                                    <th>Vehicle No.</th>
+                                                    <th>Vehicle Type</th>
+                                                    <th>Vehicle Make</th>
+                                                    <th>Year of Reg.</th>
 
                                                 }
                                             </tr>
-                                            Slno++;
-                                        }
-                                    </tbody>
-                                </table>
-                            }
-                            else
-                            {
-                                <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No</th>
-                                            @if (CustomerType == "902" || CustomerType == "917")
-                                            {
-                                                <th>Card Identifier</th>
-                                                <th>Mobile No</th>
-                                            }
-                                            @if (CustomerType == "905" || CustomerType == "909")
-                                            {
-                                                <th>Card Identifier</th>
-                                            }
-                                            @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
-                                            {
-                                                <th>Vehicle No.</th>
-                                                <th>Vehicle Type</th>
-                                                <th>Vehicle Make</th>
-                                                <th>Year of Reg.</th>
-                                                <th>Mobile No</th>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int Slno = 1;
 
                                             }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                            int Slno = 1;
+                                            @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
+                                            {
 
-                                        }
-                                        @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
-                                        {
+                                                <tr>
+                                                    <td>@Slno</td>
+                                                    @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "902" || CustomerType == "917")
+                                                    {
+                                                        <td>@Model[i].CardIdentifier</td>
+                                                    }
+                                                    @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                                    {
+                                                        <td>@Model[i].VechileNo</td>
+                                                        <td>@Model[i].VehicleType</td>
+                                                        <td>@Model[i].VehicleMake</td>
+                                                        <td>@Model[i].YearofRegistration</td>
+
+                                                    }
+                                                </tr>
+                                                Slno++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
+                                        <thead>
                                             <tr>
-                                                <td>@Slno</td>
+                                                <th>S.No</th>
                                                 @if (CustomerType == "902" || CustomerType == "917")
                                                 {
-                                                    <td>@Model[i].CardIdentifier</td>
-                                                    <td>@Model[i].MobileNo</td>
+                                                    <th>Card Identifier</th>
+                                                    <th>Mobile No</th>
                                                 }
                                                 @if (CustomerType == "905" || CustomerType == "909")
                                                 {
-                                                    <td>@Model[i].CardIdentifier</td>
+                                                    <th>Card Identifier</th>
                                                 }
                                                 @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
                                                 {
-                                                    <td>@Model[i].VechileNo</td>
-                                                    <td>@Model[i].VehicleType</td>
-                                                    <td>@Model[i].VehicleMake</td>
-                                                    <td>@Model[i].YearofRegistration</td>
-                                                    <td>@Model[i].MobileNo</td>
+                                                    <th>Vehicle No.</th>
+                                                    <th>Vehicle Type</th>
+                                                    <th>Vehicle Make</th>
+                                                    <th>Year of Reg.</th>
+                                                    <th>Mobile No</th>
 
                                                 }
                                             </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int Slno = 1;
+
+                                            }
+                                            @for (int i = 0; i < Convert.ToInt32(Model.Count); i++)
+                                            {
+                                                <tr>
+                                                    <td>@Slno</td>
+                                                    @if (CustomerType == "902" || CustomerType == "917")
+                                                    {
+                                                        <td>@Model[i].CardIdentifier</td>
+                                                        <td>@Model[i].MobileNo</td>
+                                                    }
+                                                    @if (CustomerType == "905" || CustomerType == "909")
+                                                    {
+                                                        <td>@Model[i].CardIdentifier</td>
+                                                    }
+                                                    @if (CustomerType == "905" || CustomerType == "909" || CustomerType == "901" || CustomerType == "906")
+                                                    {
+                                                        <td>@Model[i].VechileNo</td>
+                                                        <td>@Model[i].VehicleType</td>
+                                                        <td>@Model[i].VehicleMake</td>
+                                                        <td>@Model[i].YearofRegistration</td>
+                                                        <td>@Model[i].MobileNo</td>
+
+                                                    }
+                                                </tr>
 
 
-                                            Slno++;
-                                        }
-                                    </tbody>
-                                </table>
-                            }
-                        </div>
-                        <div>
-                            <div class="d-flex align-items-center justify-content-center mt-4">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="approveReject('4')">Approve</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="approveReject('13')">Reject</button>
+                                                Slno++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-center justify-content-center mt-4">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="approveReject('4')">Approve</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="approveReject('13')">Reject</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-            </form>
+                </form>
+
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="alert alert-danger mt-3 text-center">No Data Found</div>
+}
 
 <script type="text/javascript">
     function approveReject(action) {
         debugger;
-        
+
         if ($("#comments").val().trim() != "") {
             var approvemdl = { CustomerReferenceNo: $("#custRefNo").html(), Comments: $("#comments").val(), Approvalstatus: action, };
             console.log(approvemdl);
