@@ -401,6 +401,20 @@ namespace HPCL.Service.Services
                     }
                 }
 
+                if (CustomerTypeId == "918")//OTC
+                {
+                    if (searchList != null && searchList.Count > 0)
+                    {
+                        foreach (SearchGridResponse item in searchList)
+                        {
+                            if (string.IsNullOrEmpty(item.VechileNo))
+                            {
+                                item.VechileNo = "";
+                            }
+                        }
+                    }
+                }
+
                 // List<SearchGridResponse> searchList = JsonConvert.DeserializeObject<List<SearchGridResponse>>(contentString);
                 return searchList;
             }
