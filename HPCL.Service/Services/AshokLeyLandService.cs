@@ -731,8 +731,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                FormNumber = model.FormNumber,
-                CustomerName = model.CustomerName,
+                FormNumber = string.IsNullOrEmpty(model.FormNumber) ? "" : model.FormNumber,
+                CustomerName = string.IsNullOrEmpty(model.CustomerName) ? "" : model.CustomerName,
                 StateID = model.StateID,
                 Status = model.Status
             };

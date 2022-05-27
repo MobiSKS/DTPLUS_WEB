@@ -12,6 +12,7 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
     public class ccmsToCardTransfer
     {
         public  string cardNo { get; set; }
+        public string MobileNo { get; set; }
         public Decimal transferAmount { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using HPCL.Common.Models.RequestModel.TMS;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 
 namespace HPCL.Service.Services
 {
@@ -328,6 +329,55 @@ namespace HPCL.Service.Services
             return model;
         }
 
+        public async Task<EnrollmentsApprovalModel> ApproveEnrollments(EnrollmentsApprovalModel model)
+        {
+            List<StatusResponseModal> mainList = new List<StatusResponseModal>();
+            mainList = await _commonActionService.GetStatusType(1);
+            List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
+            if (model.TMSStatus == 0)
+                model.TMSStatus = 10;//Unverified
+
+            foreach (StatusResponseModal item in mainList)
+            {
+                if (item.StatusId == 10 || item.StatusId == 11 || item.StatusId == 12 || item.StatusId == 1 || item.StatusId == 13)
+                {
+                    lstNew.Add(item);
+                }
+            }
+
+            model.StatusResponseMdl.AddRange(lstNew);
+
+            var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = string.IsNullOrEmpty(model.CustomerID) ? "" : model.CustomerID,
+                TMSUserId = string.IsNullOrEmpty(model.TMSUserId) ? "" : model.TMSUserId,
+                FromDate = string.IsNullOrEmpty(model.FromDate) ? "" : model.FromDate,
+                ToDate = string.IsNullOrEmpty(model.ToDate) ? "" : model.ToDate,
+                TMSStatus = model.TMSStatus.ToString()
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCustomerDetailForEnrollmentApproval);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            EnrollmentsApprovalModel res = obj.ToObject<EnrollmentsApprovalModel>();
+
+            if (res != null && res.Data != null && res.Data.Count > 0)
+            {
+                model.Data = res.Data;
+            }
+            else
+            {
+                model.Data = new List<EnrollmentsApprovalDetails>();
+            }
+            model.Message = res.Message;
+            model.Internel_Status_Code = res.Internel_Status_Code;
+
+            return model;
+        }
 
     }
 }

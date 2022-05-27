@@ -38,6 +38,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerRequestService, CustomerRequestService>();
             services.AddTransient<IFleetService, FleetService>();
             services.AddTransient<IConfigureService, ConfigureService>();
+            services.AddTransient<IDealerService, DealerService>();
             return services;
         }
     }

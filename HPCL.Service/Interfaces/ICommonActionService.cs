@@ -72,5 +72,6 @@ namespace HPCL.Service.Interfaces
         Task<List<GetEntityFieldModel>> GetEntityFieldModelList(string EntityTypeId);
         Task<List<StatusResponseModal>> GetStatusType(int EntityTypeId);
         Task<List<CheckPancardbyDistrictIdResponse>> CheckPanCardDuplicationByDistrictidWithListOfCustomers(string DistrictId, string IncomeTaxPan);
+        Task<List<LimitTypeModal>> GetCreditCloseLimitType();
     }
 }
