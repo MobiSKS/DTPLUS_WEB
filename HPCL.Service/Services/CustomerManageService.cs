@@ -71,27 +71,30 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerZonalOfficeModel> lstZonalOffice = jarr.ToObject<List<CustomerZonalOfficeModel>>();
 
-            List<CustomerZonalOfficeModel> zonalOfficeLstCopy = lstZonalOffice.ToList();
-
-            string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
-
-            char flag = 'N';
-
-            foreach (var item in zonalOfficeLstCopy)
+            if (_httpContextAccessor.HttpContext.Session.GetString("ZonalId") != "0")
             {
-                flag = 'N';
+                List<CustomerZonalOfficeModel> zonalOfficeLstCopy = lstZonalOffice.ToList();
 
-                for (int i = 0; i < AssignedZones.Length; i++)
+                string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in zonalOfficeLstCopy)
                 {
-                    if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedZones.Length; i++)
                     {
-                        flag = 'Y';
-                        break;
+                        if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
                     }
-                }
-                if (flag == 'N')
-                {
-                    lstZonalOffice.Remove(item);
+                    if (flag == 'N')
+                    {
+                        lstZonalOffice.Remove(item);
+                    }
                 }
             }
 

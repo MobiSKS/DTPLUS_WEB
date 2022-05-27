@@ -279,9 +279,9 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("UserId", item.UserId);
                     HttpContext.Session.SetString("Today", item.Today);
                     HttpContext.Session.SetString("UserRole", item.UserRole);
-                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController);
-                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction);
-                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction);
+                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController == null ? "" : item.BreadCrumbsController);
+                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
+                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                 }
             }
 
@@ -359,9 +359,9 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("UserId", item.UserId);
                     HttpContext.Session.SetString("Today", item.Today);
                     HttpContext.Session.SetString("UserRole", item.UserRole);
-                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController);
-                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction);
-                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction);
+                    HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController == null ? "" : item.BreadCrumbsController);
+                    HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
+                    HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                 }
             }
         }
