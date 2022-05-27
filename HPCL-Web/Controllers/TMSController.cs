@@ -3,6 +3,7 @@ using HPCL.Common.Models.ViewModel.TMS;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -152,6 +153,19 @@ namespace HPCL_Web.Controllers
             }
 
             return View(Model);
+        }
+
+        public async Task<IActionResult> ApproveEnrollments(EnrollmentsApprovalModel model, string reset, string success, string error, string StateID, string FormNumber, string CustomerName, string Status)
+        {
+            var searchResult = await _tmsService.ApproveEnrollments(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            //if (!String.IsNullOrEmpty(reset))
+            //{
+            //    model.StateID = 0;
+            //}
+            return View(searchResult);
         }
 
     }
