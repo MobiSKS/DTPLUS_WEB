@@ -4,14 +4,14 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Financials</a> </li>
-            <li class="breadcrumb-item font-weight-light">Upload Card To Card Balance Transfer</li>
+            <li class="breadcrumb-item font-weight-light">Upload Card To CCMS Balance Transfer</li>
         </ul>
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-3 bg-grey m-0 font-weight-bold">Card To Card Balance Transfer</p>
-                        <button class="btn btn_primary add_update_btn" onclick="exportReportToExcel()">Download Sample Card To Card Balance Transfer</button>
+                        <button class="btn btn_primary add_update_btn" onclick="exportReportToExcel()">Download Sample Card To CCMS Balance Transfer</button>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-start flex-wrap">
                                 <div class="col-lg-12 col-12">
@@ -50,7 +50,7 @@
                                         <div class="col-lg-3 col-12">
                                             <div class="d-flex align-items-start justify-content-start mb-0">
                                                 <div class="px-0">
-                                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()">Upload Card(s) Limits Excel File</button>
+                                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()">Upload CCMS Balance Transfer File</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -115,7 +115,7 @@
         function exportReportToExcel() {
             var csv_data = [];
             var csvrow = [];
-            csvrow.push("FromCardNumber", "ToCardNumber", "FromMobileNumber", "ToMobileNumber", "Amount");
+            csvrow.push("Card Number", "Mobile Number", "Transfer Amount");
             csv_data.push(csvrow.join(","));
             csv_data = csv_data.join('\n');
             downloadCSVFile(csv_data);
@@ -196,27 +196,23 @@
 
                         if(rows.length != 0){
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                                var fromCardNo = $(tr).find(':nth-child(1)').text();
-                                var toCardNo = $(tr).find(':nth-child(2)').text();
-                                var fromMobNo = $(tr).find(':nth-child(3)').text();
-                                var toMobNo = $(tr).find(':nth-child(4)').text();
-                                var transferAmount = $(tr).find(':nth-child(5)').text();
-
-                                console.log(cardno+"         "+saletxnlimit+"      "+dailysalelimit+"      "+monthlysalelimit);
-
+                                var CardNo = $(tr).find(':nth-child(1)').text();
+                                var MobileNo = $(tr).find(':nth-child(2)').text();
+                                var TransferAmount = $(tr).find(':nth-child(3)').text();
+                               
                                 var currentIndex = index + 1;
 
-                                if(fromCardNo.trim() == ''){
+                                if(CardNo.trim() == ''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Enter Card Number</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Card Number should not blank</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }else{
-                                    if(fromCardNo.trim() != ''){
-                                        if(!fromCardNo.trim().match(/^\d{16}$/)){
+                                    if(CardNo.trim() != ''){
+                                        if(!CardNo.match(/^\d{16}$/)){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Invalid Card Number</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Card Number</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
@@ -224,17 +220,17 @@
                                     }
                                 }
 
-                                if(toCardNo.trim() == ''){
+                                if(MobileNo.trim() == ''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Enter Card Number</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Mobile Number should not blank</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }else{
-                                    if(toCardNo.trim() != ''){
-                                        if(!fromCardNo.trim().match(/^\d{16}$/)){
+                                    if(MobileNo.trim() != ''){
+                                        if(!MobileNo.trim().match(/^[6789]\d{9}$/)){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Invalid Card Number</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Mobile Number</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
@@ -242,35 +238,24 @@
                                     }
                                 }
 
-                                if(fromMobNo.trim() == ''){
+                                if(TransferAmount.trim()==''){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Enter From Mobile Number</span>");
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Transfer Amount should not blank</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
-                                }else{
-                                    if(fromMobNo.trim() != ''){
-                                        if(!fromMobNo.trim().match(/^\d{16}$/)){
+                                }
+                                else{
+                                    if(TransferAmount.trim() !=''){
+                                        if (!TransferAmount.trim().match(number)){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Invalid From Mobile Number</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Transfer Amount should be Numeric</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
-                                        }
-                                    }
-                                }
-
-                                if(toMobNo.trim() == ''){
-                                    $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Enter To Mobile Number</span>");
-                                    $("#excel_file").val('');
-                                    document.getElementById("ExcelDataError").style.display = "block";
-                                    return false;
-                                }else{
-                                    if(toMobNo.trim() != ''){
-                                        if(!toMobNo.trim().match(/^\d{16}$/)){
+                                        }else if(TransferAmount.trim() == 0){
                                             $("#ExcelDataError").html('');
-                                            $("#ExcelDataError").append("<span>Invalid To Mobile Number</span>");
+                                            $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Transfer Amount should be more than 0</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
                                             return false;
@@ -300,18 +285,14 @@
 
             var updateArray = [];
             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                var fromCardNo = $(tr).find(':nth-child(1)').text();
-                var toCardNo = $(tr).find(':nth-child(2)').text();
-                var fromMobNo = $(tr).find(':nth-child(3)').text();
-                var toMobNo = $(tr).find(':nth-child(4)').text();
-                var transferAmount = $(tr).find(':nth-child(5)').text();
+                var CardNo = $(tr).find(':nth-child(1)').text();
+                var MobileNo = $(tr).find(':nth-child(2)').text();
+                var TransferAmount = $(tr).find(':nth-child(3)').text();
 
                 updateArray.push({
-                    fromCardNo:fromCardNo,
-                    toCardNo:toCardNo,
-                    fromMobNo:fromMobNo,
-                    toMobNo:toMobNo,
-                    transferAmount:transferAmount
+                    CardNo:CardNo,
+                    MobileNo:MobileNo,
+                    TransferAmount:TransferAmount
                 });
             })
 
@@ -341,7 +322,7 @@
                             for(var i =0;i<res.reasonList.data.length;i++){
                                 if(res.reasonList.data[i].status == 0){
                                     if(Cardno == res.reasonList.data[i].cardno){
-                                        $(tr).find(':nth-child(6)').text(res.reasonList.data[i].reason);
+                                        $(tr).find(':nth-child(4)').text(res.reasonList.data[i].reason);
                                     }
                                 }
                             }
