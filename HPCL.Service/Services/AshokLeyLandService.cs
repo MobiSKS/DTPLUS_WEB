@@ -765,7 +765,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 customerID = CustomerID,
                 customerStatus = Approvalstatus,
-                remarks = Comments
+                remarks = String.IsNullOrEmpty(Comments) ? "" : Comments
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");

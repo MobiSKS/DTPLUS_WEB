@@ -128,13 +128,13 @@
                                 <td><a href="#"><i class="fa fa-eye text-primary"></i></td>
                                 <td><a href="#"><i class="fa fa-download text-primary"></i></td>
                                 <td class="editCell d-flex">
-                                    <input type="text" maxlength="30" class="form-control remarks" onkeydown="return IsAlphaNumeric(event.keyCode)" name="Remarks_@i" id="Remarks_@i" style="display:none">
+                                    <input type="text" maxlength="30" class="form-control remarks" onkeydown="return AlphaNumericWithSpace(event.keyCode)" name="Remarks_@i" id="Remarks_@i" style="display:none">
                                     <a class="d-block" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check text-success verify"></i></a>
                                     <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban text-primary reject"></i></a>
                                     <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
                                     <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
                                 </td>
-                                <td>&nbsp;</td>
+                                <td>@item.Remarks</td>
                             </tr>
                         }
                     </tbody>
@@ -376,9 +376,61 @@
             {
                 document.getElementById("formNumber_error").innerHTML = "";
             }
+
+            var customerName = document.getElementById("CustomerName").value.trim();
+            if (customerName != "") 
+            {
+                if (!isNaN(customerName)) 
+                {
+                    document.getElementById("CustomerName_error").innerHTML = "Invalid Customer Name";
+                    flag="N";
+                }
+                else if (!customerName.match(nameWithSpaceCheck)) 
+                {
+                    document.getElementById("CustomerName_error").innerHTML = "Invalid Customer Name";
+                    flag="N";
+                }
+                else 
+                {
+                    document.getElementById("CustomerName_error").innerHTML = "";
+                }
+            }
+            else 
+            {
+                document.getElementById("CustomerName_error").innerHTML = "";
+            }
+
             if (flag == "N")
                 e.preventDefault();
 
         }));
+
+     $("#CustomerName").on("blur", function () 
+     {
+        debugger;
+        var customerName = document.getElementById("CustomerName").value.trim();
+        if (customerName != "") 
+        {
+            if (!isNaN(customerName)) 
+            {
+                document.getElementById("CustomerName_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("CustomerName_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("CustomerName_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("CustomerName_error").innerHTML = "";
+        }
+
+     });
  
 </script>
