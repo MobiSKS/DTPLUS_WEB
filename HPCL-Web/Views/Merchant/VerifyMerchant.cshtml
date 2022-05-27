@@ -95,7 +95,7 @@
                                     i = i + 1;
                                     string MerchantIDVal = "30" + @item.ErpCode;
                                     <tr>
-                                        <td><input type="checkbox" id="check_@i" /></td>
+                                        <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
                                         <td><a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID" asp-route-actionFlow="Edit" asp-route-ERPCode="@item.ErpCode">@item.ErpCode</a></td>
                                         <td>@item.RegionalOfficeName</td>
                                         <td>@item.RetailOutletName</td>
@@ -105,7 +105,7 @@
                                         <td>@item.CreatedBy</td>
                                         <td>@item.VerifiedDate</td>
                                         <td>@item.VerifiedBy</td>
-                                        <td><input type="text" id="comments_@i" class="form-control comments" /><span class="comment_error" ></span></td>
+                                        <td><input type="text" id="comments_@i" class="form-control comments" disabled/><span class="comment_error" ></span></td>
                                     </tr>
                                 }
                             </tbody>
@@ -154,9 +154,34 @@
 
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
+        if ($(this).is(':checked')) {
+            $("#merchantApprovalDetails tr").each(function () {
+                $(this).find("input:text").attr("disabled", false);
+            });
+        }
+        else{
+            $("#merchantApprovalDetails tr").each(function () {
+                $(this).find("input:text").attr("disabled", true);
+                $(this).find("input:text").val("");
+                $(this).find('.comment_error').html("");
+                $(this).find('.comment_error').attr("style","dispaly:none");
+            });
+        }
+
     });
 
-
+    $("#merchantApprovalDetails").on('click', '.checkEnable', function (e) {
+                 currentRow = $(this).closest("tr");
+                 if ($(this).is(':checked')) {
+                     currentRow.find('input:text').attr("disabled", false);
+                 }
+                 if (!$(this).is(':checked')) {
+                     currentRow.find('input:text').attr("disabled", true);
+                      currentRow.find('input:text').val("");
+                     currentRow.find('.comment_error').html("");
+                     currentRow.find('.comment_error').attr("style","dispaly:none");
+                 }
+             });
     function approvalOrReject(action) {
         var flag = "Y";
 

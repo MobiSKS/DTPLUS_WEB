@@ -238,5 +238,10 @@ namespace HPCL_Web.Controllers
             var successRes = await _commonActionService.RbeMappingStatusService();
             return Json(new { successRes = successRes });
         }
+        public async Task<JsonResult> GetCreditCloseLimitType()
+        {
+            var successRes = await _commonActionService.GetCreditCloseLimitType();
+            return Json(successRes);
+        }
     }
 }
