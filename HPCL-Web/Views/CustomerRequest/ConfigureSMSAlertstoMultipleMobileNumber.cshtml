@@ -39,9 +39,9 @@
                             </div>
                             <div class="clearfix"></div>
 
-                            <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+                            <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;margin-top:2%;"></div>
 
-                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;margin-top:2%;"></div>
 
                         </div>
                         <div class="clearfix"></div>
@@ -205,9 +205,11 @@
                     if(Mob == ''){
                         row.find('.dlt').css("display", "none");
                         row.find('.mbNo').attr("readonly", false);
+                        row.find('.mbNo').removeClass("rdn");
                     }else{
                         row.find('.dlt').css("display", "block");
                         row.find('.mbNo').attr("readonly", true);
+                        row.find('.mbNo').addClass("rdn");
                     }
              });
 
@@ -230,14 +232,14 @@
 
          var updateArray = new Array();
          var flag = "Y";
-         var cnt = 0;
+         var indexS=0;
          $("#alternameMobSection .deleteButton").each(function () {
 
                 var row = $(this).closest("tr");
 
                 var selectedRow = $(this).closest("tr")[0];
 
-                var indexS = (selectedRow.rowIndex) - 1;
+                indexS = (selectedRow.rowIndex) - 1;
 
                 var MobileNo = row.find('.mbNo').val();
                 var Name = row.find('.nm').val();
@@ -256,9 +258,10 @@
 
                 console.log("mobNoArr",mobNoArr);
 
-
-
-
+                var mbN;
+                if(!row.find('.mbNo').hasClass("rdn")){
+                    mbN = row.find('.mbNo').val();
+                }
 
                 if(MobileNo.trim() != ''){
                     if(!MobileNo.match(/^[6789]\d{9}$/)){
@@ -268,13 +271,19 @@
                     }
                 }
 
-                if(MobileNo.trim() != ''){
-                    for(var i = 0;  i < mobNoArr.length; i++){
-                        if(MobileNo == mobNoArr[i].mobN){
-                            cnt++;
-                        }
+                console.log("mob no ==========",MobileNo);
+
+          
+                for(var i = 0;  i < mobNoArr.length; i++){
+
+                    console.log(mbN+"         "+mobNoArr[i].mobN);
+
+                    if(mbN == mobNoArr[i].mobN){
+                        alert("Dublicate Mobile Number.");
+                        flag = "N";
                     }
                 }
+          
 
                 if(Name.trim() != ''){
                     if(!Name.match(atLeastOneAlphabet)){
@@ -293,10 +302,12 @@
                 }
          });
 
-        if(cnt > 0){
-            alert("Dublicate Mobile Number.");
-            flag = "N";
-        }
+         //console.log("cnt final",cnt);
+
+        //if(cnt > 0){  
+        //    alert("Dublicate Mobile Number.");
+        //    flag = "N";
+        //}
 
          console.log("updateArray",updateArray);
 
@@ -446,6 +457,19 @@
                 document.getElementById('mobNoErr'+rowSelected).style.display = "none";
             }
         }
+
+        if(mobNo != ''){
+            for(var i = 0;  i < mobNoArr.length; i++){
+
+            console.log(mobNo+"         "+mobNoArr[i].mobN);
+
+                if(mobNo == mobNoArr[i].mobN){
+                    alert("Dublicate Mobile Number.");
+                    return false;
+                }
+            }
+        }
+
     }
 
     function nameOnChange(o, rowSelected){
