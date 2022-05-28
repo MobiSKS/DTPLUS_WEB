@@ -100,7 +100,7 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
         [HttpPost]
-        public async Task<IActionResult> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
+        public async Task<JsonResult> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
         {
             var reason = await _merchantServices.ActionOnMerchantID(approvalRejectionMdl);
             return Json(reason);
