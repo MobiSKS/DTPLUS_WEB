@@ -25,7 +25,7 @@
                                         <div class="col-md-7 col-12 mb-3">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@
                                     <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Upload to Excel</button>
+                                    <a class="btn btn_primary" href="#aa" id="btnUploadExcel">UPLOAD EXCEL</a>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                     var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
                     var cardNo = "<span class='cdn'>" + (girdList[i].cardNo || '') + "</span>";
                     var vechileNo = (girdList[i].vechileNo || '');
-                    var mobileno = (girdList[i].mobileno || '');
+                    var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
                     var issueDate = isDts;
                     var expiryDate = expDts;
                     var status = (girdList[i].status || '');
@@ -278,8 +278,8 @@
         var customerId = $("#custIdVal").val();
 
         var flag = "Y";
-        var cardNo;
-        var transferAmount;
+        var CardNo;
+        var TransferAmount;
         $("#CCMSToCardSearch input[type=checkbox]:checked").each(function () {
 
             var selectedRow = $(this).closest("tr")[0];
@@ -289,34 +289,36 @@
 
             var row = $(this).closest("tr");
 
-            cardNo = row.find('.cdn').text();
-            transferAmount = row.find('.txnAmt').val();
+            CardNo = row.find('.cdn').text();
+            TransferAmount = row.find('.txnAmt').val();
             var balance = row.find('.balanceAmt').text();
             var cashPurseLimit = row.find('.cashPurseLimit').text();
+            var MobileNo = row.find('.mobN').text();
 
-            var totalVal = (+transferAmount) + (+balance);
+            var totalVal = (+TransferAmount) + (+balance);
 
             updateArray.push({
-                cardNo: cardNo,
-                transferAmount: transferAmount
+                CardNo:CardNo,
+                MobileNo:MobileNo,
+                TransferAmount:TransferAmount
             });
 
-            if(transferAmount.trim() == ''){
+            if(TransferAmount.trim() == ''){
                 document.getElementById('amtToTrans_error_'+indexS).title="Please Enter Amount";
                 document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                 flag = "N";
             }
 
-            if(transferAmount.trim() != ''){
+            if(TransferAmount.trim() != ''){
                 if(!(parseFloat(totalVal) < parseFloat(cashPurseLimit))){
                     document.getElementById('amtToTrans_error_'+indexS).title="Card Balance should not be exceeded the Cash Purse Limit";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(!(parseFloat(transferAmount) < parseFloat(RestBal))){
+                }else if(!(parseFloat(TransferAmount) < parseFloat(RestBal))){
                     document.getElementById('amtToTrans_error_'+indexS).title="Amount is greater than available CCMS Balance";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(transferAmount.trim() == 0){
+                }else if(TransferAmount.trim() == 0){
                     document.getElementById('amtToTrans_error_'+indexS).title="Please Enter  Value greater than 0";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
@@ -325,7 +327,7 @@
         });
 
         
-        if (cardNo == undefined) {
+        if (CardNo == undefined) {
             alert("Please select atleast one record");
             flag = "N";
         }
@@ -354,8 +356,10 @@
                     success: function (res) {
                         console.log("res",res);
                         $("#formVal").hide();
-                        for(var i = 0; i < res.reasonList.length; i++){
-                            $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span><br>");
+                        for(var i = 0; i < res.reasonList.data.length; i++){
+                             var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                             $("#successUpdate").append(bindRes);
                         }
                         document.getElementById('successUpdate').style.display = "block";
                     },
@@ -404,6 +408,37 @@
              }
          }
      }
+
+     
+    $("#btnUploadExcel").on('click', function (e) {
+
+        var custId = $("#custIdVal").val();
+
+        var flag = "Y";
+        if(custId.trim()==''){
+            $("#CustomerIdErr").attr("style", "display:block");
+            $("#CustomerIdErr").html("Customer ID should not be left empty");
+            flag = "N";
+        }
+        else{
+            if(custId.trim()!=''){
+                if (!custId.match(mappedCustomerId)){
+                    $("#CustomerIdErr").attr("style", "display:block");
+                    $("#CustomerIdErr").html("Invalid Customer ID");
+                    flag = "N";
+                }
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if(flag == "Y"){
+            var url = '@Html.Raw(@Url.Action("CcmsToCardAmountTransferViaExcel", new { customerId = "dd" }))';
+            url = url.replace("dd", encodeURIComponent(custId));
+            $(this).attr('href', url);
+        }
+    });
 </script>
 
 <style>

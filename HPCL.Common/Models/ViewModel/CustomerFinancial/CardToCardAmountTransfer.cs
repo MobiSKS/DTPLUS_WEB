@@ -11,8 +11,10 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
 
     public class cardToCardTransfer
     {
-        public string fromCardNo { get; set; }
-        public string toCardNo { get; set; }
+        public string FromCardNo { get; set; }
+        public string ToCardNo { get; set; }
         public Decimal transferAmount { get; set; }
+        public string FromMobileNo { get; set; }
+        public string ToMobileNo { get; set; }
     }
 }

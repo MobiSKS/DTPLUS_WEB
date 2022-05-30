@@ -91,5 +91,17 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerRequestService.UpdateDndSmsAlertsConfigure(CustomerId);
             return Json(new { reasonList = reasonList });
         }
+
+        public ActionResult HotlistCardsPermanently()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> HotlistCardsPermanently(GetHotlistCardsPermanently entity)
+        {
+            var searchList = await _customerRequestService.HotlistCardsPermanently(entity);
+            return Json(new { searchList = searchList });
+        }
     }
 }
