@@ -174,6 +174,7 @@
 
         #region Login
 
+        public static string getMenu = "api/dtplus/login/get_menu_details_for_user";
         public static string getLoginUrl = "api/dtplus/login/get_login";
         #endregion
 
@@ -360,6 +361,9 @@
         public static string GetManageEnrollments = "api/dtplus/TMS/get_manage_enrollments";
         public static string UpdateTmsEnrollmentTmsStatus = "api/dtplus/TMS/update_tms_enrollment_tms_status";
         public static string GetTransportManagementSystemUrl = "api/dtplus/TMS/get_transport_management_system_url";
+        public static string GetCustomerDetailForEnrollmentApproval = "api/dtplus/TMS/get_customer_detail_for_enrollment_approval";
+        public static string UpdateCustomerDetailForEnrollmentApproval = "api/dtplus/TMS/update_customer_detail_for_enrollment_approval";
+        public static string GetTmsEnrollmentStatus = "api/dtplus/TMS/get_tms_enrollment_status";
         #endregion
 
         #region "Customer Requests"

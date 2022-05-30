@@ -1,8 +1,10 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.TMS;
 using HPCL.Common.Models.ViewModel.TMS;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -152,6 +154,29 @@ namespace HPCL_Web.Controllers
             }
 
             return View(Model);
+        }
+
+        public async Task<IActionResult> ApproveEnrollments(EnrollmentsApprovalModel model, string reset, string success, string error, string CustomerID, string TMSUserId, string FromDate, string ToDate, string TMSStatus)
+        {
+            var searchResult = await _tmsService.ApproveEnrollments(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.TMSStatus = 1;
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateCustomerDetailForEnrollmentApproval([FromBody] UpdateCustomerDetailForEnrollmentApprovalRequest model)
+        {
+            var updateKycResponse = await _tmsService.UpdateCustomerDetailForEnrollmentApproval(model);
+
+            return Json(new { customer = updateKycResponse });
         }
 
     }
