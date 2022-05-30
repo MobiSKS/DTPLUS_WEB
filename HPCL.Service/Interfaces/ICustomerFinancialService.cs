@@ -13,8 +13,8 @@ namespace HPCL.Service.Interfaces
         Task<CardToCardBalanceTransferSearchResponse> SearchCardToCardTransfer(BalanceTransferSearchModel entity);
         Task<CustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
         Task<GetViewAccountStatementResponse> ViewAccountStatement(GetViewAccountStatement entity);
-        Task<List<SuccessResponse>> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer);
+        Task<CCMSToCardAmtTransferResponse> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer);
         Task<CardToCardAmountTransferRes> CardToCardAmtTransfer(string customerId, string cardToCardTransfer);
-        Task<List<SuccessResponse>> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer);
+        Task<CardToCCMSAmtTransferResponse> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer);
     }
 }

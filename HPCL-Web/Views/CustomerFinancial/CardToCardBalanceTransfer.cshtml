@@ -26,7 +26,7 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
                                             @Html.TextBoxFor(m => m.CustomerID, new { @id = "custIdVal", @class = "form-control", onkeypress = "return isNumberKey(event)" })
-                                            @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
+                                            @Html.ValidationMessageFor(m => m.CustomerID, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -271,8 +271,8 @@
         var customerId = $("#custIdVal").val();
 
         var flag = "Y";
-        var fromCardNo;
-        var transferAmount;
+        var FromCardNo;
+        var TransferAmount;
         $("#CardToCardSearchRes input[type=checkbox]:checked").each(function () {
 
             var selectedRow = $(this).closest("tr")[0];
@@ -282,57 +282,62 @@
 
             var row = $(this).closest("tr");
 
-            fromCardNo = row.find('.cdn').text();
-            transferAmount = row.find('.txnAmt').val();
+            FromCardNo = row.find('.cdn').text();
+            TransferAmount = row.find('.txnAmt').val();
             var balance = row.find('.balanceAmt').text();
-            var toCardNo = row.find('.newCardNo').val();
+            var ToCardNo = row.find('.newCardNo').val();
+            var FromMobileNo = "";
+            var ToMobileNo = "";
+
 
             updateArray.push({
-                fromCardNo: fromCardNo,
-                toCardNo:toCardNo,
-                transferAmount: transferAmount
+                FromCardNo: FromCardNo,
+                ToCardNo:ToCardNo,
+                TransferAmount: TransferAmount,
+                FromMobileNo:FromMobileNo,
+                ToMobileNo:ToMobileNo
             });
 
-           if(toCardNo.trim() == ''){
+            if(ToCardNo.trim() == ''){
                 document.getElementById('toCardNo_error_'+indexS).title="Please Enter Card Number";
                 document.getElementById('toCardNo_error_'+indexS).style.display = "block";
                 flag = "N";
             }
 
-            if(toCardNo.trim() != ''){
-                if(!toCardNo.match(/^\d{16}$/)){
+            if(ToCardNo.trim() != ''){
+                if(!ToCardNo.match(/^\d{16}$/)){
                     document.getElementById('toCardNo_error_'+indexS).title="Card Number is a 16 digit number";
                     document.getElementById('toCardNo_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(!fromCardNoArr.find(o => o.fromCardNo == toCardNo)){
+                }else if(!fromCardNoArr.find(o => o.fromCardNo == ToCardNo)){
                     document.getElementById('toCardNo_error_'+indexS).title="Either Card(s) Hotlisted, Expired OR not belong to this Customer.";
                     document.getElementById('toCardNo_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(toCardNo == fromCardNo){
+                }else if(ToCardNo == FromCardNo){
                     document.getElementById('toCardNo_error_'+indexS).title="Duplicate Card Number";
                     document.getElementById('toCardNo_error_'+indexS).style.display = "block";
                     flag = "N";
                 }
             }
 
-            if(toCardNo.trim() == ''){
+            if(TransferAmount.trim() == ''){
                 document.getElementById('amtToTrans_error_'+indexS).title="Please Enter Card Number First";
                 document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                 flag = "N";
             }
 
-            if(transferAmount.trim()==''){
+            if(TransferAmount.trim()==''){
                 document.getElementById('amtToTrans_error_'+indexS).title="Please Enter Amount";
                 document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                 flag = "N";
             }
 
-            if(transferAmount.trim() != ''){
-                if(!(parseFloat(transferAmount) < parseFloat(balance))){
+            if(TransferAmount.trim() != ''){
+                if(!(parseFloat(TransferAmount) < parseFloat(balance))){
                     document.getElementById('amtToTrans_error_'+indexS).title="Amount should be less than or equal to Card Balance";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
-                }else if(transferAmount.trim() == 0){
+                }else if(TransferAmount.trim() == 0){
                     document.getElementById('amtToTrans_error_'+indexS).title="Please Enter Value greater than 0";
                     document.getElementById('amtToTrans_error_'+indexS).style.display = "block";
                     flag = "N";
@@ -341,7 +346,7 @@
         });
 
         
-        if (fromCardNo == undefined) {
+        if (FromCardNo == undefined) {
             alert("Please select atleast one record");
             flag = "N";
         }
@@ -372,7 +377,9 @@
                         console.log("res",res);
                         $("#formVal").hide();
                         for(var i = 0; i < res.reasonList.data.length; i++){
-                            $("#successUpdate").append("<span>"+res.reasonList.data[i].reason+"</span><br>");
+                             var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                             $("#successUpdate").append(bindRes);
                         }
                         document.getElementById('successUpdate').style.display = "block";
                     },
@@ -476,7 +483,7 @@
             e.preventDefault();
 
         if(flag == "Y"){
-            var url = '@Html.Raw(@Url.Action("SetCardLimitViaExcelFileUpload", new { customerId = "dd" }))';
+            var url = '@Html.Raw(@Url.Action("CardToCardAmountTransferViaExcel", new { customerId = "dd" }))';
             url = url.replace("dd", encodeURIComponent(custId));
             $(this).attr('href', url);
         }

@@ -113,10 +113,20 @@ namespace HPCL_Web.Controllers
             return View(uploadExcel);
         }
 
-        public IActionResult CcmsToCardAmountTransferViaExcel(string CustomerId)
+        public async Task<IActionResult> CcmsToCardAmountTransferViaExcel(string CustomerId)
         {
+            var entity = new BalanceTransferSearchModel
+            {
+                CustomerID = CustomerId,
+                CardNo = "",
+                MobileNo = ""
+            };
+
+            var searchList = await _customerFinancialService.SearchCCMSToCardTransfer(entity);
+
             AmountTransferExcel uploadExcel = new AmountTransferExcel();
             uploadExcel.CustomerId = CustomerId;
+            uploadExcel.AvailableCcmsBalance = searchList.data.availableCcmsBalanceModelOutput[0].AvailableCcmsBalance;
             return View(uploadExcel);
         }
 

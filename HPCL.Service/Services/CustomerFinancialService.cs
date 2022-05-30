@@ -223,7 +223,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<List<SuccessResponse>> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer)
+        public async Task<CCMSToCardAmtTransferResponse> CCMSToCardAmtTransfer(string customerId, string ccmsToCardTransfer)
         {
             ccmsToCardTransfer[] arrs = JsonConvert.DeserializeObject<ccmsToCardTransfer[]>(ccmsToCardTransfer);
 
@@ -239,8 +239,7 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.CCMSToCardsAmtTransferUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            CCMSToCardAmtTransferResponse reasonList = obj.ToObject<CCMSToCardAmtTransferResponse>();
             return reasonList;
         }
 
@@ -264,7 +263,7 @@ namespace HPCL.Service.Services
             return reasonList;
         }
 
-        public async Task<List<SuccessResponse>> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer)
+        public async Task<CardToCCMSAmtTransferResponse> CardToCCMSAmtTransfer(string customerId, string cardToCCMSTransfer)
         {
             cardToCCMSTransfer[] arrs = JsonConvert.DeserializeObject<cardToCCMSTransfer[]>(cardToCCMSTransfer);
 
@@ -280,8 +279,7 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.CardToCCMSsAmtTransferUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            var jarr = obj["Data"].Value<JArray>();
-            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            CardToCCMSAmtTransferResponse reasonList = obj.ToObject<CardToCCMSAmtTransferResponse>();
             return reasonList;
         }
     }

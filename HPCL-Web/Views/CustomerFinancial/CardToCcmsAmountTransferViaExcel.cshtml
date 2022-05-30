@@ -10,7 +10,7 @@
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-3 bg-grey m-0 font-weight-bold">Card To Card Balance Transfer</p>
+                        <p class="text_primary px-3 py-3 bg-grey m-0 font-weight-bold">Balance Transfer Card To CCMS</p>
                         <button class="btn btn_primary add_update_btn" onclick="exportReportToExcel()">Download Sample Card To CCMS Balance Transfer</button>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-start flex-wrap">
@@ -38,7 +38,7 @@
                             <div class="align-items-start flex-wrap" id="uploadSection">
                                 <div class="col-lg-12 col-12">
                                     <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom: 1px solid #ccc;">
-                                        Upload Card(s) Limit Details File
+                                        Upload Card(s) Balance Transfer File
                                     </p>
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-2 col-12 mb-0">Select File <sup class="text-danger">*</sup></label>
@@ -50,7 +50,7 @@
                                         <div class="col-lg-3 col-12">
                                             <div class="d-flex align-items-start justify-content-start mb-0">
                                                 <div class="px-0">
-                                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()">Upload CCMS Balance Transfer File</button>
+                                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()">Upload</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -59,7 +59,7 @@
                                                 <p class="mb-0"> Only .csv file is allowed!	</p>
                                             </div>
                                         </div>
-                                        <p class="mb-0 mt-2 font-weight-bold">Note:-Please add ‘ before card number. For example, if card no. is 7000 0000 0000 0001, it should be mentioned as ‘7000000000000001 in the excel sheet in the “Card Number” column.</p>
+                                        <p class="mb-0 mt-2 font-weight-bold">“Please upload only one field either in the CardNumber column or in MobileNumber column, not in Both".</p>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                                         <p style="background-color: #3399FF;font-weight:bold;">
                                             Successful Transactions
                                         </p>
-                                        <div class="mb-3 text-center alert alert-danger" style="display:none;" id="checkRecord"></div>
+                                        <div class="mb-3 text-center alert alert-danger" id="checkRecord"></div>
                                     </div>
                                 </div>
                                 <div class="d-inline-block" style="margin-top:2%">
@@ -135,7 +135,7 @@
             var temp_link = document.createElement('a');
 
             // Download csv file
-            temp_link.download = "SetSaleLimit.csv";
+            temp_link.download = "CardToCCMSAmountTransfer.csv";
             var url = window.URL.createObjectURL(CSVFile);
             temp_link.href = url;
 
@@ -153,6 +153,7 @@
     $("#excel_file").change(function () {
 
         document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("reponseErr").style.display = "none";
 
         var fileUpload = document.getElementById("excel_file");
             var regex = /(.*?)\.(csv)$/;
@@ -297,15 +298,15 @@
             })
 
             $.ajax({
-                url: "@Url.Action("CardToCardBalanceTransferAmount", "CustomerFinancial")",
+                url: "@Url.Action("CardToCCMSBalanceTransferAmount", "CustomerFinancial")",
                 type: "POST",
                 dataType: "JSON",
-                data: { customerId: customerId, cardToCardTransfer: JSON.stringify(updateArray)},
+                data: { customerId: customerId, cardToCCMSTransfer: JSON.stringify(updateArray)},
                 success: function (res) {
 
                     console.log("res",res);
 
-                    if(res.reasonList.data[0].status == 1){
+                    if(res.reasonList.status == 1){
                         $("#successUpdate").html('');
                         $("#successUpdate").append("<span>"+res.reasonList.data[0].reason+"</span>");
                         $("#excel_file").val('');
@@ -321,15 +322,17 @@
                             var Cardno = $(tr).find(':nth-child(1)').text();
                             for(var i =0;i<res.reasonList.data.length;i++){
                                 if(res.reasonList.data[i].status == 0){
-                                    if(Cardno == res.reasonList.data[i].cardno){
-                                        $(tr).find(':nth-child(4)').text(res.reasonList.data[i].reason);
+                                    if(Cardno == res.reasonList.data[i].cardNo){
+                                        var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                        $(tr).find(':nth-child(4)').append(bindRes);
                                     }
                                 }
                             }
                         });
 
                         $('#ExcelTable tr:gt(0)').each(function(index, tr){
-                            var err = $(tr).find(':nth-child(6)').text();
+                            var err = $(tr).find(':nth-child(4)').text();
                             if(err == ''){
                                 $(this).hide();
                             }
