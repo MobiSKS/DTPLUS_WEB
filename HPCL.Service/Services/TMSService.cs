@@ -335,11 +335,12 @@ namespace HPCL.Service.Services
             mainList = await _commonActionService.GetStatusType(1);
             List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
             if (model.TMSStatus == 0)
-                model.TMSStatus = 10;//Unverified
+                //model.TMSStatus = 10;//Unverified
+                model.TMSStatus = 2;//Unverified
 
             foreach (StatusResponseModal item in mainList)
             {
-                if (item.StatusId == 10 || item.StatusId == 11 || item.StatusId == 12 || item.StatusId == 1 || item.StatusId == 13)
+                if (item.StatusId == 10 || item.StatusId == 9 || item.StatusId == 1 || item.StatusId == 13)
                 {
                     lstNew.Add(item);
                 }
@@ -377,6 +378,29 @@ namespace HPCL.Service.Services
             model.Internel_Status_Code = res.Internel_Status_Code;
 
             return model;
+        }
+
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UpdateCustomerDetailForEnrollmentApproval([FromBody] UpdateCustomerDetailForEnrollmentApprovalRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.UpdateCustomerDetailForEnrollmentApproval);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
         }
 
     }

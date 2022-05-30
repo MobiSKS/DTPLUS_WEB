@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.TMS;
 using HPCL.Common.Models.ViewModel.TMS;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -166,6 +167,14 @@ namespace HPCL_Web.Controllers
             //    model.StateID = 0;
             //}
             return View(searchResult);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateCustomerDetailForEnrollmentApproval([FromBody] UpdateCustomerDetailForEnrollmentApprovalRequest model)
+        {
+            var updateKycResponse = await _tmsService.UpdateCustomerDetailForEnrollmentApproval(model);
+
+            return Json(new { customer = updateKycResponse });
         }
 
     }
