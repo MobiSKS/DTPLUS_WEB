@@ -27,5 +27,9 @@ namespace HPCL.Common.Models.ResponseModel.AshokLayland
         public string MobileNo { get; set; }
         public string Pin { get; set; }
         public string EmailId { get; set; }
+        public string ZOfficeID { get; set; }
+        public string ROfficeID { get; set; }
+        public string SId { get; set; }
+        public string DId { get; set; }
     }
 }
