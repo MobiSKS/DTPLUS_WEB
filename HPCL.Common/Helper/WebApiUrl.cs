@@ -174,6 +174,7 @@
 
         #region Login
 
+        public static string getMenu = "api/dtplus/login/get_menu_details_for_user";
         public static string getLoginUrl = "api/dtplus/login/get_login";
         #endregion
 

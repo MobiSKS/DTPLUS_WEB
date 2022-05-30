@@ -231,6 +231,33 @@ namespace HPCL.Service.Services
             JObject regionalOfficeObj = JObject.Parse(JsonConvert.DeserializeObject(regionalOfficeResponse).ToString());
             var regionalOfficeJarr = regionalOfficeObj["Data"].Value<JArray>();
             List<RegionalOfficeResponseModal> regionalOfficeLst = regionalOfficeJarr.ToObject<List<RegionalOfficeResponseModal>>();
+            
+            if (_httpContextAccessor.HttpContext.Session.GetString("RegionalId") != "0")
+            {
+                List<RegionalOfficeResponseModal> regionalOfficeLstCopy = regionalOfficeLst.ToList();
+
+                string[] AssignedRegions = _httpContextAccessor.HttpContext.Session.GetString("RegionalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in regionalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedRegions.Length; i++)
+                    {
+                        if (item.RegionalOfficeID.ToString() == AssignedRegions[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        regionalOfficeLst.Remove(item);
+                    }
+                }
+            }
 
             return regionalOfficeLst;
         }
@@ -300,6 +327,33 @@ namespace HPCL.Service.Services
             JObject zonalOfficeObj = JObject.Parse(JsonConvert.DeserializeObject(zonalOfficeResponse).ToString());
             var zonalOfficeJarr = zonalOfficeObj["Data"].Value<JArray>();
             List<ZonalOfficeResponseModal> zonalOfficeLst = zonalOfficeJarr.ToObject<List<ZonalOfficeResponseModal>>();
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("ZonalId") != "0")
+            {
+                List<ZonalOfficeResponseModal> zonalOfficeLstCopy = zonalOfficeLst.ToList();
+
+                string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in zonalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedZones.Length; i++)
+                    {
+                        if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        zonalOfficeLst.Remove(item);
+                    }
+                }
+            }
 
             return zonalOfficeLst;
         }
@@ -475,6 +529,33 @@ namespace HPCL.Service.Services
             JObject customerRegionObj = JObject.Parse(JsonConvert.DeserializeObject(customerRegionResponse).ToString());
             var customerRegionJarr = customerRegionObj["Data"].Value<JArray>();
             List<CustomerRegionModel> customerregionalOfficeLst = customerRegionJarr.ToObject<List<CustomerRegionModel>>();
+
+            List<CustomerRegionModel> regionalOfficeLstCopy = customerregionalOfficeLst.ToList();
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("RegionalId") != "0")
+            {
+                string[] AssignedRegions = _httpContextAccessor.HttpContext.Session.GetString("RegionalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in regionalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedRegions.Length; i++)
+                    {
+                        if (item.RegionalOfficeID.ToString() == AssignedRegions[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        customerregionalOfficeLst.Remove(item);
+                    }
+                }
+            }
 
             return customerregionalOfficeLst;
         }
@@ -669,6 +750,33 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerZonalOfficeModel> SortedtList = jarr.ToObject<List<CustomerZonalOfficeModel>>();
 
+            if (_httpContextAccessor.HttpContext.Session.GetString("ZonalId") != "0")
+            {
+                List<CustomerZonalOfficeModel> zonalOfficeLstCopy = SortedtList.ToList();
+
+                string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in zonalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedZones.Length; i++)
+                    {
+                        if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        SortedtList.Remove(item);
+                    }
+                }
+            }
+
             return SortedtList;
         }
 
@@ -727,14 +835,53 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseRegionalOffice).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerRegionModel> lstCustomerRegionModel = jarr.ToObject<List<CustomerRegionModel>>();
-            lstCustomerRegionModel.Add(new CustomerRegionModel
-            {
-                RegionalOfficeID = 0,
-                RegionalOfficeName = "--Select--",
 
-            });
-            var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();
-            return SortedtList;
+            if (_httpContextAccessor.HttpContext.Session.GetString("RegionalId") != "0")
+            {
+                List<CustomerRegionModel> regionalOfficeLstCopy = lstCustomerRegionModel.ToList();
+
+                string[] AssignedRegions = _httpContextAccessor.HttpContext.Session.GetString("RegionalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in regionalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedRegions.Length; i++)
+                    {
+                        if (item.RegionalOfficeID.ToString() == AssignedRegions[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        lstCustomerRegionModel.Remove(item);
+                    }
+                }
+
+                lstCustomerRegionModel.Add(new CustomerRegionModel
+                {
+                    RegionalOfficeID = 0,
+                    RegionalOfficeName = "--Select--",
+
+                });
+                var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();
+                return SortedtList;
+            }
+            else
+            {
+                lstCustomerRegionModel.Add(new CustomerRegionModel
+                {
+                    RegionalOfficeID = 0,
+                    RegionalOfficeName = "--Select--",
+
+                });
+                var SortedtList = lstCustomerRegionModel.OrderBy(x => x.RegionalOfficeID).ToList();
+                return SortedtList;
+            }
         }
 
         public async Task<List<TerminalStatusResponseModal>> GetMerchantStatus()

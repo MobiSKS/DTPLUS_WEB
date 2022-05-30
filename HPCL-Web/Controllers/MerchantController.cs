@@ -31,11 +31,11 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View();
+            return View(SessionMenuModel.menuList);
         }
         public async Task<IActionResult> Profile()
         {
-            return View();
+            return View(SessionMenuModel.menuList);
         }
         public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode, string actionFlow)
         {
@@ -100,7 +100,7 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
         [HttpPost]
-        public async Task<IActionResult> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
+        public async Task<JsonResult> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
         {
             var reason = await _merchantServices.ActionOnMerchantID(approvalRejectionMdl);
             return Json(reason);

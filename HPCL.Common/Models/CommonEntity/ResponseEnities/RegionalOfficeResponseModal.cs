@@ -14,4 +14,9 @@ namespace HPCL.Common.Models.CommonEntity.ResponseEnities
         public string RegionalOfficeERPCode { get; set; }
         public string ZonalOfficeName { get; set; }
     }
+
+    public class RegionalIdList
+    {
+        public int RegionalID { get; set; }
+    }
 }

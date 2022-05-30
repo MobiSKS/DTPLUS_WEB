@@ -1,72 +1,27 @@
-﻿<div style="width:100%;">
-    <div class="py-3 px-0 p-md-4">
+﻿@model IEnumerable<HPCL.Common.Models.CommonEntity.MenuDetailModel>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    int menuID = Model.FirstOrDefault().CalledMenuId;
+}
+
+<div style="width:100%;">
+    <div class="pt-3 px-0">
         <div class="d-flex align-items-stretch justify-content-start flex-wrap">
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Profile", "Merchant")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/card-detail.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Profile</h4>
-                        <p>Add, Edit and View Terminal</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Index", "TerminalManagement")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/transaction-detail.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Terminal Management</h4>
-                        <p>View Merchant and Terminal Transaction Details</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Index", "Approvals")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/card-parameter.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Approvals</h4>
-                        <p>Approavls for Terminal Installation DeInstallation</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-            <a href="@Url.Action("SearchMerchant", "Merchant")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                <div class="thumb_icon">
-                    <img src="assets/images/card-parameter.png" class="img-fluid" alt="">
+            @foreach (var mdl in Model.Where(x => x.ParentMenuId == menuID && x.UserID == Context.Session.GetString("UserId") && x.MenuLevel != 1).OrderBy(x => x.MenuOrder))
+            {
+                <div class="col-lg-3 col-md-4 col-12 mb-3">
+                    <a href="@Url.Action(mdl.Action, mdl.Controller)" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
+                        <div class="thumb_icon">
+                            <img src="@mdl.ImageUrl" class="img-fluid" alt="">
+                        </div>
+                        <div class="px-3">
+                            <h4>@mdl.Heading</h4>
+                            <p>@mdl.Details</p>
+                        </div>
+                    </a>
                 </div>
-                <div class="px-3">
-                    <h4>Search</h4>
-                    <p>Search Merchant</p>
-                </div>
-            </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Index", "AshokLeyLand")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/card-parameter.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Ashok LeyLand</h4>
-                        <p>All Pages for Ashok Leyland</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Index", "MerchantFinancials")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/card-parameter.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Financials</h4>
-                        <p>Financials</p>
-                    </div>
-                </a>
-            </div>
+            }
         </div>
     </div>
 </div>
