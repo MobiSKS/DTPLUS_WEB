@@ -363,6 +363,7 @@
         public static string GetTransportManagementSystemUrl = "api/dtplus/TMS/get_transport_management_system_url";
         public static string GetCustomerDetailForEnrollmentApproval = "api/dtplus/TMS/get_customer_detail_for_enrollment_approval";
         public static string UpdateCustomerDetailForEnrollmentApproval = "api/dtplus/TMS/update_customer_detail_for_enrollment_approval";
+        public static string GetTmsEnrollmentStatus = "api/dtplus/TMS/get_tms_enrollment_status";
         #endregion
 
         #region "Customer Requests"

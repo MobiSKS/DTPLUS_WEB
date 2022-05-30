@@ -156,16 +156,18 @@ namespace HPCL_Web.Controllers
             return View(Model);
         }
 
-        public async Task<IActionResult> ApproveEnrollments(EnrollmentsApprovalModel model, string reset, string success, string error, string StateID, string FormNumber, string CustomerName, string Status)
+        public async Task<IActionResult> ApproveEnrollments(EnrollmentsApprovalModel model, string reset, string success, string error, string CustomerID, string TMSUserId, string FromDate, string ToDate, string TMSStatus)
         {
             var searchResult = await _tmsService.ApproveEnrollments(model);
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
             ViewBag.SuccessMessage = success;
             ViewBag.ErrorMessage = error;
-            //if (!String.IsNullOrEmpty(reset))
-            //{
-            //    model.StateID = 0;
-            //}
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.TMSStatus = 1;
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
             return View(searchResult);
         }
 
