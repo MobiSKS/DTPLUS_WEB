@@ -47,8 +47,8 @@ namespace HPCL.Common.Helper
 
                         _httpContextAccessor.HttpContext.Session.SetString("BreadCrumbsController", menu.FirstOrDefault().Controller);
                         _httpContextAccessor.HttpContext.Session.SetString("BreadCrumbsAction", menu.FirstOrDefault().Action);
+                        _httpContextAccessor.HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", menu.FirstOrDefault().MenuName);
                         _httpContextAccessor.HttpContext.Session.SetString("CurrentAction", SessionMenuModel.menuList[i].MenuName);
-
                         _httpContextAccessor.HttpContext.Session.SetString("CalledMenuAllowedAction", SessionMenuModel.menuList[i].AllowedAction.ToString());
                     }
                 }
