@@ -1,4 +1,6 @@
-﻿using HPCL.Common.Models.ResponseModel.TMS;
+﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.TMS;
+using HPCL.Common.Models.ResponseModel.TMS;
 using HPCL.Common.Models.ViewModel.TMS;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,5 +25,7 @@ namespace HPCL.Service.Interfaces
         Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL();
         Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL(NavigateToTransportManagementSystemModel model);
         Task<EnrollmentsApprovalModel> ApproveEnrollments(EnrollmentsApprovalModel model);
+        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UpdateCustomerDetailForEnrollmentApproval([FromBody] UpdateCustomerDetailForEnrollmentApprovalRequest model);
+        Task<List<StatusResponseModal>> GetTMSEnrollmentStatus();
     }
 }

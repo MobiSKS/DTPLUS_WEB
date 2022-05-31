@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Services
 {
@@ -331,21 +332,28 @@ namespace HPCL.Service.Services
 
         public async Task<EnrollmentsApprovalModel> ApproveEnrollments(EnrollmentsApprovalModel model)
         {
-            List<StatusResponseModal> mainList = new List<StatusResponseModal>();
-            mainList = await _commonActionService.GetStatusType(1);
-            List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
+            model.StatusResponseMdl.AddRange(await GetTMSEnrollmentStatus());
             if (model.TMSStatus == 0)
-                model.TMSStatus = 10;//Unverified
+                model.TMSStatus = 1;//Pending
 
-            foreach (StatusResponseModal item in mainList)
+            if (string.IsNullOrEmpty(model.FromDate))
             {
-                if (item.StatusId == 10 || item.StatusId == 11 || item.StatusId == 12 || item.StatusId == 1 || item.StatusId == 13)
-                {
-                    lstNew.Add(item);
-                }
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                model.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
-            model.StatusResponseMdl.AddRange(lstNew);
+            string strFromDate = "";
+            string strToDate = "";
+            if (!string.IsNullOrEmpty(model.FromDate))
+            {
+                string[] frmDate = model.FromDate.Split("-");
+                strFromDate = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+            }
+            if (!string.IsNullOrEmpty(model.ToDate))
+            {
+                string[] toDate = model.ToDate.Split("-");
+                strToDate = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
+            }
 
             var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
             {
@@ -354,8 +362,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = string.IsNullOrEmpty(model.CustomerID) ? "" : model.CustomerID,
                 TMSUserId = string.IsNullOrEmpty(model.TMSUserId) ? "" : model.TMSUserId,
-                FromDate = string.IsNullOrEmpty(model.FromDate) ? "" : model.FromDate,
-                ToDate = string.IsNullOrEmpty(model.ToDate) ? "" : model.ToDate,
+                FromDate = strFromDate,
+                ToDate = strToDate,
                 TMSStatus = model.TMSStatus.ToString()
             };
 
@@ -377,6 +385,48 @@ namespace HPCL.Service.Services
             model.Internel_Status_Code = res.Internel_Status_Code;
 
             return model;
+        }
+
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UpdateCustomerDetailForEnrollmentApproval([FromBody] UpdateCustomerDetailForEnrollmentApprovalRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.UpdateCustomerDetailForEnrollmentApproval);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
+        }
+        public async Task<List<StatusResponseModal>> GetTMSEnrollmentStatus()
+        {
+            var statusType = new StatusRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetTmsEnrollmentStatus);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
+
+            return lst;
         }
 
     }

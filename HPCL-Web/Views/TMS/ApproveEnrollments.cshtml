@@ -6,7 +6,16 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a></li>
             <li class="breadcrumb-item font-weight-light">Enrollments Approval</li>
         </ul>
-        <form>
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="reason" class="mb-0 mt-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="reason" class="mb-0 mt-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "formValid", @class = "toBeHiddenOnSuccess" }))
+        {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -66,12 +75,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Status</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <select class="form-control">
-                                                    <option>--Select--</option>
-                                                    <option>Rejected</option>
-                                                    <option>Approved</option>
-                                                    <option>Pending</option>
-                                                </select>
+                                               @Html.DropDownListFor(m => m.TMSStatus, new SelectList(Model.StatusResponseMdl, "StatusId", "StatusName"), new { @class = "form-control" })
                                             </div>
                                         </div>
                                     </div>
@@ -80,10 +84,10 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Search</button>
+                                    <button class="btn btn_primary" type="submit" id="btnSearch" onclick="return SearchValidations()">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("ApproveEnrollments", "TMS", new { reset="Y" })'">RESET</button>
                                 </div>
                             </div>
                         </div>
@@ -92,76 +96,116 @@
                 </div>
 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <table id="ViewRedemptionTable" class="table table-striped d-block d-table table-bordered table-responsive nowrap mt-3" style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                @if (ViewBag.Reset != "Y")
+                {
+                    @if (Model.Data.Count() > 0)
+                    {
+
+                            <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="CustomerSearch">
+                                <thead style="background-color:lightgray;">
+                                 <tr>
+                                    <th style="display:none">S.No.</th>
+                                    @if (Model.TMSStatus == 1)
+                                    {
+                                        <th><input type="checkbox" id="checkAll" /></th>
+                                    }
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Address1</th>
+                                    <th>Address2</th>
+                                    <th>State</th>
+                                    <th>Requested Date</th>
+                                    @if (Model.TMSStatus == 1)
+                                    {
+                                        <th>Remarks</th>
+                                    }
+                                    @if (Model.TMSStatus != 1)
+                                    {
+                                        <th>Approved/Rejected By</th>
+                                        <th>Approved/Rejected Date</th>
+                                        <th>Remarks</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody id="searchTableBody">
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model.Data)
+                                {
+                                    i = i + 1;
+
+                                    <tr>
+                                        <td style="display:none">@i</td>
+                                        @if (Model.TMSStatus == 1)
+                                        {
+                                            <td><input type="checkbox" id="check_@i" /></td>
+                                        }
+                                        <td id="tdCustomerID" class='customerID'>@item.CustomerID</td>
+                                        <td id="tdCustomerName">@item.CustomerName</td>
+                                        <td id="tdCustomerAddress">@item.Address1</td>
+                                        <td id="tdPhoneNo">@item.Address2</td>
+                                        <td id="tdMobileNo">@item.State</td>
+                                        <td id="tdMobileNo">@item.RequestedDate</td>
+                                         @if (Model.TMSStatus == 1)
+                                         {
+                                            <td class="editCell">
+                                                <input type="text" maxlength="150" class="form-control remarks" onkeydown="return AlphaNumericWithSpace(event.keyCode)" name="Remarks_@i" id="Remarks_@i" disabled onchange='RemarksChange(this,@i)'>
+                                                <span class='field-validation-error text-danger mobileerror' id='Remarks_error_@i'></span>
+                                            </td>
+                                         }
+                                         @if (Model.TMSStatus != 1)
+                                         {
+                                             <td>@item.TMSApprovedBy</td>
+                                             <td>@item.TMSApprovedon</td>
+                                             <td>@item.Remark</td>
+                                         }
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                            @if (Model.TMSStatus == 1)
+                            {
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+                                    <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="EnrollmentApproval('Approve');">Approve</button>
                                     </div>
-                                </th>
-                                <th>Customer ID</th>
-                                <th>Customer Name</th>
-                                <th>Address1</th>
-                                <th>Address 2</th>
-                                <th>State</th>
-                                <th>Requested Date</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="EnrollmentApproval('Reject');">Reject</button>
                                     </div>
-                                </td>
-                                <td>2000302532</td>
-                                <td>K B S TRANSPORT</td>
-                                <td>JUHU HIMALAYA CO-OP HOUSING SOC LTD</td>
-                                <td>PLOT NO 8 & 8-A</td>
-                                <td>MAHARASHTRA</td>
-                                <td>15-12-2021</td>
-                                <td><input type="text" class="form-control" /></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>2000302532</td>
-                                <td>K B S TRANSPORT</td>
-                                <td>JUHU HIMALAYA CO-OP HOUSING SOC LTD</td>
-                                <td>PLOT NO 8 & 8-A</td>
-                                <td>MAHARASHTRA</td>
-                                <td>15-12-2021</td>
-                                <td><input type="text" class="form-control" /></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                                    </div>
-                                </td>
-                                <td>2000302532</td>
-                                <td>K B S TRANSPORT</td>
-                                <td>JUHU HIMALAYA CO-OP HOUSING SOC LTD</td>
-                                <td>PLOT NO 8 & 8-A</td>
-                                <td>MAHARASHTRA</td>
-                                <td>15-12-2021</td>
-                                <td><input type="text" class="form-control" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                               </div>
+                           }
+                    }
+                    else
+                    {
+                        <div class="mb-3 text-center alert alert-danger">
+                            @Model.Message
+                        </div>
+                    }
+                }
                 </div>
             </div>
-        </form>
+        }
         <div class="clearfix"></div>
     </div>
 </div>
 <div class="clearfix"></div>
 <script>
+    var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
+    var activeRow="";
+    $(document).ready(function () {
+         $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+
+    });
+
     $('#CustomerID').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
             e.preventDefault();
@@ -188,5 +232,298 @@
         }
 
     })
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+
+        $("#CustomerSearch tbody tr").each(function () {
+             //debugger;
+
+            var row = $(this);
+            var i = row[0].cells[0].textContent;
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                $('#Remarks_'+i).prop('disabled', false);
+                $('#Remarks_error_'+i).html("");
+            }
+            else
+            {
+                $('#Remarks_'+i).prop('disabled', true);
+                $('#Remarks_error_'+i).html("");
+            }
+         });
+    });
+
+    $('td input[type="checkbox"]').change(function () {
+      $(this).closest('tr').find('input[type="text"]').prop('disabled', !this.checked);
+      var row = $(this).closest('tr');
+      var i = row[0].cells[0].textContent;
+       $('#Remarks_error_'+i).html("");
+    }).change();
+
+    function EnrollmentApproval(ApproveReject) 
+    {
+        debugger;
+        //alert("inside submit");
+        var flag = "Y";
+        approvalDetail = [];
+        var count=0;
+        var message="";
+        var tmsStatus="";
+        if(ApproveReject=="Approve")
+        {
+            message="Are you sure! You want to approve the selected record(s)?";
+            tmsStatus="2";
+        }
+        else
+        {
+            message="Are you sure! You want to reject the selected record(s)?";
+            tmsStatus="3";
+        }
+
+         $("#CustomerSearch tbody tr").each(function () {
+             debugger;
+            
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                 var i = row[0].cells[0].textContent;
+                 var customerID = row.find("td.customerID").text();
+                 var remarks = $('#Remarks_'+i).val();
+ 
+                 count=count+1;
+
+                if(remarks.trim()=='')
+                {
+                    document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
+                    flag="N";
+                }
+                else
+                {
+                    if(!remarks.match(atLeastOneAlphabet)) 
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
+                        flag="N";
+                    }
+                    else
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="";
+                    }
+                }
+
+                 approvalDetail.push({ CustomerID: customerID, TMSStatus: tmsStatus, Remarks: remarks });
+            }
+         });
+     
+         if(count==0)
+         {
+             alert("Please select at least one record");
+         }
+
+        if (approvalDetail.length > 0 && flag == "Y") 
+        {
+            if (confirm(message)) 
+            {
+                var updateReqmodel = { CustomerID: $("#CustomerID").val(), customerDetailForEnrollmentApproval: approvalDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateCustomerDetailForEnrollmentApproval", "TMS")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(updateReqmodel),
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.status==1)
+                        {
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("ApproveEnrollments", "TMS",new { reset = "Y", success = "mm", error = "ee", CustomerID="xxx", TMSUserId="yyy", FromDate="zzz", ToDate="aaa", TMSStatus="bbb" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                            url = url.replace("xxx", encodeURIComponent($("#CustomerID").val())).replace("yyy", encodeURIComponent($("#TMSUserId").val()));
+                            url = url.replace("zzz", encodeURIComponent($("#FromDate").val())).replace("aaa", encodeURIComponent($("#ToDate").val())).replace("bbb", encodeURIComponent($("#TMSStatus").val()));
+                           window.location.href=url;
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
+
+    function SearchValidations()
+    {
+        debugger;
+        var ret=true;
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        debugger;
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("FromDate_error");
+        }
+
+        if (document.getElementById("CustomerID").value.trim() != "")
+        {
+            if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                ret=false;
+            }
+            else
+            {
+                $("#CustomerIdValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").html("");
+        }
+
+        if (fromdate != "" && todate == "")
+        {
+            document.getElementById("ToDate_error").innerHTML = "Please select To Date";
+            ret=false;
+        }
+        if (fromdate == "" && todate != "")
+        {
+            document.getElementById("FromDate_error").innerHTML = "Please select From Date";
+            ret=false;
+        }
+                 
+
+        if(flag == "N")
+        {
+            ret=false;
+        }
+  
+        console.log(ret);
+        return ret;
+    }
+    function SubmitValidations()
+    {
+        debugger;
+        var ret=true;
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        debugger;
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("FromDate_error");
+        }
+
+        if (document.getElementById("CustomerID").value.trim() != "")
+        {
+            if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                ret=false;
+            }
+            else
+            {
+                $("#CustomerIdValErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerIdValErrMsg").html("");
+        }
+
+        if (fromdate != "" && todate == "")
+        {
+            document.getElementById("ToDate_error").innerHTML = "Please select To Date";
+            ret=false;
+        }
+        if (fromdate == "" && todate != "")
+        {
+            document.getElementById("FromDate_error").innerHTML = "Please select From Date";
+            ret=false;
+        }
+
+         var count=0;
+         $("#CustomerSearch tbody tr").each(function () {
+             debugger;
+            
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                 var i = row[0].cells[0].textContent;
+                 var customerID = row.find("td.customerID").text();
+                 var remarks = $('#Remarks_'+i).val();
+ 
+                 count=count+1;
+
+                if(remarks.trim()=='')
+                {
+                    document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
+                    flag="N";
+                }
+                else
+                {
+                    if(!remarks.match(nameWithSpaceCheck)) 
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
+                        flag="N";
+                    }
+                    else
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="";
+                    }
+                }
+
+
+            }
+         });
+     
+         if(count==0)
+         {
+             alert("Please select at least one record");
+             flag="N";
+         }
+
+        if(flag == "N")
+        {
+            ret=false;
+        }
+  
+        console.log(ret);
+        return ret;
+    }
+    function RemarksChange(o, rowSelected) 
+    {
+          var remarks = o.value;
+          console.log(remarks);
+
+        if(remarks.trim()=='')
+        {
+            document.getElementById('Remarks_error_'+rowSelected).innerHTML="Please enter Remarks";
+            return false;
+        }
+        else if (!remarks.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById('Remarks_error_'+rowSelected).innerHTML="Invalid Remarks";
+            return false;
+        }
+        else
+        {
+            document.getElementById('Remarks_error_'+rowSelected).innerHTML="";
+        }
+
+     }
 
 </script>

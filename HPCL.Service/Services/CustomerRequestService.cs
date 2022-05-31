@@ -223,5 +223,39 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<GetHotlistCardsPermanentlyRes> HotlistCardsPermanently(GetHotlistCardsPermanently entity)
+        {
+            var searchBody = new GetHotlistCardsPermanently();
+
+            if (entity.CustomerID != null)
+            {
+                searchBody = new GetHotlistCardsPermanently
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = entity.CustomerID,
+                    CardNo = entity.CardNo
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new GetHotlistCardsPermanently
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CardNo = entity.CardNo
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetHotlistCardsPermanentlyUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetHotlistCardsPermanentlyRes searchList = obj.ToObject<GetHotlistCardsPermanentlyRes>();
+            return searchList;
+        }
     }
 }

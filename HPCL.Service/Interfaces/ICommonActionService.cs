@@ -73,5 +73,7 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetStatusType(int EntityTypeId);
         Task<List<CheckPancardbyDistrictIdResponse>> CheckPanCardDuplicationByDistrictidWithListOfCustomers(string DistrictId, string IncomeTaxPan);
         Task<List<LimitTypeModal>> GetCreditCloseLimitType();
+        Task<List<GetHotlistReasonRes>> GetHotlistReason();
+
     }
 }

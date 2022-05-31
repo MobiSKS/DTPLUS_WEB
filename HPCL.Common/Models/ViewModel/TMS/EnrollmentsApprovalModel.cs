@@ -14,6 +14,9 @@ namespace HPCL.Common.Models.ViewModel.TMS
         {
             StatusResponseMdl = new List<StatusResponseModal>();
             Data = new List<EnrollmentsApprovalDetails>();
+
+            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         public virtual List<StatusResponseModal> StatusResponseMdl { get; set; }
         public string TMSUserId { get; set; }
@@ -35,5 +38,8 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public int Status { get; set; }
         public string Reason { get; set; }
         public string Remarks { get; set; }
+        public string TMSStatus { get; set; }
+        public string TMSApprovedBy { get; set; }
+        public string TMSApprovedon { get; set; }
     }
 }
