@@ -271,5 +271,22 @@ namespace HPCL_Web.Controllers
             uploadExcel.CustomerId = CustomerId;
             return View(uploadExcel);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> SearchSetSaleLimitForUploadExcel(string customerId)
+        {
+            var entity = new GetCardLimit
+            {
+                CustomerId = customerId,
+                CardNo = "",
+                MobileNo = "",
+                Statusflag = 4
+            };
+
+            var searchList = await _cardService.SetSaleLimit(entity);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
     }
 }

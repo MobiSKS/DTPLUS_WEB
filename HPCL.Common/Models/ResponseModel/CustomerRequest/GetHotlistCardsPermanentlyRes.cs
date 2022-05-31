@@ -12,7 +12,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerRequest
     {
         public string CardNo { get; set; }
         public string UserName { get; set; }
-        public string KeyOfficialTypeOfFleet { get; set; }
+        public int OwnedORAttachedId { get; set; }
+        public string OwnedORAttachedName { get; set; }
         public string VechileNo { get; set; }
         public string VechileType { get; set; }
         public string YearOfRegistration { get; set; }

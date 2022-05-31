@@ -20,12 +20,13 @@
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", @readonly="readonly" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="col-lg-7 col-12">
                                             <div class="d-flex align-items-start justify-content-start mt-0">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button">Search</button>
+                                                    <button class="btn btn_primary" type="button" onclick="searchCustomer()">Search</button>
                                                 </div>
                                                 <div class="px-2">
                                                     <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
@@ -39,6 +40,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="mb-3 text-center alert alert-danger" id="noRecord" style="display:none;"></div>
                                 </div>
                             </div>
                             <div class="align-items-start flex-wrap" id="uploadSection">
@@ -51,6 +53,7 @@
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
                                                 <input class="form-control-file" id="excel_file" name="batchid" type="file" value="">
+                                                <span style="display:none" class="error" id="excel_file_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-12">
@@ -65,7 +68,7 @@
                                                 <p class="mb-0"> Only .csv file is allowed!	</p>
                                             </div>
                                         </div>
-                                        <p class="mb-0 mt-2 font-weight-bold">“Please add ‘ before Card Number. For example, if Card No. is 7000 0000 0000 0001, it should be mentioned as ‘7000000000000001 in the excel sheet in the “Card Number” column”.</p>
+                                        <p class="mb-0 mt-2 font-weight-bold" style="padding-top:2%">“Please add ‘ before Card Number. For example, if Card No. is 7000 0000 0000 0001, it should be mentioned as ‘7000000000000001 in the excel sheet in the “Card Number” column”.</p>
                                         <p class="mb-0 mt-2 font-weight-bold">“Please upload only one field either in the CardNumber column or in MobileNumber column, not in Both".</p>
                                     </div>
                                 </div>
@@ -108,11 +111,68 @@
 
 <script>
 
+       function searchCustomer(){
+
+        var custId = $("#CustomerDefaultVal").val();
+
+        var flag = "Y";
+        if(custId.trim()==''){
+            $("#CustomerIdErr").attr("style", "display:block");
+            $("#CustomerIdErr").html("Customer ID should not be left empty");
+            flag = "N";
+        }
+        else{
+            if(custId.trim()!=''){
+                if (!custId.match(mappedCustomerId)){
+                    $("#CustomerIdErr").attr("style", "display:block");
+                    $("#CustomerIdErr").html("Invalid Customer ID");
+                    flag = "N";
+                }
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if(flag == "Y"){
+
+            $("#CustomerIdErr").attr("style", "display:none");
+
+            $.ajax({
+                url: "@Url.Action("SearchCcmsToCardBalanceTransfer", " CustomerFinancial")",
+                type: "POST",
+                dataType: "JSON",
+                data: { customerId: custId},
+                success: function (res) {
+
+                    console.log("res",res);
+
+                    if(res.searchList.success == true){
+                        $("#CustomerDefaultVal").attr("readonly",true);
+                        $("#uploadSection").show();
+                    }else{
+                        $("#CustomerDefaultVal").attr("readonly",true);
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    console.log('Failed' + ex);
+                }
+            });
+
+        }
+    }
+
+
     function resetClick(){
         $("#uploadSection").hide();
         $("#CustomerDefaultVal").attr("readonly",false);
         $("#CustomerDefaultVal").val('');
         document.getElementById("ExcelDataError").style.display = "none";
+        document.getElementById("reponseErr").style.display = "none";
     }
 
     function exportReportToExcel() {
@@ -275,7 +335,9 @@
                     alert("This browser does not support HTML5.");
                 }
             } else {
-                alert("Please upload a valid CSV file.");
+                 $("#excel_file_error").attr("style", "display:block");
+                 $("#excel_file_error").html("Please upload a valid CSV file.");
+                 $("#excel_file").val('');
             }
     });
 
@@ -285,72 +347,89 @@
 
         var customerId = $("#CustomerDefaultVal").val();
 
-        if($("#excel_file").val() != ''){
+             var flag = "Y";
 
-            var updateArray = [];
-            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                var CardNo = $(tr).find(':nth-child(1)').text();
-                var MobileNo = $(tr).find(':nth-child(2)').text();
-                var TransferAmount = $(tr).find(':nth-child(3)').text();
+        if($("#excel_file").val() == ''){
+             $("#excel_file_error").attr("style", "display:block");
+             $("#excel_file_error").html("Please add a CSV file.");
+             flag = "N";
+        }
 
-                updateArray.push({
-                    CardNo:CardNo,
-                    MobileNo:MobileNo,
-                    TransferAmount:TransferAmount
-                });
-            })
+        if (flag == "N")
+            e.preventDefault();
 
-            $.ajax({
-                url: "@Url.Action("CCMSToCardBalanceTransferAmount", "CustomerFinancial")",
-                type: "POST",
-                dataType: "JSON",
-                data: { customerId: customerId, ccmsToCardTransfer: JSON.stringify(updateArray)},
-                success: function (res) {
 
-                    console.log("res",res);
+        if(flag == "Y"){
 
-                    if(res.reasonList.data.status == 1){
-                        $("#successUpdate").html('');
-                        $("#successUpdate").append("<span>"+res.reasonList.data[0].reason+"</span>");
-                        $("#excel_file").val('');
-                        document.getElementById("successUpdate").style.display = "block";
-                    }else{
+            $("#excel_file_error").attr("style", "display:none");
 
-                        $("#checkRecord").html('');
-                        $("#checkRecord").append("<span>"+res.reasonList.message+"</span>")
-                        $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+            if($("#excel_file").val() != ''){
 
-                            var currentIndex = index + 1;
+                var updateArray = [];
+                $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                    var CardNo = $(tr).find(':nth-child(1)').text();
+                    var MobileNo = $(tr).find(':nth-child(2)').text();
+                    var TransferAmount = $(tr).find(':nth-child(3)').text();
 
-                            var Cardno = $(tr).find(':nth-child(1)').text();
-                            for(var i =0;i<res.reasonList.data.length;i++){
-                                if(res.reasonList.data[i].status == 0){
-                                    if(Cardno == res.reasonList.data[i].cardNo){
-                                        var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+                    updateArray.push({
+                        CardNo:CardNo,
+                        MobileNo:MobileNo,
+                        TransferAmount:TransferAmount
+                    });
+                })
 
-                                        $(tr).find(':nth-child(4)').append(bindRes);
+                $.ajax({
+                    url: "@Url.Action("CCMSToCardBalanceTransferAmount", "CustomerFinancial")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { customerId: customerId, ccmsToCardTransfer: JSON.stringify(updateArray)},
+                    success: function (res) {
+
+                        console.log("res",res);
+
+                        if(res.reasonList.data.status == 1){
+                            $("#successUpdate").html('');
+                            $("#successUpdate").append("<span>"+res.reasonList.data[0].reason+"</span>");
+                            $("#excel_file").val('');
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+
+                            $("#checkRecord").html('');
+                            $("#checkRecord").append("<span>"+res.reasonList.message+"</span>")
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+
+                                var currentIndex = index + 1;
+
+                                var Cardno = $(tr).find(':nth-child(1)').text();
+                                for(var i =0;i<res.reasonList.data.length;i++){
+                                    if(res.reasonList.data[i].status == 0){
+                                        if(Cardno == res.reasonList.data[i].cardNo){
+                                            var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                            $(tr).find(':nth-child(4)').append(bindRes);
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
 
-                        $('#ExcelTable tr:gt(0)').each(function(index, tr){
-                            var err = $(tr).find(':nth-child(4)').text();
-                            if(err == ''){
-                                $(this).hide();
-                            }
-                        });
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                                var err = $(tr).find(':nth-child(4)').text();
+                                if(err == ''){
+                                    $(this).hide();
+                                }
+                            });
 
-                        $("#excel_file").val('');
-                        document.getElementById("reponseErr").style.display = "grid";
+                            $("#excel_file").val('');
+                            document.getElementById("reponseErr").style.display = "grid";
 
+                        }
+
+                    },
+                    error: function (ex) {
+                        console.log('Failed' + ex);
                     }
-
-                },
-                error: function (ex) {
-                    console.log('Failed' + ex);
-                }
-            });
+                });
+            }
         }
     }
 </script>

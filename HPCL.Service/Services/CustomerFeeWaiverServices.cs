@@ -38,7 +38,6 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(custDetails), Encoding.UTF8, "application/json");
-            //var response = await _requestService.CommonRequestService(content, WebApiUrl.bindPendingCustomerUrl);
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForApproval);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
@@ -46,14 +45,13 @@ namespace HPCL.Service.Services
             return pendingList;
         }
 
-        public async Task<BindPendingCustomerRes> BindPendingCustomer(string customerReferenceNo, string formNumber)
+        public async Task<BindPendingCustomerRes> BindPendingCustomer(string formNumber)
         {
             var forms = new BindApprovePendingCustomer
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = customerReferenceNo,
                 formNumber = formNumber
             };
 
@@ -118,7 +116,7 @@ namespace HPCL.Service.Services
             _httpContextAccessor.HttpContext.Session.SetString("formNumber", formNumber);
         }
 
-        public async Task<Tuple<List<CustomerFullDetails>, List<UploadDocResponseBody>>> ViewCustomerDetails(string formNumber)
+        public async Task<ViewCustomerDetailsResponse> ViewCustomerDetails(string formNumber)
         {
             var customerBody = new BindPendingCustomer
             {
@@ -133,16 +131,9 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            var searchRes = obj["Data"].Value<JObject>();
+            ViewCustomerDetailsResponse UploadDocList = obj.ToObject<ViewCustomerDetailsResponse>();
 
-            var cardResult = searchRes["GetCustomerDetails"].Value<JArray>();
-            var customerKYCDetailsResult = searchRes["CustomerKYCDetails"].Value<JArray>();
-
-            List<CustomerFullDetails> customerList = cardResult.ToObject<List<CustomerFullDetails>>();
-
-            List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
-
-            return Tuple.Create(customerList, UploadDocList);
+            return UploadDocList;
         }
     }
 }
