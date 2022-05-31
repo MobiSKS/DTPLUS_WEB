@@ -65,16 +65,15 @@ namespace HPCL_Web.Controllers
 
             if (alOTCCardRequestModel.Internel_Status_Code == 1000)
             {
-                alOTCCardRequestModel.Remarks = "";
-                ViewBag.Message = "AL OTC Card request saved successfully";
-                return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+                return RedirectToAction("SuccessRedirectDealerOTCCardRequest", new { Message = alOTCCardRequestModel.Remarks });
             }
 
             return View(alOTCCardRequestModel);
         }
 
-        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest()
+        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
         public async Task<IActionResult> CreateMultipleOTCCard()

@@ -162,10 +162,15 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
                     alOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     alOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+            else
+            {
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    alOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
             }
 
             return alOTCCardRequestModel;
