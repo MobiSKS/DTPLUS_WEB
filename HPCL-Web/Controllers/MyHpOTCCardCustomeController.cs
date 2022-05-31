@@ -71,19 +71,17 @@ namespace HPCL_Web.Controllers
 
             if (request.Internel_Status_Code == 1000)
             {
-                requestForOTCCardModel.Remarks = "";
-                ViewBag.Message = "OTC Card add request saved successfully";
-                return RedirectToAction("SuccessRedirectForOTCCard");
+                return RedirectToAction("SuccessRedirectForOTCCard", new { Message = requestForOTCCardModel.Remarks });
             }
 
             return View(requestForOTCCardModel);
         }
 
-        public async Task<IActionResult> SuccessRedirectForOTCCard()
+        public async Task<IActionResult> SuccessRedirectForOTCCard(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
-
 
         [HttpPost]
         public async Task<JsonResult> GetMerchantDetailsByMerchantId(string MerchantID)
