@@ -240,7 +240,7 @@
                                 var row = table.insertRow(-1);
                                 for (var j = 0; j < cells.length; j++) {
                                     var cell = row.insertCell(-1);
-                                    cell.innerHTML = cells[j];
+                                    cell.innerHTML = cells[j].replace(/`/g, '');
                                 }
                             }
                         }
@@ -248,6 +248,7 @@
                         dvCSV.innerHTML = "";
                         dvCSV.appendChild(table);
 
+                        console.log("row",row);
                         var rows = document.getElementById('ExcelTable').rows;
 
                         console.log("rows",rows.length);
@@ -379,6 +380,7 @@
     function uploadBulkLimitRow(){
 
         document.getElementById("reponseErr").style.display = "none";
+        document.getElementById("ExcelDataError").style.display = "none";
 
         var customerId = $("#CustomerDefaultVal").val();
 
@@ -417,6 +419,8 @@
                     });
                 })
 
+                console.log("updateArray", updateArray);
+
                 $.ajax({
                     url: "@Url.Action("CardToCardBalanceTransferAmount", "CustomerFinancial")",
                     type: "POST",
@@ -442,8 +446,6 @@
                                 var FromCardNo = $(tr).find(':nth-child(1)').text();
                                 for(var i =0;i<res.reasonList.data.length;i++){
                                     if(res.reasonList.data[i].status == 0){
-
-                                        console.log(FromCardNo+"                     "+res.reasonList.data[i].fromCardNo);
 
                                         if(FromCardNo == res.reasonList.data[i].fromCardNo){
                                             var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
