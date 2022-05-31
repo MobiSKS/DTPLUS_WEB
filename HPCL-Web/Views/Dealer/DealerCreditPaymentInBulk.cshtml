@@ -7,13 +7,13 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("DealerCreditMapping","Dealer")" class="text_primary">Dealer Credit Mapping</a> </li>
-            <li class="breadcrumb-item font-weight-light">Dealer Credit Payment In Bulk</li>
+            <li class="breadcrumb-item font-weight-light">Dealer Credit Payment in Bulk</li>
         </ul>
         <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Credit Payment In Bulk</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Credit Payment in Bulk</p>
 
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
@@ -33,7 +33,7 @@
                                         <div class="col-md-6 col-12">
                                             <div class="custom_select">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="btnDownload">DOWNLOAD</button>
+                                                    <button class="btn btn_primary" type="button" onclick="exportReportToExcel()" id="btnDownload">DOWNLOAD</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -43,7 +43,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Upload Template</label>
                                         <div class="col-md-6 col-12">
                                             <div class="custom_select">
-                                               <input type="file" class="form-control">
+                                                <input type="file" class="form-control-file" id="excel_file">
                                             </div>
                                         </div>
 
@@ -57,12 +57,35 @@
 
                             <div class="d-flex align-items-center flex-wrap mb-3 justify-content-center">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnSubmit">SUBMIT</button>
+                                    <button class="btn btn_primary" type="button" onclick="uploadBulkLimitRow()" id="btnSubmit">SUBMIT</button>
                                 </div>
-                                
-                            </div>
 
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="mb-3 text-center alert alert-danger" style="display:none;" id="ExcelDataError"></div>
+
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <div class="row" id="reponseErr" style="display:none;">
+                                <div class="col">
+                                    <div class="border-1 rounded border-grey pb-0">
+                                        <p style="background-color: #3399FF;font-weight:bold;">
+                                            Successful Transactions
+                                        </p>
+                                        <div class="mb-3 text-center alert alert-danger" id="checkRecord"></div>
+                                    </div>
+                                </div>
+                                <div class="col" style="margin-top:2%">
+                                    <div class="border-1 rounded border-grey pb-0">
+                                        <p style="background-color: #FF5050;font-weight:bold;">
+                                            Unsuccessful Transactions
+                                        </p>
+                                        <div id="excel_data"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="clearfix"></div>
                     </div>
 
@@ -70,16 +93,295 @@
                 </div>
             </div>
         </form>
-        
+
 
 
         <div class="clearfix"></div>
     </div>
 </div>
 <script type="text/javascript">
-     $(document).ready(function () {
-         $("#CustomerID").attr("disabled",true);
-         
+    $(document).ready(function () {
+        $("#CustomerID").attr("disabled",true);
 
-     });
+
+    });
+
+       function exportReportToExcel() {
+           var csv_data = [];
+           var csvrow = [];
+           csvrow.push("CustomerID", "MerchantID", "RetailOutletName", "Outstanding","Amount");
+           csv_data.push(csvrow.join(","));
+           csv_data = csv_data.join('\n');
+           downloadCSVFile(csv_data);
+       }
+        function downloadCSVFile(csv_data) {
+
+           // Create CSV file object and feed
+           // our csv_data into it
+           CSVFile = new Blob([csv_data], {
+               type: "text/csv",
+               width: "900"
+           });
+
+           // Create to temporary link to initiate
+           // download process
+           var temp_link = document.createElement('a');
+
+           // Download csv file
+           temp_link.download = "DealerCreditPaymentInBulk.csv";
+           var url = window.URL.createObjectURL(CSVFile);
+           temp_link.href = url;
+
+           // This link should not be displayed
+           temp_link.style.display = "none";
+           document.body.appendChild(temp_link);
+
+           // Automatically click the link to
+           // trigger download
+           temp_link.click();
+           document.body.removeChild(temp_link);
+       }
+      $("#excel_file").change(function () {
+
+        document.getElementById("successUpdate").style.display = "none";
+
+        var fileUpload = document.getElementById("excel_file");
+            var regex = /(.*?)\.(csv)$/;
+            if (regex.test(fileUpload.value)) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var table = document.createElement("table");
+                        table.setAttribute("id", "ExcelTable");
+
+                        table.classList.add("table");
+                        table.classList.add("table-striped");
+                        table.classList.add("d-block");
+                        table.classList.add("table-bordered");
+                        table.classList.add("table-responsive");
+                        table.classList.add("nowrap");
+                        table.classList.add("mt-3");
+
+                        var rows = e.target.result.split("\n");
+                        for (var i = 0; i < rows.length; i++) {
+                            var cells = rows[i].split(",");
+                            if (cells.length > 1) {
+                                var row = table.insertRow(-1);
+                                for (var j = 0; j < cells.length; j++) {
+                                    var cell = row.insertCell(-1);
+                                    cell.innerHTML = cells[j];
+                                }
+                            }
+                        }
+                        var dvCSV = document.getElementById("excel_data");
+                        dvCSV.innerHTML = "";
+                        dvCSV.appendChild(table);
+
+                        var rows = document.getElementById('ExcelTable').rows;
+
+                        console.log("rows",rows.length);
+
+                        $("tr:first").append("<td class ='errMsg'>Error Msg</td>");
+                        $("tr:not(:first)").append("<td class ='errMsg'></td>");
+
+
+                        if(rows.length >1){
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                                var customerID = $(tr).find(':nth-child(1)').text();
+                                var merchantID = $(tr).find(':nth-child(2)').text();
+                                var retailOutletName = $(tr).find(':nth-child(3)').text();
+                                var outstanding = $(tr).find(':nth-child(4)').text();
+                                var amount = $(tr).find(':nth-child(5)').text();
+
+                                var currentIndex = index + 1;
+
+                                if(customerID.trim() == ''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Enter Customer ID</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if(!customerID.match(mappedCustomerId)){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Customer ID</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                                if(merchantID.trim() == ''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Enter Merchant ID</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+
+                                else{
+                                    if(!merchantID.match(mappedMerchantID)){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Merchant ID</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                                if(retailOutletName.trim()==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Enter Retail Outlet Name</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if (retailOutletName.trim().match(onlyNumbers) || !(retailOutletName.trim().match(nameCheckwithNumandSpace))){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Retail Outlet Name</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                                if(outstanding.trim()==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Outstanding should not be blank</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if (!outstanding.trim().match(number)){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Outstanding should be Numeric</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                                if(amount.trim()==''){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Amount should not be blank</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                                else{
+                                    if (!amount.trim().match(number)){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Amount should be Numeric</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                    else if(amount.trim() <= 0){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Amount should be more than 0</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                        else{
+
+                            alert("Please enter details in excel to upload");
+                        }
+                    }
+                    reader.readAsText(fileUpload.files[0]);
+                }
+                else {
+                    alert("This browser does not support HTML5.");
+                }
+            }
+            else {
+                alert("Please upload a valid CSV file.");
+            }
+    });
+
+    function uploadBulkLimitRow(){
+
+        document.getElementById("reponseErr").style.display = "none";
+
+        if($("#excel_file").val() != ''){
+
+            var updateArray = [];
+            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                var customerID = $(tr).find(':nth-child(1)').text();
+                var merchantID = $(tr).find(':nth-child(2)').text();
+                var retailOutletName = $(tr).find(':nth-child(3)').text();
+                var outstanding = $(tr).find(':nth-child(4)').text();
+                var amount = $(tr).find(':nth-child(5)').text();
+
+                updateArray.push({
+                    CustomerID:customerID,
+                    MerchantID:merchantID,
+                    RetailOutletName:retailOutletName,
+                    Outstanding:outstanding,
+                    Amount:amount
+                });
+            })
+            if(updateArray.length>0){
+                $.ajax({
+                    url: "@Url.Action("UpdateDealerCreditPaymentBulk", "Dealer")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { limitArray: updateArray},
+                    success: function (res) {
+
+                        console.log("res",res);
+
+                        if(res.updateResponse.data[0].status == 1){
+                            $("#successUpdate").html('');
+                            $("#successUpdate").append("<span>"+res.updateResponse.data[0].reason+"</span>");
+                            $("#excel_file").val('');
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+
+                            $("#checkRecord").html('');
+                            $("#checkRecord").append("<span>"+res.updateResponse.message+"</span>")
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+
+                                var currentIndex = index + 1;
+
+                                var customerID = $(tr).find(':nth-child(1)').text();
+                                for(var i =0;i<res.updateResponse.data.length;i++){
+                                    if(res.updateResponse.data[i].status == 0){
+                                        if(customerID == res.updateResponse.data[i].customerID){
+
+                                            var aaa = "<span>Record No "+currentIndex+":- "+(res.updateResponse.data[i].reason)+"</span><br>";
+
+                                            $(tr).find(':nth-child(6)').append(aaa);
+                                        }
+                                    }
+
+
+                                }
+                            });
+
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                                var err = $(tr).find(':nth-child(6)').text();
+                                if(err == ''){
+                                    $(this).hide();
+                                }
+                            });
+
+                            $("#excel_file").val('');
+                            document.getElementById("reponseErr").style.display = "grid";
+
+                        }
+
+                    },
+                    error: function (ex) {
+                        console.log('Failed' + ex);
+                    }
+                });
+            }
+            else{
+                alert("Please enter details in excel to upload");
+            }
+        }
+    }
 </script>
