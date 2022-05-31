@@ -92,7 +92,7 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
-        public ActionResult HotlistCardsPermanently()
+        public IActionResult HotlistCardsPermanently()
         {
             return View();
         }
@@ -102,6 +102,13 @@ namespace HPCL_Web.Controllers
         {
             var searchList = await _customerRequestService.HotlistCardsPermanently(entity);
             return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList)
+        {
+            var reasonList = await _customerRequestService.UpdatePermanentlyHotlistCards(CustomerId, cardsList);
+            return Json(new { reasonList = reasonList });
         }
     }
 }

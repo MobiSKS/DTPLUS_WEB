@@ -17,5 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateSmsAlertsConfigure(string CustomerId, string SmsAlertList);
         Task<List<SuccessResponse>> UpdateDndSmsAlertsConfigure(string CustomerId);
         Task<GetHotlistCardsPermanentlyRes> HotlistCardsPermanently(GetHotlistCardsPermanently entity);
+        Task<List<SuccessResponse>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList);
     }
 }

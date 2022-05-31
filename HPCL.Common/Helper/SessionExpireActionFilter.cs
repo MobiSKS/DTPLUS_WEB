@@ -57,7 +57,7 @@ namespace HPCL.Common.Helper
 
 
             //To do : before the action executes
-            if (_httpContextAccessor.HttpContext.Session.GetString("UserId") == null || flag == 'Y')
+            if (_httpContextAccessor.HttpContext.Session.GetString("UserId") == null)
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary
                                     {

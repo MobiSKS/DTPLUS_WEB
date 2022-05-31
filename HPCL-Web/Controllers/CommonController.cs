@@ -245,7 +245,7 @@ namespace HPCL_Web.Controllers
             return Json(successRes);
         }
 
-        public async Task<JsonResult> GetHotistReason()
+        public async Task<JsonResult> GetHotlistReason()
         {
             var hotlistReasonList = await _commonActionService.GetHotlistReason();
             return Json(new { hotlistReasonList = hotlistReasonList });
