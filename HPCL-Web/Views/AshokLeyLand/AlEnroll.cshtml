@@ -97,7 +97,7 @@
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
                                                         @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control", maxlength="25" })
-                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeError", @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
@@ -359,7 +359,7 @@
             }
 
             if (id != 0) {
-                $("#state_error").html("");
+                $("#zonalErrMsg").html("");
             }
             $.ajax({
                 type: 'POST',  // http method
@@ -400,7 +400,7 @@
             }
 
             if (id != 0) {
-                $("#state_error").html("");
+                $("#stateErrMsg").html("");
             }
 
             $.ajax({
@@ -616,9 +616,257 @@
     }
 
 
-    function submitEnroll() {
+    function submitEnroll() 
+    {
+        debugger;
+        var ret=true;
 
-        if ($("#formsDts").valid()) {
+        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+        if(dealerCode=='')
+        {
+            $("#dealerCodeError").attr("style", "display:block");
+            $("#dealerCodeError").html("Dealer Code field cannot be left blank");
+            ret=false;
+        }
+        else
+        {
+            if (!(dealerCode.match(forVehicleNo)))
+            {
+                $("#dealerCodeError").attr("style", "display:block");
+                $("#dealerCodeError").html("Enter a valid Dealer Code");
+                ret=false;
+            }
+            else
+            {
+                $("#dealerCodeError").html("");
+            }
+        }
+
+        var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
+        if (dealerName == "") 
+        {
+            document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name should not be empty";
+            ret=false;
+        }
+        else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim())) 
+        {
+            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+            ret=false;
+        }
+        else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("DealerNameErrorMsg").innerHTML = "";
+        }
+
+        if(document.getElementById("ZonalOfficeId").value == "0" || document.getElementById("ZonalOfficeId").value == "") 
+        {
+          document.getElementById("zonalErrMsg").innerHTML = "Zonal Office field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("zonalErrMsg").innerHTML = "";
+        }
+
+        if(document.getElementById("RegionalOfficeId").value == "0" || document.getElementById("RegionalOfficeId").value == "" || document.getElementById("RegionalOfficeId").value == "--Select Regional Office--") 
+        {
+          document.getElementById("regionalErrMsg").innerHTML = "Regional Office field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("regionalErrMsg").innerHTML = "";
+        }
+
+        if(document.getElementById("StateId").value == "0" || document.getElementById("StateId").value == "") 
+        {
+          document.getElementById("stateErrMsg").innerHTML = "State field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("stateErrMsg").innerHTML = "";
+        }
+
+        if(document.getElementById("DistrictId").value == "0" || document.getElementById("DistrictId").value == "" || document.getElementById("DistrictId").value == "--Select District--") 
+        {
+          document.getElementById("distErrMsg").innerHTML = "District field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("distErrMsg").innerHTML = "";
+        }
+
+        var Address = document.getElementById("add1Val").value.trim();
+        if (Address == "") 
+        {
+            document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
+            ret=false;
+        }
+        else 
+        {
+            if (!isNaN(Address)) 
+            {
+                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                ret=false;
+            }
+            else if (!Address.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                ret=false;
+            }
+            else 
+            {
+                document.getElementById("Address1Err").innerHTML = "";
+            }
+
+        }
+
+        var Address = document.getElementById("add2Val").value.trim();
+        if (Address == "") 
+        {
+            document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
+            ret=false;
+        }
+        else 
+        {
+            if (!isNaN(Address)) 
+            {
+                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                ret=false;
+            }
+            else if (!Address.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                ret=false;
+            }
+            else 
+            {
+                document.getElementById("Address2Err").innerHTML = "";
+            }
+
+        }
+
+        var Address = document.getElementById("add3Val").value.trim();
+        if (Address != "") 
+        {
+            if (!isNaN(Address)) 
+            {
+                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                ret=false;
+            }
+            else if (!Address.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                ret=false;
+            }
+            else 
+            {
+                document.getElementById("Address3Err").innerHTML = "";
+            }
+
+        }
+
+        var city = document.getElementById("cityFetchVal").value.trim();
+        if (city == "") 
+        {
+            document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
+            ret=false;
+        }
+        else 
+        {
+            if (!isNaN(city)) 
+            {
+                document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                ret=false;
+            }
+            else if (!city.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                ret=false;
+            }
+            else 
+            {
+                document.getElementById("CityNameErr").innerHTML = "";
+            }
+        }
+
+        var communicationMobile = document.getElementById("mobFetchVal").value.trim();
+        if (communicationMobile == "") 
+        {
+            document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
+            ret=false;
+        }
+        else if (communicationMobile.substring(0, 1) == "0") 
+        {
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else if (communicationMobile.length < 10) 
+        {
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else if (!communicationMobile.match(phoneno))
+        {
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("MobileNoErr").innerHTML = "";
+        }
+
+
+        if (document.getElementById("pinFetchVal").value.trim() == "") 
+        {
+            document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
+            ret=false;
+        }
+        else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+        }
+        else if (document.getElementById("pinFetchVal").value.length < 6) 
+        {
+            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+        }
+        else if (!document.getElementById("pinFetchVal").value.match(pincode)) 
+        {
+            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("PinCodeErr").innerHTML = "";
+        }
+
+        var emailId = document.getElementById("emailFetchVal").value.trim();
+        if (emailId == "") 
+        {
+            document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
+            ret=false;
+        }
+        else if (!emailId.match(email)) 
+        {
+            document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            ret=false;
+        }
+        else
+        {
+            document.getElementById("EmailIdErr").innerHTML = "";
+        }
+
+        if (ret==true) 
+        {
 
             var DealerCode = $("#dealerCodedFetchVal").val();
             var DealerName = $("#dealerNameFetchVal").val();
@@ -699,7 +947,9 @@
                     alert('Failed' + ex);
                 }
             });
-        } else {
+        } 
+        else 
+        {
             return false;
         }
     }
@@ -1057,6 +1307,24 @@ $("#mobFetchVal").on("blur", function ()
         document.getElementById("MobileNoErr").innerHTML = "";
     }
 
+});
+
+$("#RegionalOfficeId").change(function () 
+{
+    var id = this.value;
+
+    if (id != 0) {
+        $("#regionalErrMsg").html("");
+    }
+});
+
+$("#DistrictId").change(function () 
+{
+    var id = this.value;
+
+    if (id != 0) {
+        $("#distErrMsg").html("");
+    }
 });
 
 </script>
