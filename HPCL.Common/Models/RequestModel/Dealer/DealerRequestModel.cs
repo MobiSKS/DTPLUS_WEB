@@ -20,6 +20,8 @@ namespace HPCL.Common.Models.RequestModel.Dealer
         public string Action { get; set; }
         public string CreditPeriod { get; set; }
         public string EffectiveDate { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
         public List<DealerRequestDetails> TypeUpdateDealerCreditMapping { get; set; }
     }
     public class DealerRequestDetails
