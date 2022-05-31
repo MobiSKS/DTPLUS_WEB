@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.CustomerRequest.GetCardRenwalRequestList
+﻿@model HPCL.Common.Models.ViewModel.CustomerRequest.GetHotlistCardsPermanently
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -9,7 +9,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
             <li class="breadcrumb-item font-weight-light">Hotlist Cards</li>
         </ul>
-        <form method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="CardRenewalRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <form method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="HotlistCardsPermanently" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="border-1 rounded border-grey h-100">
@@ -24,8 +24,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
-                                                    @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
+                                                    @Html.TextBoxFor(m => m.CustomerID, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                    @Html.ValidationMessageFor(m => m.CustomerID, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
@@ -119,29 +119,20 @@
             return true;
         }
 
-        //var loginType = '@Context.Session.GetString("LoginType")';
-
-        //if (loginType == "Customer") {
-
-        //    $.ajax({
-        //        url: "@Url.Action("SetSaleLimit", "Cards")",
-        //        type: "POST",
-        //        dataType: "JSON",
-        //        success: function (data) {
-
-        //            OnSuccessSetLimit(data);
-
-        //            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
-        //            $("#CustomerDefaultVal").attr("readonly", true);
-
-        //            document.getElementById('UpdateGrid').style.display = 'block';
-
-        //        },
-        //        error: function (ex) {
-        //            alert('Failed' + ex);
-        //        }
-        //    });
-        //}
+         $.ajax({
+            url: '@Url.Action("GetHotlistReason", "Common")',
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+            List = data.hotlistReasonList
+                $('.htlstReason').empty();
+                $('.htlstReason').append('<option value="">Select</option>');
+                for (i in List ) {
+                    $('.htlstReason').append('<option value="' + List[i].statusId + '">' + List[i].statusName + '</option>');
+                }
+            }
+        });
     });
 
     function resetClick() {
@@ -174,28 +165,38 @@
 
             for (var i = 0; i < searchGrid.length; i++) {
 
-                var expDts;
+                var yrOfReg;
 
-                if(((searchGrid[i].expiryDate) == "01/01/0001 00:00:00") || ((searchGrid[i].expiryDate) == "01/01/1900 00:00:00") || ((searchGrid[i].expiryDate) == null)){
-                    expDts = "";
+                if((searchGrid[i].yearOfRegistration) == '0'){
+                    yrOfReg = '';
                 }else{
-                    expDts = moment(searchGrid[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    yrOfReg = searchGrid[i].yearOfRegistration;
                 }
 
                 var srNumber = (i+1);
                 var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                var customerId = "<span class='getCustId'>" + (searchGrid[i].customerId || '') + "</span>";
-                var individualOrgName = (searchGrid[i].individualOrgName || '');
-                var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
-                var expiryDate = expDts + "<span style='display:none;' class='getVehicleNo'>" + (searchGrid[i].vechileNo || '') + "</span>";
-              
+                var cardNo = "<span class='getCustId'>" + (searchGrid[i].cardNo || '') + "</span>";
+                var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].userName || '') + "' readonly='readonly'>";
+                var userNo = "";
+                var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (ccmsDetails[i].vechileType || '') + "'>" + (ccmsDetails[i].vechileType || '') + "</option></select>";
+                var yrOfReg = "<input class='form-control' type='text' value='" + (searchGrid[i].yrOfReg || '') + "' readonly='readonly'>";
+                var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
+                var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value=''>Select</option><option value=''>Owned</option><option value=''>Attached</option></select>";
+                var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (ccmsDetails[i].cardCategory || '') + "'>" + (ccmsDetails[i].cardCategory || '') + "</option></select>";
+                var hotlistReason = "<select class='form-control htlstReason'></select>"
+
                 tbl.row.add([
                     srNumber,
                     pressCheck,
-                    customerId,
-                    individualOrgName,
                     cardNo,
-                    expiryDate
+                    userName,
+                    userNo,
+                    vehicleType,
+                    yrOfReg,
+                    manufacturer,
+                    ownedAttched,
+                    cardCategory,
+                    hotlistReason
                 ]).draw();
             }
 
@@ -210,73 +211,4 @@
     }
 
 
-    function updateCards(){
-
-        var updateArray = new Array();
-
-        var flag = "Y";
-        var CardNo;
-        var VechileNo;
-
-        var customerId = $("#CustomerDefaultVal").val();
-
-        $("#CardSearch input[type=checkbox]:checked").each(function () {
-
-            var row = $(this).closest("tr");
-
-            CardNo = row.find('.getCardNo').text();
-            VechileNo = row.find('.getVehicleNo').val();
-
-            updateArray.push({
-                CardNo: CardNo,
-                VechileNo: VechileNo
-            });
-        });
-
-        if (CardNo == undefined) {
-                alert("Please select at least one record");
-                flag = "N";
-        }
- 
-        if (flag == "N")
-            e.preventDefault();
-
-        if (flag == "Y") {
-
-            if (confirm('Are you sure!You want to Renew the selected card(s)?')) {
-                console.log('ok');
-
-                $.ajax({
-                    url: "@Url.Action("UpdateCardRenwalRequest", "CustomerRequest")",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: {CustomerId:customerId, updatePostArray:JSON.stringify(updateArray)},
-                    success: function (res) {
-
-                        console.log("res",res);
-
-                        if(res.reasonList[0].status == 1){
-                            document.getElementById("noRecord").style.display = "none";
-                            document.getElementById("UpdateGrid").style.display = "none";
-                            $("#successUpdate").html("");
-                            $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
-                            document.getElementById("successUpdate").style.display = "block";
-                        }else{
-                            document.getElementById("UpdateGrid").style.display = "none";
-                            document.getElementById("successUpdate").style.display = "none";
-                            $("#noRecord").html("");
-                            $("#noRecord").append("<span>" + res.reasonList[0].reason + "</span>");
-                            document.getElementById("noRecord").style.display = "block";
-                        }
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-                });
-
-            } else {
-                console.log('cancel')
-            }
-        }
-    }
 </script>

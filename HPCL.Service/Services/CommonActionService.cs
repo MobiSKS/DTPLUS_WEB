@@ -1513,5 +1513,23 @@ namespace HPCL.Service.Services
             var sortedtList = limitType.OrderBy(x => x.LimitId).ToList();
             return sortedtList;
         }
+
+        public async Task<List<GetHotlistReasonRes>> GetHotlistReason()
+        {
+            var forms = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetHotlistReasonListUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetHotlistReasonRes> hotlistReasonList = jarr.ToObject<List<GetHotlistReasonRes>>();
+            return hotlistReasonList;
+        }
     }
 }

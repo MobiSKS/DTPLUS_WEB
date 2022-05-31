@@ -73,6 +73,7 @@
         public static string GetEmergencyAddOnCardUrl = "api/dtplus/card/get_detail_for_emergency_replacement_cards";
         public static string MapEmergencyAddOnCardUrl = "api/dtplus/card/emergency_replacement_cards";
         public static string getlistcreditcloselimittype = "api/dtplus/dealercredit/get_list_credit_close_limit_type";
+        public static string GetHotlistReasonListUrl = "api/dtplus/hotlist/Get_Hotlist_Reason";
         #endregion
 
         #region Merchant
@@ -375,6 +376,7 @@
         public static string GetConfigureSmsAlertsUrl = "api/dtplus/configure/get_configure_sms_alerts_details_by_customerid";
         public static string UpdateConfigureSmsAlertsUrl = "api/dtplus/configure/update_configure_sms_alerts";
         public static string UpdateDndSmsAlertsConfigureUrl = "api/dtplus/configure/update_dnd_configure_sms_alerts";
+        public static string GetHotlistCardsPermanentlyUrl = "api/dtplus/hotlist/get_hotlist_cards_details";
         #endregion
 
         #region Configure
