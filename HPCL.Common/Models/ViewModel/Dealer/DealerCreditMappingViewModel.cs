@@ -41,5 +41,6 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string Outstanding { get; set; }
         public string CreditCloseLimitBalance { get; set; }
         public string Status { get; set; }
+        public string Action { get; set; }
     }
 }

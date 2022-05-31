@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 
 namespace HPCL.Service.Services
 {
@@ -77,13 +78,13 @@ namespace HPCL.Service.Services
             var RequestResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.insertmapdealerforcreditsale);
             JObject RequestResponseObj = JObject.Parse(JsonConvert.DeserializeObject(RequestResponse).ToString());
             var RequestResponseJarr = RequestResponseObj["Data"].Value<JArray>();
-            List<SuccessResponse> RequestResponseList = RequestResponseJarr.ToObject<List<SuccessResponse>>();
+            List<UpdateMerchantSuccessResponse> RequestResponseList = RequestResponseJarr.ToObject<List<UpdateMerchantSuccessResponse>>();
             List<string> messageList = new List<string>();
             if (RequestResponseList.Count > 0)
             {
                 messageList.Add(RequestResponseList[0].Status.ToString());
                 foreach (var item in RequestResponseList)
-                    messageList.Add(item.Reason);
+                    messageList.Add("Merchant ID :"+item.MerchantID +" "+ item.Reason);
             }
             return messageList;
 
@@ -133,9 +134,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 CustomerID = DealerRequestModel.CustomerID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                MerchantID = DealerRequestModel.MerchantID,
-                LimitAmount=DealerRequestModel.LimitAmount,
-                CreditCloseLimitTypeID=DealerRequestModel.CreditCloseLimitTypeID,
+                TypeUpdateDealerCreditMapping = DealerRequestModel.TypeUpdateDealerCreditMapping
             };
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForm), Encoding.UTF8, "application/json");
