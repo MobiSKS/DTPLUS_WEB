@@ -257,5 +257,27 @@ namespace HPCL.Service.Services
             GetHotlistCardsPermanentlyRes searchList = obj.ToObject<GetHotlistCardsPermanentlyRes>();
             return searchList;
         }
+
+        public async Task<List<SuccessResponse>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList)
+        {
+            TypePermanentlyHotlistCards[] arrs = JsonConvert.DeserializeObject<TypePermanentlyHotlistCards[]>(cardsList);
+
+            var reqBody = new UpdatePermanentlyHotlistCardsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                TypePermanentlyHotlistCards = arrs,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdatePermanentlyHotlistCardsUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
     }
 }

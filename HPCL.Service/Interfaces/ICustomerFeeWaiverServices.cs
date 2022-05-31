@@ -10,10 +10,10 @@ namespace HPCL.Service.Interfaces
     public interface ICustomerFeeWaiverServices
     {
         Task<PendingCustResponse> FeeWaiver(PendingCustomer entity);
-        Task<BindPendingCustomerRes> BindPendingCustomer(string customerReferenceNo, string formNumber);
+        Task<BindPendingCustomerRes> BindPendingCustomer(string formNumber);
         Task<string> ApproveCustomer(string CustomerReferenceNo, string comments);
         Task<string> RejectCustomer(string CustomerReferenceNo, string comments);
         void ViewCustomer(string formNumber);
-        Task<Tuple<List<CustomerFullDetails>, List<UploadDocResponseBody>>> ViewCustomerDetails(string formNumber);
+        Task<ViewCustomerDetailsResponse> ViewCustomerDetails(string formNumber);
     }
 }

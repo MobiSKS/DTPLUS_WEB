@@ -17,6 +17,8 @@
                         <div class="p-2 p-md-4">
                             <div class="w-100">
 
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
                                 <fieldset class="border-1 rounded border-grey pb-3">
                                     <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search</legend>
                                     <div class="d-flex align-items-center justify-content-between flex-wrap pt-3 ">
@@ -58,8 +60,6 @@
 
                             <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
 
-                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
-
                             <div id="UpdateGrid" style="display:none;margin-top:1%">
                                 <div class="table-responsive">
                                     <table id="CardSearch" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
@@ -69,7 +69,6 @@
                                                 <th></th>
                                                 <th>Card Number</th>
                                                 <th>Vehicle No/User Name</th>
-                                                <th>User No</th>
                                                 <th>Vehicle Type</th>
                                                 <th>Year Of Reg.</th>
                                                 <th>Manufacturer</th>
@@ -98,7 +97,6 @@
 </div>
 
 @using Microsoft.AspNetCore.Http;
-<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script>
 
@@ -118,21 +116,6 @@
 
             return true;
         }
-
-         $.ajax({
-            url: '@Url.Action("GetHotlistReason", "Common")',
-            type: "POST",
-            dataType: "json",
-            async: false,
-            success: function (data) {
-            List = data.hotlistReasonList
-                $('.htlstReason').empty();
-                $('.htlstReason').append('<option value="">Select</option>');
-                for (i in List ) {
-                    $('.htlstReason').append('<option value="' + List[i].statusId + '">' + List[i].statusName + '</option>');
-                }
-            }
-        });
     });
 
     function resetClick() {
@@ -175,22 +158,20 @@
 
                 var srNumber = (i+1);
                 var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                var cardNo = "<span class='getCustId'>" + (searchGrid[i].cardNo || '') + "</span>";
-                var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].userName || '') + "' readonly='readonly'>";
-                var userNo = "";
-                var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (ccmsDetails[i].vechileType || '') + "'>" + (ccmsDetails[i].vechileType || '') + "</option></select>";
-                var yrOfReg = "<input class='form-control' type='text' value='" + (searchGrid[i].yrOfReg || '') + "' readonly='readonly'>";
+                var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
+                var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
+                var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].vechileType || '') + "'>" + (searchGrid[i].vechileType || '') + "</option></select>";
+                var yrOfReg = "<input class='form-control' type='text' value='" + (yrOfReg) + "' readonly='readonly'>";
                 var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
-                var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value=''>Select</option><option value=''>Owned</option><option value=''>Attached</option></select>";
-                var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (ccmsDetails[i].cardCategory || '') + "'>" + (ccmsDetails[i].cardCategory || '') + "</option></select>";
-                var hotlistReason = "<select class='form-control htlstReason'></select>"
+                var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].ownedORAttachedId || '') + "'>" + (searchGrid[i].ownedORAttachedName || '') + "</option></select>";
+                var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].cardCategory || '') + "'>" + (searchGrid[i].cardCategory || '') + "</option></select>";
+                var hotlistReason = "<div style='width:160px;display:flex;'><select readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
 
                 tbl.row.add([
                     srNumber,
                     pressCheck,
                     cardNo,
                     userName,
-                    userNo,
                     vehicleType,
                     yrOfReg,
                     manufacturer,
@@ -200,6 +181,23 @@
                 ]).draw();
             }
 
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetHotlistReason", "Common")',
+                dataType: "json",
+                success: function (data, status, xhr) {
+
+                    console.log(data);
+
+                    $.each(data.hotlistReasonList, function (i, option) {
+                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".htlstReason");
+                    });
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Hotlist Reason Type");
+                }
+            });
+
             document.getElementById("UpdateGrid").style.display = "grid";
         } else {
             document.getElementById("UpdateGrid").style.display = "none";
@@ -207,6 +205,106 @@
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
+        }
+    }
+
+    $("#CardSearch").on('click', '.checkEnable', function (e) {
+
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+            currentRow.find('.htlstReason').attr("readonly", false);
+            currentRow.find('.htlstReason').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('.htlstReason').attr("readonly", true);
+            currentRow.find('.htlstReason').attr("disabled", true);
+        }
+    });
+
+    function updateCards(){
+
+        var customerId = $("#CustomerDefaultVal").val();
+
+        var updateArray = new Array();
+
+        
+        var flag = "Y";
+        var CardNo;
+
+        $("#CardSearch input[type=checkbox]:checked").each(function () {
+
+            var selectedRow = $(this).closest("tr")[0];
+            console.log("index",selectedRow.rowIndex);
+            
+            var indexS = (selectedRow.rowIndex) - 1;
+
+            console.log("indexS",indexS);
+
+            var row = $(this).closest("tr");
+
+            cardNo = row.find('.getCardNo').text();
+            var StatusId = row.find('.htlstReason option:selected').val();
+
+            updateArray.push({
+                cardNo: cardNo,
+                StatusId: StatusId
+            });
+
+            if(StatusId == 0){
+                document.getElementById('hotlistreason_error_'+indexS).title="Please Select Hotlist Reason";
+                document.getElementById('hotlistreason_error_'+indexS).style.display = "block";
+                flag = "N";
+            }
+            
+        });
+
+         if (cardNo == undefined) {
+                alert("Please select atleast one record.");
+                flag = "N";
+         }
+ 
+         if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            $("#CardSearch input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('hotlistreason_error_'+indexS).style.display = "none";
+                $(this).closest("tr").find(".checkEnable").prop('checked',false);
+                $(this).closest("tr").find('.htlstReason').attr("readonly", true);
+                $(this).closest("tr").find('.htlstReason').attr("disabled", true);
+            });
+
+            if (confirm('Do you want to process the selected record, confirm once')) {
+                console.log('ok');
+
+                $.ajax({
+                    url: "@Url.Action("UpdatePermanentlyHotlistCards", "CustomerRequest")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { CustomerId: customerId, cardsList: JSON.stringify(updateArray)},
+                    success: function (res) {
+
+                        console.log("res",res);
+
+                        if(res.reasonList[0].status == 1){
+                            document.getElementById("noRecord").style.display = "none";
+                            $("#successUpdate").html("");
+                            $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
+                            document.getElementById("successUpdate").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
         }
     }
 

@@ -133,7 +133,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Payment Source<sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @class = "form-control FeePaymentNoId", @disabled = "disabled" })
                                                                 @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
                                                             </div>
                                                         </div>
@@ -143,7 +143,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Payment Date<sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @class = "form-control datepicker FeePaymentDateId", @disabled = "disabled" })
                                                                 @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
                                                             </div>
                                                         </div>
@@ -159,7 +159,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Approval Email From<sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNoId", @class = "form-control", @disabled = "disabled" })
+                                                                @Html.TextBoxFor(m => m.FeePaymentNo, new { @class = "form-control FeePaymentNoId", @disabled = "disabled" })
                                                                 @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger" })
                                                             </div>
                                                         </div>
@@ -169,7 +169,7 @@
                                                         <div class="form-group d-flex align-items-center flex-wrap">
                                                             <label class="font-weight-normal col-md-5 col-12">Approval Email Date<sup class="text-danger">*</sup></label>
                                                             <div class="col-md-7 col-12">
-                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDateId", @class = "form-control datepicker", @disabled = "disabled" })
+                                                                @Html.TextBoxFor(m => m.FeePaymentDate, new { @class = "form-control datepicker FeePaymentDateId", @disabled = "disabled" })
                                                                 @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger" })
                                                             </div>
                                                         </div>
@@ -269,7 +269,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Comments : </label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextAreaFor(m => m.Comments, new { @id = "commentId", @class = "form-control", @type = "Date" })
+                                                    @Html.TextAreaFor(m => m.Comments, new {@maxlength = "100", @id = "commentId", @class = "form-control", @type = "Date" })
                                                     @Html.ValidationMessageFor(m => m.Comments, "", new { @id = "cmtError", @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -418,21 +418,24 @@
             success: function (res) {
                 console.log("customer", res);
 
-                if (res.customer.length > 0 && res.kycDetailsResult.length > 0) {
+                if (res.vewCustomerAllList.success == true) {
+
+                    var customerList = res.vewCustomerAllList.data.getCustomerDetails;
+                    var kycDetails = res.vewCustomerAllList.data.customerKYCDetails;
 
                     //console.log("card limit", res.limitDetailsList);
 
-                    //$('#CustomerTypeID').val(res.customer.customerTypeId);
-                    //$('#customerSubType').val(res.customer.customerSubtypeId);
+                    //$('#CustomerTypeID').val(customerList[0].customerTypeId);
+                    //$('#customerSubType').val(customerList[0].customerSubtypeId);
 
-                    var CustomerType = $('<option value="' + res.customer.customerTypeName + '">' + res.customer.customerTypeName + '</option>');
+                    var CustomerType = $('<option value="' + customerList[0].customerTypeName + '">' + customerList[0].customerTypeName + '</option>');
                     $('#CustomerTypeID').append(CustomerType);
 
-                    var custSubType = $('<option value="' + res.customer.customerSubtypeName + '">' + res.customer.customerSubtypeName + '</option>');
+                    var custSubType = $('<option value="' + customerList[0].customerSubtypeName + '">' + customerList[0].customerSubtypeName + '</option>');
                     $('#CustomerSubTypeID').append(custSubType);
 
-                    //$('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
-                    const dateObj = new Date(res.customer.dateOfApplication);
+                    //$('#CustomerDateOfApplication').val(customerList[0].dateOfApplication);
+                    const dateObj = new Date(customerList[0].dateOfApplication);
                     //$('#applicationDate').val(dateObj.getDate());
                     console.log(dateObj);
                     var month = dateObj.getMonth() + 1; //months from 1-12
@@ -444,107 +447,107 @@
                     //console.log($('#applicationDate'));
                     $('#applicationDate').val(newdate);
 
-                    var CustomerSalesArea = $('<option value="' + res.customer.salesArea + '">' + res.customer.salesArea + '</option>');
+                    var CustomerSalesArea = $('<option value="' + customerList[0].salesArea + '">' + customerList[0].salesArea + '</option>');
                     $('#CustomerSalesAreaID').append(CustomerSalesArea);
 
-                    var CustomerZonalOffice = $('<option value="' + res.customer.zonalOfficeName + '">' + res.customer.zonalOfficeName + '</option>');
+                    var CustomerZonalOffice = $('<option value="' + customerList[0].zonalOfficeName + '">' + customerList[0].zonalOfficeName + '</option>');
                     $('#CustomerZonalOfficeID').append(CustomerZonalOffice);
 
-                    var regionalOff = $('<option value="' + res.customer.regionalOfficeName + '">' + res.customer.regionalOfficeName + '</option>');
+                    var regionalOff = $('<option value="' + customerList[0].regionalOfficeName + '">' + customerList[0].regionalOfficeName + '</option>');
                     $('#CustomerRegionID').append(regionalOff);
 
-                    var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
+                    var TypeOfCustomer = $('<option value="' + customerList[0].typeOfCustomerName + '">' + customerList[0].typeOfCustomerName + '</option>');
                     $('#TypeOfCustomerID').append(TypeOfCustomer);
 
-                    var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
+                    var TierOfCustomer = $('<option value="' + customerList[0].tierOfCustomerName + '">' + customerList[0].tierOfCustomerName + '</option>');
                     $('#TierOfCustomerID').append(TierOfCustomer);
 
 
-                    var IndividualTitle = $('<option value="' + res.customer.individualOrgNameTitle + '">' + res.customer.individualOrgNameTitle + '</option>');
+                    var IndividualTitle = $('<option value="' + customerList[0].individualOrgNameTitle + '">' + customerList[0].individualOrgNameTitle + '</option>');
                     $('#IndividualOrgNameTitle').append(IndividualTitle);
 
-                    $('#IndividualOrgName').val(res.customer.individualOrgName);
+                    $('#IndividualOrgName').val(customerList[0].individualOrgName);
 
-                    $('#CustomerNameOnCard').val(res.customer.nameOnCard);
+                    $('#CustomerNameOnCard').val(customerList[0].nameOnCard);
 
-                    var CustomerTbentity = $('<option value="' + res.customer.typeOfBusinessEntityName + '">' + res.customer.typeOfBusinessEntityName + '</option>');
+                    var CustomerTbentity = $('<option value="' + customerList[0].typeOfBusinessEntityName + '">' + customerList[0].typeOfBusinessEntityName + '</option>');
                     $('#CustomerTbentityID').append(CustomerTbentity);
 
-                    var ResidenceStatus = $('<option value="' + res.customer.residenceStatus + '">' + res.customer.residenceStatus + '</option>');
+                    var ResidenceStatus = $('<option value="' + customerList[0].residenceStatus + '">' + customerList[0].residenceStatus + '</option>');
                     $('#CustomerResidenceStatus').append(ResidenceStatus);
 
-                    $('#CustomerIncomeTaxPan').val(res.customer.incomeTaxPan);
+                    $('#CustomerIncomeTaxPan').val(customerList[0].incomeTaxPan);
 
                     //Address Tab
-                    $('#CommunicationAddress1').val(res.customer.communicationAddress1);
-                    $('#CommunicationAddress2').val(res.customer.communicationAddress2);
-                    $('#CommunicationAddress3').val(res.customer.communicationAddress3);
-                    $('#CommunicationLocation').val(res.customer.communicationLocation);
-                    $('#CommunicationCity').val(res.customer.communicationCityName);
-                    $('#CommunicationPinCode').val(res.customer.communicationPincode);
+                    $('#CommunicationAddress1').val(customerList[0].communicationAddress1);
+                    $('#CommunicationAddress2').val(customerList[0].communicationAddress2);
+                    $('#CommunicationAddress3').val(customerList[0].communicationAddress3);
+                    $('#CommunicationLocation').val(customerList[0].communicationLocation);
+                    $('#CommunicationCity').val(customerList[0].communicationCityName);
+                    $('#CommunicationPinCode').val(customerList[0].communicationPincode);
 
-                    var CommunicationStateName = $('<option value="' + res.customer.communicationStateName + '">' + res.customer.communicationStateName + '</option>');
+                    var CommunicationStateName = $('<option value="' + customerList[0].communicationStateName + '">' + customerList[0].communicationStateName + '</option>');
                     $('#CommunicationStateID').append(CommunicationStateName);
 
-                    var CommunicationDistrict = $('<option value="' + res.customer.communicationDistrictName + '">' + res.customer.communicationDistrictName + '</option>');
+                    var CommunicationDistrict = $('<option value="' + customerList[0].communicationDistrictName + '">' + customerList[0].communicationDistrictName + '</option>');
                     $('#CommunicationDistrictId').append(CommunicationDistrict);
 
-                    $('#CommunicationPhoneNo').val(res.customer.communicationPhoneNo);
-                    $('#CommunicationFax').val(res.customer.communicationFax);
-                    $('#CommunicationMobileNumber').val(res.customer.communicationMobileNo);
-                    $('#CommunicationEmail').val(res.customer.communicationEmailid);
+                    $('#CommunicationPhoneNo').val(customerList[0].communicationPhoneNo);
+                    $('#CommunicationFax').val(customerList[0].communicationFax);
+                    $('#CommunicationMobileNumber').val(customerList[0].communicationMobileNo);
+                    $('#CommunicationEmail').val(customerList[0].communicationEmailid);
 
 
-                    $('#PerOrRegAddress1').val(res.customer.permanentAddress1);
-                    $('#PerOrRegAddress2').val(res.customer.permanentAddress2);
-                    $('#PerOrRegAddress3').val(res.customer.permanentAddress3);
-                    $('#PerOrRegAddressLocation').val(res.customer.permanentLocation);
-                    $('#PerOrRegAddressCity').val(res.customer.permanentCityName);
-                    $('#PerOrRegAddressPinCode').val(res.customer.permanentPincode);
+                    $('#PerOrRegAddress1').val(customerList[0].permanentAddress1);
+                    $('#PerOrRegAddress2').val(customerList[0].permanentAddress2);
+                    $('#PerOrRegAddress3').val(customerList[0].permanentAddress3);
+                    $('#PerOrRegAddressLocation').val(customerList[0].permanentLocation);
+                    $('#PerOrRegAddressCity').val(customerList[0].permanentCityName);
+                    $('#PerOrRegAddressPinCode').val(customerList[0].permanentPincode);
 
-                    var PermanentStateName = $('<option value="' + res.customer.permanentStateName + '">' + res.customer.permanentStateName + '</option>');
+                    var PermanentStateName = $('<option value="' + customerList[0].permanentStateName + '">' + customerList[0].permanentStateName + '</option>');
                     $('#PerOrRegAddressStateID').append(PermanentStateName);
 
-                    var pDistrict = $('<option value="' + res.customer.permanentDistrictName + '">' + res.customer.permanentDistrictName + '</option>');
+                    var pDistrict = $('<option value="' + customerList[0].permanentDistrictName + '">' + customerList[0].permanentDistrictName + '</option>');
                     $('#PerOrRegAddressDistrict').append(pDistrict);
 
-                    $('#PerOrRegAddressPhoneNumber').val(res.customer.permanentPhoneNo);
-                    $('#PermanentFax').val(res.customer.permanentFax);
+                    $('#PerOrRegAddressPhoneNumber').val(customerList[0].permanentPhoneNo);
+                    $('#PermanentFax').val(customerList[0].permanentFax);
 
                     //Official Details Tab
-                    var OffTitle = $('<option value="' + res.customer.keyOfficialTitle + '">' + res.customer.keyOfficialTitle + '</option>');
+                    var OffTitle = $('<option value="' + customerList[0].keyOfficialTitle + '">' + customerList[0].keyOfficialTitle + '</option>');
                     $('#KeyOffTitle').append(OffTitle);
 
-                    $('#KeyOffFirstName').val(res.customer.keyOfficialFirstName);
-                    $('#KeyOffLastName').val(res.customer.keyOfficialLastName);
-                    $('#KeyOffDesignation').val(res.customer.keyOfficialDesignation);
-                    $('#KeyOffPhoneNumber').val(res.customer.keyOfficialPhoneNo);
-                    $('#KeyOffMobileNumber').val(res.customer.keyOfficialMobile);
-                    $('#KeyOffIndividualInitials').val(res.customer.keyOfficialIndividualInitials);
-                    $('#KeyOffMiddleName').val(res.customer.keyOfficialMiddleName);
-                    $('#KeyOffFax').val(res.customer.keyOfficialFax);
-                    $('#KeyOffEmail').val(res.customer.keyOfficialEmail);
+                    $('#KeyOffFirstName').val(customerList[0].keyOfficialFirstName);
+                    $('#KeyOffLastName').val(customerList[0].keyOfficialLastName);
+                    $('#KeyOffDesignation').val(customerList[0].keyOfficialDesignation);
+                    $('#KeyOffPhoneNumber').val(customerList[0].keyOfficialPhoneNo);
+                    $('#KeyOffMobileNumber').val(customerList[0].keyOfficialMobile);
+                    $('#KeyOffIndividualInitials').val(customerList[0].keyOfficialIndividualInitials);
+                    $('#KeyOffMiddleName').val(customerList[0].keyOfficialMiddleName);
+                    $('#KeyOffFax').val(customerList[0].keyOfficialFax);
+                    $('#KeyOffEmail').val(customerList[0].keyOfficialEmail);
 
-                    var OfficialSecretQuestion = $('<option value="' + res.customer.keyOfficialSecretQuestionName + '">' + res.customer.keyOfficialSecretQuestionName + '</option>');
+                    var OfficialSecretQuestion = $('<option value="' + customerList[0].keyOfficialSecretQuestionName + '">' + customerList[0].keyOfficialSecretQuestionName + '</option>');
                     $('#KeyOfficialSecretQuestion').append(OfficialSecretQuestion);
 
-                    $('#KeyOfficialSecretAnswer').val(res.customer.keyOfficialSecretAnswer);
-                    $('#FleetSizeNoOfVechileOwnedHCV').val(res.customer.fleetSizeNoOfVechileOwnedHCV);
-                    $('#FleetSizeNoOfVechileOwnedLCV').val(res.customer.fleetSizeNoOfVechileOwnedLCV);
-                    $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res.customer.fleetSizeNoOfVechileOwnedMUVSUV);
-                    $('#FleetSizeNoOfVechileOwnedCarJeep').val(res.customer.fleetSizeNoOfVechileOwnedCarJeep);
+                    $('#KeyOfficialSecretAnswer').val(customerList[0].keyOfficialSecretAnswer);
+                    $('#FleetSizeNoOfVechileOwnedHCV').val(customerList[0].fleetSizeNoOfVechileOwnedHCV);
+                    $('#FleetSizeNoOfVechileOwnedLCV').val(customerList[0].fleetSizeNoOfVechileOwnedLCV);
+                    $('#FleetSizeNoOfVechileOwnedMUVSUV').val(customerList[0].fleetSizeNoOfVechileOwnedMUVSUV);
+                    $('#FleetSizeNoOfVechileOwnedCarJeep').val(customerList[0].fleetSizeNoOfVechileOwnedCarJeep);
 
-                    var customerTypeOfFleet = $('<option value="' + res.customer.keyOfficialTypeOfFleetName + '">' + res.customer.keyOfficialTypeOfFleetName + '</option>');
+                    var customerTypeOfFleet = $('<option value="' + customerList[0].keyOfficialTypeOfFleetName + '">' + customerList[0].keyOfficialTypeOfFleetName + '</option>');
                     $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
 
-                    $('#KeyOfficialCardAppliedFor').val(res.customer.keyOfficialCardAppliedFor);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.customer.keyOfficialApproxMonthlySpendsonVechile1);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.customer.keyOfficialApproxMonthlySpendsonVechile2);
-                    $('#AreaOfOperation').val(res.customer.areaOfOperation);
-                    //$('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
-                    //$('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOB);
+                    $('#KeyOfficialCardAppliedFor').val(customerList[0].keyOfficialCardAppliedFor);
+                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile1);
+                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile2);
+                    $('#AreaOfOperation').val(customerList[0].areaOfOperation);
+                    //$('#KeyOfficialDOB').val(customerList[0].keyOfficialDOB);
+                    //$('#KeyOffDateOfAnniversary').val(customerList[0].keyOfficialDOB);
 
-                    const dateDOB = new Date(res.customer.keyOfficialDOB);
+                    const dateDOB = new Date(customerList[0].keyOfficialDOB);
                     //$('#applicationDate').val(dateObj.getDate());
                     console.log(dateDOB);
                     var monthDOB = dateDOB.getMonth() + 1; //months from 1-12
@@ -555,7 +558,7 @@
 
                     $('#KeyOfficialDOB').val(newdateDOB);
 
-                    const dateDOA = new Date(res.customer.keyOfficialDOA);
+                    const dateDOA = new Date(customerList[0].keyOfficialDOA);
                     console.log(dateDOA);
                     var monthDOA = dateDOA.getMonth() + 1; //months from 1-12
                     var dayDOA = dateDOA.getDate();
@@ -571,20 +574,20 @@
                     console.log('Ravi');
                     console.log(res.kycDetailsResult);
 
-                    if (res.kycDetailsResult.length > 0) {
-                        var IdProofTypeName = $('<option value="' + res.kycDetailsResult[0].idProofTypeName + '">' + res.kycDetailsResult[0].idProofTypeName + '</option>');
+                    if (res.kycDetails.length > 0) {
+                        var IdProofTypeName = $('<option value="' + res.kycDetails[0].idProofTypeName + '">' + res.kycDetails[0].idProofTypeName + '</option>');
                         $('#IdProofType').append(IdProofTypeName);
-                        $('#IdProofDocumentNo').val(res.kycDetailsResult[0].idProofDocumentNo);
+                        $('#IdProofDocumentNo').val(res.kycDetails[0].idProofDocumentNo);
 
-                        $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofFront);
-                        $('#IdProofBack').attr('src', res.kycDetailsResult[0].idProofBack);
-                        $('#AddressProofBack').attr('src', res.kycDetailsResult[0].addressProofBack);
-                        $('#AddressProofFront').attr('src', res.kycDetailsResult[0].addressProofFront);
+                        $('#IdProofFront').attr('src', res.kycDetails[0].idProofFront);
+                        $('#IdProofBack').attr('src', res.kycDetails[0].idProofBack);
+                        $('#AddressProofBack').attr('src', res.kycDetails[0].addressProofBack);
+                        $('#AddressProofFront').attr('src', res.kycDetails[0].addressProofFront);
 
 
-                        var AddressProofTypeName = $('<option value="' + res.kycDetailsResult[0].addressProofTypeName + '">' + res.kycDetailsResult[0].addressProofTypeName + '</option>');
+                        var AddressProofTypeName = $('<option value="' + res.kycDetails[0].addressProofTypeName + '">' + res.kycDetails[0].addressProofTypeName + '</option>');
                         $('#AddressProofType').append(AddressProofTypeName);
-                        $('#AddressProofDocumentNo').val(res.kycDetailsResult[0].addressProofDocumentNo);
+                        $('#AddressProofDocumentNo').val(res.kycDetails[0].addressProofDocumentNo);
                     }
                     else {
                         var IdProofTypeName1 = $('<option value="' + '' + '">' + '' + '</option>');
@@ -618,6 +621,10 @@
                     $("#BasicInformation").addClass("active show");
 
                     $("#viewSelectedCustomer").modal('show');
+                }else{
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.vewCustomerAllList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
                 }
 
                 },
@@ -650,10 +657,10 @@
             url: "@Url.Action("BindPendingCustomer", "CustomerFeeWaiver")",
             type: "POST",
             dataType: "JSON",
-            data: { customerReferenceNo: customerReferenceNo, formNumber:formNumber },
+            data: { formNumber:formNumber },
              success: function (res) {
 
-                 console.log(res);
+                 console.log("res", res);
 
                  if (res.searchList.success == true) {
 
@@ -667,15 +674,11 @@
                      $('input[name="CardPreference"][value="' + basicDetails[0].cardPreference + '"]').prop('checked', true);
                      $('input[name="FeePaymentsCollectorFeeWaiver"][value="' + basicDetails[0].feePaymentsCollectorFeeWaiver + '"]').prop('checked', true);
 
-                     $('#FeePaymentNoId').val(basicDetails[0].feePaymentNo);
+                     $('.FeePaymentNoId').val(basicDetails[0].feePaymentNo);
 
-                     var momentDate = new Date(basicDetails[0].feePaymentDate);
+                     var feeDate = moment(basicDetails[0].feePaymentDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
 
-                     var abc = moment(momentDate).format('YYYY-MM-DD');
-
-                     console.log(abc, "date");
-
-                     $('#FeePaymentDateId').val(abc);
+                     $('.FeePaymentDateId').val(feeDate);
 
                      console.log($('input[name="CardPreference"]:checked').val(), "pref");
 
@@ -855,32 +858,47 @@
 
         var comments = $("#commentId").val();
 
+        var flag = "Y";
+
         if ($('#commentId').val() == "") {
-            $('#cmtError').text("Comment should not be empty");
-            return false;
+            $('#cmtError').text("Please enter comments!");
+            flag = "N";
+        }
+        if(comments != ''){
+            if(!comments.trim().match(atLeastOneAlphabet)){
+                $('#cmtError').text("Invalid comments");
+                flag = "N";
+            }
         }
 
-        $('#cmtError').text("");
+        if (flag == "N")
+            e.preventDefault();
 
-        if (confirm('Are you sure to reject fee waiver ?')) {
-            $.ajax({
-                url: "@Url.Action("RejectCustomer", "CustomerFeeWaiver")",
-                type: "POST",
-                dataType: "JSON",
-                data: { customerReferenceNo: customerReferenceNo, comments: comments },
-                success: function (res) {
 
-                    $("#noRecord").html("");
-                    $("#noRecord").append("<span>" + res + "</span>");
-                    document.getElementById("noRecord").style.display = "block";
+        if(flag == "Y"){
+    
+            $('#cmtError').text("");
 
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-        } else {
-            console.log('cancel')
+            if (confirm('Are you sure to reject fee waiver ?')) {
+                $.ajax({
+                    url: "@Url.Action("RejectCustomer", "CustomerFeeWaiver")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { customerReferenceNo: customerReferenceNo, comments: comments },
+                    success: function (res) {
+
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            } else {
+                console.log('cancel')
+            }
         }
 
     }

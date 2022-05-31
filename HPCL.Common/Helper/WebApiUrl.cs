@@ -377,6 +377,7 @@
         public static string UpdateConfigureSmsAlertsUrl = "api/dtplus/configure/update_configure_sms_alerts";
         public static string UpdateDndSmsAlertsConfigureUrl = "api/dtplus/configure/update_dnd_configure_sms_alerts";
         public static string GetHotlistCardsPermanentlyUrl = "api/dtplus/hotlist/get_hotlist_cards_details";
+        public static string UpdatePermanentlyHotlistCardsUrl = "api/dtplus/hotlist/Update_Permanently_Hotlist_Cards";
         #endregion
 
         #region Configure

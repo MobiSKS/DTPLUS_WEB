@@ -136,5 +136,48 @@ namespace HPCL_Web.Controllers
             uploadExcel.CustomerId = CustomerId;
             return View(uploadExcel);
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> SearchCardToCardBalanceTransfer(string customerId)
+        {
+            var entity = new BalanceTransferSearchModel
+            {
+                CustomerID = customerId,
+                CardNo = "",
+                MobileNo = ""
+            };
+
+            var searchList = await _customerFinancialService.SearchCardToCardTransfer(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SearchCcmsToCardBalanceTransfer(string customerId)
+        {
+            var entity = new BalanceTransferSearchModel
+            {
+                CustomerID = customerId,
+                CardNo = "",
+                MobileNo = ""
+            };
+
+            var searchList = await _customerFinancialService.SearchCCMSToCardTransfer(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SearchCardToCcmsBalanceTransfer(string customerId)
+        {
+            var entity = new BalanceTransferSearchModel
+            {
+                CustomerID = customerId,
+                CardNo = "",
+                MobileNo = ""
+            };
+
+            var searchList = await _customerFinancialService.SearchCardToCCMSTransfer(entity);
+            return Json(new { searchList = searchList });
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace HPCL.Common.Models.ResponseModel.DtpSupport
     {
         public string OldValue { get; set; }
         public int Status { get; set; }
-        public string Reason { get; set; }        
+        public string Reason { get; set; }
+        public int RegionID { get; set; }
     }
 }
