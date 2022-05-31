@@ -56,6 +56,17 @@ namespace HPCL.Service.Services
 
             SearchAlResult searchList = obj.ToObject<SearchAlResult>();
 
+            if (searchList != null && searchList.data != null && searchList.data.Count > 0)
+            {
+                foreach (ALList item in searchList.data)
+                {
+                    item.ZOfficeID = item.ZonalOfficeID.ToString();
+                    item.ROfficeID = item.RegionalOfficeID.ToString();
+                    item.SId = item.StateId.ToString();
+                    item.DId = item.DistrictId.ToString();
+                }
+            }
+
             return searchList;
         }
 
