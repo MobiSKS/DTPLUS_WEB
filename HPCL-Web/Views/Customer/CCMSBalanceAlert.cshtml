@@ -7,6 +7,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","CustomerRequest")" class="text_primary">Requests</a> </li>
             <li class="breadcrumb-item font-weight-light"> Low CCMS Balance Alert Configuration</li>
         </ul>
+        <div id="dvSuccess" style="display:none;" class="mb-3 mt-3 text-center alert alert-success"></div>
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -74,9 +75,8 @@
                 </div>
 
                 <div class="clearfix"></div>
-                 <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center"></div>
-                 <div id="dvSuccess" style="display:none;" class="mb-3 text-center alert alert-success"></div>
-
+                 <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
+                 
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvBalanceDetails" style="display:none">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Set Low Balance Alert Amount</p>
@@ -134,7 +134,7 @@
     {
         if ($("#CustomerID").val().trim() == "")
         {
-            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            $('#CustomerIdValErrMsg').html("Please enter Customer ID");
             return false;
         }
         else if (!$("#CustomerID").val().match(mappedCustomerId))
@@ -178,7 +178,7 @@
        debugger;
             if ($("#CustomerID").val().trim() == "")
             {
-                $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+                $('#CustomerIdValErrMsg').html("Please enter Customer ID");
                 return false;
             }
             else if (!$("#CustomerID").val().match(mappedCustomerId))
@@ -209,6 +209,8 @@
                         document.getElementById("dvNoData").style.display = "block";
                         document.getElementById("dvNoData").innerHTML= res.customer.reason;
                         $("#CustomerID").prop('readonly', false);
+                        $("#dvSuccess").html("");
+                        document.getElementById("dvSuccess").style.display = "none";
 
                         if(res.customer.individualOrgName!="")
                         {
@@ -223,13 +225,15 @@
                         document.getElementById("dvCustomerInformation").style.display = "none";
                         document.getElementById("dvNoData").style.display = "none";
                         document.getElementById("dvNoData").innerHTML= "";
+                        $("#dvSuccess").html("");
+                        document.getElementById("dvSuccess").style.display = "none";
 
                         if(res.customer.individualOrgName!="")
                         {
                             $('#IndividualOrgName').val(res.customer.individualOrgName);
                             $('#NameOnCard').val(res.customer.nameOnCard);
-                            $('#Amount').val(res.customer.Amount);
-                            $('#AmountOld').val(res.customer.Amount);
+                            $('#Amount').val(res.customer.amount);
+                            $('#AmountOld').val(res.customer.amount);
                         
                             document.getElementById("dvCustomerInformation").style.display = "block";
                             document.getElementById("dvBalanceDetails").style.display = "block";
@@ -318,7 +322,7 @@
 
         if ($("#CustomerID").val().trim() == "")
         {
-            $('#CustomerIdValErrMsg').html("Customer ID should not be Empty");
+            $('#CustomerIdValErrMsg').html("Please enter Customer ID");
             return false;
         }
         else if (!$("#CustomerID").val().match(mappedCustomerId))

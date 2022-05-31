@@ -12,6 +12,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "MyHpOTCCardCustomer")" class="text_primary">My HP (OTC) Card Customer</a> </li>
             <li class="breadcrumb-item font-weight-light">MID Allocation of Cards via Web</li>
         </ul>
+        <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
         <form name="addRequestForOTCCardForm" method="post" asp-action="RequestForOTCCard" class="w-100">
 
             <div class="w-100">
@@ -519,12 +520,23 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 data: JSON.stringify(model),
-                success: function (data) {
+                success: function (data) 
+                {
                     //alert(data.message);
                     console.log(data);
                     console.log(data.commonResponseData.internel_Status_Code);
-                    if (data.commonResponseData.internel_Status_Code == 1000) {
-                        window.location.href = '@Html.Raw(@Url.Action("SuccessOTCCardsAllocation", "MyHpOTCCardCustomer"))';
+                    if (data.commonResponseData.internel_Status_Code == 1000) 
+                    {
+                        document.getElementById("dvNoData").style.display = "none";
+                        document.getElementById("dvNoData").innerHTML="";
+                        var url = '@Html.Raw(@Url.Action("SuccessOTCCardsAllocation", "MyHpOTCCardCustomer",new { Message="xxx" }))';
+                        url = url.replace("xxx", encodeURIComponent(data.commonResponseData.reason));
+                        window.location.href=url;
+                    }
+                    else
+                    {
+                        document.getElementById("dvNoData").style.display = "block";
+                        document.getElementById("dvNoData").innerHTML= data.commonResponseData.reason;
                     }
                 },
                 error: function (ex) {
@@ -536,16 +548,9 @@
 
     });
 
-    $("#btnReset").click(function () {
-        dvDetails.style.display = 'none';
-        document.getElementById("MerchantID").value = "";
-        document.getElementById("NoOfUnallocatedCards").value = "";
-        document.getElementById("NoofAllocatedCards").value = "";
-        $('#CustomerRegionID').val('0');
-        document.getElementById("dvCards").innerHTML = "";
-        document.getElementById("NoofAllocatedCards_error").innerHTML = "";
-        $("#btnSave").removeAttr("disabled");
-        $('#CustomerRegionID')[0].sumo.unSelectAll();
+    $("#btnReset").click(function () 
+    {
+        window.location.href = '@Url.Action("OTCCardsAllocation", "MyHpOTCCardCustomer")';
     });
 
     $('#NoofAllocatedCards').on("cut copy paste",function(e) {

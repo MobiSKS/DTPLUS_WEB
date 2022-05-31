@@ -71,22 +71,19 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RequestForDriverCard(RequestForDriverCardModel requestForDriverCardModel)
         {
-
             RequestForDriverCardModel request = await _driverCardCustomerService.RequestForDriverCard(requestForDriverCardModel);
 
             if (request.Internel_Status_Code == 1000)
             {
-                requestForDriverCardModel.Remarks = "";
-                ViewBag.Message = "Driver Card add request saved successfully";
-                return RedirectToAction("SuccessRequestForDriverCard");
+                return RedirectToAction("SuccessRequestForDriverCard", new { Message = requestForDriverCardModel.Remarks });
             }
 
             return View(requestForDriverCardModel);
         }
 
-
-        public async Task<IActionResult> SuccessRequestForDriverCard()
+        public async Task<IActionResult> SuccessRequestForDriverCard(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
@@ -157,8 +154,9 @@ namespace HPCL_Web.Controllers
 
             return Json(new { commonResponseData = commonResponseData });
         }
-        public async Task<IActionResult> SuccessDriverCardsAllocation()
+        public async Task<IActionResult> SuccessDriverCardsAllocation(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
         [HttpPost]

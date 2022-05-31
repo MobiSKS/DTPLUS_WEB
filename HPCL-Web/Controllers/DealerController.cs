@@ -51,7 +51,7 @@ namespace HPCL_Web.Controllers
             return View(dealerForCreditSaleViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> SaveDealerForCreditSale([FromBody] DealerForCreditSaleViewModel dealerForCreditSaleViewModel)
+        public async Task<JsonResult> SaveDealerForCreditSale([FromBody] DealerForCreditSaleViewModel dealerForCreditSaleViewModel)
         {
             var result = await _dealerService.SaveDealerForCreditSale(dealerForCreditSaleViewModel);
             return Json(result);
@@ -67,7 +67,7 @@ namespace HPCL_Web.Controllers
             return RedirectToAction("DealerCreditMapping", "Dealer", new { CustomerID = customerID , success = succesMsg, error = errorMsg });
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel)
+        public async Task<JsonResult> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel)
         {
             var result = await _dealerService.UpdateDealerCreditmapping(DealerRequestModel);
             return Json(result);

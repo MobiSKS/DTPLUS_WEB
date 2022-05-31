@@ -176,13 +176,9 @@
                                         }
                                         @foreach (var item in Model.Data.CustomerMerchantMappedDetails)
                                         {
-                                            //item.Status = "Enable";
                                             i = i + 1;
-                                           @* if (i == 1 || i == 3)
-                                                item.Status = "Disable";
-                                            else
-                                                item.Status = "Enable";*@
-                                            if (item.Status == "Disable")
+                                           
+                                            if (item.Action == "0")
                                             {
                                                 classToggle = "fa-toggle-off";
                                                 status = "Enable";
@@ -203,7 +199,7 @@
                                                 <td>@item.CreditCloseLimitBalance</td>
                                                 <td style="width:8px">
                                                     <div class="d-flex align-items-center justify-content-start">
-                                                        @if (item.Status != "Disable")
+                                                        @if (item.Action != "0")
                                                         {
                                                             <a class="d-block " data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit  " aria-hidden="true"></i></a>
                                                             <a class="d-block" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
@@ -314,11 +310,11 @@
             var i = currentRow[0].cells[0].textContent;
 
             currentRow.find('td.editCell').each(function(){
-                if(pCreditCloseLimitType=="One Time Limit")
+                if(pCreditCloseLimitType!="Unlimited")
                           $(this)[0].innerHTML=('<input type="text" , autocomplete = "off" onkeypress = "return isDecimal(event,this)"  class="form-control " value="'+ $(this)[0].textContent + '" id="'+$(this)[0].id+'_'+i+'"><span class="field-validation-error text-danger" id="'+$(this)[0].id+'_error'+i+'"></span>');
                       });
           var LimitTypeId=currentRow.find('td.editCelldropdown')[0].id;
-          currentRow.find('td.editCelldropdown')[0].innerHTML=('<select name="CreditCloseLimitType" id="tdLimitType_'+i+'" class="form-control"></select>');
+          currentRow.find('td.editCelldropdown')[0].innerHTML=('<select name="CreditCloseLimitType" id="tdLimitType_'+i+'" onchange="enableLimitAmt(this);" class="form-control"></select>');
            $.ajax({
                     type: 'POST',  // http method
                     url: '@Url.Action("GetCreditCloseLimitType", "Common")',
@@ -329,11 +325,21 @@
                         if (status == 'success') {
                             $("#tdLimitType_"+i).html("");
                             $.each(data, function (j, data) { // bind the dropdown list using json result
-                                $('<option>',
-                                    {
-                                        value: data.limitId,
-                                        text: data.description
-                                    }).html(data.description).appendTo("#tdLimitType_"+i);
+                               
+                                    if (data.description == pCreditCloseLimitType) {
+                                         $('<option selected = "selected">',
+                                         {
+                                             value: data.limitId,
+                                             text: data.description
+                                         }).html(data.description).appendTo("#tdLimitType_"+i);
+                                    }
+                                    else{
+                                        $('<option>',
+                                        {
+                                            value: data.limitId,
+                                            text: data.description
+                                        }).html(data.description).appendTo("#tdLimitType_"+i);
+                                    }
                             });
                             //$("#CreditCloseLimitType")[0].sumo.reload();
 
@@ -353,6 +359,20 @@
            currentRow.find('.cancel').attr("style","display:block");
        }
     });
+    function enableLimitAmt(o){
+        debugger;
+        var selectedVal=o.value;
+        var currentRow = o.closest("tr");
+         var i = currentRow.cells[0].textContent;
+         var limitAmtCell=currentRow.cells[5];
+        if(selectedVal=="1"){
+             currentRow.cells.tdLimitAmount.innerHTML=('<input type="text" , autocomplete = "off" onkeypress = "return isDecimal(event,this)"  class="form-control " value="'+ limitAmtCell.textContent + '" id="'+limitAmtCell.id+'_'+i+'"><span class="field-validation-error text-danger" id="'+limitAmtCell.id+'_error'+i+'"></span>');
+                      
+        }
+        else{
+            currentRow.cells.tdLimitAmount.innerHTML=limitAmtCell.textContent;
+        }
+    }
      $("#CustomerMerchantMappedDetails").on('click', '.cancel', function () {
           currentRow = $(this).closest("tr");
 
@@ -367,6 +387,7 @@
        activeRow="";
      });
      $("#CustomerMerchantMappedDetails").on('click', '.save', function () {
+         merchantDetail=[];
          var flag="Y";
             var customerId=$("#CustomerID").val();
           row = $(this).closest("tr");
@@ -382,14 +403,22 @@
                   alert("Credit closer limit amount should be greater than or equal to 1.")
                   flag="N";
               }
+              else if(isNaN(CreditCloseLimitAmount)){
+                   alert("Credit closer limit amount should be greater than or equal to 1.")
+                   flag="N";
+              }
               else if(Number(CreditCloseLimitAmount)<=0){
                    alert("Credit closer limit amount should be greater than or equal to 1.")
                    flag="N";
               }
           }
+          else{
+              CreditCloseLimitAmount="0";
+          }
 
           if(flag=="Y"){
-             var reqmodel={ CustomerID: customerId, MerchantID: merchantID, LimitAmount: CreditCloseLimitAmount,CreditCloseLimitTypeID:CreditCloseLimitType};
+               merchantDetail.push({ MerchantID: merchantID, CreditCloseLimitType: CreditCloseLimitType,LimitAmount:CreditCloseLimitAmount });
+             var reqmodel={ CustomerID: customerId, TypeUpdateDealerCreditMapping:merchantDetail};
              $.ajax({
                     type: 'POST',
                     url: '@Url.Action("UpdateDealerCreditmapping", "Dealer")',
