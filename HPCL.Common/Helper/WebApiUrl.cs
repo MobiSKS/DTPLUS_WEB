@@ -390,6 +390,7 @@
         public static string insertmapdealerforcreditsale = "api/dtplus/dealercredit/insert_map_dealer_for_credit_sale";
         public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
         public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
+        public static string getdealercreditsalestatement = "api/dtplus/dealercredit/get_dealer_credit_sale_statement";
         #endregion
     }
 }

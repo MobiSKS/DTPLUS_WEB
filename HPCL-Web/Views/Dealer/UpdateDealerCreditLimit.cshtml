@@ -144,6 +144,7 @@
        $("#excel_file").change(function () {
 
         document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("ExcelDataError").style.display = "none";
 
         var fileUpload = document.getElementById("excel_file");
             var regex = /(.*?)\.(csv)$/;
@@ -220,7 +221,7 @@
                                     return false;
                                 }
                                 else{
-                                    if(limitType!="Unlimited" || limitType !="OneTime"){
+                                    if(limitType!="Unlimited" && limitType !="OneTime"){
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Limit Type can be Unlimited/OneTime</span>");
                                         $("#excel_file").val('');
@@ -237,7 +238,7 @@
                                         return false;
                                     }
                                     else{
-                                        if (isNAN(limitAmount)){
+                                        if (isNaN(limitAmount.trim())){
                                             $("#ExcelDataError").html('');
                                             $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Credit closer limit amount should be greater than or equal to 1.</span>");
                                             $("#excel_file").val('');
@@ -274,14 +275,17 @@
     function uploadBulkLimitRow(){
 
         document.getElementById("reponseErr").style.display = "none";
+        document.getElementById("ExcelDataError").style.display = "none";
         var customerId=$("#CustomerID").val();
         if($("#excel_file").val() != ''){
 
-            var updateArray = [];
+            var merchantDetail = [];
             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
                 var merchantID = $(tr).find(':nth-child(1)').text();
-                var CreditCloseLimitType = $(tr).find(':nth-child(2)').text();
-                var CreditCloseLimitAmount = $(tr).find(':nth-child(3)').text();
+                var CreditCloseLimitType = $(tr).find(':nth-child(2)').text().trim();
+                var CreditCloseLimitAmount ="0";
+                if(CreditCloseLimitType!="Unlimited")
+                    CreditCloseLimitAmount=$(tr).find(':nth-child(3)').text().trim();
               
 
                 merchantDetail.push({ MerchantID: merchantID, CreditCloseLimitType: CreditCloseLimitType,LimitAmount:CreditCloseLimitAmount });
@@ -290,6 +294,7 @@
                  var reqmodel={ CustomerID: customerId, TypeUpdateDealerCreditMapping:merchantDetail};
                 $.ajax({
                     url: "@Url.Action("UpdateDealerCreditmapping", "Dealer")",
+                    contentType: "application/json; charset=utf-8",
                     type: "POST",
                     dataType: "JSON",
                     data: JSON.stringify(reqmodel),
@@ -306,24 +311,24 @@
 
                             //$("#checkRecord").html('');
                             //$("#checkRecord").append("<span>"+data[0].reason+"</span>")
-                            //$('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
-                            //    var currentIndex = index + 1;
+                                var currentIndex = index + 1;
 
-                            //    var merchantID = $(tr).find(':nth-child(1)').text();
+                                var merchantID = $(tr).find(':nth-child(1)').text();
                                 for(var i =0;i<data.length;i++){
                                     if(data[i].status == 0){
-                                        //if(merchantID == res.updateResponse.data[i].cardno){
+                                        if(merchantID == data[i].merchantID){
 
                                             var aaa = "<span>Record No "+currentIndex+":- "+(data[i].reason)+"</span><br>";
 
                                             $(tr).find(':nth-child(4)').append(aaa);
-                                        //}
+                                        }
                                     }
 
 
                                 }
-                            //});
+                            });
 
                             $('#ExcelTable tr:gt(0)').each(function(index, tr){
                                 var err = $(tr).find(':nth-child(4)').text();

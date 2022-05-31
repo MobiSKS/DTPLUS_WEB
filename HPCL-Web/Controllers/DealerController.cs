@@ -38,7 +38,7 @@ namespace HPCL_Web.Controllers
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
             ViewBag.SuccessMessage = success;
             ViewBag.ErrorMessage = error;
-            ViewBag.CustomerID = String.IsNullOrEmpty(entity.CustomerID)?"": entity.CustomerID;
+            ViewBag.CustomerID = String.IsNullOrEmpty(entity.CustomerID)?"0": entity.CustomerID;
             return View(response);
         }
  
@@ -86,6 +86,12 @@ namespace HPCL_Web.Controllers
             dealerForCreditSaleViewModel.CustomerID = CustomerID;
             return View(dealerForCreditSaleViewModel);
         }
-        
+        public async Task<IActionResult> GetCreditSaleStatement(string CustomerID, string MerchantID, string FromDate,string ToDate)
+        {
+            var searchList = await _dealerService.GetCreditSaleStatement(CustomerID, MerchantID, FromDate,ToDate);
+            return PartialView("~/Views/Dealer/_DealerCreditSaleStatementTbl.cshtml", searchList);
+        }
+
+
     }
 }
