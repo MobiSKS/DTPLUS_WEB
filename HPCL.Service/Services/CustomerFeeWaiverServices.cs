@@ -1,13 +1,11 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerFeeWaiver;
 using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Numerics;
@@ -52,7 +50,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                formNumber = formNumber
+                formNumber = BigInteger.Parse(formNumber)
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");

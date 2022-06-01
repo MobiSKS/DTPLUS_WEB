@@ -5,7 +5,6 @@ namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
 {
     public class BindApprovePendingCustomer : BaseEntity
     {
-        public BigInteger CustomerReferenceNo { get; set; }
-        public string formNumber { get; set; }
+        public BigInteger formNumber { get; set; }
     }
 }
