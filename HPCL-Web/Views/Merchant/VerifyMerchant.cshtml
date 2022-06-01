@@ -198,31 +198,32 @@
         var flag = "Y";
 
         ObjApprovalRejectDetail = [];
-        var count = 0;
         $("#merchantApprovalDetails tr").each(function () {
             $(this).find(".comment_error").html("");
-            count = count + 1;
             if ($(this).find('input[type="checkbox"]').is(":checked")) {
                 //$("#reason").addClass("displayNone");
                 debugger;
-                let comment = $("#comments_" + count).val();
-                if (comment.trim() == "") {
-                    $(this).find(".comment_error").html("Please fill comment.");
-                    flag = "N";
-                }
-                else{
-                    if (comment.trim().length>50){
-                        $(this).find(".comment_error").html("Comment should not be greater than 50");
+                let comment = $(this).find(".comments").val();
+                if (comment != undefined)
+                {
+                    if (comment.trim() == "") {
+                        $(this).find(".comment_error").html("Please fill comment.");
                         flag = "N";
+                    }
+                    else{
+                        if (comment.trim().length>50){
+                            $(this).find(".comment_error").html("Comment should not be greater than 50");
+                            flag = "N";
+                        }
+                    }
+                    let erpCode = $(this).find("a.erp_code").html();
+                    if (erpCode != undefined) {
+                        ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
                     }
                 }
                 //else {
                 //    flag = "Y";
                 //}
-                let erpCode = $(this).find("a.erp_code").html();
-                if (erpCode != undefined) {
-                    ObjApprovalRejectDetail.push({ ErpCode: erpCode, Comments: comment });
-                }
             }
 
         });
