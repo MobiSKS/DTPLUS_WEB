@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
+using HPCL.Common.Models;
 
 namespace HPCL.Service.Services
 {
@@ -60,35 +61,37 @@ namespace HPCL.Service.Services
             viewCardSearch = JsonConvert.DeserializeObject<ViewCustomerSearch>(response);
             return viewCardSearch;
         }
-        public async Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model)
+        public async Task<CommonResponseData> EnrollToTransportManagementSystem(string CustomerId)
         {
+            EnrollToTransportManagementSystemModel model = new EnrollToTransportManagementSystemModel();
             model.UserAgent = CommonBase.useragent;
             model.UserIp = CommonBase.userip;
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CustomerId = CustomerId;
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.EnrollTransportManagementSystem);
 
-            EnrollTMSResponse enrollTMSResponse = JsonConvert.DeserializeObject<EnrollTMSResponse>(response);
-            model.Internel_Status_Code = enrollTMSResponse.Internel_Status_Code;
+            JObject linkedObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            if (model.Internel_Status_Code == 1000)
+            CommonResponseData responseData = new CommonResponseData();
+
+            if (linkedObj["Status_Code"].ToString() == "200")
             {
-                model.Message = enrollTMSResponse.Message;
-                if (enrollTMSResponse != null && enrollTMSResponse.Data != null && enrollTMSResponse.Data.Count > 0)
-                {
-                    model.Message = enrollTMSResponse.Data[0].message;
-                }
+                var Jarr = linkedObj["Data"].Value<JArray>();
+                List<CommonResponseData> responseLst = Jarr.ToObject<List<CommonResponseData>>();
+                responseData = responseLst[0];
+                responseData.Internel_Status_Code = Convert.ToInt32(linkedObj["Internel_Status_Code"].ToString());
             }
             else
             {
-                model.Message = enrollTMSResponse.Message;
-                model.StatusCode = enrollTMSResponse.Internel_Status_Code;
+                responseData.Internel_Status_Code = Convert.ToInt32(linkedObj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(linkedObj["Status_Code"].ToString());
             }
 
-            return model;
+            return responseData;
         }
 
         public async Task<EnrollVehicleViewModel> EnrollVehicle()

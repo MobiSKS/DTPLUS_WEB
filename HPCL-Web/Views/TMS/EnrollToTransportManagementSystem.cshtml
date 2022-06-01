@@ -11,7 +11,8 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","TMS")" class="text_primary">Transport Management System</a> </li>
             <li class="breadcrumb-item font-weight-light"> Enroll To Transport Management System</li>
         </ul>
-         @using (Html.BeginForm("EnrollToTransportManagementSystem", "TMS", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
+        @using (Html.BeginForm("EnrollToTransportManagementSystem", "TMS", FormMethod.Post, new { @enctype = "multipart/form-data" }))
          {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -60,7 +61,7 @@
 
                     <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-0">
                         <div class="pr-2">
-                            <button class="btn btn_primary" id="btnsubmit" type="Submit" onclick="return SubmitValidations()">ENROLL TO TRANSPORT MANAGEMENT SYSTEM</button>
+                            <button class="btn btn_primary" id="btnsubmit" type="button" onclick="return SubmitValidations()">ENROLL TO TRANSPORT MANAGEMENT SYSTEM</button>
                         </div>
                     </div>
 
@@ -218,8 +219,37 @@
          alert('Select I Agree to Terms & Conditions');
      }
 
-    console.log(ret);
-    return ret;
+    if(ret==true)
+    {
+          $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("EnrollToTransportManagementSystem", "TMS")',
+                data: { CustomerId: customerId },  // data to submit
+                dataType: "json",
+                success: function (data) 
+                {
+                    //alert(data.message);
+                    console.log(data);
+                    console.log(data.commonResponseData.internel_Status_Code);
+                    if (data.commonResponseData.internel_Status_Code == 1000) 
+                    {
+                        document.getElementById("dvNoData").style.display = "none";
+                        document.getElementById("dvNoData").innerHTML="";
+                        var url = '@Html.Raw(@Url.Action("SuccessEnrollToTMS", "TMS",new { Message="xxx" }))';
+                        url = url.replace("xxx", encodeURIComponent(data.commonResponseData.reason));
+                        window.location.href=url;
+                    }
+                    else
+                    {
+                        document.getElementById("dvNoData").style.display = "block";
+                        document.getElementById("dvNoData").innerHTML= data.commonResponseData.reason;
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+            });
+    }
 
    }
 
