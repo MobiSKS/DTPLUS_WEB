@@ -377,6 +377,7 @@
         public static string UpdateConfigureSmsAlertsUrl = "api/dtplus/configure/update_configure_sms_alerts";
         public static string UpdateDndSmsAlertsConfigureUrl = "api/dtplus/configure/update_dnd_configure_sms_alerts";
         public static string GetHotlistCardsPermanentlyUrl = "api/dtplus/hotlist/get_hotlist_cards_details";
+        public static string UpdatePermanentlyHotlistCardsUrl = "api/dtplus/hotlist/Update_Permanently_Hotlist_Cards";
         #endregion
 
         #region Configure
@@ -390,6 +391,7 @@
         public static string insertmapdealerforcreditsale = "api/dtplus/dealercredit/insert_map_dealer_for_credit_sale";
         public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
         public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
+        public static string getdealercreditsalestatement = "api/dtplus/dealercredit/get_dealer_credit_sale_statement";
         #endregion
     }
 }

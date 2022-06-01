@@ -33,9 +33,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> BindPendingCustomer(string customerReferenceNo, string formNumber)
+        public async Task<JsonResult> BindPendingCustomer(string formNumber)
         {
-            var searchList = await _customerFeeWaiverServices.BindPendingCustomer(customerReferenceNo, formNumber);
+            var searchList = await _customerFeeWaiverServices.BindPendingCustomer(formNumber);
 
             ModelState.Clear();
             return Json(new { searchList = searchList });
@@ -68,13 +68,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ViewCustomerDetails(string formNumber)
         {
-            var Tuple = await _customerFeeWaiverServices.ViewCustomerDetails(formNumber);
+            var vewCustomerAllList = await _customerFeeWaiverServices.ViewCustomerDetails(formNumber);
 
-            var customerList = Tuple.Item1;
-            var UploadDocList = Tuple.Item2;
-
-            CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == formNumber).FirstOrDefault();
-            return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
+            return Json(new { vewCustomerAllList = vewCustomerAllList });
         }
     }
 }

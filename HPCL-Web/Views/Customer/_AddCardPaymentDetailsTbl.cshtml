@@ -8,11 +8,11 @@
             <div class="col-md-6 col-12">
                 <div class="col-md-7 col-12 d-flex align-items-center justify-content-start mb-3">
                     <label class="d-flex align-items-center justify-content-start">
-                        @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "rbtnCard" })
+                        @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "rbtnCard",@class="radio-button" })
                         <span class="ml-2">Card</span>
                     </label>
                     <label class="d-flex align-items-center justify-content-start ml-3">
-                        @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless" })
+                        @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless",@class="radio-button" })
                         <span class="ml-2">Cardless</span>
                     </label>
                 </div>
@@ -120,7 +120,7 @@
 @Html.HiddenFor(model => Model.CardPreference)
 @Html.HiddenFor(model => Model.VehicleNoVerifiedManually)
 @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
-
+@Html.HiddenFor(model => Model.FeePaymentsCollectFeeWaiver)
 <script>
 
     $(document).ready(function ()
@@ -201,10 +201,10 @@
 
            //alert(count);
 
-           if (count > 0) 
-           {
-               LoadCardDeatils();
-           }
+           //if (count > 0) 
+           //{
+           //    LoadCardDeatils();
+           //}
            
        });
 
@@ -408,7 +408,6 @@
 
            if (!(document.querySelector('input[name="CardPreference"]:checked')))
            {
-               //alert("Please select Card Preference");
                document.getElementById("CardPreference_error").innerHTML="Please select Card Preference";
                ret=false;
            }
@@ -464,12 +463,12 @@
                    if (document.getElementById("FeePaymentNo").value.trim() == "")
                    {
                        document.getElementById("FeePaymentNo_error").innerHTML = "Approval Email From cannot be left blank";
-                       //ret=false;
+                       ret=false;
                    }
                    else if (!document.getElementById("FeePaymentNo").value.match(atLeastOneAlphabet)) 
                    {
                        document.getElementById("FeePaymentNo_error").innerHTML = "Invalid Approval Email From";
-                       //ret=false;
+                       ret=false;
                    }
                    else
                    {
@@ -479,7 +478,7 @@
                    if (document.getElementById("FeePaymentDate").value.trim() == "")
                    {
                        document.getElementById("FeePaymentDate_error").innerHTML = "Approval Email Date cannot be left blank";
-                       //ret=false;
+                       ret=false;
                    }
                    else
                    {
@@ -492,12 +491,12 @@
                    if (document.getElementById("FeePaymentNo").value.trim() == "")
                    {
                        document.getElementById("FeePaymentNo_error").innerHTML = "Payment Source cannot be left blank";
-                       //ret=false;
+                       ret=false;
                    }
                    else if (!document.getElementById("FeePaymentNo").value.match(atLeastOneAlphabet)) 
                    {
                        document.getElementById("FeePaymentNo_error").innerHTML = "Invalid Payment Source";
-                       //ret=false;
+                       ret=false;
                    }
                    else
                    {
@@ -507,7 +506,7 @@
                    if (document.getElementById("FeePaymentDate").value.trim() == "")
                    {
                        document.getElementById("FeePaymentDate_error").innerHTML = "Payment Date cannot be left blank";
-                       //ret=false;
+                       ret=false;
                    }
                    else
                    {
@@ -641,9 +640,11 @@
 
                            $('#NoOfCards').attr("readonly", true);
                            $('#NoofVechileforAllCards').attr("readonly", true);
-                           //$('#FeePaymentDate').attr("readonly", true);
-                           //$('#FeePaymentNo').attr("readonly", true);
+                           $('#FeePaymentDate').attr("readonly", true);
+                           $('#FeePaymentNo').attr("readonly", true);
                            $("#btnAdd").attr("disabled", true);
+                           $(".radio-button").prop("disabled", true);
+                           $(".radio-toolbar").prop("disabled", true);
 
                            if(customerTypeId==902 || customerTypeId==917)
                            {

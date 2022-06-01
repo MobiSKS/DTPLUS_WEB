@@ -154,8 +154,9 @@ namespace HPCL_Web.Controllers
 
             return Json(new { commonResponseData = commonResponseData });
         }
-        public async Task<IActionResult> SuccessDriverCardsAllocation()
+        public async Task<IActionResult> SuccessDriverCardsAllocation(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
         [HttpPost]

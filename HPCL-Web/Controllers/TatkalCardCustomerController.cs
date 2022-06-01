@@ -43,17 +43,15 @@ namespace HPCL_Web.Controllers
 
             if (request.Internel_Status_Code == 1000)
             {
-                tatkalCustomerCardRequestInfo.Remarks = "";
-                ViewBag.Message = "Tatkal Card add request saved successfully";
-                return RedirectToAction("SuccessRedirectForTatkalCard");
+                return RedirectToAction("SuccessRedirectForTatkalCard", new { Message = request.Remarks });
             }
 
             return View(tatkalCustomerCardRequestInfo);
         }
 
-
-        public async Task<IActionResult> SuccessRedirectForTatkalCard()
+        public async Task<IActionResult> SuccessRedirectForTatkalCard(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 

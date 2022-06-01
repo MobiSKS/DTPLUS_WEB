@@ -8,10 +8,10 @@
             <div class="form-group">
                 <div class="d-flex align-items-center justify-content-start mt-3">
                     <div class="d-flex align-items-center justify-content-start mr-3">
-                        @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "rbtnCard" }) <span class="ml-2"> Card </span>
+                        @Html.RadioButtonFor(m => m.CardPreference, "Card", new { @id = "rbtnCard",@class="radio-button" }) <span class="ml-2"> Card </span>
                     </div>
                     <div class="d-flex align-items-center justify-content-start">
-                        @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless" }) <span class="ml-2"> Cardless </span>
+                        @Html.RadioButtonFor(m => m.CardPreference, "Cardless", new { @id = "rbtnCardless",@class="radio-button" }) <span class="ml-2"> Cardless </span>
                     </div>
                 </div>
                 <span class="error position-static mb-0 mt-2" id="CardPreference_error"></span>
@@ -46,7 +46,7 @@
                 <label class="font-weight-normal col-md-5 col-12" id="lblChequeNo">Cheque No.<sup class="text-danger">*</sup></label>
                 <div class="col-md-7 col-12">
                     @Html.TextBoxFor(m => m.FeePaymentNo, new { @id = "FeePaymentNo", @class = "form-control", autocomplete = "off" })
-                    @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "text-danger", @id = "FeePaymentNoErrMsg" })
+                    @Html.ValidationMessageFor(m => m.FeePaymentNo, "", new { @class = "error", @id = "FeePaymentNoErrMsg" })
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                 <label class="font-weight-normal col-md-5 col-12" id="lblChequeDate">Cheque Date<sup class="text-danger">*</sup></label>
                 <div class="col-md-7 col-12">
                     @Html.TextBoxFor(m => m.FeePaymentDate, new { @id = "FeePaymentDate", @class = "form-control fromDate",@placeholder="dd-mm-yyyy", autocomplete = "off" })
-                    @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "text-danger", @id = "FeePaymentDateErrMsg" })
+                    @Html.ValidationMessageFor(m => m.FeePaymentDate, "", new { @class = "error", @id = "FeePaymentDateErrMsg" })
                 </div>
             </div>
         </div>
@@ -118,6 +118,7 @@
 @Html.HiddenFor(model => Model.Message)
 @Html.HiddenFor(model => Model.CardPreference)
 @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
+@Html.HiddenFor(model => Model.FeePaymentsCollectFeeWaiver)
 
 <script>
 
@@ -323,7 +324,7 @@ function setFromDateFormat(){
                 $("#NoofVechileforAllCardsErrMsg").attr("style", "display:block");
                 ret=false;
             }
-            else if (cardsCount > noOfVehiclesAllCards) 
+            else if (Number(cardsCount) > Number(noOfVehiclesAllCards)) 
             {
                 $("#NoofVechileforAllCardsErrMsg").text("No. of Vehicles cannot be less than No. of Cards");
                 ret=false;
@@ -377,7 +378,6 @@ function setFromDateFormat(){
 
         if (!(document.querySelector('input[name="CardPreference"]:checked'))) 
         {
-            //alert("Please select Card Preference");
             document.getElementById("CardPreference_error").innerHTML="Please select Card Preference";
             ret = false;
         }
@@ -391,7 +391,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentNoErrMsg').text("Approval Email From cannot be left blank");
                     $("#FeePaymentNoErrMsg").attr("style", "display:block");
-                    //ret=false;
+                    ret=false;
                 }
                 else 
                 {
@@ -402,7 +402,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentDateErrMsg').text("Approval Email Date cannot be left blank");
                     $("#FeePaymentDateErrMsg").attr("style", "display:block");
-                    //ret=false;
+                    ret=false;
                 }
                 else 
                 {
@@ -416,7 +416,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentNoErrMsg').text("Payment Source cannot be left blank");
                     $("#FeePaymentNoErrMsg").attr("style", "display:block");
-                    //ret=false;
+                    ret=false;
                 }
                 else 
                 {
@@ -427,7 +427,7 @@ function setFromDateFormat(){
                 {
                     $('#FeePaymentDateErrMsg').text("Payment Date cannot be left blank");
                     $("#FeePaymentDateErrMsg").attr("style", "display:block");
-                    //ret=false;
+                    ret=false;
                 }
                 else 
                 {
@@ -558,9 +558,20 @@ function setFromDateFormat(){
 
                         $('#NoOfCards').attr("readonly", true);
                         $('#NoofVechileforAllCards').attr("readonly", true);
-                        //$('#FeePaymentDate').attr("readonly", true);
-                        //$('#FeePaymentNo').attr("readonly", true);
+                        $('#FeePaymentDate').attr("readonly", true);
+                        $('#FeePaymentNo').attr("readonly", true);
                         $("#btnAdd").attr("disabled", true);
+                        $(".radio-button").prop("disabled", true);
+                        $(".radio-toolbar").prop("disabled", true);
+
+                        if(customerTypeId==902 || customerTypeId==917)
+                        {
+                         document.getElementById("NoOfCardsTbl").className="datatable table table-striped table-bordered w-50 d-md-table b-block text-nowrap display table-responsive";
+                        }
+                        else
+                        {
+                         document.getElementById("NoOfCardsTbl").className="datatable table table-striped table-bordered w-100 d-md-table b-block text-nowrap display table-responsive";
+                        }
                     }
                 },
             error: function (jqXhr, textStatus, errorMessage) 
@@ -847,7 +858,7 @@ function RemoveSpecialChar(txtName)
                 $("#NoofVechileforAllCardsErrMsg").attr("style", "display:block");
                 ret=false;
             }
-            else if (cardsCount > noOfVehiclesAllCards) 
+            else if (Number(cardsCount) > Number(noOfVehiclesAllCards)) 
             {
                 $("#NoofVechileforAllCardsErrMsg").text("No. of Vehicles cannot be less than No. of Cards");
                 ret=false;

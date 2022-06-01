@@ -237,8 +237,9 @@ namespace HPCL_Web.Controllers
             return Json(new { commonResponseData = commonResponseData });
         }
 
-        public async Task<IActionResult> SuccessOTCCardsAllocation()
+        public async Task<IActionResult> SuccessOTCCardsAllocation(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 

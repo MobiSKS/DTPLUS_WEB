@@ -124,7 +124,7 @@ namespace HPCL.Service.Services
             return RequestResponseList;
 
         }
-        public async Task<List<SuccessResponse>> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel)
+        public async Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel)
         {
   
             var RequestForm = new DealerRequestModel
@@ -140,27 +140,54 @@ namespace HPCL.Service.Services
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForm), Encoding.UTF8, "application/json");
             var RequestResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatedealercreditmapping);
             JObject RequestResponseObj = JObject.Parse(JsonConvert.DeserializeObject(RequestResponse).ToString());
-            //var RequestResponseJarr = RequestResponseObj["Data"].Value<JArray>();
-            //List<SuccessResponse> RequestResponseList = RequestResponseJarr.ToObject<List<SuccessResponse>>();
-
-            //return RequestResponseList;
-            List<SuccessResponse> RequestResponseList = new List<SuccessResponse>();
+           
+            List<UpdateMerchantSuccessResponse> RequestResponseList = new List<UpdateMerchantSuccessResponse>();
             if (RequestResponseObj["Status_Code"].ToString() == "200")
             {
                 var RequestResponseJarr = RequestResponseObj["Data"].Value<JArray>();
-                RequestResponseList = RequestResponseJarr.ToObject<List<SuccessResponse>>();
+                RequestResponseList = RequestResponseJarr.ToObject<List<UpdateMerchantSuccessResponse>>();
                 
             }
             else
             {
-                SuccessResponse successResponse = new SuccessResponse();
+                UpdateMerchantSuccessResponse successResponse = new UpdateMerchantSuccessResponse();
                 successResponse.Status = 0;
                 successResponse.Reason = RequestResponseObj["Message"].ToString();
                 RequestResponseList.Add(successResponse);
             }
             return RequestResponseList;
         }
-        
+        public async Task<DealerCreditSaleStatement> GetCreditSaleStatement(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = FromDate,
+                ToDate = ToDate,
+                CustomerID = CustomerID,
+                MerchantID = MerchantID,
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdealercreditsalestatement);
+
+            DealerCreditSaleStatement searchList = JsonConvert.DeserializeObject<DealerCreditSaleStatement>(response);
+            return searchList;
+        }
+
     }
 
 }
