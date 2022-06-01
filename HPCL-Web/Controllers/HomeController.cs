@@ -249,7 +249,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<ActionResult> TopMenu([FromBody] string userId)
         {
-            HttpContext.Session.SetString("TopMenuCalled", "TopMenuCalled");
             if (SessionMenuModel.sessionList.Count == 1)
             {
                 HttpContext.Session.SetString("Token", SessionMenuModel.sessionList[0].Token);
@@ -266,7 +265,6 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
-                HttpContext.Session.SetString("Inside1stIf", "Inside1stIf");
             }
             else
             {
@@ -286,14 +284,11 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
-                    HttpContext.Session.SetString("InsideForEach", "InsideForEach");
                 }
-                HttpContext.Session.SetString("Inside2ndIf", "Inside2ndIf");
             }
 
             if (SessionMenuModel.menuList.Count == 0 || !SessionMenuModel.menuList.Any(a => a.UserID == userId))
             {
-                HttpContext.Session.SetString("Inside3", "Inside3");
                 var menuDetails = new MenuRequestModel
                 {
                     UserId = userId,
@@ -312,7 +307,6 @@ namespace HPCL_Web.Controllers
                     {
                         if (Response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            HttpContext.Session.SetString("Inside4", "Inside4");
                             var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
                             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
@@ -323,7 +317,6 @@ namespace HPCL_Web.Controllers
                         }
                         else
                         {
-                            HttpContext.Session.SetString("Inside6", "Inside6");
                             return PartialView("~/Views/Shared/TopMenu.cshtml", null);
                         }
                     }
@@ -331,7 +324,6 @@ namespace HPCL_Web.Controllers
             }
             else
             {
-                HttpContext.Session.SetString("Inside5", "Inside5");
                 return PartialView("~/Views/Shared/TopMenu.cshtml", SessionMenuModel.menuList.Where(x => x.UserID == HttpContext.Session.GetString("UserId")));
             }
         }
