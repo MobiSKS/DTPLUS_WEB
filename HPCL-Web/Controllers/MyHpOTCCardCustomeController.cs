@@ -289,21 +289,19 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel)
         {
-
             DealerWiseMyHPOTCCardRequestModel request = await _myHpOTCCardCustomerService.DealerOTCCardRequests(dealerWiseMyHPOTCCardRequestModel);
 
             if (request.Internel_Status_Code == 1000)
             {
-                dealerWiseMyHPOTCCardRequestModel.Remarks = "";
-                ViewBag.Message = "OTC Card add request saved successfully";
-                return RedirectToAction("SuccessRedirectDealerOTCCardRequest");
+                return RedirectToAction("SuccessRedirectDealerOTCCardRequest", new { Message = request.Remarks });
             }
 
             return View(dealerWiseMyHPOTCCardRequestModel);
         }
 
-        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest()
+        public async Task<IActionResult> SuccessRedirectDealerOTCCardRequest(string Message)
         {
+            ViewBag.Message = Message;
             return View();
         }
 
