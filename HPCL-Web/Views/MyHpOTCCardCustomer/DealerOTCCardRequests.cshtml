@@ -75,10 +75,14 @@
         window.location.href = '@Url.Action("DealerOTCCardRequests", "MyHpOTCCardCustomer")';
     };
 
+    $("#MerchantId").focus(function(){
+       $("#btnSubmit").attr("disabled", true);
+    });
 
         $("#MerchantId").on("blur", function () {
             debugger;
             localStorage.setItem("MERCHANTIDFOUND", "0");
+            $("#btnSubmit").attr("disabled", true);
 
             var merchantId = document.getElementById("MerchantId").value.trim();
             if (merchantId == "") 
@@ -155,12 +159,6 @@
                 error: function (xhr, ajaxOptions, thrownError) {
                     document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
                     localStorage.setItem("MERCHANTIDFOUND", "0");
-                },
-                statusCode: {
-                    1024: function () {
-                        document.getElementById("MerchantId_error").innerHTML = "Merchant ID does not exist";
-                        localStorage.setItem("MERCHANTIDFOUND", "0");
-                    }
                 }
             });
 
