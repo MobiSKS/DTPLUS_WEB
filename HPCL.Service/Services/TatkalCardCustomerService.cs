@@ -63,12 +63,19 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
                     tatkalCustomerCardRequestInfo.Remarks = customerResponse.Data[0].Reason;
                 else
                     tatkalCustomerCardRequestInfo.Remarks = customerResponse.Message;
 
                 tatkalCustomerCardRequestInfo.RegionMdl.AddRange(await _commonActionService.GetregionalOfficeList());
+            }
+            else
+            {
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    tatkalCustomerCardRequestInfo.Remarks = customerResponse.Data[0].Reason;
+                else
+                    tatkalCustomerCardRequestInfo.Remarks = customerResponse.Message;
             }
 
             return tatkalCustomerCardRequestInfo;
