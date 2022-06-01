@@ -55,16 +55,11 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model)
+        public async Task<IActionResult> EnrollToTransportManagementSystem(string CustomerId)
         {
-            var Model = await _tmsService.EnrollToTransportManagementSystem(model);
+            var Model = await _tmsService.EnrollToTransportManagementSystem(CustomerId);
 
-            if (Model.Internel_Status_Code == 1000)
-            {
-                return RedirectToAction("SuccessEnrollToTMS", new { Message = Model.Message });
-            }
-
-            return View(Model);
+            return Json(new { commonResponseData = Model });
         }
         public async Task<IActionResult> SuccessEnrollToTMS(string Message)
         {

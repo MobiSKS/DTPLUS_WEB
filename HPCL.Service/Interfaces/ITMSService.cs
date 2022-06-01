@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+﻿using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.TMS;
 using HPCL.Common.Models.ResponseModel.TMS;
 using HPCL.Common.Models.ViewModel.TMS;
@@ -15,7 +16,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem();
         Task<ViewCustomerSearch> ViewCustomerDetails(string CustomerId);
-        Task<EnrollToTransportManagementSystemModel> EnrollToTransportManagementSystem(EnrollToTransportManagementSystemModel model);
+        Task<CommonResponseData> EnrollToTransportManagementSystem(string CustomerId);
         Task<EnrollVehicleViewModel> EnrollVehicle();
         Task<EnrollVehicleViewModel> GetEnrollVehicleManagementDetail(string customerId, int enrollmentStatus, string vehicleNo, string cardNo);
         Task<string> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel);
