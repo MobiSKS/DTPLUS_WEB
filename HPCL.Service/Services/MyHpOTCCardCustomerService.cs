@@ -451,7 +451,14 @@ namespace HPCL.Service.Services
 
             if (customerResponse.Internel_Status_Code != 1000)
             {
-                if (customerResponse.Data != null)
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;
+            }
+            else
+            {
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
                     dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Data[0].Reason;
                 else
                     dealerWiseMyHPOTCCardRequestModel.Remarks = customerResponse.Message;

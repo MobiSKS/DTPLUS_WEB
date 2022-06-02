@@ -36,7 +36,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(custDetails), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForApproval);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getCustomerPendingForFeeApproval);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             PendingCustResponse pendingList = obj.ToObject<PendingCustResponse>();

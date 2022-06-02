@@ -347,7 +347,6 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
-          //$("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
           var vehicleNo = o.value;
           console.log(vehicleNo);
           var isValid=true;
@@ -369,11 +368,6 @@
             if(vehicleNo.trim()!='')
             {
                 if (!(vehicleNo.match(forVehicleNo))) 
-                {
-                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
-                    isValid=false;
-                }
-                else if (!vehicleNo.match(atLeastOneAlphabet)) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
@@ -443,7 +437,14 @@
 
           if(isValid)
           {
-              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+              if($(VehicleNoVerifiedManually).prop("checked"))
+              {
+                  $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+              }
+              else
+              {
+                $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+              }
 
               $.ajax({
                   type: 'POST',  // http method
@@ -621,11 +622,6 @@
           else 
           {
                 if (!(vehicleNo.match(forVehicleNo))) 
-                {
-                    document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
-                    return false;
-                }
-                else if (!(vehicleNo.match(atLeastOneAlphabet))) 
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     return false;

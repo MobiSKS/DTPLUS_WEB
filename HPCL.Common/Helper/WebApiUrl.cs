@@ -171,6 +171,9 @@
         public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
         public static string getCcmsBalAlertConfiguration = "api/dtplus/customer/get_ccms_bal_alert_configuration";
         public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
+
+        public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
+
         #endregion
 
         #region Login
@@ -188,6 +191,7 @@
         public static string UserResetPasswordUrl = "api/dtplus/UserManage/reset_password_user_managemodel";
         public static string UpdateManageUserUrl = "api/dtplus/UserManage/update_manage_users";
         public static string DeleteManageUserUrl = "api/dtplus/UserManage/delete_manage_users";
+        public static string UserCreationRequestView = "api/dtplus/UserManage/user_creation_request_view";
         #endregion
 
         #region DriverCard

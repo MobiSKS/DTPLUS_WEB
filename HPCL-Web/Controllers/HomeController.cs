@@ -123,7 +123,7 @@ namespace HPCL_Web.Controllers
                                         Token = access_token.Result,
                                         UserRole = loginRes[0].UserRole
                                     }
-                                   };
+                                };
 
                                 SessionMenuModel.sessionList.AddRange(sessionData);
                             }
@@ -261,7 +261,7 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId);
                 HttpContext.Session.SetString("Today", SessionMenuModel.sessionList[0].Today);
                 HttpContext.Session.SetString("UserRole", SessionMenuModel.sessionList[0].UserRole);
-                HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "": SessionMenuModel.sessionList[0].BreadCrumbsController);
+                HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsController);
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
@@ -329,7 +329,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public void SetSessionItems([FromBody] string userId)
+        public async Task<JsonResult> SetSessionItems([FromBody] string userId)
         {
             if (SessionMenuModel.sessionList.Count == 1)
             {
@@ -347,6 +347,8 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
+
+                return Json("Success");
             }
             else
             {
@@ -367,6 +369,7 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
                 }
+                return Json("Success");
             }
         }
 
