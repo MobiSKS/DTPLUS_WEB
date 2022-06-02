@@ -119,5 +119,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
+        public async Task<ActionResult> GetUserRoleLocation(string UserName)
+        {
+            var model = await _securityService.GetUserRoleLocation(UserName);
+
+            return PartialView("~/Views/Security/_ViewUserRoleLocationTbl.cshtml", model);
+        }
+
     }
 }

@@ -270,5 +270,27 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg;
         }
+        public async Task<GetUserRoleLocationResponse> GetUserRoleLocation(string UserName)
+        {
+            var request = new GetUserRoleLocationRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetUserCreationApprovalRoleLocation);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetUserRoleLocationResponse roleLocationResponse = obj.ToObject<GetUserRoleLocationResponse>();
+            if (roleLocationResponse != null)
+            {
+                roleLocationResponse.UserName = UserName;
+            }
+            return roleLocationResponse;
+        }
     }
 }
