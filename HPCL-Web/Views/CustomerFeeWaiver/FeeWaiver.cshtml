@@ -14,12 +14,16 @@
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Approve Fee Waiver</p>
                     <div class="py-2 p-md-4">
                         <div class="w-100">
-                            <form method="post" data-ajax="true" asp-controller="CustomerFeeWaiver" asp-action="FeeWaiver" data-ajax-method="POST" data-ajax-success="OnSuccessFeeWaiverLoad" data-ajax-failure="OnFailure">
+
+                            <div id="approveRejectFail" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+                            <div id="approveRejectSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <form id="formVal" method="post" data-ajax="true" asp-controller="CustomerFeeWaiver" asp-action="FeeWaiver" data-ajax-method="POST" data-ajax-success="OnSuccessFeeWaiverLoad" data-ajax-failure="OnFailure">
                                 <div>
                                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                                         <div class="col-md-12 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-2 col-12 px-0">Form Number<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-2 col-12 px-0">Form Number</label>
                                                 <div class="col-md-3 col-12">
                                                     @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                     @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger", @id = "FormNumberErrMsg" })
@@ -825,35 +829,77 @@
     });
 
 
+    $("#commentId").on("blur", function (){
+
+        var comments = $("#commentId").val();
+
+        if (comments.trim() == '') {
+            $('#cmtError').text("Please enter comments!");
+            return false;
+        }
+        if(comments.trim() != ''){
+             if(!comments.trim().match(atLeastOneAlphabet)){
+                $('#cmtError').text("Invalid Comment");
+                return false;
+            }else{
+                $('#cmtError').text("");
+            }
+        }
+
+    });
+
 
 
     function approveClick() {
 
         var comments = $("#commentId").val();
 
-        if ($('#commentId').val() == "") {
-            $('#cmtError').text("Comment should not be empty");
-            return false;
+        var flag = "Y";
+
+        if (comments.trim() == "") {
+            $('#cmtError').text("Please enter comments!");
+            flag = "N";
         }
-        $('#cmtError').text("");
-
-
-        $.ajax({
-            url: "@Url.Action("ApproveCustomer", "CustomerFeeWaiver")",
-            type: "POST",
-            dataType: "JSON",
-            data: { customerReferenceNo: customerReferenceNo, comments: comments },
-            success: function (res) {
-
-                $("#noRecord").html("");
-                $("#noRecord").append("<span>" + res + "</span>");
-                document.getElementById("noRecord").style.display = "block";
-
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
+        if(comments.trim() != ''){
+            if(!comments.trim().match(atLeastOneAlphabet)){
+                $('#cmtError').text("Invalid Comment");
+                flag = "N";
             }
-        });
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+
+        if(flag == "Y"){
+    
+            $('#cmtError').text("");
+
+            $.ajax({
+                url: "@Url.Action("ApproveCustomer", "CustomerFeeWaiver")",
+                type: "POST",
+                dataType: "JSON",
+                data: { customerReferenceNo: customerReferenceNo, comments: comments },
+                success: function (res) {
+
+                    if(res.responseMsg[0].status == 1){
+                        $("#detailsSection").hide();
+                        $("#formVal").hide();
+                        $("#approveRejectSuccess").html("");
+                        $("#approveRejectSuccess").append("<span>" + (res.responseMsg[0].reason) + "</span>");
+                        document.getElementById("approveRejectSuccess").style.display = "block";
+                    }else{
+                        $("#approveRejectFail").html("");
+                        $("#approveRejectFail").append("<span>" + (res.responseMsg[0].reason) + "</span>");
+                        document.getElementById("approveRejectFail").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
 
     }
 
@@ -864,13 +910,13 @@
 
         var flag = "Y";
 
-        if ($('#commentId').val() == "") {
+        if (comments.trim() == "") {
             $('#cmtError').text("Please enter comments!");
             flag = "N";
         }
-        if(comments != ''){
+        if(comments.trim() != ''){
             if(!comments.trim().match(atLeastOneAlphabet)){
-                $('#cmtError').text("Invalid comments");
+                $('#cmtError').text("Invalid Comment");
                 flag = "N";
             }
         }
@@ -891,9 +937,17 @@
                     data: { customerReferenceNo: customerReferenceNo, comments: comments },
                     success: function (res) {
 
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
+                        if(res.responseMsg[0].status == 1){
+                            $("#detailsSection").hide();
+                            $("#formVal").hide();
+                            $("#approveRejectSuccess").html("");
+                            $("#approveRejectSuccess").append("<span>" + (res.responseMsg[0].reason) + "</span>");
+                            document.getElementById("approveRejectSuccess").style.display = "block";
+                        }else{
+                            $("#approveRejectFail").html("");
+                            $("#approveRejectFail").append("<span>" + (res.responseMsg[0].reason) + "</span>");
+                            document.getElementById("approveRejectFail").style.display = "block";
+                        }
 
                     },
                     error: function (ex) {

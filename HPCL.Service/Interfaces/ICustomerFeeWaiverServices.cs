@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.Customer;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerFeeWaiver;
 using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
 using System;
@@ -11,8 +12,8 @@ namespace HPCL.Service.Interfaces
     {
         Task<PendingCustResponse> FeeWaiver(PendingCustomer entity);
         Task<BindPendingCustomerRes> BindPendingCustomer(string formNumber);
-        Task<string> ApproveCustomer(string CustomerReferenceNo, string comments);
-        Task<string> RejectCustomer(string CustomerReferenceNo, string comments);
+        Task<List<SuccessResponse>> ApproveCustomer(string CustomerReferenceNo, string comments);
+        Task<List<SuccessResponse>> RejectCustomer(string CustomerReferenceNo, string comments);
         void ViewCustomer(string formNumber);
         Task<ViewCustomerDetailsResponse> ViewCustomerDetails(string formNumber);
     }
