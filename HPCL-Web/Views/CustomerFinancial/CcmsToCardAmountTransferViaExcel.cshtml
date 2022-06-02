@@ -36,7 +36,7 @@
                                         <label class="font-weight-normal col-md-2 col-12">Available CCMS Balance</label>
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.AvailableCcmsBalance, new { @class = "form-control-plaintext", @readonly="readonly" })
+                                                @Html.TextBoxFor(m => m.AvailableCcmsBalance, new {@id="availableCCMSVal", @class = "form-control-plaintext", @readonly="readonly" })
                                             </div>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@
             $("#CustomerIdErr").attr("style", "display:none");
 
             $.ajax({
-                url: "@Url.Action("SearchCcmsToCardBalanceTransfer", " CustomerFinancial")",
+                url: "@Url.Action("SearchCcmsToCardBalanceTransfer", "CustomerFinancial")",
                 type: "POST",
                 dataType: "JSON",
                 data: { customerId: custId},
@@ -149,6 +149,10 @@
 
                     if(res.searchList.success == true){
                         $("#CustomerDefaultVal").attr("readonly",true);
+
+                        $("#availableCCMSVal").html("");
+                        $("#availableCCMSVal").append("<span>Available CCMS Balance : " + (res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance) + "</span>");
+
                         $("#uploadSection").show();
                     }else{
                         $("#CustomerDefaultVal").attr("readonly",true);
@@ -171,6 +175,7 @@
         $("#uploadSection").hide();
         $("#CustomerDefaultVal").attr("readonly",false);
         $("#CustomerDefaultVal").val('');
+        $("#availableCCMSVal").val('');
         document.getElementById("ExcelDataError").style.display = "none";
         document.getElementById("reponseErr").style.display = "none";
     }

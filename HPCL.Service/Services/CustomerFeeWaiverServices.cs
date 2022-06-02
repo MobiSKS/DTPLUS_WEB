@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<string> ApproveCustomer(string CustomerReferenceNo, string comments)
+        public async Task<List<SuccessResponse>> ApproveCustomer(string CustomerReferenceNo, string comments)
         {
             var forms = new ApproveRejectWaiver
             {
@@ -83,10 +83,10 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
 
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
-            return responseMsg[0].Reason;
+            return responseMsg;
         }
 
-        public async Task<string> RejectCustomer(string CustomerReferenceNo, string comments)
+        public async Task<List<SuccessResponse>> RejectCustomer(string CustomerReferenceNo, string comments)
         {
             var forms = new ApproveRejectWaiver
             {
@@ -106,7 +106,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
 
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
-            return responseMsg[0].Reason;
+            return responseMsg;
         }
 
         public void ViewCustomer(string formNumber)
