@@ -2,229 +2,212 @@
 @using HPCL.Common.Resources
 
 <div class="col-lg-12">
-<div class="bg-white p-2 p-md-4">
-   <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-      <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
-      <li class="breadcrumb-item font-weight-light">Unblock User</li>
-   </ul>
-    @using (Html.BeginForm("UnblockUser", "DtpSupport", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-    {
-      <div class="w-100">
-         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-            <div class="border-1 rounded border-grey pb-3">
-               <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Unblock User</p>
-                @if (Model.Success != "")
-                {
-                    <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Success</div>
-                }
-                <div class="col-lg-12 col-md-12 col-12 py-3">
-                  <div class="d-flex align-items-center flex-wrap">
-                     <div class="col-lg-6 col-12">
-                        <div class="d-flex align-items-center flex-wrap mb-3">
-                           <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
-                           <div class="col-md-7 col-12">
-                              <div class="custom_select">
-                                 @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new { @id = "CustomerIdErrorMsg", @class = "error" })
-                              </div>
-                           </div>
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
+            <li class="breadcrumb-item font-weight-light">Unblock User</li>
+        </ul>
+        <div class="mb-0 mt-3 text-center alert alert-danger" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+            @Html.DisplayFor(m => m.Message)
+        </div>
+        <div class="mb-0 mt-3 text-center alert alert-success" id="dvSuccess" style="@(Model.Success=="" ? "display:none":"display:block")">
+            @Html.DisplayFor(m => m.Success)
+        </div>
+        @using (Html.BeginForm("UnblockUser", "DtpSupport", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Unblock User</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @id = "CustomerIdErrorMsg", @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">User Name </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.UserName1, new { @id = "UserName1", @class = "form-control", maxlength = "50" })
+                                                @Html.ValidationMessageFor(m => m.UserName1, "", new { @id = "UserNameErrorMsg", @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                        <div class="col-lg-6 col-12">
-                           <div class="d-flex align-items-center flex-wrap mb-3">
-                              <label class="font-weight-normal offset-md-1 col-md-4 col-12">User Name </label>
-                              <div class="col-md-7 col-12">
-                                 <div class="custom_select">
-                                    @Html.TextBoxFor(m => m.UserName1, new { @id = "UserName1", @class = "form-control", maxlength = "50" })
-                                    @Html.ValidationMessageFor(m => m.UserName1, "", new { @id = "UserNameErrorMsg", @class = "error" })
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="clearfix"></div>
-                     <div class="d-flex align-items-center justify-content-center mt-0">
-                        <div class="px-2">
-                           <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
-                        </div>
-                        <div class="px-2">
-                           <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
-                        </div>
-                     </div>
-                </div>
-                <div class="clearfix"></div>
+                        <div class="clearfix"></div>
 
- <div id="dvUpdateFields" style="display:none">
-   <div class="d-flex align-items-center flex-wrap">
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <label class="font-weight-normal col-md-4 col-12">User Name </label>
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-                  @Html.TextBoxFor(m => m.UserName, new { @id = "UserName", @class = "form-control", @readonly = "readonly" })
-               </div>
+                        <div id="dvUpdateFields" style="display:none">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">User Name </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.UserName, new { @id = "UserName", @class = "form-control", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Created Date </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CreatedTime, new { @id = "CreatedTime", @class = "form-control", @readonly = "readonly" })
+                                                @Html.ValidationMessageFor(m => m.CreatedTime, "", new { @id = "CreatedTimeErrorMsg", @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblNewValue">Customer Name </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control", @readonly = "readonly" })
+                                                @Html.ValidationMessageFor(m => m.Name, "", new { @id = "NameErrorMsg", @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Remarks <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Remark, new { @id = "Remark", @class = "form-control", maxlength = "50" })
+                                                @Html.ValidationMessageFor(m => m.Remark, "", new { @id = "RemarkErrorMsg", @class = "error" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return SubmitValidations()">UNBLOCK</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
             </div>
-         </div>
-      </div>
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="d-flex align-items-center flex-wrap">
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <label class="font-weight-normal col-md-4 col-12">Created Date </label>
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-                  @Html.TextBoxFor(m => m.CreatedTime, new { @id = "CreatedTime", @class = "form-control", @readonly = "readonly" })
-                  @Html.ValidationMessageFor(m => m.CreatedTime, "", new { @id = "CreatedTimeErrorMsg", @class = "error" })
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="d-flex align-items-center flex-wrap">
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <label class="font-weight-normal col-md-4 col-12" id="lblNewValue">Customer Name </label>
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-                  @Html.TextBoxFor(m => m.Name, new { @id = "Name", @class = "form-control", @readonly = "readonly" })
-                  @Html.ValidationMessageFor(m => m.Name, "", new { @id = "NameErrorMsg", @class = "error" })
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="d-flex align-items-center flex-wrap">
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <label class="font-weight-normal col-md-4 col-12">Remarks <sup class="text-danger">*</sup></label>
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-                  @Html.TextBoxFor(m => m.Remark, new { @id = "Remark", @class = "form-control" })
-                  @Html.ValidationMessageFor(m => m.Remark, "", new { @id = "RemarkErrorMsg", @class = "error" })
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-lg-6 col-12">
-         <div class="d-flex align-items-center flex-wrap mb-3">
-            <div class="col-md-7 col-12">
-               <div class="custom_select">
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="d-flex align-items-center justify-content-center mt-0">
-      <div class="px-2">
-         <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return SubmitValidations()">UNBLOCK</button>
-      </div>
-   </div>
+
+
+        }
+        <div class="clearfix"></div>
+        <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="dvNoRecord">
+        </div>
+        <div class="clearfix"></div>
+        <div>@Html.HiddenFor(m => m.UpdateStatus)</div>
+    </div>
 </div>
 
-
-            </div>
-         </div>
-
-         
-      </div>
-   
-
-   }
-   <div class="clearfix"></div>
-    <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="dvNoRecord">
-    </div>
-    <div class="clearfix"></div>
-    <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
-        @Html.DisplayFor(m => m.Message)
-    </div>
-   <div>@Html.HiddenFor(m => m.UpdateStatus)</div>
-   </div>
-   </div>
-
 <script>
-$(document).ready(function () 
-{
-    console.log(document.getElementById("UpdateStatus").value);
-    console.log($("#dvRemarks").html().trim());
-    if($("#dvRemarks").html().trim()!="")
+    $(document).ready(function ()
     {
-        if(document.getElementById("UpdateStatus").value=="UPDATED")
+        console.log(document.getElementById("UpdateStatus").value);
+        console.log($("#dvRemarks").html().trim());
+        if($("#dvRemarks").html().trim()!="")
         {
-            dvUpdateFields.style.display = "none";
-            dvNoRecord.style.display = "none";
+            if(document.getElementById("UpdateStatus").value=="UPDATED")
+            {
+                dvUpdateFields.style.display = "none";
+                dvNoRecord.style.display = "none";
+            }
+            else
+            {
+                dvUpdateFields.style.display = "block";
+                dvNoRecord.style.display = "none";
+            }
         }
-        else
-        {
-            dvUpdateFields.style.display = "none";
-            dvNoRecord.style.display = "none";
-        }
-    }
 
-});
+    });
 
-$("#btnReset").on("click", (function (e)
-{
-    window.location.href = '@Url.Action("UnblockUser", "DtpSupport")';
-}));
-
-$("#btnSearch").on("click", (function (e)
-{
-    var flag="Y";
-    var customerId = document.getElementById("CustomerId").value.trim();
-    var userName = document.getElementById("UserName1").value.trim();
-    dvRemarks.style.display = "none";
-    $("#dvRemarks").html("");
-    
-
-    if(customerId=="" && userName=="")
+    $("#btnReset").on("click", (function (e)
     {
-        $("#CustomerIdErrorMsg").attr("style", "display:block");
-        $("#CustomerIdErrorMsg").html("Please enter Customer ID or User Name");
-        flag="N";
-    }
-    else if(customerId!="" && userName!="")
+        window.location.href = '@Url.Action("UnblockUser", "DtpSupport")';
+    }));
+
+    $("#btnSearch").on("click", (function (e)
     {
-        if (!$("#CustomerId").val().match(mappedCustomerId)) 
+        var flag="Y";
+        var customerId = document.getElementById("CustomerId").value.trim();
+        var userName = document.getElementById("UserName1").value.trim();
+        dvRemarks.style.display = "none";
+        $("#dvRemarks").html("");
+
+
+        if(customerId=="" && userName=="")
         {
             $("#CustomerIdErrorMsg").attr("style", "display:block");
-            $("#CustomerIdErrorMsg").html("Invalid Customer ID");
+            $("#CustomerIdErrorMsg").html("Please enter Customer ID or User Name");
             flag="N";
         }
-        else
+        else if(customerId!="" && userName!="")
         {
-            $('#CustomerIdErrorMsg').text("");
-        }
-        
-    }
-    else
-    {
-        if ($("#CustomerId").val().trim() != "") 
-        {
-            if (!$("#CustomerId").val().match(mappedCustomerId)) 
+            if (!$("#CustomerId").val().match(mappedCustomerId))
             {
                 $("#CustomerIdErrorMsg").attr("style", "display:block");
                 $("#CustomerIdErrorMsg").html("Invalid Customer ID");
@@ -234,34 +217,63 @@ $("#btnSearch").on("click", (function (e)
             {
                 $('#CustomerIdErrorMsg').text("");
             }
+
+        }
+        else
+        {
+            if ($("#CustomerId").val().trim() != "")
+            {
+                if (!$("#CustomerId").val().match(mappedCustomerId))
+                {
+                    $("#CustomerIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdErrorMsg").html("Invalid Customer ID");
+                    flag="N";
+                }
+                else
+                {
+                    $('#CustomerIdErrorMsg').text("");
+                }
+            }
+
         }
 
-    }
-
-    if(flag=="Y")
-    {
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetDetailForUserUnblock", "DtpSupport")',
-                data: { CustomerId: customerId,UserName: userName },  // data to submit
-                dataType: "json",
-                success: function (res) 
-                {
-                    console.log(res);
-                         
-                    if (res.searchResult.data.length > 0)
+        if(flag=="Y")
+        {
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetDetailForUserUnblock", "DtpSupport")',
+                    data: { CustomerId: customerId,UserName: userName },  // data to submit
+                    dataType: "json",
+                    success: function (res)
                     {
-                        console.log(res.searchResult.data[0].status);
+                        console.log(res);
 
-                        if (res.searchResult.data[0].status == 1)
+                        if (res.searchResult.data.length > 0)
                         {
-                            document.getElementById("UserName").value = res.searchResult.data[0].userName;
-                            document.getElementById("CreatedTime").value = res.searchResult.data[0].createdTime;
-                            document.getElementById("Name").value = res.searchResult.data[0].name;
-                            dvUpdateFields.style.display = "block";
-                            dvNoRecord.style.display = "none";
-                            $("#CustomerId").prop("readonly", true);
-                            $("#UserName1").prop("readonly", true);
+                            console.log(res.searchResult.data[0].status);
+
+                            if (res.searchResult.data[0].status == 1)
+                            {
+                                document.getElementById("UserName").value = res.searchResult.data[0].userName;
+                                document.getElementById("CreatedTime").value = res.searchResult.data[0].createdTime;
+                                document.getElementById("Name").value = res.searchResult.data[0].name;
+                                dvUpdateFields.style.display = "block";
+                                dvNoRecord.style.display = "none";
+                                $("#CustomerId").prop("readonly", true);
+                                $("#UserName1").prop("readonly", true);
+                            }
+                            else
+                            {
+                                document.getElementById("UserName").value = "";
+                                document.getElementById("CreatedTime").value = "";
+                                document.getElementById("Name").value = "";
+                                dvUpdateFields.style.display = "none";
+                                dvNoRecord.style.display = "block";
+                                $('#dvNoRecord').html(res.searchResult.data[0].reason);
+                                $("#CustomerId").prop("readonly", false);
+                                $("#UserName1").prop("readonly", false);
+                            }
+
                         }
                         else
                         {
@@ -270,120 +282,107 @@ $("#btnSearch").on("click", (function (e)
                             document.getElementById("Name").value = "";
                             dvUpdateFields.style.display = "none";
                             dvNoRecord.style.display = "block";
-                            $('#dvNoRecord').html(res.searchResult.data[0].reason);
+                            $('#dvNoRecord').html(res.searchResult.message);
+                            //alert(res.searchResult.message);
                             $("#CustomerId").prop("readonly", false);
                             $("#UserName1").prop("readonly", false);
                         }
-
-                    }
-                    else
+                    },
+                    error: function (xhr, ajaxOptions, thrownError)
                     {
-                        document.getElementById("UserName").value = "";
-                        document.getElementById("CreatedTime").value = "";
-                        document.getElementById("Name").value = "";
                         dvUpdateFields.style.display = "none";
+                        console.log('Not success');
+                        alert(xhr);
                         dvNoRecord.style.display = "block";
-                        $('#dvNoRecord').html(res.searchResult.message);
-                        //alert(res.searchResult.message);
+                        $('#dvNoRecord').html(xhr);
                         $("#CustomerId").prop("readonly", false);
                         $("#UserName1").prop("readonly", false);
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) 
-                {
-                    dvUpdateFields.style.display = "none";
-                    console.log('Not success');
-                    alert(xhr);
-                    dvNoRecord.style.display = "block";
-                    $('#dvNoRecord').html(xhr);
-                    $("#CustomerId").prop("readonly", false);
-                    $("#UserName1").prop("readonly", false);
-                }
-            });
+                });
 
 
-    }
-    
+        }
 
-}));
 
-function SubmitValidations()
-{
-    debugger;
+    }));
 
-    var ret=true;
-
-    var customerId = document.getElementById("CustomerId").value.trim();
-    var userName = document.getElementById("UserName1").value.trim();
-
-    if(customerId=="" && userName=="")
+    function SubmitValidations()
     {
-        $("#CustomerIdErrorMsg").attr("style", "display:block");
-        $("#CustomerIdErrorMsg").html("Please enter Customer ID or User Name");
-        ret=false;
-    }
-    else if(customerId!="" && userName!="")
-    {
-        if (!$("#CustomerId").val().match(mappedCustomerId)) 
+        debugger;
+
+        var ret=true;
+
+        var customerId = document.getElementById("CustomerId").value.trim();
+        var userName = document.getElementById("UserName1").value.trim();
+
+        if(customerId=="" && userName=="")
         {
             $("#CustomerIdErrorMsg").attr("style", "display:block");
-            $("#CustomerIdErrorMsg").html("Invalid Customer ID");
+            $("#CustomerIdErrorMsg").html("Please enter Customer ID or User Name");
             ret=false;
         }
-        else
+        else if(customerId!="" && userName!="")
         {
-            $('#CustomerIdErrorMsg').text("");
-        }
-        
-    }
-    else
-    {
-        if ($("#CustomerId").val().trim() != "") 
-        {
-            if (!$("#CustomerId").val().match(mappedCustomerId)) 
+            if (!$("#CustomerId").val().match(mappedCustomerId))
             {
                 $("#CustomerIdErrorMsg").attr("style", "display:block");
                 $("#CustomerIdErrorMsg").html("Invalid Customer ID");
-                 ret=false;
+                ret=false;
             }
             else
             {
                 $('#CustomerIdErrorMsg').text("");
             }
-        }
 
-    }
-
-    if($("#Remark").val().trim()=="")
-    {
-        $("#RemarkErrorMsg").attr("style", "display:block");
-        $("#RemarkErrorMsg").html("Please enter Remarks");
-        ret=false;
-    }
-    else
-    {
-        $("#RemarkErrorMsg").html("");
-    }
-   
-     return ret;
-
-   }
-
-$("#CustomerId").on("blur", function () 
-{
-    if ($("#CustomerId").val().trim() != "") 
-    {
-        if (!$("#CustomerId").val().match(mappedCustomerId)) 
-        {
-            $("#CustomerIdErrorMsg").attr("style", "display:block");
-            $("#CustomerIdErrorMsg").html("Invalid Customer ID");
-            return false;
         }
         else
         {
-        $('#CustomerIdValErrMsg').text("");
+            if ($("#CustomerId").val().trim() != "")
+            {
+                if (!$("#CustomerId").val().match(mappedCustomerId))
+                {
+                    $("#CustomerIdErrorMsg").attr("style", "display:block");
+                    $("#CustomerIdErrorMsg").html("Invalid Customer ID");
+                     ret=false;
+                }
+                else
+                {
+                    $('#CustomerIdErrorMsg').text("");
+                }
+            }
+
         }
-    }
-         
-});
+
+        if($("#Remark").val().trim()=="")
+        {
+            $("#RemarkErrorMsg").attr("style", "display:block");
+            $("#RemarkErrorMsg").html("Please enter Remarks");
+            ret=false;
+        }
+        else
+        {
+            $("#RemarkErrorMsg").html("");
+        }
+
+         return ret;
+
+       }
+
+    $("#CustomerId").on("blur", function ()
+    {
+        if ($("#CustomerId").val().trim() != "")
+        {
+            if (!$("#CustomerId").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdErrorMsg").attr("style", "display:block");
+                $("#CustomerIdErrorMsg").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+            $('#CustomerIdValErrMsg').text("");
+            }
+        }
+
+    });
 </script>
