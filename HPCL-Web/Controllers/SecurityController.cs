@@ -2,6 +2,8 @@
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -57,6 +59,49 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(reason);
+        }
+
+        public IActionResult ManageUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ManageUser(string searchItemList)
+        {
+            List<GetManageUser> arrs = JsonConvert.DeserializeObject<List<GetManageUser>>(searchItemList);
+
+            var searchList = await _securityService.GetManageUsers(arrs[0]);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DisableUpdateManageUser(string userName, string action)
+        {
+            var reasonList = await _securityService.DisableUpdateManageUser(userName,action);
+
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UserResetPassword(string userName)
+        {
+            var reasonList = await _securityService.UserResetPassword(userName);
+
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteManageUser(string userList)
+        {
+            var reasonList = await _securityService.DeleteManageUser(userList);
+
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
         }
     }
 }
