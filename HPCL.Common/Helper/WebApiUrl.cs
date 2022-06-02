@@ -171,6 +171,9 @@
         public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
         public static string getCcmsBalAlertConfiguration = "api/dtplus/customer/get_ccms_bal_alert_configuration";
         public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
+
+        public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
+
         #endregion
 
         #region Login
