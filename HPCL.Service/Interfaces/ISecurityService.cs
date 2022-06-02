@@ -17,5 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UserResetPassword(string userName);
         Task<List<SuccessResponse>> DisableUpdateManageUser(string userName, string action);
         Task<List<SuccessResponse>> DeleteManageUser(string userList);
+        Task<List<SuccessResponse>> AddUser(AddNewUserReq entity);
     }
 }

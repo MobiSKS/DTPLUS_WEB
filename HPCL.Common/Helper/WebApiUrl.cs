@@ -192,6 +192,7 @@
         public static string UpdateManageUserUrl = "api/dtplus/UserManage/update_manage_users";
         public static string DeleteManageUserUrl = "api/dtplus/UserManage/delete_manage_users";
         public static string UserCreationRequestView = "api/dtplus/UserManage/user_creation_request_view";
+        public static string AddNewUserUrl = "api/dtplus/UserManage/add_user";
         #endregion
 
         #region DriverCard
