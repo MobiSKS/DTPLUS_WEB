@@ -11,6 +11,7 @@ namespace HPCL.Service.Interfaces
         Task<ViewRbeDetailsResponse> ViewRbeDetails(string userName);
         Task<string> ApproveRbeUser(string userName, string comments);
         Task<string> RejectRbeUser(string userName, string comments);
+        Task<UserCreationRequestViewModel> UserCreationRequestView(UserCreationRequestViewModel model);
 
     }
 }

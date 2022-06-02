@@ -184,6 +184,7 @@
         public static string BindRbeDetailsUrl = "api/dtplus/RBE/bind_rbe_detail";
         public static string ViewRbeDataUrl = "api/dtplus/RBE/get_rbe_detail_by_user_name";
         public static string ApproveRejectRbeUserUrl = "api/dtplus/RBE/approve_reject_rbe";
+        public static string UserCreationRequestView = "api/dtplus/UserManage/user_creation_request_view";
         #endregion
 
         #region DriverCard

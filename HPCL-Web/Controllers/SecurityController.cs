@@ -2,6 +2,7 @@
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -57,6 +58,20 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(reason);
+        }
+        public async Task<IActionResult> UserCreationRequestView(UserCreationRequestViewModel model, string reset, string success, string error, string UserName, string Status, string FromDate, string ToDate)
+        {
+            var searchResult = await _securityService.UserCreationRequestView(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.Status = -1;
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
         }
     }
 }
