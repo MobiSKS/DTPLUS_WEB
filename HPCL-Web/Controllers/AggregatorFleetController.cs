@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.Customer;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class AggregatorFleetController : Controller
     {
         private readonly IFleetService _fleetService;
