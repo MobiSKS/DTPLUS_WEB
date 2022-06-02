@@ -270,6 +270,32 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg;
         }
+
+        public async Task<List<SuccessResponse>> AddUser(AddNewUserReq entity)
+        {
+            var forms = new AddNewUserReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = entity.UserName,
+                Email = entity.Email,
+                Password = entity.Password,
+                ConfirmPassword = entity.ConfirmPassword,
+                SecretQuestion = entity.SecretQuestion,
+                SecretQuestionAnswer = entity.SecretQuestionAnswer,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.AddNewUserUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
         public async Task<GetUserRoleLocationResponse> GetUserRoleLocation(string UserName)
         {
             var request = new GetUserRoleLocationRequest
