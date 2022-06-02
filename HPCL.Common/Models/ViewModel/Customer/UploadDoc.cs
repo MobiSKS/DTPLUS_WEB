@@ -15,19 +15,19 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string CustomerReferenceNo { get; set; }
 
         [Display(Name = "IdProofType")]
-        [Required(ErrorMessage = "{0} is required")]
+        [Required(ErrorMessage = "ID Proof Type is required")]
         public int IdProofType { get; set; }
 
         [MaxLength(20)]
-        [Required(ErrorMessage = "Id Proof Document Number is required")]
+        [Required(ErrorMessage = "ID Proof Document Number is required")]
         [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
         public string IdProofDocumentNo { get; set; }
         //[CustomImageValidate]
 
-        [Required(ErrorMessage = "Id Proof Front Photo is required")]
+        [Required(ErrorMessage = "ID Proof Front Photo is required")]
         public IFormFile IdProofFront { get; set; }
 
-        [Required(ErrorMessage = "Id Proof Back Photo is required")]
+        [Required(ErrorMessage = "ID Proof Back Photo is required")]
         public IFormFile IdProofBack { get; set; }
 
         [Display(Name = "Select Address Proof Type")]
