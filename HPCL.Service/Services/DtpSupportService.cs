@@ -287,13 +287,18 @@ namespace HPCL.Service.Services
 
         public async Task<GetDetailForUserUnblockResponse> GetDetailForUserUnblock(string CustomerId, string UserName)
         {
+            string id = CustomerId;
+            if(string.IsNullOrEmpty(id))
+            {
+                id = UserName;
+            }
             var searchBody = new GetDetailForUserUnblockRequest
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
-                UserName = string.IsNullOrEmpty(UserName) ? "" : UserName
+                CustomerId = string.IsNullOrEmpty(id) ? "" : id,
+                UserName = ""
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -340,6 +345,10 @@ namespace HPCL.Service.Services
                         model.Success = updateResponse.Data[0].Reason;
                         model.Message = "";
                     }
+                    else
+                    {
+                        model.StatusCode = updateResponse.Internel_Status_Code + 1;
+                    }
                 }
             }
             else
@@ -350,6 +359,7 @@ namespace HPCL.Service.Services
                 {
                     model.Status = updateResponse.Data[0].Status;
                     model.Message = updateResponse.Data[0].Reason;
+                    model.Success = "";
                 }
             }
 
