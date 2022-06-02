@@ -187,6 +187,10 @@
         public static string BindRbeDetailsUrl = "api/dtplus/RBE/bind_rbe_detail";
         public static string ViewRbeDataUrl = "api/dtplus/RBE/get_rbe_detail_by_user_name";
         public static string ApproveRejectRbeUserUrl = "api/dtplus/RBE/approve_reject_rbe";
+        public static string GetManageUserUrl = "api/dtplus/UserManage/get_manage_users";
+        public static string UserResetPasswordUrl = "api/dtplus/UserManage/reset_password_user_managemodel";
+        public static string UpdateManageUserUrl = "api/dtplus/UserManage/update_manage_users";
+        public static string DeleteManageUserUrl = "api/dtplus/UserManage/delete_manage_users";
         public static string UserCreationRequestView = "api/dtplus/UserManage/user_creation_request_view";
         #endregion
 

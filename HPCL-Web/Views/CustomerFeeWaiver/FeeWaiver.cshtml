@@ -408,6 +408,8 @@
 
     $("#customerSearchTblBind").on('click', '.cust', function (e) {
 
+        $('select.disableSumo')[0].sumo.disable();
+
         var formNum = $(this).closest("tr").find(".frmNo").text();
 
         $.ajax({
@@ -528,7 +530,7 @@
                     $('#KeyOffFax').val(customerList[0].keyOfficialFax);
                     $('#KeyOffEmail').val(customerList[0].keyOfficialEmail);
 
-                    var OfficialSecretQuestion = $('<option value="' + customerList[0].keyOfficialSecretQuestionName + '">' + customerList[0].keyOfficialSecretQuestionName + '</option>');
+                    var OfficialSecretQuestion = $('<option value="' + customerList[0].keyOfficialSecretQuestionName + '">' + (customerList[0].keyOfficialSecretQuestionName || '') + '</option>');
                     $('#KeyOfficialSecretQuestion').append(OfficialSecretQuestion);
 
                     $('#KeyOfficialSecretAnswer').val(customerList[0].keyOfficialSecretAnswer);
@@ -537,7 +539,7 @@
                     $('#FleetSizeNoOfVechileOwnedMUVSUV').val(customerList[0].fleetSizeNoOfVechileOwnedMUVSUV);
                     $('#FleetSizeNoOfVechileOwnedCarJeep').val(customerList[0].fleetSizeNoOfVechileOwnedCarJeep);
 
-                    var customerTypeOfFleet = $('<option value="' + customerList[0].keyOfficialTypeOfFleetName + '">' + customerList[0].keyOfficialTypeOfFleetName + '</option>');
+                    var customerTypeOfFleet = $('<option value="' + customerList[0].keyOfficialTypeOfFleetName + '">' + (customerList[0].keyOfficialTypeOfFleetName || '') + '</option>');
                     $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
 
                     $('#KeyOfficialCardAppliedFor').val(customerList[0].keyOfficialCardAppliedFor);
@@ -574,24 +576,25 @@
                     console.log('Ravi');
                     console.log(res.kycDetailsResult);
 
-                    if (res.kycDetails.length > 0) {
-                        var IdProofTypeName = $('<option value="' + res.kycDetails[0].idProofTypeName + '">' + res.kycDetails[0].idProofTypeName + '</option>');
-                        $('#IdProofType').append(IdProofTypeName);
-                        $('#IdProofDocumentNo').val(res.kycDetails[0].idProofDocumentNo);
+                    if (kycDetails.length > 0) {
+                        var IdProofTypeName = $('<option value="' + kycDetails[0].idProofTypeName + '">' + kycDetails[0].idProofTypeName + '</option>');
+                        $('.IdProofType').append(IdProofTypeName);
 
-                        $('#IdProofFront').attr('src', res.kycDetails[0].idProofFront);
-                        $('#IdProofBack').attr('src', res.kycDetails[0].idProofBack);
-                        $('#AddressProofBack').attr('src', res.kycDetails[0].addressProofBack);
-                        $('#AddressProofFront').attr('src', res.kycDetails[0].addressProofFront);
+                        $('#IdProofDocumentNo').val(kycDetails[0].idProofDocumentNo);
+
+                        $('#IdProofFront').attr('src', kycDetails[0].idProofFront);
+                        $('#IdProofBack').attr('src', kycDetails[0].idProofBack);
+                        $('#AddressProofBack').attr('src', kycDetails[0].addressProofBack);
+                        $('#AddressProofFront').attr('src', kycDetails[0].addressProofFront);
 
 
-                        var AddressProofTypeName = $('<option value="' + res.kycDetails[0].addressProofTypeName + '">' + res.kycDetails[0].addressProofTypeName + '</option>');
+                        var AddressProofTypeName = $('<option value="' + kycDetails[0].addressProofTypeName + '">' + kycDetails[0].addressProofTypeName + '</option>');
                         $('#AddressProofType').append(AddressProofTypeName);
-                        $('#AddressProofDocumentNo').val(res.kycDetails[0].addressProofDocumentNo);
+                        $('#AddressProofDocumentNo').val(kycDetails[0].addressProofDocumentNo);
                     }
                     else {
                         var IdProofTypeName1 = $('<option value="' + '' + '">' + '' + '</option>');
-                        $('#IdProofType').append(IdProofTypeName1);
+                        $('.IdProofType').append(IdProofTypeName1);
                         $('#IdProofDocumentNo').val("");
 
                         $('#IdProofFront').attr('src', null);

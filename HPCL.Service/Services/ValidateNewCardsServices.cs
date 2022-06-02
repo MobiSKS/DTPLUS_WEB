@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.ValidateNewCard;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 using HPCL.Common.Models.ViewModel.ValidateNewCards;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
