@@ -412,7 +412,7 @@
             var entityFieldId = $("#EntityFieldId").val();
             var selectedText = $("#EntityFieldId").find("option:selected").text();
             var oldValue= selectedText + ' [Old Value]';
-            var newValue= selectedText + ' [New Value]';
+            var newValue= selectedText + ' [New Value]<sup class="text-danger">*</sup>';
 
             if(entityTypeId!="0")
             {
@@ -538,7 +538,7 @@
                                $('#lblOutletTypes').text('');
                                $('#lblOutletTypes').append(newValue);
                                
-                               if(entityTypeId=="1" && entityFieldId=="4")//Sales Area
+                               if((entityTypeId=="1" && entityFieldId=="4") || (entityTypeId=="2" && entityFieldId=="7"))//Sales Area
                                {
                                    dvSalesArea.style.display = "block";
                                    dvNewValue.style.display = "none";
@@ -593,9 +593,9 @@
                                 $('#lblOldValue').text('');
                                 $('#lblOldValue').append('Old Value');
                                 $('#lblNewValue').text('');
-                                $('#lblNewValue').append('New Value');
+                                $('#lblNewValue').append('New Value <sup class="text-danger">*</sup>');
                                 $('#lblSalesArea').text('');
-                                $('#lblSalesArea').append('New Value');
+                                $('#lblSalesArea').append('New Value <sup class="text-danger">*</sup>');
                                 $("#dvRemarks").addClass("alert-danger");
                                 dvRemarks.style.display = "block";
                                 $('#dvRemarks').html(res.searchResult.data[0].reason);
@@ -794,6 +794,21 @@
                         document.getElementById("NewValue").value = merchantTypeId;
                     }
                 }
+                else if(entityFieldId=="7")//Sales Area
+                {
+                    var salesAreaID = $("#CustomerSalesAreaID").val();
+                    if(salesAreaID=="0")
+                    {
+                        $("#salesArea_error").attr("style", "display:block");
+                        $("#salesArea_error").html("Select Supply Location Code");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#salesArea_error").html("");
+                        document.getElementById("NewValue").value = salesAreaID;
+                    }
+                }
                 else
                 {
                     if(document.getElementById("NewValue").value.trim()=="")
@@ -937,6 +952,16 @@
         if (id != 0) 
         {
             $("#salesArea_error").html("");
+        }
+   });
+
+   $("#MerchantTypeId").change(function () 
+   {
+        var id = this.value;
+
+        if (id != 0) 
+        {
+            $("#merchantType_error").html("");
         }
    });
 
