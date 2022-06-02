@@ -51,6 +51,30 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string CustomerTypeId { get; set; }
         public string Type { get; set; }
 
+        [Display(Name = "Select PAN Card Type")]
+        [Required(ErrorMessage = "PAN Card Type is required")]
+        public int PanCardType{ get; set; }
+
+  
+        [Required(ErrorMessage = "PAN Card is required")]
+        public IFormFile PanCard { get; set; }
+        [MaxLength(20)]
+        [Required(ErrorMessage = "Vehicle Details Type is required")]
+        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
+        public string VehicleDetailsType{ get; set; }
+
+
+        [Required(ErrorMessage = "Vehicle Details is required")]
+        public IFormFile VehicleDetails { get; set; }
+        [MaxLength(20)]
+        [Required(ErrorMessage = "Customer Form Type is required")]
+        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
+        public string CustomerFormType { get; set; }
+
+
+        [Required(ErrorMessage = "Customer Form is required")]
+        public IFormFile CustomerForm{ get; set; }
+
     }
 
     public class UploadDocResponse: ResponseMsg

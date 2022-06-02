@@ -138,7 +138,7 @@
             <div class="d-flex align-items-center justify-content-center flex-wrap mb-0 mt-3">
                 <div class="col-md-12 col-12 d-flex align-items-center justify-content-center">
                     <div class="pr-2">
-                        <input class="btn btn_primary" id="btnsubmit" type="submit" onclick="return SubmitValidations()" value="SUBMIT">
+                        <input class="btn btn_primary" id="btnsubmit" type="submit" onclick="SubmitValidations()" value="SUBMIT">
                     </div>
                 </div>
             </div>
@@ -214,6 +214,7 @@
 
      function CheckVechileNoUsed(o, rowSelected)
      {
+         debugger;
              $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
              var vehicleNo = o.value;
              console.log(vehicleNo);
@@ -229,7 +230,6 @@
            {
                document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
                isValid=false;
-               return false;
            }
            else
            {
@@ -239,13 +239,11 @@
                    {
                        document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                        isValid=false;
-                       return false;
                    }
                    else if(vehicleNo.length<6 || vehicleNo.length>10)
                    {
                        document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                        isValid=false;
-                       return false;
                    }
                    else
                    {
@@ -267,11 +265,11 @@
              var mycelStatus;
                  if (selected.toUpperCase() == "CARDLESS") {
                      mycel = myrow.getElementsByTagName("td")[7];
-                     mycelStatus=myrow.getElementsByTagName("td")[8];
+                     mycelStatus=myrow.getElementsByTagName("td")[7];
                  }
                  else {
                      mycel = myrow.getElementsByTagName("td")[6];
-                     mycelStatus=myrow.getElementsByTagName("td")[7];
+                     mycelStatus=myrow.getElementsByTagName("td")[6];
                  }
 
 
@@ -284,40 +282,54 @@
                  document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
                  mycelStatus.innerHTML = "0";
                  isValid=false;
-                 return false;
              }
              else
              {
-                 document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                 //document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
                  mycelStatus.innerHTML = "0";
              }
 
-
-             $.ajax({
-                 type: 'POST',  // http method
-                 url: '@Url.Action("CheckVechileNoUsed", "Customer")',
-                 data: { VechileNo: vehicleNo },  // data to submit
-                 dataType: "json",
-                 success: function (data, status, xhr) {
-                     console.log(data);
-                     if (data.status == "0") {
+              if(isValid)
+              {
+                 if($(VehicleNoVerifiedManually).prop("checked"))
+                  {
+                      $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+                  }
+                  else
+                  {
+                    $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+                  }
+                 $.ajax({
+                     type: 'POST',  // http method
+                     url: '@Url.Action("CheckVechileNoUsed", "Customer")',
+                     data: { VechileNo: vehicleNo },  // data to submit
+                     dataType: "json",
+                     success: function (data, status, xhr) {
+                         console.log(data);
+                         if (data.status == "0") {
+                             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
+                             mycelStatus.innerHTML = "1";
+                             isValid=false;
+                         }
+                         else {
+                             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
+                             mycelStatus.innerHTML = "0";
+                         }
+                     },
+                     error: function (jqXhr, textStatus, errorMessage) {
+                         alert("Error "+ errorMessage);
                          document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
                          mycelStatus.innerHTML = "1";
                          isValid=false;
-                     }
-                     else {
-                         document.getElementById('VechileNo_error_'+rowSelected).innerHTML="";
-                         mycelStatus.innerHTML = "0";
-                     }
-                 },
-                 error: function (jqXhr, textStatus, errorMessage) {
-                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Vehicle No. already exists";
-                     mycelStatus.innerHTML = "1";
-                     isValid=false;
 
-                 }
-             });
-
+                     }
+                 });
+             }
+              else
+              {
+                  mycelStatus.innerHTML = "0";
+                  $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
+              }
 
            setTimeout(function()
            {
@@ -420,11 +432,11 @@
              var mycel;
             if (selected.toUpperCase() == "CARDLESS") {
                 mycel = myrow.getElementsByTagName("td")[7];
-                mycelValidStatus = myrow.getElementsByTagName("td")[9];
+                mycelValidStatus = myrow.getElementsByTagName("td")[8];
             }
             else {
                 mycel = myrow.getElementsByTagName("td")[6];
-                mycelValidStatus = myrow.getElementsByTagName("td")[8];
+                mycelValidStatus = myrow.getElementsByTagName("td")[7];
             }
 
 
@@ -834,14 +846,14 @@
            if (customerTypeId == "901") //Fleet And Credit
            {
 
-
+               vhnoArr=[],vhType=[],vhMake=[],yearofReg=[],mobNoArr=[],docArr=[];
                i=0;
                cnt = 0;
                var RCFile="";
                $("#NoOfCardsTbl tbody tr").each(function ()
                {
                    var row = $(this);
-
+                  
                    var vhno = row.find("td:eq(1) input[type='text']").val();
                    var vehicleType =row.find('td').eq(3).find('select').val();
                    var vehicleMake = row.find("td:eq(4) input[type='text']").val();
@@ -865,13 +877,14 @@
                          var regex = /(.*?)\.(gif|png|jpeg|JPEG|jpg)$/;
                          if (regex.test(doc[0].files[0].name.toLowerCase())) {
                              if (typeof (FileReader) != "undefined") {
-                                 if(doc[0].files[0].size < 10485760){
+                                 if(doc[0].files[0].size < 2097152){
                                         var reader = new FileReader();
                                         reader.readAsDataURL(doc[0].files[0]);
                                         document.getElementById('RC_error_'+cnt).innerHTML="";
+                                        docArr.push(doc[0].files[0]);
                          
                                  }else{
-                                     document.getElementById('RC_error_'+cnt).innerHTML="Document Image should not exceeded from 10MB";
+                                     document.getElementById('RC_error_'+cnt).innerHTML="Document Image should not exceed 2MB";
                                      ret=false;
                                  } 
 
@@ -889,27 +902,25 @@
                    }
                    else
                    {
-                       document.getElementById('VechileNo_error_'+cnt).innerHTML="";
+                       if(vhno.trim()!='')
+                       {
+                           if (!(vhno.match(forVehicleNo)))
+                           {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                               ret=false;
+                           }
+                           else if(vhno.length<6 || vhno.length>10)
+                           {
+                              document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                              ret=false;
+                           }
+                           else
+                           {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                               vhnoArr.push(vhno);
+                           }
+                       }
                    }
-
-                   if(vhno.trim()!='')
-                   {
-                       if (!(vhno.match(forVehicleNo)))
-                       {
-                           document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
-                           ret=false;
-                       }
-                       else if(vhno.length<6 || vhno.length>10)
-                       {
-                         document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
-                         ret=false;
-                       }
-                       else
-                       {
-                           document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
-                       }
-                   }
-
                    if (vehicleType == "--Select--")
                    {
                        document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="Select Vehicle Type";
@@ -918,6 +929,7 @@
                    else
                    {
                        document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="";
+                       vhType.push( vehicleType );
                    }
 
                    if(vehicleMake.trim()=='')
@@ -933,6 +945,7 @@
                    else
                    {
                        document.getElementById('VehicleMake_error_'+cnt).innerHTML="";
+                       vhMake.push(vehicleMake)
                    }
 
                    if(yearReg.trim()=='')
@@ -960,6 +973,7 @@
                        else
                        {
                          document.getElementById('YearOfRegistration_error_'+cnt).innerHTML="";
+                         yearofReg.push(yearReg);
                        }
                    }
 
@@ -993,6 +1007,7 @@
                            else
                            {
                               document.getElementById('MobileNo_error_'+cnt).innerHTML="";
+                              mobNoArr.push(mobile);
                            }
                        }
 
@@ -1239,13 +1254,96 @@
            if (ret == true)
            {
                return true;
+               //debugger;
+               //var refNo=document.getElementById("CustomerReferenceNo").value;
+               //var noofCards=document.getElementById("NoOfCards").value;
+               //var formData = new FormData(); 
+               //formData.append("Attachments",docArr);
+               //var reqModel = { CustomerReferenceNo: refNo, NoOfCards: noofCards, CardPreference: selected, VechileNo:vhnoArr,VehicleType:vhType,VehicleMake:vhMake,YearOfRegistration:yearofReg,MobileNo:mobNoArr};
+               //formData.append("ReqModel", JSON.stringify(reqModel));
+
+               //console.log(reqModel);
+               //console.log("stringify"+formData);
+               //  $.ajax({
+               //    type: 'POST',
+               //    url: '@Url.Action("AddCardDetails", "AggregatorFleet")',
+               //    data: formData,
+               //    success: function (data, status, xhr) {
+               //       console.log(data);
+               //    },
+               //    error: function (xhr, ajaxOptions, thrownError)
+               //    {
+               //        alert("Error");
+               //    }
+               //});
+
            }
            else
            {
                return false;
            }
       }
+    $('#VehicleNoVerifiedManually').click(function()
+       {
+             var customerTypeId = document.getElementById("CustomerTypeId").value;
+             console.log(customerTypeId);
+             if ($(this).prop("checked"))
+             {
+               var cnt = 0;
 
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   //var row = $(this);
+                   document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                   $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
+                   cnt=cnt+1;
+                });
+             }
+             else
+             {
+                 var cnt = 0;
+                 var vehicleNo = "";
+                 var isValid=true;
+
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                    isValid=true;
+                    vehicleNo = "";
+                    vehicleNo=document.getElementById('VechileNo_'+cnt).value;
+                    if(vehicleNo.trim()=='')
+                    {
+                        isValid=false;
+                    }
+                    else
+                    {
+                        if(vehicleNo.trim()!='')
+                        {
+                            if (!(vehicleNo.match(forVehicleNo))) 
+                            {
+                                isValid=false;
+                            }
+                            else if(vehicleNo.length<6 || vehicleNo.length>10)
+                            {
+                                isValid=false;
+                            }
+                        }
+                    } 
+
+                    if(isValid)
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", false);
+                    }
+                    else
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
+                    }
+
+                    cnt=cnt+1;
+
+                });
+             }
+
+       });
    function RCFileSelected(o, rowSelected)
         {
             var rcCopy = o.value;
@@ -1256,13 +1354,13 @@
                var regex = /(.*?)\.(gif|png|jpeg|JPEG|jpg)$/;
              if (regex.test(o.files[0].name.toLowerCase())) {
                  if (typeof (FileReader) != "undefined") {
-                     if(o.files[0].size < 10485760){
+                     if(o.files[0].size < 2097152){
                             var reader = new FileReader();
                             reader.readAsDataURL(o.files[0]);
                             document.getElementById('RC_error_'+rowSelected).innerHTML="";
                          
                      }else{
-                         document.getElementById('RC_error_'+rowSelected).innerHTML="Document Image should not exceeded from 10MB";
+                         document.getElementById('RC_error_'+rowSelected).innerHTML="Document Image should not exceed 2MB";
                          isValid = false;
                      } 
 

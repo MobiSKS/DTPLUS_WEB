@@ -17,7 +17,7 @@ namespace HPCL.Service.Interfaces
         Task<UploadDocResponseBody> UploadDoc(string FormNumber);
         Task<UploadDocResponse> UploadDoc(UploadDoc entity);
         Task<string> SaveUploadDoc(UploadDoc entity);
-        Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo);
+        Task<CustomerCardInfo> AddCardDetails( CustomerCardInfo customerCardInfo);
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
