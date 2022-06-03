@@ -31,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> LimitUpdateForSingleRecharge(string objCCMSLimits);
         Task<GetEmergencyAddOnCardResponse> EmergencyAddOnCard(GetEmergencyAddOnCard entity);
         Task<List<SuccessResponse>> MapEmergencyAddOnCard(string objCards);
+        Task<EnableCustomerServicesModel> EnableCustomerServices();
     }
 }

@@ -288,5 +288,11 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+        public async Task<IActionResult> EnableCustomerServices()
+        {
+            var modals = await _cardService.EnableCustomerServices();
+            return View(modals);
+        }
+
     }
 }

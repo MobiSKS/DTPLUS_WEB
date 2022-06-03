@@ -650,5 +650,14 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<EnableCustomerServicesModel> EnableCustomerServices()
+        {
+            EnableCustomerServicesModel custMdl = new EnableCustomerServicesModel();
+            custMdl.Remarks = "";
+
+            return custMdl;
+        }
+
     }
 }
