@@ -173,6 +173,8 @@
         public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
 
         public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
+        public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
+        public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
 
         #endregion
 
