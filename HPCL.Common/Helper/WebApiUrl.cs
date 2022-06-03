@@ -405,5 +405,9 @@
         public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
         public static string getdealercreditsalestatement = "api/dtplus/dealercredit/get_dealer_credit_sale_statement";
         #endregion
+
+        #region "HDFC Bank Credit Pouch"
+        public static string GetCustomerDetailsUrl = "api/dtplus/HDFCCreditPouch/get_dtail_mo";
+        #endregion
     }
 }
