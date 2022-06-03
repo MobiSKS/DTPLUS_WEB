@@ -1894,10 +1894,10 @@ namespace HPCL.Service.Services
 
             if (configurationResponse != null && configurationResponse.Data != null)
             {
+                returnValue.IndividualOrgName = "";
+                returnValue.NameOnCard = "";
                 if (configurationResponse.Data.CCMSCustomerDetail != null && configurationResponse.Data.CCMSCustomerDetail.Count > 0)
                 {
-                    returnValue.IndividualOrgName = "";
-                    returnValue.NameOnCard = "";
                     if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSCustomerDetail[0].IndividualOrgName))
                         returnValue.IndividualOrgName = configurationResponse.Data.CCMSCustomerDetail[0].IndividualOrgName;
                     if (!string.IsNullOrEmpty(configurationResponse.Data.CCMSCustomerDetail[0].NameOnCard))
