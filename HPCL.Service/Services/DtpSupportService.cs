@@ -68,7 +68,7 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res[0].Reason;
         }
-        public async Task<string> GetCardBalanceTransferDetails(string CardNo)
+        public async Task<List<SuccessResponse>> GetCardBalanceTransferDetails(string CardNo)
         {
             var reqBody = new CardBalanceTransferViewModel
             {
@@ -85,7 +85,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
-            return res[0].Reason;
+            return res;
         }
         public async Task<UnblockUserModel> UnblockUser()
         {

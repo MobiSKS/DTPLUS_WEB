@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
             <li class="breadcrumb-item font-weight-light">Card Balance Transfer</li>
         </ul>
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        
         <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
@@ -60,7 +60,7 @@
         </form>
        
         <div class="clearfix"></div>
-
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
 
     </div>
 </div>
@@ -100,8 +100,22 @@
                   data: { CardNo: cardNo},  // data to submit
                   success: function (data, status, xhr) {
                       console.log(data);
-                           $("#reason").html(data);
-                           $(".toBeHiddenOnSuccess").hide();
+                      if(data.length>0){
+                          if(data[0].status=="0"){
+                             $("#reason").addClass("alert-danger");
+                             if($("#reason").hasClass("alert-success"))
+                                $("#reason").removeClass("alert-success");
+                          }
+                          else{
+                              $("#reason").addClass("alert-success");
+                              if($("#reason").hasClass("alert-danger"))
+                                $("#reason").removeClass("alert-danger");
+                          }
+                          $("#reason").html(data[0].reason);
+                          $("#reason").attr("style","display:block");
+                          //$(".toBeHiddenOnSuccess").hide();
+                      }
+                           
                    },
               });
           }
