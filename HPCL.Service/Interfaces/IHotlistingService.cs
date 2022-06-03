@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.RequestModel.Hotlisting;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Hotlisting;
 using HPCL.Common.Models.ResponseModel.Hotlisting;
 using HPCL.Common.Models.ViewModel.Hotlisting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,6 @@ namespace HPCL.Service.Interfaces
         Task<List<string>> ApplyHotlistorReactivate([FromBody] HotlistorReactivateViewModel HotlistorReactivateViewModel);
         Task<ViewHotlistingorReactivateResponse> GetHotlistedorReactivatedData(string EntityTypeId, string EntityId);
         Task<GetHotlistApprovalResponse> GetHotlistApproval(string EntityTypeId, string ActionId, string FromDate, string ToDate);
-        Task<string> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest);
+        Task<List<HotlistSuccessResponse>> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest);
     }
 }

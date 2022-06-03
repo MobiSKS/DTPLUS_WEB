@@ -102,15 +102,15 @@ namespace HPCL.Service.Services
             getHotlistApprovalResponse = JsonConvert.DeserializeObject<GetHotlistApprovalResponse>(Response);
             return getHotlistApprovalResponse;
         }
-        public async Task<string> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
+        public async Task<List<HotlistSuccessResponse>> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
         {
             var hotlistRequest = new HotlistApprovalRequest
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                EntityTypeId =Convert.ToInt32(hotlistApprovalRequest.EntityTypeId) ,
-                ActionId = Convert.ToInt32(hotlistApprovalRequest.ActionId), 
+                EntityTypeId = Convert.ToInt32(hotlistApprovalRequest.EntityTypeId),
+                ActionId = Convert.ToInt32(hotlistApprovalRequest.ActionId),
                 ObjUpdateHotlistApprovalEntityCode = hotlistApprovalRequest.ObjUpdateHotlistApprovalEntityCode,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -119,16 +119,11 @@ namespace HPCL.Service.Services
             var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatehotlistapproval);
             JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
 
-            if (ResponseObj["Status_Code"].ToString() == "200")
-            {
-                var responseJarr = ResponseObj["Data"].Value<JArray>();
-                List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
-                return responseList.First().Reason.ToString();
-            }
-            else
-            {
-                return ResponseObj["Message"].ToString();
-            }
+
+            var responseJarr = ResponseObj["Data"].Value<JArray>();
+            List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
+            return responseList;
+
         }
     }
 }
