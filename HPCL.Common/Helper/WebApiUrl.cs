@@ -173,6 +173,8 @@
         public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
 
         public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
+        public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
+        public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
 
         #endregion
 
@@ -402,6 +404,10 @@
         public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
         public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
         public static string getdealercreditsalestatement = "api/dtplus/dealercredit/get_dealer_credit_sale_statement";
+        #endregion
+
+        #region "HDFC Bank Credit Pouch"
+        public static string GetCustomerDetailsUrl = "api/dtplus/HDFCCreditPouch/get_dtail_mo";
         #endregion
     }
 }

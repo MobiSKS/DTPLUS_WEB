@@ -126,5 +126,9 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Security/_ViewUserRoleLocationTbl.cshtml", model);
         }
 
+        public IActionResult AddNewUser()
+        {
+            return View();
+        }
     }
 }
