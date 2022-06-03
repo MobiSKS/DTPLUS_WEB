@@ -10,7 +10,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<GetBlockUnblockCustomerCcmsAccountByCustomeridResponse> GetBlockUnblockCustomerCcmsAccount(string customerId);
         Task<string> UpdateCustomerCcmsAccountStatus (BlockUnblockCustomerCcmsAccount entity);
-        Task<string> GetCardBalanceTransferDetails(string CardNo);
+        Task<List<SuccessResponse>> GetCardBalanceTransferDetails(string CardNo);
         Task<UnblockUserModel> UnblockUser();
         Task<GeneralUpdatesModel> GeneralUpdates();
         Task<GetEntityOldFieldValueResponse> GetEntityOldFieldValue(string EntityTypeId, string EntityFieldId, string CustomerIdOrCardOrMerchantId);

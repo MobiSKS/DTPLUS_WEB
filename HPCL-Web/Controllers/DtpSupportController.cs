@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using HPCL.Common.Helper;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class DtpSupportController : Controller
     {
         private readonly IDtpSupportService _dtpSupportService;

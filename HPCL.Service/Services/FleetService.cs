@@ -274,14 +274,22 @@ namespace HPCL.Service.Services
             MultipartFormDataContent form = new MultipartFormDataContent();
 
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
-            form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
-            form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
+
+            form.Add(new StringContent("4"), "IdProofType");
             form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
-            form.Add(new StreamContent(entity.IdProofBack.OpenReadStream()), "IdProofBack", entity.IdProofBack.FileName);
-            form.Add(new StringContent(entity.AddressProofType.ToString()), "AddressProofType");
-            form.Add(new StringContent(entity.AddressProofDocumentNo), "AddressProofDocumentNo");
+
+            form.Add(new StringContent("6"), "AddressProofType");
             form.Add(new StreamContent(entity.AddressProofFront.OpenReadStream()), "AddressProofFront", entity.AddressProofFront.FileName);
-            form.Add(new StreamContent(entity.AddressProofBack.OpenReadStream()), "AddressProofBack", entity.AddressProofBack.FileName);
+
+            form.Add(new StringContent("3"), "PanCardType");
+            form.Add(new StreamContent(entity.PanCard.OpenReadStream()), "PanCard", entity.PanCard.FileName);
+
+            form.Add(new StringContent("7"), "VehicleDetailsType");
+            form.Add(new StreamContent(entity.VehicleDetails.OpenReadStream()), "VehicleDetails", entity.VehicleDetails.FileName);
+
+            form.Add(new StringContent("8"), "CustomerFormType");
+            form.Add(new StreamContent(entity.CustomerForm.OpenReadStream()), "CustomerForm", entity.CustomerForm.FileName);
+
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
@@ -337,7 +345,7 @@ namespace HPCL.Service.Services
 
             return obj;
         }
-        public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
+        public async Task<CustomerCardInfo> AddCardDetails( CustomerCardInfo customerCardInfo)
         {
 
             foreach (HPCL.Common.Models.ViewModel.Customer.CardDetails cardDetails in customerCardInfo.ObjCardDetail)
@@ -353,30 +361,21 @@ namespace HPCL.Service.Services
                 }
             }
 
-            #region Create Request Info
-
-            //CustomerCardInsertInfo insertInfo = new CustomerCardInsertInfo();
-
-            //insertInfo.CustomerReferenceNo = customerCardInfo.CustomerReferenceNo;
-            //insertInfo.CustomerName = customerCardInfo.CustomerName;
-            //insertInfo.FormNumber = customerCardInfo.FormNumber;
-            //insertInfo.NoOfCards = customerCardInfo.NoOfCards;
-            //insertInfo.CardPreference = customerCardInfo.CardPreference;
-            //insertInfo.Useragent = CommonBase.useragent;
-            //insertInfo.Userip = CommonBase.userip;
-            //insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            //insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            //insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
-            //insertInfo.VehicleNoVerifiedManually = (customerCardInfo.VehicleNoVerifiedManually ? "1" : "0");
-
-            #endregion
 
             MultipartFormDataContent form = new MultipartFormDataContent();
 
             form.Add(new StringContent(customerCardInfo.CustomerReferenceNo.ToString()), "CustomerReferenceNo");
             form.Add(new StringContent(customerCardInfo.NoOfCards), "NoOfCards");
             form.Add(new StringContent(customerCardInfo.CardPreference), "CardPreference");
-            //form.Add(new StreamContent(customerCardInfo.ObjCardDetail.OpenReadStream()), "ObjCardDetail");
+            foreach (CardDetails item in customerCardInfo.ObjCardDetail)
+            {
+                form.Add(new StringContent(item.MobileNo), "MobileNo");
+                form.Add(new StringContent(item.VechileNo), "VechileNo");
+                form.Add(new StringContent(item.VehicleType), "VehicleType");
+                form.Add(new StringContent(item.VehicleMake), "VehicleMake");
+                form.Add(new StringContent(item.YearOfRegistration), "YearOfRegistration");
+                form.Add(new StreamContent(item.RCCopy.OpenReadStream()), "RcCopy", item.RCCopy.FileName);
+            }
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");

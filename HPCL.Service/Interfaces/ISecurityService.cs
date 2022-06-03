@@ -18,5 +18,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> DisableUpdateManageUser(string userName, string action);
         Task<List<SuccessResponse>> DeleteManageUser(string userList);
         Task<List<SuccessResponse>> AddUser(AddNewUserReq entity);
+        Task<GetUserRoleLocationResponse> GetUserRoleLocation(string UserName);
     }
 }
