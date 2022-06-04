@@ -11,7 +11,9 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Cards</a> </li>
             <li class="breadcrumb-item font-weight-light">Enable / Disable Products and Transactions</li>
         </ul>
-        <form>
+        <div id="reason" class="mb-3 text-center alert alert-success mt-3" style="display:none;"></div>
+        <div id="dvNoData" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
+        <form id="formVal" class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -127,7 +129,14 @@
                             <div class="clearfix"></div>
                         </div>
                     </div>
+                     <div class="clearfix"></div>
+                      <div class="d-flex align-items-center justify-content-center mt-0">
+                         <div class="px-0">
+                            <button class="btn btn_primary" id="btnsubmit" type="button">SAVE</button>
+                         </div>
+                      </div>
                 </div>
+                
             </div>
         </form>
         <div class="clearfix"></div>
@@ -658,6 +667,71 @@
             var row2 = $(this);
             row2[0].cells[0].innerHTML=z;
         });
+
+    });
+
+    $("#btnsubmit").click(function ()
+    {
+
+        var ObjProductsInput = [];
+        var ObjTransactionsInput = [];
+
+        $("#FullProductsTbl tbody tr").each(function () {
+                var row = $(this);
+                var productID = row[0].cells[2].textContent;
+                var statusFlag= row[0].cells[3].textContent;
+
+                ObjProductsInput.push({
+                    productID: productID,
+                    statusFlag: statusFlag
+                });
+        });
+
+        $("#FullTransactionsTbl tbody tr").each(function () {
+                var row = $(this);
+                var transactionID = row[0].cells[2].textContent;
+                var statusFlag= row[0].cells[3].textContent;
+
+                ObjTransactionsInput.push({
+                    TransactionID: transactionID,
+                    StatusFlag: statusFlag
+                });
+        });
+
+
+        if (confirm('Do you want to approve the selected Terminal Installation Request(s)?')) {
+        $.ajax({
+            url: "@Url.Action("EnableDisableProductsAndTransaction", "Cards")",
+            type: "POST",
+            dataType: "JSON",
+            data: { ObjProducts: JSON.stringify(ObjProductsInput), ObjTransactions: JSON.stringify(ObjTransactionsInput), CustomerId: $("#CustomerId").val(), CardNo:$("#CardNo").val(), MobileNo :$("#MobileNo").val() },
+            success: function (res) 
+            {
+                console.log(res,"res");
+                if (res.commonResponseData.internel_Status_Code == 1000) 
+                {
+                    $("#reason").html(res.commonResponseData.reason);
+                    $(".toBeHiddenOnSuccess").hide();
+                    document.getElementById("reason").style.display = "none";
+                    document.getElementById("noRecord").style.display = "none";
+                    document.getElementById("reason").style.display = "block";
+                }
+                else
+                {
+                    document.getElementById("reason").style.display = "none";
+                    document.getElementById("dvNoData").style.display = "block";
+                    document.getElementById("dvNoData").innerHTML= res.commonResponseData.reason;
+                    document.getElementById("noRecord").style.display = "none";
+                }
+            },
+            error: function (ex) 
+            {
+                alert('Failed' + ex);
+            }
+        });
+        } else {
+            console.log('cancel')
+        }
 
     });
 
