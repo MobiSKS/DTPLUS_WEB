@@ -1,4 +1,9 @@
 ﻿@model HPCL.Common.Models.ViewModel.Cards.EnableCustomerServicesModel
+@using HPCL.Common.Resources;
+@{
+    ViewData["Title"] = "Enable / Disable Products and Transactions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -18,7 +23,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -28,7 +34,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="formnumber" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control restrictPaste", maxlength = "16", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "error", @id = "CardNoErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -40,7 +47,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Mobile Number</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="date" value="">
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "error", @id = "MobileNoErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -50,10 +58,10 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button">Search</button>
+                                <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
                             </div>
                             <div class="px-2">
-                                <button class="btn btn_primary" type="button">Reset</button>
+                                <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                             </div>
                         </div>
                     </div>
@@ -245,3 +253,216 @@
     </div>
 </div>
 <div class="clearfix"></div>
+<script>
+
+$("#CustomerId").on("blur", function ()
+{
+    if ($("#CustomerId").val().trim() == "")
+    {
+        $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+        return false;
+    }
+    else if (!$("#CustomerId").val().match(mappedCustomerId))
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        return false;
+    }
+    else
+    {
+        $('#CustomerIdValErrMsg').html("");
+    }
+
+})
+
+$("#MobileNo").on("blur", function () 
+{
+    //debugger;
+    var communicationMobile = document.getElementById("MobileNo").value.trim();
+    if (communicationMobile != "") 
+    {
+        if (communicationMobile.substring(0, 1) == "0") 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (communicationMobile.length < 10) 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (!communicationMobile.match(phoneno)) 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "";
+        }
+    }
+
+});
+
+$("#CardNo").on("blur", function () 
+{
+    //debugger;
+    var cardNo = document.getElementById("CardNo").value.trim();
+    if (cardNo != "") 
+    {
+        if (cardNo.substring(0, 1) == "0") 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            return false;
+        }
+        else if (cardNo.length < 16) 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            return false;
+        }
+        else if (!cardNo.match(cardNoCheck)) 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "";
+        }
+    }
+
+});
+$('#CustomerId').keypress(function (e) {
+    if (e.keyCode == 13) {  // detect the enter key
+        e.preventDefault();
+        $('#btnSearch').click();
+    }
+});
+
+$("#btnSearch").on("click", (function (e)
+{
+    var flag="Y";
+    if ($("#CustomerId").val().trim() == "")
+    {
+        $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        flag="N";
+    }
+    else if (!$("#CustomerId").val().match(mappedCustomerId))
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        flag="N";
+    }
+    else
+    {
+        $('#CustomerIdValErrMsg').html("");
+    }
+
+    var cardNo = document.getElementById("CardNo").value.trim();
+    if (cardNo != "") 
+    {
+        if (cardNo.substring(0, 1) == "0") 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            $("#CardNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else if (cardNo.length < 16) 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            $("#CardNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else if (!cardNo.match(cardNoCheck)) 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+            $("#CardNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else 
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "";
+        }
+    }
+
+    var communicationMobile = document.getElementById("MobileNo").value.trim();
+    if (communicationMobile != "") 
+    {
+        if (communicationMobile.substring(0, 1) == "0") 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            $("#MobileNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else if (communicationMobile.length < 10) 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            $("#MobileNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else if (!communicationMobile.match(phoneno)) 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            $("#MobileNoErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else 
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "";
+        }
+    }
+
+    if(flag=="Y")
+    {
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("ViewCustomerDetails", "TMS")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                data: { CustomerId: customerId},
+                success: function (data, status, xhr)
+                {
+                    console.log(data);
+                    var v = data;
+                    if (status == 'success') {
+                        $("#show_Table").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#show_Table").offset().top
+                        }, 2000);
+                    }
+                    else
+                    {
+                        console.log(v);
+                    }
+
+                var count = $('#tblCustomer tr').length;
+                console.log(count);
+                if(count>1)
+                {
+                    document.getElementById("divSubmit").style.display = "block";
+                        $('#CustomerId').attr("readonly", true);
+                }
+                else
+                {
+                    document.getElementById("divSubmit").style.display = "none";
+                        $('#CustomerId').attr("readonly", false);
+                }
+                },
+                error: function (jqXhr, textStatus, errorMessage)
+                {
+                    alert("Error"+ errorMessage);
+                }
+            });
+
+
+    }
+
+ }));
+
+$("#btnReset").click(function () 
+{
+    window.location.href = '@Url.Action("EnableCustomerServices", "Cards")';
+});
+
+</script>
