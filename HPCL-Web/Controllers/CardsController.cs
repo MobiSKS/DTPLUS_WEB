@@ -294,5 +294,13 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo)
+        {
+            var searchList = await _cardService.GetDetailForEnableDisableProductsAndTransactions(CustomerId, CardNo, MobileNo);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
     }
 }
