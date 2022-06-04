@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch;
 using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +22,7 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<string> GetCustomerDetails(CustomerDetailsReq entity)
+        public async Task<CustomerDetailsRes> GetCustomerDetails(CustomerDetailsReq entity)
         {
             var searchBody = new CustomerDetailsReq
             {
@@ -29,15 +30,15 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerId = entity.CustomerId,
-                RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                RequestedBy = entity.CustomerId
             };
 
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCustomerDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            //SearchManageCards searchList = obj.ToObject<SearchManageCards>();
-            return "";
+            CustomerDetailsRes searchList = obj.ToObject<CustomerDetailsRes>();
+            return searchList;
         }
     }
 }

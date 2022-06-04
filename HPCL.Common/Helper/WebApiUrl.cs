@@ -74,6 +74,8 @@
         public static string MapEmergencyAddOnCardUrl = "api/dtplus/card/emergency_replacement_cards";
         public static string getlistcreditcloselimittype = "api/dtplus/dealercredit/get_list_credit_close_limit_type";
         public static string GetHotlistReasonListUrl = "api/dtplus/hotlist/Get_Hotlist_Reason";
+        public static string GetDetailForEnableDisableProductsAndTransactions = "api/dtplus/card/get_detail_for_enable_disable_products_and_transactions";
+        public static string EnableDisableProductsAndTransactions = "api/dtplus/card/enable_disable_products_and_transactions";
         #endregion
 
         #region Merchant
@@ -167,12 +169,14 @@
         public static string getfleetcustomernameandformnumberbyreferenceno = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no";
         public static string getunverfiedfleetcustomerbyformnumber = "api/dtplus/aggregatorcustomer/get_unverfied_aggregator_normal_fleet_customer_detail_by_form_number";
         public static string getUpdateContactPersonDetails = "api/dtplus/customer/get_update_contact_person_details";
-        public static string updateContactPersonDetails = "api/dtplus/customer/update_contact_person_details";
+        public static string updateContactPersonDetails = "api/dtplus/customer/update_request_contact_person_details";
         public static string aggregatornormalfleetcustomeraddcard = "api/dtplus/aggregatorcustomer/aggregator_normal_fleet_customer_add_card";
         public static string getCcmsBalAlertConfiguration = "api/dtplus/customer/get_ccms_bal_alert_configuration";
         public static string updateCcmsbalAlertConfiguration = "api/dtplus/customer/update_ccmsbal_alert_configuration";
 
         public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
+        public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
+        public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
 
         #endregion
 

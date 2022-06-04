@@ -72,7 +72,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Hotlisting/_HotlistApprovalTblView.cshtml", result);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
+        public async Task<JsonResult> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
         {
             var result = await _hotlistingService.UpdateHotlistApproval(hotlistApprovalRequest);
             return Json(result);
