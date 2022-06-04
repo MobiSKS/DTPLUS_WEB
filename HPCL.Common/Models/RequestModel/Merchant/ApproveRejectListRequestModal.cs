@@ -13,6 +13,7 @@ namespace HPCL.Common.Models.RequestModel.Merchant
         }
         public string StatusId { get; set; }
         public string ApprovedBy { get; set; }
+        public string CategoryId { get; set; }
         public List<ErpNCommentsModal> ObjApprovalRejectDetail { get; set; }
     }
 

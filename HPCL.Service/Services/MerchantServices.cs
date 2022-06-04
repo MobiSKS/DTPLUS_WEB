@@ -30,6 +30,15 @@ namespace HPCL.Service.Services
         }
         public async Task<List<string>> ActionOnMerchantID([FromBody] ApproveRejectListRequestModal approvalRejectionMdl)
         {
+            string url = "";
+            if (approvalRejectionMdl.CategoryId == "1")
+            {
+                url = WebApiUrl.approveRejectMerchant;
+            }
+            else
+            {
+                url = WebApiUrl.approveRejectMerchantUpdate;
+            }
             var approvalRejectionMerchantForms = new ApproveRejectListRequestModal
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -41,7 +50,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent approvalRejectionMerchantContent = new StringContent(JsonConvert.SerializeObject(approvalRejectionMerchantForms), Encoding.UTF8, "application/json");
-            var approvalRejectionMerchantResponse = await _requestService.CommonRequestService(approvalRejectionMerchantContent, WebApiUrl.approveRejectMerchant);
+            var approvalRejectionMerchantResponse = await _requestService.CommonRequestService(approvalRejectionMerchantContent, url);
             JObject approvalRejectionMerchantObj = JObject.Parse(JsonConvert.DeserializeObject(approvalRejectionMerchantResponse).ToString());
             List<string> messageList = new List<string>();
 

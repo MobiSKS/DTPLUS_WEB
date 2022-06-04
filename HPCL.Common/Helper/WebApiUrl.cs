@@ -107,6 +107,7 @@
         public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
+        public static string approveRejectMerchantUpdate = "api/dtplus/merchant/approve_reject_merchant_update";
         #endregion
 
         #region customer
