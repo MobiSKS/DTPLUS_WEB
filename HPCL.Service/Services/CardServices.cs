@@ -658,6 +658,24 @@ namespace HPCL.Service.Services
 
             return custMdl;
         }
+        public async Task<GetDetailForEnableDisableProductsAndTransactions> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo)
+        {
+            var requestBody = new EnableCustomerServicesModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                CardNo = CardNo,
+                MobileNo = MobileNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetDetailForEnableDisableProductsAndTransactions);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetDetailForEnableDisableProductsAndTransactions searchList = obj.ToObject<GetDetailForEnableDisableProductsAndTransactions>();
+            return searchList;
+        }
 
     }
 }

@@ -32,5 +32,6 @@ namespace HPCL.Service.Interfaces
         Task<GetEmergencyAddOnCardResponse> EmergencyAddOnCard(GetEmergencyAddOnCard entity);
         Task<List<SuccessResponse>> MapEmergencyAddOnCard(string objCards);
         Task<EnableCustomerServicesModel> EnableCustomerServices();
+        Task<GetDetailForEnableDisableProductsAndTransactions> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo);
     }
 }
