@@ -131,6 +131,14 @@
     </div>
 </div>
 <div class="clearfix"></div>
+<div id="divFullProductsTbl" style="display:none">
+    <table class="table d-md-table d-block" id="FullProductsTbl">
+    </table>
+</div>
+<div id="divFullTransactionsTbl" style="display:none">
+    <table class="table d-md-table d-block" id="FullTransactionsTbl">
+    </table>
+</div>
 <script>
 
 $("#CustomerId").on("blur", function ()
@@ -313,44 +321,54 @@ $("#btnSearch").on("click", (function (e)
                         $("#AvailableTransactionsTypeTbl td").parent().remove();
                         $("#AllowedTransactionsTypeTbl td").parent().remove();
 
+                        $("#divFullProductsTbl td").parent().remove();
+                        $("#divFullTransactionsTbl td").parent().remove();
+
                         var j=0;
                         var k=0;
+                        var z=0;
                         var availableRows = "<tbody>"
                         var allowedRows = "<tbody>"
                         var availableTranRows = "<tbody>"
                         var allowedTranRows = "<tbody>"
+                        var fullProductRows = "<tbody>"
+                        var fullTransactionRows = "<tbody>"
 
                         for (var i = 0; i < resp.searchList.data.getProductsType.length; i++) 
                         {
-                            debugger;
+                            z=z+1;
+                            //debugger;
                             if(resp.searchList.data.getProductsType[i].statusFlag==0)
                             {
                                 j=j+1;
                                 
                                 availableRows += "<tr>"
                                   + "<td style='width: 7%;'>"+ (j) +"</td>"
-                                  //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td style='width: 77%;'>" + resp.searchList.data.getProductsType[i].productName + "</td>"
                                   + "<td style='display:none'>" + resp.searchList.data.getProductsType[i].productID + "</td>"
-                                  + "<td style='width: 16%;'><button class='btn btn_primary' type='button'>Add</button></td>"
+                                  + "<td style='width: 16%;'><button class='btn btn_primary BtnAdd' type='button'>Add</button></td>"
                                   + "</tr >";
            
                             }
-                            debugger;
+                            //debugger;
                             if(resp.searchList.data.getProductsType[i].statusFlag==1)
                             {
                                 k=k+1;
                                 
                                  allowedRows += "<tr>"
                                   + "<td style='width: 7%;'>"+ (k) +"</td>"
-                                  //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td style='width: 77%;'>" + resp.searchList.data.getProductsType[i].productName + "</td>"
                                   + "<td style='display:none'>" + resp.searchList.data.getProductsType[i].productID + "</td>"
                                   + "<td style='width: 16%;'><a class='Icons_sty' data-toggle='tooltip' title='' tooltip='Delete'><i class='fa fa-times-circle text-danger Delete'></i></a></td>"
                                   + "</tr >";
-           
                             }
 
+                            fullProductRows += "<tr>"
+                                  + "<td>"+ (z) +"</td>"
+                                  + "<td>" + resp.searchList.data.getProductsType[i].productName + "</td>"
+                                  + "<td>" + resp.searchList.data.getProductsType[i].productID + "</td>"
+                                  + "<td>" + resp.searchList.data.getProductsType[i].statusFlag + "</td>"
+                                  + "</tr>";
 
                         }
                         availableRows += "</tbody>"
@@ -359,38 +377,50 @@ $("#btnSearch").on("click", (function (e)
                         allowedRows += "</tbody>"
                         $('#AllowedProductTbl table').append(allowedRows);
 
+                        fullProductRows += "</tbody>"
+                        $('#divFullProductsTbl table').append(fullProductRows);
+
                         var j=0;
                         var k=0;
+                        var z=0;
                         for (var i = 0; i < resp.searchList.data.getTransactionsType.length; i++) 
                         {
-                            debugger;
+                            //debugger;
                             if(resp.searchList.data.getTransactionsType[i].statusFlag==0)
                             {
                                 j=j+1;
                                 
                                 availableTranRows += "<tr>"
                                   + "<td style='width: 7%;'>"+ (j) +"</td>"
-                                  //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td style='width: 77%;'>" + resp.searchList.data.getTransactionsType[i].transactionType + "</td>"
                                   + "<td style='display:none'>" + resp.searchList.data.getTransactionsType[i].transactionID + "</td>"
-                                  + "<td style='width: 16%;'><button class='btn btn_primary' type='button'>Add</button></td>"
+                                  + "<td style='width: 16%;'><button class='btn btn_primary BtnAdd' type='button'>Add</button></td>"
                                   + "</tr >";
            
                             }
-                            debugger;
+                            //debugger;
                             if(resp.searchList.data.getTransactionsType[i].statusFlag==1)
                             {
                                 k=k+1;
                                 
                                  allowedTranRows += "<tr>"
                                   + "<td style='width: 7%;'>"+ (k) +"</td>"
-                                  //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
                                   + "<td style='width: 77%;'>" + resp.searchList.data.getTransactionsType[i].transactionType + "</td>"
                                   + "<td style='display:none'>" + resp.searchList.data.getTransactionsType[i].transactionID + "</td>"
                                   + "<td style='width: 16%;'><a class='Icons_sty' data-toggle='tooltip' title='' tooltip='Delete'><i class='fa fa-times-circle text-danger Delete'></i></a></td>"
                                   + "</tr >";
            
                             }
+                            
+                            z=z+1;
+
+                            fullTransactionRows += "<tr>"
+                                  + "<td>"+ (z) +"</td>"
+                                  + "<td>" + resp.searchList.data.getTransactionsType[i].transactionType + "</td>"
+                                  + "<td>" + resp.searchList.data.getTransactionsType[i].transactionID + "</td>"
+                                  + "<td>" + resp.searchList.data.getTransactionsType[i].statusFlag + "</td>"
+                                  + "</tr>";
+                            
                         }
 
                         availableTranRows += "</tbody>"
@@ -398,6 +428,9 @@ $("#btnSearch").on("click", (function (e)
 
                         allowedTranRows += "</tbody>"
                         $('#AllowedTransactionsTypeTbl table').append(allowedTranRows);
+
+                        fullTransactionRows += "</tbody>"
+                        $('#divFullTransactionsTbl table').append(fullTransactionRows);
                 }
 
             },
@@ -422,7 +455,41 @@ $("#AllowedPTbl").on('click', '.Delete', function ()
     row = $(this).closest("tr");
     var i = row[0].cells[0].textContent;
     var productID = row[0].cells[2].textContent;
-    alert(productID);      
+    var productName = row[0].cells[1].textContent;
+    //alert(productID);
+    $("#FullProductsTbl tbody tr").each(function () 
+    {
+        debugger;
+        var row1 = $(this);
+        var rowProductID = row1[0].cells[2].textContent;
+
+        if (rowProductID == productID) 
+        {
+            row1[0].cells[3].innerHTML="0";
+        }
+    });
+    //alert(i);
+    if(i>0)
+    {
+       var j= AvailablePTbl.rows.length;
+       var rowContent = "<tr>"
+                                  + "<td style='width: 7%;'>"+ (j+1) +"</td>"
+                                  + "<td style='width: 77%;'>" + productName + "</td>"
+                                  + "<td style='display:none'>" + productID + "</td>"
+                                  + "<td style='width: 16%;'><button class='btn btn_primary' type='button'>Add</button></td>"
+                                  + "</tr>";
+
+      $("#AvailablePTbl").find('tbody').append(rowContent);
+      document.getElementById("AllowedPTbl").deleteRow(i-1);
+    }
+
+    var z=0;
+    $("#AllowedPTbl tbody tr").each(function () 
+    {
+        z=z+1;
+        var row2 = $(this);
+        row2[0].cells[0].innerHTML=z;
+    });
 
 });
 
@@ -432,7 +499,43 @@ $("#AllowedTTbl").on('click', '.Delete', function ()
     row = $(this).closest("tr");
     var i = row[0].cells[0].textContent;
     var transactionID = row[0].cells[2].textContent;
-    alert(transactionID);      
+    var transactionType=row[0].cells[1].textContent;
+    //alert(transactionID); 
+    
+    $("#FullTransactionsTbl tbody tr").each(function () 
+    {
+        debugger;
+        var row1 = $(this);
+        var rowtransactionID = row1[0].cells[2].textContent;
+        
+        if (rowtransactionID == transactionID) 
+        {
+            row1[0].cells[3].innerHTML="0";
+        }
+    });
+    alert(i);
+    if(i>0)
+    {
+       var j= AvailableTTbl.rows.length;
+       var rowContent = "<tr>"
+                                  + "<td style='width: 7%;'>"+ (j+1) +"</td>"
+                                  + "<td style='width: 77%;'>" + transactionType + "</td>"
+                                  + "<td style='display:none'>" + transactionID + "</td>"
+                                  + "<td style='width: 16%;'><button class='btn btn_primary' type='button'>Add</button></td>"
+                                  + "</tr >";
+
+
+      $("#AvailableTTbl").find('tbody').append(rowContent);
+      document.getElementById("AllowedTTbl").deleteRow(i-1);
+    }
+
+    var z=0;
+    $("#AllowedTTbl tbody tr").each(function () 
+    {
+        z=z+1;
+        var row2 = $(this);
+        row2[0].cells[0].innerHTML=z;
+    });
 
 });
 
