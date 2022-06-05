@@ -92,7 +92,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/TerminalManagement/_TerminalInstallationRequestClosetbl.cshtml", modals);
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel TerminalManagementRequestModel)
+        public async Task<JsonResult> SubmitTerminalRequestClose([FromBody] TerminalManagementRequestModel TerminalManagementRequestModel)
         {
             var result = await _TerminalService.SubmitTerminalRequestClose(TerminalManagementRequestModel);
             return Json(result);
@@ -151,7 +151,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/TerminalManagement/_ProblematicDeinstalledTbl.cshtml", modals);
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel deInstall)
+        public async Task<JsonResult> SubmitProblematicDeinstalltoDeinstall([FromBody] TerminalDeinstallationCloseModel deInstall)
         {
             var result = await _TerminalService.SubmitProblematicDeinstalltoDeinstall(deInstall);
             return Json(result);
@@ -173,7 +173,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationReqTbl.cshtml", modals);
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
+        public async Task<JsonResult> SubmitDeinstallRequest([FromBody] TerminalDeinstallationRequestUpdateModel TerminalDeinstallationRequestUpdate)
         {
             var result = await _TerminalService.SubmitDeinstallRequest(TerminalDeinstallationRequestUpdate);
             return Json(result);
@@ -193,7 +193,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/TerminalManagement/_TerminalDeinstallationCloseTbl.cshtml", modals);
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)
+        public async Task<JsonResult> SubmitDeinstallationRequestClose([FromBody] TerminalDeinstallationCloseModel TerminalDeinstallationClose)
         {
             var result = await _TerminalService.SubmitDeinstallationRequestClose(TerminalDeinstallationClose);
             return Json(result);

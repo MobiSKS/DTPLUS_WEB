@@ -92,7 +92,7 @@
 }
 else
 {
-    <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">
+    <div class="mb-3 text-center alert alert-danger">
         @Model.Message
     </div>
 }
@@ -149,9 +149,15 @@ else
                     dataType: 'json',
                     data: JSON.stringify(terminationReqmodel),
                     success: function (data) {
-                        //setDates();
-                        $("#reason").html(data);
-                        $(".toBeHiddenOnSuccess").hide();
+                       if(data.length>0){
+                            if(data[0]=="0")
+                                $("#reason").addClass("alert-danger");
+                            else
+                                $("#reason").addClass("alert-success");
+                            $("#reason").html(data[1]);
+                            $("#reason").attr("style","display:block");
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
 
                     },
                     error: function (ex) {

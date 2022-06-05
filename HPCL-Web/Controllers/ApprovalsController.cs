@@ -34,7 +34,7 @@ namespace HPCL_Web.Controllers
             var modals = await _approvalServices.GetTerminalsForApproval(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
             return PartialView("~/Views/Approvals/_TerminalsForApprovalTable.cshtml", modals);
         }
-        public async Task<IActionResult> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
+        public async Task<JsonResult> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
         {
             var reason = await _approvalServices.TerminalDeInstallRequestApprovalRejection(approvalRejectionMdl);
             return Json(reason);
@@ -49,7 +49,7 @@ namespace HPCL_Web.Controllers
             var modals = await _approvalServices.GetTerminalsForAuthorization(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
             return PartialView("~/Views/Approvals/_TerminalsForAuthorizationTable.cshtml", modals);
         }
-        public async Task<IActionResult> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit AuthorizeRejectionMdl)
+        public async Task<JsonResult> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit AuthorizeRejectionMdl)
         {
             var reason = await _approvalServices.TerminalDeInstallRequestApprovalRejectionAuth(AuthorizeRejectionMdl);
             return Json(reason);

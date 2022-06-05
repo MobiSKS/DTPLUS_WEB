@@ -16,5 +16,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewHotlistingorReactivateResponse> GetHotlistedorReactivatedData(string EntityTypeId, string EntityId);
         Task<GetHotlistApprovalResponse> GetHotlistApproval(string EntityTypeId, string ActionId, string FromDate, string ToDate);
         Task<List<HotlistSuccessResponse>> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest);
+        Task<List<HotlistSuccessResponse>> CheckEntityAlreadyHotlisted(string EntityTypeId,string EntityId);
     }
 }

@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
             return getTerminalDeInstallationRequestApprovalReponseModals;
         }
 
-        public async Task<string> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
+        public async Task<List<string>> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
         {
             var approvalRejectionTerminalReqForms = new TerminalDeInstallationApprovalSubmit
             {
@@ -91,16 +91,14 @@ namespace HPCL.Service.Services
             var approvalRejectionTerminalReqResponse = await _requestService.CommonRequestService(approvalRejectionTerminalReqContent, WebApiUrl.updateTerminalDeInstallationRequestApproval);
             JObject approvalRejectionTerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(approvalRejectionTerminalReqResponse).ToString());
 
-            if (approvalRejectionTerminalReqObj["Status_Code"].ToString() == "200")
-            {
-                var approvalRejectionTerminalReqJarr = approvalRejectionTerminalReqObj["Data"].Value<JArray>();
-                List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
-                return approvalRejectionTerminalReqLst.First().Reason.ToString();
-            }
-            else
-            {
-                return approvalRejectionTerminalReqObj["Message"].ToString();
-            }
+
+            var approvalRejectionTerminalReqJarr = approvalRejectionTerminalReqObj["Data"].Value<JArray>();
+            List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
+            List<string> MessageList = new List<string>();
+            MessageList.Add(Convert.ToString(approvalRejectionTerminalReqLst[0].Status));
+            MessageList.Add(approvalRejectionTerminalReqLst[0].Reason);
+            return MessageList;
+
         }
 
         public async Task<TerminalDeInstallationRequestAuthorizationRequestModal> TerminalDeInstallationRequestAuthorization()
@@ -108,7 +106,7 @@ namespace HPCL.Service.Services
             TerminalDeInstallationRequestAuthorizationRequestModal terminalDeInstallationRequestAuthorizationRequestModal = new TerminalDeInstallationRequestAuthorizationRequestModal();
             terminalDeInstallationRequestAuthorizationRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
             return terminalDeInstallationRequestAuthorizationRequestModal;
-        } 
+        }
         public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
         {
             TerminalDeInstallationRequestAuthorizationWithRemark getTerminalDeInstallationRequestAuthorizationReponseModals = new TerminalDeInstallationRequestAuthorizationWithRemark();
@@ -146,7 +144,7 @@ namespace HPCL.Service.Services
             return getTerminalDeInstallationRequestAuthorizationReponseModals;
         }
 
-        public async Task<string> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit approvalRejectionMdl)
+        public async Task<List<string>> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit approvalRejectionMdl)
         {
             var approvalRejectionTerminalReqForms = new TerminalDeInstallationAuthorizationSubmit
             {
@@ -163,16 +161,13 @@ namespace HPCL.Service.Services
             var approvalRejectionTerminalReqResponse = await _requestService.CommonRequestService(approvalRejectionTerminalReqContent, WebApiUrl.updateTerminalDeInstallationRequestAuthorization);
             JObject approvalRejectionTerminalReqObj = JObject.Parse(JsonConvert.DeserializeObject(approvalRejectionTerminalReqResponse).ToString());
 
-            if (approvalRejectionTerminalReqObj["Status_Code"].ToString() == "200")
-            {
-                var approvalRejectionTerminalReqJarr = approvalRejectionTerminalReqObj["Data"].Value<JArray>();
-                List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
-                return approvalRejectionTerminalReqLst.First().Reason.ToString();
-            }
-            else
-            {
-                return approvalRejectionTerminalReqObj["Message"].ToString();
-            }
+
+            var approvalRejectionTerminalReqJarr = approvalRejectionTerminalReqObj["Data"].Value<JArray>();
+            List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
+            List<string> MessageList = new List<string>();
+            MessageList.Add(Convert.ToString(approvalRejectionTerminalReqLst[0].Status));
+            MessageList.Add(approvalRejectionTerminalReqLst[0].Reason);
+            return MessageList;
         }
     }
 }
