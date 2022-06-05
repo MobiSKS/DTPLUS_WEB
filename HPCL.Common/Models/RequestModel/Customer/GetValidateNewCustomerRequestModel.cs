@@ -13,5 +13,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string StateId { get; set; }
         public string CustomerName { get; set; }
         public string RegionalOfficeId { get; set; }
+        public string Status { get; set; }
     }
 }

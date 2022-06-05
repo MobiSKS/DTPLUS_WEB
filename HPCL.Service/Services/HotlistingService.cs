@@ -100,6 +100,19 @@ namespace HPCL.Service.Services
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
             var Response = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.gethotlistapproval);
             getHotlistApprovalResponse = JsonConvert.DeserializeObject<GetHotlistApprovalResponse>(Response);
+            if (getHotlistApprovalResponse.Data != null)
+            {
+                foreach (var item in getHotlistApprovalResponse.Data)
+                {
+                    if (!string.IsNullOrEmpty(item.CreationDate))
+                    {
+                        string[] subs = item.CreationDate.Split('T');
+                        string[] date = subs[0].Split('-');
+                        item.CreationDate= date[1] + "-" + date[2] + "-" + date[0];
+                    }
+                }
+            }
+            
             return getHotlistApprovalResponse;
         }
         public async Task<List<HotlistSuccessResponse>> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
