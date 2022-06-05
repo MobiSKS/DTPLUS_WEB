@@ -12,6 +12,8 @@ using HPCL.Common.Models.ResponseModel.Cards;
 using HPCL.Service.Interfaces;
 using System;
 using System.Linq;
+using HPCL.Common.Models.RequestModel.Cards;
+using HPCL.Common.Models;
 
 namespace HPCL.Service.Services
 {
@@ -650,5 +652,71 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<EnableCustomerServicesModel> EnableCustomerServices()
+        {
+            EnableCustomerServicesModel custMdl = new EnableCustomerServicesModel();
+            custMdl.Remarks = "";
+
+            return custMdl;
+        }
+        public async Task<GetDetailForEnableDisableProductsAndTransactions> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo)
+        {
+            var requestBody = new EnableCustomerServicesModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                CardNo = CardNo,
+                MobileNo = MobileNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetDetailForEnableDisableProductsAndTransactions);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetDetailForEnableDisableProductsAndTransactions searchList = obj.ToObject<GetDetailForEnableDisableProductsAndTransactions>();
+            return searchList;
+        }
+
+        public async Task<CommonResponseData> EnableDisableProductsAndTransaction(string ObjProductsInput, string ObjTransactionsInput, string CustomerId, string CardNo, string MobileNo)
+        {
+            ProductTypeDetails[] arrs = JsonConvert.DeserializeObject<ProductTypeDetails[]>(ObjProductsInput);
+            TransactionTypeDetails[] arrs1 = JsonConvert.DeserializeObject<TransactionTypeDetails[]>(ObjTransactionsInput);
+
+            var requestBody = new EnableDisableProductsAndTransactionsRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId,
+                CardNo = CardNo,
+                MobileNo = MobileNo,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjProducts = arrs,
+                ObjTransactions = arrs1
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.EnableDisableProductsAndTransactions);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CommonResponseData responseData = new CommonResponseData();
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<CommonResponseData> responseLst = Jarr.ToObject<List<CommonResponseData>>();
+                responseData = responseLst[0];
+                responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+            }
+            else
+            {
+                responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(obj["Status_Code"].ToString());
+            }
+
+            return responseData;
+        }
+
     }
 }

@@ -1342,7 +1342,7 @@ namespace HPCL.Service.Services
             var validateMappedMerchantIdJarr = validateMappedMerchantIdObj["Data"].Value<JArray>();
             List<ValidateMappedMerchantIdModalOutput> validateErpCodeModels = validateMappedMerchantIdJarr.ToObject<List<ValidateMappedMerchantIdModalOutput>>();
 
-            return validateErpCodeModels.First().Status.ToString();
+            return validateErpCodeModels.First().Reason.ToString();
         }
 
         public async Task<List<RbeMappingStatusResponse>> RbeMappingStatusService()

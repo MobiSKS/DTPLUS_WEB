@@ -57,7 +57,7 @@
                             <table id="RbeMapping" class="datatable table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
                                 <thead>
                                     <tr>
-                                        <th>S.No</th>
+                                        <th>S.No.</th>
                                         <th>RBE ID</th>
                                         <th>Mobile No.</th>
                                         <th>First Name</th>
@@ -170,7 +170,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE Id</label>
+                    <label for="staticEmail" class="col-sm-4 col-form-label">RBE ID</label>
                     <div class="col-sm-8">
                         <input type="text" readonly class="form-control-plaintext" id="GetRbeId">
                     </div>
@@ -184,7 +184,7 @@
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">New Mobile No. <sup class="text-danger">*</sup></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="newMobileNoVall" maxlength="10" onchange="mobileNoOnChange(this)">
+                        <input type="text" class="form-control" id="newMobileNoVall" maxlength="10" onchange="mobileNoOnChange(this)" onkeypress="return isNumberKey(event)">
                         <span style="display:none" class="error" id="mobileno_error"></span>
                     </div>
                 </div>
@@ -209,6 +209,24 @@
     function resetClick() {
         window.location.reload(true);
     }
+
+    $('.restrictPaste').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    });
 
     var mobNoArr = [];
     var mobN;
@@ -323,6 +341,9 @@
     });
 
     function clickChangeRbe(){
+
+        $("#mobileno_error").attr("style", "display:none");
+        $("#otp_error").attr("style", "display:none");
         
         newMobNo = $("#newMobileNoVall").val();
         console.log(mobNo+"   "+newMobNo,"clicked");
@@ -486,7 +507,7 @@
 
         if(otpGet.trim() ==''){
             $("#otp_error").attr("style", "display:block");
-            $("#otp_error").html("Please Enter OTP");
+            $("#otp_error").html("Please enter OTP");
             flag = "N";
         }
         if(otpGet.trim()!=''){

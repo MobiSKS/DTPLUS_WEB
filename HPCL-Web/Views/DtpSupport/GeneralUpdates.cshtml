@@ -7,15 +7,15 @@
          <li class="breadcrumb-item"><a href="@Url.Action("Index","DtpSupport")" class="text_primary">DTP Support</a> </li>
          <li class="breadcrumb-item font-weight-light">General Updates</li>
       </ul>
+        <div class="mb-0 mt-3 text-center alert" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+            @Html.DisplayFor(m => m.Message)
+        </div>
        @using (Html.BeginForm("GeneralUpdates", "DtpSupport", FormMethod.Post, new { @enctype = "multipart/form-data" }))
        {
          <div class="w-100">
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                <div class="border-1 rounded border-grey pb-3">
                   <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">General Updates</p>
-                   <div class="alert" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
-                        @Html.DisplayFor(m => m.Message)
-                  </div>
                   <div class="col-lg-12 col-md-12 col-12 py-3">
                      <div class="d-flex align-items-center flex-wrap">
                         <div class="col-lg-6 col-12">
@@ -209,6 +209,8 @@
         console.log($("#dvRemarks").html().trim());
         if($("#dvRemarks").html().trim()!="")
         {
+           var id = document.getElementById("EntityTypeId").value;
+
            if(document.getElementById("UpdateStatus").value=="UPDATED")
            {
              dvUpdateFields.style.display = "none";
@@ -221,6 +223,26 @@
                dvUpdateFields.style.display = "block";
                $("#dvRemarks").addClass("alert-danger");
            }
+
+            if (id == 1) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Customer ID <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 10;
+            }
+            else if (id == 2) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Merchant ID <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 10;
+            }
+            else if (id == 3) 
+            {
+                $('#lblCustomerId').text('');
+                $('#lblCustomerId').append('Card PAN <sup class="text-danger">*</sup>');
+                document.getElementById("CustomerIdOrCardOrMerchantId").maxLength = 16;
+            }
+
         }
     });
 
@@ -249,7 +271,10 @@
      {
             var id = this.value;
 
-            if (id != 0) 
+            $("#dvRemarks").html("");
+            document.getElementById("dvRemarks").style.display="none";
+
+            if (id != 0)
             {
                 $("#EntityTypeId_error").html("");
                 $("#salesArea_error").html("");
@@ -322,6 +347,7 @@
             debugger;
             var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
             var entityTypeId = $("#EntityTypeId").val();
+            dvUpdateFields.style.display = "none";
 
             if(entityTypeId!="0")
             {
@@ -405,14 +431,16 @@
 
      $("#btnSearch").on("click", (function (e)
      {
-
-           var flag="Y";
+            var flag="Y";
             var CustomerId = document.getElementById("CustomerIdOrCardOrMerchantId").value.trim();
             var entityTypeId = $("#EntityTypeId").val();
             var entityFieldId = $("#EntityFieldId").val();
             var selectedText = $("#EntityFieldId").find("option:selected").text();
             var oldValue= selectedText + ' [Old Value]';
             var newValue= selectedText + ' [New Value]<sup class="text-danger">*</sup>';
+
+            $("#dvRemarks").html("");
+            document.getElementById("dvRemarks").style.display="none";
 
             if(entityTypeId!="0")
             {

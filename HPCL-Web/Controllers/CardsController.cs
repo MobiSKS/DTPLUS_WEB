@@ -288,5 +288,26 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+        public async Task<IActionResult> EnableCustomerServices()
+        {
+            var modals = await _cardService.EnableCustomerServices();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo)
+        {
+            var searchList = await _cardService.GetDetailForEnableDisableProductsAndTransactions(CustomerId, CardNo, MobileNo);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EnableDisableProductsAndTransaction(string ObjProducts, string ObjTransactions, string CustomerId, string CardNo, string MobileNo)
+        {
+            var commonResponseData = await _cardService.EnableDisableProductsAndTransaction(ObjProducts, ObjTransactions, CustomerId, CardNo, MobileNo);
+            return Json(new { commonResponseData = commonResponseData });
+        }
+
     }
 }
