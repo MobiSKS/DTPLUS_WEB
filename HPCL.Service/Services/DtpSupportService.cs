@@ -287,19 +287,34 @@ namespace HPCL.Service.Services
 
         public async Task<GetDetailForUserUnblockResponse> GetDetailForUserUnblock(string CustomerId, string UserName)
         {
+            var searchBody = new GetDetailForUserUnblockRequest();
             string id = CustomerId;
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
             {
                 id = UserName;
             }
-            var searchBody = new GetDetailForUserUnblockRequest
+            if (!string.IsNullOrEmpty(CustomerId) && !string.IsNullOrEmpty(UserName))
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                CustomerId = string.IsNullOrEmpty(id) ? "" : id,
-                UserName = ""
-            };
+                searchBody = new GetDetailForUserUnblockRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = CustomerId,
+                    UserName = UserName
+                };
+            }
+            else
+            {
+                searchBody = new GetDetailForUserUnblockRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = string.IsNullOrEmpty(id) ? "" : id,
+                    UserName = ""
+                };
+            }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getDetailForUserUnblockByCustomeridOrUsername);
