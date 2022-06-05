@@ -703,6 +703,87 @@
 
     $("#btnsubmit").click(function ()
     {
+        debugger;
+
+        var flag="Y";
+        if ($("#CustomerId").val().trim() == "")
+        {
+            $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            flag="N";
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerIdValErrMsg").attr("style", "display:block");
+            $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+            flag="N";
+        }
+        else
+        {
+            $('#CustomerIdValErrMsg').html("");
+        }
+
+        var cardNo = document.getElementById("CardNo").value.trim();
+        if (cardNo != "")
+        {
+            if (cardNo.substring(0, 1) == "0")
+            {
+                document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+                $("#CardNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else if (cardNo.length < 16)
+            {
+                document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+                $("#CardNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else if (!cardNo.match(cardNoCheck))
+            {
+                document.getElementById("CardNoErrMsg").innerHTML = "Invalid Card Number";
+                $("#CardNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else
+            {
+                document.getElementById("CardNoErrMsg").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("CardNoErrMsg").innerHTML = "";
+        }
+
+        var comMobile = document.getElementById("MobileNo").value.trim();
+        if (comMobile != "")
+        {
+            if (comMobile.substring(0, 1) == "0")
+            {
+                document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                $("#MobileNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else if (comMobile.length < 10)
+            {
+                document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                $("#MobileNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else if (!comMobile.match(phoneno))
+            {
+                document.getElementById("MobileNoErrMsg").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                $("#MobileNoErrMsg").attr("style", "display:block");
+                flag="N";
+            }
+            else
+            {
+                document.getElementById("MobileNoErrMsg").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("MobileNoErrMsg").innerHTML = "";
+        }
 
         var ObjProductsInput = [];
         var ObjTransactionsInput = [];
@@ -729,42 +810,44 @@
                 });
         });
 
-
-        if (confirm('Are you sure ! you want to save the Products and Transactions?')) 
+        if ((ObjProductsInput.length > 0 || ObjTransactionsInput.length > 0) && flag == "Y") 
         {
-            $.ajax({
-                url: "@Url.Action("EnableDisableProductsAndTransaction", "Cards")",
-                type: "POST",
-                dataType: "JSON",
-                data: { ObjProducts: JSON.stringify(ObjProductsInput), ObjTransactions: JSON.stringify(ObjTransactionsInput), CustomerId: $("#CustomerId").val(), CardNo:$("#CardNo").val(), MobileNo :$("#MobileNo").val() },
-                success: function (res) 
-                {
-                    console.log(res,"res");
-                    if (res.commonResponseData.internel_Status_Code == 1000) 
+            if (confirm('Are you sure ! you want to save the Products and Transactions?')) 
+            {
+                $.ajax({
+                    url: "@Url.Action("EnableDisableProductsAndTransaction", "Cards")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { ObjProducts: JSON.stringify(ObjProductsInput), ObjTransactions: JSON.stringify(ObjTransactionsInput), CustomerId: $("#CustomerId").val(), CardNo:$("#CardNo").val(), MobileNo :$("#MobileNo").val() },
+                    success: function (res) 
                     {
-                        $("#reason").html(res.commonResponseData.reason);
-                        $(".toBeHiddenOnSuccess").hide();
-                        document.getElementById("reason").style.display = "none";
-                        document.getElementById("noRecord").style.display = "none";
-                        document.getElementById("reason").style.display = "block";
-                    }
-                    else
+                        console.log(res,"res");
+                        if (res.commonResponseData.internel_Status_Code == 1000) 
+                        {
+                            $("#reason").html(res.commonResponseData.reason);
+                            $(".toBeHiddenOnSuccess").hide();
+                            document.getElementById("reason").style.display = "none";
+                            document.getElementById("noRecord").style.display = "none";
+                            document.getElementById("reason").style.display = "block";
+                        }
+                        else
+                        {
+                            document.getElementById("reason").style.display = "none";
+                            document.getElementById("dvNoData").style.display = "block";
+                            document.getElementById("dvNoData").innerHTML= res.commonResponseData.reason;
+                            document.getElementById("noRecord").style.display = "none";
+                        }
+                    },
+                    error: function (ex) 
                     {
-                        document.getElementById("reason").style.display = "none";
-                        document.getElementById("dvNoData").style.display = "block";
-                        document.getElementById("dvNoData").innerHTML= res.commonResponseData.reason;
-                        document.getElementById("noRecord").style.display = "none";
+                        alert('Failed' + ex);
                     }
-                },
-                error: function (ex) 
-                {
-                    alert('Failed' + ex);
-                }
-            });
-        } 
-        else 
-        {
-            console.log('cancel')
+                });
+            } 
+            else 
+            {
+                console.log('cancel')
+            }
         }
 
     });
