@@ -14,5 +14,9 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string CustomerName { get; set; }
         public string RegionalOfficeId { get; set; }
         public string Status { get; set; }
+        public string CustomerStatus { get; set; }//for Verfiy/reject in Verfiy Fleet Customer
+        public string CustomerId { get; set; }
+        public string VerifyRemark { get; set; }
+        public string VerifyBy { get; set; }
     }
 }

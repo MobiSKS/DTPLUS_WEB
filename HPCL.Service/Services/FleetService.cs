@@ -624,7 +624,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
-                StateId = String.IsNullOrEmpty(entity.StateId) ? "" : entity.StateId,
+                StateId = String.IsNullOrEmpty(entity.StateId) || entity.StateId=="0" ? "" : entity.StateId,
                 CustomerName = String.IsNullOrEmpty(entity.CustomerName) ? "" : entity.CustomerName,
                 Status = String.IsNullOrEmpty(entity.StatusId) ? "19" : entity.StatusId
             };
@@ -1089,6 +1089,28 @@ namespace HPCL.Service.Services
             }
 
             return cust;
+        }
+        //  verifyrejectaggregatornormalfleetcustomer
+        public async Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId,string FormNumber,string CustomerStatus,string VerifyRemark)
+        {
+            var reqBody = new GetValidateNewCustomerRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId,
+                VerifyBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                VerifyRemark = VerifyRemark,
+                FormNumber = FormNumber,
+                CustomerStatus=(CustomerStatus=="Verify")?"11":"12"
+            };//11 for Verfiy, 12 for Verfiy Reject
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.verifyrejectaggregatornormalfleetcustomer);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.Customer;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
@@ -26,5 +27,6 @@ namespace HPCL.Service.Interfaces
         Task<JObject> ViewCustomerDetails(string FormNumber);
         Task<ManageAggregatorViewModel> UpdateFleetCustomer(ManageAggregatorViewModel cust);
         Task<ManageAggregatorViewModel> UpdateFleetCustomer(string FormNumber);
+        Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark);
     }
 }
