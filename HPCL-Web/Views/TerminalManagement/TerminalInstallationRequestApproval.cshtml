@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "Approvals")" class="text_primary">Approvals</a> </li>
             <li class="breadcrumb-item font-weight-light">Terminal Installation Request Approval</li>
         </ul>
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
         <form id="formVal" class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
@@ -375,9 +375,15 @@ $(".zonalFetchId").change(function () {
             dataType: "JSON",
             data: { ObjMerchantTerminalInsertInput: JSON.stringify(ObjMerchantTerminalInsertInput), remark: remark },
             success: function (res) {
-
-                $("#reason").html(res);
-                $(".toBeHiddenOnSuccess").hide();
+                if(res.length>0){
+                    if(res[0]=="0")
+                        $("#reason").addClass("alert-danger");
+                    else
+                        $("#reason").addClass("alert-success");
+                    $("#reason").html(res[1]);
+                    $("#reason").attr("style","display:block");
+                    $(".toBeHiddenOnSuccess").hide();
+                }
             },
             error: function (ex) {
                 alert('Failed' + ex);
@@ -430,8 +436,15 @@ $(".zonalFetchId").change(function () {
                 dataType: "JSON",
                 data: { ObjMerchantTerminalInsertInput: JSON.stringify(ObjMerchantTerminalInsertInput), remark: remark },
                 success: function (res) {
-                    $("#reason").html(res);
-                    $(".toBeHiddenOnSuccess").hide();
+                    if(res.length>0){
+                        if(res[0].status=="0")
+                            $("#reason").addClass("alert-danger");
+                        else
+                            $("#reason").addClass("alert-success");
+                        $("#reason").html(res[1].reason);
+                        $("#reason").attr("style","display:block");
+                        $(".toBeHiddenOnSuccess").hide();
+                    }
                 },
                 error: function (ex) {
                     alert('Failed' + ex);

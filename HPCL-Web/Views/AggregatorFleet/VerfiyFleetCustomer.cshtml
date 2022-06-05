@@ -9,7 +9,7 @@
             <li class="breadcrumb-item font-weight-light">Verify Customers</li>
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center" style="display:none"></div>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -83,10 +83,10 @@
                                         <div class="col-md-3 col-12 px-0">
                                             <div class="col-12 d-flex align-items-center justify-content-center">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="submit" id="btnSearch" name="btnSave" style="background-color:#084693;color:white;">@Label.Search</button>
+                                                    <button class="btn btn_primary" type="submit" id="btnSearch" name="btnSave">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="=btnCancel" style="background-color:#084693;color:white;" onclick="location.href='@Url.Action("ValidateAggregatorCustomer", "Aggregator", new { reset="Y" })'">@Label.Reset</button>
+                                                    <button class="btn btn_primary" type="button" id="=btnCancel"  onclick="location.href='@Url.Action("VerfiyFleetCustomer", "AggregatorFleet", new { reset="Y" })'">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,7 +161,7 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>View</span></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Edit</span></a></td>
                                                                 <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>View</span></a></td>
                                                                 <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Download</span></a></td>
                                                                 <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Approve</span></a></td>
@@ -258,30 +258,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                        <div class="col-md-6 col-12">
-                                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                                <label class="font-weight-normal col-md-5 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
-                                                                <div class="col-md-7 col-12">
-                                                                    <div class="custom_select">
-                                                                        @Html.DropDownListFor(x => x.TypeOfCustomerID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                                    </div>
-                                                                    <span class="error" id="regionalOffice_error"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-12">
-                                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                                <label class="font-weight-normal col-md-5 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                                                <div class="col-md-7 col-12">
-                                                                    <div class="custom_select">
-                                                                        @Html.DropDownListFor(x => x.TierOfCustomerID, Enumerable.Empty<SelectListItem>(), null, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                                    </div>
-                                                                    <span class="error" id="regionalOffice_error"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
@@ -1047,7 +1024,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
+                                   @* <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
                                         <div class="form-group d-flex align-items-center flex-wrap w-100">
                                             <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
@@ -1055,7 +1032,7 @@
                                                 <span class="error" id="Remarks_error"></span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*@
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnPrevious" class="btn btn_primary py-2 px-4" onclick="ShowOfficialDetails()">Previous</a>
@@ -1189,13 +1166,13 @@
                     $('#CustomerRegion_ID').append(regionalOff);
                     $("#CustomerRegion_ID")[0].sumo.reload();
 
-                    var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
-                    $('#TypeOfCustomerID').append(TypeOfCustomer);
-                    $("#TypeOfCustomerID")[0].sumo.reload();
+                    //var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
+                    //$('#TypeOfCustomerID').append(TypeOfCustomer);
+                    //$("#TypeOfCustomerID")[0].sumo.reload();
 
-                    var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
-                    $('#TierOfCustomerID').append(TierOfCustomer);
-                    $("#TierOfCustomerID")[0].sumo.reload();
+                    //var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
+                    //$('#TierOfCustomerID').append(TierOfCustomer);
+                    //$("#TierOfCustomerID")[0].sumo.reload();
 
 
                     var IndividualTitle = $('<option value="' + res.customer.individualOrgNameTitle + '">' + res.customer.individualOrgNameTitle + '</option>');
@@ -1416,9 +1393,6 @@
 
             $('#CustomerRegion_ID').empty();
 
-            $('#TypeOfCustomerID').empty();
-
-            $('#TierOfCustomerID').empty();
 
 
             $('#IndividualOrgNameTitle').empty();
@@ -1574,6 +1548,8 @@
                       console.log(tableCustData, "tbl");
 
                       $("#reason").html(res);
+                      $("#reason").addClass("alert-success");
+                      $("#reason").attr("style","display:block");
                       $(".toBeHiddenOnSuccess").hide();
                   },
                   error: function (ex) {
@@ -1628,7 +1604,7 @@
           
               if(FormNumber!="")
               {
-                  var link = '@Url.Action("UpdateAggregatorCustomer", "Aggregator", new { FormNumber = "-1" })';
+                  var link = '@Url.Action("UpdateFleetCustomer", "AggregatorFleet", new { FormNumber = "-1" })';
                   link = link.replace("-1", FormNumber);
                   window.location.href = link;
                   return true;

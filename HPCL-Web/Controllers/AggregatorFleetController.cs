@@ -377,5 +377,26 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = Customer, kycDetailsResult = UploadDocList });
         }
+
+
+        public async Task<IActionResult> UpdateFleetCustomer(string FormNumber)
+        {
+            var modals = await _fleetService.UpdateFleetCustomer(FormNumber);
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateFleetCustomer(ManageAggregatorViewModel cust)
+        {
+
+            var modals = await _fleetService.UpdateFleetCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("VerfiyFleetCustomer");
+            }
+
+            return View(modals);
+        }
     }
 }

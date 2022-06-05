@@ -138,5 +138,24 @@ namespace HPCL.Service.Services
             return responseList;
 
         }
+        public async Task<List<HotlistSuccessResponse>> CheckEntityAlreadyHotlisted(string EntityTypeId,string EntityId)
+        {
+            var hotlistRequest = new HotlistingRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                EntityIdVal = EntityId,
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
+            var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.checkentityalreadyhotlisted);
+            JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
+            var responseJarr = ResponseObj["Data"].Value<JArray>();
+            List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
+            return responseList;
+
+        }
     }
 }

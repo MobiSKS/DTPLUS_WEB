@@ -24,5 +24,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
         Task<ValidateAggregatorCustomerModel> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity);
         Task<JObject> ViewCustomerDetails(string FormNumber);
+        Task<ManageAggregatorViewModel> UpdateFleetCustomer(ManageAggregatorViewModel cust);
+        Task<ManageAggregatorViewModel> UpdateFleetCustomer(string FormNumber);
     }
 }

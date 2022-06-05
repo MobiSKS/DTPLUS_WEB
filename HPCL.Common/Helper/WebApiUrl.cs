@@ -178,6 +178,7 @@
         public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
         public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
         public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
+        public static string updateaggregatornormalfleetcustomer="api/dtplus/aggregatorcustomer/update_aggregator_normal_fleet_customer";
 
         #endregion
 
@@ -318,6 +319,7 @@
         public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
         public static string gethotlistapproval = "api/dtplus/hotlist/get_hotlist_approval";
         public static string updatehotlistapproval = "api/dtplus/hotlist/update_hotlist_approval";
+        public static string checkentityalreadyhotlisted = "api/dtplus/hotlist/check_entity_already_hotlisted";
 
         #endregion
 

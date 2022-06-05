@@ -103,11 +103,11 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             CustomerStatusMdl = new List<StatusResponseModal>();
-            CustomerStatusMdl.Add(new StatusResponseModal
-            {
-                StatusId = 0,
-                StatusName = "Select Status"
-            });
+            //CustomerStatusMdl.Add(new StatusResponseModal
+            //{
+            //    StatusId = 0,
+            //    StatusName = "Select Status"
+            //});
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
