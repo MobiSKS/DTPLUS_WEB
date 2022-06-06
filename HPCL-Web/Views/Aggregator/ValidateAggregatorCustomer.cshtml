@@ -9,7 +9,7 @@
             <li class="breadcrumb-item font-weight-light">Validate Aggregate Customer</li>
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -1572,9 +1572,15 @@
                       let tableCustData = sessionStorage.getItem("tableCustData");
 
                       console.log(tableCustData, "tbl");
-
-                      $("#reason").html(res);
-                      $(".toBeHiddenOnSuccess").hide();
+                      
+                            if(res.status=="0")
+                                $("#reason").addClass("alert-danger");
+                            else
+                                $("#reason").addClass("alert-success");
+                          $("#reason").html(res.reason);
+                          $("#reason").attr("style","display:block");
+                          $(".toBeHiddenOnSuccess").hide();
+                      
                   },
                   error: function (ex) {
                       alert('Failed' + ex);
