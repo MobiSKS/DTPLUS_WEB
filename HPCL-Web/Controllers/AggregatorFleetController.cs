@@ -414,5 +414,27 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("VerfiyFleetCustomer", "AggregatorFleet", new { success = succesMsg, error = errorMsg });
         }
+        public async Task<IActionResult> ApproveFleetCustomer(ValidateAggregatorCustomerModel entity, string reset, string success, string error)
+        {
+            var modals = await _fleetService.ApproveFleetCustomer(entity);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            return View(modals);
+        }
+        public async Task<ActionResult> ApproveorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string ApprovedRemark)
+        {
+            var searchResult = await _fleetService.ApproveorRejectFleetCustomer(CustomerId, FormNumber, CustomerStatus, ApprovedRemark);
+            string succesMsg = "", errorMsg = "";
+            if (searchResult.Count() > 0)
+            {
+                if (searchResult[0].Status == 1)
+                    succesMsg = searchResult[0].Reason;
+                else if (searchResult[0].Status == 0)
+                    errorMsg = searchResult[0].Reason;
+            }
+            return RedirectToAction("ApproveFleetCustomer", "AggregatorFleet", new { success = succesMsg, error = errorMsg });
+        }
+
     }
 }
