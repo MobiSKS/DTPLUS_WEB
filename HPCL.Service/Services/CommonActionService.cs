@@ -585,7 +585,7 @@ namespace HPCL.Service.Services
             {
                 foreach (var item in lst)
                 {
-                    if (item.StatusId == 4)
+                    if (item.StatusId == 4 || item.StatusId == 6 || item.StatusId == 7 || item.StatusId == 8)
                     {
                         lsts.Add(item);
                     }

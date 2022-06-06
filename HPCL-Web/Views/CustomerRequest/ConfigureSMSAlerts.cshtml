@@ -56,7 +56,7 @@
                         <table id="CardSearch" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Sr. No</th>
+                                    <th>S.No.</th>
                                     <th>
                                         <input type="checkbox" name="allCheck" class="checkAll" />
                                     </th>
@@ -269,33 +269,40 @@
 
         var CustomerID = $("#CustomerDefaultVal").val();
 
-         $.ajax({
-            url: "@Url.Action("UpdateDndSmsAlertsConfigure", "CustomerRequest")",
-            type: "POST",
-            traditional: true,
-            data: { CustomerId: CustomerID },
-            success: function (res) {
+        if (confirm('Are you sure you want to remove all SMS alert(s) for this customer? ')) {
+                console.log('ok');
 
-               console.log("res",res);
+            $.ajax({
+                url: "@Url.Action("UpdateDndSmsAlertsConfigure", "CustomerRequest")",
+                type: "POST",
+                traditional: true,
+                data: { CustomerId: CustomerID },
+                success: function (res) {
 
-               if(res.reasonList[0].status == 1){
-                    document.getElementById("noRecord").style.display = "none";
-                    document.getElementById("UpdateGrid").style.display = "none";
-                    $("#successUpdate").html("");
-                    $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
-                    document.getElementById("successUpdate").style.display = "block";
-                }else{
-                    document.getElementById("UpdateGrid").style.display = "none";
-                    document.getElementById("successUpdate").style.display = "none";
-                    $("#noRecord").html("");
-                    $("#noRecord").append("<span>" + res.reasonList[0].reason + "</span>");
-                    document.getElementById("noRecord").style.display = "block";
+                   console.log("res",res);
+
+                   if(res.reasonList[0].status == 1){
+                        document.getElementById("noRecord").style.display = "none";
+                        document.getElementById("UpdateGrid").style.display = "none";
+                        $("#successUpdate").html("");
+                        $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
+                        document.getElementById("successUpdate").style.display = "block";
+                    }else{
+                        document.getElementById("UpdateGrid").style.display = "none";
+                        document.getElementById("successUpdate").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.reasonList[0].reason + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
                 }
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-         });
+            });
+
+        } else {
+            console.log('cancel')
+        }
     }
 
 </script>
