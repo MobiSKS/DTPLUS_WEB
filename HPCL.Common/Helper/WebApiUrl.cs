@@ -180,6 +180,7 @@
         public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
         public static string updateaggregatornormalfleetcustomer="api/dtplus/aggregatorcustomer/update_aggregator_normal_fleet_customer";
         public static string verifyrejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/verify_reject_aggregator_normal_fleet_customer";
+        public static string approverejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/approve_reject_aggregator_normal_fleet_customer";
 
         #endregion
 
@@ -416,6 +417,7 @@
 
         #region "HDFC Bank Credit Pouch"
         public static string GetCustomerDetailsUrl = "api/dtplus/HDFCCreditPouch/get_dtail_mo";
+        public static string GetPlanUrl = "api/dtplus/HDFCCreditPouch/get_plan";
         #endregion
     }
 }

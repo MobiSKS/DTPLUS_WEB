@@ -30,5 +30,13 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckPlan(string amount)
+        {
+            var searchList = await _hDFCBankCreditPouchService.GetPlan(amount);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
     }
 }

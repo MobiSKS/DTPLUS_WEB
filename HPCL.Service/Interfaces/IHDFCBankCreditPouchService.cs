@@ -7,5 +7,6 @@ namespace HPCL.Service.Interfaces
     public interface IHDFCBankCreditPouchService
     {
         Task<CustomerDetailsRes> GetCustomerDetails(CustomerDetailsReq entity);
+        Task<GetPlanRes> GetPlan(string amount);
     }
 }

@@ -1112,5 +1112,59 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res;
         }
+        public async Task<ValidateAggregatorCustomerModel> ApproveFleetCustomer(ValidateAggregatorCustomerModel entity)
+        {
+
+            entity.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            entity.CustomerStatusMdl.AddRange(await _commonActionService.GetNormalFleetCustomerStatus());
+
+            var request = new GetValidateNewCustomerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
+                StateId = String.IsNullOrEmpty(entity.StateId) || entity.StateId == "0" ? "" : entity.StateId,
+                CustomerName = String.IsNullOrEmpty(entity.CustomerName) ? "" : entity.CustomerName,
+                Status = String.IsNullOrEmpty(entity.StatusId) ? "19" : entity.StatusId
+            };
+
+            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornormalfleetcustomer);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+
+            entity.SearchCustomerResponseGridLst = searchList;
+            entity.Message = obj["Message"].ToString();
+            return entity;
+        }
+        public async Task<List<SuccessResponse>> ApproveorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string ApprovedRemark)
+        {
+            var reqBody = new GetValidateNewCustomerRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId,
+                Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ApprovedRemark = ApprovedRemark,
+                FormNumber = FormNumber,
+                CustomerStatus = (CustomerStatus == "Approve") ? "1" : "20"
+            };//1 for Approve, 20 for Approve Reject
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.approverejectaggregatornormalfleetcustomer);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }
