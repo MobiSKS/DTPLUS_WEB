@@ -9,7 +9,7 @@
             <li class="breadcrumb-item font-weight-light">Validate Aggregate Customer</li>
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -912,11 +912,11 @@
                                     <div id="docUpdateId">
 
                                         <fieldset class="border-1 rounded border-grey pt-3">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Id Proof</legend>
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">ID Proof</legend>
 
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Id Proof<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12">ID Proof<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                         @*@Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })*@
@@ -1572,9 +1572,15 @@
                       let tableCustData = sessionStorage.getItem("tableCustData");
 
                       console.log(tableCustData, "tbl");
-
-                      $("#reason").html(res);
-                      $(".toBeHiddenOnSuccess").hide();
+                      
+                            if(res.status=="0")
+                                $("#reason").addClass("alert-danger");
+                            else
+                                $("#reason").addClass("alert-success");
+                          $("#reason").html(res.reason);
+                          $("#reason").attr("style","display:block");
+                          $(".toBeHiddenOnSuccess").hide();
+                      
                   },
                   error: function (ex) {
                       alert('Failed' + ex);
