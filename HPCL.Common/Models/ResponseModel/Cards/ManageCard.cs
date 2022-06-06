@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 
 namespace HPCL.Common.Models.ResponseModel.Cards
@@ -44,17 +45,17 @@ namespace HPCL.Common.Models.ResponseModel.Cards
 
     public class LimitResponseData
     {
-        public int CardBalance { get; set; }
+        public Decimal CardBalance { get; set; }
         public string CardStatus { get; set; }
-        public int SaleTranscationLimit { get; set; }
-        public int DailySaleLimit { get; set; }
-        public int DailyCreditLimit { get; set; }
-        public int CashPurseLimit { get; set; }
-        public int MonthlySaleLimit { get; set; }
-        public int MonthlySaleBalance { get; set; }
-        public int CCMSReloadSale { get; set; }
+        public Decimal SaleTranscationLimit { get; set; }
+        public Decimal DailySaleLimit { get; set; }
+        public Decimal DailyCreditLimit { get; set; }
+        public Decimal CashPurseLimit { get; set; }
+        public Decimal MonthlySaleLimit { get; set; }
+        public Decimal MonthlySaleBalance { get; set; }
+        public Decimal CCMSReloadSale { get; set; }
         public string CCMSReloadSaleLimit { get; set; }
-        public int CCMSReloadSaleLimitValue { get; set; }
+        public Decimal CCMSReloadSaleLimitValue { get; set; }
         public string ExpiryDate { get; set; }
         public string AllowCreditTranscation { get; set; }
         public int LimitTypeId { get; set; }
@@ -62,7 +63,7 @@ namespace HPCL.Common.Models.ResponseModel.Cards
 
     public class ServicesResponse
     {
-        public int ServiceID { get; set; }
+        public string ServiceID { get; set; }
         public string ServiceName { get; set; }
         public int SelectedServices { get; set; }
     }
