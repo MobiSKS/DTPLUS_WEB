@@ -179,6 +179,7 @@
         public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
         public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
         public static string updateaggregatornormalfleetcustomer="api/dtplus/aggregatorcustomer/update_aggregator_normal_fleet_customer";
+        public static string verifyrejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/verify_reject_aggregator_normal_fleet_customer";
 
         #endregion
 

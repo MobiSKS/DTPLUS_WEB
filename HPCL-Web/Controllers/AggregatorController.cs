@@ -273,7 +273,7 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
         {
             UpdateKycResponse updateKycResponse = await _aggregatorService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus);
-            return Json(updateKycResponse.Reason);
+            return Json(updateKycResponse);
         }
         [HttpPost]
         public async Task<JsonResult> GetDistrictDetails(string Stateid)

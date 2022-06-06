@@ -10,6 +10,14 @@
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
         <div id="reason" class="mb-3 text-center" style="display:none"></div>
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="msgSucess" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="msgError" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -86,7 +94,7 @@
                                                     <button class="btn btn_primary" type="submit" id="btnSearch" name="btnSave">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="=btnCancel"  onclick="location.href='@Url.Action("VerfiyFleetCustomer", "AggregatorFleet", new { reset="Y" })'">@Label.Reset</button>
+                                                    <button class="btn btn_primary" type="button" id="=btnCancel" onclick="location.href='@Url.Action("VerfiyFleetCustomer", "AggregatorFleet", new { reset="Y" })'">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,10 +169,22 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Edit</span></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>View</span></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Download</span></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Approve</span></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Edit"  href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-start">
+                                                                        <a asp-action="VerifyorRejectFleetCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-FormNumber="@item.FormNumber" asp-route-CustomerStatus="Verify"
+                                                           onclick="return confirm('Are you sure to approve verification of this customer?');" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check verify" aria-hidden="true"></i></a>
+                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban verifyreject" aria-hidden="true"></i></a>
+                                                                        <div class="col-md-12 col-12 px-0">
+                                                                            <input type="text" style="display:none" maxlength="100" class="form-control" id="VerifyRemark_@y">
+
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-check reject" aria-hidden="true" style="display:none"></i></a>
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
                                                                 <td></td>
                                                             </tr>
                                                         }
@@ -258,7 +278,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                   
+
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
@@ -1024,32 +1044,20 @@
                                         </div>
 
                                     </div>
-                                   @* <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
+                                    @* <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
                                         <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                            <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
-                                                <span class="error" id="Remarks_error"></span>
-                                            </div>
+                                        <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                        @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
+                                        <span class="error" id="Remarks_error"></span>
                                         </div>
-                                    </div>*@
+                                        </div>
+                                        </div>*@
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnPrevious" class="btn btn_primary py-2 px-4" onclick="ShowOfficialDetails()">Previous</a>
                                         </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnUpdateCustomer" class="btn btn_primary py-2 px-4" onclick="updateCustomer()">UPDATE CUSTOMER</a>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnUpdateKYCDocuments" class="btn btn_primary py-2 px-4" onclick="updateKYCDocuments()">UPDATE KYC Documents</a>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(4)" href="#">@Label.Validate</a>@*href="#CustomerCardsSection"*@
-                                            <span class="error" id="Referenceno_error"></span>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnReject" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(13)" href="#">@Label.Reject</a>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -1067,6 +1075,7 @@
 
 <script type="text/javascript">
     var notFoundError = "@ViewBag.NotFoundError";
+    var activeRow="";
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
 
@@ -1078,7 +1087,8 @@
                 search: true,
                 searchText: 'Enter Text here.'
             });
-
+            $('#StatusId').val("19");
+            $("#StatusId")[0].sumo.reload();
 
 
             let tableCustData = sessionStorage.getItem("tableCustData");
@@ -1376,7 +1386,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
             document.getElementById("FromDate_error").innerHTML = "";
             document.getElementById("ToDate_error").innerHTML = "";
-            $("#ManageCardHeader").text("Validate Aggregate Customer");
+            $("#ManageCardHeader").text("Verify Customers");
             sessionStorage.removeItem("tableCustData");
             //window.location.reload(true);
             $("#FormNumberForSearch").val('');
@@ -1597,11 +1607,11 @@
             debugger;
             var FormNumber = frmNumber.trim();
             referenceNo=referenceNo.trim();
-          
+
 
             $('#FormNumberForSearch').val(FormNumber);
             $('#CustomerReferenceNoForSearch').val(referenceNo);
-          
+
               if(FormNumber!="")
               {
                   var link = '@Url.Action("UpdateFleetCustomer", "AggregatorFleet", new { FormNumber = "-1" })';
@@ -1680,7 +1690,7 @@
           document.getElementById("AddressTab").classList.add("disable");
           document.getElementById("OfficialDetailsTab").classList.add("disable");
           document.getElementById("KYCDetailsTab").classList.add("disable");
-          $("#ManageCardHeader").text("Validate Aggregate Customer");
+          $("#ManageCardHeader").text("Verify Customers");
       }
       function ShowBasicInfo()
       {
@@ -1734,7 +1744,60 @@
           }
 
     });
+     $("#CustomerSearch").on('click', '.verifyreject', function () {
+        if(activeRow==""){
+            currentRow = $(this).closest("tr");
+            activeRow=currentRow;
+            var i = currentRow[0].cells[0].textContent;
 
+
+
+           currentRow.find('.verify').attr("style","display:none");
+           currentRow.find('.verifyreject').attr("style","display:none");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:block");
+           currentRow.find('.reject').attr("style","display:block");
+           currentRow.find('.cancel').attr("style","display:block");
+       }
+    });
+     $("#CustomerSearch").on('click', '.cancel', function () {
+          currentRow = $(this).closest("tr");
+          var i = currentRow[0].cells[0].textContent;
+
+        currentRow.find('.verify').attr("style","display:block");
+        currentRow.find('.verifyreject').attr("style","display:block");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:none");
+           currentRow.find('.reject').attr("style","display:none");
+           currentRow.find('.cancel').attr("style","display:none");
+       activeRow="";
+     });
+     $("#CustomerSearch").on('click', '.reject', function () {
+         debugger;
+         var flag="Y";
+          row = $(this).closest("tr");
+          var i = row[0].cells[0].textContent;
+          var verifyRemark = $('#VerifyRemark_'+i).val();
+          var formNumber = row[0].cells[1].textContent;
+          var customerId = row[0].cells[2].textContent;
+          if(verifyRemark.trim()==""){
+              alert("Comment is required to reject verification of a customer.");
+              flag="N";
+          }
+          if(flag=="Y"){
+             $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("VerifyorRejectFleetCustomer", "AggregatorFleet")',
+                    contentType: "application/json; charset=utf-8",
+                    data:{ CustomerId:customerId,FormNumber:formNumber,CustomerStatus:"Reject", VerifyRemark:verifyRemark},
+                    dataType: 'json',
+                    success: function (data) {
+                       
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+             });
+           }
+     });
 </script>
 <style>
     .nav-item > li.active > a,

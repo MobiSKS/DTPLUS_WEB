@@ -172,10 +172,12 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
-        public async Task<IActionResult> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity, string reset)
+        public async Task<IActionResult> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity, string reset, string success, string error)
         {
             var modals = await _fleetService.VerfiyFleetCustomer(entity);
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
             return View(modals);
         }
 
@@ -397,6 +399,20 @@ namespace HPCL_Web.Controllers
             }
 
             return View(modals);
+        }
+    
+        public async Task<ActionResult> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark)
+        {
+            var searchResult = await _fleetService.VerifyorRejectFleetCustomer(CustomerId,FormNumber,CustomerStatus, VerifyRemark);
+            string succesMsg = "", errorMsg = "";
+            if (searchResult.Count() > 0)
+            {
+                if (searchResult[0].Status == 1)
+                    succesMsg = searchResult[0].Reason;
+                else if (searchResult[0].Status == 0)
+                    errorMsg = searchResult[0].Reason;
+            }
+            return RedirectToAction("VerfiyFleetCustomer", "AggregatorFleet", new { success = succesMsg, error = errorMsg });
         }
     }
 }

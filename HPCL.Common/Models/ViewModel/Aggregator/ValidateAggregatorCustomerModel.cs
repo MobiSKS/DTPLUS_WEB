@@ -318,6 +318,7 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
         public string StateId { get; set; }
         public string StatusId { get; set; }
         public virtual List<StatusResponseModal> CustomerStatusMdl { get; set; }
+        public string VerifyRemark { get; set; }
     }
 
 }
