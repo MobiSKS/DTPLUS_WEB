@@ -18,5 +18,7 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string CustomerId { get; set; }
         public string VerifyRemark { get; set; }
         public string VerifyBy { get; set; }
+        public string Approvedby { get; set; }
+        public string ApprovedRemark { get; set; }
     }
 }

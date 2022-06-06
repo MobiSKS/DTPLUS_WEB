@@ -7,10 +7,10 @@ namespace HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer
 {
     public class OTCCardDetailsResponse: CommonResponseBase
     {
-        public List<CardDetails> Data { get; set; }
+        public List<OTCCardDetails> Data { get; set; }
     }
 
-    public class CardDetails
+    public class OTCCardDetails
     {
         public string CardNo { get; set; }
     }

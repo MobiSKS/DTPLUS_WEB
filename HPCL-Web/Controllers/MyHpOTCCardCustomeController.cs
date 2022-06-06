@@ -36,8 +36,7 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> CustomerCardCreation()
         {
-            MyHPOTCCardCustomerModel custMdl = new MyHPOTCCardCustomerModel();
-            custMdl = await _myHpOTCCardCustomerService.CustomerCardCreation();
+            var custMdl = await _myHpOTCCardCustomerService.CustomerCardCreation();
 
             return View(custMdl);
         }
@@ -138,7 +137,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID)
         {
-            List<CardDetails> lstCardDetails = await _myHpOTCCardCustomerService.GetAvailableOTCCardByRegionalId(RegionalId, MerchantID);
+            List<OTCCardDetails> lstCardDetails = await _myHpOTCCardCustomerService.GetAvailableOTCCardByRegionalId(RegionalId, MerchantID);
 
             if (lstCardDetails != null)
             {
@@ -320,6 +319,38 @@ namespace HPCL_Web.Controllers
 
             return Json(Model);
         }
+        public async Task<IActionResult> OTCCustomerCreation()
+        {
+            var custMdl = await _myHpOTCCardCustomerService.OTCCustomerCreation();
 
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableOTCCardUserWise()
+        {
+            List<OTCCardDetails> lstCardDetails = await _myHpOTCCardCustomerService.GetAvailableOTCCardUserWise();
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OTCCustomerCreation(MyHPOTCCardCustomerModel customerModel)
+        {
+            customerModel = await _myHpOTCCardCustomerService.InsertOTCCustomer(customerModel);
+
+            if (customerModel.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectForOTCCardCustomer", new { Message = customerModel.Remarks });
+            }
+
+            return View(customerModel);
+        }
     }
 }

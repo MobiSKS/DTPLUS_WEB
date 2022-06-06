@@ -19,7 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<DriverCardAllocationToMerchantModel> DriverCardAllocation();
         Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedDriverCards(string RegionalId);
         Task<CommonResponseData> SaveDriverCardsAllocation([FromBody] LinkCardsToMerchantModel linkCardsToMerchantModel);
-        Task<List<CardDetails>> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID);
+        Task<List<OTCCardDetails>> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID);
         Task<DriverCardCustomerModel> CreateDriverCardCustomer(DriverCardCustomerModel customerModel);
         Task<GetCustomerNameByIdResponse> GetCustomerNameByCustomerId(string CustomerID);
 

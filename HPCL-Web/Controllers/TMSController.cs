@@ -105,8 +105,8 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel)
         {
-            var result = await _tmsService.UpdateTMSEnrollmentStatus(manageEnrollmentsModel);
-            return Json(result);
+            var commonResponseData = await _tmsService.UpdateTMSEnrollmentStatus(manageEnrollmentsModel);
+            return Json(new { commonResponseData = commonResponseData });
         }
         public async Task<IActionResult> SwitchToCargoFL()
         {

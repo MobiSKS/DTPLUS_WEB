@@ -28,5 +28,7 @@ namespace HPCL.Service.Interfaces
         Task<ManageAggregatorViewModel> UpdateFleetCustomer(ManageAggregatorViewModel cust);
         Task<ManageAggregatorViewModel> UpdateFleetCustomer(string FormNumber);
         Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark);
+        Task<ValidateAggregatorCustomerModel> ApproveFleetCustomer(ValidateAggregatorCustomerModel entity);
+        Task<List<SuccessResponse>> ApproveorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string ApprovedRemark);
     }
 }
