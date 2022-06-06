@@ -326,7 +326,7 @@ namespace HPCL.Service.Services
                     GetCustomerDetails.CustomerOrgName = "";
                     if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
                     {
-                        GetCustomerDetails.Reason = "Customer ID not found";
+                        GetCustomerDetails.Reason = "Customer ID Not Found";
                     }
                     else
                     {
@@ -338,7 +338,7 @@ namespace HPCL.Service.Services
                     GetCustomerDetails.CustomerOrgName = "";
                     if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
                     {
-                        GetCustomerDetails.Reason = "Customer ID not found";
+                        GetCustomerDetails.Reason = "Customer ID Not Found";
                     }
                     else
                     {
