@@ -70,7 +70,7 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
                 SecretQuestionName = "Select Secret Question"
             });
 
-            CardDetailsMdl = new List<CardDetails>();
+            CardDetailsMdl = new List<OTCCardDetails>();
             VehicleTypeMdl = new List<VehicleTypeModel>();
             SalesAreaMdl = new List<SalesAreaModel>();
 
@@ -105,7 +105,7 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
-        public virtual List<CardDetails> CardDetailsMdl { get; set; }
+        public virtual List<OTCCardDetails> CardDetailsMdl { get; set; }
         public virtual List<CustomerTypeModel> CustomerTypeMdl { get; set; }
         public virtual List<CustomerSubTypeModel> CustomerSubTypeMdl { get; set; }
         public virtual List<CustomerZonalOfficeModel> CustomerZonalOfficeMdl { get; set; }

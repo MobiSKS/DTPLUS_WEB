@@ -18,7 +18,7 @@ namespace HPCL.Service.Interfaces
 
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation();
                
-        Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID);
+        Task<List<OTCCardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID);
         Task<MyHPOTCCardCustomerModel> CustomerCardCreation(MyHPOTCCardCustomerModel customerModel);
         Task<OTCUnAllocatedCardsResponse> GetAllUnAllocatedCardsForOtcCard(string RegionalId);
         Task<MIDAllocationOfCardsModel> OTCCardsAllocation();
@@ -34,5 +34,8 @@ namespace HPCL.Service.Interfaces
         Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests();
         Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel);
         Task<CustomerInserCardResponseData> CheckMobilNoAlreadyUsedForOTCCard(string MobileNo);
+        Task<MyHPOTCCardCustomerModel> OTCCustomerCreation();
+        Task<List<OTCCardDetails>> GetAvailableOTCCardUserWise();
+        Task<MyHPOTCCardCustomerModel> InsertOTCCustomer(MyHPOTCCardCustomerModel customerModel);
     }
 }

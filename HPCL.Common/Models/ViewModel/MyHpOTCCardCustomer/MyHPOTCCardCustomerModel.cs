@@ -100,6 +100,7 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public string OutletName { get; set; }
         public string ExternalPANAPIStatus { get; set; }
         public string ExternalVehicleAPIStatus { get; set; }
+        public string UserName { get; set; }        
     }
 
     [Serializable()]

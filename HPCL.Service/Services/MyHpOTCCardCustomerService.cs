@@ -123,9 +123,9 @@ namespace HPCL.Service.Services
             return custModel;
         }
         
-        public async Task<List<CardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID)
+        public async Task<List<OTCCardDetails>> GetAvailableOTCCardByRegionalId(string RegionalId, string MerchantID)
         {
-            List<CardDetails> lstCardDetails = new List<CardDetails>();
+            List<OTCCardDetails> lstCardDetails = new List<OTCCardDetails>();
 
             GetAvailableOTCCardByRegionalIdRequestModel requestinfo = new GetAvailableOTCCardByRegionalIdRequestModel()
             {
@@ -140,16 +140,9 @@ namespace HPCL.Service.Services
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityOtcCard);
 
-            //OTCCardDetailsResponse otcCardDetailsResponse = JsonConvert.DeserializeObject<OTCCardDetailsResponse>(response);
-            //if (otcCardDetailsResponse.Internel_Status_Code == 1000)
-            //{
-            //    lstCardDetails = otcCardDetailsResponse.Data;
-            //}
-
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
-
+            List<OTCCardDetails> searchList = jarr.ToObject<List<OTCCardDetails>>();
 
             return searchList;
         }
@@ -485,6 +478,123 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
+        }
+
+        public async Task<MyHPOTCCardCustomerModel> OTCCustomerCreation()
+        {
+            MyHPOTCCardCustomerModel custModel = new MyHPOTCCardCustomerModel();
+            custModel.Remarks = "";
+
+            custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            custModel.LoggedInAs = "";
+            custModel.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalPANAPIStatus))
+            {
+                custModel.ExternalPANAPIStatus = "Y";
+            }
+            custModel.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custModel.ExternalVehicleAPIStatus))
+            {
+                custModel.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return custModel;
+        }
+        public async Task<List<OTCCardDetails>> GetAvailableOTCCardUserWise()
+        {
+            List<OTCCardDetails> lstCardDetails = new List<OTCCardDetails>();
+
+            var requestBody = new GetAvailableOTCCardByRegionalIdRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityOtcCardUserWise);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<OTCCardDetails> searchList = jarr.ToObject<List<OTCCardDetails>>();
+
+
+            return searchList;
+        }
+
+        public async Task<MyHPOTCCardCustomerModel> InsertOTCCustomer(MyHPOTCCardCustomerModel customerModel)
+        {
+            customerModel.UserAgent = CommonBase.useragent;
+            customerModel.UserIp = CommonBase.userip;
+            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
+            customerModel.CommunicationFax = (string.IsNullOrEmpty(customerModel.CommunicationFaxCode) ? "" : customerModel.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationFaxPart2) ? "" : customerModel.CommunicationFaxPart2);
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
+
+            customerModel.ObjOTCCardEntryDetail.Clear();
+
+            if (!string.IsNullOrEmpty(customerModel.CardNumber1))
+            {
+                OTCCardEntryDetailsMdl cardDetails = new OTCCardEntryDetailsMdl();
+                cardDetails.CardNo = customerModel.CardNumber1;
+                cardDetails.VechileNo = customerModel.VehicleNo1;
+                cardDetails.MobileNo = customerModel.MobileNo1;
+                customerModel.ObjOTCCardEntryDetail.Add(cardDetails);
+            }
+
+            if (!string.IsNullOrEmpty(customerModel.CardNumber2))
+            {
+                OTCCardEntryDetailsMdl cardDetails = new OTCCardEntryDetailsMdl();
+                cardDetails.CardNo = customerModel.CardNumber2;
+                cardDetails.VechileNo = customerModel.VehicleNo2;
+                cardDetails.MobileNo = customerModel.MobileNo2;
+                customerModel.ObjOTCCardEntryDetail.Add(cardDetails);
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerModel), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertOtcCustomerRegionWise);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            OTCCustomerCardResponse customerResponse = JsonConvert.DeserializeObject<OTCCustomerCardResponse>(response, settings);
+
+            customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            customerModel.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    customerModel.Remarks = customerResponse.Message;
+
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                customerModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(customerModel.CommunicationStateId.ToString()));
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                {
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+                    if (customerResponse.Data[0].Status != 1)
+                    {
+                        customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
+                    }
+                }
+            }
+
+            return customerModel;
         }
 
     }

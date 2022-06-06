@@ -162,7 +162,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID)
         {
-            List<CardDetails> lstCardDetails = await _driverCardCustomerService.GetAvailableDriverCardByRegionalId(RegionalId, MerchantID);
+            List<OTCCardDetails> lstCardDetails = await _driverCardCustomerService.GetAvailableDriverCardByRegionalId(RegionalId, MerchantID);
 
             if (lstCardDetails != null)
             {
