@@ -38,6 +38,8 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            SessionMenuModel.menuList.Clear();
+            SessionMenuModel.sessionList.Clear();
             return View();
         }
 
