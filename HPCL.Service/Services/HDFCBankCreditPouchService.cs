@@ -5,6 +5,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,23 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCustomerDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             CustomerDetailsRes searchList = obj.ToObject<CustomerDetailsRes>();
+            return searchList;
+        }
+
+        public async Task<GetPlanRes> GetPlan(string amount)
+        {
+            var searchBody = new GetPlan
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Amount = Convert.ToDecimal(amount)
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetPlanUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetPlanRes searchList = obj.ToObject<GetPlanRes>();
             return searchList;
         }
     }

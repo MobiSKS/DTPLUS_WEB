@@ -132,7 +132,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Quarterly Fuel Consumption in (RS)<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <input class="form-control" id="" name="fromdate" type="text" value="">
+                                                    <input class="form-control" id="" name="fromdate" type="text" value="" onchange="checkPlan(this)">
                                                 </div>
                                             </div>
                                         </div>
@@ -142,10 +142,8 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Plan<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <select class="form-control">
-                                                        <option>--Select--</option>
-                                                        <option>Plan1</option>
-                                                        <option>Plan2</option>
+                                                    <select class="form-control disableSumo typePlan">
+                                                        <option>Select</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -158,10 +156,8 @@
                                             <label class="font-weight-normal col-md-4 col-12">Bank Name</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <select class="form-control">
-                                                        <option>--Select--</option>
+                                                    <select class="form-control disableSumo" disabled="disabled">
                                                         <option>HDFC Bank</option>
-                                                        <option>ICICI Bank</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -223,6 +219,9 @@
 
     $(document).ready(function () {
 
+        $('select')[0].sumo.unload();
+        $('select')[1].sumo.unload();
+
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
             if (charCode != 46 && charCode > 31
@@ -264,5 +263,34 @@
             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
         }
+    }
+
+    function checkPlan(res){
+        var amountVal = res.value;
+
+        $.ajax({
+            url: "@Url.Action("CheckPlan", "HDFCBankCreditPouch")",
+            data: { amount: amountVal},
+            type: "POST",
+            dataType: "JSON",
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    //$("#typePlan").html("")
+                    var plans = $('<option value="' + res.searchList.data[0].planId + '">' + (res.searchList.data[0].planName || '') + '</option>');
+                    $('.typePlan').append(plans);
+                }else{
+                    //$("#typePlan").html("")
+                    var plans = $('<option>Select</option>');
+                    $('.typePlan').append(plans);
+                }
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
     }
 </script>

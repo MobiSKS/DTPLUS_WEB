@@ -414,6 +414,7 @@
 
         #region "HDFC Bank Credit Pouch"
         public static string GetCustomerDetailsUrl = "api/dtplus/HDFCCreditPouch/get_dtail_mo";
+        public static string GetPlanUrl = "api/dtplus/HDFCCreditPouch/get_plan";
         #endregion
     }
 }
