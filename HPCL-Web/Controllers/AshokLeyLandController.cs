@@ -84,7 +84,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetAvailableAlOTCCardForDealer(string DealerCode)
         {
-            List<CardDetails> lstCardDetails = await _ashokLeyLandService.GetAvailableAlOTCCardForDealer(DealerCode);
+            List<OTCCardDetails> lstCardDetails = await _ashokLeyLandService.GetAvailableAlOTCCardForDealer(DealerCode);
 
             if (lstCardDetails != null)
             {

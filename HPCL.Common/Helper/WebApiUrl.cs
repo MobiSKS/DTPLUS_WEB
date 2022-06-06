@@ -229,6 +229,8 @@
         public static string getotccardallocationactivation = "api/dtplus/otc/get_otc_card_allocation_activation";
         public static string insertDealerWiseOtcCardRequest = "api/dtplus/otc/insert_dealer_wise_otc_card_request";
         public static string checkMobileNo = "api/dtplus/card/check_mobile_no";
+        public static string getAvailityOtcCardUserWise = "api/dtplus/otc/get_availity_otc_card_user_wise";
+        public static string insertOtcCustomerRegionWise = "api/dtplus/otc/insert_otc_customer_region_wise";
         #endregion
 
         #region TatkalCardCustomer

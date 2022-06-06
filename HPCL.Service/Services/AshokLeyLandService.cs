@@ -184,7 +184,7 @@ namespace HPCL.Service.Services
             ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return ashokLeylandCardCreationModel;
         }
-        public async Task<List<CardDetails>> GetAvailableAlOTCCardForDealer(string DealerCode)
+        public async Task<List<OTCCardDetails>> GetAvailableAlOTCCardForDealer(string DealerCode)
         {
 
             var requestinfo = new GetAvailityALOTCCardRequest()
@@ -201,7 +201,7 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
+            List<OTCCardDetails> searchList = jarr.ToObject<List<OTCCardDetails>>();
 
             return searchList;
         }

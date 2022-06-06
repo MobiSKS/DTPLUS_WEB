@@ -194,7 +194,7 @@ namespace HPCL.Service.Services
 
             return responseData;
         }
-        public async Task<List<CardDetails>> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID)
+        public async Task<List<OTCCardDetails>> GetAvailableDriverCardByRegionalId(string RegionalId, string MerchantID)
         {
 
             GetAvailableOTCCardByRegionalIdRequestModel requestinfo = new GetAvailableOTCCardByRegionalIdRequestModel()
@@ -218,8 +218,7 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<CardDetails> searchList = jarr.ToObject<List<CardDetails>>();
-
+            List<OTCCardDetails> searchList = jarr.ToObject<List<OTCCardDetails>>();
 
             return searchList;
         }
