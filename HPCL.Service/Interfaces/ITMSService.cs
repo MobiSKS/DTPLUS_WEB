@@ -22,7 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<string> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel);
         Task<ManageEnrollmentsModel> ManageEnrollments();
         Task<ViewCustomerSearch> ViewCustomerDetailsForManageEnrollments(string CustomerId);
-        Task<string> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel);
+        Task<CommonResponseData> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel);
         Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL();
         Task<NavigateToTransportManagementSystemModel> SwitchToCargoFL(NavigateToTransportManagementSystemModel model);
         Task<EnrollmentsApprovalModel> ApproveEnrollments(EnrollmentsApprovalModel model);
