@@ -77,5 +77,11 @@ namespace HPCL_Web.Controllers
             var result = await _hotlistingService.UpdateHotlistApproval(hotlistApprovalRequest);
             return Json(result);
         }
+        [HttpPost]
+        public async Task<JsonResult> CheckEntityAlreadyHotlisted(string EntityTypeId, string EntityId)
+        {
+            var result = await _hotlistingService.CheckEntityAlreadyHotlisted(EntityTypeId, EntityId);
+            return Json(result);
+        }
     }
 }

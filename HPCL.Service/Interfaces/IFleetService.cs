@@ -1,7 +1,9 @@
-﻿using HPCL.Common.Models.ResponseModel.Customer;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +23,10 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerDetailsForAddCard(string customerReferenceNo);
         Task<CustomerCardInfo> GetCustomerAddCardsPartialView([FromBody] List<CardDetails> arrs);
+        Task<ValidateAggregatorCustomerModel> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity);
+        Task<JObject> ViewCustomerDetails(string FormNumber);
+        Task<ManageAggregatorViewModel> UpdateFleetCustomer(ManageAggregatorViewModel cust);
+        Task<ManageAggregatorViewModel> UpdateFleetCustomer(string FormNumber);
+        Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark);
     }
 }

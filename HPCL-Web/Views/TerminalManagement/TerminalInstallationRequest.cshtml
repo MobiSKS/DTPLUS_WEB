@@ -8,7 +8,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "TerminalManagement")" class="text_primary">Terminal Management</a> </li>
             <li class="breadcrumb-item font-weight-light">Terminal Installation Request</li>
         </ul>
-        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
         @*<form id="formValid" method="POST" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">*@
         <form id="formValid" class="toBeHiddenOnSuccess">
             <div class="w-100">
@@ -429,7 +429,7 @@
              e.preventDefault();
          if (flag == "Y") {
 
-             if (confirm('Do you want to place terminal installation request for this merchant?')) {
+             if (confirm('Do you want to place Terminal Installation Request for this Merchant?')) {
 
                  var objInsertTerminal = [];
 
@@ -446,8 +446,16 @@
                      dataType: "JSON",
                      data: { objInsertTerminal: JSON.stringify(objInsertTerminal) },
                      success: function (res) {
-                         $("#reason").html(res);
-                         $(".toBeHiddenOnSuccess").hide();
+                         if(res.length>0){
+                             debugger;
+                            if(res[0]=="0")
+                                $("#reason").addClass("alert-danger");
+                            else
+                                $("#reason").addClass("alert-success");
+                            $("#reason").html(res[1]);
+                            $("#reason").attr("style","display:block");
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
                      },
                      error: function (ex) {
                          alert('Failed' + ex);

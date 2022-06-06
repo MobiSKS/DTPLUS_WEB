@@ -5,11 +5,19 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Profile","Aggregator")" class="text_primary">Profile</a> </li>
-            <li class="breadcrumb-item font-weight-light">Validate Aggregate Customer</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","AggregatorFleet")" class="text_primary">Aggregator Fleet</a> </li>
+            <li class="breadcrumb-item font-weight-light">Verify Customers</li>
         </ul>
         @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
-        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
+        <div id="reason" class="mb-3 text-center" style="display:none"></div>
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="msgSucess" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="msgError" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="tab-content mt-3" id="myTabContent">
@@ -17,7 +25,7 @@
 
                     <div class="border-1 rounded border-grey h-100 mt-3">
 
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader"> Validate Aggregate Customer </p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader">Verify Customers</p>
                         <div class="p-2 p-md-4">
                             <div>
                                 <ul class="nav nav-tabs mt-2 form_tabs mb-3">
@@ -47,7 +55,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12 mb-0">Region Name</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -62,21 +70,18 @@
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">From Date</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Name</label>
                                                 <div class="col-md-7 col-12">
-                                                    @*@Html.TextBoxFor(m => m.FromDate, new { @type = "date", @class = "form-control date" })*@
-                                                    @*@Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @Type = "Date" })*@
-                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
-                                                    <span class="error" id="FromDate_error"></span>
+                                                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @id = "CustomerName", maxlength = "50" })
+                                                    <span class="error" id="customerName_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">To Date</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Status</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('FromDate_error');" })
-                                                    <span class="error" id="ToDate_error"></span>
+                                                    @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.CustomerStatusMdl, "StatusId", "StatusName"), new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -86,10 +91,10 @@
                                         <div class="col-md-3 col-12 px-0">
                                             <div class="col-12 d-flex align-items-center justify-content-center">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="submit" id="btnSave" name="btnSave" style="background-color:#084693;color:white;">@Label.Search</button>
+                                                    <button class="btn btn_primary" type="submit" id="btnSearch" name="btnSave">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="=btnCancel" style="background-color:#084693;color:white;" onclick="location.href='@Url.Action("ValidateAggregatorCustomer", "Aggregator", new { reset="Y" })'">@Label.Reset</button>
+                                                    <button class="btn btn_primary" type="button" id="=btnCancel" onclick="location.href='@Url.Action("VerfiyFleetCustomer", "AggregatorFleet", new { reset="Y" })'">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -110,7 +115,7 @@
                                                                 Form No.
                                                             </th>
                                                             <th>
-                                                                Customer Ref. No.
+                                                                Customer ID
                                                             </th>
                                                             <th>
                                                                 Customer Name
@@ -124,18 +129,20 @@
                                                             <th>
                                                                 Mobile No.
                                                             </th>
-
                                                             <th>
-                                                                Created Role Name
+                                                                Edit
                                                             </th>
                                                             <th>
-                                                                Created By
+                                                                View
                                                             </th>
                                                             <th>
-                                                                Created Date
+                                                                Download
                                                             </th>
                                                             <th>
                                                                 Action
+                                                            </th>
+                                                            <th>
+                                                                Approval Comment
                                                             </th>
 
                                                         </tr>
@@ -150,7 +157,7 @@
                                                             <tr>
                                                                 <td>@y</td>
                                                                 <td>@item.FormNumber</td>
-                                                                <td>@item.CustomerReferenceNo</td>
+                                                                <td>@item.CustomerId</td>
                                                                 <td>@item.CustomerName</td>
                                                                 <td>@item.CustomerAddress</td>
                                                                 @if (@item.PhoneNo == "-")
@@ -162,10 +169,23 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                <td>@item.CreatedRoleName</td>
-                                                                <td>@item.CreatedBy</td>
-                                                                <td>@item.CreatedDate</td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Validate</span></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Edit"  href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-start">
+                                                                        <a asp-action="VerifyorRejectFleetCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-FormNumber="@item.FormNumber" asp-route-CustomerStatus="Verify"
+                                                           onclick="return confirm('Are you sure to approve verification of this customer?');" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check verify" aria-hidden="true"></i></a>
+                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban verifyreject" aria-hidden="true"></i></a>
+                                                                        <div class="col-md-12 col-12 px-0">
+                                                                            <input type="text" style="display:none" maxlength="100" class="form-control" id="VerifyRemark_@y">
+
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-check reject" aria-hidden="true" style="display:none"></i></a>
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td></td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -258,30 +278,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                        <div class="col-md-6 col-12">
-                                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                                <label class="font-weight-normal col-md-5 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
-                                                                <div class="col-md-7 col-12">
-                                                                    <div class="custom_select">
-                                                                        @Html.DropDownListFor(x => x.TypeOfCustomerID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                                    </div>
-                                                                    <span class="error" id="regionalOffice_error"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-12">
-                                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                                <label class="font-weight-normal col-md-5 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
-                                                                <div class="col-md-7 col-12">
-                                                                    <div class="custom_select">
-                                                                        @Html.DropDownListFor(x => x.TierOfCustomerID, Enumerable.Empty<SelectListItem>(), null, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                                    </div>
-                                                                    <span class="error" id="regionalOffice_error"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
@@ -912,11 +909,11 @@
                                     <div id="docUpdateId">
 
                                         <fieldset class="border-1 rounded border-grey pt-3">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">ID Proof</legend>
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Id Proof</legend>
 
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">ID Proof<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12">Id Proof<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
                                                         @*@Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })*@
@@ -1047,32 +1044,20 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
+                                    @* <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
                                         <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                            <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
-                                            <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
-                                                <span class="error" id="Remarks_error"></span>
-                                            </div>
+                                        <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                        @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
+                                        <span class="error" id="Remarks_error"></span>
                                         </div>
-                                    </div>
+                                        </div>
+                                        </div>*@
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnPrevious" class="btn btn_primary py-2 px-4" onclick="ShowOfficialDetails()">Previous</a>
                                         </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnUpdateCustomer" class="btn btn_primary py-2 px-4" onclick="updateCustomer()">UPDATE CUSTOMER</a>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnUpdateKYCDocuments" class="btn btn_primary py-2 px-4" onclick="updateKYCDocuments()">UPDATE KYC Documents</a>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnApprove" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(4)" href="#">@Label.Validate</a>@*href="#CustomerCardsSection"*@
-                                            <span class="error" id="Referenceno_error"></span>
-                                        </div>
-                                        <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                            <a id="btnReject" class="btn btn_primary py-2 px-4" onclick="ApproveCustomer(13)" href="#">@Label.Reject</a>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -1090,6 +1075,7 @@
 
 <script type="text/javascript">
     var notFoundError = "@ViewBag.NotFoundError";
+    var activeRow="";
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
 
@@ -1101,8 +1087,9 @@
                 search: true,
                 searchText: 'Enter Text here.'
             });
+            $('#StatusId').val("19");
+            $("#StatusId")[0].sumo.reload();
 
-           
 
             let tableCustData = sessionStorage.getItem("tableCustData");
 
@@ -1159,7 +1146,7 @@
             console.log($('#CustomerReferenceNoForSearch').val());
 
             $.ajax({
-                url: "@Url.Action("ViewCustomerDetails", "Aggregator")",
+                url: "@Url.Action("ViewCustomerDetails", "AggregatorFleet")",
                 type: "POST",
                 dataType: "JSON",
                 data: { FormNumber: FormNumber },
@@ -1189,13 +1176,13 @@
                     $('#CustomerRegion_ID').append(regionalOff);
                     $("#CustomerRegion_ID")[0].sumo.reload();
 
-                    var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
-                    $('#TypeOfCustomerID').append(TypeOfCustomer);
-                    $("#TypeOfCustomerID")[0].sumo.reload();
+                    //var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
+                    //$('#TypeOfCustomerID').append(TypeOfCustomer);
+                    //$("#TypeOfCustomerID")[0].sumo.reload();
 
-                    var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
-                    $('#TierOfCustomerID').append(TierOfCustomer);
-                    $("#TierOfCustomerID")[0].sumo.reload();
+                    //var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
+                    //$('#TierOfCustomerID').append(TierOfCustomer);
+                    //$("#TierOfCustomerID")[0].sumo.reload();
 
 
                     var IndividualTitle = $('<option value="' + res.customer.individualOrgNameTitle + '">' + res.customer.individualOrgNameTitle + '</option>');
@@ -1399,7 +1386,7 @@
             document.getElementById("formNumber_error").innerHTML = "";
             document.getElementById("FromDate_error").innerHTML = "";
             document.getElementById("ToDate_error").innerHTML = "";
-            $("#ManageCardHeader").text("Validate Aggregate Customer");
+            $("#ManageCardHeader").text("Verify Customers");
             sessionStorage.removeItem("tableCustData");
             //window.location.reload(true);
             $("#FormNumberForSearch").val('');
@@ -1416,9 +1403,6 @@
 
             $('#CustomerRegion_ID').empty();
 
-            $('#TypeOfCustomerID').empty();
-
-            $('#TierOfCustomerID').empty();
 
 
             $('#IndividualOrgNameTitle').empty();
@@ -1572,15 +1556,11 @@
                       let tableCustData = sessionStorage.getItem("tableCustData");
 
                       console.log(tableCustData, "tbl");
-                      
-                            if(res.status=="0")
-                                $("#reason").addClass("alert-danger");
-                            else
-                                $("#reason").addClass("alert-success");
-                          $("#reason").html(res.reason);
-                          $("#reason").attr("style","display:block");
-                          $(".toBeHiddenOnSuccess").hide();
-                      
+
+                      $("#reason").html(res);
+                      $("#reason").addClass("alert-success");
+                      $("#reason").attr("style","display:block");
+                      $(".toBeHiddenOnSuccess").hide();
                   },
                   error: function (ex) {
                       alert('Failed' + ex);
@@ -1623,16 +1603,19 @@
               }
           });
 
-          function updateCustomer()
-          {
-              console.log($('#FormNumberForSearch').val());
-              var formNo = $('#FormNumberForSearch').val();
-              console.log('Inside updateCustomer()');
-              console.log(formNo);
-              if(formNo!="")
+          function updateCustomer(o, referenceNo, frmNumber) {
+            debugger;
+            var FormNumber = frmNumber.trim();
+            referenceNo=referenceNo.trim();
+
+
+            $('#FormNumberForSearch').val(FormNumber);
+            $('#CustomerReferenceNoForSearch').val(referenceNo);
+
+              if(FormNumber!="")
               {
-                  var link = '@Url.Action("UpdateAggregatorCustomer", "Aggregator", new { FormNumber = "-1" })';
-                  link = link.replace("-1", formNo);
+                  var link = '@Url.Action("UpdateFleetCustomer", "AggregatorFleet", new { FormNumber = "-1" })';
+                  link = link.replace("-1", FormNumber);
                   window.location.href = link;
                   return true;
               }
@@ -1707,7 +1690,7 @@
           document.getElementById("AddressTab").classList.add("disable");
           document.getElementById("OfficialDetailsTab").classList.add("disable");
           document.getElementById("KYCDetailsTab").classList.add("disable");
-          $("#ManageCardHeader").text("Validate Aggregate Customer");
+          $("#ManageCardHeader").text("Verify Customers");
       }
       function ShowBasicInfo()
       {
@@ -1761,7 +1744,60 @@
           }
 
     });
-    
+     $("#CustomerSearch").on('click', '.verifyreject', function () {
+        if(activeRow==""){
+            currentRow = $(this).closest("tr");
+            activeRow=currentRow;
+            var i = currentRow[0].cells[0].textContent;
+
+
+
+           currentRow.find('.verify').attr("style","display:none");
+           currentRow.find('.verifyreject').attr("style","display:none");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:block");
+           currentRow.find('.reject').attr("style","display:block");
+           currentRow.find('.cancel').attr("style","display:block");
+       }
+    });
+     $("#CustomerSearch").on('click', '.cancel', function () {
+          currentRow = $(this).closest("tr");
+          var i = currentRow[0].cells[0].textContent;
+
+        currentRow.find('.verify').attr("style","display:block");
+        currentRow.find('.verifyreject').attr("style","display:block");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:none");
+           currentRow.find('.reject').attr("style","display:none");
+           currentRow.find('.cancel').attr("style","display:none");
+       activeRow="";
+     });
+     $("#CustomerSearch").on('click', '.reject', function () {
+         debugger;
+         var flag="Y";
+          row = $(this).closest("tr");
+          var i = row[0].cells[0].textContent;
+          var verifyRemark = $('#VerifyRemark_'+i).val();
+          var formNumber = row[0].cells[1].textContent;
+          var customerId = row[0].cells[2].textContent;
+          if(verifyRemark.trim()==""){
+              alert("Comment is required to reject verification of a customer.");
+              flag="N";
+          }
+          if(flag=="Y"){
+             $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("VerifyorRejectFleetCustomer", "AggregatorFleet")',
+                    contentType: "application/json; charset=utf-8",
+                    data:{ CustomerId:customerId,FormNumber:formNumber,CustomerStatus:"Reject", VerifyRemark:verifyRemark},
+                    dataType: 'json',
+                    success: function (data) {
+                       
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+             });
+           }
+     });
 </script>
 <style>
     .nav-item > li.active > a,

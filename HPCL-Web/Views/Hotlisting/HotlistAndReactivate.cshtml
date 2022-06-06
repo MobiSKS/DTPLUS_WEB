@@ -180,6 +180,10 @@
         $("#remarks_error").html("");
         $("#divReasonDetails").attr("style", "display:none");
         $('#ReasonId').empty();
+        $("#CustomerId").val("");
+        $("#MerchantId").val("");
+        $("#TerminalId").val("");
+        $("#CardNo").val("");
         //$('<option>',
         //    {
         //        value: 0,
@@ -453,15 +457,36 @@
                 }
             }
         }
+        var entityTypeId = $('#EntityTypeId :selected').val();
+        if(entityIdVal.trim()!=""){
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                dataType: 'json',
+                data: { EntityTypeId: entityTypeId, EntityId: entityIdVal },
+                success: function (data) {
+                    if(data.length>0){
+                        if(data[0].status=="0"){
+                            $("#entityid_error").attr("style", "display:block");
+                            $("#entityid_error").html(data[0].reason);
+                            flag="N";
+                        }
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+            });
+        }
         if (flag == "N")
             e.preventDefault();
         else {
             var actionText = $('#ActionId :selected').text();
-            var entityTypeId = $('#EntityTypeId :selected').val();
+            //var entityTypeId = $('#EntityTypeId :selected').val();
             var remarks = $('#Remarks').val();
             var model = { EntityTypeId: entityTypeId, EntityIdVal: entityIdVal, ActionId: actionId, ReasonId: reasonId, ReasonDetails: reasonDetails, Remarks: remarks };
             if (actionText == "Permanent Hotlisted" || actionId == "7") {
-                if (confirm("Entity Once Permanent Hotlisted cannot be Reactived. Are you sure you want to continue?")) {
+                if (confirm("Entity once Permanent Hotlisted cannot be Reactived. Are you sure you want to continue?")) {
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
@@ -492,14 +517,14 @@
                 }
             }
             else {
-                 $.ajax({
+                    $.ajax({
                         type: 'POST',
                         url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
                         contentType: "application/json; charset=utf-8",
                         dataType: 'json',
                         data: JSON.stringify(model),
                         success: function (data) {
-                           if(data.length>0){
+                            if(data.length>0){
                                
                                 $("#reason").html("");
                                 $("#reason").append("<span>" + data[1] + "</span></br>");
@@ -541,8 +566,31 @@
                     $("#entityid_error").html("Invalid Merchant ID");
                 }
                 else {
-                    $("#entityid_error").attr("style", "display:none");
-                    $("#entityid_error").html("");
+                    
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId, EntityId: merchantId },
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                    
                 }
          }
          else{
@@ -558,8 +606,29 @@
                     $("#entityid_error").html("Invalid Terminal ID");
                 }
                 else {
-                    $("#entityid_error").attr("style", "display:none");
-                    $("#entityid_error").html("");
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:terminalId},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
                 }
          }
          else{
@@ -575,8 +644,29 @@
                     $("#entityid_error").html("Invalid Card Number");
                 }
                 else {
-                    $("#entityid_error").attr("style", "display:none");
-                    $("#entityid_error").html("");
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:cardNo},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
                 }
             }
          else{
@@ -585,6 +675,7 @@
          }
      });
      $("#CustomerId").on("blur", function () {
+         debugger;
             var customerId = $("#CustomerId").val();
             if (customerId != "") {
                 if (!customerId.match(mappedCustomerId)) {
@@ -592,8 +683,29 @@
                     $("#entityid_error").html("Invalid Customer ID");
                 }
                 else {
-                    $("#entityid_error").attr("style", "display:none");
-                    $("#entityid_error").html("");
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:customerId},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
                 }
             }
          else{

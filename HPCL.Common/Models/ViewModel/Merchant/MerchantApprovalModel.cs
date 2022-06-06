@@ -22,11 +22,11 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 CategoryID = 2,
                 CategoryType = "Updated Merchants"
             });
-            Categories.Add(new CategoriesModel
-            {
-                CategoryID = 3,
-                CategoryType = "Clone Merchant"
-            });
+            //Categories.Add(new CategoriesModel
+            //{
+            //    CategoryID = 3,
+            //    CategoryType = "Clone Merchant"
+            //});
         }
         public string CategoryID { get; set; }
         public string FromDate { get; set; }

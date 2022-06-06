@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.Aggregator;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.ResponseModel.Customer;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Service.Services
 {
-    public class FleetService:IFleetService
+    public class FleetService : IFleetService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
@@ -345,35 +346,22 @@ namespace HPCL.Service.Services
 
             return obj;
         }
-        public async Task<CustomerCardInfo> AddCardDetails( CustomerCardInfo customerCardInfo)
+        public async Task<CustomerCardInfo> AddCardDetails(CustomerCardInfo customerCardInfo)
         {
-
-            foreach (HPCL.Common.Models.ViewModel.Customer.CardDetails cardDetails in customerCardInfo.ObjCardDetail)
-            {
-                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
-                {
-                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
-                }
-
-                if (customerCardInfo.CustomerTypeId == "902" || customerCardInfo.CustomerTypeId == "917")
-                {
-                    cardDetails.YearOfRegistration = "0";
-                }
-            }
-
 
             MultipartFormDataContent form = new MultipartFormDataContent();
 
             form.Add(new StringContent(customerCardInfo.CustomerReferenceNo.ToString()), "CustomerReferenceNo");
-            form.Add(new StringContent(customerCardInfo.NoOfCards), "NoOfCards");
-            form.Add(new StringContent(customerCardInfo.CardPreference), "CardPreference");
+            form.Add(new StringContent(customerCardInfo.NoOfCards.ToString()), "NoOfCards");
+            form.Add(new StringContent(customerCardInfo.CardPreference.ToString()), "CardPreference");
             foreach (CardDetails item in customerCardInfo.ObjCardDetail)
             {
-                form.Add(new StringContent(item.MobileNo), "MobileNo");
-                form.Add(new StringContent(item.VechileNo), "VechileNo");
-                form.Add(new StringContent(item.VehicleType), "VehicleType");
-                form.Add(new StringContent(item.VehicleMake), "VehicleMake");
-                form.Add(new StringContent(item.YearOfRegistration), "YearOfRegistration");
+                if(customerCardInfo.CardPreference=="Cardless")
+                    form.Add(new StringContent(item.MobileNo.ToString()), "MobileNo");
+                form.Add(new StringContent(item.VechileNo.ToUpper().ToString()), "VechileNo");
+                form.Add(new StringContent(item.VehicleType.ToString()), "VehicleType");
+                form.Add(new StringContent(item.VehicleMake.ToString()), "VehicleMake");
+                form.Add(new StringContent(item.YearOfRegistration.ToString()), "YearOfRegistration");
                 form.Add(new StreamContent(item.RCCopy.OpenReadStream()), "RcCopy", item.RCCopy.FileName);
             }
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
@@ -588,7 +576,7 @@ namespace HPCL.Service.Services
                         customerCardInfo.NoOfCards = "";
                     customerCardInfo.RBEName = string.IsNullOrEmpty(customerResponseByReferenceNo.Data[0].RBEName) ? "" : customerResponseByReferenceNo.Data[0].RBEName;
 
-                   
+
                 }
             }
             else
@@ -605,16 +593,16 @@ namespace HPCL.Service.Services
                 addAddOnCard.Message = arrs[0].Message;
             if (!string.IsNullOrEmpty(arrs[0].CardPreference))
                 addAddOnCard.CardPreference = arrs[0].CardPreference;
-        
+
             addAddOnCard.CustomerTypeId = "901";
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.VehicleNoVerifiedManually = Convert.ToBoolean(arrs[0].VehicleNoVerifiedManually);
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardIdentifier)) || (!string.IsNullOrEmpty(arrs[0].VechileNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
-           
-                addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
-          
+
+            addAddOnCard.NoOfGridRows = arrs[0].NoOfCards;
+
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
             if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
             {
@@ -623,6 +611,506 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
+        public async Task<ValidateAggregatorCustomerModel> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity)
+        {
 
+            entity.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            entity.CustomerStatusMdl.AddRange(await _commonActionService.GetNormalFleetCustomerStatus());
+
+            var request = new GetValidateNewCustomerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
+                StateId = String.IsNullOrEmpty(entity.StateId) || entity.StateId=="0" ? "" : entity.StateId,
+                CustomerName = String.IsNullOrEmpty(entity.CustomerName) ? "" : entity.CustomerName,
+                Status = String.IsNullOrEmpty(entity.StatusId) ? "19" : entity.StatusId
+            };
+
+            _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornormalfleetcustomer);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SearchCustomerResponseGrid> searchList = jarr.ToObject<List<SearchCustomerResponseGrid>>();
+
+            entity.SearchCustomerResponseGridLst = searchList;
+            entity.Message = obj["Message"].ToString();
+            return entity;
+        }
+        public async Task<ManageAggregatorViewModel> UpdateFleetCustomer(string FormNumber)
+        {
+            ManageAggregatorViewModel custMdl = new ManageAggregatorViewModel();
+            custMdl.Remarks = "";
+
+            int CustomerTypeID = 901;
+            custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID));
+
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+
+            custMdl.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
+
+            custMdl.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+
+            if (!string.IsNullOrEmpty(FormNumber))
+            {
+                JObject obj = await ViewCustomerDetails(FormNumber);
+
+                var searchRes = obj["Data"].Value<JObject>();
+                var custResult = searchRes["GetAggregatorCustomerDetails"].Value<JArray>();
+
+
+
+                List<CustomerFullDetails> customerList = custResult.ToObject<List<CustomerFullDetails>>();
+
+                CustomerFullDetails Customer = customerList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+
+                if (Customer != null)
+                {
+                    custMdl.FormNumber = Customer.FormNumber;
+                    custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
+                    custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
+
+                    custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(custMdl.CustomerTypeID));
+
+                    custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
+                    custMdl.CustomerZonalOfficeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.ZonalOfficeID) ? "0" : Customer.ZonalOfficeID);
+
+                    List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
+                    lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(custMdl.CustomerZonalOfficeID);
+                    if (lstCustomerRegion.Count > 0)
+                    {
+                        if (lstCustomerRegion[0].RegionalOfficeName == "--Select--")
+                            lstCustomerRegion[0].RegionalOfficeName = "Select Regional Office";
+                    }
+
+                    custMdl.CustomerRegionMdl.Clear();
+                    custMdl.CustomerRegionMdl.AddRange(lstCustomerRegion);
+
+                    custMdl.CustomerRegionID = Convert.ToInt32(string.IsNullOrEmpty(Customer.RegionalOfficeID) ? "0" : Customer.RegionalOfficeID);
+
+                    custMdl.SalesAreaMdl.AddRange(await _commonActionService.GetSalesAreaDropdown(custMdl.CustomerRegionID.ToString()));
+
+                    if (!string.IsNullOrEmpty(Customer.DateOfApplication))
+                    {
+                        string[] subs = Customer.DateOfApplication.Split(' ');
+                        string[] date = subs[0].Split('/');
+                        custMdl.CustomerDateOfApplication = date[1] + "-" + date[0] + "-" + date[2];
+                    }
+                    custMdl.CustomerSalesAreaID = Convert.ToInt32(string.IsNullOrEmpty(Customer.SalesareaID) ? "0" : Customer.SalesareaID);
+                    custMdl.IndividualOrgNameTitle = Customer.IndividualOrgNameTitle;
+                    custMdl.IndividualOrgName = Customer.IndividualOrgName;
+                    custMdl.CustomerNameOnCard = Customer.NameOnCard;
+                    custMdl.CustomerTbentityID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfBusinessEntityId) ? "0" : Customer.TypeOfBusinessEntityId);
+                    custMdl.CustomerResidenceStatus = Customer.ResidenceStatus;
+                    custMdl.CustomerIncomeTaxPan = Customer.IncomeTaxPan;
+                    custMdl.CommunicationAddress1 = Customer.CommunicationAddress1;
+                    custMdl.CommunicationAddress2 = Customer.CommunicationAddress2;
+                    custMdl.CommunicationAddress3 = Customer.CommunicationAddress3;
+                    custMdl.CommunicationLocation = Customer.CommunicationLocation;
+                    custMdl.CommunicationCity = Customer.CommunicationCityName;
+                    custMdl.CommunicationPinCode = Customer.CommunicationPincode;
+                    custMdl.CommunicationStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CommunicationStateId) ? "0" : Customer.CommunicationStateId);
+
+                    custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
+
+                    custMdl.CommunicationDistrictId = (string.IsNullOrEmpty(Customer.CommunicationDistrictId) ? "0" : Customer.CommunicationDistrictId);
+                    custMdl.CommunicationEmail = Customer.CommunicationEmailid;
+                    custMdl.CommunicationMobileNumber = Customer.CommunicationMobileNo;
+
+                    if (!string.IsNullOrEmpty(Customer.CommunicationPhoneNo))
+                    {
+                        string[] subs = Customer.CommunicationPhoneNo.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.CommunicationDialCode = subs[0].ToString();
+                            custMdl.CommunicationPhoneNo = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.CommunicationPhoneNo = Customer.CommunicationPhoneNo;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Customer.CommunicationFax))
+                    {
+                        string[] subs = Customer.CommunicationFax.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.CommunicationFaxCode = subs[0].ToString();
+                            custMdl.CommunicationFax = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.CommunicationFax = Customer.CommunicationFax;
+                        }
+                    }
+
+                    custMdl.PerOrRegAddress1 = Customer.PermanentAddress1;
+                    custMdl.PerOrRegAddress2 = Customer.PermanentAddress2;
+                    custMdl.PerOrRegAddress3 = Customer.PermanentAddress3;
+                    custMdl.PerOrRegAddressLocation = Customer.PermanentLocation;
+                    custMdl.PerOrRegAddressCity = Customer.PermanentCityName;
+                    custMdl.PerOrRegAddressPinCode = Customer.PermanentPincode;
+                    custMdl.PerOrRegAddressStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentStateId) ? "0" : Customer.PermanentStateId);
+
+                    custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
+
+                    custMdl.PermanentDistrictId = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentDistrictId) ? "0" : Customer.PermanentDistrictId);
+
+                    if (!string.IsNullOrEmpty(Customer.PermanentFax))
+                    {
+                        string[] subs = Customer.PermanentFax.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.PermanentFaxCode = subs[0].ToString();
+                            custMdl.PermanentFax = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.PermanentFax = Customer.PermanentFax;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Customer.PermanentPhoneNo))
+                    {
+                        string[] subs = Customer.PermanentPhoneNo.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.PerOrRegAddressDialCode = subs[0].ToString();
+                            custMdl.PerOrRegAddressPhoneNumber = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.PerOrRegAddressPhoneNumber = Customer.PermanentPhoneNo;
+                        }
+                    }
+
+                    custMdl.KeyOffTitle = Customer.KeyOfficialTitle;
+                    custMdl.KeyOffIndividualInitials = Customer.KeyOfficialIndividualInitials;
+                    custMdl.KeyOffFirstName = Customer.KeyOfficialFirstName;
+                    custMdl.KeyOffMiddleName = Customer.KeyOfficialMiddleName;
+                    custMdl.KeyOffLastName = Customer.KeyOfficialLastName;
+
+                    if (!string.IsNullOrEmpty(Customer.KeyOfficialFax))
+                    {
+                        string[] subs = Customer.KeyOfficialFax.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.KeyOffFaxCode = subs[0].ToString();
+                            custMdl.KeyOffFax = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.KeyOffFax = Customer.KeyOfficialFax;
+                        }
+                    }
+                    custMdl.KeyOffDesignation = Customer.KeyOfficialDesignation;
+                    custMdl.KeyOffEmail = Customer.KeyOfficialEmail;
+
+                    if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
+                    {
+                        string[] subs = Customer.KeyOfficialPhoneNo.Split('-');
+
+                        if (subs.Count() > 1)
+                        {
+                            custMdl.KeyOffPhoneCode = subs[0].ToString();
+                            custMdl.KeyOffPhoneNumber = subs[1].ToString();
+                        }
+                        else
+                        {
+                            custMdl.KeyOffPhoneNumber = Customer.KeyOfficialPhoneNo;
+                        }
+                    }
+                    custMdl.KeyOffMobileNumber = Customer.KeyOfficialMobile;
+                    custMdl.KeyOfficialSecretQuestion = Customer.KeyOfficialSecretQuestionId;
+                    custMdl.KeyOfficialSecretAnswer = Customer.KeyOfficialSecretAnswer;
+
+
+                    if (!string.IsNullOrEmpty(Customer.KeyOfficialDOA))
+                    {
+                        if (!Customer.KeyOfficialDOA.Contains("1900"))
+                        {
+
+                            string[] subs = Customer.KeyOfficialDOA.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Customer.KeyOfficialDOB))
+                    {
+                        if (!Customer.KeyOfficialDOB.Contains("1900"))
+                        {
+                            string[] subs = Customer.KeyOfficialDOB.Split(' ');
+                            string[] date = subs[0].Split('/');
+                            custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                        }
+                    }
+
+                    custMdl.CustomerTypeOfFleetID = (string.IsNullOrEmpty(Customer.KeyOfficialTypeOfFleetId) ? "0" : Customer.KeyOfficialTypeOfFleetId);
+                    custMdl.KeyOfficialCardAppliedFor = Customer.KeyOfficialCardAppliedFor;
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile1) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile1);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile1 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile1 = "";
+                    custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = (string.IsNullOrEmpty(Customer.KeyOfficialApproxMonthlySpendsonVechile2) ? "" : Customer.KeyOfficialApproxMonthlySpendsonVechile2);
+                    if (custMdl.KeyOfficialApproxMonthlySpendsonVechile2 == "0")
+                        custMdl.KeyOfficialApproxMonthlySpendsonVechile2 = "";
+                    custMdl.FleetSizeNoOfVechileOwnedHCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedHCV) ? "" : Customer.FleetSizeNoOfVechileOwnedHCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedHCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedHCV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedLCV) ? "" : Customer.FleetSizeNoOfVechileOwnedLCV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedLCV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedLCV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : Customer.FleetSizeNoOfVechileOwnedMUVSUV);
+                    if (custMdl.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                    custMdl.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(Customer.FleetSizeNoOfVechileOwnedCarJeep) ? "" : Customer.FleetSizeNoOfVechileOwnedCarJeep);
+                    if (custMdl.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        custMdl.FleetSizeNoOfVechileOwnedCarJeep = "";
+                    custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
+                    custMdl.TierOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TierOfCustomerId) ? "0" : Customer.TierOfCustomerId);
+                    custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);
+                    custMdl.PanCardRemarks = Customer.PanCardRemarks;
+
+                    custMdl.IsDuplicatePanNo = "0";
+                    custMdl.AllowPanDuplication = "N";
+                    if (!string.IsNullOrEmpty(custMdl.PanCardRemarks))
+                    {
+                        custMdl.IsDuplicatePanNo = "1";
+                        custMdl.AllowPanDuplication = "Y";
+                    }
+
+                    if (Customer.AreaOfOperation != null)
+                    {
+                        if (Customer.AreaOfOperation.Contains("Inter State"))
+                            custMdl.InterState = true;
+                        else
+                            custMdl.InterState = false;
+
+                        if (Customer.AreaOfOperation.Contains("Inter City"))
+                            custMdl.InterCity = true;
+                        else
+                            custMdl.InterCity = false;
+
+                        if (Customer.AreaOfOperation.Contains("Intra City"))
+                            custMdl.IntraCity = true;
+                        else
+                            custMdl.IntraCity = false;
+                    }
+                }
+
+            }
+
+            return custMdl;
+        }
+
+        public async Task<ManageAggregatorViewModel> UpdateFleetCustomer(ManageAggregatorViewModel cust)
+        {
+            if (cust.InterState)
+            {
+                cust.AreaOfOperation = "Inter State";
+            }
+            if (cust.InterCity)
+            {
+                if (string.IsNullOrEmpty(cust.AreaOfOperation))
+                    cust.AreaOfOperation = "Inter City";
+                else
+                    cust.AreaOfOperation = cust.AreaOfOperation + ",Inter City";
+            }
+            if (cust.IntraCity)
+            {
+                if (string.IsNullOrEmpty(cust.AreaOfOperation))
+                    cust.AreaOfOperation = "Intra City";
+                else
+                    cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
+            }
+
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
+            }
+
+            string customerDateOfApplication = "";
+            string KeyOffDateOfAnniversary = "";
+            string KeyOfficialDOB = "";
+
+
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
+
+            if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            {
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
+            }
+
+            if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            {
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
+            }
+
+            string CustomerTypeID = "901";//For Fleet Customer
+
+            var CustomerTypeForms = new Dictionary<string, string>
+                {
+                    {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                    {"Useragent", CommonBase.useragent},
+                    {"Userip", CommonBase.userip},
+                    {"CustomerReferenceNo", cust.CustomerReferenceNo},
+                    {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
+                    {"RegionalOffice", cust.CustomerRegionID.ToString()},
+                    {"DateOfApplication", customerDateOfApplication},
+                    {"SalesArea", cust.CustomerSalesAreaID.ToString()},
+                    {"ModifiedBy", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                    {"IndividualOrgNameTitle", cust.IndividualOrgNameTitle},
+                    {"IndividualOrgName", cust.IndividualOrgName},
+                    {"NameOnCard", (String.IsNullOrEmpty(cust.CustomerNameOnCard)?"":cust.CustomerNameOnCard)},
+                    {"TypeOfBusinessEntity", cust.CustomerTbentityID.ToString()},
+                    {"ResidenceStatus", cust.CustomerResidenceStatus},
+                    {"IncomeTaxPan", cust.CustomerIncomeTaxPan},
+                    {"CommunicationAddress1", cust.CommunicationAddress1},
+                    {"CommunicationAddress2", cust.CommunicationAddress2},
+                    {"CommunicationAddress3", (String.IsNullOrEmpty(cust.CommunicationAddress3)?"":cust.CommunicationAddress3)},
+                    {"CommunicationLocation", (String.IsNullOrEmpty(cust.CommunicationLocation)?"":cust.CommunicationLocation)},
+                    {"CommunicationCityName", (String.IsNullOrEmpty(cust.CommunicationCity)?"":cust.CommunicationCity)},
+                    {"CommunicationPincode", cust.CommunicationPinCode},
+                    {"CommunicationStateId", cust.CommunicationStateID.ToString()},
+                    {"CommunicationDistrictId", cust.CommunicationDistrictId.ToString()},
+                    {"CommunicationPhoneNo", (String.IsNullOrEmpty(cust.CommunicationDialCode)?"":cust.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationPhoneNo)?"":cust.CommunicationPhoneNo)},
+                    {"CommunicationFax", (String.IsNullOrEmpty(cust.CommunicationFaxCode)?"":cust.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationFax)?"":cust.CommunicationFax)},
+                    {"CommunicationMobileNo", cust.CommunicationMobileNumber},
+                    {"CommunicationEmailid", cust.CommunicationEmail},
+                    {"PermanentAddress1", cust.PerOrRegAddress1},
+                    {"PermanentAddress2", cust.PerOrRegAddress2},
+                    {"PermanentAddress3", (String.IsNullOrEmpty(cust.PerOrRegAddress3)?"":cust.PerOrRegAddress3)},
+                    {"PermanentLocation", (String.IsNullOrEmpty(cust.PerOrRegAddressLocation)?"":cust.PerOrRegAddressLocation)},
+                    {"PermanentCityName", cust.PerOrRegAddressCity},
+                    {"PermanentPincode", cust.PerOrRegAddressPinCode},
+                    {"PermanentStateId", cust.PerOrRegAddressStateID.ToString()},
+                    {"PermanentDistrictId", (cust.PermanentDistrictId==0?cust.CommunicationDistrictId.ToString():cust.PermanentDistrictId.ToString())},
+                    {"PermanentPhoneNo", (String.IsNullOrEmpty(cust.PerOrRegAddressDialCode)?"":cust.PerOrRegAddressDialCode) + "-" + (String.IsNullOrEmpty(cust.PerOrRegAddressPhoneNumber)?"":cust.PerOrRegAddressPhoneNumber)},
+                    {"PermanentFax", (String.IsNullOrEmpty(cust.PermanentFaxCode)?"":cust.PermanentFaxCode) + "-" + (String.IsNullOrEmpty(cust.PermanentFax)?"":cust.PermanentFax)},
+                    {"KeyOfficialTitle", cust.KeyOffTitle},
+                    {"KeyOfficialIndividualInitials", cust.KeyOffIndividualInitials},
+                    {"KeyOfficialFirstName", (String.IsNullOrEmpty(cust.KeyOffFirstName)?"":cust.KeyOffFirstName)},
+                    {"KeyOfficialMiddleName", (String.IsNullOrEmpty(cust.KeyOffMiddleName)?"":cust.KeyOffMiddleName)},
+                    {"KeyOfficialLastName", (String.IsNullOrEmpty(cust.KeyOffLastName)?"":cust.KeyOffLastName)},
+                    {"KeyOfficialFax", (String.IsNullOrEmpty(cust.KeyOffFaxCode)?"":cust.KeyOffFaxCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffFax)?"":cust.KeyOffFax)},
+                    {"KeyOfficialDesignation", cust.KeyOffDesignation},
+                    {"KeyOfficialEmail", cust.KeyOffEmail},
+                    {"KeyOfficialPhoneNo", (String.IsNullOrEmpty(cust.KeyOffPhoneCode)?"":cust.KeyOffPhoneCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffPhoneNumber)?"":cust.KeyOffPhoneNumber)},
+                    {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
+                    {"KeyOfficialMobile", cust.KeyOffMobileNumber},
+                    {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
+                    {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
+                    {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
+                    {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
+                    {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
+                    {"KeyOfficialApproxMonthlySpendsonVechile1", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile1)},
+                    {"KeyOfficialApproxMonthlySpendsonVechile2", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile2)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile2)},
+                    {"AreaOfOperation", cust.AreaOfOperation},
+                    {"FleetSizeNoOfVechileOwnedHCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedHCV)?"0":cust.FleetSizeNoOfVechileOwnedHCV)},
+                    {"FleetSizeNoOfVechileOwnedLCV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedLCV)?"0":cust.FleetSizeNoOfVechileOwnedLCV)},
+                    {"FleetSizeNoOfVechileOwnedMUVSUV", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedMUVSUV)?"0":cust.FleetSizeNoOfVechileOwnedMUVSUV)},
+                    {"FleetSizeNoOfVechileOwnedCarJeep", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedCarJeep)?"0":cust.FleetSizeNoOfVechileOwnedCarJeep)},
+                    {"CustomerType", CustomerTypeID.ToString()},
+                    {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
+                    {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
+                    {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
+                    {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)}
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerTypeForms), Encoding.UTF8, "application/json");
+
+            var contentString = await _requestService.CommonRequestService(content, WebApiUrl.updateaggregatornormalfleetcustomer);
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(contentString);
+            cust.Internel_Status_Code = customerResponse.Internel_Status_Code;
+
+            if (customerResponse.Data != null)
+            {
+                cust.Remarks = customerResponse.Data[0].Reason;
+                cust.CustomerReferenceNo = customerResponse.Data[0].CustomerReferenceNo;
+            }
+            else
+                cust.Remarks = customerResponse.Message;
+
+            if (cust.Internel_Status_Code != 1000)
+            {
+                //cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
+
+                cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(901));
+
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+
+                cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
+
+                cust.SalesAreaMdl.AddRange(await _commonActionService.GetSalesAreaDropdown(cust.CustomerRegionID.ToString()));
+
+                cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+
+                cust.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+                cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
+
+                cust.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+
+                cust.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
+
+                cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+
+                cust.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.PerOrRegAddressStateID.ToString()));
+            }
+
+            return cust;
+        }
+        //  verifyrejectaggregatornormalfleetcustomer
+        public async Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId,string FormNumber,string CustomerStatus,string VerifyRemark)
+        {
+            var reqBody = new GetValidateNewCustomerRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId,
+                VerifyBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                VerifyRemark = VerifyRemark,
+                FormNumber = FormNumber,
+                CustomerStatus=(CustomerStatus=="Verify")?"11":"12"
+            };//11 for Verfiy, 12 for Verfiy Reject
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.verifyrejectaggregatornormalfleetcustomer);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity;
+﻿using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
 using System.Collections.Generic;
@@ -33,5 +34,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> MapEmergencyAddOnCard(string objCards);
         Task<EnableCustomerServicesModel> EnableCustomerServices();
         Task<GetDetailForEnableDisableProductsAndTransactions> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo);
+        Task<CommonResponseData> EnableDisableProductsAndTransaction(string ObjProductsInput, string ObjTransactionsInput, string CustomerId, string CardNo, string MobileNo);
     }
 }

@@ -1342,7 +1342,7 @@ namespace HPCL.Service.Services
             var validateMappedMerchantIdJarr = validateMappedMerchantIdObj["Data"].Value<JArray>();
             List<ValidateMappedMerchantIdModalOutput> validateErpCodeModels = validateMappedMerchantIdJarr.ToObject<List<ValidateMappedMerchantIdModalOutput>>();
 
-            return validateErpCodeModels.First().Status.ToString();
+            return validateErpCodeModels.First().Reason.ToString();
         }
 
         public async Task<List<RbeMappingStatusResponse>> RbeMappingStatusService()
@@ -1530,6 +1530,23 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<GetHotlistReasonRes> hotlistReasonList = jarr.ToObject<List<GetHotlistReasonRes>>();
             return hotlistReasonList;
+        }
+        public async Task<List<StatusResponseModal>> GetNormalFleetCustomerStatus()
+        {
+            var forms = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornormalfleetcustomerstatus);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> responseModel = jarr.ToObject<List<StatusResponseModal>>();
+            return responseModel;
         }
     }
 }

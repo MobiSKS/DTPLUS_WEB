@@ -102,6 +102,12 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
             SearchCustomerResponseGridLst = new List<SearchCustomerResponseGrid>();
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            CustomerStatusMdl = new List<StatusResponseModal>();
+            //CustomerStatusMdl.Add(new StatusResponseModal
+            //{
+            //    StatusId = 0,
+            //    StatusName = "Select Status"
+            //});
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -308,7 +314,11 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
         public string PanCardRemarks { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
-
+        public string CustomerName { get; set; }
+        public string StateId { get; set; }
+        public string StatusId { get; set; }
+        public virtual List<StatusResponseModal> CustomerStatusMdl { get; set; }
+        public string VerifyRemark { get; set; }
     }
 
 }

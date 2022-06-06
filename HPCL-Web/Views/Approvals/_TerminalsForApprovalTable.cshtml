@@ -116,7 +116,7 @@ else
                 return;
             }
              if (remark.trim() == "") {
-                 $("#remark_error").html("Please enter remark.");
+                 $("#remark_error").html("Please enter Remark.");
                  flag = "N";
                   return;
              }
@@ -124,9 +124,9 @@ else
                 $("#remark_error").html("");
                 var confirmText="";
              if(action=="Approve")
-                confirmText="Do you want to approve the selected Terminal deinstallation request(s)?";
+                confirmText="Do you want to approve the selected Terminal Deinstallation Request(s)?";
             if(action=="Reject")
-             confirmText ="Do you want to reject the selected Terminal deinstallation request(s)?";
+             confirmText ="Do you want to reject the selected Terminal Deinstallation Request(s)?";
             if (ObjApprovalRejectDetail.length > 0 && flag == "Y") {
                 if (confirm(confirmText)) {
                     var modal = { Remark: remark, ModifiedBy: "", ObjTerminalDeInstallationInsertInput: ObjApprovalRejectDetail, Action: action, UserId: "", Useragent: "", Userip: "", };
@@ -137,9 +137,15 @@ else
                         dataType: 'json',
                         data: JSON.stringify(modal),
                         success: function (data) {
-                            console.log(data);
-                            $("#reason").html(data);
-                            $(".toBeHiddenOnSuccess").hide();
+                            if(data.length>0){
+                                if(data[0]=="0")
+                                    $("#reason").addClass("alert-danger");
+                                else
+                                    $("#reason").addClass("alert-success");
+                                $("#reason").html(data[1]);
+                                $("#reason").attr("style","display:block");
+                                $(".toBeHiddenOnSuccess").hide();
+                            }
                         },
                         error: function (ex) {
                             alert('Error.' + ex);
@@ -154,7 +160,7 @@ else
          var remark = $("#Remark").val();
          if (remark.trim() == "") {
              $("#remark_error").attr("style", "display:block");
-             $("#remark_error").html("Please enter remark.");
+             $("#remark_error").html("Please enter Remark.");
 
          }
          else{

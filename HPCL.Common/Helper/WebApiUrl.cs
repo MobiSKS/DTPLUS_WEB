@@ -75,6 +75,7 @@
         public static string getlistcreditcloselimittype = "api/dtplus/dealercredit/get_list_credit_close_limit_type";
         public static string GetHotlistReasonListUrl = "api/dtplus/hotlist/Get_Hotlist_Reason";
         public static string GetDetailForEnableDisableProductsAndTransactions = "api/dtplus/card/get_detail_for_enable_disable_products_and_transactions";
+        public static string EnableDisableProductsAndTransactions = "api/dtplus/card/enable_disable_products_and_transactions";
         #endregion
 
         #region Merchant
@@ -106,6 +107,7 @@
         public static string merchantReceivablePayableDetail = "api/dtplus/merchant/merchant_receivable_payable_detail";
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
+        public static string approveRejectMerchantUpdate = "api/dtplus/merchant/approve_reject_merchant_update";
         #endregion
 
         #region customer
@@ -176,6 +178,8 @@
         public static string getCustomerPendingForFeeApproval = "api/dtplus/customer/bind_unverfied_customer_for_feewaiver";
         public static string getaggregatornormalfleetcustomerstatus = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status";
         public static string getaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer";
+        public static string updateaggregatornormalfleetcustomer="api/dtplus/aggregatorcustomer/update_aggregator_normal_fleet_customer";
+        public static string verifyrejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/verify_reject_aggregator_normal_fleet_customer";
 
         #endregion
 
@@ -316,6 +320,7 @@
         public static string gethotlistedorreactivateddetails = "api/dtplus/hotlist/get_hotlisted_or_reactivated_details";
         public static string gethotlistapproval = "api/dtplus/hotlist/get_hotlist_approval";
         public static string updatehotlistapproval = "api/dtplus/hotlist/update_hotlist_approval";
+        public static string checkentityalreadyhotlisted = "api/dtplus/hotlist/check_entity_already_hotlisted";
 
         #endregion
 

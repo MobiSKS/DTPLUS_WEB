@@ -20,12 +20,11 @@
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="viewProfile" role="tabpanel" aria-labelledby="viewProfile-tab">
                     <div class="border-1 rounded border-grey w-100 mt-3">
-                        @if (Model.Message != "")
+                        @if (Model.Message != "" && Model.Message != null)
                         {
                             <div class="mb-3 text-center" style="background-color: #f9c9c9; color: #8d0d0d; border-color: #f3abab;">@Model.Message</div>
-
                         }
-                        @if (Model.Success != "")
+                        @if (Model.Success != "" && Model.Success != null)
                         {
                             <div class="mb-3 text-center" style="background-color: #a0f1d6;">@Model.Success</div>
                         }
@@ -1101,6 +1100,10 @@
         if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
             $(".mappedMerchId").removeClass("displayNone");
             $("#OutletCategoryId").SumoSelect().sumo.disable();
+        }
+        else if ($('#MerchantTypeId :selected').text() != "--Select--"){
+            $("#MerchantTypeId option[value='1015']").remove();
+            $("#MerchantTypeId")[0].sumo.reload();
         }
 
         if ($("#OutletCategoryId").val() != "1") {
@@ -2832,8 +2835,8 @@
                     dataType: "json",
                     success: function (data, status, xhr) {
                         var v = data;
-                        if (status == 'success' && v == '0') {
-                            document.getElementById("mappedMerchantId_error").innerHTML = "Merchant ID does not exist";
+                        if (status == 'success' && v != 'Merchant ID Exsists') {
+                            document.getElementById("mappedMerchantId_error").innerHTML = v;
                             if (ret != "N") {
                                 document.applicationForm.MappedMerchantId.focus();
                             }

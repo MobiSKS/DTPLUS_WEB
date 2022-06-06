@@ -100,6 +100,19 @@ namespace HPCL.Service.Services
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
             var Response = await _requestService.CommonRequestService(ResponseContent, WebApiUrl.gethotlistapproval);
             getHotlistApprovalResponse = JsonConvert.DeserializeObject<GetHotlistApprovalResponse>(Response);
+            if (getHotlistApprovalResponse.Data != null)
+            {
+                foreach (var item in getHotlistApprovalResponse.Data)
+                {
+                    if (!string.IsNullOrEmpty(item.CreationDate))
+                    {
+                        string[] subs = item.CreationDate.Split('T');
+                        string[] date = subs[0].Split('-');
+                        item.CreationDate= date[1] + "-" + date[2] + "-" + date[0];
+                    }
+                }
+            }
+            
             return getHotlistApprovalResponse;
         }
         public async Task<List<HotlistSuccessResponse>> UpdateHotlistApproval([FromBody] HotlistApprovalRequest hotlistApprovalRequest)
@@ -120,6 +133,25 @@ namespace HPCL.Service.Services
             JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
 
 
+            var responseJarr = ResponseObj["Data"].Value<JArray>();
+            List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
+            return responseList;
+
+        }
+        public async Task<List<HotlistSuccessResponse>> CheckEntityAlreadyHotlisted(string EntityTypeId,string EntityId)
+        {
+            var hotlistRequest = new HotlistingRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                EntityIdVal = EntityId,
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
+            var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.checkentityalreadyhotlisted);
+            JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
             var responseJarr = ResponseObj["Data"].Value<JArray>();
             List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
             return responseList;
