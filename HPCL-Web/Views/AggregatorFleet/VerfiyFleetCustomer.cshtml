@@ -169,16 +169,20 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Edit</span></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>View</span></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><span class='rowCardNo'>Download</span></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Edit"  href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
                                                                 <td>
                                                                     <div class="d-flex align-items-center justify-content-start">
                                                                         <a asp-action="VerifyorRejectFleetCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-FormNumber="@item.FormNumber" asp-route-CustomerStatus="Verify"
-                                                                            onclick="return confirm('Are you sure to approve verification of this customer?');" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check" aria-hidden="true"></i></a>
-                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban" aria-hidden="true"></i></a>
-                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
-                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                           onclick="return confirm('Are you sure to approve verification of this customer?');" data-toggle="tooltip" title="" tooltip="Verify"><i class="fa fa-check verify" aria-hidden="true"></i></a>
+                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban verifyreject" aria-hidden="true"></i></a>
+                                                                        <div class="col-md-12 col-12 px-0">
+                                                                            <input type="text" style="display:none" maxlength="100" class="form-control" id="VerifyRemark_@y">
+
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-check reject" aria-hidden="true" style="display:none"></i></a>
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                        </div>
                                                                     </div>
                                                                 </td>
                                                                 <td></td>
@@ -1083,6 +1087,7 @@
 
 <script type="text/javascript">
     var notFoundError = "@ViewBag.NotFoundError";
+    var activeRow="";
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
 
@@ -1751,7 +1756,67 @@
           }
 
     });
+     $("#CustomerSearch").on('click', '.verifyreject', function () {
+        if(activeRow==""){
+            currentRow = $(this).closest("tr");
+            activeRow=currentRow;
+            var i = currentRow[0].cells[0].textContent;
 
+
+
+           currentRow.find('.verify').attr("style","display:none");
+           currentRow.find('.verifyreject').attr("style","display:none");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:block");
+           currentRow.find('.reject').attr("style","display:block");
+           currentRow.find('.cancel').attr("style","display:block");
+       }
+    });
+     $("#CustomerSearch").on('click', '.cancel', function () {
+          currentRow = $(this).closest("tr");
+          var i = currentRow[0].cells[0].textContent;
+
+        currentRow.find('.verify').attr("style","display:block");
+        currentRow.find('.verifyreject').attr("style","display:block");
+           currentRow.find('#VerifyRemark_'+i).attr("style","display:none");
+           currentRow.find('.reject').attr("style","display:none");
+           currentRow.find('.cancel').attr("style","display:none");
+       activeRow="";
+     });
+     $("#CustomerSearch").on('click', '.reject', function () {
+         debugger;
+         var flag="Y";
+          row = $(this).closest("tr");
+          var i = row[0].cells[0].textContent;
+          var verifyRemark = $('#VerifyRemark_'+i).val();
+          var formNumber = row[0].cells[1].textContent;
+          var customerId = row[0].cells[2].textContent;
+          if(verifyRemark.trim()==""){
+              alert("Comment is required to reject verification of a customer.");
+              flag="N";
+          }
+          if(flag=="Y"){
+             $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("VerifyorRejectFleetCustomer", "AggregatorFleet")',
+                    contentType: "application/json; charset=utf-8",
+                    data:{ CustomerId:customerId,FormNumber:formNumber,CustomerStatus:"Reject", VerifyRemark:verifyRemark},
+                    dataType: 'json',
+                    success: function (data) {
+                        //var successMsg="",errorMsg="";
+                        //if(data[0].status==1)
+                        //    successMsg=data[0].reason;
+                        //else if(data[0].status==0)
+                        //    errorMsg=data[0].reason;
+                        //var url = '@Html.Raw(@Url.Action("TeamMapping", "DtpSupport",new {  success = "mm", error = "ee" }))';
+                        //url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                        //window.location.href=url;
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+             });
+           }
+     });
 </script>
 <style>
     .nav-item > li.active > a,

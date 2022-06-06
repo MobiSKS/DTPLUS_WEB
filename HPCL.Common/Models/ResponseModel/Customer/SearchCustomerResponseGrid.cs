@@ -22,6 +22,5 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string KYCStatus { get; set; }
         public string ApprovalComment { get; set; } 
         public string CustomerId { get; set; }
-
     }
 }
