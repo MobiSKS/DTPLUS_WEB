@@ -117,6 +117,7 @@ namespace HPCL.Service.Services
                 CardNo = string.IsNullOrEmpty(cardNo) ? "" : cardNo
             };
 
+            model.EnrollmentStatus = enrollmentStatus;
             StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetVehicleEnrollmentDetail);
 
@@ -149,12 +150,12 @@ namespace HPCL.Service.Services
                     }
                     else
                     {
-                        model.vehicleDetailsModel = sortedtList;
+                        model.vehicleEnrollmentStatusList = sortedtList;
                     }
                 }
                 else
                 {
-                    model.vehicleDetailsModel = sortedtList;
+                    model.vehicleEnrollmentStatusList = sortedtList;
                 }
             }
             else
@@ -171,7 +172,7 @@ namespace HPCL.Service.Services
             enrollVehicleViewModel.UserIp = CommonBase.userip;
             enrollVehicleViewModel.UserAgent = CommonBase.useragent;
 
-            foreach (EnrollVehicleDetailsModel vehicleDetailsModel in enrollVehicleViewModel.vehicleDetailsModel)
+            foreach (EnrollVehicleDetailsModel vehicleDetailsModel in enrollVehicleViewModel.vehicleEnrollmentStatusList)
             {
                 vehicleDetailsModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             }

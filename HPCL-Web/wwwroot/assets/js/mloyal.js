@@ -2108,7 +2108,7 @@ function GetClientConfirmation(o) {
 
     console.log(selectedButton);
 
-    if (selectedButton == "OK") {
+    if (selectedButton == "YES") {
         $('#AllowPanDuplication').val('Y');
         $("#PanCardRemarks").prop('readonly', false);
         document.getElementById("lblPanCardRemarks").style.display = "block";
