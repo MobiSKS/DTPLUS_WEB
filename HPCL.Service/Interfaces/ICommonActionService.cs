@@ -75,6 +75,6 @@ namespace HPCL.Service.Interfaces
         Task<List<LimitTypeModal>> GetCreditCloseLimitType();
         Task<List<GetHotlistReasonRes>> GetHotlistReason();
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatus();
-
+        Task<List<StatusResponseModal>> GetNormalFleetCustomerStatusForApprove();
     }
 }
