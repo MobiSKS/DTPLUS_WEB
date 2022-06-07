@@ -18,5 +18,10 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string AddressProofDocumentNo { get; set; }
         public string AddressProofFront { get; set; }
         public string AddressProofBack { get; set; }
+
+
+        public string CustomerForm { get; set; }
+        public string PanCard { get; set; }
+        public string VehicleDetails { get; set; }
     }
 }

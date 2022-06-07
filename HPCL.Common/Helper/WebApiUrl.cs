@@ -269,6 +269,7 @@
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlCustomerDetailForVerification = "api/dtplus/ashokleyland/get_al_customer_detail_for_verification";
         public static string updateAlCustomerStatus = "api/dtplus/ashokleyland/update_al_customer_status";
+        public static string getAlCustomerStatus = "api/dtplus/ashokleyland/get_al_customer_status";
         #endregion
 
         #region Customer Financial

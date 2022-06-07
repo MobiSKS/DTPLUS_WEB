@@ -53,9 +53,9 @@
                                     <div class="d-flex align-items-center justify-content-between flex-wrap w-100">
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Region Name</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">State<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.SearchStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -79,7 +79,7 @@
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Status</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Status<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.CustomerStatusMdl, "StatusId", "StatusName"), new { @class = "form-control" })
                                                 </div>
@@ -129,18 +129,25 @@
                                                             <th>
                                                                 Mobile No.
                                                             </th>
-                                                            <th>
-                                                                Edit
-                                                            </th>
+                                                            @if (Model.StatusId == "11"|| Model.StatusId==null)
+
+                                                            {
+                                                                <th>
+                                                                    Edit
+                                                                </th>
+                                                            }
                                                             <th>
                                                                 View
                                                             </th>
                                                             <th>
                                                                 Download
                                                             </th>
-                                                            <th>
-                                                                Action
-                                                            </th>
+                                                            @if (Model.StatusId ==  "11"|| Model.StatusId==null)
+                                                            {
+                                                                <th>
+                                                                    Action
+                                                                </th>
+                                                            }
                                                             <th>
                                                                 Approval Comment
                                                             </th>
@@ -169,23 +176,29 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Edit"  href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tooltip'  tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center justify-content-start">
-                                                                        <a asp-action="ApproveorRejectFleetCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-FormNumber="@item.FormNumber" asp-route-CustomerStatus="Verify"
+                                                                @if (Model.StatusId ==  "11"|| Model.StatusId==null)
+                                                                {
+                                                                    <td><a class='CardNumber' data-toggle='tooltip' tooltip="Edit" href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
+                                                                }
+                                                                <td><a class='CardNumber' data-toggle='tooltip' tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
+                                                                <td><a class='CardNumber' data-toggle='tooltip' tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
+                                                                @if (Model.StatusId ==  "11"|| Model.StatusId==null)
+                                                                {
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-start">
+                                                                            <a asp-action="ApproveorRejectFleetCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-FormNumber="@item.FormNumber" asp-route-CustomerStatus="Approve"
                                                            onclick="return confirm('Are you sure to approve this customer?');" data-toggle="tooltip" title="" tooltip="Approve"><i class="fa fa-check verify" aria-hidden="true"></i></a>
-                                                                        <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban verifyreject" aria-hidden="true"></i></a>
-                                                                        <div class="col-md-12 col-12 px-0">
-                                                                            <input type="text" style="display:none" maxlength="100" class="form-control" id="VerifyRemark_@y">
+                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-ban verifyreject" aria-hidden="true"></i></a>
+                                                                            <div class="col-md-12 col-12 px-0">
+                                                                                <input type="text" style="display:none" maxlength="100" class="form-control" id="VerifyRemark_@y">
 
-                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-check reject" aria-hidden="true" style="display:none"></i></a>
-                                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                                <a class="d-block" data-toggle="tooltip" title="" tooltip="Reject Verification"><i class="fa fa-check reject" aria-hidden="true" style="display:none"></i></a>
+                                                                                <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel Reject"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td></td>
+                                                                    </td>
+                                                                }
+                                                                <td>@item.ApprovalComment</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -200,7 +213,7 @@
                                         </div>
                                     }
                                 </div>
-
+                                <div style="display:none;">@Html.TextBoxFor(m => m.StatusIdVal)</div>
                                 <div id="BasicInformation" class="tab-pane" role="tabpanel">
                                     <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                         <div class="w-100">
@@ -795,15 +808,15 @@
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @Html.TextBoxFor(m => m.AreaOfOperation, new { @class = "form-control", style = "width:242px;", @readonly = "readonly", disabled = "disabled" })
                                                                         @*@Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter State</p>*@
+                                                                    <p class="m-0">Inter State</p>*@
                                                                     </label>
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Inter City</p>*@
+                                                                    <p class="m-0">Inter City</p>*@
                                                                     </label>
                                                                     <label class="d-flex align-items-center justify-content-between">
                                                                         @*@Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity", @readonly = "readonly", disabled = "disabled" })
-                                                                            <p class="m-0">Intra City</p>*@
+                                                                    <p class="m-0">Intra City</p>*@
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -909,43 +922,16 @@
                                     <div id="docUpdateId">
 
                                         <fieldset class="border-1 rounded border-grey pt-3">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Id Proof</legend>
-
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">ID Proof of Owner/Partner</legend>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Id Proof<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.DropDownListFor(m => m.IdProofType, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                        @*@Html.ValidationMessageFor(m => m.IdProofType, "", new { @class = "text-danger" })*@
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Document Number<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.IdProofDocumentNo, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                        @*@Html.ValidationMessageFor(m => m.IdProofDocumentNo, "", new { @class = "text-danger" })*@
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-5 col-12">ID Proof<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Id proof front" id="IdProofFront" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        <img src="/assets/images/id-card.png" alt="Id proof back" id="IdProofBack" />
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <div class="col-md-5 col-6"></div>
@@ -954,60 +940,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <div class="col-md-5 col-6"></div>
-                                                    <div class="col-md-7 col-12">
-                                                        <div id="idPbackImg"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </fieldset>
-
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                        </div>
-                                        <div class="form-group d-flex align-items-center flex-wrap">
-                                        </div>
-
                                         <fieldset class="border-1 rounded border-grey pt-3">
-                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Address Proof</legend>
-
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Customer Address Proof</legend>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12">Address Proof<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.DropDownListFor(m => m.AddressProofType, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                        @*@Html.ValidationMessageFor(m => m.AddressProofType, "", new { @class = "text-danger" })*@
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Document Number<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.AddressProofDocumentNo, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
-                                                        @*@Html.ValidationMessageFor(m => m.AddressProofDocumentNo, "", new { @class = "text-danger" })*@
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Address proof front" id="AddressProofFront" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        <img src="/assets/images/id-card.png" alt="Address proof back" id="AddressProofBack" />
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <div class="col-md-5 col-6"></div>
@@ -1016,22 +960,81 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <div class="col-md-5 col-6"></div>
-                                                    <div class="col-md-7 col-12">
-                                                        <div id="idAbackImg"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </fieldset>
 
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
+                                        <fieldset class="border-1 rounded border-grey pt-3">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">PAN Card Details</legend>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">PAN Card<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <img src="/assets/images/id-card.png" alt="PAN Card Front" id="PanCard" />
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <div class="col-md-5 col-6"></div>
+                                                    <div class="col-md-7 col-12">
+                                                        <div id="panCardImg"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                        </div>
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                        </div>
+                                        <fieldset class="border-1 rounded border-grey pt-3">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Vehicle Details</legend>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">Vehicle Details<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <img src="/assets/images/id-card.png" alt="Vehicle Details Front" id="VehicleDetails" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <div class="col-md-5 col-6"></div>
+                                                    <div class="col-md-7 col-12">
+                                                        <div id="vehicleDetailsImg"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                        </div>
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                        </div>
+                                        <fieldset class="border-1 rounded border-grey pt-3">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Signed Customer Form</legend>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12">Customer Form<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <img src="/assets/images/id-card.png" alt="Customer Form Front" id="CustomerForm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <div class="col-md-5 col-6"></div>
+                                                    <div class="col-md-7 col-12">
+                                                        <div id="customerFormImg"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
                                         <div class="clearfix"></div>
 
                                         <div class="d-flex align-items-center justify-content-center mt-3">
@@ -1045,19 +1048,19 @@
 
                                     </div>
                                     @* <div class="col-lg-6 col-12 d-flex align-items-center justify-content-start flex-wrap px-0">
-                                        <div class="form-group d-flex align-items-center flex-wrap w-100">
-                                        <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
-                                        <span class="error" id="Remarks_error"></span>
-                                        </div>
-                                        </div>
-                                        </div>*@
+                                <div class="form-group d-flex align-items-center flex-wrap w-100">
+                                <label class="font-weight-normal col-md-5 col-12">Comments <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control", maxlength = "100" })
+                                <span class="error" id="Remarks_error"></span>
+                                </div>
+                                </div>
+                                </div>*@
                                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100">
                                         <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                             <a id="btnPrevious" class="btn btn_primary py-2 px-4" onclick="ShowOfficialDetails()">Previous</a>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -1075,729 +1078,626 @@
 
 <script type="text/javascript">
     var notFoundError = "@ViewBag.NotFoundError";
-    var activeRow="";
-        var fromDate = $("#FromDate").val();
-        var toDate = $("#ToDate").val();
+    var activeRow = "";
+    var fromDate = $("#FromDate").val();
+    var toDate = $("#ToDate").val();
 
 
-        $(document).ready(function () {
-            ShowCustomerDetails();
-            $('#CustomerRegionID').SumoSelect({
-                placeholder: '-Select-',
-                search: true,
-                searchText: 'Enter Text here.'
-            });
-            $('#StatusId').val("19");
+    $(document).ready(function() {
+        ShowCustomerDetails();
+        $('#CustomerRegionID').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+        if ($('#StatusIdVal').val() == "") {
+            $('#StatusId').val("11");
             $("#StatusId")[0].sumo.reload();
-
-
-            let tableCustData = sessionStorage.getItem("tableCustData");
-
-            console.log(tableCustData, "tbl");
-        });
-
-        $("#form1").on("keypress", function (event) {
-                var keyPressed = event.keyCode || event.which;
-                if (keyPressed === 13) {
-                    event.preventDefault();
-                    return false;
-                }
-        });
-
-        $("#CustomerSearch").on('click', '.editNumber', function (e) {
-
-            var currentRow = $(this).closest("tr");
-
-            var cardNumber = currentRow.find(".rowCardNo").text();
-            var mobileNumber = currentRow.find(".rowMobNo").text();
-
-            var LimitTypeName = currentRow.find(".lmtName").text();
-            var CCMSReloadSaleLimitValue = currentRow.find(".amts").text();
-
-            console.log("card number : ", cardNumber);
-            console.log("mobile number : ", mobileNumber);
-
-            var url = '@Html.Raw(@Url.Action("CardlessMapping", new { cardNumber = "dd", mobileNumber = "mm", LimitTypeName = "ll", CCMSReloadSaleLimitValue = "cc" }))';
-
-            url = url.replace("dd", encodeURIComponent(cardNumber)).replace("mm", encodeURIComponent(mobileNumber)).replace("ll", encodeURIComponent(LimitTypeName)).replace("cc", encodeURIComponent(CCMSReloadSaleLimitValue));
-
-            $(this).attr('href', url);
-
-        });
-
-        function OnFailure(data) {
-            alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+        }
+        else{
+             $('#StatusId').val($('#StatusIdVal').val());
+            $("#StatusId")[0].sumo.reload();
         }
 
-
-        function ViewCustomerDetails(o, referenceNo, frmNumber) {
-            debugger;
-            var FormNumber = frmNumber.trim();
-            referenceNo=referenceNo.trim();
-            console.log('Ravi');
-            //console.log(row);
-            //console.log(col1);
-            console.log(frmNumber);
-
-            $('#FormNumberForSearch').val(FormNumber);
-            $('#CustomerReferenceNoForSearch').val(referenceNo);
-
-            console.log($('#FormNumberForSearch').val());
-            console.log($('#CustomerReferenceNoForSearch').val());
-
-            $.ajax({
-                url: "@Url.Action("ViewCustomerDetails", "AggregatorFleet")",
-                type: "POST",
-                dataType: "JSON",
-                data: { FormNumber: FormNumber },
-                success: function (res) {
-                    console.log("customer", res.customer);
-                    console.log("kycDetailsResult", res.kycDetailsResult);
-
-                    var CustomerType = $('<option value="' + res.customer.customerTypeName + '">' + res.customer.customerTypeName + '</option>');
-                    $('#CustomerTypeID').append(CustomerType);
-                    $("#CustomerTypeID")[0].sumo.reload();
-
-                    var custSubType = $('<option value="' + res.customer.customerSubtypeName + '">' + res.customer.customerSubtypeName + '</option>');
-                    $('#CustomerSubTypeID').append(custSubType);
-                    $("#CustomerSubTypeID")[0].sumo.reload();
-
-                    $('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
-
-                    var CustomerSalesArea = $('<option value="' + res.customer.salesArea + '">' + res.customer.salesArea + '</option>');
-                    $('#CustomerSalesAreaID').append(CustomerSalesArea);
-                    $("#CustomerSalesAreaID")[0].sumo.reload();
-
-                    var CustomerZonalOffice = $('<option value="' + res.customer.zonalOfficeName + '">' + res.customer.zonalOfficeName + '</option>');
-                    $('#CustomerZonalOfficeID').append(CustomerZonalOffice);
-                    $("#CustomerZonalOfficeID")[0].sumo.reload();
-
-                    var regionalOff = $('<option value="' + res.customer.regionalOfficeName + '">' + res.customer.regionalOfficeName + '</option>');
-                    $('#CustomerRegion_ID').append(regionalOff);
-                    $("#CustomerRegion_ID")[0].sumo.reload();
-
-                    //var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
-                    //$('#TypeOfCustomerID').append(TypeOfCustomer);
-                    //$("#TypeOfCustomerID")[0].sumo.reload();
-
-                    //var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
-                    //$('#TierOfCustomerID').append(TierOfCustomer);
-                    //$("#TierOfCustomerID")[0].sumo.reload();
-
-
-                    var IndividualTitle = $('<option value="' + res.customer.individualOrgNameTitle + '">' + res.customer.individualOrgNameTitle + '</option>');
-                    $('#IndividualOrgNameTitle').append(IndividualTitle);
-                    $("#IndividualOrgNameTitle")[0].sumo.reload();
-
-                    $('#IndividualOrgName').val(res.customer.individualOrgName);
-
-                    $('#CustomerNameOnCard').val(res.customer.nameOnCard);
-
-                    if(res.customer.typeOfBusinessEntityId==10)
-                    {
-                         document.getElementById("lblPanCardRemarks").style.display = "none";
-                         document.getElementById("PanCardRemarks").style.display = "none";
-                         $('#lblPanText').text('');
-                         $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
-                    }
-                    else
-                    {
-                        document.getElementById("lblPanCardRemarks").style.display = "block";
-                        document.getElementById("PanCardRemarks").style.display = "block";
-                        $('#lblPanText').text('');
-                        $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
-                    }
-
-                    var CustomerTbentity = $('<option value="' + res.customer.typeOfBusinessEntityName + '">' + res.customer.typeOfBusinessEntityName + '</option>');
-                    $('#CustomerTbentityID').append(CustomerTbentity);
-                    $("#CustomerTbentityID")[0].sumo.reload();
-
-                    var ResidenceStatus = $('<option value="' + res.customer.residenceStatus + '">' + res.customer.residenceStatus + '</option>');
-                    $('#CustomerResidenceStatus').append(ResidenceStatus);
-                    $("#CustomerResidenceStatus")[0].sumo.reload();
-
-                    $('#CustomerIncomeTaxPan').val(res.customer.incomeTaxPan);
-                    $('#PanCardRemarks').val(res.customer.panCardRemarks);
-
-                    //Address Tab
-                    $('#CommunicationAddress1').val(res.customer.communicationAddress1);
-                    $('#CommunicationAddress2').val(res.customer.communicationAddress2);
-                    $('#CommunicationAddress3').val(res.customer.communicationAddress3);
-                    $('#CommunicationLocation').val(res.customer.communicationLocation);
-                    $('#CommunicationCity').val(res.customer.communicationCityName);
-                    $('#CommunicationPinCode').val(res.customer.communicationPincode);
-
-                    var CommunicationStateName = $('<option value="' + res.customer.communicationStateName + '">' + res.customer.communicationStateName + '</option>');
-                    $('#CommunicationStateID').append(CommunicationStateName);
-                    $("#CommunicationStateID")[0].sumo.reload();
-
-                    var CommunicationDistrict = $('<option value="' + res.customer.communicationDistrictName + '">' + res.customer.communicationDistrictName + '</option>');
-                    $('#CommunicationDistrictId').append(CommunicationDistrict);
-                    $("#CommunicationDistrictId")[0].sumo.reload();
-
-                    $('#CommunicationDialCode').val(res.customer.communicationDialCode);
-                    $('#CommunicationPhoneNo').val(res.customer.communicationPh);
-                    $('#CommunicationFaxCode').val(res.customer.communicationFaxCode);
-                    $('#CommunicationFax').val(res.customer.communicationFaxPh);
-                    $('#CommunicationMobileNumber').val(res.customer.communicationMobileNo);
-                    $('#CommunicationEmail').val(res.customer.communicationEmailid);
-
-
-                    $('#PerOrRegAddress1').val(res.customer.permanentAddress1);
-                    $('#PerOrRegAddress2').val(res.customer.permanentAddress2);
-                    $('#PerOrRegAddress3').val(res.customer.permanentAddress3);
-                    $('#PerOrRegAddressLocation').val(res.customer.permanentLocation);
-                    $('#PerOrRegAddressCity').val(res.customer.permanentCityName);
-                    $('#PerOrRegAddressPinCode').val(res.customer.permanentPincode);
-
-                    var PermanentStateName = $('<option value="' + res.customer.permanentStateName + '">' + res.customer.permanentStateName + '</option>');
-                    $('#PerOrRegAddressStateID').append(PermanentStateName);
-                    $("#PerOrRegAddressStateID")[0].sumo.reload();
-
-                    var pDistrict = $('<option value="' + res.customer.permanentDistrictName + '">' + res.customer.permanentDistrictName + '</option>');
-                    $('#PerOrRegAddressDistrict').append(pDistrict);
-                    $("#PerOrRegAddressDistrict")[0].sumo.reload();
-
-                    $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
-                    $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPh);
-                    $('#PermanentFaxCode').val(res.customer.permanentFaxCode);
-                    $('#PermanentFax').val(res.customer.permanentFaxPh);
-
-                    //Official Details Tab
-                    var OffTitle = $('<option value="' + res.customer.keyOfficialTitle + '">' + res.customer.keyOfficialTitle + '</option>');
-                    $('#KeyOffTitle').append(OffTitle);
-                    $("#KeyOffTitle")[0].sumo.reload();
-
-                    $('#KeyOffFirstName').val(res.customer.keyOfficialFirstName);
-                    $('#KeyOffLastName').val(res.customer.keyOfficialLastName);
-                    $('#KeyOffDesignation').val(res.customer.keyOfficialDesignation);
-                    $('#KeyOffPhoneCode').val(res.customer.keyOffDialCode);
-                    $('#KeyOffPhoneNumber').val(res.customer.keyOffPh);
-                    $('#KeyOffMobileNumber').val(res.customer.keyOfficialMobile);
-                    $('#KeyOffIndividualInitials').val(res.customer.keyOfficialIndividualInitials);
-                    $('#KeyOffMiddleName').val(res.customer.keyOfficialMiddleName);
-                    $('#KeyOffFaxCode').val(res.customer.keyOffFaxCode);
-                    $('#KeyOffFax').val(res.customer.keyOffFaxPh);
-                    $('#KeyOffEmail').val(res.customer.keyOfficialEmail);
-
-                    if (res.customer.keyOfficialSecretQuestionName != null) {
-                        var OfficialSecretQuestion = $('<option value="' + res.customer.keyOfficialSecretQuestionName + '">' + res.customer.keyOfficialSecretQuestionName + '</option>');
-                        $('#KeyOfficialSecretQuestion').append(OfficialSecretQuestion);
-                        $("#KeyOfficialSecretQuestion")[0].sumo.reload();
-                    }
-                    else {
-                        $('#KeyOfficialSecretQuestion').append('');
-                        $("#KeyOfficialSecretQuestion")[0].sumo.reload();
-                    }
-
-                    $('#KeyOfficialSecretAnswer').val(res.customer.keyOfficialSecretAnswer);
-                    $('#FleetSizeNoOfVechileOwnedHCV').val(res.customer.fleetSizeNoOfVechileOwnedHCV);
-                    $('#FleetSizeNoOfVechileOwnedLCV').val(res.customer.fleetSizeNoOfVechileOwnedLCV);
-                    $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res.customer.fleetSizeNoOfVechileOwnedMUVSUV);
-                    $('#FleetSizeNoOfVechileOwnedCarJeep').val(res.customer.fleetSizeNoOfVechileOwnedCarJeep);
-
-                    if (res.customer.keyOfficialTypeOfFleetName != null) {
-                        var customerTypeOfFleet = $('<option value="' + res.customer.keyOfficialTypeOfFleetName + '">' + res.customer.keyOfficialTypeOfFleetName + '</option>');
-                        $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
-                        $("#CustomerTypeOfFleetID")[0].sumo.reload();
-                    }
-                    else {
-                        $('#CustomerTypeOfFleetID').append('');
-                        $("#CustomerTypeOfFleetID")[0].sumo.reload();
-                    }
-
-                    $('#KeyOfficialCardAppliedFor').val(res.customer.keyOfficialCardAppliedFor);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.customer.keyOfficialApproxMonthlySpendsonVechile1);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.customer.keyOfficialApproxMonthlySpendsonVechile2);
-                    $('#AreaOfOperation').val(res.customer.areaOfOperation);
-
-                    $('#CustomerReferenceNoForSearch').val(res.customer.customerReferenceNo);
-
-                    $('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
-                    $('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOA);
-
-                    //res.kycDetailsResult
-                    //KYC
-                    console.log(res.kycDetailsResult);
-
-                    if (res.kycDetailsResult.length > 0) {
-                        var IdProofTypeName = $('<option value="' + res.kycDetailsResult[0].idProofTypeName + '">' + res.kycDetailsResult[0].idProofTypeName + '</option>');
-                        $('#IdProofType').append(IdProofTypeName);
-                        $("#IdProofType")[0].sumo.reload();
-                        $('#IdProofDocumentNo').val(res.kycDetailsResult[0].idProofDocumentNo);
-
-                        $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofFront);
-                        $('#IdProofBack').attr('src', res.kycDetailsResult[0].idProofBack);
-                        $('#AddressProofBack').attr('src', res.kycDetailsResult[0].addressProofBack);
-                        $('#AddressProofFront').attr('src', res.kycDetailsResult[0].addressProofFront);
-
-
-                        var AddressProofTypeName = $('<option value="' + res.kycDetailsResult[0].addressProofTypeName + '">' + res.kycDetailsResult[0].addressProofTypeName + '</option>');
-                        $('#AddressProofType').append(AddressProofTypeName);
-                        $("#AddressProofType")[0].sumo.reload();
-                        $('#AddressProofDocumentNo').val(res.kycDetailsResult[0].addressProofDocumentNo);
-                    }
-                    else {
-                        var IdProofTypeName1 = $('<option value="' + '' + '">' + '' + '</option>');
-                        $('#IdProofType').append(IdProofTypeName1);
-                        $("#IdProofType")[0].sumo.reload();
-                        $('#IdProofDocumentNo').val("");
-
-                        $('#IdProofFront').attr('src', null);
-                        $('#IdProofBack').attr('src', null);
-                        $('#AddressProofBack').attr('src', null);
-                        $('#AddressProofFront').attr('src', null);
-
-
-                        var AddressProofTypeName1 = $('<option value="' + '' + '">' + '' + '</option>');
-                        $('#AddressProofType').append(AddressProofTypeName);
-                        $("#AddressProofType")[0].sumo.reload();
-                        $('#AddressProofDocumentNo').val("");
-                    }
-
-
-
-                    //$("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Customer Details With Form Number: ( " + FormNumber + ") </p>");
-                    var t="Customer Details With Form Number: ( " + FormNumber + ")";
-                    $('#ManageCardHeader').text(t);
-
-                    document.getElementById("CustomerCardTab").classList.add("disable");
-                    $("#BasicInformationTab").removeClass("disabled");
-                    $('#BasicInformationTab').tab('show');
-                    //$("#AddressTab").removeClass("disabled");
-                    //$("#OfficialDetailsTab").removeClass("disabled");
-                    //$("#KYCDetailsTab").removeClass("disabled");
-
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-            });
-        };
-
-        function ResetFields() {
-            //debugger;
-            $("#FormNumber").val('');
-            $("#FromDate").val('');
-            $("#ToDate").val('');
-            $("#CustomerRegionID").val('0');
-            //document.getElementById('NoRecord').style.display = 'none';
-            document.getElementById('tblResponse').style.display = 'none';
-            document.getElementById("formNumber_error").innerHTML = "";
-            document.getElementById("FromDate_error").innerHTML = "";
-            document.getElementById("ToDate_error").innerHTML = "";
-            $("#ManageCardHeader").text("Approve Customers");
-            sessionStorage.removeItem("tableCustData");
-            //window.location.reload(true);
-            $("#FormNumberForSearch").val('');
-            $("#CustomerReferenceNoForSearch").val('');
-
-            $("#CustomerTypeID").empty();
-            $("#CustomerSubTypeID").empty();
-
-            $('#CustomerDateOfApplication').val('');
-
-            $('#CustomerSalesAreaID').empty();
-
-            $('#CustomerZonalOfficeID').empty();
-
-            $('#CustomerRegion_ID').empty();
-
-
-
-            $('#IndividualOrgNameTitle').empty();
-
-            $('#IndividualOrgName').val('');
-
-            $('#CustomerNameOnCard').val('');
-
-            $('#CustomerTbentityID').empty();
-
-            $('#CustomerResidenceStatus').empty();
-
-            $('#CustomerIncomeTaxPan').val('');
-            $('#PanCardRemarks').val('');
-
-            //Address Tab
-            $('#CommunicationAddress1').val('');
-            $('#CommunicationAddress2').val('');
-            $('#CommunicationAddress3').val('');
-            $('#CommunicationLocation').val('');
-            $('#CommunicationCity').val('');
-            $('#CommunicationPinCode').val('');
-
-            $('#CommunicationStateID').empty();
-
-            $('#CommunicationDistrictId').empty();
-
-            $('#CommunicationDialCode').val('');
-            $('#CommunicationPhoneNo').val('');
-            $('#CommunicationFaxCode').val('');
-            $('#CommunicationFax').val('');
-            $('#CommunicationMobileNumber').val('');
-            $('#CommunicationEmail').val('');
-
-
-            $('#PerOrRegAddress1').val('');
-            $('#PerOrRegAddress2').val('');
-            $('#PerOrRegAddress3').val('');
-            $('#PerOrRegAddressLocation').val('');
-            $('#PerOrRegAddressCity').val('');
-            $('#PerOrRegAddressPinCode').val('');
-
-            $('#PerOrRegAddressStateID').empty();
-
-            $('#PerOrRegAddressDistrict').empty();
-
-            $('#PerOrRegAddressDialCode').val('');
-            $('#PerOrRegAddressPhoneNumber').val('');
-            $('#PermanentFaxCode').val('');
-            $('#PermanentFax').val('');
-
-            //Official Details Tab
-            $('#KeyOffTitle').empty();
-
-            $('#KeyOffFirstName').val('');
-            $('#KeyOffLastName').val('');
-            $('#KeyOffDesignation').val('');
-            $('#KeyOffPhoneCode').val('');
-            $('#KeyOffPhoneNumber').val('');
-            $('#KeyOffMobileNumber').val('');
-            $('#KeyOffIndividualInitials').val('');
-            $('#KeyOffMiddleName').val('');
-            $('#KeyOffFaxCode').val('');
-            $('#KeyOffFax').val('');
-            $('#KeyOffEmail').val('');
-
-
-            $('#KeyOfficialSecretQuestion').empty();
-            $('#KeyOfficialSecretAnswer').val('');
-            $('#FleetSizeNoOfVechileOwnedHCV').val('');
-            $('#FleetSizeNoOfVechileOwnedLCV').val('');
-            $('#FleetSizeNoOfVechileOwnedMUVSUV').val('');
-            $('#FleetSizeNoOfVechileOwnedCarJeep').val('');
-            $('#CustomerTypeOfFleetID').empty();
-
-
-            $('#KeyOfficialCardAppliedFor').val('');
-            $('#KeyOfficialApproxMonthlySpendsonVechile1').val('');
-            $('#KeyOfficialApproxMonthlySpendsonVechile2').val('');
-            $('#AreaOfOperation').val('');
-            $('#KeyOfficialDOB').val('');
-            $('#KeyOffDateOfAnniversary').val('');
-            $('#CustomerReferenceNoForSearch').val('');
-
-            //KYC
-            $('#IdProofType').empty();
-            $('#IdProofDocumentNo').val("");
-
-            $('#IdProofFront').attr('src', null);
-            $('#IdProofBack').attr('src', null);
-            $('#AddressProofBack').attr('src', null);
-            $('#AddressProofFront').attr('src', null);
-
-            $('#AddressProofType').empty();
-            $('#AddressProofDocumentNo').val("");
-            $('#Remarks').val("");
-            document.getElementById('Remarks_error').innerHTML='';
-
-            $("#BasicInformationTab").addClass("disabled");
-            $("#AddressTab").addClass("disabled");
-            $("#OfficialDetailsTab").addClass("disabled");
-            $("#KYCDetailsTab").addClass("disabled");
-            $('#CustomerRegionID')[0].sumo.unSelectAll();
-            $('#CustomerRegionID')[0].sumo.selectItem(0);
+        let tableCustData = sessionStorage.getItem("tableCustData");
+
+        console.log(tableCustData, "tbl");
+    });
+    $("#StatusId").change(function () {
+        var id = this.value;
+        $("#StatusIdVal").val(id);
+    });
+    $("#form1").on("keypress", function(event) {
+        var keyPressed = event.keyCode || event.which;
+        if (keyPressed === 13) {
+            event.preventDefault();
             return false;
-        };
+        }
+    });
+
+    $("#CustomerSearch").on('click', '.editNumber', function(e) {
+
+        var currentRow = $(this).closest("tr");
+
+        var cardNumber = currentRow.find(".rowCardNo").text();
+        var mobileNumber = currentRow.find(".rowMobNo").text();
+
+        var LimitTypeName = currentRow.find(".lmtName").text();
+        var CCMSReloadSaleLimitValue = currentRow.find(".amts").text();
+
+        console.log("card number : ", cardNumber);
+        console.log("mobile number : ", mobileNumber);
+
+        var url = '@Html.Raw(@Url.Action("CardlessMapping", new { cardNumber = "dd", mobileNumber = "mm", LimitTypeName = "ll", CCMSReloadSaleLimitValue = "cc" }))';
+
+        url = url.replace("dd", encodeURIComponent(cardNumber)).replace("mm", encodeURIComponent(mobileNumber)).replace("ll", encodeURIComponent(LimitTypeName)).replace("cc", encodeURIComponent(CCMSReloadSaleLimitValue));
+
+        $(this).attr('href', url);
+
+    });
+
+    function OnFailure(data) {
+        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+
+
+    function ViewCustomerDetails(o, referenceNo, frmNumber) {
+        debugger;
+        var FormNumber = frmNumber.trim();
+        referenceNo = referenceNo.trim();
+        console.log('Ravi');
+        //console.log(row);
+        //console.log(col1);
+        console.log(frmNumber);
+
+        $('#FormNumberForSearch').val(FormNumber);
+        $('#CustomerReferenceNoForSearch').val(referenceNo);
+
+        console.log($('#FormNumberForSearch').val());
+        console.log($('#CustomerReferenceNoForSearch').val());
+
+        $.ajax({
+            url: "@Url.Action("ViewCustomerDetails", "AggregatorFleet")",
+            type: "POST",
+            dataType: "JSON",
+            data: { FormNumber: FormNumber },
+            success: function(res) {
+                console.log("customer", res.customer);
+                console.log("kycDetailsResult", res.kycDetailsResult);
+
+                var CustomerType = $('<option value="' + res.customer.customerTypeName + '">' + res.customer.customerTypeName + '</option>');
+                $('#CustomerTypeID').append(CustomerType);
+                $("#CustomerTypeID")[0].sumo.reload();
+
+                var custSubType = $('<option value="' + res.customer.customerSubtypeName + '">' + res.customer.customerSubtypeName + '</option>');
+                $('#CustomerSubTypeID').append(custSubType);
+                $("#CustomerSubTypeID")[0].sumo.reload();
+
+                $('#CustomerDateOfApplication').val(res.customer.dateOfApplication);
+
+                var CustomerSalesArea = $('<option value="' + res.customer.salesArea + '">' + res.customer.salesArea + '</option>');
+                $('#CustomerSalesAreaID').append(CustomerSalesArea);
+                $("#CustomerSalesAreaID")[0].sumo.reload();
+
+                var CustomerZonalOffice = $('<option value="' + res.customer.zonalOfficeName + '">' + res.customer.zonalOfficeName + '</option>');
+                $('#CustomerZonalOfficeID').append(CustomerZonalOffice);
+                $("#CustomerZonalOfficeID")[0].sumo.reload();
+
+                var regionalOff = $('<option value="' + res.customer.regionalOfficeName + '">' + res.customer.regionalOfficeName + '</option>');
+                $('#CustomerRegion_ID').append(regionalOff);
+                $("#CustomerRegion_ID")[0].sumo.reload();
+
+                //var TypeOfCustomer = $('<option value="' + res.customer.typeOfCustomerName + '">' + res.customer.typeOfCustomerName + '</option>');
+                //$('#TypeOfCustomerID').append(TypeOfCustomer);
+                //$("#TypeOfCustomerID")[0].sumo.reload();
+
+                //var TierOfCustomer = $('<option value="' + res.customer.tierOfCustomerName + '">' + res.customer.tierOfCustomerName + '</option>');
+                //$('#TierOfCustomerID').append(TierOfCustomer);
+                //$("#TierOfCustomerID")[0].sumo.reload();
+
+
+                var IndividualTitle = $('<option value="' + res.customer.individualOrgNameTitle + '">' + res.customer.individualOrgNameTitle + '</option>');
+                $('#IndividualOrgNameTitle').append(IndividualTitle);
+                $("#IndividualOrgNameTitle")[0].sumo.reload();
+
+                $('#IndividualOrgName').val(res.customer.individualOrgName);
+
+                $('#CustomerNameOnCard').val(res.customer.nameOnCard);
+
+                if (res.customer.typeOfBusinessEntityId == 10) {
+                    document.getElementById("lblPanCardRemarks").style.display = "none";
+                    document.getElementById("PanCardRemarks").style.display = "none";
+                    $('#lblPanText').text('');
+                    $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                }
+                else {
+                    document.getElementById("lblPanCardRemarks").style.display = "block";
+                    document.getElementById("PanCardRemarks").style.display = "block";
+                    $('#lblPanText').text('');
+                    $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                }
+
+                var CustomerTbentity = $('<option value="' + res.customer.typeOfBusinessEntityName + '">' + res.customer.typeOfBusinessEntityName + '</option>');
+                $('#CustomerTbentityID').append(CustomerTbentity);
+                $("#CustomerTbentityID")[0].sumo.reload();
+
+                var ResidenceStatus = $('<option value="' + res.customer.residenceStatus + '">' + res.customer.residenceStatus + '</option>');
+                $('#CustomerResidenceStatus').append(ResidenceStatus);
+                $("#CustomerResidenceStatus")[0].sumo.reload();
+
+                $('#CustomerIncomeTaxPan').val(res.customer.incomeTaxPan);
+                $('#PanCardRemarks').val(res.customer.panCardRemarks);
+
+                //Address Tab
+                $('#CommunicationAddress1').val(res.customer.communicationAddress1);
+                $('#CommunicationAddress2').val(res.customer.communicationAddress2);
+                $('#CommunicationAddress3').val(res.customer.communicationAddress3);
+                $('#CommunicationLocation').val(res.customer.communicationLocation);
+                $('#CommunicationCity').val(res.customer.communicationCityName);
+                $('#CommunicationPinCode').val(res.customer.communicationPincode);
+
+                var CommunicationStateName = $('<option value="' + res.customer.communicationStateName + '">' + res.customer.communicationStateName + '</option>');
+                $('#CommunicationStateID').append(CommunicationStateName);
+                $("#CommunicationStateID")[0].sumo.reload();
+
+                var CommunicationDistrict = $('<option value="' + res.customer.communicationDistrictName + '">' + res.customer.communicationDistrictName + '</option>');
+                $('#CommunicationDistrictId').append(CommunicationDistrict);
+                $("#CommunicationDistrictId")[0].sumo.reload();
+
+                $('#CommunicationDialCode').val(res.customer.communicationDialCode);
+                $('#CommunicationPhoneNo').val(res.customer.communicationPh);
+                $('#CommunicationFaxCode').val(res.customer.communicationFaxCode);
+                $('#CommunicationFax').val(res.customer.communicationFaxPh);
+                $('#CommunicationMobileNumber').val(res.customer.communicationMobileNo);
+                $('#CommunicationEmail').val(res.customer.communicationEmailid);
+
+
+                $('#PerOrRegAddress1').val(res.customer.permanentAddress1);
+                $('#PerOrRegAddress2').val(res.customer.permanentAddress2);
+                $('#PerOrRegAddress3').val(res.customer.permanentAddress3);
+                $('#PerOrRegAddressLocation').val(res.customer.permanentLocation);
+                $('#PerOrRegAddressCity').val(res.customer.permanentCityName);
+                $('#PerOrRegAddressPinCode').val(res.customer.permanentPincode);
+
+                var PermanentStateName = $('<option value="' + res.customer.permanentStateName + '">' + res.customer.permanentStateName + '</option>');
+                $('#PerOrRegAddressStateID').append(PermanentStateName);
+                $("#PerOrRegAddressStateID")[0].sumo.reload();
+
+                var pDistrict = $('<option value="' + res.customer.permanentDistrictName + '">' + res.customer.permanentDistrictName + '</option>');
+                $('#PerOrRegAddressDistrict').append(pDistrict);
+                $("#PerOrRegAddressDistrict")[0].sumo.reload();
+
+                $('#PerOrRegAddressDialCode').val(res.customer.perOrRegAddressDialCode);
+                $('#PerOrRegAddressPhoneNumber').val(res.customer.perOrRegAddressPh);
+                $('#PermanentFaxCode').val(res.customer.permanentFaxCode);
+                $('#PermanentFax').val(res.customer.permanentFaxPh);
+
+                //Official Details Tab
+                var OffTitle = $('<option value="' + res.customer.keyOfficialTitle + '">' + res.customer.keyOfficialTitle + '</option>');
+                $('#KeyOffTitle').append(OffTitle);
+                $("#KeyOffTitle")[0].sumo.reload();
+
+                $('#KeyOffFirstName').val(res.customer.keyOfficialFirstName);
+                $('#KeyOffLastName').val(res.customer.keyOfficialLastName);
+                $('#KeyOffDesignation').val(res.customer.keyOfficialDesignation);
+                $('#KeyOffPhoneCode').val(res.customer.keyOffDialCode);
+                $('#KeyOffPhoneNumber').val(res.customer.keyOffPh);
+                $('#KeyOffMobileNumber').val(res.customer.keyOfficialMobile);
+                $('#KeyOffIndividualInitials').val(res.customer.keyOfficialIndividualInitials);
+                $('#KeyOffMiddleName').val(res.customer.keyOfficialMiddleName);
+                $('#KeyOffFaxCode').val(res.customer.keyOffFaxCode);
+                $('#KeyOffFax').val(res.customer.keyOffFaxPh);
+                $('#KeyOffEmail').val(res.customer.keyOfficialEmail);
+
+                if (res.customer.keyOfficialSecretQuestionName != null) {
+                    var OfficialSecretQuestion = $('<option value="' + res.customer.keyOfficialSecretQuestionName + '">' + res.customer.keyOfficialSecretQuestionName + '</option>');
+                    $('#KeyOfficialSecretQuestion').append(OfficialSecretQuestion);
+                    $("#KeyOfficialSecretQuestion")[0].sumo.reload();
+                }
+                else {
+                    $('#KeyOfficialSecretQuestion').append('');
+                    $("#KeyOfficialSecretQuestion")[0].sumo.reload();
+                }
+
+                $('#KeyOfficialSecretAnswer').val(res.customer.keyOfficialSecretAnswer);
+                $('#FleetSizeNoOfVechileOwnedHCV').val(res.customer.fleetSizeNoOfVechileOwnedHCV);
+                $('#FleetSizeNoOfVechileOwnedLCV').val(res.customer.fleetSizeNoOfVechileOwnedLCV);
+                $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res.customer.fleetSizeNoOfVechileOwnedMUVSUV);
+                $('#FleetSizeNoOfVechileOwnedCarJeep').val(res.customer.fleetSizeNoOfVechileOwnedCarJeep);
+
+                if (res.customer.keyOfficialTypeOfFleetName != null) {
+                    var customerTypeOfFleet = $('<option value="' + res.customer.keyOfficialTypeOfFleetName + '">' + res.customer.keyOfficialTypeOfFleetName + '</option>');
+                    $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
+                    $("#CustomerTypeOfFleetID")[0].sumo.reload();
+                }
+                else {
+                    $('#CustomerTypeOfFleetID').append('');
+                    $("#CustomerTypeOfFleetID")[0].sumo.reload();
+                }
+
+                $('#KeyOfficialCardAppliedFor').val(res.customer.keyOfficialCardAppliedFor);
+                $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res.customer.keyOfficialApproxMonthlySpendsonVechile1);
+                $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res.customer.keyOfficialApproxMonthlySpendsonVechile2);
+                $('#AreaOfOperation').val(res.customer.areaOfOperation);
+
+                $('#CustomerReferenceNoForSearch').val(res.customer.customerReferenceNo);
+
+                $('#KeyOfficialDOB').val(res.customer.keyOfficialDOB);
+                $('#KeyOffDateOfAnniversary').val(res.customer.keyOfficialDOA);
+
+                //res.kycDetailsResult
+                //KYC
+                console.log(res.kycDetailsResult);
+
+                if (res.kycDetailsResult.length > 0) {
+
+                    $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofFront);
+                    $('#AddressProofFront').attr('src', res.kycDetailsResult[0].addressProofFront);
+                    $('#panCardImg').attr('src', res.kycDetailsResult[0].PanCard);
+                    $('#vehicleDetailsImg').attr('src', res.kycDetailsResult[0].VehicleDetails);
+                    $('#customerFormImg').attr('src', res.kycDetailsResult[0].CustomerForm);
+
+                }
+                else {
+
+                    $('#IdProofFront').attr('src', null);
+                    $('#AddressProofFront').attr('src', null);
+                    $('#panCardImg').attr('src', null);
+                    $('#vehicleDetailsImg').attr('src', null);
+                    $('#customerFormImg').attr('src', null);
+
+                }
+
+
+
+                //$("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Customer Details With Form Number: ( " + FormNumber + ") </p>");
+                var t = "Customer Details With Form Number: ( " + FormNumber + ")";
+                $('#ManageCardHeader').text(t);
+
+                document.getElementById("CustomerCardTab").classList.add("disable");
+                $("#BasicInformationTab").removeClass("disabled");
+                $('#BasicInformationTab').tab('show');
+                //$("#AddressTab").removeClass("disabled");
+                //$("#OfficialDetailsTab").removeClass("disabled");
+                //$("#KYCDetailsTab").removeClass("disabled");
+
+            },
+            error: function(ex) {
+                alert('Failed' + ex);
+            }
+        });
+    };
+
+    function ResetFields() {
+        //debugger;
+        $("#FormNumber").val('');
+        $("#FromDate").val('');
+        $("#ToDate").val('');
+        $("#CustomerRegionID").val('0');
+        //document.getElementById('NoRecord').style.display = 'none';
+        document.getElementById('tblResponse').style.display = 'none';
+        document.getElementById("formNumber_error").innerHTML = "";
+        document.getElementById("FromDate_error").innerHTML = "";
+        document.getElementById("ToDate_error").innerHTML = "";
+        $("#ManageCardHeader").text("Approve Customers");
+        sessionStorage.removeItem("tableCustData");
+        //window.location.reload(true);
+        $("#FormNumberForSearch").val('');
+        $("#CustomerReferenceNoForSearch").val('');
+
+        $("#CustomerTypeID").empty();
+        $("#CustomerSubTypeID").empty();
+
+        $('#CustomerDateOfApplication').val('');
+
+        $('#CustomerSalesAreaID').empty();
+
+        $('#CustomerZonalOfficeID').empty();
+
+        $('#CustomerRegion_ID').empty();
+
+
+
+        $('#IndividualOrgNameTitle').empty();
+
+        $('#IndividualOrgName').val('');
+
+        $('#CustomerNameOnCard').val('');
+
+        $('#CustomerTbentityID').empty();
+
+        $('#CustomerResidenceStatus').empty();
+
+        $('#CustomerIncomeTaxPan').val('');
+        $('#PanCardRemarks').val('');
+
+        //Address Tab
+        $('#CommunicationAddress1').val('');
+        $('#CommunicationAddress2').val('');
+        $('#CommunicationAddress3').val('');
+        $('#CommunicationLocation').val('');
+        $('#CommunicationCity').val('');
+        $('#CommunicationPinCode').val('');
+
+        $('#CommunicationStateID').empty();
+
+        $('#CommunicationDistrictId').empty();
+
+        $('#CommunicationDialCode').val('');
+        $('#CommunicationPhoneNo').val('');
+        $('#CommunicationFaxCode').val('');
+        $('#CommunicationFax').val('');
+        $('#CommunicationMobileNumber').val('');
+        $('#CommunicationEmail').val('');
+
+
+        $('#PerOrRegAddress1').val('');
+        $('#PerOrRegAddress2').val('');
+        $('#PerOrRegAddress3').val('');
+        $('#PerOrRegAddressLocation').val('');
+        $('#PerOrRegAddressCity').val('');
+        $('#PerOrRegAddressPinCode').val('');
+
+        $('#PerOrRegAddressStateID').empty();
+
+        $('#PerOrRegAddressDistrict').empty();
+
+        $('#PerOrRegAddressDialCode').val('');
+        $('#PerOrRegAddressPhoneNumber').val('');
+        $('#PermanentFaxCode').val('');
+        $('#PermanentFax').val('');
+
+        //Official Details Tab
+        $('#KeyOffTitle').empty();
+
+        $('#KeyOffFirstName').val('');
+        $('#KeyOffLastName').val('');
+        $('#KeyOffDesignation').val('');
+        $('#KeyOffPhoneCode').val('');
+        $('#KeyOffPhoneNumber').val('');
+        $('#KeyOffMobileNumber').val('');
+        $('#KeyOffIndividualInitials').val('');
+        $('#KeyOffMiddleName').val('');
+        $('#KeyOffFaxCode').val('');
+        $('#KeyOffFax').val('');
+        $('#KeyOffEmail').val('');
+
+
+        $('#KeyOfficialSecretQuestion').empty();
+        $('#KeyOfficialSecretAnswer').val('');
+        $('#FleetSizeNoOfVechileOwnedHCV').val('');
+        $('#FleetSizeNoOfVechileOwnedLCV').val('');
+        $('#FleetSizeNoOfVechileOwnedMUVSUV').val('');
+        $('#FleetSizeNoOfVechileOwnedCarJeep').val('');
+        $('#CustomerTypeOfFleetID').empty();
+
+
+        $('#KeyOfficialCardAppliedFor').val('');
+        $('#KeyOfficialApproxMonthlySpendsonVechile1').val('');
+        $('#KeyOfficialApproxMonthlySpendsonVechile2').val('');
+        $('#AreaOfOperation').val('');
+        $('#KeyOfficialDOB').val('');
+        $('#KeyOffDateOfAnniversary').val('');
+        $('#CustomerReferenceNoForSearch').val('');
+
+        //KYC
+        $('#IdProofFront').attr('src', null);
+        $('#AddressProofFront').attr('src', null);
+        $('#panCardImg').attr('src', null);
+        $('#vehicleDetailsImg').attr('src', null);
+        $('#customerFormImg').attr('src', null);
+        //$('#Remarks').val("");
+        document.getElementById('Remarks_error').innerHTML = '';
+
+        $("#BasicInformationTab").addClass("disabled");
+        $("#AddressTab").addClass("disabled");
+        $("#OfficialDetailsTab").addClass("disabled");
+        $("#KYCDetailsTab").addClass("disabled");
+        $('#CustomerRegionID')[0].sumo.unSelectAll();
+        $('#CustomerRegionID')[0].sumo.selectItem(0);
+        return false;
+    };
 
 </script>
 
 <script type="text/javascript">
-          var todate = $("#FromDate").val();
-          var today = new Date();
-          var dd = String(today.getDate()).padStart(2, '0');
-          var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-          var yyyy = today.getFullYear();
-          //today = yyyy + '-' + mm + '-' + dd;
-          today = dd + '-' + mm + '-' + yyyy;
-
-          function ApproveCustomer(approveReject)
-          {
-              console.log(approveReject);
-              var custRefNo = document.getElementById("CustomerReferenceNoForSearch").value;
-              if (custRefNo.trim() == "")
-              {
-                  alert("Please select Customer To Approve/Reject");
-                  return (false);
-              }
-
-              var remarks = document.getElementById("Remarks").value;
-              if (remarks.trim() == "")
-              {
-                  document.getElementById("Remarks_error").innerHTML = "Please enter comment";
-                  $("#Remarks").focus();
-                  return (false);
-              }
-              else
-              {
-                  document.getElementById("Remarks_error").innerHTML = "";
-              }
-
-              $.ajax({
-                  url: "@Url.Action("AproveCustomer", "Aggregator")",
-                  type: "POST",
-                  dataType: "JSON",
-                  data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: approveReject },
-                  success: function (res) {
-                      //if (serviceId.checked == true) {
-                      //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
-                      //}
-
-                      let tableCustData = sessionStorage.getItem("tableCustData");
-
-                      console.log(tableCustData, "tbl");
-
-                      $("#reason").html(res);
-                      $("#reason").addClass("alert-success");
-                      $("#reason").attr("style","display:block");
-                      $(".toBeHiddenOnSuccess").hide();
-                  },
-                  error: function (ex) {
-                      alert('Failed' + ex);
-                  }
-              });
+    var todate = $("#FromDate").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    //today = yyyy + '-' + mm + '-' + dd;
+    today = dd + '-' + mm + '-' + yyyy;
 
 
-              return true;
-          };
 
 
-          $("#FormNumber").on("blur", function () {
-              //debugger;
-              if (document.getElementById("FormNumber").value.trim() != "") {
+    $("#FormNumber").on("blur", function() {
+        //debugger;
+        if (document.getElementById("FormNumber").value.trim() != "") {
 
-                  if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      //document.getElementById("FormNumber").value = "";
-                      //document.getElementById("FormNumber").focus();
-                      return false;
-                  }
-                  else if (document.getElementById("FormNumber").value.length < 10) {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      //document.getElementById("FormNumber").value = "";
-                      //document.getElementById("FormNumber").focus();
-                      return false;
-                  }
-                  else if (!(document.getElementById("FormNumber").value).match(number)) {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      //document.getElementById("FormNumber").value = "";
-                      //document.getElementById("FormNumber").focus();
-                      return false;
-                  }
-                  else {
-                      document.getElementById("formNumber_error").innerHTML = "";
-                  }
-              }
-              else{
-                  document.getElementById("formNumber_error").innerHTML = "";
-              }
-          });
-
-          function updateCustomer(o, referenceNo, frmNumber) {
-            debugger;
-            var FormNumber = frmNumber.trim();
-            referenceNo=referenceNo.trim();
-
-
-            $('#FormNumberForSearch').val(FormNumber);
-            $('#CustomerReferenceNoForSearch').val(referenceNo);
-
-              if(FormNumber!="")
-              {
-                  var link = '@Url.Action("UpdateFleetCustomer", "AggregatorFleet", new { FormNumber = "-1" })';
-                  link = link.replace("-1", FormNumber);
-                  window.location.href = link;
-                  return true;
-              }
-              else
-              {
-                  alert("Please select customer");
-                  return false;
-              }
-          };
-          function updateKYCDocuments()
-          {
-              console.log($('#FormNumberForSearch').val());
-              var formNo = $('#FormNumberForSearch').val();
-              var customerReferenceNoForSearch = $('#CustomerReferenceNoForSearch').val();
-              console.log('Inside updateKYCDocuments()');
-              console.log(formNo);
-              if(formNo!="")
-              {
-                  var link = '@Html.Raw(Url.Action("UploadAggregatorDoc", "Aggregator", new { customerReferenceNo = "-1", FormNumber="-2" }))';
-                  link = link.replace("-1", customerReferenceNoForSearch);
-                  link = link.replace("-2", formNo);
-                  console.log(link);
-                  window.location.href = link;
-              }
-              else
-              {
-                  alert("Please select customer");
-              }
-          };
-
-
-          $("#btnSave").on("click", (function (e) {
-              var fromdate = $("#FromDate").val();
-              var todate = $("#ToDate").val();
-
-              var flag = "Y";
-              debugger;
-              if (fromdate != "" && todate != "") {
-                  flag = checkDates("FromDate_error");
-              }
-              if (document.getElementById("FormNumber").value.trim() != "") {
-
-                  if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      flag="N";
-                  }
-                  else if (document.getElementById("FormNumber").value.length < 10) {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      flag="N";
-                  }
-                  else if (!(document.getElementById("FormNumber").value).match(number)) {
-                      document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-                      flag="N";
-                  }
-                  else {
-                      document.getElementById("formNumber_error").innerHTML = "";
-                  }
-              }
-              else {
-                  document.getElementById("formNumber_error").innerHTML = "";
-              }
-              if (flag == "N")
-                  e.preventDefault();
-
-          }));
-
-      function ShowCustomerDetails()
-      {
-          document.getElementById("CustomerCardTab").click();
-          document.getElementById("CustomerCardTab").classList.remove("disable");
-          document.getElementById("BasicInformationTab").classList.add("disable");
-          document.getElementById("AddressTab").classList.add("disable");
-          document.getElementById("OfficialDetailsTab").classList.add("disable");
-          document.getElementById("KYCDetailsTab").classList.add("disable");
-          $("#ManageCardHeader").text("Approve Customers");
-      }
-      function ShowBasicInfo()
-      {
-          document.getElementById("CustomerCardTab").classList.add("disable");
-          document.getElementById("BasicInformationTab").classList.remove("disable");
-          document.getElementById("BasicInformationTab").click();
-          document.getElementById("AddressTab").classList.add("disable");
-          document.getElementById("OfficialDetailsTab").classList.add("disable");
-          document.getElementById("KYCDetailsTab").classList.add("disable");
-      }
-      function ShowAddress()
-      {
-          debugger;
-          document.getElementById("CustomerCardTab").classList.add("disable");
-          document.getElementById("BasicInformationTab").classList.add("disable");
-          document.getElementById("AddressTab").classList.remove("disable");
-          document.getElementById("AddressTab").click();
-          document.getElementById("OfficialDetailsTab").classList.add("disable");
-          document.getElementById("KYCDetailsTab").classList.add("disable");
-      }
-      function ShowOfficialDetails()
-      {
-          document.getElementById("CustomerCardTab").classList.add("disable");
-          document.getElementById("BasicInformationTab").classList.add("disable");
-          document.getElementById("AddressTab").classList.add("disable");
-          document.getElementById("OfficialDetailsTab").click();
-          document.getElementById("OfficialDetailsTab").classList.remove("disable");
-          document.getElementById("KYCDetailsTab").classList.add("disable");
-      }
-      function ShowKYCDetails()
-      {
-          document.getElementById("CustomerCardTab").classList.add("disable");
-          document.getElementById("BasicInformationTab").classList.add("disable");
-          document.getElementById("AddressTab").classList.add("disable");
-          document.getElementById("OfficialDetailsTab").classList.add("disable");
-          document.getElementById("KYCDetailsTab").click();
-          document.getElementById("KYCDetailsTab").classList.remove("disable");
-      }
-
-      $("#Remarks").on("blur", function ()
-      {
-          //debugger;
-          if (document.getElementById("Remarks").value.trim() == "")
-          {
-              document.getElementById("Remarks_error").innerHTML = "Please enter comment";
-              return (false);
-          }
-          else
-          {
-              document.getElementById("Remarks_error").innerHTML = "";
-          }
-
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                //document.getElementById("FormNumber").value = "";
+                //document.getElementById("FormNumber").focus();
+                return false;
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
     });
-     $("#CustomerSearch").on('click', '.verifyreject', function () {
-        if(activeRow==""){
+
+    function updateCustomer(o, referenceNo, frmNumber) {
+        debugger;
+        var FormNumber = frmNumber.trim();
+        referenceNo = referenceNo.trim();
+
+
+        $('#FormNumberForSearch').val(FormNumber);
+        $('#CustomerReferenceNoForSearch').val(referenceNo);
+
+        if (FormNumber != "") {
+            var link = '@Url.Action("UpdateFleetCustomer", "AggregatorFleet", new { FormNumber = "-1" })';
+            link = link.replace("-1", FormNumber);
+            window.location.href = link;
+            return true;
+        }
+        else {
+            alert("Please select customer");
+            return false;
+        }
+    };
+
+
+    $("#btnSave").on("click", (function(e) {
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        debugger;
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("FromDate_error");
+        }
+        if (document.getElementById("FormNumber").value.trim() != "") {
+
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag = "N";
+            }
+            else if (document.getElementById("FormNumber").value.length < 10) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag = "N";
+            }
+            else if (!(document.getElementById("FormNumber").value).match(number)) {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag = "N";
+            }
+            else {
+                document.getElementById("formNumber_error").innerHTML = "";
+            }
+        }
+        else {
+            document.getElementById("formNumber_error").innerHTML = "";
+        }
+        if (flag == "N")
+            e.preventDefault();
+
+    }));
+
+    function ShowCustomerDetails() {
+        document.getElementById("CustomerCardTab").click();
+        document.getElementById("CustomerCardTab").classList.remove("disable");
+        document.getElementById("BasicInformationTab").classList.add("disable");
+        document.getElementById("AddressTab").classList.add("disable");
+        document.getElementById("OfficialDetailsTab").classList.add("disable");
+        document.getElementById("KYCDetailsTab").classList.add("disable");
+        $("#ManageCardHeader").text("Approve Customers");
+    }
+    function ShowBasicInfo() {
+        document.getElementById("CustomerCardTab").classList.add("disable");
+        document.getElementById("BasicInformationTab").classList.remove("disable");
+        document.getElementById("BasicInformationTab").click();
+        document.getElementById("AddressTab").classList.add("disable");
+        document.getElementById("OfficialDetailsTab").classList.add("disable");
+        document.getElementById("KYCDetailsTab").classList.add("disable");
+    }
+    function ShowAddress() {
+        debugger;
+        document.getElementById("CustomerCardTab").classList.add("disable");
+        document.getElementById("BasicInformationTab").classList.add("disable");
+        document.getElementById("AddressTab").classList.remove("disable");
+        document.getElementById("AddressTab").click();
+        document.getElementById("OfficialDetailsTab").classList.add("disable");
+        document.getElementById("KYCDetailsTab").classList.add("disable");
+    }
+    function ShowOfficialDetails() {
+        document.getElementById("CustomerCardTab").classList.add("disable");
+        document.getElementById("BasicInformationTab").classList.add("disable");
+        document.getElementById("AddressTab").classList.add("disable");
+        document.getElementById("OfficialDetailsTab").click();
+        document.getElementById("OfficialDetailsTab").classList.remove("disable");
+        document.getElementById("KYCDetailsTab").classList.add("disable");
+    }
+    function ShowKYCDetails() {
+        document.getElementById("CustomerCardTab").classList.add("disable");
+        document.getElementById("BasicInformationTab").classList.add("disable");
+        document.getElementById("AddressTab").classList.add("disable");
+        document.getElementById("OfficialDetailsTab").classList.add("disable");
+        document.getElementById("KYCDetailsTab").click();
+        document.getElementById("KYCDetailsTab").classList.remove("disable");
+    }
+
+
+    $("#CustomerSearch").on('click', '.verifyreject', function() {
+        if (activeRow == "") {
             currentRow = $(this).closest("tr");
-            activeRow=currentRow;
+            activeRow = currentRow;
             var i = currentRow[0].cells[0].textContent;
 
 
 
-           currentRow.find('.verify').attr("style","display:none");
-           currentRow.find('.verifyreject').attr("style","display:none");
-           currentRow.find('#VerifyRemark_'+i).attr("style","display:block");
-           currentRow.find('.reject').attr("style","display:block");
-           currentRow.find('.cancel').attr("style","display:block");
-       }
+            currentRow.find('.verify').attr("style", "display:none");
+            currentRow.find('.verifyreject').attr("style", "display:none");
+            currentRow.find('#VerifyRemark_' + i).attr("style", "display:block");
+            currentRow.find('.reject').attr("style", "display:block");
+            currentRow.find('.cancel').attr("style", "display:block");
+        }
     });
-     $("#CustomerSearch").on('click', '.cancel', function () {
-          currentRow = $(this).closest("tr");
-          var i = currentRow[0].cells[0].textContent;
+    $("#CustomerSearch").on('click', '.cancel', function() {
+        currentRow = $(this).closest("tr");
+        var i = currentRow[0].cells[0].textContent;
 
-        currentRow.find('.verify').attr("style","display:block");
-        currentRow.find('.verifyreject').attr("style","display:block");
-           currentRow.find('#VerifyRemark_'+i).attr("style","display:none");
-           currentRow.find('.reject').attr("style","display:none");
-           currentRow.find('.cancel').attr("style","display:none");
-       activeRow="";
-     });
-     $("#CustomerSearch").on('click', '.reject', function () {
-         debugger;
-         var flag="Y";
-          row = $(this).closest("tr");
-          var i = row[0].cells[0].textContent;
-          var verifyRemark = $('#VerifyRemark_'+i).val();
-          var formNumber = row[0].cells[1].textContent;
-          var customerId = row[0].cells[2].textContent;
-          if(verifyRemark.trim()==""){
-              alert("Comment is required to reject a customer.");
-              flag="N";
-          }
-          if(flag=="Y"){
-             $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("ApproveorRejectFleetCustomer", "AggregatorFleet")',
-                    contentType: "application/json; charset=utf-8",
-                    data:{ CustomerId:customerId,FormNumber:formNumber,CustomerStatus:"Reject", ApprovedRemark:verifyRemark},
-                    dataType: 'json',
-                    success: function (data) {
-                       
-                    },
-                    error: function (ex) {
-                        alert('Error.' + ex);
-                    }
-             });
-           }
-     });
+        currentRow.find('.verify').attr("style", "display:block");
+        currentRow.find('.verifyreject').attr("style", "display:block");
+        currentRow.find('#VerifyRemark_' + i).attr("style", "display:none");
+        currentRow.find('.reject').attr("style", "display:none");
+        currentRow.find('.cancel').attr("style", "display:none");
+        activeRow = "";
+    });
+    $("#CustomerSearch").on('click', '.reject', function() {
+        debugger;
+        var flag = "Y";
+        row = $(this).closest("tr");
+        var i = row[0].cells[0].textContent;
+        var verifyRemark = $('#VerifyRemark_' + i).val();
+        var formNumber = row[0].cells[1].textContent;
+        var customerId = row[0].cells[2].textContent;
+        if (verifyRemark.trim() == "") {
+            alert("Comment is required to reject a customer.");
+            flag = "N";
+        }
+        if (flag == "Y") {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("ApproveorRejectFleetCustomer", "AggregatorFleet")',
+                contentType: "application/json; charset=utf-8",
+                data: { CustomerId: customerId, FormNumber: formNumber, CustomerStatus: "Reject", ApprovedRemark: verifyRemark },
+                dataType: 'json',
+                success: function(data) {
+
+                },
+                error: function(ex) {
+                    alert('Error.' + ex);
+                }
+            });
+        }
+    });
 </script>
 <style>
     .nav-item > li.active > a,

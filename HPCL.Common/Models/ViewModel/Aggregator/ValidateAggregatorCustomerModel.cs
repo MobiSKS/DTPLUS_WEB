@@ -103,13 +103,15 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             CustomerStatusMdl = new List<StatusResponseModal>();
-            //CustomerStatusMdl.Add(new StatusResponseModal
-            //{
-            //    StatusId = 0,
-            //    StatusName = "Select Status"
-            //});
+            SearchStateMdl = new List<StateResponseModal>();
+            SearchStateMdl.Add(new StateResponseModal
+            {
+                CountryID = 0,
+                StateID = 0,
+                StateName = "--ALL--"
+            });
         }
-
+        public virtual List<StateResponseModal> SearchStateMdl { get; set; }
         public virtual List<OTCCardDetails> CardDetailsMdl { get; set; }
         public virtual List<CustomerTypeModel> CustomerTypeMdl { get; set; }
         public virtual List<CustomerSubTypeModel> CustomerSubTypeMdl { get; set; }
@@ -319,6 +321,7 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
         public string StatusId { get; set; }
         public virtual List<StatusResponseModal> CustomerStatusMdl { get; set; }
         public string VerifyRemark { get; set; }
+        public string StatusIdVal { get; set; }
     }
 
 }

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using HPCL.Common.Models.RequestModel.TMS;
 using System.Linq;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 
 namespace HPCL.Service.Services
 {
@@ -726,21 +727,10 @@ namespace HPCL.Service.Services
         public async Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model)
         {
             model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-            List<StatusResponseModal> mainList = new List<StatusResponseModal>();
-            mainList = await _commonActionService.GetStatusType(1);
-            List<StatusResponseModal> lstNew = new List<StatusResponseModal>();
+
+            model.StatusResponseMdl.AddRange(await GetAlStatusType());
             if (model.Status == 0)
-                model.Status = 10;//Unverified
-
-            foreach (StatusResponseModal item in mainList)
-            {
-                if (item.StatusId == 10 || item.StatusId == 11 || item.StatusId == 12 || item.StatusId == 1 || item.StatusId == 13)
-                {
-                    lstNew.Add(item);
-                }
-            }
-
-            model.StatusResponseMdl.AddRange(lstNew);
+                model.Status = 9;//Pending
 
             var reqBody = new GetAlCustomerDetailForVerificationRequest
             {
@@ -793,6 +783,25 @@ namespace HPCL.Service.Services
             List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> insertKyc = jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
 
             return insertKyc[0];
+        }
+        public async Task<List<StatusResponseModal>> GetAlStatusType()
+        {
+            var statusType = new StatusRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAlCustomerStatus);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
+
+            return lst;
         }
 
     }
