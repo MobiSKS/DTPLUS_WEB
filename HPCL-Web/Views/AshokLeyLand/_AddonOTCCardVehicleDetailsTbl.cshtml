@@ -13,7 +13,7 @@
                                 <th></th>
 	     						<th>Vehicle Type</th>
 								<th>VIN Number</th>
-								<th>Mobile No</th>
+								<th>Mobile Number</th>
 								<td></td>
 								<td style="display:none;"></td>
 								<td style="display:none;"></td>
@@ -636,6 +636,7 @@
          var isValid=true;
          var PrevMobile = "";
          var CurMobile =  "";
+         var isMobileNoAlreadyExists=false;
 
         if(mobile.trim()=='')
         {
@@ -664,8 +665,66 @@
                 document.getElementById('MobileNo_error_'+rowSelected).innerHTML="";
             }
         }
-        
+       
+       
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+
+          var mycelStatus;
+          
+          mycelStatus=myrow.getElementsByTagName("td")[10];
+         
+
         if(isValid)
+        {
+            $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
+                data: { MobileNo: mobile }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+
+                    if (status == 'success') 
+                    {
+                        console.log('Test');
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") 
+                        {
+                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
+                            mycelStatus.innerHTML = "1";
+                            isMobileNoAlreadyExists=true;
+                        }
+                        else 
+                        {
+                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "";
+                            mycelStatus.innerHTML = "0";
+                        }
+                    }
+                    else 
+                    {
+                        document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
+                        mycelStatus.innerHTML = "1";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
+                    mycelStatus.innerHTML = "1";
+                }
+            });
+        }
+        else
+        {
+            mycelStatus.innerHTML = "0";
+        }
+
+     setTimeout(function()
+     {
+        if(isValid && !isMobileNoAlreadyExists)
         {
             j=0;i=0;
             cnt=0;
@@ -702,60 +761,7 @@
             });
 
         }
-
-          var tbl = document.getElementById('NoOfCardsTbl');
-          mytablebody = tbl.getElementsByTagName("tbody")[0];
-          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
-
-          var mycelStatus;
-          
-          mycelStatus=myrow.getElementsByTagName("td")[10];
-         
-
-        if(isValid)
-        {
-            $.ajax({
-                type: 'POST',   
-                url: '@Url.Action("CheckMobilNoAlreadyUsedForOTCCard", "MyHpOTCCardCustomer")',
-                data: { MobileNo: mobile }, 
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(status);
-
-                    if (status == 'success') 
-                    {
-                        console.log('Test');
-                        console.log(data.status);
-                        console.log(data.reason);
-                        if (data.status == "0") 
-                        {
-                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
-                            mycelStatus.innerHTML = "1";
-                        }
-                        else 
-                        {
-                            document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "";
-                            mycelStatus.innerHTML = "0";
-                        }
-                    }
-                    else 
-                    {
-                        document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
-                        mycelStatus.innerHTML = "1";
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) 
-                {
-                    document.getElementById('MobileNo_error_'+rowSelected).innerHTML = "Mobile Number already exists";
-                    mycelStatus.innerHTML = "1";
-                }
-            });
-        }
-        else
-        {
-            mycelStatus.innerHTML = "0";
-        }
+     },500);
 
      }
 
