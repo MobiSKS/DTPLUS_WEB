@@ -1102,8 +1102,8 @@ namespace HPCL.Service.Services
                 VerifyBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 VerifyRemark = VerifyRemark,
                 FormNumber = FormNumber,
-                CustomerStatus=(CustomerStatus=="Verify")?"11":"12"
-            };//11 for Verfiy, 12 for Verfiy Reject
+                CustomerStatus=CustomerStatus
+            };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.verifyrejectaggregatornormalfleetcustomer);

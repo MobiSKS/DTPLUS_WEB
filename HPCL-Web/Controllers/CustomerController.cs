@@ -736,6 +736,18 @@ namespace HPCL_Web.Controllers
             var modals = await _commonActionService.CheckPanCardDuplicationByDistrictidWithListOfCustomers(DistrictId, IncomeTaxPan);
             return PartialView("~/Views/Customer/_ViewCustomersWithDuplicatePAN.cshtml", modals);
         }
-
+        public async Task<IActionResult> ApprovalUpdateCustomerAddress(CustomerAddressApproveRequestModel model, string reset, string success, string error, string FromDate, string ToDate)
+        {
+            var searchResult = await _customerService.ApprovalUpdateCustomerAddress(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
+        }
     }
 }

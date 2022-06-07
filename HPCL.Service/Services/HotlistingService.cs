@@ -125,7 +125,8 @@ namespace HPCL.Service.Services
                 EntityTypeId = Convert.ToInt32(hotlistApprovalRequest.EntityTypeId),
                 ActionId = Convert.ToInt32(hotlistApprovalRequest.ActionId),
                 ObjUpdateHotlistApprovalEntityCode = hotlistApprovalRequest.ObjUpdateHotlistApprovalEntityCode,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ActionOnRequest= hotlistApprovalRequest.ActionOnRequest
             };
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
