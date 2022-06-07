@@ -407,14 +407,25 @@
             dataType: "JSON",
             data: { newUserName: newUserName, userName: userName},
             success: function (res) {
-                reloadGrid();
-                $("#statusMsg").html("");
-                $("#statusMsg").append("<span>Request created successfully !!</span>")
-                $('#responseMsgModal').modal({
-                        backdrop: 'static',
-                        keyboard: false, 
-                        show: true
-                });
+
+                if(res.changeList.success == true){
+                    reloadGrid();
+                    $("#statusMsg").html("");
+                    $("#statusMsg").append("<span>"+(res.changeList.data[0].reason)+"</span>");
+                    $('#responseMsgModal').modal({
+                            backdrop: 'static',
+                            keyboard: false, 
+                            show: true
+                    });
+                }else{
+                    $("#statusMsg").html("");
+                    $("#statusMsg").append("<span>"+(res.changeList.data[0].reason)+"</span>");
+                    $('#responseMsgModal').modal({
+                            backdrop: 'static',
+                            keyboard: false, 
+                            show: true
+                    });
+                }
             },
             error: function (ex) {
                 alert('Failed' + ex);

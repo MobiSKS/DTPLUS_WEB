@@ -38,5 +38,18 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> EnrollExceptionRequest(EnrollExceptionRequest entity)
+        {
+            var reasonList = await _hDFCBankCreditPouchService.InsertExceptionRequest(entity);
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+
+        public IActionResult RequestApproval()
+        {
+            return View();
+        }
     }
 }
