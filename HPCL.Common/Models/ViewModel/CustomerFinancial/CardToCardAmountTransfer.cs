@@ -5,7 +5,7 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
 {
     public class CardToCardAmountTransfer : BaseEntity
     {
-        public string customerId { get; set; }
+        public string CustomerId { get; set; }
         public cardToCardTransfer[] cardToCardTransfer { get; set; }
     }
 
@@ -13,7 +13,7 @@ namespace HPCL.Common.Models.ViewModel.CustomerFinancial
     {
         public string FromCardNo { get; set; }
         public string ToCardNo { get; set; }
-        public Decimal transferAmount { get; set; }
+        public Decimal TransferAmount { get; set; }
         public string FromMobileNo { get; set; }
         public string ToMobileNo { get; set; }
     }
