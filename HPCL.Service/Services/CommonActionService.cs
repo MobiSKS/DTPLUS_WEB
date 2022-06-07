@@ -611,7 +611,18 @@ namespace HPCL.Service.Services
                     }
                 }
             }
-            
+
+            else if (status == "HdfcReqApproval")
+            {
+                foreach (var item in lst)
+                {
+                    //if (item.StatusId == 4)
+                    //{
+                        lsts.Add(item);
+                    //}
+                }
+            }
+
             return lsts;
         }
 
