@@ -41,5 +41,6 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public string TMSStatus { get; set; }
         public string TMSApprovedBy { get; set; }
         public string TMSApprovedon { get; set; }
+        public string TMSUserId { get; set; }
     }
 }
