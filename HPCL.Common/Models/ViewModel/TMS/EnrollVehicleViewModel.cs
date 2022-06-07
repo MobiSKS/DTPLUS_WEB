@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public EnrollVehicleViewModel()
         {
             StatusList = new List<StatusResponseModal>();
-            vehicleDetailsModel = new List<EnrollVehicleDetailsModel>();
+            vehicleEnrollmentStatusList = new List<EnrollVehicleDetailsModel>();
         }
 
         public string CustomerID { get; set; }
@@ -25,7 +25,7 @@ namespace HPCL.Common.Models.ViewModel.TMS
         public string Reason { get; set; }
         public string Message { get; set; }
         public virtual List<StatusResponseModal> StatusList { get; set; }
-        public virtual List<EnrollVehicleDetailsModel> vehicleDetailsModel { get; set; }
+        public virtual List<EnrollVehicleDetailsModel> vehicleEnrollmentStatusList { get; set; }
     }
 
     public class EnrollVehicleDetailsModel
