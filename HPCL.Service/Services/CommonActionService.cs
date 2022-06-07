@@ -1548,5 +1548,23 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> responseModel = jarr.ToObject<List<StatusResponseModal>>();
             return responseModel;
         }
+
+        public async Task<List<StatusResponseModal>> GetNormalFleetCustomerStatusForApprove()
+        {
+            var forms = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornormalfleetcustomerstatusapprove);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> responseModel = jarr.ToObject<List<StatusResponseModal>>();
+            return responseModel;
+        }
     }
 }
