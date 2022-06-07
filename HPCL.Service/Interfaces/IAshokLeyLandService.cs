@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.AshokLayland;
+﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using Microsoft.AspNetCore.Mvc;
@@ -31,5 +32,6 @@ namespace HPCL.Service.Interfaces
         Task<AshokLeylandCardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<ALCardEntryDetails> arrs);
         Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model);
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus);
+        Task<List<StatusResponseModal>> GetAlStatusType();
     }
 }
