@@ -614,7 +614,7 @@ namespace HPCL.Service.Services
         public async Task<ValidateAggregatorCustomerModel> VerfiyFleetCustomer(ValidateAggregatorCustomerModel entity)
         {
 
-            entity.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            entity.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
             entity.CustomerStatusMdl.AddRange(await _commonActionService.GetNormalFleetCustomerStatus());
 
             var request = new GetValidateNewCustomerRequestModel()
@@ -1127,7 +1127,7 @@ namespace HPCL.Service.Services
                 FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
                 StateId = String.IsNullOrEmpty(entity.StateId) || entity.StateId == "0" ? "" : entity.StateId,
                 CustomerName = String.IsNullOrEmpty(entity.CustomerName) ? "" : entity.CustomerName,
-                Status = String.IsNullOrEmpty(entity.StatusId) ? "19" : entity.StatusId
+                Status = String.IsNullOrEmpty(entity.StatusId) ? "11" : entity.StatusId
             };
 
             _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedCustGrid", JsonConvert.SerializeObject(request));
@@ -1156,7 +1156,7 @@ namespace HPCL.Service.Services
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ApprovedRemark = ApprovedRemark,
                 FormNumber = FormNumber,
-                CustomerStatus = (CustomerStatus == "Approve") ? "1" : "20"
+                CustomerStatus = (CustomerStatus == "Approve") ? "Approved" : "Approval Rejected"
             };//1 for Approve, 20 for Approve Reject
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

@@ -53,9 +53,9 @@
                                     <div class="d-flex align-items-center justify-content-between flex-wrap w-100">
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">State</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">State<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.SearchStateMdl, "StateID", "StateName"), new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -79,9 +79,9 @@
                                         </div>
                                         <div class="col-md-6 col-12 px-0">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Status</label>
+                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Status<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.CustomerStatusMdl, "StatusId", "StatusName"), new { @class = "form-control" })
+                                                    @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.CustomerStatusMdl, "StatusId", "StatusName"), new { @class = "form-control"})
                                                 </div>
                                             </div>
                                         </div>
@@ -129,7 +129,7 @@
                                                             <th>
                                                                 Mobile No.
                                                             </th>
-                                                            @if (Model.StatusId == "19")
+                                                            @if (Model.StatusId == "19" || Model.StatusId==null)
                                                             {
                                                                 <th>
                                                                     Edit
@@ -141,7 +141,7 @@
                                                             <th>
                                                                 Download
                                                             </th>
-                                                            @if (Model.StatusId == "19")
+                                                            @if (Model.StatusId == "19"|| Model.StatusId==null)
                                                             {
                                                                 <th>
                                                                     Action
@@ -175,13 +175,13 @@
                                                                     <td>@item.PhoneNo</td>
                                                                 }
                                                                 <td>@item.MobileNo</td>
-                                                                @if (Model.StatusId == "19")
+                                                                @if (Model.StatusId == "19"|| Model.StatusId==null)
                                                                 {
                                                                     <td><a class='CardNumber' data-toggle='tooltip' tooltip="Edit" href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
                                                                 }
                                                                 <td><a class='CardNumber' data-toggle='tooltip' tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
                                                                 <td><a class='CardNumber' data-toggle='tooltip' tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
-                                                                @if (Model.StatusId == "19")
+                                                                @if (Model.StatusId == "19"|| Model.StatusId==null)
                                                                 {
                                                                     
                                                                     <td>
@@ -213,7 +213,7 @@
                                         </div>
                                     }
                                 </div>
-
+                                 <div style="display:none;">@Html.TextBoxFor(m => m.StatusIdVal)</div>
                                 <div id="BasicInformation" class="tab-pane" role="tabpanel">
                                     <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                         <div class="w-100">
@@ -1090,8 +1090,12 @@
             search: true,
             searchText: 'Enter Text here.'
         });
-        if ($('#StatusId').val() == "0") {
+        if ($('#StatusIdVal').val() == "") {
             $('#StatusId').val("19");
+            $("#StatusId")[0].sumo.reload();
+        }
+        else{
+             $('#StatusId').val($('#StatusIdVal').val());
             $("#StatusId")[0].sumo.reload();
         }
 
@@ -1139,9 +1143,6 @@
         debugger;
         var FormNumber = frmNumber.trim();
         referenceNo = referenceNo.trim();
-        console.log('Ravi');
-        //console.log(row);
-        //console.log(col1);
         console.log(frmNumber);
 
         $('#FormNumberForSearch').val(FormNumber);
@@ -1713,6 +1714,11 @@
                 }
             });
         }
+    });
+
+    $("#StatusId").change(function () {
+        var id = this.value;
+        $("#StatusIdVal").val(id);
     });
 </script>
 <style>
