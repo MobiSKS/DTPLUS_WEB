@@ -85,7 +85,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                PreRBEUserName = userName ?? "",
+                PreRBEUserName = userName,
                 NewRBEUserName = newUserName ?? "",
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };

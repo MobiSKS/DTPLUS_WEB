@@ -9,7 +9,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
             <li class="breadcrumb-item font-weight-light">Hotlist Cards</li>
         </ul>
-        <form method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="HotlistCardsPermanently" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="HotlistCardsPermanently" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="border-1 rounded border-grey h-100">
@@ -17,7 +17,7 @@
                         <div class="p-2 p-md-4">
                             <div class="w-100">
 
-                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+                                <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
                                 <fieldset class="border-1 rounded border-grey pb-3">
                                     <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search</legend>
@@ -93,6 +93,15 @@
                 </div>
             </div>
         </form>
+        <table id="responseTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:50%;display:none;">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Card PAN</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -129,6 +138,7 @@
 
             document.getElementById("noRecord").style.display = "none";
             document.getElementById("successUpdate").style.display = "none";
+            document.getElementById("responseTbl").style.display = "none";
 
             var searchGrid = res.searchList.data;
 
@@ -228,15 +238,17 @@
 
         var updateArray = new Array();
 
-        
+
         var flag = "Y";
         var CardNo;
 
         $("#CardSearch input[type=checkbox]:checked").each(function () {
 
+            document.getElementById("responseTbl").style.display = "none";
+
             var selectedRow = $(this).closest("tr")[0];
             console.log("index",selectedRow.rowIndex);
-            
+
             var indexS = (selectedRow.rowIndex) - 1;
 
             console.log("indexS",indexS);
@@ -256,14 +268,14 @@
                 document.getElementById('hotlistreason_error_'+indexS).style.display = "block";
                 flag = "N";
             }
-            
+
         });
 
          if (cardNo == undefined) {
                 alert("Please select atleast one record.");
                 flag = "N";
          }
- 
+
          if (flag == "N")
             e.preventDefault();
 
@@ -295,6 +307,22 @@
                             $("#successUpdate").html("");
                             $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
                             document.getElementById("successUpdate").style.display = "block";
+                        }else{
+                            $("#responseTbl td").parent().remove();
+
+                            for (var i = 0; i < res.reasonList.length; i++) {
+
+                                var rows = "<tbody><tr>"
+                                    + "<td>"+(i+1)+"</td>"
+                                    + "<td><span class='cardNoVal'>" + (res.reasonList[i].cardNo || '') + "</span></td>"
+                                    + "<td>" + (res.reasonList[i].reason || '') + "</td>"
+                                    + "</tr ></tbody>";
+
+                                $('#responseTbl').append(rows);
+                            }
+
+                            $("#formVal").hide();
+                            document.getElementById("responseTbl").style.display = "block";
                         }
                     },
                     error: function (ex) {

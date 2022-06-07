@@ -1,11 +1,14 @@
 ﻿@model HPCL.Common.Models.ViewModel.TMS.EnrollVehicleViewModel
 @using HPCL.Common.Resources
-@if (Model.vehicleDetailsModel.Count() > 0)
+@if (Model.vehicleEnrollmentStatusList.Count() > 0)
 {
     <table class="datatable table table-striped d-md-table table-bordered table-responsive" style="width:100%;" id="VehicleDetailsTbl">
         <thead>
             <tr>
-                <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                @if (Model.EnrollmentStatus == 0)
+                {
+                    <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
+                }
                 <th style="width:45%;">Vehicle No.</th>
                 <th style="width:50%;">Card Number</th>
                 <th style="display:none">Customer ID</th>
@@ -17,14 +20,17 @@
             @{
                 int i = 0;
             }
-            @foreach (var item in Model.vehicleDetailsModel)
+            @foreach (var item in Model.vehicleEnrollmentStatusList)
             {
                 i = i + 1;
 
                 <tr>
-                    <td>
-                       <input type="checkbox" id="check_@i" />
-                    </td>
+                    @if (Model.EnrollmentStatus == 0)
+                    {
+                        <td>
+                            <input type="checkbox" id="check_@i" />
+                        </td>
+                    }
                     <td>@item.VehicleNo</td>
                     <td>@item.CardNo</td>
                     <td style="display:none">@item.CustomerID</td>
@@ -35,11 +41,14 @@
         </tbody>
     </table>
     <div class="clearfix"></div>
-        
+
     <div class="clearfix"></div>
     <div class="d-flex align-items-center justify-content-center mt-3">
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="submitVehicleEnrollment();">Submit</button>
+            @if (Model.EnrollmentStatus == 0)
+            {
+                <button class="btn btn_primary" type="button" onclick="submitVehicleEnrollment();">Submit</button>
+            }
         </div>
 
     </div>
@@ -113,7 +122,7 @@ else
         if (vehicleDetail.length > 0 && flag == "Y") {
             if (confirm("Are you sure! you want to enroll the selected vehicle(s)?")) 
             {
-                var reqmodel = { CustomerID: CustomerID, vehicleDetailsModel: vehicleDetail };
+                var reqmodel = { CustomerID: CustomerID, vehicleEnrollmentStatusList: vehicleDetail };
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("SubmitVehicleEnrollment", "TMS")',
@@ -122,8 +131,20 @@ else
                     data: JSON.stringify(reqmodel),
                     success: function (data) 
                     {
-                        $("#reason").html(data);
-                        $(".toBeHiddenOnSuccess").hide();
+                        console.log(data,"data");
+                        if (data.commonResponseData.internel_Status_Code == 1000) 
+                        {
+                            $("#reason").html(data.commonResponseData.reason);
+                            $(".toBeHiddenOnSuccess").hide();
+                            document.getElementById("reason").style.display = "block";
+                            document.getElementById("dvNoData").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("reason").style.display = "none";
+                            document.getElementById("dvNoData").style.display = "block";
+                            document.getElementById("dvNoData").innerHTML= data.commonResponseData.reason;
+                        }
 
                     },
                     error: function (ex) {

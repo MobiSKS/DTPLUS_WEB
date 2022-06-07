@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch;
 using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +59,30 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetPlanRes searchList = obj.ToObject<GetPlanRes>();
             return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> InsertExceptionRequest(EnrollExceptionRequest entity)
+        {
+            var searchBody = new EnrollExceptionRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId,
+                FuleConsumptionCapacity = entity.FuleConsumptionCapacity,
+                PlanTypeId = entity.PlanTypeId,
+                ReferenceNo = entity.ReferenceNo,
+                MoComment = entity.MoComment,
+                RequestedBy = entity.RequestedBy,
+                CreatedBy = entity.CreatedBy
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.EnrollExceptionReqUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
         }
     }
 }
