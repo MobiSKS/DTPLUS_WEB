@@ -122,8 +122,20 @@ else
                     data: JSON.stringify(reqmodel),
                     success: function (data) 
                     {
-                        $("#reason").html(data);
-                        $(".toBeHiddenOnSuccess").hide();
+                        console.log(data,"data");
+                        if (data.commonResponseData.internel_Status_Code == 1000) 
+                        {
+                            $("#reason").html(data.commonResponseData.reason);
+                            $(".toBeHiddenOnSuccess").hide();
+                            document.getElementById("reason").style.display = "block";
+                            document.getElementById("dvNoData").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("reason").style.display = "none";
+                            document.getElementById("dvNoData").style.display = "block";
+                            document.getElementById("dvNoData").innerHTML= data.commonResponseData.reason;
+                        }
 
                     },
                     error: function (ex) {

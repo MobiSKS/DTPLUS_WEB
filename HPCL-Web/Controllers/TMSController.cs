@@ -88,8 +88,8 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
         {
-            var result = await _tmsService.SubmitVehicleEnrollment(enrollVehicleViewModel);
-            return Json(result);
+            var commonResponseData = await _tmsService.SubmitVehicleEnrollment(enrollVehicleViewModel);
+            return Json(new { commonResponseData = commonResponseData });
         }
         public async Task<IActionResult> ManageEnrollments()
         {

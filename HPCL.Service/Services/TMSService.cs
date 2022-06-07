@@ -165,7 +165,7 @@ namespace HPCL.Service.Services
             return model;
         }
 
-        public async Task<string> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
+        public async Task<CommonResponseData> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
         {
             enrollVehicleViewModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             enrollVehicleViewModel.UserIp = CommonBase.userip;
@@ -180,17 +180,20 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.InsertVehicleEnrollmentStatus);
             JObject responseObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
+            CommonResponseData responseData = new CommonResponseData();
             if (responseObj["Status_Code"].ToString() == "200")
             {
                 var responseJarr = responseObj["Data"].Value<JArray>();
-                List<SuccessResponse> closeRequestResponseList = responseJarr.ToObject<List<SuccessResponse>>();
-                return closeRequestResponseList.First().Reason.ToString();
+                List<CommonResponseData> responseLst = responseJarr.ToObject<List<CommonResponseData>>();
+                responseData = responseLst[0];
+                responseData.Internel_Status_Code = Convert.ToInt32(responseObj["Internel_Status_Code"].ToString());
             }
             else
             {
-                return responseObj["Message"].ToString();
+                responseData.Internel_Status_Code = Convert.ToInt32(responseObj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(responseObj["Status_Code"].ToString());
             }
-
+            return responseData;
         }
 
         public async Task<ManageEnrollmentsModel> ManageEnrollments()
