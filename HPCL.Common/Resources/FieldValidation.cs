@@ -70,7 +70,7 @@
         public const string ValidHeadOfcCode = @"^[0-9]{1,4}$";
         public const string ValidHeadOfcCodeErrMsg = "Invalid Head Office Code";
 
-        public const string NoOfTatkalCardsNum = @"\b([1-9]|10)\b";
+        public const string NoOfTatkalCardsNum = @"\b(0?[1-9]|10)\b";
         public const string NoOfTatkalCardsNumErrMsg = "No of Tatkal cards should be 1 to 10";
         #endregion
 
