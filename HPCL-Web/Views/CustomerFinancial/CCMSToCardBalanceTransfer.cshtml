@@ -197,56 +197,58 @@
 
              for (var i = 0; i < girdList.length; i++) {
 
-                    var isDts;
-                    var expDts;
+                 if(girdList[i].status == "Active"){
+                        var isDts;
+                        var expDts;
 
-                    if(((girdList[i].issueDate) == "01/01/0001 00:00:00") || ((girdList[i].issueDate) == "01/01/1900 00:00:00") || ((girdList[i].issueDate) == null)){
-                        isDts = "";
-                    }else{
-                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                    }
+                        if(((girdList[i].issueDate) == "01/01/0001 00:00:00") || ((girdList[i].issueDate) == "01/01/1900 00:00:00") || ((girdList[i].issueDate) == null)){
+                            isDts = "";
+                        }else{
+                            isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        }
 
-                    if(((girdList[i].expiryDate) == "01/01/0001 00:00:00") || ((girdList[i].expiryDate) == "01/01/1900 00:00:00") || ((girdList[i].expiryDate) == null)){
-                        expDts = "";
-                    }else{
-                        expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                    }
+                        if(((girdList[i].expiryDate) == "01/01/0001 00:00:00") || ((girdList[i].expiryDate) == "01/01/1900 00:00:00") || ((girdList[i].expiryDate) == null)){
+                            expDts = "";
+                        }else{
+                            expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        }
 
-                    var checkBoxValid;
+                        var checkBoxValid;
 
-                    if(girdList[i].balance == 0){
-                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
-                    }else{
-                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                    }
+                        if(girdList[i].balance == 0){
+                            checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
+                        }else{
+                            checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                        }
 
-                    var srNumber = (i + 1);
-                    var pressCheck = checkBoxValid;
-                    var cardNo = "<span class='cdn'>" + (girdList[i].cardNo || '') + "</span>";
-                    var vechileNo = (girdList[i].vechileNo || '');
-                    var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
-                    var issueDate = isDts;
-                    var expiryDate = expDts;
-                    var status = (girdList[i].status || '');
-                    var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance)+"</span>";
-                    var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit)+"</span>";
-                    var ccmsLimit = (girdList[i].ccmsLimitValue);
-                    var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
+                        var srNumber = (i + 1);
+                        var pressCheck = checkBoxValid;
+                        var cardNo = "<span class='cdn'>" + (girdList[i].cardNo || '') + "</span>";
+                        var vechileNo = (girdList[i].vechileNo || '');
+                        var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
+                        var issueDate = isDts;
+                        var expiryDate = expDts;
+                        var status = (girdList[i].status || '');
+                        var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance)+"</span>";
+                        var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit)+"</span>";
+                        var ccmsLimit = (girdList[i].ccmsLimitValue);
+                        var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
-                    tbl.row.add([
-                        srNumber,
-                        pressCheck,
-                        cardNo,
-                        vechileNo,
-                        mobileno,
-                        issueDate,
-                        expiryDate,
-                        status,
-                        balance,
-                        cashPurseLimit,
-                        ccmsLimit,
-                        transAmt
-                    ]).draw();
+                        tbl.row.add([
+                            srNumber,
+                            pressCheck,
+                            cardNo,
+                            vechileNo,
+                            mobileno,
+                            issueDate,
+                            expiryDate,
+                            status,
+                            balance,
+                            cashPurseLimit,
+                            ccmsLimit,
+                            transAmt
+                        ]).draw();
+                  }
             }
             document.getElementById('searchResSection').style.display = 'block';
         } else {
@@ -350,7 +352,7 @@
                 var selectedRow = $(this).closest("tr")[0];
                 console.log("index",selectedRow.rowIndex);
                 var indexS = (selectedRow.rowIndex) - 1;
-                document.getElementById('amtTotransId_'+indexS).style.display = "none";
+                document.getElementById('amtToTrans_error_'+indexS).style.display = "none";
             });
 
             if (confirm('Do you want to process the selected record, confirm once')) {

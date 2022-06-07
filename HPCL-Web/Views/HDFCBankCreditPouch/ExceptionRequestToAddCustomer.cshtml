@@ -117,6 +117,7 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
+                    <div id="AlreadyEnroll" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
                 </div>
             </div>
 
@@ -232,34 +233,45 @@
     function OnSuccess(res) {
 
         document.getElementById("noRecord").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
 
         console.log(res);
 
         if (res.searchList.success == true) {
 
-            $("#custZonal").html('');
-            $("#custRegional").html('');
-            $("#custName").html('');
-            $("#nameOnCard").html('');
-            $("#transDate").html('');
-            $("#lastQuaterSpend").html('');
-            $("#custZonal").append("<span>"+(res.searchList.data[0].zo || '')+"</span>");
-            $("#custRegional").append("<span>"+(res.searchList.data[0].ro || '')+"</span>");
-            $("#custName").append("<span>"+(res.searchList.data[0].customerName || '')+"</span>");
-            $("#nameOnCard").append("<span>"+(res.searchList.data[0].nameOnCard || '')+"</span>");
-            $("#transDate").append("<span>"+(res.searchList.data[0].lastTransactionDate || '')+"</span>");
-            $("#lastQuaterSpend").append("<span>"+(res.searchList.data[0].totalSpend || '')+"</span>");
+            if(res.searchList.data[0].status == 1){
+                $("#custZonal").html('');
+                $("#custRegional").html('');
+                $("#custName").html('');
+                $("#nameOnCard").html('');
+                $("#transDate").html('');
+                $("#lastQuaterSpend").html('');
+                $("#custType").html('');
+                $("#custZonal").append("<span>"+(res.searchList.data[0].zo || '')+"</span>");
+                $("#custRegional").append("<span>"+(res.searchList.data[0].ro || '')+"</span>");
+                $("#custName").append("<span>"+(res.searchList.data[0].customerName || '')+"</span>");
+                $("#nameOnCard").append("<span>"+(res.searchList.data[0].nameOnCard || '')+"</span>");
+                $("#transDate").append("<span>"+(res.searchList.data[0].lastTransactionDate || '')+"</span>");
+                $("#lastQuaterSpend").append("<span>"+(res.searchList.data[0].totalSpend || '')+"</span>");
+                $("#custType").append("<span>"+(res.searchList.data[0].customerType || '')+"</span>")
 
-            document.getElementById("customerDetailsSection").style.display = "block";
-            document.getElementById("custEnrollUpdateSection").style.display = "block";
-
-        } else {
-            document.getElementById("customerDetailsSection").style.display = "none";
-            document.getElementById("custEnrollUpdateSection").style.display = "none";
-            $("#noRecord").html("");
-            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-            document.getElementById("noRecord").style.display = "block";
-        }
+                document.getElementById("customerDetailsSection").style.display = "block";
+                document.getElementById("custEnrollUpdateSection").style.display = "block";
+            }else{
+                document.getElementById("customerDetailsSection").style.display = "block";
+                document.getElementById("custEnrollUpdateSection").style.display = "none";
+                $("#AlreadyEnroll").html("");
+                $("#AlreadyEnroll").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("AlreadyEnroll").style.display = "block";
+            }
+        }else{
+                document.getElementById("customerDetailsSection").style.display = "none";
+                document.getElementById("custEnrollUpdateSection").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                document.getElementById("noRecord").style.display = "block";
+            }
+        
     }
 
     function checkPlan(res){

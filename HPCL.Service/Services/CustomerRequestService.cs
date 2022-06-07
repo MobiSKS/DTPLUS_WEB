@@ -258,7 +258,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<List<SuccessResponse>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList)
+        public async Task<List<UpdateHotlistCardRes>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList)
         {
             TypePermanentlyHotlistCards[] arrs = JsonConvert.DeserializeObject<TypePermanentlyHotlistCards[]>(cardsList);
 
@@ -276,7 +276,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdatePermanentlyHotlistCardsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            List<UpdateHotlistCardRes> reasonList = jarr.ToObject<List<UpdateHotlistCardRes>>();
             return reasonList;
         }
     }

@@ -185,56 +185,58 @@
 
              for (var i = 0; i < girdList.length; i++) {
 
-                    var isDts;
-                    var expDts;
+                    if(girdList[i].status == "Active"){
+                        var isDts;
+                        var expDts;
 
-                    if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
-                        isDts = "";
-                    }else{
-                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
+                            isDts = "";
+                        }else{
+                            isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        }
+
+                        if(((girdList[i].expiryDate) == "01-01-0001 00:00:00") || ((girdList[i].expiryDate) == "01-01-1900 00:00:00") || ((girdList[i].expiryDate) == null)){
+                            expDts = "";
+                        }else{
+                            expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        }
+
+                        var checkBoxValid;
+
+                        if(girdList[i].cardBalance == 0){
+                            checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
+                        }else{
+                            checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                        }
+
+                        var srNumber = (i + 1);
+                        var pressCheck = checkBoxValid;
+                        var cardNumber = "<span class='cdn' id='fromCardNoId_"+i+"'>" + (girdList[i].cardNumber || '') + "</span>";
+                        var vechileNo = (girdList[i].vechileNo || '');
+                        var mobileno = (girdList[i].mobileno || '');
+                        var issueDate = isDts;
+                        var expiryDate = expDts;
+                        var status = (girdList[i].status || '');
+                        var cardBalance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance)+"</span>";
+                        var ToCardNumber = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='16' onchange='toCardNoChange(this," + (i) + ")' class='form-control newCardNo cgl' id='toCardNoId_"+i+"' name='ToCardNumber' type='text' value='' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='toCardNo_error_"+i+"' aria-hidden='true'></i></div>";
+                        var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
+
+                        tbl.row.add([
+                            srNumber,
+                            pressCheck,
+                            cardNumber,
+                            vechileNo,
+                            mobileno,
+                            issueDate,
+                            expiryDate,
+                            status,
+                            cardBalance,
+                            ToCardNumber,
+                            transAmt
+                        ]).draw();
+
+                        fromCardNoArr.push({fromCardNo:girdList[i].cardNumber});
                     }
-
-                    if(((girdList[i].expiryDate) == "01-01-0001 00:00:00") || ((girdList[i].expiryDate) == "01-01-1900 00:00:00") || ((girdList[i].expiryDate) == null)){
-                        expDts = "";
-                    }else{
-                        expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                    }
-
-                    var checkBoxValid;
-
-                    if(girdList[i].cardBalance == 0){
-                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
-                    }else{
-                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                    }
-
-                    var srNumber = (i + 1);
-                    var pressCheck = checkBoxValid;
-                    var cardNumber = "<span class='cdn' id='fromCardNoId_"+i+"'>" + (girdList[i].cardNumber || '') + "</span>";
-                    var vechileNo = (girdList[i].vechileNo || '');
-                    var mobileno = (girdList[i].mobileno || '');
-                    var issueDate = isDts;
-                    var expiryDate = expDts;
-                    var status = (girdList[i].status || '');
-                    var cardBalance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance)+"</span>";
-                    var ToCardNumber = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='16' onchange='toCardNoChange(this," + (i) + ")' class='form-control newCardNo cgl' id='toCardNoId_"+i+"' name='ToCardNumber' type='text' value='' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='toCardNo_error_"+i+"' aria-hidden='true'></i></div>";
-                    var transAmt = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='10' onchange='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
-
-                    tbl.row.add([
-                        srNumber,
-                        pressCheck,
-                        cardNumber,
-                        vechileNo,
-                        mobileno,
-                        issueDate,
-                        expiryDate,
-                        status,
-                        cardBalance,
-                        ToCardNumber,
-                        transAmt
-                    ]).draw();
-
-                    fromCardNoArr.push({fromCardNo:girdList[i].cardNumber});
             }
 
             document.getElementById('searchResult').style.display = 'block';
@@ -370,7 +372,7 @@
                 console.log("index",selectedRow.rowIndex);
                 var indexS = (selectedRow.rowIndex) - 1;
                 document.getElementById('toCardNo_error_'+indexS).style.display = "none";
-                document.getElementById('amtTotransId_'+indexS).style.display = "none";
+                document.getElementById('amtToTrans_error_'+indexS).style.display = "none";
             });
 
             if (confirm('Do you want to process the selected record, confirm once')) {
