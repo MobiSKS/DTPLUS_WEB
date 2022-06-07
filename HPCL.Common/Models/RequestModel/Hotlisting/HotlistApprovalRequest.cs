@@ -11,6 +11,7 @@ namespace HPCL.Common.Models.RequestModel.Hotlisting
     {
         public int EntityTypeId { get; set; }
         public int ActionId { get; set; }
+        public string ActionOnRequest { get; set; }
         public virtual List<HotlistApprovalReqDetails> ObjUpdateHotlistApprovalEntityCode { get; set; }
     }
     public class HotlistApprovalReqDetails

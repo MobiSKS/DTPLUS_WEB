@@ -41,9 +41,11 @@
 
     <div class="d-flex align-items-center justify-content-center mt-0">
         <div class="px-2">
-            <button class="btn btn_primary" type="button" onclick="ApproveHotlistedEntity();">Approve</button>
+            <button class="btn btn_primary" type="button" onclick="ApproveHotlistedEntity('Approve');">APPROVE</button>
         </div>
-
+        <div class="px-2">
+            <button class="btn btn_primary" type="button" onclick="ApproveHotlistedEntity('Reject');">REJECT</button>
+        </div>
     </div>
 }
 else
@@ -67,7 +69,7 @@ else
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
-      function ApproveHotlistedEntity() {
+      function ApproveHotlistedEntity(action) {
         detail = [];
          $("#HotlistedData tbody tr").each(function () {
 
@@ -93,7 +95,10 @@ else
             flag = "N";
         }
         if (detail.length == 0) {
-            alert("Please select at least one request to process.");
+            if(action=="Approve")
+                alert("Please select at least one request to approve.");
+            if(action=="Reject")
+                alert("Please select at least one request to reject.");
             return;
         }
 
@@ -105,8 +110,8 @@ else
             $("#entity_typeerror").attr("style", "display:none");
             $("#entity_typeerror").html("");
             //if (confirm("Are you sure ?")) {
-                var model = { EntityTypeId: entityTypeId,ActionId:actionId, ObjUpdateHotlistApprovalEntityCode: detail };
-                if (actionText == "Permanent Hotlisted" || actionId == "7") {
+                var model = { EntityTypeId: entityTypeId,ActionId:actionId, ObjUpdateHotlistApprovalEntityCode: detail,ActionOnRequest:action };
+                if ((actionText == "Permanent Hotlisted" || actionId == "7") && action=="Approve") {
                     if (confirm("Entity once Permanent Hotlisted cannot be reactived.Are you sure you want to continue?")) {
                             $.ajax({
                                 type: 'POST',
