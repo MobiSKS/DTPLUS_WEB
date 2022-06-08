@@ -11,5 +11,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerDetailsRes> GetCustomerDetails(CustomerDetailsReq entity);
         Task<GetPlanRes> GetPlan(string amount);
         Task<List<SuccessResponse>> InsertExceptionRequest(EnrollExceptionRequest entity);
+        Task<SearchRequestApprovalRes> SearchRequestApproval(SearchRequestApprovalClone entity);
     }
 }

@@ -211,6 +211,7 @@
         public static string deleteroles = "api/dtplus/UserManage/delete_roles";
         public static string getusermanagemenulist="api/dtplus/UserManage/get_user_manage_menu_list";
         public static string InsertAddManageRole = "api/dtplus/UserManage/Insert_Add_Manage_Role";
+        public static string userCreationApproval = "api/dtplus/UserManage/user_creation_approval";
         #endregion
 
         #region DriverCard
@@ -429,6 +430,7 @@
         public static string GetCustomerDetailsUrl = "api/dtplus/HDFCCreditPouch/get_dtail_mo";
         public static string GetPlanUrl = "api/dtplus/HDFCCreditPouch/get_plan";
         public static string EnrollExceptionReqUrl = "api/dtplus/HDFCcreditPouch/insrt_cp_rqst";
+        public static string GetExApproval = "api/dtplus/HDFCCreditPouch/Get_cp_by_bank";
         #endregion
     }
 }

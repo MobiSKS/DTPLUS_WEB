@@ -84,5 +84,25 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<SearchRequestApprovalRes> SearchRequestApproval(SearchRequestApprovalClone entity)
+        {
+            var searchBody = new SearchRequestApproval
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId,
+                ZO = Convert.ToInt32(entity.ZO),
+                RO=Convert.ToInt32(entity.RO),
+                Status = entity.Status
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetExApproval);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            SearchRequestApprovalRes searchList = obj.ToObject<SearchRequestApprovalRes>();
+            return searchList;
+        }
     }
 }
