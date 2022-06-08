@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.RequestModel.Customer;
 
 namespace HPCL.Service.Interfaces
 {
@@ -50,5 +51,6 @@ namespace HPCL.Service.Interfaces
         Task<LowCCMSBalanceAlertConfigurationModel> GetCCMSBalAlertConfiguration(string CustomerID);
         Task<UpdateKycResponse> UpdateCCMSBalAlertConfiguration(string CustomerID, string Amount, string ActionType);
         Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerAddress(CustomerAddressApproveRequestModel model);
+        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model);
     }
 }

@@ -1995,6 +1995,27 @@ namespace HPCL.Service.Services
 
             return model;
         }
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approvalApproveCustomerAddressRequests);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
+        }
 
     }
 }

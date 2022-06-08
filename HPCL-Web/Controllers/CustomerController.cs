@@ -12,6 +12,7 @@ using HPCL.Service.Interfaces;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using System;
+using HPCL.Common.Models.RequestModel.Customer;
 
 namespace HPCL_Web.Controllers
 {
@@ -748,6 +749,13 @@ namespace HPCL_Web.Controllers
                 model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             }
             return View(searchResult);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model)
+        {
+            var updateKycResponse = await _customerService.ApproveCustomerAddressRequests(model);
+
+            return Json(new { customer = updateKycResponse });
         }
     }
 }
