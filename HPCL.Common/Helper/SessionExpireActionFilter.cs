@@ -63,7 +63,7 @@ namespace HPCL.Common.Helper
                                     {
                                         { "action", "Index" },
                                         { "controller", "Home" },
-                                        { "returnUrl", "~/Home/Index"}
+                                        { "returnUrl", "~/Home/Logout"}
                                     });
                 return;
             }

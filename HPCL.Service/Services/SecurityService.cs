@@ -372,5 +372,127 @@ namespace HPCL.Service.Services
             }
         }
 
+
+        public async Task<GetUserManageRoleModel> GetUserManageRoleList(string RoleId)
+        {
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RoleId=RoleId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getusermanagerolelist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetUserManageRoleModel searchList = obj.ToObject<GetUserManageRoleModel>();
+            return searchList;
+        }
+        public async Task<ManageRolesViewModel> SelectUserManageRolesRequest(ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RoleName = manageRolesRequestModel.RoleName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SelectUserManageRolesRequest);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ManageRolesViewModel searchList = obj.ToObject<ManageRolesViewModel>();
+            return searchList;
+        }
+        public async Task<ManageRolesViewModel> GetUserManageMenuList(ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getusermanagemenulist);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ManageRolesViewModel searchList = obj.ToObject<ManageRolesViewModel>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> DeleteRoles(ManageRolesRequestModel manageRolesRequestModel)
+        {
+
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TypeRoleNameAndRoleDescriptionMapping = manageRolesRequestModel.TypeRoleNameAndRoleDescriptionMapping
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.deleteroles);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
+        public async Task<List<SuccessResponse>> UpdateManageRole(ManageRolesRequestModel manageRolesRequestModel)
+        {
+
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RoleName= manageRolesRequestModel.RoleName,
+                RoleDescription= manageRolesRequestModel.RoleDescription,
+                ObjUpdate = manageRolesRequestModel.ObjUpdate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateinsertmanagerole);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
+        public async Task<List<SuccessResponse>> InsertManageRole(ManageRolesRequestModel manageRolesRequestModel)
+        {
+
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                MainLevelId = manageRolesRequestModel.MainLevelId,
+                SubLevelId = manageRolesRequestModel.SubLevelId,
+                SubLevelName = manageRolesRequestModel.SubLevelName,
+                RoleDescription = manageRolesRequestModel.RoleDescription,
+                TypeInsertAddManageUsers = manageRolesRequestModel.TypeInsertAddManageUsers
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.InsertAddManageRole);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
     }
 }

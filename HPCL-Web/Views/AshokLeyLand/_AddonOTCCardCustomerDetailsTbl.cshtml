@@ -893,4 +893,64 @@
        }
         
     });
+
+    $('#VehicleVerifiedManually').click(function()
+    {
+             if ($(this).prop("checked"))
+             {
+               var cnt = 0;
+
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   //var row = $(this);
+                   document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                   $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
+                   cnt=cnt+1;
+                });
+             }
+             else
+             {
+                 var cnt = 0;
+                 var vehicleNo = "";
+                 var isValid=true;
+
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                    isValid=true;
+                    vehicleNo = "";
+                    vehicleNo=document.getElementById('VechileNo_'+cnt).value;
+                    if(vehicleNo.trim()=='')
+                    {
+                        isValid=false;
+                    }
+                    else
+                    {
+                        if(vehicleNo.trim()!='')
+                        {
+                            if (!(vehicleNo.match(forVehicleNo))) 
+                            {
+                                isValid=false;
+                            }
+                            else if(vehicleNo.length<6 || vehicleNo.length>10)
+                            {
+                                isValid=false;
+                            }
+                        }
+                    } 
+
+                    if(isValid)
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", false);
+                    }
+                    else
+                    {
+                       $("#VechileNo_Vefirybtn_" + cnt).prop("disabled", true);
+                    }
+
+                    cnt=cnt+1;
+
+                });
+             }
+
+       });
 </script>
