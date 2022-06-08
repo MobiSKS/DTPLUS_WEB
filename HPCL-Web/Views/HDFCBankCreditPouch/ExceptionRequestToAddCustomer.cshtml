@@ -16,6 +16,9 @@
 
                     <form id="formVal" method="post" data-ajax="true" asp-controller="HDFCBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
                         <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div id="EnrollSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-12 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
@@ -133,7 +136,8 @@
                                             <label class="font-weight-normal col-md-4 col-12">Quarterly Fuel Consumption in (RS)<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <input class="form-control" id="" name="fromdate" type="text" value="" onchange="checkPlan(this)">
+                                                    <input class="form-control restrictPaste" id="fuelAmt" maxlength="10" onkeypress = "return isNumberKey(event)" name="fromdate" type="text" value="" onchange="checkPlan(this)">
+                                                     <span style="display:none" class="error" id="fuelAmt_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +147,8 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Plan<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.DropDownList("PlanType", Enumerable.Empty<SelectListItem>(), new { @class = "form-control disableSumo typePlan", @readonly = "readonly", disabled = "disabled" })
+                                                    @Html.DropDownList("PlanType", Enumerable.Empty<SelectListItem>(),"select", new { @class = "form-control disableSumo typePlan", @readonly = "readonly", disabled = "disabled" })
+                                                    <span style="display:none" class="error" id="planType_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -155,7 +160,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Bank Name</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <select class="form-control disableSumo" disabled="disabled">
+                                                    <select class="form-control disableSumo" disabled="disabled" readonly="readonly">
                                                         <option>HDFC Bank</option>
                                                     </select>
                                                 </div>
@@ -167,7 +172,8 @@
                                             <label class="font-weight-normal offset-md-1 col-md-4 col-12">Reference No</label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <input class="form-control" id="refNo" name="" type="text" value="" readonly="readonly">
+                                                    <input class="form-control restrictPaste" maxlength="15" id="refNo" name="" type="text" value="" readonly="readonly" onkeypress = "return isNumberKey(event)">
+                                                    <span style="display:none" class="error" id="refNo_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +185,8 @@
                                             <label class="font-weight-normal col-md-4 col-12">Comment<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <textarea class="form-control" rows="2"></textarea>
+                                                    <textarea id="cmnts" maxlength="100" class="form-control" rows="2"></textarea>
+                                                    <span style="display:none" class="error" id="comments_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,15 +194,16 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center mt-0">
                                     <div class="px-2">
-                                        <button class="btn btn_primary" type="button">Enroll</button>
+                                        <button class="btn btn_primary" type="button" onclick="enrollExceptionReq()">Enroll</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         </div>
                     </div>
                 </form>
             </div>
+            <div class="clearfix"></div>
+            <div id="failedEnroll" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
         </div>
 
         <div class="clearfix"></div>
@@ -205,6 +213,12 @@
 
 
 <script>
+
+    $('.restrictPaste').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
 
     function resetClick() {
         window.location.reload(true);
@@ -218,7 +232,7 @@
 
     $(document).ready(function () {
 
-        $('select.disableSumo')[0].sumo.unload();
+        //$('select.disableSumo')[0].sumo.unload();
 
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -277,8 +291,19 @@
     function checkPlan(res){
         var amountVal = res.value;
 
-        $('select.disableSumo')[0].sumo.unload();
-        $('select.disableSumo')[1].sumo.unload();
+        $("#planType_error").attr("style", "display:none");
+
+        if(amountVal == ''){
+            $("#fuelAmt_error").html("Please enter Upliftment");
+            $("#fuelAmt_error").attr("style", "display:block");
+            return false;
+        }else{
+            $("#fuelAmt_error").html("");
+            $("#fuelAmt_error").attr("style", "display:none");
+        }
+
+        //$('select.disableSumo')[0].sumo.unload();
+        //$('select.disableSumo')[1].sumo.unload();
 
         $.ajax({
             url: "@Url.Action("CheckPlan", "HDFCBankCreditPouch")",
@@ -290,16 +315,19 @@
                 console.log("res",res);
 
                 if(res.searchList.success == true){
+                    $(".typePlan").html("");
                     var plans = $('<option value="' + res.searchList.data[0].planId + '">' + (res.searchList.data[0].planName || '') + '</option>');
                     $('#PlanType').append(plans);
                     $('#PlanType').attr("disabled", true);
                     $("#refNo").attr("readonly", false);
+                    $('select.disableSumo')[0].sumo.reload();
                 }else{
-                    $(".typePlan").html("")
-                    var plans = $('<option>Select</option>');
+                    $(".typePlan").html("");
+                    var plans = $('<option value="-1">No Plan</option>');
                     $('#PlanType').append(plans);
                     $('#PlanType').attr("disabled", true);
                     $("#refNo").attr("readonly", false);
+                    $('select.disableSumo')[0].sumo.reload();
                 }
 
             },
@@ -307,5 +335,116 @@
                 alert('Failed' + ex);
             }
         });
+    }
+
+    $("#cmnts").on("blur", function (){
+
+        var comments = $("#cmnts").val();
+
+        if (comments.trim() == '') {
+            $("#comments_error").html("Please enter comment");
+            $("#comments_error").attr("style", "display:block");
+            return false;
+        }
+        if(comments.trim() != ''){
+             if(!comments.trim().match(atLeastOneAlphabet)){
+                $("#comments_error").html("Invalid Comment");
+                $("#comments_error").attr("style", "display:block");
+                return false;
+            }else{
+                $("#comments_error").attr("style", "display:none");
+            }
+        }
+
+    });
+
+    function enrollExceptionReq(){
+
+        document.getElementById("EnrollSuccess").style.display = "none";
+        document.getElementById("failedEnroll").style.display = "none";
+
+        var enrollArray = [];
+
+        var flag = "Y";
+        var FuleConsumptionCapacity = $("#fuelAmt").val();
+        var PlanTypeId = $(".typePlan option:selected").val();
+        var ReferenceNo = $("#refNo").val();
+        var MoComment = $("#cmnts").val();
+        var CustomerId = $("#CustomerDefaultVal").val();
+
+        if(FuleConsumptionCapacity == ''){
+            $("#fuelAmt_error").html("Please enter Upliftment");
+            $("#fuelAmt_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(PlanTypeId == ''){
+            $("#planType_error").html("Please select  Plan");
+            $("#planType_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(PlanTypeId != ''){
+            if(PlanTypeId == "-1"){
+                $("#planType_error").html("Customer cannot be enrolled with No Plan");
+                $("#planType_error").attr("style", "display:block");
+                flag = "N";
+            }
+        }
+        if(MoComment == ''){
+            $("#comments_error").html("Please enter comment");
+            $("#comments_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(MoComment.trim() != ''){
+            if(!MoComment.trim().match(atLeastOneAlphabet)){
+                $("#comments_error").html("Invalid Comment");
+                $("#comments_error").attr("style", "display:block");
+                flag = "N";
+            }
+        }
+
+        enrollArray.push({
+            CustomerId:CustomerId,
+            FuleConsumptionCapacity:FuleConsumptionCapacity,
+            PlanTypeId:PlanTypeId,
+            ReferenceNo:ReferenceNo,
+            MoComment:MoComment,
+            RequestedBy:CustomerId
+        });
+
+        if (flag == "N")
+            e.preventDefault();
+        else {
+        
+             if (confirm('Are you sure you want to provide option to the customer for CCMS Recharge through Credit ?')) {
+                console.log('ok');
+
+                  $.ajax({
+                    url: "@Url.Action("EnrollExceptionRequest", "HDFCBankCreditPouch")",
+                    data: { enrollList: JSON.stringify(enrollArray)},
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function (res) {
+
+                        if(res.reasonList[0].status == 1){
+                            document.getElementById("custEnrollUpdateSection").style.display = "none";
+                            document.getElementById("customerDetailsSection").style.display = "none";
+                            $("#EnrollSuccess").html('');
+                            $("#EnrollSuccess").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("EnrollSuccess").style.display = "block";
+                        }else{
+                            $("#failedEnroll").html('');
+                            $("#failedEnroll").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("failedEnroll").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
     }
 </script>

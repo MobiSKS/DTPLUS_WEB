@@ -5,6 +5,7 @@ using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -318,5 +319,58 @@ namespace HPCL.Service.Services
             }
             return roleLocationResponse;
         }
+        public async Task<UserCreationApprovalNonRBEModel> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model)
+        {
+            var reqBody = new UserCreationViewRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FirstName = String.IsNullOrEmpty(model.FirstName) ? "" : model.FirstName,
+                UserName = String.IsNullOrEmpty(model.UserName) ? "" : model.UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.userCreationApproval);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            UserCreationApprovalNonRBEModel res = obj.ToObject<UserCreationApprovalNonRBEModel>();
+
+            if (res != null && res.Data != null && res.Data.Count > 0)
+            {
+                model.Data = res.Data;
+            }
+            else
+            {
+                model.Data = new List<UserCreationApprovalDetails>();
+            }
+            model.Message = res.Message;
+            model.Internel_Status_Code = res.Internel_Status_Code;
+
+            return model;
+        }
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UserApprovalRejectionNonRBE([FromBody] UserApprovalRejectionRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.userApprovalRejection);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
+        }
+
     }
 }
