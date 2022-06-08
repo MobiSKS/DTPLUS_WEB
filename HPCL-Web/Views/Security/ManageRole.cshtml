@@ -1,0 +1,122 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.ManageRolesViewModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Manage Security</a> </li>
+            <li class="breadcrumb-item font-weight-light">Manage Roles</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Roles</p>
+                        <div class="col-lg-12 col-md-12 col-12 pb-0 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <div class="col-md-4 col-12 px-0">
+                                            <div class="custom_select">
+                                                @*<input type="text" id="RoleName" class="dropdown-toggle form-control" data-toggle="dropdown" style="text-align:left;" />*@
+                                               @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control dropdown-toggle", maxlength = "100",@data_toggle="dropdown" })
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li class="checkbox-in-ddl">
+                                                        <label>
+                                                            <input type="checkbox"><label class="font-weight-normal">Role Name</label>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-0">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="submit">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <div class="col-lg-12 col-12 px-0">
+                                            <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button">Add</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div id="tblResponse">
+                            @*style="display:none"*@
+                            @if (Model.Data.Count() > 0)
+                            {
+                                <table id="RoleSearch" class="datatable table d-md-table table-striped table-bordered table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="checkAll" /></th>
+                                            <th>
+                                                Role Name
+                                            </th>
+                                            <th>
+                                                Role Description
+                                            </th>
+                                            <th>
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchTableBody">
+                                        @{
+                                            int i = 0;
+                                        }
+                                        @foreach (var item in Model.Data)
+                                        {
+                                            i = i + 1;
+                                            <tr>
+                                                <td><input type="checkbox" id="check_@i" /></td>
+                                                <td>@item.RoleName</td>
+                                                <td>@item.RoleDescription</td>
+                                                <td>
+                                                    <a asp-action="RolePermissionSummaryView" class="view" asp-route-RoleName="@item.RoleName" asp-route-RoleDescription="@item.RoleDescription" data-toggle="tooltip" title="" tooltip="View"><i class="fa fa-eye view" aria-hidden="true"></i></a>
+                                                    
+                                                    <a class='edit' data-toggle='tooltip' tooltip="Edit"  onclick='EditRoleDetails(this," @item.RoleName ","@item.RoleDescription")' role='tab'><i class="fa fa-edit edit" aria-hidden="true"></i></a>
+                                                    <a class='delete' data-toggle='tooltip' tooltip="Delete"  onclick='DeleteRoleDetails(this," @item.RoleName ","@item.RoleDescription")' role='tab'><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
+                                    @Model.Message
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+    $("#checkAll").click(function() {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+</script>
