@@ -22,7 +22,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
     }
     public class CustomerAddressApproveDetails
     {
-        public string CustomerID { get; set; }
+        public string CustomerCode { get; set; }
         public string CustomerName { get; set; }
         public string ZO { get; set; }
         public string RO { get; set; }
