@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -40,8 +41,19 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EnrollExceptionRequest(EnrollExceptionRequest entity)
+        public async Task<JsonResult> EnrollExceptionRequest(string enrollList)
         {
+            EnrollExceptionRequest[] arrs = JsonConvert.DeserializeObject<EnrollExceptionRequest[]>(enrollList);
+
+            var entity = new EnrollExceptionRequest
+            {
+                CustomerId = arrs[0].CustomerId,
+                FuleConsumptionCapacity = arrs[0].FuleConsumptionCapacity,
+                PlanTypeId = arrs[0].PlanTypeId,
+                ReferenceNo = arrs[0].ReferenceNo,
+                MoComment = arrs[0].MoComment,
+                RequestedBy = arrs[0].RequestedBy
+            };
             var reasonList = await _hDFCBankCreditPouchService.InsertExceptionRequest(entity);
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
