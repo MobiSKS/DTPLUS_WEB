@@ -51,5 +51,13 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> RequestApproval(SearchRequestApprovalClone entity)
+        {
+            var searchList = await _hDFCBankCreditPouchService.SearchRequestApproval(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
     }
 }
