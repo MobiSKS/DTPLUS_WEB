@@ -263,7 +263,7 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getfleetcustomernameandformnumberbyreferenceno);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getnormalfleetcustomerbyreferencenoforcustomer);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             UploadDocResponse searchCustomer = obj.ToObject<UploadDocResponse>();
@@ -1116,7 +1116,7 @@ namespace HPCL.Service.Services
         {
 
             entity.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-            entity.CustomerStatusMdl.AddRange(await _commonActionService.GetNormalFleetCustomerStatus());
+            entity.CustomerStatusMdl.AddRange(await _commonActionService.GetNormalFleetCustomerStatusForApprove());
 
             var request = new GetValidateNewCustomerRequestModel()
             {

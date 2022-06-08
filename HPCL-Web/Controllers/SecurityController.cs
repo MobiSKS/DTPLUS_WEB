@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -129,6 +130,18 @@ namespace HPCL_Web.Controllers
         public IActionResult AddNewUser()
         {
             return View();
+        }
+        public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var modals = await _securityService.SelectUserManageRolesRequest(manageRolesRequestModel);
+            return View(modals);
+        }
+        public async Task<IActionResult> RolePermissionSummaryView (string RoleName,string RoleDescription)
+        {
+            var modals = await _securityService.GetUserManageRoleList("1");
+            modals.RoleDescription = RoleDescription;
+            modals.RoleName = RoleName;
+            return View(modals);
         }
     }
 }
