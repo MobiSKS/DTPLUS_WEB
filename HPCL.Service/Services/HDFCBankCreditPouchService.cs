@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
                 ReferenceNo = entity.ReferenceNo,
                 MoComment = entity.MoComment,
                 RequestedBy = entity.RequestedBy,
-                CreatedBy = entity.CreatedBy
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
