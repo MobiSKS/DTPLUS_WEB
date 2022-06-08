@@ -1,6 +1,8 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Security;
 using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,5 +21,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> DeleteManageUser(string userList);
         Task<List<SuccessResponse>> AddUser(AddNewUserReq entity);
         Task<GetUserRoleLocationResponse> GetUserRoleLocation(string UserName);
+        Task<UserCreationApprovalNonRBEModel> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model);
+        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UserApprovalRejectionNonRBE([FromBody] UserApprovalRejectionRequest model);
     }
 }

@@ -13,5 +13,6 @@ namespace HPCL.Common.Models.RequestModel.Security
         public string Status { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string FirstName { get; set; }
     }
 }
