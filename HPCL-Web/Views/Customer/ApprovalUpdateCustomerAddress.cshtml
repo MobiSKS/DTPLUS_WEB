@@ -79,6 +79,7 @@
                                         <th>PAN</th>
                                         <th>Duplicate PAN Reason</th>
                                         <th>Comments</th>
+                                        <th style="display:none">Customer Code</th>
                                     </tr>
                                 </thead>
                                 <tbody id="searchTableBody">
@@ -93,7 +94,7 @@
                                             <td style="display:none">@i</td>
                                             <td><input type="checkbox" id="check_@i" /></td>
                                             <td id="tdCustomerName">@item.CustomerName</td>
-                                            <td id="tdCustomerID" class='customerID'>@item.CustomerCode</td>
+                                            <td><a class='CardNumber' href='#BasicInformation' onclick='ViewRoleDetails(this,"@item.CustomerCode")'><span class='rowCardNo'>@item.CustomerCode</span></a></td>
                                             <td>@item.ZO</td>
                                             <td>@item.RO</td>
                                             <td>@item.City</td>
@@ -105,6 +106,7 @@
                                                 <input type="text" maxlength="100" class="form-control remarks" onkeydown="return AlphaNumericWithSpace(event.keyCode)" name="Remarks_@i" id="Remarks_@i" disabled onchange='RemarksChange(this,@i)'>
                                                 <span class='field-validation-error text-danger mobileerror' id='Remarks_error_@i'></span>
                                             </td>
+                                            <td id="tdCustomerID" class='customerID' style="display:none">@item.CustomerCode</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -120,6 +122,9 @@
                                 </div>
                             </div>
 
+                           <div class="clearfix"></div>
+                           <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+                           </div>
                         }
                         else
                         {
@@ -405,5 +410,59 @@
         }
 
      }
+
+    function ViewRoleDetails(o,userName)
+    {
+        debugger;
+        var flag="Y";
+ 
+        if(flag=="Y")
+        {
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetUserRoleLocation", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                data: { UserName: userName},
+                success: function (data, status, xhr)
+                {
+                    console.log(data);
+                    var v = data;
+                    if (status == 'success') {
+                        $("#show_Table").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#show_Table").offset().top
+                        }, 2000);
+                    }
+                    else
+                    {
+                        console.log(v);
+                    }
+
+                    //var count = $('#tblCustomer tr').length;
+                    //console.log(count);
+                
+                },
+                error: function (jqXhr, textStatus, errorMessage)
+                {
+                    alert("Error"+ errorMessage);
+                }
+            });
+
+        }
+
+    }
+
+$("#CustomerSearch").on('page.dt', function () 
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
+
+$("#CustomerSearch").on('length.dt', function () 
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
 
 </script>
