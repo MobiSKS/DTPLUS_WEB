@@ -183,6 +183,7 @@
         public static string approverejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/approve_reject_aggregator_normal_fleet_customer";
         public static string approveCustomerAddressRequests = "api/dtplus/customer/approve_customer_address_requests";
         public static string getaggregatornormalfleetcustomerstatusapprove = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status_approve";
+        public static string getnormalfleetcustomerbyreferencenoforcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no_for_customer";
         #endregion
 
         #region Login
