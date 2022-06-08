@@ -16,7 +16,7 @@ $(document).on("ajaxError", function () {
         $("#loader").fadeOut();
     }, 100)
     sessionStorage.clear();
-    window.location.href = "/Home/Index";
+    window.location.href = "/Home/Logout";
     
 })
 

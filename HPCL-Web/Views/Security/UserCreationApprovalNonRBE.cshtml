@@ -1,0 +1,348 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.UserCreationApprovalNonRBEModel
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Manage Security</a> </li>
+            <li class="breadcrumb-item font-weight-light">User Creation Approval</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Creation Approval</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">First Name </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", maxlength = "50" })
+                                                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "error", @id = "FirstNameValErrMsg" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">User Name </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50" })
+                                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "error", @id = "UserNameValErrMsg" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="d-flex align-items-center justify-content-center mt-0">
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="submit" id="btnSearch" onclick="return SearchValidations()">SEARCH</button>
+                            </div>
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("UserCreationApprovalNonRBE", "Security", new { reset="Y" })'">RESET</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    @if (ViewBag.Reset != "Y")
+                    {
+                        @if (Model.Data.Count() > 0)
+                        {
+
+                            <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="CustomerSearch">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+                                        <th style="display:none">S.No.</th>
+                                        <th><input type="checkbox" id="checkAll" /></th>
+                                        <th>First Name</th>
+                                        <th>User Name</th>
+                                        <th>Email</th>
+                                        <th>Maker Comment</th>
+                                        <th>Requested On</th>
+                                        <th>Requested By</th>
+                                        <th>Role &amp; Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchTableBody">
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Data)
+                                    {
+                                        i = i + 1;
+
+                                        <tr>
+                                            <td style="display:none">@i</td>
+                                            <td><input type="checkbox" id="check_@i" /></td>
+                                            <td>@item.FirstName</td>
+                                            <td id="tdUserName" class='userName'>@item.UserName</td>
+                                            <td id="tdEmail" class='email'>@item.Email</td>
+                                            <td>@item.Comments</td>
+                                            <td>@item.RequestedOn</td>
+                                            <td id="tdRequestedBy">@item.RequestedBy</td>
+                                            <td><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewRoleDetails(this,"@item.UserName")'><span class='rowCardNo'>View</span></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 col-md-12 col-12 pt-3">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-2 col-12 px-2">Comments <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-9 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", @row = "5" })
+                                                    @Html.ValidationMessageFor(m => m.Comments, "", new { @id = "CommentsError", @class = "error" })
+
+                                                    <p id="charRemining"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center justify-content-center mt-0">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="ApproveUser('APPROVE');">Approve</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="ApproveUser('REJECT');">Reject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3 text-center alert alert-danger">
+                                @Model.Message
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script>
+    var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
+    var activeRow="";
+    $(document).ready(function ()
+    {
+            $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+
+        var text_max = 1000;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#Comments').keyup(function () 
+        {
+            var text_length = $('#Comments').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+
+    });
+
+        function ViewRoleDetails(o,userName)
+        {
+            debugger;
+            var flag="Y";
+
+            if(flag=="Y")
+            {
+                $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetUserRoleLocation", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'text',
+                    data: { UserName: userName},
+                    success: function (data, status, xhr)
+                    {
+                        console.log(data);
+                        var v = data;
+                        if (status == 'success') {
+                            $("#show_Table").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#show_Table").offset().top
+                            }, 2000);
+                        }
+                        else
+                        {
+                            console.log(v);
+                        }
+
+                        //var count = $('#tblCustomer tr').length;
+                        //console.log(count);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage)
+                    {
+                        alert("Error"+ errorMessage);
+                    }
+                });
+
+            }
+
+        }
+
+    $("#checkAll").click(function () 
+    {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+$("#CustomerSearch").on('page.dt', function () 
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
+
+$("#CustomerSearch").on('length.dt', function () 
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
+
+function ApproveUser(ApproveReject) 
+{
+        debugger;
+        //alert("inside submit");
+        var flag = "Y";
+        approvalDetail = [];
+        var count=0;
+        var message="";
+        var actionType="";
+        if(ApproveReject=="APPROVE")
+        {
+            message="Are you sure! You want to approve the selected record(s)?";
+            actionType="APPROVE";
+        }
+        else
+        {
+            message="Are you sure! You want to reject the selected record(s)?";
+            actionType="REJECT";
+        }
+
+        var remarks = $('#Comments').val().trim();
+                 
+        if(remarks.trim()=='')
+        {
+            document.getElementById('CommentsError').innerHTML="Please enter Comments";
+            flag="N";
+        }
+        else
+        {
+            if(!remarks.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById('CommentsError').innerHTML="Invalid Comments";
+                flag="N";
+            }
+            else
+            {
+                document.getElementById('CommentsError').innerHTML="";
+            }
+        }
+
+         $("#CustomerSearch tbody tr").each(function () 
+         {
+             debugger;
+
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                 var i = row[0].cells[0].textContent;
+                 var userName = row.find("td.userName").text();
+                 var email = row.find("td.email").text();
+
+                  count=count+1;
+                 
+                 approvalDetail.push({ UserName: userName, Email: email });
+            }
+         });
+     
+         if(count==0)
+         {
+             alert("Please select at least one record");
+         }
+
+        if (approvalDetail.length > 0 && flag == "Y") 
+        {
+            if (confirm(message)) 
+            {
+                var updateReqmodel = { ActionType: actionType, TypeApprovalRejectionList: approvalDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UserApprovalRejectionNonRBE", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(updateReqmodel),
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.status==1)
+                        {
+                            var successMsg="",errorMsg="";
+                            if(res.customer.status==1)
+                                successMsg=res.customer.reason;
+                            else if(data[0].status==0)
+                                errorMsg=res.customer.reason;
+                            var url = '@Html.Raw(@Url.Action("UserCreationApprovalNonRBE", "Security",new { reset = "Y", success = "mm", error = "ee", FirstName="xxx", UserName="yyy" }))';
+                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                            url = url.replace("xxx", encodeURIComponent($("#FirstName").val())).replace("yyy", encodeURIComponent($("#UserName").val()));
+                           window.location.href=url;
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+ };
+
+ $("#Comments").on("blur", function () 
+ {
+    //debugger;
+    var comments = document.getElementById("Comments").value.trim();
+    if (comments == "") 
+    {
+        document.getElementById("CommentsError").innerHTML = "Please enter Comments";
+        return (false);
+    }
+    else if (!document.getElementById("Comments").value.match(nameWithSpaceCheck)) 
+    {
+        document.getElementById("CommentsError").innerHTML = "Invalid Comments";
+        return false;
+    }
+    else
+    {
+        document.getElementById("CommentsError").innerHTML = "";
+    }
+});
+</script>
