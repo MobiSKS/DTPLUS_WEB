@@ -131,6 +131,26 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model, string reset, string success, string error, string FirstName, string UserName)
+        {
+            var searchResult = await _securityService.UserCreationApprovalNonRBE(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.FirstName = "";
+                model.UserName = "";
+            }
+            return View(searchResult);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UserApprovalRejectionNonRBE([FromBody] UserApprovalRejectionRequest model)
+        {
+            var updateKycResponse = await _securityService.UserApprovalRejectionNonRBE(model);
+
+            return Json(new { customer = updateKycResponse });
+        }
         public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel)
         {
             var modals = await _securityService.SelectUserManageRolesRequest(manageRolesRequestModel);
