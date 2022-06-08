@@ -183,6 +183,7 @@
         public static string approverejectaggregatornormalfleetcustomer = "api/dtplus/aggregatorcustomer/approve_reject_aggregator_normal_fleet_customer";
         public static string approveCustomerAddressRequests = "api/dtplus/customer/approve_customer_address_requests";
         public static string getaggregatornormalfleetcustomerstatusapprove = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status_approve";
+        public static string getnormalfleetcustomerbyreferencenoforcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no_for_customer";
         #endregion
 
         #region Login
@@ -210,6 +211,7 @@
         public static string deleteroles = "api/dtplus/UserManage/delete_roles";
         public static string getusermanagemenulist="api/dtplus/UserManage/get_user_manage_menu_list";
         public static string InsertAddManageRole = "api/dtplus/UserManage/Insert_Add_Manage_Role";
+        public static string userCreationApproval = "api/dtplus/UserManage/user_creation_approval";
         #endregion
 
         #region DriverCard
