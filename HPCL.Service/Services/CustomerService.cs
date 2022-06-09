@@ -2048,7 +2048,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.approveCustomerAddressRequests);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestApproveCustomerContactPersonDetails);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             CustomerAddressApproveRequestModel res = obj.ToObject<CustomerAddressApproveRequestModel>();
@@ -2065,6 +2065,27 @@ namespace HPCL.Service.Services
             model.Internel_Status_Code = res.Internel_Status_Code;
 
             return model;
+        }
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerAddressRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approveCustomerContactPersonDetails);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
         }
 
     }
