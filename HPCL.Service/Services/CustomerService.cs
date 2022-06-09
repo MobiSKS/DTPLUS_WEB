@@ -2066,7 +2066,7 @@ namespace HPCL.Service.Services
 
             return model;
         }
-        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerAddressRequest model)
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
         {
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;

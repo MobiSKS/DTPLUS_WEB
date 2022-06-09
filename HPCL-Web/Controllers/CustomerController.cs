@@ -771,7 +771,7 @@ namespace HPCL_Web.Controllers
             return View(searchResult);
         }
         [HttpPost]
-        public async Task<JsonResult> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerAddressRequest model)
+        public async Task<JsonResult> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
         {
             var updateKycResponse = await _customerService.ApproveCustomerContactPersonRequests(model);
 
