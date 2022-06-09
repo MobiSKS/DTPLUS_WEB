@@ -323,13 +323,30 @@ else
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 data: JSON.stringify(approvemdl),
-                success: function (data) {
-                    $("#reason").removeClass("displayNone");
-                    $("#reason").html(data);
-                    $(".toBeHiddenOnSuccess").addClass("displayNone");
-                    document.getElementById("reason").style.display="block";
+                success: function (data) 
+                {
+                    console.log(data);
+                    console.log(data.commonResponseData.internel_Status_Code);
+                    if (data.commonResponseData.internel_Status_Code == 1000) 
+                    {
+                        $("#reason").removeClass("displayNone");
+                        $("#reason").html(data);
+                        $(".toBeHiddenOnSuccess").addClass("displayNone");
+                        document.getElementById("reason").style.display="block";
+                        document.getElementById("reason").innerHTML= data.commonResponseData.reason;
+                        document.getElementById("dvFailure").style.display = "none";
+                        document.getElementById("dvFailure").innerHTML="";
+                    }
+                    else
+                    {
+                        document.getElementById("dvFailure").style.display = "block";
+                        document.getElementById("dvFailure").innerHTML= data.commonResponseData.reason;
+                        document.getElementById("reason").style.display = "none";
+                        document.getElementById("reason").innerHTML="";
+                    }
                 },
-                error: function (ex) {
+                error: function (ex) 
+                {
                     alert('Error.' + ex);
                 }
             });

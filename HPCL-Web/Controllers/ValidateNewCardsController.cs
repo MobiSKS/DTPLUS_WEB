@@ -48,8 +48,8 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel)
         {
-            var reason = await _validateNewCardsService.ActionOnCards(approveRejectModel);
-            return Json(reason);
+            var commonResponseData = await _validateNewCardsService.ActionOnCards(approveRejectModel);
+            return Json(new { commonResponseData = commonResponseData });
         }
     }
 }
