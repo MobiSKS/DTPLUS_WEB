@@ -41,6 +41,12 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public string CardCategory { get; set; }
         public string CardIssueType { get; set; }
         public string CardIdentifier { get; set; }
+        public string RBEId { get; set; }
+        public string RbeName { get; set; }
+        public string FeePaymentNo { get; set; }
+        public string FeePaymentDate { get; set; }
+        public int FeePaymentsCollectFeeWaiverId { get; set; }
+        public string FeePaymentsCollectFeeWaiver { get; set; }
     }
 
     public class LimitResponseData

@@ -113,6 +113,19 @@ namespace HPCL.Service.Services
             }
             _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
 
+            //foreach (var decimalValue in searchRes.Data.GetCardLimtModel)
+            //{
+            //    decimalValue.CardBalance.ToString("0.####");
+            //    decimalValue.SaleTranscationLimit.ToString("0.####");
+            //    decimalValue.DailySaleLimit.ToString("0.####");
+            //    decimalValue.DailyCreditLimit.ToString("0.####");
+            //    decimalValue.CashPurseLimit.ToString("0.####");
+            //    decimalValue.MonthlySaleLimit.ToString("0.####");
+            //    decimalValue.MonthlySaleBalance.ToString("0.####");
+            //    decimalValue.CCMSReloadSale.ToString("0.####");
+            //    decimalValue.CCMSReloadSaleLimitValue.ToString("0.####");
+            //}
+
             return searchRes;
         }
 
