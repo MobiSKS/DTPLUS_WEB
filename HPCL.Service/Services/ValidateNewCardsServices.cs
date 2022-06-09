@@ -47,13 +47,22 @@ namespace HPCL.Service.Services
             StringContent actionOnCardsContent = new StringContent(JsonConvert.SerializeObject(actionOnCardsForms), Encoding.UTF8, "application/json");
             var actionOnCardsResponse = await _requestService.CommonRequestService(actionOnCardsContent, WebApiUrl.approveRejectCard);
             JObject actionOnCardsObj = JObject.Parse(JsonConvert.DeserializeObject(actionOnCardsResponse).ToString());
+            responseData.Internel_Status_Code = Convert.ToInt32(actionOnCardsObj["Internel_Status_Code"].ToString());
 
             if (actionOnCardsObj["Status_Code"].ToString() == "200")
             {
                 var Jarr = actionOnCardsObj["Data"].Value<JArray>();
                 List<CommonResponseData> responseLst = Jarr.ToObject<List<CommonResponseData>>();
-                responseData = responseLst[0];
+
+                if (responseLst != null && responseLst.Count > 0)
+                {
+                    responseData = responseLst[0];
+                }
                 responseData.Internel_Status_Code = Convert.ToInt32(actionOnCardsObj["Internel_Status_Code"].ToString());
+                if (responseLst != null && responseLst.Count > 0 && responseLst[0].Status != 1)
+                {
+                    responseData.Internel_Status_Code = responseData.Internel_Status_Code + 1;
+                }
             }
             else
             {
