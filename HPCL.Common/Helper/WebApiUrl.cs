@@ -184,6 +184,7 @@
         public static string approveCustomerAddressRequests = "api/dtplus/customer/approve_customer_address_requests";
         public static string getaggregatornormalfleetcustomerstatusapprove = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_status_approve";
         public static string getnormalfleetcustomerbyreferencenoforcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no_for_customer";
+        public static string approvalApproveCustomerAddressRequests = "api/dtplus/customer/approval_approve_customer_address_requests";
         public static string getaggregatorcustomernormalfleetdownloadkyc = "api/dtplus/aggregatorcustomer/get_aggregator_customer_normal_fleet_download_kyc";
         
         #endregion
@@ -390,7 +391,7 @@
         public static string GetCustomerSearchDetails = "api/dtplus/TMS/bind_enroll_transport_management_system";
         public static string EnrollTransportManagementSystem = "api/dtplus/TMS/get_enroll_transport_management_system";
         public static string GetDetailsForCustomerUpdate = "api/dtplus/TMS/get_details_for_customer_update";
-        public static string UpdateCustomerAddress = "api/dtplus/TMS/update_customer_address";
+        public static string UpdateCustomerAddress = "api/dtplus/customer/update_request_customer_address";
         public static string GetVehicleEnrollmentStatus = "api/dtplus/TMS/get_vehicle_enrollment_status";
         public static string GetVehicleEnrollmentDetail = "api/dtplus/TMS/Get_Vehicle_Enrollment_Detail";
         public static string InsertVehicleEnrollmentStatus = "api/dtplus/TMS/insert_vehicle_enrollment_status";

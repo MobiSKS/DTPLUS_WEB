@@ -38,9 +38,14 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            SessionMenuModel.menuList.Clear();
-            SessionMenuModel.sessionList.Clear();
             return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            SessionMenuModel.menuList.RemoveAll(x => x.UserID == HttpContext.Session.GetString("UserId"));
+            SessionMenuModel.sessionList.RemoveAll(x => x.UserID == HttpContext.Session.GetString("UserId"));
+            return RedirectToAction("Index");
         }
 
         [Route("get-captcha-image")]
@@ -270,7 +275,7 @@ namespace HPCL_Web.Controllers
             }
             else
             {
-                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserID == userId))
+                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId == userId))
                 {
                     HttpContext.Session.SetString("Token", item.Token);
                     HttpContext.Session.SetString("LocalStorage", item.LocalStorage);
@@ -354,7 +359,7 @@ namespace HPCL_Web.Controllers
             }
             else
             {
-                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserID == userId))
+                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId == userId))
                 {
                     HttpContext.Session.SetString("Token", item.Token);
                     HttpContext.Session.SetString("LocalStorage", item.LocalStorage);
