@@ -163,14 +163,13 @@
 
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetStatusType", "Common")',
-                data: { status: "HdfcReqApproval" },
+                url: '@Url.Action("GetCreditPouchStatus", "Common")',
                 dataType: "json",
                 success: function (data, status, xhr) {
 
                     console.log(data);
                     $('<option>',{value: 0,text: "--All--"}).html("--All--").appendTo(".statusVal");
-                    $.each(data.statusTypeList, function (i, option) {
+                    $.each(data.getStatus, function (i, option) {
                         $("<option/>").val(option.statusId).text(option.statusName).appendTo(".statusVal");
                     });
                     $(".statusVal")[0].sumo.reload();
@@ -257,7 +256,7 @@
                 var planName = "";
                 var requestedBy = (res.searchList.data[i].requestedBy);
                 var requestNo = (res.searchList.data[i].requestNo);
-                var status = "";
+                var status = (res.searchList.data[i].actionStatus);
                 var remarks = "<textarea class='form-control'></textarea>";
                 var action = "<select class='form-control'><option value='1'>Submit for final Approval</option><option value='2'>Submit for final Rejection</option></select>";
 

@@ -104,5 +104,44 @@ namespace HPCL.Service.Services
             SearchRequestApprovalRes searchList = obj.ToObject<SearchRequestApprovalRes>();
             return searchList;
         }
+
+        public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatus entity)
+        {
+            var searchBody = new SearchEnrollStatus
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId,
+                ZO = Convert.ToInt32(entity.ZO),
+                RO = Convert.ToInt32(entity.RO),
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetEnrollStatusUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            SearchEnrollStatusRes searchList = obj.ToObject<SearchEnrollStatusRes>();
+            return searchList;
+        }
+
+        public async Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId)
+        {
+            var searchBody = new GetEnrollStatusReport
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                RequestId = requestId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetEnrollStatusReportUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetEnrollStatusReportRes searchList = obj.ToObject<GetEnrollStatusReportRes>();
+            return searchList;
+        }
     }
 }

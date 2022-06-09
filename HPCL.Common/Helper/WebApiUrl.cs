@@ -76,6 +76,7 @@
         public static string GetHotlistReasonListUrl = "api/dtplus/hotlist/Get_Hotlist_Reason";
         public static string GetDetailForEnableDisableProductsAndTransactions = "api/dtplus/card/get_detail_for_enable_disable_products_and_transactions";
         public static string EnableDisableProductsAndTransactions = "api/dtplus/card/enable_disable_products_and_transactions";
+        public static string GetCreditPouchStatusUrl = "api/dtplus/settings/get_cp_statusName";
         #endregion
 
         #region Merchant
@@ -435,6 +436,8 @@
         public static string GetPlanUrl = "api/dtplus/HDFCCreditPouch/get_plan";
         public static string EnrollExceptionReqUrl = "api/dtplus/HDFCcreditPouch/insrt_cp_rqst";
         public static string GetExApproval = "api/dtplus/HDFCCreditPouch/Get_cp_by_bank";
+        public static string GetEnrollStatusUrl = "api/dtplus/HDFCCreditPouch/get_cp_status";
+        public static string GetEnrollStatusReportUrl = "api/dtplus/HDFCCreditPouch/get_cp_status_Report";
         #endregion
     }
 }
