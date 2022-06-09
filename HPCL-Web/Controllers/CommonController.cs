@@ -250,5 +250,11 @@ namespace HPCL_Web.Controllers
             var hotlistReasonList = await _commonActionService.GetHotlistReason();
             return Json(new { hotlistReasonList = hotlistReasonList });
         }
+
+        public async Task<JsonResult> GetCreditPouchStatus()
+        {
+            var getStatus = await _commonActionService.GetCreditPouchStatus();
+            return Json(new { getStatus = getStatus });
+        }
     }
 }
