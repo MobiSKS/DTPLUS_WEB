@@ -1,6 +1,8 @@
-﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+﻿using Castle.MicroKernel.SubSystems.Conversion;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HPCL.Common.Models.ResponseModel.Cards
 {
@@ -29,6 +31,7 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public string VehicleMake { get; set; }
         public int CCMSLimitOption { get; set; }
         public string Description { get; set; }
+        [Column(TypeName = "money")]
         public Decimal CCMSReloadSaleLimitValue { get; set; }
     }
 

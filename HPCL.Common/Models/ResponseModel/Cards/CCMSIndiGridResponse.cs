@@ -1,4 +1,6 @@
-﻿namespace HPCL.Common.Models.ResponseModel.Cards
+﻿using System;
+
+namespace HPCL.Common.Models.ResponseModel.Cards
 {
     public class ViewGird
     {
@@ -10,6 +12,6 @@
         public string Mobileno { get; set; }
         public int Limittype { get; set; }
         public string limitTypeText { get; set; }
-        public int Amount { get; set; }
+        public Decimal Amount { get; set; }
     }
 }
