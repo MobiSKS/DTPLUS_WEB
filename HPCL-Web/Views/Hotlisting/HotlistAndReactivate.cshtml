@@ -117,6 +117,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden"  id="entityStatus"/>
         </form>
         <div class="clearfix"></div>
 
@@ -459,25 +460,14 @@
         }
         var entityTypeId = $('#EntityTypeId :selected').val();
         if(entityIdVal.trim()!=""){
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
-                dataType: 'json',
-                data: { EntityTypeId: entityTypeId, EntityId: entityIdVal },
-                success: function (data) {
-                    if(data.length>0){
-                        if(data[0].status=="0"){
-                            $("#entityid_error").attr("style", "display:block");
-                            $("#entityid_error").html(data[0].reason);
-                            flag="N";
-                        }
-                    }
-                },
-                error: function (ex) {
-                    alert('Error.' + ex);
-                }
-            });
+            if ($("#entityStatus").val() != "0") {
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html($("#entityStatus").val());
+                flag = "N"
+            }
+                
         }
+
         if (flag == "N")
             e.preventDefault();
         else {
@@ -578,10 +568,12 @@
                                 if(data[0].status=="0"){
                                     $("#entityid_error").attr("style", "display:block");
                                     $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
                                 }
                                 else{
                                     $("#entityid_error").attr("style", "display:none");
                                     $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
                                 }
                             }
 
@@ -617,10 +609,12 @@
                                 if(data[0].status=="0"){
                                     $("#entityid_error").attr("style", "display:block");
                                     $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
                                 }
                                 else{
                                     $("#entityid_error").attr("style", "display:none");
                                     $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
                                 }
                             }
 
@@ -655,10 +649,12 @@
                                 if(data[0].status=="0"){
                                     $("#entityid_error").attr("style", "display:block");
                                     $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
                                 }
                                 else{
                                     $("#entityid_error").attr("style", "display:none");
                                     $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
                                 }
                             }
 
@@ -694,10 +690,12 @@
                                 if(data[0].status=="0"){
                                     $("#entityid_error").attr("style", "display:block");
                                     $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
                                 }
                                 else{
                                     $("#entityid_error").attr("style", "display:none");
                                     $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
                                 }
                             }
 
