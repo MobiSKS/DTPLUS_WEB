@@ -757,5 +757,25 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
+        public async Task<IActionResult> ApprovalUpdateCustomerContactPerson(CustomerAddressApproveRequestModel model, string reset, string success, string error, string FromDate, string ToDate)
+        {
+            var searchResult = await _customerService.ApprovalUpdateCustomerContactPerson(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
+        {
+            var updateKycResponse = await _customerService.ApproveCustomerContactPersonRequests(model);
+
+            return Json(new { customer = updateKycResponse });
+        }
     }
 }

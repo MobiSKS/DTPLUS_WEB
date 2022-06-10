@@ -105,7 +105,7 @@
                                     <table id="CardSearchTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%">
                                         <thead>
                                             <tr>
-                                                 <th>
+                                                <th>
                                                     S.No.
                                                 </th>
                                                 <th>
@@ -283,48 +283,70 @@
 
                                 <div class="clearfix"></div>
 
-                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap" id="feePaymentSection" style="display:none;">
 
                                     <div class="w-100">
                                         <fieldset class="border-1 rounded border-grey">
                                             <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Fee Payment Details</legend>
                                             <div class="p-2 col-12">
                                                 <div class="col-sm-10 col-12">
-                                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                                        <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                            <input type="radio" name="optradio" class="mr-2" checked>
-                                                            Online
-                                                        </label>
-                                                        <label class="mb-0 mr-4 d-flex align-items-center justify-content-start">
-                                                            <input type="radio" name="optradio" class="mr-2">
-                                                            Fee Waiver
-                                                        </label>
+                                                    <div class="form-group">
+                                                        <div class="d-flex align-items-center justify-content-start">
+                                                            <div class="d-flex align-items-center justify-content-start mr-3">
+                                                                @Html.RadioButton("FeePaymentsCollectorFeeWaiver", "1", new { @id = "cardChecked", disabled = "disabled" }) <span class="ml-2"> Online </span>
+                                                            </div>
+                                                            <div class="d-flex align-items-center justify-content-start">
+                                                                @Html.RadioButton("FeePaymentsCollectorFeeWaiver", "2", new { @id = "cardlessChecked", disabled = "disabled" }) <span class="ml-2"> Fee Waiver </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-6 col-8">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email From</label>
-                                                        <div class="col-md-7 col-12">
-                                                            <input type="text" name="perma_address1" class="form-control">
-                                                            <div class="error" id="perma_address1_error"></div>
+                                                <div id="onlineFeePayment" style="display:none;">
+                                                    <div class="col-md-6 col-8">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Payment Source</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <input type="text" name="perma_address1" class="form-control emailFromFeePayment" readonly="readonly">
+                                                                <div class="error" id="perma_address1_error"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-8">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Payment Date</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <input type="text" name="perma_address2" class="form-control emailDateFeePayment" readonly="readonly">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-8">
-                                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email Date</label>
-                                                        <div class="col-md-7 col-12">
-                                                            <input type="text" name="perma_address2" class="form-control">
+
+                                                <div id="feeWaiverFeePayment" style="display:none;">
+                                                    <div class="col-md-6 col-8">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Approval Email From</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <input type="text" name="perma_address1" class="form-control emailFromFeePayment" readonly="readonly">
+                                                                <div class="error" id="perma_address1_error"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-8">
+                                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                                            <label class="font-weight-normal col-md-5 col-12">Approval Email Date</label>
+                                                            <div class="col-md-7 col-12">
+                                                                <input type="text" name="perma_address2" class="form-control emailDateFeePayment" readonly="readonly">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </fieldset>
                                     </div>
 
                                 </div>
-
                             </div>
 
 
@@ -395,7 +417,7 @@
                                                                     @Html.TextBoxFor(m => m.CCMSReloadSaleLimitValue, new { @id = "CCMSReloadSaleLimitValueId", @class = "form-control", @readonly = "readonly" })
                                                                 </div>
                                                                 <div class="col-5 pl-0">
-                                                                    <p id="CCMSReloadDefineSaleValue" class="mb-0 mt-2">></p>
+                                                                    <p id="CCMSReloadDefineSaleValue" class="mb-0 mt-2"></p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -632,6 +654,12 @@
                     yrOfReg = searchGrid[i].yearOfRegistration;
                 }
 
+                //var addEdit;
+
+                //if((searchGrid[i].mobileNumber) == ''){
+
+                //}
+
                 var srNumber = "<span class='rowData'>" + (searchGrid[i].srNumber || '') + "</span>";
                 var cardNumber = "<a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (searchGrid[i].cardNumber || '') + "</span></a>";
                 var customerID = "<span class='rowData cusId'>" + (searchGrid[i].customerID || '') + "</span>";
@@ -643,8 +671,8 @@
                 var expiryDate = expDts;
                 var status = (searchGrid[i].status || '');
                 var yearOfRegistration = yrOfReg;
-                var manufacturer = (searchGrid[i].manufacturer || '');
-                var ownershipType = (searchGrid[i].ownershipType || '');
+                var manufacturer = (searchGrid[i].vehicleMake || '');
+                var ownershipType = (searchGrid[i].ownedorAttached || '');
                 var mobileNumber = "<span class='rowMobNo'>" + (searchGrid[i].mobileNumber || '') + "</span>";
                 var vinNumber = (searchGrid[i].vinNumber || '');
                 var edit = "<a href='#aaa' class='editNumber'>Edit</a><span style='display:none;' class='lmtName'>" + (searchGrid[i].limitTypeName || '') + "</span><span style='display:none;' class='amts'>" + (searchGrid[i].ccmsReloadSaleLimitValue || '') + "</span>";
@@ -720,13 +748,6 @@
 
     function ViewCardDetails(o) {
 
-        $('select.disableSumo')[0].sumo.unload();
-        $('select.disableSumo')[1].sumo.unload();
-        $('select.disableSumo')[2].sumo.unload();
-        $('select.disableSumo')[3].sumo.unload();
-        $('select.disableSumo')[4].sumo.unload();
-        $('select.disableSumo')[5].sumo.unload();
-
         var CardId = o.innerText;
 
         $.ajax({
@@ -757,8 +778,8 @@
 
                     $('#RequestDateValue').val(cardDetails[0].requestDate);
                     $('#FormNumberValue').val(cardDetails[0].formNumber);
-                    $('#RbeIdValue').val(0);
-                    $('#RbeNameValue').val(0);
+                    $('#RbeIdValue').val(cardDetails[0].rbeId || '');
+                    $('#RbeNameValue').val(cardDetails[0].rbeName || '');
                     $('#VehicleNumberValue').val(cardDetails[0].vechileNo);
 
                     var vehicleType = $('<option value="' + cardDetails[0].vehicleType + '">' + cardDetails[0].vehicleType + '</option>');
@@ -772,6 +793,35 @@
 
                     $('#VinNumberValue').val(cardDetails[0].vinNumber);
 
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 0) {
+                        document.getElementById("feePaymentSection").style.display = "none";
+                    }
+
+
+                    $('input[name="FeePaymentsCollectorFeeWaiver"][value="' + cardDetails[0].feePaymentsCollectFeeWaiverId + '"]').prop('checked', true);
+                    
+                    
+                    $('.emailFromFeePayment').val(cardDetails[0].feePaymentNo);
+                    var emailDatFee;
+                    if(((cardDetails[0].feePaymentDate) == "01/01/0001 00:00:00") || ((cardDetails[0].feePaymentDate) == "01/01/1900 00:00:00") || ((cardDetails[0].feePaymentDate) == null)){
+                        emailDatFee = "";
+                    }else{
+                        emailDatFee = moment(cardDetails[0].feePaymentDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+                        $('.emailDateFeePayment').val(emailDatFee);
+
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 1) {
+                        document.getElementById("onlineFeePayment").style.display = "block";
+                        document.getElementById("feeWaiverFeePayment").style.display = "none";
+                    }
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 2) {
+                        document.getElementById("onlineFeePayment").style.display = "none";
+                        document.getElementById("feeWaiverFeePayment").style.display = "block";
+                    }
+
                     $('#SaleTranscationLimitValue').val(limitDetails[0].saleTranscationLimit);
                     $('#DailySaleLimitValue').val(limitDetails[0].dailySaleLimit);
                     $('#DailyCreditLimitValue').val(limitDetails[0].dailyCreditLimit);
@@ -783,15 +833,17 @@
                     $('#CCMSReloadSaleLimitTypeValue').append(reloadSaleType);
 
                     $('#CCMSReloadSaleLimitValueId').val(limitDetails[0].ccmsReloadSaleLimitValue);
+                    $('#CCMSReloadDefineSaleValue').html('');
                     $('#CCMSReloadDefineSaleValue').append("<span>(Available Limit: " + limitDetails[0].ccmsReloadSale + ")</span>");
 
-                    var momentDate = new Date(limitDetails[0].expiryDate);
+                    var limitExpiryDate;
+                    if(((limitDetails[0].expiryDate) == "01/01/0001 00:00:00") || ((limitDetails[0].expiryDate) == "01/01/1900 00:00:00") || ((limitDetails[0].expiryDate) == null)){
+                    limitExpiryDate = "";
+                    }else{
+                        limitExpiryDate = moment(limitDetails[0].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                    var abc = moment(momentDate).format('YYYY-MM-DD');
-
-                    console.log(abc, "date");
-
-                    $('#LimitExpiryDateValue').val(abc);
+                    $('#LimitExpiryDateValue').val(limitExpiryDate);
 
                     var creditTransType = $('<option value="' + limitDetails[0].allowCreditTranscation + '">' + limitDetails[0].allowCreditTranscation + '</option>');
                     $('#AllowCreditTranscationValue').append(creditTransType);
@@ -813,6 +865,14 @@
                     }
 
                     $("#ManageCardHeader").replaceWith("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards CARD PAN: ( " + CardId + ") </p>");
+
+                    
+                    $('select.disableSumo')[0].sumo.reload();
+                    $('select.disableSumo')[1].sumo.reload();
+                    $('select.disableSumo')[2].sumo.reload();
+                    $('select.disableSumo')[3].sumo.reload();
+                    $('select.disableSumo')[4].sumo.reload();
+                    $('select.disableSumo')[5].sumo.reload();
 
                     $("#CardDetailsTab").removeClass("disabled");
                     $("#LimitTab").removeClass("disabled");

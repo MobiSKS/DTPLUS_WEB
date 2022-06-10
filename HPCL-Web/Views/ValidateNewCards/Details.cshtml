@@ -17,6 +17,7 @@
         <li class="breadcrumb-item font-weight-light">Validate New Cards</li>
     </ul>
     <div id="reason" class="mb-3 text-center alert alert-success" style="display:none"></div>
+    <div id="dvFailure" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
     @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
     {
         <div class="tab-content" id="myTabContent">
@@ -225,7 +226,11 @@
 
     function statusAction(CustomerRefNum,customerType) {
         var id = CustomerRefNum;
-        var type=customerType
+        var type=customerType;
+
+        document.getElementById("dvFailure").style.display = "none";
+        document.getElementById("dvFailure").innerHTML="";
+
         $.ajax({
             type: 'GET',  // http method
             url: '@Url.Action("GetCardDetailsForApproval", "ValidateNewCards")',
@@ -327,6 +332,9 @@
         {
             document.getElementById("Customer_error").innerHTML = "";
         }
+
+        document.getElementById("dvFailure").style.display = "none";
+        document.getElementById("dvFailure").innerHTML="";
 
          if (flag == "N")
              e.preventDefault();

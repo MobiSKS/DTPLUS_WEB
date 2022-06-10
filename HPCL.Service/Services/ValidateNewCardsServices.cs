@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.ValidateNewCard;
 using HPCL.Common.Models.ResponseModel.CommonResponse;
@@ -29,8 +30,9 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
             _commonActionService = commonActionService;
         }
-        public async Task<string> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel)
+        public async Task<CommonResponseData> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel)
         {
+            CommonResponseData responseData = new CommonResponseData();
             var actionOnCardsForms = new ApproveCardDetailsModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -45,17 +47,29 @@ namespace HPCL.Service.Services
             StringContent actionOnCardsContent = new StringContent(JsonConvert.SerializeObject(actionOnCardsForms), Encoding.UTF8, "application/json");
             var actionOnCardsResponse = await _requestService.CommonRequestService(actionOnCardsContent, WebApiUrl.approveRejectCard);
             JObject actionOnCardsObj = JObject.Parse(JsonConvert.DeserializeObject(actionOnCardsResponse).ToString());
+            responseData.Internel_Status_Code = Convert.ToInt32(actionOnCardsObj["Internel_Status_Code"].ToString());
 
             if (actionOnCardsObj["Status_Code"].ToString() == "200")
             {
-                var actionOnCardsJarr = actionOnCardsObj["Data"].Value<JArray>();
-                List<SuccessResponse> actionOnCardsLst = actionOnCardsJarr.ToObject<List<SuccessResponse>>();
-                return actionOnCardsLst.First().Reason.ToString();
+                var Jarr = actionOnCardsObj["Data"].Value<JArray>();
+                List<CommonResponseData> responseLst = Jarr.ToObject<List<CommonResponseData>>();
+
+                if (responseLst != null && responseLst.Count > 0)
+                {
+                    responseData = responseLst[0];
+                }
+                responseData.Internel_Status_Code = Convert.ToInt32(actionOnCardsObj["Internel_Status_Code"].ToString());
+                if (responseLst != null && responseLst.Count > 0 && responseLst[0].Status != 1)
+                {
+                    responseData.Internel_Status_Code = responseData.Internel_Status_Code + 1;
+                }
             }
             else
             {
-                return actionOnCardsObj["Message"].ToString();
+                responseData.Internel_Status_Code = Convert.ToInt32(actionOnCardsObj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(actionOnCardsObj["Status_Code"].ToString());
             }
+            return responseData;
         }
 
         public async Task<ValidateNewCardsModel> Details(ValidateNewCardsModel validateNewCardsMdl)

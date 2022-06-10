@@ -1577,5 +1577,26 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> responseModel = jarr.ToObject<List<StatusResponseModal>>();
             return responseModel;
         }
+
+
+        public async Task<List<StatusResponseModal>> GetCreditPouchStatus()
+        {
+            var statusType = new GetCreditPouchStatus
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                PageName = "BankAuthorization"
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetCreditPouchStatusUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
+            return lst;
+        }
     }
 }

@@ -2017,5 +2017,76 @@ namespace HPCL.Service.Services
             }
         }
 
+        public async Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerContactPerson(CustomerAddressApproveRequestModel model)
+        {
+            if (string.IsNullOrEmpty(model.FromDate))
+            {
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                model.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            string strFromDate = "";
+            string strToDate = "";
+            if (!string.IsNullOrEmpty(model.FromDate))
+            {
+                string[] frmDate = model.FromDate.Split("-");
+                strFromDate = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+            }
+            if (!string.IsNullOrEmpty(model.ToDate))
+            {
+                string[] toDate = model.ToDate.Split("-");
+                strToDate = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
+            }
+
+            var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FromDate = strFromDate,
+                ToDate = strToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestApproveCustomerContactPersonDetails);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CustomerAddressApproveRequestModel res = obj.ToObject<CustomerAddressApproveRequestModel>();
+
+            if (res != null && res.Data != null && res.Data.Count > 0)
+            {
+                model.Data = res.Data;
+            }
+            else
+            {
+                model.Data = new List<CustomerAddressApproveDetails>();
+            }
+            model.Message = res.Message;
+            model.Internel_Status_Code = res.Internel_Status_Code;
+
+            return model;
+        }
+        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approveCustomerContactPersonDetails);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            if (obj["Status_Code"].ToString() == "200")
+            {
+                var Jarr = obj["Data"].Value<JArray>();
+                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
+                return updateResponse[0];
+            }
+            else
+            {
+                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+            }
+        }
+
     }
 }

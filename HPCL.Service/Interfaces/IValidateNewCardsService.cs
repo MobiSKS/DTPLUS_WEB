@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.ValidateNewCards;
+﻿using HPCL.Common.Models;
+using HPCL.Common.Models.ViewModel.ValidateNewCards;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace HPCL.Service.Interfaces
     {
         Task<ValidateNewCardsModel> Details(ValidateNewCardsModel validateNewCardsMdl);
         Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo);
-        Task<string> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel);
+        Task<CommonResponseData> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel);
     }
 }
