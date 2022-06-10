@@ -166,7 +166,7 @@ namespace HPCL.Service.Services
             return editMobBody;
         }
 
-        public async Task<string> CardlessMappingUpdate(string mobNoNew, string crdNo)
+        public async Task<List<SuccessResponse>> CardlessMappingUpdate(string mobNoNew, string crdNo)
         {
             var cardDetailsBody = new UpdateMobile
             {
@@ -184,7 +184,7 @@ namespace HPCL.Service.Services
 
             var updateRes = obj["Data"].Value<JArray>();
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
-            return updateResponse[0].Reason;
+            return updateResponse;
         }
 
         public async Task<SearchCardsResponse> AcDcCardSearch(SearchCards entity)

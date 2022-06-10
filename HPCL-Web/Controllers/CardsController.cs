@@ -64,10 +64,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CardlessMappingUpdate(string mobNoNew, string crdNo)
         {
-            var reason = await _cardService.CardlessMappingUpdate(mobNoNew, crdNo);
+            var updateResponse = await _cardService.CardlessMappingUpdate(mobNoNew, crdNo);
             ModelState.Clear();
 
-            return Json(reason);
+            return Json(new { updateResponse = updateResponse });
         }
 
         public IActionResult AcDcCardSearch()
