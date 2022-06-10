@@ -51,8 +51,9 @@ namespace HPCL.Service.Interfaces
         Task<LowCCMSBalanceAlertConfigurationModel> GetCCMSBalAlertConfiguration(string CustomerID);
         Task<UpdateKycResponse> UpdateCCMSBalAlertConfiguration(string CustomerID, string Amount, string ActionType);
         Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerAddress(CustomerAddressApproveRequestModel model);
-        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model);
+        Task<CommonResponseData> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model);
         Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerContactPerson(CustomerAddressApproveRequestModel model);
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model);
+        Task<GetCustomerAddressRequestForApproval> GetCustomerOldAndNewAddressList(string CustomerId);
     }
 }

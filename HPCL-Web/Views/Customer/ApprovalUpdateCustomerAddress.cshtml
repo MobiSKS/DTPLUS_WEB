@@ -14,6 +14,8 @@
         {
             <div id="reason" class="mb-0 mt-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
         }
+        <div id="dvSuccess" class="mb-3 text-center alert alert-success mt-3" style="display:none;"></div>
+        <div id="dvFailure" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "formValid", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
@@ -94,7 +96,7 @@
                                             <td style="display:none">@i</td>
                                             <td><input type="checkbox" id="check_@i" /></td>
                                             <td id="tdCustomerName">@item.CustomerName</td>
-                                            <td><a class='CardNumber' href='#BasicInformation' onclick='ViewRoleDetails(this,"@item.CustomerCode")'><span class='rowCardNo'>@item.CustomerCode</span></a></td>
+                                            <td><a class='CardNumber' href='#BasicInformation' onclick='ViewAddressDetails(this,"@item.CustomerCode")'><span class='rowCardNo'>@item.CustomerCode</span></a></td>
                                             <td>@item.ZO</td>
                                             <td>@item.RO</td>
                                             <td>@item.City</td>
@@ -256,18 +258,28 @@
                     success: function (res)
                     {
                         console.log(res);
-                        console.log(res.customer.reason);
-                        if(res.customer.status==1)
+                        console.log(res);
+                        if(res.customer.internel_Status_Code == 1000)
                         {
-                            var successMsg="",errorMsg="";
-                            if(res.customer.status==1)
-                                successMsg=res.customer.reason;
-                            else if(data[0].status==0)
-                                errorMsg=res.customer.reason;
-                            var url = '@Html.Raw(@Url.Action("ApprovalUpdateCustomerAddress", "Customer",new { reset = "Y", success = "mm", error = "ee", FromDate="zzz", ToDate="aaa" }))';
-                            url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
-                            url = url.replace("zzz", encodeURIComponent($("#FromDate").val())).replace("aaa", encodeURIComponent($("#ToDate").val()));
-                           window.location.href=url;
+                           // var successMsg="",errorMsg="";
+                           // if(res.customer.status==1)
+                           //     successMsg=res.customer.reason;
+                           // else if(data[0].status==0)
+                           //     errorMsg=res.customer.reason;
+                           // var url = '@Html.Raw(@Url.Action("ApprovalUpdateCustomerAddress", "Customer",new { reset = "Y", success = "mm", error = "ee", FromDate="zzz", ToDate="aaa" }))';
+                           // url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                           // url = url.replace("zzz", encodeURIComponent($("#FromDate").val())).replace("aaa", encodeURIComponent($("#ToDate").val()));
+                           //window.location.href=url;
+                            $("#dvSuccess").html(res.customer.reason);
+                            $(".toBeHiddenOnSuccess").hide();
+                            document.getElementById("dvSuccess").style.display = "block";
+                            document.getElementById("dvFailure").style.display = "none";
+                        }
+                        else
+                        {
+                            $("#dvFailure").html(res.customer.reason);
+                            document.getElementById("dvFailure").style.display = "block";
+                            document.getElementById("dvSuccess").style.display = "none";
                         }
 
                     },
@@ -277,7 +289,6 @@
                 });
             }
         }
-
 
     };
 
@@ -411,7 +422,7 @@
 
      }
 
-    function ViewRoleDetails(o,userName)
+    function ViewAddressDetails(o,customercode)
     {
         debugger;
         var flag="Y";
@@ -420,10 +431,10 @@
         {
             $.ajax({
                 type: 'GET',  // http method
-                url: '@Url.Action("GetUserRoleLocation", "Security")',
+                url: '@Url.Action("GetCustomerOldAndNewAddressList", "Customer")',
                 contentType: "application/json; charset=utf-8",
                 dataType: 'text',
-                data: { UserName: userName},
+                data: { CustomerId: customercode},
                 success: function (data, status, xhr)
                 {
                     console.log(data);
