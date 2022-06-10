@@ -15,7 +15,7 @@
                             <div class="border-1 rounded border-grey">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Add Edit Cardless Mapping</p>
                             
-                             <div id="serviceUpdateResponse" class="mb-3 text-center alert alert-success" style=";display:none;"></div>
+                             <div id="serviceUpdateResponse" class="mb-3 text-center alert alert-success" style="margin-top:1%;display:none;"></div>
 
                             <div class="col-md-6 col-12" style="margin-top:1%">
                                 <div class="form-group d-flex align-items-center flex-wrap">
@@ -65,6 +65,7 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
+                    <div id="noRecord" class="mb-3 text-center alert alert-danger" style="margin-top:1%;display:none;"></div>
                    </div>
                 </div>
             </div>
@@ -104,6 +105,10 @@ function updateMobNoClick(){
                 $("#mobNoVllNewErrMsg").text("Mobile Number is same.");
                 return false;
             }else{
+
+                document.getElementById("serviceUpdateResponse").style.display = "none";
+                document.getElementById("noRecord").style.display = "none";
+
                 $.ajax({
                     url: "@Url.Action("CardlessMappingUpdate", "Cards")",
                     type: "POST",
@@ -111,9 +116,16 @@ function updateMobNoClick(){
                     data: { mobNoNew: mobNoNew, crdNo: crdNo },
                     success: function (res) {
 
-                        $("#serviceUpdateResponse").html("");
-                        $("#serviceUpdateResponse").append("<span>" + res + "</span>");
-                        document.getElementById("serviceUpdateResponse").style.display = "block";
+                        console.log("res",res);
+                        if(res.updateResponse[0].status == 1){
+                            $("#serviceUpdateResponse").html("");
+                            $("#serviceUpdateResponse").append("<span>" + res + "</span>");
+                            document.getElementById("serviceUpdateResponse").style.display = "block";
+                        }else{
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + (res.updateResponse[0].reason) + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
                     },
                     error: function (ex) {
                         alert('Failed' + ex);
