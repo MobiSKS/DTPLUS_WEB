@@ -2087,8 +2087,10 @@ namespace HPCL.Service.Services
 
             return model;
         }
-        public async Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
+        public async Task<CommonResponseData> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model)
         {
+            CommonResponseData responseData = new CommonResponseData();
+
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
             model.UserIp = CommonBase.userip;
@@ -2097,16 +2099,36 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approveCustomerContactPersonDetails);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            if (obj["Status_Code"].ToString() == "200")
+            var Jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> updateResponse = Jarr.ToObject<List<CommonResponseData>>();
+            responseData = updateResponse[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            if (obj["Internel_Status_Code"].ToString() == "1000")
             {
-                var Jarr = obj["Data"].Value<JArray>();
-                List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> updateResponse = Jarr.ToObject<List<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse>>();
-                return updateResponse[0];
+                string msg = "";
+                foreach (CommonResponseData item in updateResponse)
+                {
+                    msg = msg + item.Reason + " ";
+                }
+                responseData.Reason = msg;
+                if (responseData.Status != 1)
+                {
+                    responseData.Internel_Status_Code = responseData.Internel_Status_Code + 1;
+                }
             }
             else
             {
-                return new HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse();
+                responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+                responseData.Status = Convert.ToInt32(obj["Status_Code"].ToString());
+                string msg = "";
+                foreach (CommonResponseData item in updateResponse)
+                {
+                    msg = msg + item.Reason + " ";
+                }
+                responseData.Reason = msg;
             }
+            return responseData;
         }
 
         public async Task<GetCustomerAddressRequestForApproval> GetCustomerOldAndNewAddressList(string CustomerId)
