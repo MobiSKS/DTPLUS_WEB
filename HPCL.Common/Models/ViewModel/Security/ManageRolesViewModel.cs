@@ -21,5 +21,6 @@ namespace HPCL.Common.Models.ViewModel.Security
     {
         public string RoleName { get; set; }
         public string RoleDescription { get; set; }
+        public string ID { get; set; }
     }
 }

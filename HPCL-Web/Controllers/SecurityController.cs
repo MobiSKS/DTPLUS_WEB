@@ -156,9 +156,9 @@ namespace HPCL_Web.Controllers
             var modals = await _securityService.SelectUserManageRolesRequest(manageRolesRequestModel);
             return View(modals);
         }
-        public async Task<IActionResult> RolePermissionSummaryView (string RoleName,string RoleDescription)
+        public async Task<IActionResult> RolePermissionSummaryView (string RoleName,string RoleDescription,string RoleId)
         {
-            var modals = await _securityService.GetUserManageRoleList("1");
+            var modals = await _securityService.GetUserManageRoleList(RoleId);
             modals.RoleDescription = RoleDescription;
             modals.RoleName = RoleName;
             return View(modals);
