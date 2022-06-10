@@ -163,5 +163,11 @@ namespace HPCL_Web.Controllers
             modals.RoleName = RoleName;
             return View(modals);
         }
+        public async Task<IActionResult> AddRolesandPermissions()
+        {
+            var modals = await _securityService.GetUserManageMenuList();
+            
+            return View(modals);
+        }
     }
 }

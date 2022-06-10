@@ -48,9 +48,9 @@ namespace HPCL_Web.Controllers
             var searchResult = await _dtpSupportService.UpdateCustomerCcmsAccountStatus(entity);
             return Json(searchResult);
         }
-        public async Task<JsonResult> GetCardBalanceTransferDetails(string CardNo)
+        public async Task<JsonResult> GetCardBalanceTransferDetails(string CardNo,string CardStatus)
         {
-            var searchResult = await _dtpSupportService.GetCardBalanceTransferDetails(CardNo);
+            var searchResult = await _dtpSupportService.GetCardBalanceTransferDetails(CardNo, CardStatus);
             return Json(searchResult);
         }
         public async Task<IActionResult> UnblockUser()

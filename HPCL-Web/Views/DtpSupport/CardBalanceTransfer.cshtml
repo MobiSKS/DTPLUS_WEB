@@ -69,7 +69,7 @@
 
           var flag = "Y";
 
-
+        var cardStatus="";
         var cardNo = $("#CardNo").val();
             if (cardNo != "") {
                 if (cardNo.length < 16 || (!(cardNo.match(number)))) {
@@ -87,7 +87,12 @@
                 $("#card_error").html("Card Number cannot be left blank");
                 flag="N";
             }
-
+            if ($("#rbExpired").is(":checked")) {
+                cardStatus="1";
+            }
+            if ($("#rbHotlisted").is(":checked")) {
+               cardStatus="2";
+            }
 
           if (flag == "N")
               e.preventDefault();
@@ -97,7 +102,7 @@
               $.ajax({
                   type: 'GET',  // http method
                   url: '@Url.Action("GetCardBalanceTransferDetails", "DtpSupport")',
-                  data: { CardNo: cardNo},  // data to submit
+                  data: { CardNo: cardNo,CardStatus:cardStatus},  // data to submit
                   success: function (data, status, xhr) {
                       console.log(data);
                       if(data.length>0){
