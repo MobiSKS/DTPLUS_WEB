@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.Aggregator;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
@@ -30,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark);
         Task<ValidateAggregatorCustomerModel> ApproveFleetCustomer(ValidateAggregatorCustomerModel entity);
         Task<List<SuccessResponse>> ApproveorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string ApprovedRemark);
+        Task<GetAggregatorFileDownload> GetAggregatorFiles(string FormNumber);
     }
 }

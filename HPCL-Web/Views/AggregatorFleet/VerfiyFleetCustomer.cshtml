@@ -180,7 +180,8 @@
                                                                     <td><a class='CardNumber' data-toggle='tooltip' tooltip="Edit" href='#BasicInformation' onclick='updateCustomer(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a></td>
                                                                 }
                                                                 <td><a class='CardNumber' data-toggle='tooltip' tooltip="View" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-search view" aria-hidden="true"></i></a></td>
-                                                                <td><a class='CardNumber' data-toggle='tooltip' tooltip="Download" href='#BasicInformation' onclick='ViewCustomerDetails(this," @item.CustomerReferenceNo "," @item.FormNumber")' role='tab'><i class="fa fa-download download" aria-hidden="true"></i></a></td>
+                                                                <td> <a asp-action="GetAggregatorFilesinVerify" class="d-block" asp-route-FormNumber="@item.FormNumber" 
+                                                            data-toggle="tooltip" title="" tooltip="Download"><i class="fa fa-download download" aria-hidden="true"></i></a></td>
                                                                 @if (Model.StatusId == "19"|| Model.StatusId==null)
                                                                 {
                                                                     
@@ -1325,21 +1326,20 @@
                 console.log(res.kycDetailsResult);
 
                 if (res.kycDetailsResult.length > 0) {
-
-                    $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofFront);
-                    $('#AddressProofFront').attr('src', res.kycDetailsResult[0].addressProofFront);
-                    $('#panCardImg').attr('src', res.kycDetailsResult[0].PanCard);
-                    $('#vehicleDetailsImg').attr('src', res.kycDetailsResult[0].VehicleDetails);
-                    $('#customerFormImg').attr('src', res.kycDetailsResult[0].CustomerForm);
+                    $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofofOwnerPartner);
+                    $('#AddressProofFront').attr('src', res.kycDetailsResult[0].customerAddressProof);
+                    $('#PanCard').attr('src', res.kycDetailsResult[0].panCarddetails);
+                    $('#VehicleDetails').attr('src', res.kycDetailsResult[0].vehicleDetails);
+                    $('#CustomerForm').attr('src', res.kycDetailsResult[0].signedCustomerForm);
 
                 }
                 else {
 
                     $('#IdProofFront').attr('src', null);
                     $('#AddressProofFront').attr('src', null);
-                    $('#panCardImg').attr('src', null);
-                    $('#vehicleDetailsImg').attr('src', null);
-                    $('#customerFormImg').attr('src', null);
+                    $('#PanCard').attr('src', null);
+                    $('#VehicleDetails').attr('src', null);
+                    $('#CustomerForm').attr('src', null);
 
                 }
 
@@ -1479,9 +1479,9 @@
 
         $('#IdProofFront').attr('src', null);
         $('#AddressProofFront').attr('src', null);
-        $('#panCardImg').attr('src', null);
-        $('#vehicleDetailsImg').attr('src', null);
-        $('#customerFormImg').attr('src', null);
+        $('#PanCard').attr('src', null);
+        $('#VehicleDetails').attr('src', null);
+        $('#CustomerForm').attr('src', null);
 
         //$('#Remarks').val("");
         document.getElementById('Remarks_error').innerHTML = '';
@@ -1702,12 +1702,17 @@
         if (flag == "Y") {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("VerifyorRejectFleetCustomer", "AggregatorFleet")',
-                contentType: "application/json; charset=utf-8",
-                data: { CustomerId: customerId, FormNumber: formNumber, CustomerStatus: "Reject Verificationx", VerifyRemark: verifyRemark },
-                dataType: 'json',
+                url: '@Url.Action("RejectFleetCustomer", "AggregatorFleet")',
+                data: { CustomerId: customerId, FormNumber: formNumber, CustomerStatus: "Reject Verification", VerifyRemark: verifyRemark },
                 success: function(data) {
-
+                     var successMsg="",errorMsg="";
+                        if(data[0].status==1)
+                            successMsg=data[0].reason;
+                        else if(data[0].status==0)
+                            errorMsg=data[0].reason;
+                        var url = '@Html.Raw(@Url.Action("VerfiyFleetCustomer", "AggregatorFleet",new {  success = "mm", error = "zz" }))';
+                        url = url.replace("mm", encodeURIComponent(successMsg)).replace("zz", encodeURIComponent(errorMsg));
+                       window.location.href=url;
                 },
                 error: function(ex) {
                     alert('Error.' + ex);

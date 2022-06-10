@@ -3,6 +3,7 @@ using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.Aggregator;
 using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.ResponseModel.Aggregator;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.Customer;
@@ -1164,6 +1165,25 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
+        public async Task<GetAggregatorFileDownload> GetAggregatorFiles(string FormNumber)
+        {
+
+
+            var customerBody = new CheckformNumberDuplicationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = FormNumber
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(customerBody), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatorcustomernormalfleetdownloadkyc);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            GetAggregatorFileDownload res = obj.ToObject<GetAggregatorFileDownload>();
             return res;
         }
     }

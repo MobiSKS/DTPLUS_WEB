@@ -71,5 +71,18 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+
+        public IActionResult EnrollmentStatus()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatus entity)
+        {
+            var searchList = await _hDFCBankCreditPouchService.GetEnrollStatus(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
     }
 }
