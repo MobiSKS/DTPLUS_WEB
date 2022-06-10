@@ -2131,5 +2131,28 @@ namespace HPCL.Service.Services
             }
             return customerDetails;
         }
+        public async Task<GetCustomerContactPersonRequestForApproval> GetCustomerOldAndNewContactPersonList(string CustomerId)
+        {
+            var request = new GetCustomerAddressDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestGetApproveCustomerContactPersonDetails);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetCustomerContactPersonRequestForApproval customerDetails = obj.ToObject<GetCustomerContactPersonRequestForApproval>();
+            if (customerDetails != null)
+            {
+                customerDetails.CustomerId = CustomerId;
+            }
+            return customerDetails;
+        }
+
     }
 }

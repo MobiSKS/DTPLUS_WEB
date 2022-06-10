@@ -94,7 +94,7 @@
                                             <td style="display:none">@i</td>
                                             <td><input type="checkbox" id="check_@i" /></td>
                                             <td id="tdCustomerName">@item.CustomerName</td>
-                                            <td><a class='CardNumber' href='#BasicInformation' onclick='ViewRoleDetails(this,"@item.CustomerCode")'><span class='rowCardNo'>@item.CustomerCode</span></a></td>
+                                            <td><a class='CardNumber' href='#BasicInformation' onclick='ViewContactPersonDetails(this,"@item.CustomerCode")'><span class='rowCardNo'>@item.CustomerCode</span></a></td>
                                             <td>@item.ZO</td>
                                             <td>@item.RO</td>
                                             <td>@item.City</td>
@@ -411,7 +411,7 @@
 
      }
 
-    function ViewRoleDetails(o,userName)
+    function ViewContactPersonDetails(o,customerId)
     {
         debugger;
         var flag="Y";
@@ -420,10 +420,10 @@
         {
             $.ajax({
                 type: 'GET',  // http method
-                url: '@Url.Action("GetUserRoleLocation", "Security")',
+                url: '@Url.Action("GetCustomerOldAndNewContactPersonList", "Customer")',
                 contentType: "application/json; charset=utf-8",
                 dataType: 'text',
-                data: { UserName: userName},
+                data: { CustomerId: customerId},
                 success: function (data, status, xhr)
                 {
                     console.log(data);
@@ -438,10 +438,7 @@
                     {
                         console.log(v);
                     }
-
-                    //var count = $('#tblCustomer tr').length;
-                    //console.log(count);
-                
+             
                 },
                 error: function (jqXhr, textStatus, errorMessage)
                 {
