@@ -2150,6 +2150,28 @@ namespace HPCL.Service.Services
             if (customerDetails != null)
             {
                 customerDetails.CustomerId = CustomerId;
+                foreach (CustomerContactPersonDetails item in customerDetails.Data.ObjOldCustomerContactValue)
+                {
+                    if (!string.IsNullOrEmpty(item.KeyOfficialDOA) && item.KeyOfficialDOA.Contains("1900"))
+                    {
+                        item.KeyOfficialDOA = "";
+                    }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialDOB) && item.KeyOfficialDOB.Contains("1900"))
+                    {
+                        item.KeyOfficialDOB = "";
+                    }
+                }
+                foreach (CustomerContactPersonDetails item in customerDetails.Data.ObjNewCustomerContactValue)
+                {
+                    if (!string.IsNullOrEmpty(item.KeyOfficialDOA) && item.KeyOfficialDOA.Contains("1900"))
+                    {
+                        item.KeyOfficialDOA = "";
+                    }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialDOB) && item.KeyOfficialDOB.Contains("1900"))
+                    {
+                        item.KeyOfficialDOB = "";
+                    }
+                }
             }
             return customerDetails;
         }
