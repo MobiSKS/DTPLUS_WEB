@@ -23,5 +23,10 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string CustomerForm { get; set; }
         public string PanCard { get; set; }
         public string VehicleDetails { get; set; }
+        public string CustomerAddressProof { get; set; }
+        public string IDProofofOwnerPartner { get; set; }
+        public string PANCarddetails { get; set; }
+        public string SignedCustomerForm { get; set; }
+
     }
 }
