@@ -2088,5 +2088,27 @@ namespace HPCL.Service.Services
             }
         }
 
+        public async Task<GetCustomerAddressRequestForApproval> GetCustomerOldAndNewAddressList(string CustomerId)
+        {
+            var request = new GetCustomerAddressDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getApproveCustomerAddressRequests);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetCustomerAddressRequestForApproval customerDetails = obj.ToObject<GetCustomerAddressRequestForApproval>();
+            if (customerDetails != null)
+            {
+                customerDetails.CustomerId = CustomerId;
+            }
+            return customerDetails;
+        }
     }
 }
