@@ -105,7 +105,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatus entity)
+        public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity)
         {
             var searchBody = new SearchEnrollStatus
             {
