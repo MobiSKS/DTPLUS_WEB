@@ -10,5 +10,6 @@ namespace HPCL.Common.Models.ViewModel.DtpSupport
     public class CardBalanceTransferViewModel:BaseEntity
     {
         public string CardNo { get; set; }
+        public int CardStatus { get; set; }
     }
 }

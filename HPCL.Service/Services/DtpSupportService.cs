@@ -9,6 +9,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -68,14 +69,15 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res[0].Reason;
         }
-        public async Task<List<SuccessResponse>> GetCardBalanceTransferDetails(string CardNo)
+        public async Task<List<SuccessResponse>> GetCardBalanceTransferDetails(string CardNo,string CardStatus)
         {
             var reqBody = new CardBalanceTransferViewModel
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CardNo = CardNo
+                CardNo = CardNo,
+                CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus)
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

@@ -25,7 +25,7 @@ namespace HPCL.Service.Interfaces
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UserApprovalRejectionNonRBE([FromBody] UserApprovalRejectionRequest model);
         Task<GetUserManageRoleModel> GetUserManageRoleList(string RoleId);
         Task<ManageRolesViewModel> SelectUserManageRolesRequest(ManageRolesRequestModel manageRolesRequestModel);
-        Task<ManageRolesViewModel> GetUserManageMenuList(ManageRolesRequestModel manageRolesRequestModel);
+        Task<GetUserManageMenuModel> GetUserManageMenuList();
         Task<List<SuccessResponse>> DeleteRoles(ManageRolesRequestModel manageRolesRequestModel);
         Task<List<SuccessResponse>> UpdateManageRole(ManageRolesRequestModel manageRolesRequestModel);
         Task<List<SuccessResponse>> InsertManageRole(ManageRolesRequestModel manageRolesRequestModel);

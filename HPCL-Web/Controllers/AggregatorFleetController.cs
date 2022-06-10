@@ -49,15 +49,16 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks ,Status="Create"});
             }
 
             return View(modals);
         }
-        public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message)
+        public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message,string Status)
         {
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             ViewBag.Message = Message;
+            ViewBag.Status = Status;
             return View();
         }
         [HttpPost]
@@ -403,7 +404,8 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("VerfiyFleetCustomer");
+                //return RedirectToAction("VerfiyFleetCustomer");
+                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks,Status="Update" });
             }
 
             return View(modals);

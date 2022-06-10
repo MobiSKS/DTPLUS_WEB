@@ -409,7 +409,7 @@ namespace HPCL.Service.Services
             ManageRolesViewModel searchList = obj.ToObject<ManageRolesViewModel>();
             return searchList;
         }
-        public async Task<ManageRolesViewModel> GetUserManageMenuList(ManageRolesRequestModel manageRolesRequestModel)
+        public async Task<GetUserManageMenuModel> GetUserManageMenuList()
         {
             var forms = new ManageRolesRequestModel
             {
@@ -423,7 +423,7 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getusermanagemenulist);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            ManageRolesViewModel searchList = obj.ToObject<ManageRolesViewModel>();
+            GetUserManageMenuModel searchList = obj.ToObject<GetUserManageMenuModel>();
             return searchList;
         }
 
