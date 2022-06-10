@@ -53,7 +53,8 @@ namespace HPCL.Common.Models.ResponseModel.Cards
     {
         public Decimal CardBalance { get; set; }
         public string CardStatus { get; set; }
-        public Decimal SaleTranscationLimit { get; set; }
+        public decimal _saleTranscationLimit;
+        public Decimal SaleTranscationLimit { get { return Convert.ToDecimal(_saleTranscationLimit.ToString("0.0")); }set { _saleTranscationLimit = value; } }
         public Decimal DailySaleLimit { get; set; }
         public Decimal DailyCreditLimit { get; set; }
         public Decimal CashPurseLimit { get; set; }
