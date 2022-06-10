@@ -11,6 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.IO.Compression;
+using HPCL.Common.Models.ResponseModel.Aggregator;
+using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using System.Net.Http;
 
 namespace HPCL_Web.Controllers
 {
@@ -19,10 +25,12 @@ namespace HPCL_Web.Controllers
     {
         private readonly IFleetService _fleetService;
         private readonly ICommonActionService _commonActionService;
-        public AggregatorFleetController(IFleetService fleetService, ICommonActionService commonActionService)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public AggregatorFleetController(IFleetService fleetService, ICommonActionService commonActionService, IWebHostEnvironment hostingEnvironment)
         {
             _fleetService = fleetService;
             _commonActionService = commonActionService;
+            _hostingEnvironment = hostingEnvironment;
         }
         public IActionResult Index()
         {
@@ -70,7 +78,7 @@ namespace HPCL_Web.Controllers
             }
             return Json(lstDistrict);
         }
-      
+
         public async Task<IActionResult> UploadFleetDoc(string customerReferenceNo, string FormNumber)
         {
             UploadDoc uploadDoc = new UploadDoc();
@@ -400,10 +408,10 @@ namespace HPCL_Web.Controllers
 
             return View(modals);
         }
-    
+
         public async Task<ActionResult> VerifyorRejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark)
         {
-            var searchResult = await _fleetService.VerifyorRejectFleetCustomer(CustomerId,FormNumber,CustomerStatus, VerifyRemark);
+            var searchResult = await _fleetService.VerifyorRejectFleetCustomer(CustomerId, FormNumber, CustomerStatus, VerifyRemark);
             string succesMsg = "", errorMsg = "";
             if (searchResult.Count() > 0)
             {
@@ -413,6 +421,17 @@ namespace HPCL_Web.Controllers
                     errorMsg = searchResult[0].Reason;
             }
             return RedirectToAction("VerfiyFleetCustomer", "AggregatorFleet", new { success = succesMsg, error = errorMsg });
+        }
+
+        public async Task<JsonResult> RejectFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string VerifyRemark)
+        {
+            var searchResult = await _fleetService.VerifyorRejectFleetCustomer(CustomerId, FormNumber, CustomerStatus, VerifyRemark);
+            return Json(searchResult);
+        }
+        public async Task<JsonResult> RejectApprovalFleetCustomer(string CustomerId, string FormNumber, string CustomerStatus, string ApprovedRemark)
+        {
+            var searchResult = await _fleetService.ApproveorRejectFleetCustomer(CustomerId, FormNumber, CustomerStatus, ApprovedRemark);
+            return Json(searchResult);
         }
         public async Task<IActionResult> ApproveFleetCustomer(ValidateAggregatorCustomerModel entity, string reset, string success, string error)
         {
@@ -435,6 +454,100 @@ namespace HPCL_Web.Controllers
             }
             return RedirectToAction("ApproveFleetCustomer", "AggregatorFleet", new { success = succesMsg, error = errorMsg });
         }
+        public async Task<IActionResult> GetAggregatorFilesinVerify(string FormNumber)
+        {
+            var modals = await _fleetService.GetAggregatorFiles(FormNumber);
 
+            List<FileModel> files = new List<FileModel>();
+            List<string> downloads = new List<string>();
+            if (modals != null)
+            {
+                if (modals.Data.Count() > 0)
+                {
+                    downloads.Add(modals.Data[0].CustomerAddressProof);
+                    downloads.Add(modals.Data[0].IDProofofOwnerPartner);
+                    downloads.Add((modals.Data[0].PANCarddetails));
+                    downloads.Add(modals.Data[0].VehicleDetails);
+                    downloads.Add(modals.Data[0].SignedCustomerForm);
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                        {
+                            using (var client = new HttpClient())
+                            {
+
+                                foreach (string file in downloads)
+                                {
+                                    using (var result = await client.GetAsync(file))
+                                    {
+                                        if (result.IsSuccessStatusCode)
+                                        {
+                                            byte[] bytes = await result.Content.ReadAsByteArrayAsync();
+                                            var zipEntry = archive.CreateEntry(file,
+                                            CompressionLevel.Fastest);
+                                            using (var zipStream = zipEntry.Open())
+                                            {
+                                                zipStream.Write(bytes, 0, bytes.Length);
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        return File(ms.ToArray(), "application/zip", "Aggregator.zip");
+                    }
+                }
+            }
+            return RedirectToAction("VerfiyFleetCustomer", "AggregatorFleet", new { success = "", error = "" });
+        }
+        public async Task<IActionResult> GetAggregatorFilesinApprove(string FormNumber)
+        {
+            var modals = await _fleetService.GetAggregatorFiles(FormNumber);
+
+            List<FileModel> files = new List<FileModel>();
+            List<string> downloads = new List<string>();
+            if (modals != null)
+            {
+                if (modals.Data.Count() > 0)
+                {
+                    downloads.Add(modals.Data[0].CustomerAddressProof);
+                    downloads.Add(modals.Data[0].IDProofofOwnerPartner);
+                    downloads.Add((modals.Data[0].PANCarddetails));
+                    downloads.Add(modals.Data[0].VehicleDetails);
+                    downloads.Add(modals.Data[0].SignedCustomerForm);
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                        {
+                            using (var client = new HttpClient())
+                            {
+
+                                foreach (string file in downloads)
+                                {
+                                    var fileName = Path.GetFileName(file);
+                                    using (var result = await client.GetAsync(file))
+                                    {
+                                        if (result.IsSuccessStatusCode)
+                                        {
+                                            byte[] bytes = await result.Content.ReadAsByteArrayAsync();
+                                            var zipEntry = archive.CreateEntry(fileName,
+                                            CompressionLevel.Fastest);
+                                            using (var zipStream = zipEntry.Open())
+                                            {
+                                                zipStream.Write(bytes, 0, bytes.Length);
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        return File(ms.ToArray(), "application/zip", "Aggregator.zip");
+                    }
+                }
+            }
+            return RedirectToAction("ApproveFleetCustomer", "AggregatorFleet", new { success = "", error = "" });
+        }
     }
 }

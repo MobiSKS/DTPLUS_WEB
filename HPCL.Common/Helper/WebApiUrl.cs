@@ -187,7 +187,9 @@
         public static string getnormalfleetcustomerbyreferencenoforcustomer = "api/dtplus/aggregatorcustomer/get_aggregator_normal_fleet_customer_name_and_form_number_by_reference_no_for_customer";
         public static string approvalApproveCustomerAddressRequests = "api/dtplus/customer/approval_approve_customer_address_requests";
         public static string getaggregatorcustomernormalfleetdownloadkyc = "api/dtplus/aggregatorcustomer/get_aggregator_customer_normal_fleet_download_kyc";
-        
+        public static string requestApproveCustomerContactPersonDetails = "api/dtplus/customer/request_approve_customer_contact_person_details";
+        public static string approveCustomerContactPersonDetails = "api/dtplus/customer/approve_customer_contact_person_details";
+
         #endregion
 
         #region Login

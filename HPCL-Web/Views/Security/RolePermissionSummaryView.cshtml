@@ -1,0 +1,175 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.GetUserManageRoleModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 p-4 p-md-4">
+
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Manage Role</a> </li>
+            <li class="breadcrumb-item font-weight-light">Role Permission Summary</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Roles</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Role Name</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <label class="font-weight-normal col-md-12 col-12">@Model.RoleName</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Role Description</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <label class="font-weight-normal col-md-12 col-12">@Model.RoleDescription</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <div class="d-flex align-items-start flex-wrap">
+                            <div class="col-12 col-lg-12 px-0">
+
+                                <div class="ManageRoleArea">
+                                    <div class="panel-group" id="accordion">
+                                        @{
+                                            int i = 0, j = 0;
+                                        }
+                                        @foreach (var item in Model.Data.tblMenuDetails.Where(x => x.MenuId == x.ParentMenuId).OrderBy(x => x.MenuOrder))
+                                        {
+                                            i++;
+                                            <!-- /.panel -->
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_@i" contenteditable="false">
+                                                            <label class="form-check-label" for="inlineCheckbox1">@item.MenuName</label>
+                                                        </a>
+                                                    </h4>
+
+                                                </div>
+                                                <!--/.panel-heading -->
+                                                <div id="collapse_@i" class="panel-collapse collapse" style="">
+                                                    <div class="panel-body">
+                                                        <!-- nested -->
+                                                        <div class="panel-group" id="nested_@i">
+                                                            @foreach (var item1 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item.MenuId && x.MenuId != item.MenuId).OrderBy(x => x.MenuOrder))
+                                                            {
+                                                                j++;
+
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading">
+                                                                        <h4 class="panel-title">
+                                                                            <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" class="collapsed">
+                                                                                <label class="form-check-label" for="inlineCheckbox1">@item1.MenuName</label>
+                                                                            </a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <!--/.panel-heading -->
+                                                                    <div id="nested-collapse_@j" class="panel-collapse collapse in">
+                                                                        @foreach (var item2 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
+                                                                        {
+                                                                            <div class="panel-body">
+                                                                                <table class="table table-striped d-md-table d-block table-bordered table-responsive" style="width:100%;">
+                                                                                    <thead>
+                                                                                        <tr class="text-center" style="font-size: 16px;">
+                                                                                            <th colspan="3">Permissions</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Pages</th>
+                                                                                            <th>View</th>
+                                                                                            <th>All</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                            <td>Allow</td>
+                                                                                            <td>Allow</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>@item2.MenuName</td>
+                                                                                            @if (item2.AllowedAction == "2")
+                                                                                            {
+                                                                                                <td>
+
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" checked disabled aria-label="...">
+                                                                                                    </div>
+
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" checked disabled aria-label="...">
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                            }
+                                                                                            else if(item2.AllowedAction == "1")
+                                                                                            {
+                                                                                                  <td>
+
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" checked disabled aria-label="...">
+                                                                                                    </div>
+
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" disabled  aria-label="...">
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                            }
+                                                                                        </tr>
+
+
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        }
+                                                                        <!--/.panel-body -->
+                                                                    </div>
+                                                                    <!--/.panel-collapse -->
+                                                                </div>
+
+                                                                <!-- nested -->
+                                                                <!--/.panel-collapse -->
+                                                                <!-- /.panel -->
+                                                            }
+                                                        </div>
+                                                        <!--/.panel-body -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- /.panel-group -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
