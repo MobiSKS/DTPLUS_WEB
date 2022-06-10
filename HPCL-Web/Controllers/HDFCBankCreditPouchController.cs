@@ -78,7 +78,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatus entity)
+        public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatusClone entity)
         {
             var searchList = await _hDFCBankCreditPouchService.GetEnrollStatus(entity);
             ModelState.Clear();
