@@ -42,7 +42,7 @@
                      <div class="d-flex align-items-center flex-wrap">
                         <div class="col-lg-6 col-12">
                            <div class="d-flex align-items-center flex-wrap mb-3">
-                              <label class="font-weight-normal col-md-4 col-12">Entity Fields <sup class="text-danger">*</sup></label>
+                              <label class="font-weight-normal col-md-4 col-12">Entity Field <sup class="text-danger">*</sup></label>
                               <div class="col-md-7 col-12">
                                  <div class="custom_select">
                                     @Html.DropDownListFor(m => m.EntityFieldId, new SelectList(Model.EntityFieldMdl, "entityFieldId", "entityFieldName"), new { @class = "form-control" })
@@ -336,7 +336,7 @@
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Entity Fields");
+                    alert("Error Populating Entity Field");
                 }
             });
 
@@ -523,7 +523,7 @@
 
                 if(entityFieldId=="0")
                 {
-                    document.getElementById("EntityFieldId_error").innerHTML = "Please Select an Entity Fields";
+                    document.getElementById("EntityFieldId_error").innerHTML = "Please select an Entity Field";
                     flag="N";
                 }
                 else
@@ -681,7 +681,7 @@
 
         if(entityFieldId=="0")
         {
-            document.getElementById("EntityFieldId_error").innerHTML = "Please select an Entity Fields";
+            document.getElementById("EntityFieldId_error").innerHTML = "Please select an Entity Field";
             ret=false;
         }
         else
@@ -767,6 +767,7 @@
                 if(entityFieldId=="4")//Sales Area
                 {
                     var salesAreaID = $("#CustomerSalesAreaID").val();
+                    var selectedText = $("#CustomerSalesAreaID :selected").text()
                     if(salesAreaID=="0")
                     {
                         $("#salesArea_error").attr("style", "display:block");
@@ -775,8 +776,17 @@
                     }
                     else
                     {
-                        $("#salesArea_error").html("");
-                        document.getElementById("NewValue").value = salesAreaID;
+                        if(document.getElementById("OldValue").value==selectedText)
+                        {
+                            $("#salesArea_error").attr("style", "display:block");
+                            $("#salesArea_error").html("New Value cannot be same as Old Value");
+                            ret=false;
+                        }
+                        else
+                        {
+                            $("#salesArea_error").html("");
+                            document.getElementById("NewValue").value = salesAreaID;
+                        }
                     }
                 }
                 else
@@ -784,25 +794,35 @@
                     if(document.getElementById("NewValue").value.trim()=="")
                     {
                         $("#NewValueErrorMsg").attr("style", "display:block");
-                        $("#NewValueErrorMsg").html("Please enter value");
+                        $("#NewValueErrorMsg").html("Please enter Value");
                         ret=false;
                     }
                     else if (!isNaN(document.getElementById("NewValue").value.trim())) 
                     {
                       $("#NewValueErrorMsg").attr("style", "display:block");
-                      $("#NewValueErrorMsg").html("Invalid value");
+                      $("#NewValueErrorMsg").html("Invalid Value");
                       return false;
                     }
                     else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
                     {
                         $("#NewValueErrorMsg").attr("style", "display:block");
-                        $("#NewValueErrorMsg").html("Invalid value");
+                        $("#NewValueErrorMsg").html("Invalid Value");
                         ret=false;
                     }
                     else
                     {
-                        $("#NewValueErrorMsg").html("");
+                        if(document.getElementById("OldValue").value==document.getElementById("NewValue").value)
+                        {
+                            $("#NewValueErrorMsg").attr("style", "display:block");
+                            $("#NewValueErrorMsg").html("New Value cannot be same as Old Value");
+                            ret=false;
+                        }
+                        else
+                        {
+                            $("#NewValueErrorMsg").html("");
+                        }
                     }
+                    
                 }
             }
             else if(entityTypeId=="2")//Merchant
@@ -810,6 +830,7 @@
                 if(entityFieldId=="6")//Outlet Type
                 {
                     var merchantTypeId = $("#MerchantTypeId").val();
+                    var selectedText = $("#MerchantTypeId :selected").text()
                     if(merchantTypeId=="0")
                     {
                         $("#merchantType_error").attr("style", "display:block");
@@ -818,13 +839,23 @@
                     }
                     else
                     {
-                        $("#merchantType_error").html("");
-                        document.getElementById("NewValue").value = merchantTypeId;
+                        if(document.getElementById("OldValue").value==selectedText)
+                        {
+                            $("#merchantType_error").attr("style", "display:block");
+                            $("#merchantType_error").html("New Value cannot be same as Old Value");
+                            ret=false;
+                        }
+                        else
+                        {
+                            $("#merchantType_error").html("");
+                            document.getElementById("NewValue").value = merchantTypeId;
+                        }
                     }
                 }
                 else if(entityFieldId=="7")//Sales Area
                 {
                     var salesAreaID = $("#CustomerSalesAreaID").val();
+                    var selectedText = $("#CustomerSalesAreaID :selected").text()
                     if(salesAreaID=="0")
                     {
                         $("#salesArea_error").attr("style", "display:block");
@@ -833,8 +864,17 @@
                     }
                     else
                     {
-                        $("#salesArea_error").html("");
-                        document.getElementById("NewValue").value = salesAreaID;
+                        if(document.getElementById("OldValue").value==selectedText)
+                        {
+                            $("#salesArea_error").attr("style", "display:block");
+                            $("#salesArea_error").html("New Value cannot be same as Old Value");
+                            ret=false;
+                        }
+                        else
+                        {
+                            $("#salesArea_error").html("");
+                            document.getElementById("NewValue").value = salesAreaID;
+                        }
                     }
                 }
                 else
@@ -842,25 +882,35 @@
                     if(document.getElementById("NewValue").value.trim()=="")
                     {
                         $("#NewValueErrorMsg").attr("style", "display:block");
-                        $("#NewValueErrorMsg").html("Please enter value");
+                        $("#NewValueErrorMsg").html("Please enter Value");
                         ret=false;
                     }
                     else if (!isNaN(document.getElementById("NewValue").value.trim())) 
                     {
                       $("#NewValueErrorMsg").attr("style", "display:block");
-                      $("#NewValueErrorMsg").html("Invalid value");
+                      $("#NewValueErrorMsg").html("Invalid Value");
                       return false;
                     }
                     else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
                     {
                         $("#NewValueErrorMsg").attr("style", "display:block");
-                        $("#NewValueErrorMsg").html("Invalid value");
+                        $("#NewValueErrorMsg").html("Invalid Value");
                         ret=false;
                     }
                     else
                     {
-                        $("#NewValueErrorMsg").html("");
+                        if(document.getElementById("OldValue").value==document.getElementById("NewValue").value)
+                        {
+                            $("#NewValueErrorMsg").attr("style", "display:block");
+                            $("#NewValueErrorMsg").html("New Value cannot be same as Old Value");
+                            ret=false;
+                        }
+                        else
+                        {
+                            $("#NewValueErrorMsg").html("");
+                        }
                     }
+                    
                 }
             }
             else if(entityTypeId=="3")//Card
@@ -868,24 +918,33 @@
                 if(document.getElementById("NewValue").value.trim()=="")
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Please enter value");
+                    $("#NewValueErrorMsg").html("Please enter Value");
                     ret=false;
                 }
                 else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Invalid value");
+                    $("#NewValueErrorMsg").html("Invalid Value");
                     ret=false;
                 }
                 else
                 {
-                    $("#NewValueErrorMsg").html("");
+                    if(document.getElementById("OldValue").value==document.getElementById("NewValue").value)
+                    {
+                        $("#NewValueErrorMsg").attr("style", "display:block");
+                        $("#NewValueErrorMsg").html("New Value cannot be same as Old Value");
+                        ret=false;
+                    }
+                    else
+                    {
+                        $("#NewValueErrorMsg").html("");
+                    }
                 }
+                    
             }
 
         }
-
-   
+  
      return ret;
    }
 
@@ -903,19 +962,19 @@
                 if(document.getElementById("NewValue").value.trim()=="")
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Please enter value");
+                    $("#NewValueErrorMsg").html("Please enter Value");
                     return false;
                 }
                 else if (!isNaN(document.getElementById("NewValue").value.trim())) 
                 {
                   $("#NewValueErrorMsg").attr("style", "display:block");
-                  $("#NewValueErrorMsg").html("Invalid value");
+                  $("#NewValueErrorMsg").html("Invalid Value");
                   return false;
                 }
                 else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Invalid value");
+                    $("#NewValueErrorMsg").html("Invalid Value");
                     return false;
                 }
                 else
@@ -931,19 +990,19 @@
                 if(document.getElementById("NewValue").value.trim()=="")
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Please enter value");
+                    $("#NewValueErrorMsg").html("Please enter Value");
                     ret=false;
                 }
                 else if (!isNaN(document.getElementById("NewValue").value.trim())) 
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Invalid value");
+                    $("#NewValueErrorMsg").html("Invalid Value");
                     return false;
                 }
                 else if (!document.getElementById("NewValue").value.trim().match(nameWithSpaceCheck)) 
                 {
                     $("#NewValueErrorMsg").attr("style", "display:block");
-                    $("#NewValueErrorMsg").html("Invalid value");
+                    $("#NewValueErrorMsg").html("Invalid Value");
                     ret=false;
                 }
                 else
@@ -957,13 +1016,13 @@
             if(document.getElementById("NewValue").value.trim()=="")
             {
                 $("#NewValueErrorMsg").attr("style", "display:block");
-                $("#NewValueErrorMsg").html("Please enter value");
+                $("#NewValueErrorMsg").html("Please enter Value");
                 return false;
             }
             else if (!document.getElementById("NewValue").value.trim().match(forVehicleNo)) 
             {
                 $("#NewValueErrorMsg").attr("style", "display:block");
-                $("#NewValueErrorMsg").html("Invalid value");
+                $("#NewValueErrorMsg").html("Invalid Value");
                 return false;
             }
             else
