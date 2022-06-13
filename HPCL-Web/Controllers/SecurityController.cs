@@ -186,10 +186,12 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> DeleteRoleRow(string RoleName,string RoleDescription)
         {
             ManageRolesRequestModel manageRolesRequestModel = new ManageRolesRequestModel();
-            List<DeleteRoleModel> roleModel = new List<DeleteRoleModel>();
-            roleModel[0].RoleDescription = RoleDescription;
-            roleModel[0].RoleDescription = RoleName;
-            manageRolesRequestModel.TypeRoleNameAndRoleDescriptionMapping = roleModel;
+            List<DeleteRoleModel> roleModelList = new List<DeleteRoleModel>();
+            DeleteRoleModel deleteRoleModel = new DeleteRoleModel();
+            deleteRoleModel.RoleDescription = RoleDescription;
+            deleteRoleModel.RoleName = RoleName;
+            roleModelList.Add(deleteRoleModel);
+            manageRolesRequestModel.TypeRoleNameAndRoleDescriptionMapping = roleModelList;
             var result = await _securityService.DeleteRoles(manageRolesRequestModel);
             string succesMsg = "", errorMsg = "";
             if (result[0].Status == 1)
