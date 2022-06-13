@@ -427,7 +427,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<List<SuccessResponse>> DeleteRoles(ManageRolesRequestModel manageRolesRequestModel)
+        public async Task<List<SuccessResponse>> DeleteRoles([FromBody] ManageRolesRequestModel manageRolesRequestModel)
         {
 
             var forms = new ManageRolesRequestModel
@@ -470,7 +470,7 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg;
         }
-        public async Task<List<SuccessResponse>> InsertManageRole(ManageRolesRequestModel manageRolesRequestModel)
+        public async Task<List<SuccessResponse>> InsertManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel)
         {
 
             var forms = new ManageRolesRequestModel
@@ -478,9 +478,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                MainLevelId = manageRolesRequestModel.MainLevelId,
-                SubLevelId = manageRolesRequestModel.SubLevelId,
-                SubLevelName = manageRolesRequestModel.SubLevelName,
+                RoleName = manageRolesRequestModel.RoleName,
                 RoleDescription = manageRolesRequestModel.RoleDescription,
                 TypeInsertAddManageUsers = manageRolesRequestModel.TypeInsertAddManageUsers
             };

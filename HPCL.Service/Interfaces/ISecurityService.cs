@@ -26,8 +26,8 @@ namespace HPCL.Service.Interfaces
         Task<GetUserManageRoleModel> GetUserManageRoleList(string RoleId);
         Task<ManageRolesViewModel> SelectUserManageRolesRequest(ManageRolesRequestModel manageRolesRequestModel);
         Task<GetUserManageMenuModel> GetUserManageMenuList();
-        Task<List<SuccessResponse>> DeleteRoles(ManageRolesRequestModel manageRolesRequestModel);
+        Task<List<SuccessResponse>> DeleteRoles([FromBody] ManageRolesRequestModel manageRolesRequestModel);
         Task<List<SuccessResponse>> UpdateManageRole(ManageRolesRequestModel manageRolesRequestModel);
-        Task<List<SuccessResponse>> InsertManageRole(ManageRolesRequestModel manageRolesRequestModel);
+        Task<List<SuccessResponse>> InsertManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel);
     }
 }

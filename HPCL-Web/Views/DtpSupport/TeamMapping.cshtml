@@ -113,11 +113,14 @@
                                     <div class="px-2">
                                         <button class="btn btn_primary teamSearch" type="submit" id="btnSearch">SEARCH</button>
                                     </div>
-                                    <div class="px-2">
+                                    <div class="px-2 teamSearch">
                                         <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("TeamMapping", "DtpSupport", new { reset="Y" })'">RESET</button>
                                     </div>
                                     <div class="px-2 teamAdd" style="display:none;">
-                                        <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("TeamMapping", "DtpSupport")'" ,id="btnSearch">SEARCH</button>
+                                        <button class="btn btn_primary" type="button" id="btnResetAdd">RESET</button>
+                                    </div>
+                                    <div class="px-2 teamAdd" style="display:none;">
+                                        <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("TeamMapping", "DtpSupport")'" >SEARCH</button>
                                     </div>
                                 </div>
 
@@ -138,7 +141,7 @@
                 <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="TeamMapSearch">
                     <thead style="background-color:lightgray;">
                         <tr>
-                            <th style="display:none">Sl No.</th>
+                            <th>S.No.</th>
                             <th>ZBM ID</th>
                             <th>ZBM Name</th>
                             <th>RSM ID</th>
@@ -160,7 +163,7 @@
                             i = i + 1;
 
                             <tr>
-                                <td style="display:none" >@i</td>
+                                <td>@i</td>
                                 <td class="editCell" id="tdZBMId">@item.ZBMId</td>
                                 <td class="editCell" id="tdZBMName">@item.ZBMName</td>
                                 <td class="editCell" id="tdRSMId">@item.RSMId</td>
@@ -188,7 +191,7 @@
             }
             else
             {
-                <div class="mb-3 text-center alert alert-danger">
+                <div class="mb-3 text-center alert alert-danger" id="divMsg">
                     @Model.Message
                 </div>
             }
@@ -227,7 +230,105 @@
             $("label.teamAddlbl").removeClass("Required");
         }
     });
-
+    
+     
+     $("#btnSearch").on("click",(function(e){
+         var flag="Y";
+        
+        if($("#ZBMID").val().trim()!=""){
+            if(!($("#ZBMID").val().match(nameWithNumCheck))){
+                $("#ZBMId_error").html("ZBM ID is Invalid");
+                $("#ZBMId_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#ZBMID").val().match(onlyNumbers)){
+                $("#ZBMId_error").html("ZBM ID is Invalid");
+                $("#ZBMId_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+     
+        if($("#ZBMName").val().trim()!=""){
+            if(!($("#ZBMName").val().match(nameWithNumCheck))){
+                $("#ZBMName_error").html("ZBM Name is Invalid");
+                $("#ZBMName_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#ZBMName").val().match(onlyNumbers)){
+                $("#ZBMName_error").html("ZBM Name is Invalid");
+                $("#ZBMName_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+        
+        if($("#RSMID").val().trim()!=""){
+            if(!($("#RSMID").val().match(nameWithNumCheck))){
+                $("#RSMId_error").html("RSM ID is Invalid");
+                $("#RSMId_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#RSMID").val().match(onlyNumbers)){
+                $("#RSMId_error").html("RSM ID is Invalid");
+                $("#RSMId_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+     
+        if($("#RSMName").val().trim()!=""){
+            if(!($("#RSMName").val().match(nameWithNumCheck))){
+                $("#RSMName_error").html("RSM Name is Invalid");
+                $("#RSMName_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#RSMName").val().match(onlyNumbers)){
+                $("#RSMName_error").html("RSM Name is Invalid");
+                $("#RSMName_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+        
+        if($("#RBEID").val().trim()!=""){
+            if(!($("#RBEID").val().match(nameWithNumCheck))){
+                $("#RBEId_error").html("RBE ID is Invalid");
+                $("#RBEId_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#RBEID").val().match(onlyNumbers)){
+                $("#RBEId_error").html("RBE ID is Invalid");
+                $("#RBEId_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+        
+        if($("#RBEName").val().trim()!=""){
+            if(!($("#RBEName").val().match(nameWithNumCheck))){
+                $("#RBEName_error").html("RBE Name is Invalid");
+                $("#RBEName_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#RBEName").val().match(onlyNumbers)){
+                $("#RBEName_error").html("RBE Name is Invalid");
+                $("#RBEName_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+      
+        if($("#Location").val().trim()!=""){
+            if(!($("#Location").val().match(nameWithNumCheck))){
+                $("#Location_error").html("Location is Invalid");
+                $("#Location_error").attr("style","display:block");
+                flag="N";
+            }
+            else if($("#Location").val().match(onlyNumbers)){
+                $("#Location_error").html("Location is Invalid");
+                $("#Location_error").attr("style","display:block");
+                flag="N";
+            }
+        }
+        if(flag=="N"){
+            e.preventDefault();
+        }
+     }));
      $("#AddRecord").click(function(){
          if(!$("label.teamAddlbl").hasClass("Required")){
             $("label.teamAddlbl").addClass("Required");
@@ -239,7 +340,25 @@
         $("p.teamAdd").attr("style","display:block;border-bottom:1px solid #ccc;");
 
         $("#Status").val("ADD");
+        $("#ZBMID").val("");
+        $("#ZBMName").val("");
+        $("#RSMName").val("");
+        $("#RBEID").val("");
+        $("#RBEName").val("");
+        $("#Location").val("");
+        $("#RSMID").val("");
+        $("#divMsg").html("");
+        $("#divMsg").attr("style","display:none");
     });
+    $("#btnResetAdd").on("click",(function(e){
+        $("#ZBMID").val("");
+        $("#ZBMName").val("");
+        $("#RSMName").val("");
+        $("#RBEID").val("");
+        $("#RBEName").val("");
+        $("#Location").val("");
+        $("#RSMID").val("");
+    }));
     $("#btnAdd").click(function(){
         var flag = "Y";
         //debugger;
