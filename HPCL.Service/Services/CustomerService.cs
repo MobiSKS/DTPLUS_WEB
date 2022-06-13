@@ -1771,11 +1771,11 @@ namespace HPCL.Service.Services
                             custMdl.KeyOffFaxPart2 = custMdl.Fax;
                         }
                     }
-                    if (custMdl.DateOfBirth.Contains("1900"))
+                    if (!string.IsNullOrEmpty(custMdl.DateOfBirth) && custMdl.DateOfBirth.Contains("1900"))
                     {
                         custMdl.DateOfBirth = "";
                     }
-                    if (custMdl.DateofAnniversary.Contains("1900"))
+                    if (!string.IsNullOrEmpty(custMdl.DateofAnniversary) && custMdl.DateofAnniversary.Contains("1900"))
                     {
                         custMdl.DateofAnniversary = "";
                     }
