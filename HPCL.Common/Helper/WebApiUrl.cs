@@ -77,6 +77,9 @@
         public static string GetDetailForEnableDisableProductsAndTransactions = "api/dtplus/card/get_detail_for_enable_disable_products_and_transactions";
         public static string EnableDisableProductsAndTransactions = "api/dtplus/card/enable_disable_products_and_transactions";
         public static string GetCreditPouchStatusUrl = "api/dtplus/settings/get_cp_statusName";
+        public static string bindPendingCustomerForAddOnCardApproval = "api/dtplus/card/bind_pending_customer_for_add_on_card_approval";
+        public static string getCardDetailForAddOnCardApproval = "api/dtplus/card/get_card_detail_for_add_on_card_approval";
+        public static string approveRejectAddOnCard = "api/dtplus/card/approve_reject_add_on_card";
         #endregion
 
         #region Merchant
