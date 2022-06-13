@@ -246,6 +246,13 @@
 
             for (var i = 0; i < res.searchList.data.length; i++) {
 
+                var isDts;
+                if(((res.searchList.data[i].requestedDate) == "01-01-0001 00:00:00") || ((res.searchList.data[i].requestedDate) == "01-01-1900 00:00:00") || ((res.searchList.data[i].requestedDate) == null)){
+                    isDts = "";
+                }else{
+                    isDts = moment(res.searchList.data[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                }
+
                 var srNumber = (i + 1);
                 var checkBx = "<input type='checkbox' class='checkRow' name='checkRowName'>";
                 var referenceNo = (res.searchList.data[i].referenceNo || '');
@@ -253,9 +260,9 @@
                 var ro =  (res.searchList.data[i].ro || '');
                 var customerId = (res.searchList.data[i].customerId);
                 var customerName = (res.searchList.data[i].customerName);
-                var planName = "";
+                var planName = (res.searchList.data[i].planName);
                 var requestedBy = (res.searchList.data[i].requestedBy);
-                var requestNo = (res.searchList.data[i].requestNo);
+                var requestedDate = isDts;
                 var status = (res.searchList.data[i].actionStatus);
                 var remarks = "<textarea class='form-control'></textarea>";
                 var action = "<select class='form-control'><option value='1'>Submit for final Approval</option><option value='2'>Submit for final Rejection</option></select>";
@@ -270,7 +277,7 @@
                     customerName,
                     planName,
                     requestedBy,
-                    requestNo,
+                    requestedDate,
                     status,
                     remarks,
                     action
