@@ -1,0 +1,384 @@
+﻿@model HPCL.Common.Models.ViewModel.ValidateAddOnCards.ValidateAddOnCardsModel
+@{
+    ViewData["Title"] = "Details";
+    PagerModel pager = new PagerModel();
+    int pageNo = 0;
+
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="bg-white p-2 p-md-4 w-100">
+    <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Enrollments")" class="text_primary">Enrollments</a> </li>
+        <li class="breadcrumb-item font-weight-light">Validate Add-On Cards</li>
+    </ul>
+    <div id="reason" class="mb-3 text-center alert alert-success" style="display:none"></div>
+    <div id="dvFailure" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+    {
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="w-100">
+                    <div class="border-1 rounded border-grey mb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Validate Add-On Cards</p>
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 pt-3">
+                            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Form Number</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control" , maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off"})
+                                            </div>
+                                            <span class="error" id="formNo_error"></span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">State</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.StateId, new SelectList(Model.States, "StateID", "StateName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="state_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">From Date</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">To Date</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Customer Name</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", maxlength = "50" })
+                                            </div>
+                                            <span class="error" id="Customer_error"></span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-5 col-12 mb-3">Created By</label>
+                                        <div class="col-md-7 col-12 mb-3">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CreatedBy, new SelectList(Model.OfficerTypeMdl, "OfficerTypeID", "OfficerTypeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" style="font-size: 14px; color: #dc3545 !important " id="toDate"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 px-4 w-100 mb-3">
+                            <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                <button class="btn btn_primary py-2 px-4" id="btnSearch" type="submit">Search</button>
+                            </div>
+                            <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                <button class="btn btn_primary py-2 px-4" type="button" onclick="location.href='@Url.Action("Details", "ValidateAddOnCards", new { reset="Y" })'">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    }
+    @if (ViewBag.Reset == "")
+    {
+        <div id="show_Table" class="toBeHiddenOnSuccess">
+            @if (Model.NewCardsLists.Count() > 0)
+            {
+                <table class="table table-striped d-md-table d-block table-bordered table-responsive mt-3" id="merchantApprovalDetails">
+                    <thead style="background-color:lightgray;">
+                        <tr>
+                            <th style="width:5%;">S.No.</th>
+                            <th style="width:10%;">Customer Ref. No.</th>
+                            <th style="width:10%;">Form No.</th>
+                            <th style="width:10%;">Customer ID</th>
+                            <th style="width:20%;">Customer Name</th>
+                            <th style="width:5%;">Total Cards</th>
+                            <th style="width:10%;">Role Name</th>
+                            <th style="width:10%;">Created By</th>
+                            <th style="width:10%;">Created Date</th>
+                            <th>Mobile No.</th>
+                            <th style="width:20%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchMerchantTableBody">
+                        @{
+                            int y = 0;
+                        }
+                        @foreach (var item in Model.NewCardsLists)
+                        {
+                            y = y + 1;
+                            <tr>
+                                <td>@y</td>
+                                <td>@item.CustomerReferenceNo</td>
+                                <td>@item.FormNumber</td>
+                                <td>@(item.CustomerID=="0"?"":item.CustomerID)</td>
+                                <td>@item.CustomerName</td>
+                                <td>@(item.TotalCards=="0"?"":item.TotalCards)</td>
+                                <td>@item.CreatedRoleName</td>
+                                <td>@item.CreatedBy</td>
+                                <td>@item.CreatedDate</td>
+                                <td>@item.MobileNo</td>
+                                @{
+                                    if (@item.Action == "Validate")
+                                    {
+                                        <td><a href="#" onclick="statusAction(@item.CustomerReferenceNo,@item.CustomerType)">@item.Action</a></td>
+                                    }else
+                                    {
+                                        <td><a href="#">@item.Action</a></td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="container">
+                    @if (pager.TotalPages > 0)
+                    {
+                        <ul class="pagination justify-content-end">
+                            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                            {
+                                <li class="page-item @(pge == pager.CurrentPage ? " active" : "" )">
+                                    <a class="page-link" asp-controller="Merchant" asp-action="VerifyMerchant" asp-route-pg="@pge">@pge</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+            else
+            {
+
+                <div class="mb-3 text-center alert alert-danger">
+                    No Record Found
+                </div>
+
+            }
+        </div>
+    }
+
+<div id="vehicleDetails" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+
+    function clearDetails() {
+        document.getElementById("vehicleDetails").innerHTML = "";
+        document.getElementById("show_Table").innerHTML = "";
+        $("#FormNumber").val("");
+        $("#CustomerName").val("");
+        $("#StateId").val("0");
+        $("#CreatedBy").val("0");
+        $("#FromDate").val("");
+        $("#ToDate").val("");
+        $("#CreatedBy")[0].sumo.reload();
+        $("#StateId")[0].sumo.reload();
+         $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
+    };
+
+    function statusAction(CustomerRefNum,customerType) {
+        var id = CustomerRefNum;
+        var type=customerType;
+
+        document.getElementById("dvFailure").style.display = "none";
+        document.getElementById("dvFailure").innerHTML="";
+
+        $.ajax({
+            type: 'GET',  // http method
+            url: '@Url.Action("GetCardDetailsForApproval", "ValidateAddOnCards")',
+            contentType: "application/json; charset=utf-8",
+            data: { CustomerRefNo: id ,CustomerType:type},  // data to submit
+            dataType: "text",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') 
+                {
+                    $("#vehicleDetails").html(data);
+                    $('html, body').animate({
+                        scrollTop: $("#vehicleDetails").offset().top
+                    }, 2000);
+                    console.log(customerType);
+                    if(customerType==902 || customerType==917)
+                    {
+                      document.getElementById("NoOfCardsTbl").className="datatable table table-striped table-bordered w-50 d-md-table b-block text-nowrap display table-responsive";
+                    }
+                    else
+                    {
+                      document.getElementById("NoOfCardsTbl").className="datatable table table-striped table-bordered w-100 d-md-table b-block text-nowrap display table-responsive";
+                    }
+                }
+                else 
+                {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Sales Area Data");
+            }
+        });
+    };
+    $("#FormNumber").on("blur", function () {
+         var FormNumber = $("#FormNumber").val();
+         if (FormNumber != "") {
+             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" )){
+                 $("#formNo_error").attr("style", "display:block");
+                 $("#formNo_error").html("Invalid Form Number");
+             }
+             else{
+                 $("#formNo_error").attr("style", "display:none");
+                 $("#formNo_error").html("");
+             }
+         }
+         else{
+             $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
+         }
+     });
+       $("#btnSearch").on("click", (function (e) {
+           var flag="Y";
+         var FormNumber = $("#FormNumber").val();
+           var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+         if (FormNumber != "") 
+         {
+             if (!(FormNumber.match(number)) ||(FormNumber.length<10) ||(FormNumber.substring(0,1)=="0" ))
+             {
+                 $("#formNo_error").attr("style", "display:block");
+                 $("#formNo_error").html("Invalid Form Number");
+                 flag="N";
+             }
+             else
+             {
+                 $("#formNo_error").attr("style", "display:none");
+                 $("#formNo_error").html("");
+             }
+         }
+         else
+         {
+             $("#formNo_error").attr("style", "display:none");
+             $("#formNo_error").html("");
+         }
+
+        var customerName = document.getElementById("CustomerName").value.trim();
+        if (customerName != "") 
+        {
+            if (!isNaN(customerName)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                flag="N";
+            }
+            else if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                flag="N";
+            }
+            else 
+            {
+                document.getElementById("Customer_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("Customer_error").innerHTML = "";
+        }
+
+        document.getElementById("dvFailure").style.display = "none";
+        document.getElementById("dvFailure").innerHTML="";
+
+         if (flag == "N")
+             e.preventDefault();
+
+     })
+     );
+
+     $("#CustomerName").on("blur", function () 
+     {
+        debugger;
+        var customerName = document.getElementById("CustomerName").value.trim();
+        if (customerName != "") 
+        {
+            if (!isNaN(customerName)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                document.getElementById("Customer_error").innerHTML = "Invalid Customer Name";
+                return false;
+            }
+            else 
+            {
+                document.getElementById("Customer_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("Customer_error").innerHTML = "";
+        }
+
+     });     
+
+$("#merchantApprovalDetails").on('page.dt', function () 
+{
+    //debugger;
+    document.getElementById("vehicleDetails").innerHTML="";
+});
+
+$("#merchantApprovalDetails").on('length.dt', function () 
+{
+    //debugger;
+    document.getElementById("vehicleDetails").innerHTML="";
+});
+</script>
