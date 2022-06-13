@@ -9,7 +9,8 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Manage Role</a> </li>
             <li class="breadcrumb-item font-weight-light">Add Role and Permissions</li>
         </ul>
-        <form>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
+        <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -85,10 +86,10 @@
                                                                         </h4>
                                                                     </div>
                                                                     <!--/.panel-heading -->
-                                                            <div id="nested-collapse_@j" class="panel-collapse collapse in">
+                                                                    <div id="nested-collapse_@j" class="panel-collapse collapse in">
 
                                                                         <div class="panel-body">
-                                                                            <table class="table table-striped d-md-table d-block table-bordered table-responsive" style="width:100%;">
+                                                                            <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
                                                                                 <thead>
                                                                                     <tr class="text-center" style="font-size: 16px;">
                                                                                         <th colspan="3">Permissions</th>
@@ -97,6 +98,10 @@
                                                                                         <th>Pages</th>
                                                                                         <th>View</th>
                                                                                         <th>All</th>
+                                                                                        <th >MainLevelId</th>
+                                                                                        <th >SubLevelID</th>
+                                                                                        <th >SubLevelname</th>
+                                                                                        <th >Menu ID</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -104,6 +109,10 @@
                                                                                         <td></td>
                                                                                         <td>Allow</td>
                                                                                         <td>Allow</td>
+                                                                                        <td >MainLevelId</td>
+                                                                                        <td >SubLevelID</td>
+                                                                                        <td >SubLevelname</td>
+                                                                                        <td >Menu ID</td>
                                                                                     </tr>
                                                                                     @foreach (var item2 in Model.Data.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
                                                                                     {
@@ -113,15 +122,19 @@
                                                                                             <td>
 
                                                                                                 <div class="form-check">
-                                                                                                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" value="1" aria-label="...">
                                                                                                 </div>
 
                                                                                             </td>
                                                                                             <td>
                                                                                                 <div class="form-check">
-                                                                                                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" value="2" aria-label="...">
                                                                                                 </div>
                                                                                             </td>
+                                                                                            <td >@item.MenuId</td>@*Parent ID*@
+                                                                                            <td >@item1.MenuId</td> @*Sublevel ID*@
+                                                                                            <td >@item1.MenuName</td> @*subLevelName*@
+                                                                                            <td >@item2.MenuId</td> @*Menu ID*@
 
                                                                                         </tr>
                                                                                     }
@@ -131,21 +144,22 @@
                                                                         </div>
 
                                                                         <!--/.panel-body -->
-                                                            </div>
+                                                                    </div>
                                                                     <!--/.panel-collapse -->
-                                                        </div>
+                                                                </div>
 
                                                                 <!-- nested -->
                                                                 <!--/.panel-collapse -->
                                                                 <!-- /.panel -->
                                                             }
+                                                            
                                                         </div>
                                                         <!--/.panel-body -->
                                                 </div>
                                                 </div>
                                             </div>
                                         }
-
+                                        <input type="hidden" id="tblCount" value=@j>
                                         <!-- /.panel-group -->
                                     </div>
                                 </div>
@@ -154,26 +168,35 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" onclick="SavePermissions();">SAVE ALL</button>
+                    </div>
+
+                </div>
             </div>
         </form>
         <div class="clearfix"></div>
     </div>
 </div>
 <script type="text/javascript">
-    $(".ManageRoleArea").on("click",(function(e){
+    $("#menuArea").on("click",(function(e){
 
         var roleName=$("#RoleName").val();
         var roleDescription=$("#txtRoleDescription").val();
         if(roleName.trim()==""){
             $("#roleName_error").html("Role Name is required");
             $("#roleName_error").attr("style","display:block");
+            if(!($("#menuArea").hasClass("disable"))){
+                $("#menuArea").addClass("disable");
+            }
         }
         else{
 
             $("#roleName_error").html("");
             $("#roleName_error").attr("style","display:none");
-            if($(".ManageRoleArea").hasClass("disable"){
-                $(".ManageRoleArea").removeClass("disable");
+            if($("#menuArea").hasClass("disable")){
+                $("#menuArea").removeClass("disable");
             }
         }
     }));
@@ -182,16 +205,85 @@
          if(roleName.trim()==""){
             $("#roleName_error").html("Role Name is required");
             $("#roleName_error").attr("style","display:block");
-            if(!$(".ManageRoleArea").hasClass("disable"){
-                $(".ManageRoleArea").addClass("disable");
+            if(!($("#menuArea").hasClass("disable"))){
+                $("#menuArea").addClass("disable");
             }
         }
         else{
             $("#roleName_error").html("");
             $("#roleName_error").attr("style","display:none");
-            if($(".ManageRoleArea").hasClass("disable"){
-                $(".ManageRoleArea").removeClass("disable");
+            if($("#menuArea").hasClass("disable")){
+                $("#menuArea").removeClass("disable");
             }
         }
     });
+     function SavePermissions() {
+
+        menuDetail = [];
+        var flag="Y";
+        var count=$("#tblCount").val();
+        if(count>0){
+            for(var i=0;i<count;i++){
+                //var table=$("#Permissiontable_"i);
+                
+                 $("#Permissiontable_"+i+" tbody tr").each(function () {
+
+                         var row = $(this);
+                        if(row[0].rowIndex>2){
+                             
+                             var menuId = row[0].cells[6].textContent;
+                             var allowedAction="0";
+                             
+                             if(row.find('input[name=chkView_'+menuId+']').is(":checked"))
+                                allowedAction="1";
+                             if(row.find('input[name=chkAll_'+menuId+']').is(":checked"))
+                                allowedAction="2";
+                      
+                             menuDetail.push({ MenuId: menuId, AllowedAction: allowedAction });
+                         }
+
+                    
+                 });
+            }
+            console.log(menuDetail);
+        }
+         var roleName=$("#RoleName").val();
+        var roleDescription=$("#txtRoleDescription").val();
+        if(roleName.trim()==""){
+              $("#roleName_error").html("Role Name is required");
+            $("#roleName_error").attr("style","display:block");
+            if(!($("#menuArea").hasClass("disable"))){
+                $("#menuArea").addClass("disable");
+            }
+            flag="N";
+        }
+        if (flag == "Y") {
+                var reqModel = { RoleName: roleName, RoleDescription: roleDescription, TypeInsertAddManageUsers: menuDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("InsertManageRole", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(reqModel),
+                    success: function (data) {
+                       if(data.length>0){
+                            if(data[0].status=="0")
+                                $("#reason").addClass("alert-danger");
+                            else
+                                $("#reason").addClass("alert-success");
+                            $("#reason").html(data[0].reason);
+                            $("#reason").attr("style","display:block");
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            
+        }
+
+
+    };
 </script>
