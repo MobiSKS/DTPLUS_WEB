@@ -116,8 +116,10 @@ namespace HPCL_Web.Controllers
                             Random rnd = new Random();
                             int num = rnd.Next();
 
-                            if (!SessionMenuModel.sessionList.Any(a => a.UserID == user.UserId))
-                            {
+                            //if (!SessionMenuModel.sessionList.Any(a => a.UserID == user.UserId))
+                            //{
+                                SessionMenuModel.sessionList.RemoveAll(x => x.UserID == user.UserId);
+
                                 List<SessionDataModelDetails> sessionData = new List<SessionDataModelDetails>
                                 {
                                     new SessionDataModelDetails { UserID = user.UserId, LocalStorage = num.ToString(),
@@ -133,7 +135,7 @@ namespace HPCL_Web.Controllers
                                 };
 
                                 SessionMenuModel.sessionList.AddRange(sessionData);
-                            }
+                            //}
 
                             HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);

@@ -61,7 +61,7 @@ namespace HPCL.Common.Helper
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary
                                     {
-                                        { "action", "Index" },
+                                        { "action", "Logout" },
                                         { "controller", "Home" },
                                         { "returnUrl", "~/Home/Logout"}
                                     });
