@@ -155,7 +155,7 @@
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">Please Enter OTP <sup class="text-danger">*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" id="findOtp" maxlength="6" onchange="otpOnChange(this)">
+                        <input type="text" class="form-control" id="findOtp" maxlength="6"  onkeypress="return isNumberKey(event)" onchange="otpOnChange(this)">
                         <span style="display:none" class="error" id="otp_error"></span>
                         <p class="text-danger text-left mb-0" id="otpResErr"></p>
                     </div>
@@ -217,6 +217,18 @@
 
 
 <script>
+
+    $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    });
 
     function resetClick() {
         window.location.reload(true);
@@ -502,7 +514,7 @@
 
         if(otpGet.trim() ==''){
             $("#otp_error").attr("style", "display:block");
-            $("#otp_error").html("Please Enter OTP");
+            $("#otp_error").html("Please enter OTP");
             flag = "N";
         }
         if(otpGet.trim()!=''){

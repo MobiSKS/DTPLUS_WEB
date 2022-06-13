@@ -777,5 +777,17 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
+        public async Task<ActionResult> GetCustomerOldAndNewAddressList(string CustomerId)
+        {
+            var model = await _customerService.GetCustomerOldAndNewAddressList(CustomerId);
+
+            return PartialView("~/Views/Customer/_ViewCustomerOldNewAddressTbl.cshtml", model);
+        }
+        public async Task<ActionResult> GetCustomerOldAndNewContactPersonList(string CustomerId)
+        {
+            var model = await _customerService.GetCustomerOldAndNewContactPersonList(CustomerId);
+
+            return PartialView("~/Views/Customer/_ViewCustomerOldNewContactPersonDetailsTbl.cshtml", model);
+        }
     }
 }

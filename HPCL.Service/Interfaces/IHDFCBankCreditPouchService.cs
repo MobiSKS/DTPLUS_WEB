@@ -12,7 +12,7 @@ namespace HPCL.Service.Interfaces
         Task<GetPlanRes> GetPlan(string amount);
         Task<List<SuccessResponse>> InsertExceptionRequest(EnrollExceptionRequest entity);
         Task<SearchRequestApprovalRes> SearchRequestApproval(SearchRequestApprovalClone entity);
-        Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatus entity);
+        Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity);
         Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId);
     }
 }
