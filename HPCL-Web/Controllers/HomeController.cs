@@ -118,7 +118,7 @@ namespace HPCL_Web.Controllers
 
                             //if (!SessionMenuModel.sessionList.Any(a => a.UserID == user.UserId))
                             //{
-                                SessionMenuModel.sessionList.RemoveAll(x => x.UserID == user.UserId);
+                                SessionMenuModel.sessionList.RemoveAll(x => x.UserID.ToLower() == user.UserId.ToLower());
 
                                 List<SessionDataModelDetails> sessionData = new List<SessionDataModelDetails>
                                 {
