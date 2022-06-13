@@ -53,7 +53,8 @@ namespace HPCL.Service.Interfaces
         Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerAddress(CustomerAddressApproveRequestModel model);
         Task<CommonResponseData> ApproveCustomerAddressRequests([FromBody] ApproveCustomerAddressRequest model);
         Task<CustomerAddressApproveRequestModel> ApprovalUpdateCustomerContactPerson(CustomerAddressApproveRequestModel model);
-        Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model);
+        Task<CommonResponseData> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model);
         Task<GetCustomerAddressRequestForApproval> GetCustomerOldAndNewAddressList(string CustomerId);
+        Task<GetCustomerContactPersonRequestForApproval> GetCustomerOldAndNewContactPersonList(string CustomerId);
     }
 }
