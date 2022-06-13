@@ -442,6 +442,7 @@
         public static string GetPlanUrl = "api/dtplus/HDFCCreditPouch/get_plan";
         public static string EnrollExceptionReqUrl = "api/dtplus/HDFCcreditPouch/insrt_cp_rqst";
         public static string GetExApproval = "api/dtplus/HDFCCreditPouch/Get_cp_by_bank";
+        public static string SubmitExApprovalUrl = "api/dtplus/HDFCCreditPouch/action_cp";
         public static string GetEnrollStatusUrl = "api/dtplus/HDFCCreditPouch/get_cp_status";
         public static string GetEnrollStatusReportUrl = "api/dtplus/HDFCCreditPouch/get_cp_status_Report";
         #endregion

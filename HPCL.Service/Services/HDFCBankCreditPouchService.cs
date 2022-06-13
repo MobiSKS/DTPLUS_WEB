@@ -105,6 +105,26 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
+        public async Task<List<SuccessResponse>> SubmitRequestApproval(string bankEntryDetail)
+        {
+            ObjBankEntryDetail[] arrs = JsonConvert.DeserializeObject<ObjBankEntryDetail[]>(bankEntryDetail);
+
+            var searchBody = new ActionApproveRejectReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ObjBankEntryDetail = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SubmitExApprovalUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+
         public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity)
         {
             var searchBody = new SearchEnrollStatus
