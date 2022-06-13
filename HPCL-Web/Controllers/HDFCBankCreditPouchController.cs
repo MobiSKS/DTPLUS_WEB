@@ -72,6 +72,14 @@ namespace HPCL_Web.Controllers
             return Json(new { searchList = searchList });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> SubmitRequestApproval(string bankEntryDetail)
+        {
+            var reasonList = await _hDFCBankCreditPouchService.SubmitRequestApproval(bankEntryDetail);
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+
         public IActionResult EnrollmentStatus()
         {
             return View();

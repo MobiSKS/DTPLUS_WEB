@@ -14,6 +14,9 @@
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">HDFC Bank Credit Pouch Request Approval</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
@@ -103,6 +106,13 @@
                                     </thead>
                                 </table>
                             </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="requestApprovalSubmit()">Submit</button>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -112,6 +122,9 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 
 <script type="text/javascript">
@@ -222,8 +235,29 @@
     });
 
 
+     $("#approvalHdfcList").on('click', '.checkRow', function (e) {
+
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+
+            currentRow.find('.remarksVal').attr("readonly", false);
+            currentRow.find('.actionVal').attr("readonly", false);
+            currentRow.find('.actionVal').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('.remarksVal').attr("readonly", true);
+            currentRow.find('.actionVal').attr("readonly", true);
+            currentRow.find('.actionVal').attr("disabled", true);
+            currentRow.find('.errs').css("display", "none");
+        }
+    });
+
 
     function OnSuccess(res) {
+
+        document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
 
         console.log("data",res);
 
@@ -258,14 +292,14 @@
                 var referenceNo = (res.searchList.data[i].referenceNo || '');
                 var zo = (res.searchList.data[i].zo || '');
                 var ro =  (res.searchList.data[i].ro || '');
-                var customerId = (res.searchList.data[i].customerId);
+                var customerId = "<span class='custVal'>"+(res.searchList.data[i].customerId)+"</span>";
                 var customerName = (res.searchList.data[i].customerName);
                 var planName = (res.searchList.data[i].planName);
                 var requestedBy = (res.searchList.data[i].requestedBy);
                 var requestedDate = isDts;
                 var status = (res.searchList.data[i].actionStatus);
-                var remarks = "<textarea class='form-control'></textarea>";
-                var action = "<select class='form-control'><option value='1'>Submit for final Approval</option><option value='2'>Submit for final Rejection</option></select>";
+                var remarks = "<div style='width:160px;'><textarea onchange='remarksChange(this," + (i) + ")' readonly='readonly' class='form-control remarksVal' class='remarksVal'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
+                var action = "<select readonly='readonly' disabled='disabled' class='form-control actionVal'><option value='1'>Submit for final Approval</option><option value='2'>Submit for final Rejection</option></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
 
                 tbl.row.add([
                     srNumber,
@@ -289,6 +323,131 @@
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
+        }
+    }
+
+    function requestApprovalSubmit(){
+
+        document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
+
+        var updateArray = new Array();
+
+        var flag = "Y";
+        var CustomerId;
+
+        $("#approvalHdfcList input[type=checkbox]:checked").each(function () {
+            
+            var selectedRow = $(this).closest("tr")[0];
+          
+            var indexS = (selectedRow.rowIndex) - 1;
+
+            console.log("indexS",indexS);
+
+            var row = $(this).closest("tr");
+
+            CustomerId = row.find('.custVal').text();
+            var RequestId = row.find('.reqId').text();
+            var BankRemark = row.find('.remarksVal').val();
+            var ActionType = row.find('.actionVal option:selected').val();
+            var ApprovedBy = row.find('.custVal').text();
+            
+            updateArray.push({
+                CustomerId: CustomerId,
+                RequestId: RequestId,
+                BankRemark: BankRemark,
+                ActionType: ActionType,
+                ApprovedBy: ApprovedBy
+            });
+
+            if(BankRemark.trim() == ''){
+                document.getElementById('remarks_error_'+indexS).title="Please enter Apporval Remarks.";
+                document.getElementById('remarks_error_'+indexS).style.display = "block";
+                flag = "N";
+            }
+            else{
+             if(BankRemark.trim()!=''){
+                if (!BankRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+indexS).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+indexS).style.display = "block";
+                    flag = "N";
+                }
+              }
+            }
+        });
+
+        if (CustomerId == undefined) {
+                alert("Please select at least one record");
+                flag = "N";
+        }
+ 
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+         $("#approvalHdfcList input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('remarks_error_'+indexS).style.display = "none";
+                $(this).closest("tr").find(".checkRow").prop('checked',false);
+                $(this).closest("tr").find('.remarksVal').val('');
+                $(this).closest("tr").find('.remarksVal').attr("readonly", true);
+                $(this).closest("tr").find('.actionVal').attr("readonly", true);
+                $(this).closest("tr").find('.actionVal').attr("disabled", true);
+            });
+
+            if (confirm('Are you sure! You want to process the selected record(s)?')) {
+                console.log('ok');
+
+                $.ajax({
+                    url: "@Url.Action("SubmitRequestApproval", "HDFCBankCreditPouch")",
+                    type: "POST",
+                    traditional: true,
+                    data: { bankEntryDetail: JSON.stringify(updateArray) },
+                    success: function (res) {
+
+                        if(res.reasonList[0].status == 1){
+                            $("#successUpdate").html('');
+                            $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+                            $("#noRecord").html('');
+                            $("#noRecord").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+
+    function remarksChange(o, rowSelected){
+
+       var BankRemark = o.value;
+       
+       if(BankRemark.trim() == ''){
+                document.getElementById('remarks_error_'+rowSelected).title="Please enter Apporval Remarks.";
+                document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                flag = "N";
+            }
+        else{
+            if(BankRemark.trim()!=''){
+                if (!BankRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+rowSelected).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                    flag = "N";
+                }else{
+                    document.getElementById('remarks_error_'+rowSelected).title="";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "none";
+                }
+            }
         }
     }
 </script>
