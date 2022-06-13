@@ -48,5 +48,10 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string PermanentPhoneNo { get; set; }
         public string PermanentFax { get; set; }
         public string PanCardRemarks { get; set; }
+        public string CommunicationStateName { get; set; }
+        public string CommunicationDistrictName { get; set; }
+        public string PermanentStateName { get; set; }
+        public string PermanentDistrictName { get; set; }
+
     }
 }
