@@ -23,5 +23,6 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string Status { get; set; }
         public string MenuNameId { get; set; }
         public string Reason { get; set; }
+        public string AllowedAction { get; set; }
     }
 }

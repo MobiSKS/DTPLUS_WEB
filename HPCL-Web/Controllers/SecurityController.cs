@@ -151,9 +151,11 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
-        public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel)
+        public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel,string success,string error)
         {
             var modals = await _securityService.SelectUserManageRolesRequest(manageRolesRequestModel);
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
             return View(modals);
         }
         public async Task<IActionResult> RolePermissionSummaryView (string RoleName,string RoleDescription,string RoleId)
@@ -167,6 +169,42 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _securityService.GetUserManageMenuList();
             
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> InsertManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var result = await _securityService.InsertManageRole(manageRolesRequestModel);
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<JsonResult> DeleteRoles([FromBody] ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var result = await _securityService.DeleteRoles(manageRolesRequestModel);
+            return Json(result);
+        }
+        public async Task<IActionResult> DeleteRoleRow(string RoleName,string RoleDescription)
+        {
+            ManageRolesRequestModel manageRolesRequestModel = new ManageRolesRequestModel();
+            List<DeleteRoleModel> roleModelList = new List<DeleteRoleModel>();
+            DeleteRoleModel deleteRoleModel = new DeleteRoleModel();
+            deleteRoleModel.RoleDescription = RoleDescription;
+            deleteRoleModel.RoleName = RoleName;
+            roleModelList.Add(deleteRoleModel);
+            manageRolesRequestModel.TypeRoleNameAndRoleDescriptionMapping = roleModelList;
+            var result = await _securityService.DeleteRoles(manageRolesRequestModel);
+            string succesMsg = "", errorMsg = "";
+            if (result[0].Status == 1)
+                succesMsg = result[0].Reason;
+            else if (result[0].Status == 0)
+                errorMsg = result[0].Reason;
+            return RedirectToAction("ManageRole", "Security", new { success = succesMsg, error = errorMsg });
+        }
+        public async Task<IActionResult> UpdateRolesandPermissions(string RoleName, string RoleDescription, string RoleId)
+        {
+            var modals = await _securityService.GetUserManageRoleList(RoleId);
+            modals.RoleDescription = RoleDescription;
+            modals.RoleName = RoleName;
             return View(modals);
         }
     }

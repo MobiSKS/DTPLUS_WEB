@@ -7,6 +7,14 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Manage Security</a> </li>
             <li class="breadcrumb-item font-weight-light">Manage Roles</li>
         </ul>
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="reason" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -46,7 +54,7 @@
                                                     <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("AddRolesandPermissions", "Security")'">Add</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button">Delete</button>
+                                                    <button class="btn btn_primary" type="button" onclick="deleteMnanageRoles();">Delete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -93,8 +101,8 @@
                                                 <td>
                                                     <a asp-action="RolePermissionSummaryView" class="view" asp-route-RoleName="@item.RoleName" asp-route-RoleDescription="@item.RoleDescription" asp-route-RoleId="@item.ID" data-toggle="tooltip" title="" tooltip="View"><i class="fa fa-eye view" aria-hidden="true"></i></a>
                                                     
-                                                    <a class='edit' data-toggle='tooltip' tooltip="Edit"  onclick='EditRoleDetails(this," @item.RoleName ","@item.RoleDescription")' role='tab'><i class="fa fa-edit edit" aria-hidden="true"></i></a>
-                                                    <a class='delete' data-toggle='tooltip' tooltip="Delete"  onclick='DeleteRoleDetails(this," @item.RoleName ","@item.RoleDescription")' role='tab'><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+                                                    <a class='edit' data-toggle='tooltip' tooltip="Edit"  asp-action="UpdateRolesandPermissions" class="edit" asp-route-RoleName="@item.RoleName" asp-route-RoleDescription="@item.RoleDescription" asp-route-RoleId="@item.ID" role='tab'><i class="fa fa-edit edit" aria-hidden="true"></i></a>
+                                                    <a class='delete' data-toggle='tooltip' tooltip="Delete"  asp-action="DeleteRoleRow"  asp-route-RoleName="@item.RoleName" asp-route-RoleDescription="@item.RoleDescription" role='tab'><i class="fa fa-trash delete" aria-hidden="true"></i></a>
                                                 </td>
                                                 <td style="display:none">@item.ID</td>
                                             </tr>
@@ -123,4 +131,53 @@
     $("#checkAll").click(function() {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
+    function deleteMnanageRoles(){
+        menuDetail = [];
+        var flag="Y";
+                
+        $("#RoleSearch tbody tr").each(function () {
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) {
+                             
+                var roleName = row[0].cells[1].textContent;
+                var roleDescription = row[0].cells[2].textContent;
+                menuDetail.push({ RoleName: roleName, RoleDescription: roleDescription });
+            }
+
+                    
+        });
+  
+        var roleName=$("#RoleName").val();
+        var roleDescription=$("#txtRoleDescription").val();
+       if (menuDetail.length == 0) {
+            alert("Please select at least one record to delete.");
+            flag="N";
+            return;
+        }
+        if (flag == "Y") {
+                var reqModel = {  TypeRoleNameAndRoleDescriptionMapping: menuDetail };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteRoles", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(reqModel),
+                    success: function (data) {
+                       var successMsg="",errorMsg="";
+                        if(data[0].status==1)
+                            successMsg=data[0].reason;
+                        else if(data[0].status==0)
+                            errorMsg=data[0].reason;
+                        var url = '@Html.Raw(@Url.Action("ManageRole", "Security",new {  success = "mm", error = "ee" }))';
+                        url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                        window.location.href=url;
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            
+        }
+
+    };
 </script>
