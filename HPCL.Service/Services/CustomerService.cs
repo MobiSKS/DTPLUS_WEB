@@ -2150,7 +2150,30 @@ namespace HPCL.Service.Services
             if (customerDetails != null)
             {
                 customerDetails.CustomerId = CustomerId;
+                foreach (CustomerAddressDetails item in customerDetails.Data.ObjOldCustomerAddressValue)
+                {
+                    if (!string.IsNullOrEmpty(item.CommunicationFax) && item.CommunicationFax == "-")
+                        item.CommunicationFax = "";
+                    if (!string.IsNullOrEmpty(item.PermanentFax) && item.PermanentFax == "-")
+                        item.PermanentFax = "";
+                    if (!string.IsNullOrEmpty(item.CommunicationPhoneNo) && item.CommunicationPhoneNo == "-")
+                        item.CommunicationPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.PermanentPhoneNo) && item.PermanentPhoneNo == "-")
+                        item.PermanentPhoneNo = "";
+                }
+                foreach (CustomerAddressDetails item in customerDetails.Data.ObjNewCustomerAddressValue)
+                {
+                    if (!string.IsNullOrEmpty(item.CommunicationFax) && item.CommunicationFax == "-")
+                        item.CommunicationFax = "";
+                    if (!string.IsNullOrEmpty(item.PermanentFax) && item.PermanentFax == "-")
+                        item.PermanentFax = "";
+                    if (!string.IsNullOrEmpty(item.CommunicationPhoneNo) && item.CommunicationPhoneNo == "-")
+                        item.CommunicationPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.PermanentPhoneNo) && item.PermanentPhoneNo == "-")
+                        item.PermanentPhoneNo = "";
+                }
             }
+
             return customerDetails;
         }
         public async Task<GetCustomerContactPersonRequestForApproval> GetCustomerOldAndNewContactPersonList(string CustomerId)
@@ -2182,6 +2205,10 @@ namespace HPCL.Service.Services
                     {
                         item.KeyOfficialDOB = "";
                     }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialPhoneNo) && item.KeyOfficialPhoneNo == "-")
+                        item.KeyOfficialPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.KeyOfficialFax) && item.KeyOfficialFax == "-")
+                        item.KeyOfficialFax = "";
                 }
                 foreach (CustomerContactPersonDetails item in customerDetails.Data.ObjNewCustomerContactValue)
                 {
@@ -2193,6 +2220,10 @@ namespace HPCL.Service.Services
                     {
                         item.KeyOfficialDOB = "";
                     }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialPhoneNo) && item.KeyOfficialPhoneNo == "-")
+                        item.KeyOfficialPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.KeyOfficialFax) && item.KeyOfficialFax == "-")
+                        item.KeyOfficialFax = "";
                 }
             }
             return customerDetails;
