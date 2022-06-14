@@ -1,5 +1,6 @@
 ﻿
 using HPCL.Common.Models.CommonEntity;
+using System;
 
 namespace HPCL.Common.Models.ViewModel.Cards
 {
@@ -10,10 +11,9 @@ namespace HPCL.Common.Models.ViewModel.Cards
 
     public class ObjCardLimits
     {
-        public string CardNo { get; set; }
-        public int CashPurse { get; set; }
-        public int SaleTxn { get; set; }
-        public int DailySale { get; set; }
-        public int MonthlySale { get; set; }
+        public string Cardno { get; set; }
+        public Decimal SaleTxnLimit { get; set; }
+        public Decimal DailySaleLimit { get; set; }
+        public Decimal MonthlySaleLimit { get; set; }
     }
 }
