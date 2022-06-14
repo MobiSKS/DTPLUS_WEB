@@ -2205,6 +2205,10 @@ namespace HPCL.Service.Services
                     {
                         item.KeyOfficialDOB = "";
                     }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialPhoneNo) && item.KeyOfficialPhoneNo == "-")
+                        item.KeyOfficialPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.KeyOfficialFax) && item.KeyOfficialFax == "-")
+                        item.KeyOfficialFax = "";
                 }
                 foreach (CustomerContactPersonDetails item in customerDetails.Data.ObjNewCustomerContactValue)
                 {
@@ -2216,6 +2220,10 @@ namespace HPCL.Service.Services
                     {
                         item.KeyOfficialDOB = "";
                     }
+                    if (!string.IsNullOrEmpty(item.KeyOfficialPhoneNo) && item.KeyOfficialPhoneNo == "-")
+                        item.KeyOfficialPhoneNo = "";
+                    if (!string.IsNullOrEmpty(item.KeyOfficialFax) && item.KeyOfficialFax == "-")
+                        item.KeyOfficialFax = "";
                 }
             }
             return customerDetails;
