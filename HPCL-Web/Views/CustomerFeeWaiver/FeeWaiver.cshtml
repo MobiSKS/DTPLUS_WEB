@@ -439,18 +439,15 @@
                     var custSubType = $('<option value="' + customerList[0].customerSubtypeName + '">' + customerList[0].customerSubtypeName + '</option>');
                     $('#CustomerSubTypeID').append(custSubType);
 
-                    //$('#CustomerDateOfApplication').val(customerList[0].dateOfApplication);
-                    const dateObj = new Date(customerList[0].dateOfApplication);
-                    //$('#applicationDate').val(dateObj.getDate());
-                    console.log(dateObj);
-                    var month = dateObj.getMonth() + 1; //months from 1-12
-                    var day = dateObj.getDate();
-                    var year = dateObj.getFullYear();
+                    var appDate;
 
-                    var newdate = day + "/" + month + "/" + year;
-                    console.log(dateObj.getDate());
-                    //console.log($('#applicationDate'));
-                    $('#applicationDate').val(newdate);
+                    if(((customerList[0].dateOfApplication) == "01/01/0001 00:00:00") || ((customerList[0].dateOfApplication) == "01/01/1900 00:00:00") || ((customerList[0].dateOfApplication) == null)){
+                        appDate = "";
+                    }else{
+                        appDate = moment(customerList[0].dateOfApplication, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+
+                    $('#CustomerDateOfApplication').val(appDate);
 
                     var CustomerSalesArea = $('<option value="' + customerList[0].salesArea + '">' + customerList[0].salesArea + '</option>');
                     $('#CustomerSalesAreaID').append(CustomerSalesArea);
@@ -546,33 +543,28 @@
                     $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
 
                     $('#KeyOfficialCardAppliedFor').val(customerList[0].keyOfficialCardAppliedFor);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile1);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile2);
+                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile1.toFixed(2));
+                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile2.toFixed(2));
                     $('#AreaOfOperation').val(customerList[0].areaOfOperation);
-                    //$('#KeyOfficialDOB').val(customerList[0].keyOfficialDOB);
-                    //$('#KeyOffDateOfAnniversary').val(customerList[0].keyOfficialDOB);
+               
+                    var newDob;
+                    var dtoa;
 
-                    const dateDOB = new Date(customerList[0].keyOfficialDOB);
-                    //$('#applicationDate').val(dateObj.getDate());
-                    console.log(dateDOB);
-                    var monthDOB = dateDOB.getMonth() + 1; //months from 1-12
-                    var dayDOB = dateDOB.getDate();
-                    var yearDOB = dateDOB.getFullYear();
+                    if(((customerList[0].keyOfficialDOB) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOB) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOB) == null)){
+                        newDob = "";
+                    }else{
+                        newDob = moment(customerList[0].keyOfficialDOB, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                    var newdateDOB = dayDOB + "/" + monthDOB + "/" + yearDOB;
+                    if(((customerList[0].keyOfficialDOA) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOA) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOA) == null)){
+                        dtoa = "";
+                    }else{
+                        dtoa = moment(customerList[0].keyOfficialDOA, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                    $('#KeyOfficialDOB').val(newdateDOB);
+                    $('#KeyOfficialDOB').val(newDob);
+                    $('#KeyOffDateOfAnniversary').val(dtoa);
 
-                    const dateDOA = new Date(customerList[0].keyOfficialDOA);
-                    console.log(dateDOA);
-                    var monthDOA = dateDOA.getMonth() + 1; //months from 1-12
-                    var dayDOA = dateDOA.getDate();
-                    var yearDOA = dateDOA.getFullYear();
-
-                    var newdateDOA = dayDOA + "/" + monthDOA + "/" + yearDOA;
-
-
-                    $('#KeyOffDateOfAnniversary').val(newdateDOA);
 
                     res.kycDetailsResult
                     //KYC
