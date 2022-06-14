@@ -279,10 +279,10 @@
                 var status = (searchGrid[i].status || '');
                 var issueDate = isDts;
                 var expiryDate = expDts;
-                var cashPurseLimit = "<div style='width:160px;'><input class='form-control cgl' type='text' value='" + (searchGrid[i].cashPurseLimit || '') + "' readonly='readonly'><span style='display:none;' class='cpl' id='cashpurselimitid_"+i+"'>" + (searchGrid[i].cashPurseLimit || '') + "</span></div>";
-                var saleTxnLimit = "<div style='width:160px;display:flex;'><input maxlength='10' class='form-control cgl stl' id='saletxnlimitid_"+i+"' onchange='saletxnlimitChange(this," + (i) + ")' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='saletxn_error_"+i+"' aria-hidden='true'></i></div>";
-                var dailySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' class='form-control cgl dsl' onchange='dailySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='dailysale_error_"+i+"' aria-hidden='true'></i></div>";
-                var monthlySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' class='form-control cgl msl' id='monthlySalelimitid_"+i+"' onchange='monthlySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errsss' id='monthlysale_error_"+i+"' aria-hidden='true'></i></div>";
+                var cashPurseLimit = "<div style='width:160px;'><input class='form-control cgl' type='text' value='" + (searchGrid[i].cashPurseLimit.toFixed(2) || '') + "' readonly='readonly'><span style='display:none;' class='cpl' id='cashpurselimitid_"+i+"'>" + (searchGrid[i].cashPurseLimit || '') + "</span></div>";
+                var saleTxnLimit = "<div style='width:160px;display:flex;'><input maxlength='10' class='form-control cgl stl' id='saletxnlimitid_"+i+"' onchange='saletxnlimitChange(this," + (i) + ")' name='" + (searchGrid[i].saleTxnLimit || '') + "' type='text' value='" + (searchGrid[i].saleTxnLimit.toFixed(2) || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='saletxn_error_"+i+"' aria-hidden='true'></i></div>";
+                var dailySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' class='form-control cgl dsl' onchange='dailySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].dailySaleLimit || '') + "' type='text' value='" + (searchGrid[i].dailySaleLimit.toFixed(2) || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='dailysale_error_"+i+"' aria-hidden='true'></i></div>";
+                var monthlySaleLimit = "<div style='width:160px;display:flex;'><input maxlength='14' class='form-control cgl msl' id='monthlySalelimitid_"+i+"' onchange='monthlySalelimitChange(this," + (i) + ")' name='" + (searchGrid[i].monthlySaleLimit || '') + "' type='text' value='" + (searchGrid[i].monthlySaleLimit.toFixed(2) || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errsss' id='monthlysale_error_"+i+"' aria-hidden='true'></i></div>";
 
                 tbl.row.add([
                     srNumber,
@@ -311,10 +311,9 @@
     }
 
     var cardNo;
-    var cashPurse;
-    var saleTxn;
-    var dailySale;
-    var monthlySale;
+    var SaleTxnLimit;
+    var DailySaleLimit;
+    var MonthlySaleLimit;
     var currentRow;
 
     $("#CardSearchSaleLimit").on('click', '.checkEnable', function (e) {
@@ -371,40 +370,37 @@
             var row = $(this).closest("tr");
 
             cardNo = row.find('.getCard').text();
-            cashPurse = row.find('.cpl').text();
-            saleTxn = row.find('.stl').val();
-            dailySale = row.find('.dsl').val();
-            monthlySale = row.find('.msl').val();
+            SaleTxnLimit = row.find('.stl').val();
+            DailySaleLimit = row.find('.dsl').val();
+            MonthlySaleLimit = row.find('.msl').val();
 
             updateArray.push({
                 cardNo: cardNo,
-                cashPurse: cashPurse,
-                saleTxn: saleTxn,
-                dailySale: dailySale,
-                monthlySale: monthlySale
+                SaleTxnLimit: SaleTxnLimit,
+                DailySaleLimit: DailySaleLimit,
+                MonthlySaleLimit: MonthlySaleLimit
             });
 
             var cashPurseLimitVal = $('#cashpurselimitid_'+indexS).text();
             var saleTxnLimitVal = $('#saletxnlimitid_'+indexS).val();
             var monthlySaleLimitVal = $('#monthlySalelimitid_'+indexS).val();
 
-            console.log(cashPurse+"          "+cashPurseLimitVal);
-
-            var slTxn = parseFloat(saleTxn);
+            var slTxn = parseFloat(SaleTxnLimit);
             var cplVal = parseFloat(cashPurseLimitVal);
 
-            if(saleTxn.trim() == ''){
+            if(SaleTxnLimit.trim() == ''){
                 document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                 document.getElementById('saletxn_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
-             if(saleTxn.trim()!=''){
-                if (!saleTxn.match(number)){
-                    document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+indexS).style.display = "block";
-                    flag = "N";
-                }else if(saleTxn == 0){
+             if(SaleTxnLimit.trim()!=''){
+                //if (!saleTxn.match(number)){
+                //    document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                //    document.getElementById('saletxn_error_'+indexS).style.display = "block";
+                //    flag = "N";
+                //}else 
+                if(SaleTxnLimit == 0){
                     document.getElementById('saletxn_error_'+indexS).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+indexS).style.display = "block";
                     flag = "N";
@@ -416,24 +412,25 @@
               }
             } 
             
-            if(dailySale.trim()==''){
+            if(DailySaleLimit.trim()==''){
                 document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limitsss";
                 document.getElementById('dailysale_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
-                 if(dailySale.trim()!=''){
-                    if (!dailySale.match(number)){
+                 if(DailySaleLimit.trim()!=''){
+                    //if (!dailySale.match(number)){
+                    //    document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                    //    document.getElementById('dailysale_error_'+indexS).style.display = "block";
+                    //    flag = "N";
+                    //}
+                    //else 
+                    if(DailySaleLimit == 0){
                         document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
                         document.getElementById('dailysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
-                    else if(dailySale == 0){
-                        document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
-                        document.getElementById('dailysale_error_'+indexS).style.display = "block";
-                        flag = "N";
-                    }
-                    else if((parseFloat(dailySale) < parseFloat(saleTxnLimitVal)) || (parseFloat(dailySale) > parseFloat(monthlySaleLimitVal))){       
+                    else if((parseFloat(DailySaleLimit) < parseFloat(saleTxnLimitVal)) || (parseFloat(DailySaleLimit) > parseFloat(monthlySaleLimitVal))){       
                         document.getElementById('dailysale_error_'+indexS).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
                         document.getElementById('dailysale_error_'+indexS).style.display = "block";
                         flag = "N";
@@ -442,24 +439,25 @@
             }
 
 
-             if(monthlySale.trim()==''){
+             if(MonthlySaleLimit.trim()==''){
                 document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
                 document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                 flag = "N";
             }
             else{
-                 if(monthlySale.trim()!=''){
-                    if (!monthlySale.match(number)){
+                 if(MonthlySaleLimit.trim()!=''){
+                    //if (!monthlySale.match(number)){
+                    //    document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                    //    document.getElementById('monthlysale_error_'+indexS).style.display = "block";
+                    //    flag = "N";
+                    //}
+                    //else 
+                    if(MonthlySaleLimit == 0){
                         document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
                         document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                         flag = "N";
                     }
-                    else if(monthlySale == 0){
-                        document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                        document.getElementById('monthlysale_error_'+indexS).style.display = "block";
-                        flag = "N";
-                    }
-                    else if(!(monthlySale < 10000001)){
+                    else if(!(MonthlySaleLimit < 10000001)){
                         document.getElementById('monthlysale_error_'+indexS).title="MonthlySaleLimit can not be greater than 10,000,000.";
                         document.getElementById('monthlysale_error_'+indexS).style.display = "block";
                         flag = "N";
@@ -529,11 +527,12 @@
         }
         else{
             if(txnVal.trim()!=''){
-                if (!txnVal.match(number)){
-                    document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
-                    document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
-                    return false;
-                }else if(txnVal == 0){
+                //if (!txnVal.match(number)){
+                //    document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
+                //    document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
+                //    return false;
+                //}else 
+                if(txnVal == 0){
                     document.getElementById('saletxn_error_'+rowSelected).title="Sale Txn limit should be less than or equal to Cash Purse Limit and also less than equal to 100,000";
                     document.getElementById('saletxn_error_'+rowSelected).style.display = "block";
                     return false;
@@ -564,15 +563,14 @@
             return;
         }
         else{
-             if(dailySaleVal.trim()!='')
-                {
-                if (!dailySaleVal.match(number))
-                {
-                    document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
-                    document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
-                    return false;
-                }
-                else if(dailySaleVal.trim() == 0){
+             if(dailySaleVal.trim()!=''){
+                //if (!dailySaleVal.match(number)){
+                //    document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
+                //    document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
+                //    return false;
+                //}
+                //else 
+                if(dailySaleVal.trim() == 0){
                     document.getElementById('dailysale_error_'+rowSelected).title="Daily Sale Limit should be greater than equal to Sale Txn Limit and less than equal to Monthly Sale limit";
                     document.getElementById('dailysale_error_'+rowSelected).style.display = "block";
                     return false;
@@ -601,12 +599,12 @@
         }
         else{
                 if(monthlySale.trim()!=''){
-                if (!monthlySale.match(number)){
-                    document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
-                    document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
-                    return false;
-                }
-                else if(monthlySale == 0){
+                //if (!monthlySale.match(number)){
+                //    document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
+                //    document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
+                //    return false;
+                //}else 
+                if(monthlySale == 0){
                     document.getElementById('monthlysale_error_'+rowSelected).title="MonthlySaleLimit can not be greater than 10,000,000.";
                     document.getElementById('monthlysale_error_'+rowSelected).style.display = "block";
                     return false;
