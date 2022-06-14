@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using HPCL.Common.Models.RequestModel.Cards;
 using HPCL.Common.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HPCL.Service.Services
 {
@@ -717,6 +718,44 @@ namespace HPCL.Service.Services
 
             return responseData;
         }
+        public async Task<CorporateMultiRechargeLimitModel> GetCustomerRechargeLimitConfig(string CustomerId)
+        {
+            CorporateMultiRechargeLimitModel corporateMultiRechargeLimitModel = new CorporateMultiRechargeLimitModel();
+            var reqBody = new CorporateMultiRechargeLimitRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID =CustomerId
+            };
 
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdetailforcorpmultirechargelimitconfig);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            corporateMultiRechargeLimitModel = obj.ToObject<CorporateMultiRechargeLimitModel>();
+            return corporateMultiRechargeLimitModel;
+        }
+        public async Task<List<SuccessResponse>> ConfigureLimits([FromBody] CorporateMultiRechargeLimitRequest reqModel)
+        {
+            var reqBody = new CorporateMultiRechargeLimitRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ObjLimitConfig = reqModel.ObjLimitConfig
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.corpmultirechargelimitconfig);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }

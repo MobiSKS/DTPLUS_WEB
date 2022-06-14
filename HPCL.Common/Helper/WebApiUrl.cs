@@ -80,6 +80,8 @@
         public static string bindPendingCustomerForAddOnCardApproval = "api/dtplus/card/bind_pending_customer_for_add_on_card_approval";
         public static string getCardDetailForAddOnCardApproval = "api/dtplus/card/get_card_detail_for_add_on_card_approval";
         public static string approveRejectAddOnCard = "api/dtplus/card/approve_reject_add_on_card";
+        public static string getdetailforcorpmultirechargelimitconfig = "api/dtplus/card/get_detail_for_corp_multi_recharge_limit_config";
+        public static string corpmultirechargelimitconfig = "api/dtplus/card/corp_multi_recharge_limit_config";
         #endregion
 
         #region Merchant

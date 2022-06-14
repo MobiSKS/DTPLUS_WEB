@@ -1,8 +1,10 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -308,6 +310,20 @@ namespace HPCL_Web.Controllers
             var commonResponseData = await _cardService.EnableDisableProductsAndTransaction(ObjProducts, ObjTransactions, CustomerId, CardNo, MobileNo);
             return Json(new { commonResponseData = commonResponseData });
         }
-
+       
+     
+        public async Task<IActionResult> CorporateMultiRechargeLimitConfig(CorporateMultiRechargeLimitRequest reqModel)
+        {
+            CorporateMultiRechargeLimitModel modals = new CorporateMultiRechargeLimitModel();
+            if(reqModel.CustomerID!=null)
+                modals = await _cardService.GetCustomerRechargeLimitConfig(reqModel.CustomerID);
+            return View(modals);
+        }  
+        [HttpPost]
+        public async Task<JsonResult> ConfigureLimits([FromBody] CorporateMultiRechargeLimitRequest reqModel)
+        {
+            var  modals = await _cardService.ConfigureLimits(reqModel);
+            return Json(modals);
+        }
     }
 }
