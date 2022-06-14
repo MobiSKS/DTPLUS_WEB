@@ -184,7 +184,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
 
-                                        <table id="FleetAndCredit" class="table table-bordered table-responsive mb-3 w-100" style="display:none; margin:auto;">
+                                        <table id="FleetAndCredit" class="table table-bordered table-responsive mb-3 w-100" style="margin:auto;">
                                             <thead>
                                                 <tr> 
 
@@ -211,7 +211,7 @@
                                             </thead>
                                         </table>
 
-                                        <table id="AttachedAndGeneric" class="table table-bordered table-responsive w-100" style="display:none;">
+                                        <table id="AttachedAndGeneric" class="table table-bordered table-responsive w-100">
                                             <thead>
                                                 <tr>
 
@@ -241,7 +241,7 @@
                                             </thead>
                                         </table>
 
-                                        <table id="CorporateAndNonFleet" class="table table-bordered table-responsive w-50" style="display:none;">
+                                        <table id="CorporateAndNonFleet" class="table table-bordered table-responsive w-50">
                                             <thead>
                                                 <tr>
 
@@ -331,6 +331,12 @@
     function resetClick() {
         window.location.reload(true);
     }
+
+    $(document).ready(function () {
+        document.getElementById("FleetAndCredit").style.display = none;
+        document.getElementById("AttachedAndGeneric").style.display = none;
+        document.getElementById("CorporateAndNonFleet").style.display = none;
+    });
 
     function OnSuccessFeeWaiverLoad(res) {
 
@@ -436,7 +442,7 @@
 
                     var appDate;
 
-                    if(((customerList[0].dateOfApplication) == "01/01/0001 00:00:00") || ((customerList[0].dateOfApplication) == "01/01/1900 00:00:00") || ((customerList[0].dateOfApplication) == null)){
+                    if(((customerList[0].dateOfApplication) == "01-01-0001") || ((customerList[0].dateOfApplication) == "01-01-1900") || ((customerList[0].dateOfApplication) == null)){
                         appDate = "";
                     }else{
                         appDate = moment(customerList[0].dateOfApplication, 'DD-MM-YYYY').format('DD-MM-YYYY');
@@ -624,10 +630,17 @@
                     $('#KeyOfficialSecretQuestion').append(OfficialSecretQuestion);
 
                     $('#KeyOfficialSecretAnswer').val(customerList[0].keyOfficialSecretAnswer);
-                    $('#FleetSizeNoOfVechileOwnedHCV').val(customerList[0].fleetSizeNoOfVechileOwnedHCV);
-                    $('#FleetSizeNoOfVechileOwnedLCV').val(customerList[0].fleetSizeNoOfVechileOwnedLCV);
-                    $('#FleetSizeNoOfVechileOwnedMUVSUV').val(customerList[0].fleetSizeNoOfVechileOwnedMUVSUV);
-                    $('#FleetSizeNoOfVechileOwnedCarJeep').val(customerList[0].fleetSizeNoOfVechileOwnedCarJeep);
+
+                    
+                    var hcv = (customerList[0].fleetSizeNoOfVechileOwnedHCV == 0) ? dfs = "" : dfs = (customerList[0].fleetSizeNoOfVechileOwnedHCV);
+                    var lcv = (customerList[0].fleetSizeNoOfVechileOwnedLCV == 0) ? dfs = "" : dfs = (customerList[0].fleetSizeNoOfVechileOwnedLCV);
+                    var suv = (customerList[0].fleetSizeNoOfVechileOwnedMUVSUV == 0) ? dfs = "" : dfs = (customerList[0].fleetSizeNoOfVechileOwnedMUVSUV);
+                    var jeep = (customerList[0].fleetSizeNoOfVechileOwnedCarJeep == 0) ? dfs = "" : dfs = (customerList[0].fleetSizeNoOfVechileOwnedCarJeep);
+
+                    $('#FleetSizeNoOfVechileOwnedHCV').val(hcv);
+                    $('#FleetSizeNoOfVechileOwnedLCV').val(lcv);
+                    $('#FleetSizeNoOfVechileOwnedMUVSUV').val(suv);
+                    $('#FleetSizeNoOfVechileOwnedCarJeep').val(jeep);
 
                     var customerTypeOfFleet = $('<option value="' + customerList[0].keyOfficialTypeOfFleetName + '">' + (customerList[0].keyOfficialTypeOfFleetName || '') + '</option>');
                     $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
@@ -640,17 +653,19 @@
                     var newDob;
                     var dtoa;
 
-                    if(((customerList[0].keyOfficialDOB) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOB) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOB) == null)){
+                    if(((customerList[0].keyOfficialDOB) == "01-01-0001") || ((customerList[0].keyOfficialDOB) == "01-01-1900") || ((customerList[0].keyOfficialDOB) == null)){
                         newDob = "";
                     }else{
                         newDob = moment(customerList[0].keyOfficialDOB, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
 
-                    if(((customerList[0].keyOfficialDOA) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOA) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOA) == null)){
+                    if(((customerList[0].keyOfficialDOA) == "01-01-0001") || ((customerList[0].keyOfficialDOA) == "01-01-1900") || ((customerList[0].keyOfficialDOA) == null)){
                         dtoa = "";
                     }else{
                         dtoa = moment(customerList[0].keyOfficialDOA, 'DD-MM-YYYY').format('DD-MM-YYYY');
                     }
+
+                    console.log(customerList[0].keyOfficialDOA+"        "+dtoa);
 
                     $('#KeyOfficialDOB').val(newDob);
                     $('#KeyOffDateOfAnniversary').val(dtoa);
