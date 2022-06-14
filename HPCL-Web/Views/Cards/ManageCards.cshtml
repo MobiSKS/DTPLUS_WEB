@@ -459,7 +459,7 @@
                             <div id="ServiceSection" class="tab-pane" role="tabpanel">
 
                                 <fieldset class="border-1 rounded border-grey">
-                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Select Services</legend>
+                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Services</legend>
 
                                     <div class="px-4 mb-0 mt-3">
                                         <div class="mb-3 text-center alert alert-success" style="display:none;" id="serviceUpdateResponse">
@@ -469,8 +469,40 @@
 
                                     <div class="p-2 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <ul class="list-group list-group-flush" id="wkslist">
-                                            </ul>
+                                            @*<ul class="list-group list-group-flush" id="wkslist">
+                                            </ul>*@
+
+                                            <div class="col-lg-6 col-md-6 col-12 pl-0 pr-2 mt-3">
+                                            <div class="border-1 rounded border-grey pb-3">
+                                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Available Services</p>
+                                                <div class="col-lg-12 col-md-12 col-12 py-3" style="height:398px; overflow-y:scroll;">
+                                                    <div class="d-flex align-items-center flex-wrap">
+                                                        <div class="col-md-12 col-12 px-0" id="AvailableProductTbl">
+                                                            <table class="table d-md-table d-block" style="width:100%;" id="AvailablePTbl">
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-12 pl-2 pr-0 mt-3">
+                                            <div class="border-1 rounded border-grey pb-3">
+                                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Allowed Services</p>
+                                                <div class="col-lg-12 col-md-12 col-12 py-3" style="height:398px; overflow-y:scroll;">
+                                                    <div class="d-flex align-items-center flex-wrap">
+                                                        <div class="col-md-12 col-12 px-0" id="AllowedProductTbl">
+                                                            <table class="table d-md-table d-block" style="width:100%;" id="AllowedPTbl">
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+
+
                                         </div>
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                         </div>
@@ -863,21 +895,63 @@
                     var creditTransType = $('<option value="' + limitDetails[0].allowCreditTranscation + '">' + limitDetails[0].allowCreditTranscation + '</option>');
                     $('#AllowCreditTranscationValue').append(creditTransType);
 
+                    $("#AvailableProductTbl td").parent().remove();
+                    $("#AllowedProductTbl td").parent().remove();
 
-                    for (var i = 0; i < serviceDetails.length; i++) {
-                        var checkboxList = "<li class='list-group-item py-0'>"
-                            + "<div class='custom-control custom-checkbox'>"
-                            + "<input type='checkbox' onclick='updateCheck(this)' class='custom-control-input cbk' name=" + serviceDetails[i].serviceID + " id=" + serviceDetails[i].serviceID + ">"
-                            + "<label class='custom-control-label' for=" + serviceDetails[i].serviceID + ">" + serviceDetails[i].serviceName + "</label>"
-                            + "</div></li>";
+                     var availableRows = "<tbody>"
+                     var allowedRows = "<tbody>"
+                     var j=0;
+                     var k=0;
+                     var z=0;
 
-                        $('#wkslist').append(checkboxList);
+                    for (var i = 0; i < serviceDetails.length; i++) 
+                    {
+                        //var checkboxList = "<li class='list-group-item py-0'>"
+                        //    + "<div class='custom-control custom-checkbox'>"
+                        //    + "<input type='checkbox' onclick='updateCheck(this)' class='custom-control-input cbk' name=" + serviceDetails[i].serviceID + " id=" + serviceDetails[i].serviceID + ">"
+                        //    + "<label class='custom-control-label' for=" + serviceDetails[i].serviceID + ">" + serviceDetails[i].serviceName + "</label>"
+                        //    + "</div></li>";
 
-                        if (serviceDetails[i].selectedServices == 1) {
-                            console.log(serviceDetails[i].selectedServices);
-                            $('input[name *= "' + serviceDetails[i].serviceID + '"]').prop('checked', true);
+                        //$('#wkslist').append(checkboxList);
+
+                        //if (serviceDetails[i].selectedServices == 1) 
+                        //{
+                        //    console.log(serviceDetails[i].selectedServices);
+                        //    $('input[name *= "' + serviceDetails[i].serviceID + '"]').prop('checked', true);
+                        //}
+
+                        z=z+1;
+                        //debugger;
+                        if(serviceDetails[i].selectedServices==0)
+                        {
+                            j=j+1;
+
+                            availableRows += "<tr>"
+                                + "<td style='width: 7%;'>"+ (j) +"</td>"
+                                + "<td style='width: 93%;'>" + serviceDetails[i].serviceName + "</td>"
+                                + "<td style='display:none'>" + serviceDetails[i].serviceID + "</td>"
+                                + "</tr >";
+
                         }
+                        //debugger;
+                        if(serviceDetails[i].selectedServices==1)
+                        {
+                            k=k+1;
+
+                                allowedRows += "<tr>"
+                                + "<td style='width: 7%;'>"+ (k) +"</td>"
+                                + "<td style='width: 93%;'>" + serviceDetails[i].serviceName + "</td>"
+                                + "<td style='display:none'>" + serviceDetails[i].serviceID + "</td>"
+                                + "</tr >";
+                        }
+
                     }
+
+                    availableRows += "</tbody>"
+                    $('#AvailableProductTbl table').append(availableRows);
+
+                    allowedRows += "</tbody>"
+                    $('#AllowedProductTbl table').append(allowedRows);
 
                     $("#ManageCardHeader").html('');
                     $("#ManageCardHeader").append("<p class='text_primary px-3 py-2 bg-grey m-0 font-weight-bold'>Manage Cards CARD PAN: ( " + (cardDetails[0].cardNumber) + ") </p>");

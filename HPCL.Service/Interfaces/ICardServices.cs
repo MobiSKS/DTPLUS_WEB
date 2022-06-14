@@ -1,7 +1,9 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Cards;
 using HPCL.Common.Models.ResponseModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,5 +37,7 @@ namespace HPCL.Service.Interfaces
         Task<EnableCustomerServicesModel> EnableCustomerServices();
         Task<GetDetailForEnableDisableProductsAndTransactions> GetDetailForEnableDisableProductsAndTransactions(string CustomerId, string CardNo, string MobileNo);
         Task<CommonResponseData> EnableDisableProductsAndTransaction(string ObjProductsInput, string ObjTransactionsInput, string CustomerId, string CardNo, string MobileNo);
+        Task<CorporateMultiRechargeLimitModel> GetCustomerRechargeLimitConfig(string CustomerId);
+        Task<List<SuccessResponse>> ConfigureLimits([FromBody] CorporateMultiRechargeLimitRequest reqModel);
     }
 }
