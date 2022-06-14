@@ -271,8 +271,8 @@
 
                                         <div class="col-md-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Comments : </label>
-                                                <div class="col-md-7 col-12">
+                                                <label class="font-weight-normal col-md-3 col-12">Comments : </label>
+                                                <div class="col-md-9 col-12">
                                                     @Html.TextAreaFor(m => m.Comments, new {@maxlength = "100", @id = "commentId", @class = "form-control", @type = "Date" })
                                                     @Html.ValidationMessageFor(m => m.Comments, "", new { @id = "cmtError", @class = "text-danger" })
                                                 </div>
@@ -306,10 +306,10 @@
     </div>
 </div>
 
-<div id="viewSelectedCustomer" class="modal fade" style="padding-right:320%;">
+<div id="viewSelectedCustomer" class="modal fade">
     <div class="vertical-alignment-helper">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="width:140%">
+        <div class="modal-dialog modal-lg" style="max-width:960px;width:100%;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text_primary" id="exampleModalLabel">Customer Details</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -439,18 +439,15 @@
                     var custSubType = $('<option value="' + customerList[0].customerSubtypeName + '">' + customerList[0].customerSubtypeName + '</option>');
                     $('#CustomerSubTypeID').append(custSubType);
 
-                    //$('#CustomerDateOfApplication').val(customerList[0].dateOfApplication);
-                    const dateObj = new Date(customerList[0].dateOfApplication);
-                    //$('#applicationDate').val(dateObj.getDate());
-                    console.log(dateObj);
-                    var month = dateObj.getMonth() + 1; //months from 1-12
-                    var day = dateObj.getDate();
-                    var year = dateObj.getFullYear();
+                    var appDate;
 
-                    var newdate = day + "/" + month + "/" + year;
-                    console.log(dateObj.getDate());
-                    //console.log($('#applicationDate'));
-                    $('#applicationDate').val(newdate);
+                    if(((customerList[0].dateOfApplication) == "01/01/0001 00:00:00") || ((customerList[0].dateOfApplication) == "01/01/1900 00:00:00") || ((customerList[0].dateOfApplication) == null)){
+                        appDate = "";
+                    }else{
+                        appDate = moment(customerList[0].dateOfApplication, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+
+                    $('#applicationDate').val(appDate);
 
                     var CustomerSalesArea = $('<option value="' + customerList[0].salesArea + '">' + customerList[0].salesArea + '</option>');
                     $('#CustomerSalesAreaID').append(CustomerSalesArea);
@@ -497,7 +494,22 @@
                     var CommunicationDistrict = $('<option value="' + customerList[0].communicationDistrictName + '">' + customerList[0].communicationDistrictName + '</option>');
                     $('#CommunicationDistrictId').append(CommunicationDistrict);
 
-                    $('#CommunicationPhoneNo').val(customerList[0].communicationPhoneNo);
+                    var comPhNoCode;
+                    var comPhNo;
+
+                    var comPhNoSplit =  (customerList[0].communicationPhoneNo).split('-');
+                  
+                    if(customerList[0].communicationPhoneNo == "-"){
+                        comPhNo = "";
+                        comPhNoCode = "";
+                    }else{
+                        comPhNoCode = comPhNoSplit[0];
+                        comPhNo = comPhNoSplit[1];
+                    }
+
+                    $('#CommunicationPhoneNoCode').val(comPhNoCode);
+                    $('#CommunicationPhoneNo').val(comPhNo);
+
                     $('#CommunicationFax').val(customerList[0].communicationFax);
                     $('#CommunicationMobileNumber').val(customerList[0].communicationMobileNo);
                     $('#CommunicationEmail').val(customerList[0].communicationEmailid);
@@ -546,33 +558,28 @@
                     $('#CustomerTypeOfFleetID').append(customerTypeOfFleet);
 
                     $('#KeyOfficialCardAppliedFor').val(customerList[0].keyOfficialCardAppliedFor);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile1);
-                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile2);
+                    $('#KeyOfficialApproxMonthlySpendsonVechile1').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile1.toFixed(2));
+                    $('#KeyOfficialApproxMonthlySpendsonVechile2').val(customerList[0].keyOfficialApproxMonthlySpendsonVechile2.toFixed(2));
                     $('#AreaOfOperation').val(customerList[0].areaOfOperation);
-                    //$('#KeyOfficialDOB').val(customerList[0].keyOfficialDOB);
-                    //$('#KeyOffDateOfAnniversary').val(customerList[0].keyOfficialDOB);
+               
+                    var newDob;
+                    var dtoa;
 
-                    const dateDOB = new Date(customerList[0].keyOfficialDOB);
-                    //$('#applicationDate').val(dateObj.getDate());
-                    console.log(dateDOB);
-                    var monthDOB = dateDOB.getMonth() + 1; //months from 1-12
-                    var dayDOB = dateDOB.getDate();
-                    var yearDOB = dateDOB.getFullYear();
+                    if(((customerList[0].keyOfficialDOB) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOB) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOB) == null)){
+                        newDob = "";
+                    }else{
+                        newDob = moment(customerList[0].keyOfficialDOB, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                    var newdateDOB = dayDOB + "/" + monthDOB + "/" + yearDOB;
+                    if(((customerList[0].keyOfficialDOA) == "01/01/0001 00:00:00") || ((customerList[0].keyOfficialDOA) == "01/01/1900 00:00:00") || ((customerList[0].keyOfficialDOA) == null)){
+                        dtoa = "";
+                    }else{
+                        dtoa = moment(customerList[0].keyOfficialDOA, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                    $('#KeyOfficialDOB').val(newdateDOB);
+                    $('#KeyOfficialDOB').val(newDob);
+                    $('#KeyOffDateOfAnniversary').val(dtoa);
 
-                    const dateDOA = new Date(customerList[0].keyOfficialDOA);
-                    console.log(dateDOA);
-                    var monthDOA = dateDOA.getMonth() + 1; //months from 1-12
-                    var dayDOA = dateDOA.getDate();
-                    var yearDOA = dateDOA.getFullYear();
-
-                    var newdateDOA = dayDOA + "/" + monthDOA + "/" + yearDOA;
-
-
-                    $('#KeyOffDateOfAnniversary').val(newdateDOA);
 
                     res.kycDetailsResult
                     //KYC
