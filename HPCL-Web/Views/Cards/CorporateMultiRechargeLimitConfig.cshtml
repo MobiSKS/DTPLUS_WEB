@@ -7,7 +7,7 @@
             <li class="breadcrumb-item font-weight-light">Corporate Multi Recharge Limit Configuration</li>
         </ul>
 
-        <form class="toBeHiddenOnSuccess">
+        <form  method="post" class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey pb-3">
@@ -35,7 +35,7 @@
                                     <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="button">RESET</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="button" onclick="location.href='@Url.Action("CorporateMultiRechargeLimitConfig", "Cards")'">RESET</button>
                                 </div>
                             </div>
                         </div>
@@ -45,65 +45,67 @@
             </div>
         </form>
         <div class="clearfix"></div>
-
-        @if (Model.Data.Count() > 0)
-        {
-            @if (Model.Data.First().Reason == null)
+       
+            @if (Model.Data.Count() > 0)
             {
-                <div class="w-100">
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3 toBeHiddenOnSuccess">
-                        <div class="border-1 rounded border-grey pb-3">
+                @if (Model.Data.First().Reason == null)
+                {
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3 toBeHiddenOnSuccess">
+                            <div class="border-1 rounded border-grey pb-3">
 
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Select limits to be Configured</p>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-12 col-12">
-                                        <div class="clearfix"></div>
-                                        <div class="d-flex align-items-center flex-wrap mt-3">
-                                            @foreach (var item in Model.Data)
-                                            {
-                                                <label id="lblLimitType" class="font-weight-normal">@item.TypeOfLimit:</label>
-                                                @if(item.CheckUncheckId=="0"){
-                                                    <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" value="@item.CheckUncheckId">
-                                                }
-                                                @if (item.CheckUncheckId == "1")
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Select limits to be Configured</p>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-12 col-12">
+
+                                            <div class="d-flex align-items-center flex-wrap mt-3">
+                                                @foreach (var item in Model.Data)
                                                 {
-                                                     <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" checked value="@item.CheckUncheckId">
+                                                    <label id="lblLimitType" class="font-weight-normal">@item.TypeOfLimit:</label>
+                                                    @if (item.CheckUncheckId == "0")
+                                                    {
+                                                        <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" value="@item.CheckUncheckId">
+                                                    }
+                                                    @if (item.CheckUncheckId == "1")
+                                                    {
+                                                        <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" checked value="@item.CheckUncheckId">
+                                                    }
+
                                                 }
-
-                                    }
+                                            </div>
+                                            <div class="clearfix"></div>
                                         </div>
-                                        <div class="clearfix"></div>
                                     </div>
-                                </div>
-                                <div class="col-12 d-flex align-items-center justify-content-center mt-3">
-                                    <div class="px-2">
-                                        <button class="btn btn_primary" id="btnConfigure" type="button">CONFIGURE LIMITS</button>
-                                    </div>
+                                    <div class="col-12 d-flex align-items-center justify-content-center mt-3">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" id="btnConfigure" type="button">CONFIGURE LIMITS</button>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-            else
-            {
-
-                @if (Model.Data.First().Status == "0")
-                {
-                    <div id="reason" class="mb-3 text-center alert alert-danger">@Model.Data.First().Reason</div>
                 }
-                @if (Model.Data.First().Status == "1")
+                else
                 {
-                    <div id="reason" class="mb-3 text-center alert alert-success">@Model.Data.First().Reason</div>
+
+                    @if (Model.Data.First().Status == "0")
+                    {
+                        <div id="reason" class="mb-3 text-center alert alert-danger">@Model.Data.First().Reason</div>
+                    }
+                    @if (Model.Data.First().Status == "1")
+                    {
+                        <div id="reason" class="mb-3 text-center alert alert-success">@Model.Data.First().Reason</div>
+                    }
                 }
             }
-        }
 
-        <div class="clearfix"></div>
-        <div id="response" class="mb-3 text-center alert"></div>
-
+            <div class="clearfix"></div>
+            <div id="response" class="mb-3 text-center alert"></div>
+        
     </div>
 </div>
 <script type="text/javascript">
