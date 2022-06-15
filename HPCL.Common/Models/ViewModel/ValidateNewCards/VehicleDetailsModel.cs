@@ -22,5 +22,6 @@
         public string VechileOwnerName { get; set; }
         public string YearofRegistration { get; set; }
         public string MobileNo { get; set; }
+        public string FormNumber { get; set; }
     }
 }

@@ -56,5 +56,7 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> ApproveCustomerContactPersonRequests([FromBody] ApproveCustomerContactPersonRequest model);
         Task<GetCustomerAddressRequestForApproval> GetCustomerOldAndNewAddressList(string CustomerId);
         Task<GetCustomerContactPersonRequestForApproval> GetCustomerOldAndNewContactPersonList(string CustomerId);
+        Task<CustomerResetPasswordViewModel> CustomerResetPassword(string CustomerId);
+        Task<List<SuccessResponse>> UpdateEmailResetPassword([FromBody] CustomerResetPasswordViewModel reqModel);
     }
 }

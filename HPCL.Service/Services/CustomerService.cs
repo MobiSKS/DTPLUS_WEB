@@ -2228,6 +2228,45 @@ namespace HPCL.Service.Services
             }
             return customerDetails;
         }
+        public async Task<CustomerResetPasswordViewModel> CustomerResetPassword(string CustomerId)
+        {
+            CustomerResetPasswordViewModel customerResetPasswordViewModel = new CustomerResetPasswordViewModel();
+            var reqBody = new CustomerResetPasswordRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
 
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getcommunicationemailresetpassword);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            customerResetPasswordViewModel = obj.ToObject<CustomerResetPasswordViewModel>();
+            return customerResetPasswordViewModel;
+        }
+        public async Task<List<SuccessResponse>> UpdateEmailResetPassword([FromBody] CustomerResetPasswordViewModel reqModel)
+        {
+            var reqBody = new CustomerResetPasswordRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = reqModel.CustomerId,
+                AlternateEmailId = reqModel.AlternateEmailId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updatecommunicationemailresetpassword);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }

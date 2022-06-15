@@ -34,3 +34,4 @@ var tatkalCustomerCheck = /^(?=(23))[0-9]{10}$/;
 var dealerNameCheck = /^[A-Za-z ]{2,50}$/;
 var cardNoCheck = /^(?!(0))[0-9]{16}$/;
 var corporateCustomerCheck = /^(?=(28))[0-9]{10}$/;
+var empIDCheck = /^[A-Za-z0-9]{6,30}$/;

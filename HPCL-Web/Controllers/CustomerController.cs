@@ -607,12 +607,11 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCustomer(CustomerModel cust)
         {
-
             var modals = await _customerService.UpdateCustomer(cust);
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("ValidateNewCustomer");
+                return RedirectToAction("SuccessRedirectUpdateCustomer", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
             }
 
             return View(modals);
@@ -788,6 +787,39 @@ namespace HPCL_Web.Controllers
             var model = await _customerService.GetCustomerOldAndNewContactPersonList(CustomerId);
 
             return PartialView("~/Views/Customer/_ViewCustomerOldNewContactPersonDetailsTbl.cshtml", model);
+        }
+        public async Task<IActionResult> SuccessRedirectUpdateCustomer(string customerReferenceNo, string Message)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.Message = Message;
+            return View();
+        }
+        public async Task<IActionResult> SuccessUploadDocumentRedirect(string customerReferenceNo)
+        {
+            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            return View();
+        }
+        public async Task<IActionResult> CustomerResetPassword()
+        {
+            CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CustomerResetPassword(CustomerResetPasswordViewModel reqModel)
+        {
+            CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
+            if (reqModel != null)
+            {
+                if (reqModel.CustomerId != null)
+                    modals = await _customerService.CustomerResetPassword(reqModel.CustomerId);
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateEmailResetPassword([FromBody] CustomerResetPasswordViewModel reqModel)
+        {
+            var modals = await _customerService.UpdateEmailResetPassword(reqModel);
+            return Json(modals);
         }
     }
 }

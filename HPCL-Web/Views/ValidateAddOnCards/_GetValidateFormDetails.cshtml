@@ -282,17 +282,7 @@
                                         <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;" maxlength="200"></textarea>
                                         <div class="error" id="comment_error"></div>
                                         <div style="display:none;" id="custRefNo">@Model[0].CustomerReferenceNo</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                 <div class="row">
-                                    <div class="col-lg-2">
-                                        <label class="font-weight-normal col-md-5 col-12">Form Number<sup class="text-danger">*</sup></label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input autocomplete="off" class="form-control" id="FormNumber1" maxlength="10" name="FormNumber1" onkeypress="return isNumberKey(event)" type="text">
-                                        <div class="error" id="FormNumber1_error"></div>
+                                        <div style="display:none;" id="frmNumber">@Model[0].FormNumber</div>
                                     </div>
                                 </div>
                             </div>
@@ -335,44 +325,10 @@ else
          {
              $("#comment_error").html("");
          }
-
-        var formNumber = document.getElementById("FormNumber1").value;
-        if (formNumber == "") 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Form Number field cannot be left blank";
-            ret=false;
-        }
-        else if (formNumber.substring(0, 1) == "0") 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (formNumber.length < 10) 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (!formNumber.match(number)) 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else
-        {
-            if (localStorage.getItem("FORMNOALREADYUSED") == 0) 
-            {
-                document.getElementById("FormNumber1_error").innerHTML = "Form Number already exists";
-                ret = false;
-            }
-            else 
-            {
-                document.getElementById("FormNumber1_error").innerHTML = "";
-            }
-        }
-
+                 
         if (ret==true)
         {
-            var approvemdl = { CustomerReferenceNo: $("#custRefNo").html(), Comments: $("#comments").val(), Approvalstatus: action, FormNumber: formNumber };
+            var approvemdl = { CustomerReferenceNo: $("#custRefNo").html(), Comments: $("#comments").val(), Approvalstatus: action, FormNumber: $("#frmNumber").html() };
             console.log(approvemdl);
             $.ajax({
                 type: 'POST',
@@ -424,69 +380,4 @@ else
               $("#comment_error").html("Comment is required");
          }
      });
-
-     $("#FormNumber1").on("blur", function () 
-     {
-        debugger;
-        localStorage.setItem("FORMNOALREADYUSED", "1");
-
-        var formNumber = document.getElementById("FormNumber1").value;
-        if (formNumber == "") 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Form Number field cannot be left blank";
-            return (false);
-        }
-        else if (formNumber.substring(0, 1) == "0") 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-        else if (formNumber.length < 10) 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-        else if (!formNumber.match(number)) 
-        {
-            document.getElementById("FormNumber1_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
-            return false;
-        }
-        else
-            document.getElementById("FormNumber1_error").innerHTML = "";
-
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckformnumberDuplication", "Customer")',
-            data: { FormNumber: formNumber },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) 
-            {
-                console.log(data);
-                console.log(status);
-                var v = data;
-                if (status == 'success') 
-                {
-                    if (data.status == "0") 
-                    {
-                        document.getElementById("FormNumber1_error").innerHTML = "Form Number already exists";
-                        localStorage.setItem("FORMNOALREADYUSED", "0");
-                    }
-                    else 
-                    {
-                        document.getElementById("FormNumber1_error").innerHTML = "";
-                    }
-                }
-                else 
-                {
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) 
-            {
-
-            }
-        });
-
-
-   });
 </script>
