@@ -454,5 +454,10 @@
         public static string GetEnrollStatusUrl = "api/dtplus/HDFCCreditPouch/get_cp_status";
         public static string GetEnrollStatusReportUrl = "api/dtplus/HDFCCreditPouch/get_cp_status_Report";
         #endregion
+
+        #region "CCMS Recharge"
+        public static string GetDetailsByMobNoUrl = "api/dtplus/RechargeCCMS/get_details";
+        public static string RedirectToPGUrl = "api/dtplus/RechargeCCMS/init_ccms_rcharge";
+        #endregion
     }
 }

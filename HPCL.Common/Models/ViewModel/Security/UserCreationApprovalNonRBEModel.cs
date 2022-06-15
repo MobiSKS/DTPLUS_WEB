@@ -27,7 +27,7 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string LastName { get; set; }
         public string SubLevelName { get; set; }
         public string Comments { get; set; }
-        public string RequestedOn { get; set; }
+        public string RequestedDate { get; set; }
         public string RequestedBy { get; set; }
     }
-}
+}   
