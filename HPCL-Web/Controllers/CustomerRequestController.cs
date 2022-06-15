@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.ViewModel.CustomerRequest;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -109,6 +110,28 @@ namespace HPCL_Web.Controllers
         {
             var reasonList = await _customerRequestService.UpdatePermanentlyHotlistCards(CustomerId, cardsList);
             return Json(new { reasonList = reasonList });
+        }
+        public async Task<IActionResult> ConfigureEmailAlerts()
+        {
+            ConfigureEmailAlertViewModel modals = new ConfigureEmailAlertViewModel();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ConfigureEmailAlerts(ConfigureEmailAlertViewModel reqModel)
+        {
+            ConfigureEmailAlertViewModel modals = new ConfigureEmailAlertViewModel();
+            if (reqModel != null)
+            {
+                if (reqModel.CustomerID != null)
+                    modals = await _customerRequestService.ConfigureEmailAlerts(reqModel.CustomerID);
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel)
+        {
+            var modals = await _customerRequestService.UpdateConfigureEmailAlert(reqModel);
+            return Json(modals);
         }
     }
 }
