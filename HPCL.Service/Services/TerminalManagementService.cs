@@ -3,6 +3,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.TerminalManagement;
 using HPCL.Common.Models.ResponseModel.TerminalManagementResponse;
 using HPCL.Common.Models.ViewModel;
+using HPCL.Common.Models.ViewModel.Merchant;
 using HPCL.Common.Models.ViewModel.Terminal;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -596,6 +597,108 @@ namespace HPCL.Service.Services
             ManageTerminalModel custModel = new ManageTerminalModel();
             custModel.StatusModals.AddRange(await _commonActionService.GetStatusTypeforTerminal());
             return custModel;
+        }
+        public async Task<MerchantModel> GetMerchantSummaryData(string ERPCode)
+        {
+            char flag = 'N';
+            MerchantModel merchantModel = new MerchantModel();
+            if (!string.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("ERPCode")))
+            {
+                merchantModel.ERPCode = _httpContextAccessor.HttpContext.Session.GetString("ERPCode");
+            }
+
+
+            var MerchantFormDetails = new Dictionary<string, string>
+                    {
+                        {"Useragent", CommonBase.useragent},
+                        { "Userip", CommonBase.userip},
+                        {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+                        { "ErpCode", ERPCode}
+                    };
+            MerchantGetDetailsModel merchantDetailsModel = new MerchantGetDetailsModel();
+            StringContent MerchantFormDetailsContent = new StringContent(JsonConvert.SerializeObject(MerchantFormDetails), Encoding.UTF8, "application/json");
+
+            var merchantRejectedResponse = await _requestService.CommonRequestService(MerchantFormDetailsContent, WebApiUrl.getMerchantbyERPCode);
+
+            JObject merchantRejectedObj = JObject.Parse(JsonConvert.DeserializeObject(merchantRejectedResponse).ToString());
+            var merchantRejectedJarr = merchantRejectedObj["Data"].Value<JArray>();
+            List<MerchantGetDetailsModel> dtls = merchantRejectedJarr.ToObject<List<MerchantGetDetailsModel>>();
+            merchantDetailsModel = dtls.First();
+            merchantModel.MerchantID = merchantDetailsModel.MerchantId;
+            merchantModel.ERPCode = merchantDetailsModel.ErpCode;
+            merchantModel.RetailOutletName = merchantDetailsModel.RetailOutletName;
+            merchantModel.MerchantType = merchantDetailsModel.MerchantTypeName;
+            merchantModel.DealerName = merchantDetailsModel.DealerName;
+            merchantModel.MappedMerchantID = merchantDetailsModel.MappedMerchantId;
+            merchantModel.DealerMobileNumber = merchantDetailsModel.DealerMobileNo;
+            merchantModel.OutletCategory = merchantDetailsModel.OutletCategoryName;
+            merchantModel.PreHighwayNumber = merchantDetailsModel.HighwayNo1;
+            merchantModel.HighwayNumber = merchantDetailsModel.HighwayNo2;
+            merchantModel.HighwayName = merchantDetailsModel.HighwayName;
+            merchantModel.SBUType = merchantDetailsModel.SBUName;
+            merchantModel.LPG_CNGSale = merchantDetailsModel.LPGCNGSale;
+            merchantModel.PANCardNumber = merchantDetailsModel.PancardNumber;
+            merchantModel.GSTNumber = merchantDetailsModel.GSTNumber;
+
+            merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1;
+            merchantModel.Retail_Outlet_Address2 = merchantDetailsModel.RetailOutletAddress2;
+            merchantModel.Retail_Outlet_Address3 = merchantDetailsModel.RetailOutletAddress3;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3)) && !(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2)))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1 + "," + merchantDetailsModel.RetailOutletAddress2 + "," + merchantDetailsModel.RetailOutletAddress3;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3) && !(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2)))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1 + "," + merchantDetailsModel.RetailOutletAddress2;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress3) && String.IsNullOrEmpty(merchantDetailsModel.RetailOutletAddress2))
+                merchantModel.Retail_Outlet_Address1 = merchantDetailsModel.RetailOutletAddress1;
+            merchantModel.Retail_Outlet_Location = merchantDetailsModel.RetailOutletLocation;
+            merchantModel.Retail_Outlet_City = merchantDetailsModel.RetailOutletCity;
+            merchantModel.Retail_Outlet_State = merchantDetailsModel.RetailOutletStateName;
+            merchantModel.Retail_Outlet_District = merchantDetailsModel.RetailOutletDistrictName;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.RetailOutletStateName)))
+                merchantModel.Retail_Outlet_District = merchantDetailsModel.RetailOutletDistrictName + "," + merchantDetailsModel.RetailOutletStateName;
+            merchantModel.Retail_DistictID = merchantDetailsModel.RetailOutletDistrictId;
+            merchantModel.Retail_Outlet_Pin = merchantDetailsModel.RetailOutletPinNumber;
+            merchantModel.ZonalOffice = merchantDetailsModel.ZonalOfficeName;
+            merchantModel.ZonalOfficeID = merchantDetailsModel.ZonalOfficeId;
+            merchantModel.RegionalOffice = merchantDetailsModel.RegionalOfficeName;
+            merchantModel.RegionalOfcID = merchantDetailsModel.RegionalOfficeId;
+            merchantModel.SalesArea = merchantDetailsModel.SalesAreaName;
+            merchantModel.SalesAreaID = merchantDetailsModel.SalesAreaId;
+            merchantModel.FName = merchantDetailsModel.ContactPersonNameFirstName;
+            merchantModel.MName = merchantDetailsModel.ContactPersonNameMiddleName;
+            merchantModel.LName = merchantDetailsModel.ContactPersonNameLastName;
+            merchantModel.Mobile = merchantDetailsModel.MobileNo;
+            merchantModel.Email = merchantDetailsModel.EmailId;
+            merchantModel.Misc = merchantDetailsModel.Mics;
+            merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1;
+            merchantModel.Comm_Address2 = merchantDetailsModel.CommunicationAddress2;
+            merchantModel.Comm_Address3 = merchantDetailsModel.CommunicationAddress3;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3)) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2)))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1 + "," + merchantDetailsModel.CommunicationAddress2 + "," + merchantDetailsModel.CommunicationAddress3;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2)))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1 + "," + merchantDetailsModel.CommunicationAddress2;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress3) && String.IsNullOrEmpty(merchantDetailsModel.CommunicationAddress2))
+                merchantModel.Comm_Address1 = merchantDetailsModel.CommunicationAddress1;
+            merchantModel.Comm_City = merchantDetailsModel.CommunicationCity;
+            merchantModel.Comm_State = merchantDetailsModel.CommunicationStateName;
+            merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName;
+            if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName)) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName + "," + merchantDetailsModel.CommunicationStateName;
+            else if (!(String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName)) && (String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationStateName;
+            else if (String.IsNullOrEmpty(merchantDetailsModel.CommunicationStateName) && !(String.IsNullOrEmpty(merchantDetailsModel.CommunicationDistrictName)))
+                merchantModel.Comm_District = merchantDetailsModel.CommunicationDistrictName;
+            merchantModel.Comm_DistictID = merchantDetailsModel.CommunicationDistrictId;
+            merchantModel.Comm_Pin = merchantDetailsModel.CommunicationPinNumber;
+            merchantModel.NumOfLiveTerminals = merchantDetailsModel.NoofLiveTerminals;
+            merchantModel.TerminalTypeRequested = merchantDetailsModel.TerminalTypeRequested;
+            merchantModel.Retail_Outlet_PhoneOffice = merchantDetailsModel.RetailOutletPhoneNumber;
+            merchantModel.Retail_Outlet_Fax = merchantDetailsModel.RetailOutletFax;
+            merchantModel.Comm_PhoneNumber = merchantDetailsModel.CommunicationPhoneNumber;
+            merchantModel.Comm_Fax = merchantDetailsModel.CommunicationFax;
+
+
+            return merchantModel;
+
         }
     }
 }

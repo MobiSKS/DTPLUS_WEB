@@ -242,5 +242,12 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/TerminalManagement/_SearchResultForTerminalTable.cshtml", modals);
         }
         #endregion
+
+        public async Task<IActionResult> GetMerchantSummaryData(string ERPCode)
+        {
+
+            var modals = await _TerminalService.GetMerchantSummaryData(ERPCode);
+            return PartialView("~/Views/TerminalManagement/_MerchantSummaryView.cshtml", modals);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models.RequestModel.TerminalManagement;
 using HPCL.Common.Models.ResponseModel.TerminalManagementResponse;
 using HPCL.Common.Models.ViewModel;
+using HPCL.Common.Models.ViewModel.Merchant;
 using HPCL.Common.Models.ViewModel.Terminal;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SearchTerminalDetailsResponseModal>> SearchTerminalDetails(string terminalId, string merchantId, string terminalType, string issueDate);
         Task<ManageTerminalModel> ManageTerminal();
         Task<ManageTerminalResponse> GetAllStatusValue(string MerchantId, string TerminalId, string Status);
+        Task<MerchantModel> GetMerchantSummaryData(string ERPCode);
     }
 }
