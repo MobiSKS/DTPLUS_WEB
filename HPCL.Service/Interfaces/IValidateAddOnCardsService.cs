@@ -13,7 +13,7 @@ namespace HPCL.Service.Interfaces
     public interface IValidateAddOnCardsService
     {
         Task<ValidateAddOnCardsModel> Details(ValidateAddOnCardsModel validateNewCardsMdl);
-        Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo);
+        Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo, string FormNumber);
         Task<CommonResponseData> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel);
     }
 }

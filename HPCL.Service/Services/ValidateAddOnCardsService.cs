@@ -107,7 +107,7 @@ namespace HPCL.Service.Services
             validateNewCardsModel.NewCardsLists.AddRange(validateNewCardslst);
             return validateNewCardsModel;
         }
-        public async Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo)
+        public async Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo, string FormNumber)
         {
             var getDetailsForApprovalForms = new ValidateNewCardWithReferenceNumberModel
             {
@@ -124,6 +124,11 @@ namespace HPCL.Service.Services
             JObject getDetailsForApprovalObj = JObject.Parse(JsonConvert.DeserializeObject(getDetailsForApprovalResponse).ToString());
             var getDetailsForApprovalJarr = getDetailsForApprovalObj["Data"].Value<JArray>();
             List<VehicleDetailsModel> getDetailsForApprovallst = getDetailsForApprovalJarr.ToObject<List<VehicleDetailsModel>>();
+
+            foreach (VehicleDetailsModel item in getDetailsForApprovallst)
+            {
+                item.FormNumber = FormNumber;
+            }
 
             return getDetailsForApprovallst;
         }
