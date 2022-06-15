@@ -90,7 +90,7 @@
                         i = i + 1;
 
                         <tr>
-                            <td><input type="checkbox" id="check_@i" @disabled @checkedval /></td>
+                            <td><input type="checkbox" id="check_@i" @disabled @checkedval onchange="checkChanged(this)" /></td>
                             <td>@item.ZonalOfficeName</td>
                             <td>@item.RegionalOfficeName</td>
                             <td>@item.TerminalId</td>
@@ -149,6 +149,13 @@ else
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
+    function checkChanged(o){
+        
+        var chkStatus=o.checked;
+        var chkAllStatus= $("#checkAll")[0].checked;
+        if(!chkStatus && chkAllStatus)
+            $("#checkAll")[0].checked=false;
+    }
   $('select').SumoSelect({
             placeholder: '-All-',
             search: true,
@@ -160,7 +167,8 @@ else
          terminalDetail = [];
          var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
          var deInstallationType = $("#DeinstallationTypeID :selected").text();
-         if (deInstallationTypeID == "1") {
+         var checkedAll=$("#checkAll")[0].checked;
+         if (deInstallationTypeID == "1" || checkedAll) {
              $("#TerminalRequestDetails tbody tr").each(function () {
                  var row = $(this);
                  var terminalId = row[0].cells[3].textContent;
@@ -168,7 +176,7 @@ else
              });
              confirmstring = "You have selected all Terminals for Deinstallation, Merchant will be Temporary Hotlisted";
          }
-         if (deInstallationTypeID == "2") {
+         if (deInstallationTypeID == "2" && !checkedAll) {
              $("#TerminalRequestDetails tbody tr").each(function () {
                  var row = $(this);
                  if (row.find('input[type="checkbox"]').is(":checked")) {
