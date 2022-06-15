@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
+﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
 {
+    [TypeFilter(typeof(SessionExpireActionFilter))]
     public class HDFCBankCreditPouchController : Controller
     {
         private readonly IHDFCBankCreditPouchService _hDFCBankCreditPouchService;
