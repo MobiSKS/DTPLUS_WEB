@@ -40,7 +40,8 @@ namespace HPCL.Service.Services
                 CustomerReferenceNo = approveRejectModel.CustomerReferenceNo,
                 Comments = approveRejectModel.Comments,
                 Approvalstatus = approveRejectModel.Approvalstatus,
-                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = approveRejectModel.FormNumber
             };
 
             StringContent actionOnCardsContent = new StringContent(JsonConvert.SerializeObject(actionOnCardsForms), Encoding.UTF8, "application/json");
