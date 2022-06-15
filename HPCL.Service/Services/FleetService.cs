@@ -530,7 +530,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerReferenceNo = customerReferenceNo,
-                Type = "1",
+                Type = "0",
             };
 
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();

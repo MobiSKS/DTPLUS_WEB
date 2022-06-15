@@ -196,6 +196,9 @@
         public static string approveCustomerContactPersonDetails = "api/dtplus/customer/approve_customer_contact_person_details";
         public static string getApproveCustomerAddressRequests = "api/dtplus/customer/get_approve_customer_address_requests";
         public static string requestGetApproveCustomerContactPersonDetails = "api/dtplus/customer/request_get_approve_customer_contact_person_Details";
+        public static string getconfigureemailalerts = "api/dtplus/configure/get_configure_email_alerts";
+        public static string updateconfigureemailalert = "api/dtplus/configure/update_configure_email_alert"; 
+
         #endregion
 
         #region Login
