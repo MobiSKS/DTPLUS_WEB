@@ -375,21 +375,35 @@
             });
             ret = "N";
         }
-        else if (!document.form1.UserName.value.match(userNameCheck)){
+        else{
+            if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM" && $('#OfficerTypeID').val()!="0") {
+                
+                if (!document.form1.UserName.value.match(userNameCheck)){
+                    document.getElementById("userName_error").innerHTML = "Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.";
 
-            if ($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM") {
-                document.getElementById("userName_error").innerHTML = "Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.";
-
-                if (ret != "N") {
-                    document.form1.UserName.focus();
+                    if (ret != "N") {
+                        document.form1.UserName.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
                 }
-                $("#form1").submit(function (e) {
-                    e.preventDefault();
-                });
-                ret = "N";
             }
             else if ($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM") {
-                document.getElementById("userName_error").innerHTML = "Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.";
+                if (!document.form1.UserName.value.match(empIDCheck)){
+                    document.getElementById("userName_error").innerHTML = "Invalid Emp ID.Minimum length should be 6 and special characters are not allowed.";
+                    if (ret != "N") {
+                        document.form1.UserName.focus();
+                    }
+                    $("#form1").submit(function (e) {
+                        e.preventDefault();
+                    });
+                    ret = "N";
+                }
+            }
+            else if (document.getElementById("userName_error").innerHTML.length > 0)
+            {
                 if (ret != "N") {
                     document.form1.UserName.focus();
                 }
@@ -398,20 +412,11 @@
                 });
                 ret = "N";
             }
-        }
-        else if (document.getElementById("userName_error").innerHTML.length > 0)
-        {
-            if (ret != "N") {
-                document.form1.UserName.focus();
+            else {
+                document.getElementById("userName_error").innerHTML = "";
             }
-            $("#form1").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
         }
-        else {
-            document.getElementById("userName_error").innerHTML = "";
-        }
+        
 
         if (document.form1.OfficerTypeID.value == "" || document.form1.OfficerTypeID.value == "0") {
             document.getElementById("officerType_error").innerHTML = "Officer Type is required";
@@ -645,8 +650,8 @@
             $("#commAddressForm").hide();
 
             if($("#UserName").val().trim() != ""){
-                if(!($("#UserName").val().match(userNameCheck)))
-                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.");
+                if(!($("#UserName").val().match(empIDCheck)))
+                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters are not allowed.");
                 else{
                     $("#userName_error").html("");
             //    $("#userName_error").html("Emp ID is required");
@@ -675,8 +680,8 @@
             $("#empIDLabel").attr("style","display:block;");
             $("#commAddressForm").show();
             if($("#UserName").val().trim() != ""){
-                if(!($("#UserName").val().match(userNameCheck)))
-                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.");
+                if(!($("#UserName").val().match(empIDCheck)))
+                    $("#userName_error").html("Invalid Emp ID.Minimum length should be 6 and special characters are not allowed.");
                 else{
                     $("#userName_error").html("");
             //    $("#userName_error").html("Emp ID is required");
@@ -707,7 +712,7 @@
             $("#commAddressForm").show();
             if($("#UserName").val().trim() != ""){
                 if(!($("#UserName").val().match(userNameCheck)))
-                    $("#userName_error").html("Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Username should not start with special character and 2 consecutive special characters are not allowed.");
+                    $("#userName_error").html("Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.");
                 else{
                     $("#userName_error").html("");
             //    $("#userName_error").html("User Name is required");
@@ -964,15 +969,25 @@
     $("#UserName").on("blur", function () {
         var UserName = this.value;
         if (UserName.trim() != "") {
-            var errorMsg="";
-
-            if($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM")
-                errorMsg="Invalid Emp ID.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.Emp ID should not start with special character and 2 consecutive special characters are not allowed.";
-            else
+            var errorMsg="",valid="Y";
+            debugger;
+            if($('#OfficerTypeID :selected').text() == "RBE" || $('#OfficerTypeID :selected').text() == "RSM"){
+                errorMsg="Invalid Emp ID.Minimum length should be 6 and special characters are not allowed.";
+                if(!(UserName.match(empIDCheck))){
+                    $("#userName_error").html(errorMsg);
+                    valid="N";
+                }
+                
+            }
+                
+            else if($('#OfficerTypeID :selected').text() != "RBE" && $('#OfficerTypeID :selected').text() != "RSM" && $('#OfficerTypeID').val()!="0"){
                 errorMsg="Invalid User Name.Minimum length should be 6 and special characters(Except .,_,@@)are not allowed.User Name should not start with special character and 2 consecutive special characters are not allowed.";
-            if(!(UserName.match(userNameCheck)))
-                $("#userName_error").html(errorMsg);
-            else{
+                if(!(UserName.match(userNameCheck))){
+                    $("#userName_error").html(errorMsg);
+                    valid="N";
+                }
+            }
+            if(valid=="Y"){
                 $("#userName_error").html("");
                 $.ajax({
                     type: 'POST',  // http method
