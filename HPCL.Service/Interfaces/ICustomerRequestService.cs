@@ -1,6 +1,8 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerRequest;
 using HPCL.Common.Models.ViewModel.CustomerRequest;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,5 +20,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateDndSmsAlertsConfigure(string CustomerId);
         Task<GetHotlistCardsPermanentlyRes> HotlistCardsPermanently(GetHotlistCardsPermanently entity);
         Task<List<UpdateHotlistCardRes>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList);
+        Task<ConfigureEmailAlertViewModel> ConfigureEmailAlerts(string CustomerId);
+        Task<List<SuccessResponse>> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel);
     }
 }
