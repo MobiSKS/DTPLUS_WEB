@@ -41,6 +41,7 @@ namespace HPCL.Service
             services.AddTransient<IDealerService, DealerService>();
             services.AddTransient<IHDFCBankCreditPouchService, HDFCBankCreditPouchService>();
             services.AddTransient<IValidateAddOnCardsService, ValidateAddOnCardsService>();
+            services.AddTransient<ICCMSRechargeService, CCMSRechargeService>();
             return services;
         }
     }

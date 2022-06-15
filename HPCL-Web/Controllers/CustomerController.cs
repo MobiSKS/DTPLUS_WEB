@@ -799,5 +799,27 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerReferenceNo = customerReferenceNo;
             return View();
         }
+        public async Task<IActionResult> CustomerResetPassword()
+        {
+            CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CustomerResetPassword(CustomerResetPasswordViewModel reqModel)
+        {
+            CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
+            if (reqModel != null)
+            {
+                if (reqModel.CustomerId != null)
+                    modals = await _customerService.CustomerResetPassword(reqModel.CustomerId);
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateEmailResetPassword([FromBody] CustomerResetPasswordViewModel reqModel)
+        {
+            var modals = await _customerService.UpdateEmailResetPassword(reqModel);
+            return Json(modals);
+        }
     }
 }
