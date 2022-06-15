@@ -100,5 +100,10 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+
+        public IActionResult RequestAuthorization()
+        {
+            return View();
+        }
     }
 }
