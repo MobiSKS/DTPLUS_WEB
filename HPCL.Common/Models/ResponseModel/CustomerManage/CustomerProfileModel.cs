@@ -330,9 +330,9 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string RegionalOfficeName { get; set; }
         public string DateOfApplication { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime CreatedTime { get; set; }
+        public string CreatedTime { get; set; }
         public object ModifiedBy { get; set; }
-        public DateTime ModifiedTime { get; set; }
+        public string ModifiedTime { get; set; }
         public string NameOnCard { get; set; }
         public string TypeOfBusinessEntityId { get; set; }
         public string TypeOfBusinessEntityName { get; set; }
@@ -376,12 +376,12 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string CustomerReferenceNo { get; set; }
         public string CustomerStatusId { get; set; }
         public string CustomerStatusName { get; set; }
-        public DateTime Approvedon { get; set; }
+        public string Approvedon { get; set; }
         public object ApprovedBy { get; set; }
         public string CustomerStatusFeewaiverID { get; set; }
         public object CustomerStatusFeewaiverName { get; set; }
         public object FeewaiverComments { get; set; }
-        public DateTime FeewaiverApprovedOn { get; set; }
+        public string FeewaiverApprovedOn { get; set; }
         public object FeewaiverApprovedBy { get; set; }
         public string CustomerSignedOn { get; set; }
         public string CustomerFormNumber { get; set; }

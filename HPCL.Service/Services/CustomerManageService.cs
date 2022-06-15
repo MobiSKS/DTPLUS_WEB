@@ -329,13 +329,7 @@ namespace HPCL.Service.Services
 
                         if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
                         {
-                            if (!response.KeyOfficialDOA.Contains("1900"))
-                            {
-                                string[] subs = response.KeyOfficialDOA.Split(' ');
-                                string[] date = subs[0].Split('/');
-                                response.KeyOfficialDOA = date[1] + "-" + date[0] + "-" + date[2];
-                            }
-                            else
+                            if (response.KeyOfficialDOA.Contains("1900"))
                             {
                                 response.KeyOfficialDOA = "";
                             }
@@ -343,13 +337,7 @@ namespace HPCL.Service.Services
 
                         if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
                         {
-                            if (!response.KeyOfficialDOB.Contains("1900"))
-                            {
-                                string[] subs = response.KeyOfficialDOB.Split(' ');
-                                string[] date = subs[0].Split('/');
-                                response.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
-                            }
-                            else
+                            if (response.KeyOfficialDOB.Contains("1900"))
                             {
                                 response.KeyOfficialDOB = "";
                             }
@@ -358,19 +346,9 @@ namespace HPCL.Service.Services
                         {
                             response.NameOnCard = "";
                         }
-
                         if (!string.IsNullOrEmpty(response.DateOfApplication))
                         {
-                            string[] subs = response.DateOfApplication.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            response.CustomerApplicationDate = date[1] + "-" + date[0] + "-" + date[2];
-                            response.DateOfApplication = date[1] + "-" + date[0] + "-" + date[2];
-                        }
-                        if (!string.IsNullOrEmpty(response.SignedOn))
-                        {
-                            string[] subs = response.SignedOn.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            response.SignedOn = date[1] + "-" + date[0] + "-" + date[2];
+                            response.CustomerApplicationDate = response.DateOfApplication;
                         }
                         if (string.IsNullOrEmpty(response.RegionalOfficeName))
                         {
@@ -412,6 +390,19 @@ namespace HPCL.Service.Services
                 JObject obj = JObject.Parse(JsonConvert.DeserializeObject(contentString).ToString());
                 var jarr = obj["Data"].Value<JArray>();
                 List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
+
+                if (searchList != null && searchList.Count > 0)
+                {
+                    foreach (SearchGridResponse item in searchList)
+                    {
+                        if (string.IsNullOrEmpty(item.ExpiryDate))
+                            item.ExpiryDate = "";
+                        if (string.IsNullOrEmpty(item.IssueDate))
+                            item.IssueDate = "";
+                        if (string.IsNullOrEmpty(item.VechileNo))
+                            item.VechileNo = "";
+                    }
+                }
 
                 if (CustomerTypeId == "927")//DriverCard
                 {
