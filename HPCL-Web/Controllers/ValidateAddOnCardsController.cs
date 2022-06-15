@@ -31,10 +31,10 @@ namespace HPCL_Web.Controllers
             modals.States.AddRange(lstState);
             return View(modals);
         }
-        public async Task<IActionResult> GetCardDetailsForApproval(string CustomerRefNo, string CustomerType)
+        public async Task<IActionResult> GetCardDetailsForApproval(string CustomerRefNo, string CustomerType, string FormNumber)
         {
             ViewBag.CustomerType = CustomerType;
-            var modals = await _validateNewCardsService.GetCardDetailsForApproval(CustomerRefNo);
+            var modals = await _validateNewCardsService.GetCardDetailsForApproval(CustomerRefNo, FormNumber);
             return PartialView("~/Views/ValidateAddOnCards/_GetValidateFormDetails.cshtml", modals);
         }
         public async Task<IActionResult> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel)
