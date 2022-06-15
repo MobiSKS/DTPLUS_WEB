@@ -9,5 +9,6 @@ namespace HPCL.Common.Models.ViewModel.ValidateNewCards
         public string Comments { get; set; }
         public string Approvalstatus { get; set; }
         public string ApprovedBy { get; set; }
+        public string FormNumber { get; set; }
     }
 }
