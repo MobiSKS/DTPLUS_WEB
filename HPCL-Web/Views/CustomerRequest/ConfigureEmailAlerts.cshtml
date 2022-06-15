@@ -1,17 +1,17 @@
-﻿@model HPCL.Common.Models.ViewModel.Cards.CorporateMultiRechargeLimitModel
+﻿@model HPCL.Common.Models.ViewModel.CustomerRequest.ConfigureEmailAlertViewModel
 
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index","Card")" class="text_primary">Cards</a> </li>
-            <li class="breadcrumb-item font-weight-light">Corporate Multi Recharge Limit Configuration</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
+            <li class="breadcrumb-item font-weight-light">Configure Email Alerts</li>
         </ul>
 
         <form method="post" class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Corporate Multi Recharge Limit Configuration</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Configure Email Alerts</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
 
                             <div class="d-flex align-items-center flex-wrap">
@@ -35,7 +35,7 @@
                                     <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="btnSearch" type="button" onclick="location.href='@Url.Action("CorporateMultiRechargeLimitConfig", "Cards")'">RESET</button>
+                                    <button class="btn btn_primary" id="btnSearch" type="button" onclick="location.href='@Url.Action("ConfigureEmailAlerts", "CustomerRequest")'">RESET</button>
                                 </div>
                             </div>
                         </div>
@@ -48,45 +48,50 @@
 
         @if (Model.Data.Count() > 0)
         {
-            @if (Model.Data.First().Reason == null)
+            @if (Model.Data.First().Status == "1")
             {
-                <div class="w-100">
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3 toBeHiddenOnSuccess">
-                        <div class="border-1 rounded border-grey pb-3">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Allowed Email</p>
+                <table class="table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="tblConfigureEmail">
+                    <thead style="background-color:lightgray;">
+                        <tr>
+                            <th style="display:none">S.No.</th>
+                            <th>Service Name</th>
+                            <th>Allowed</th>
+                            <th style="display:none">ID</th>
 
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Select limits to be Configured</p>
-                            <div class="clearfix"></div>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-12 col-12">
+                        </tr>
+                    </thead>
+                    <tbody id="searchTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.Data)
+                        {
+                            i = i + 1;
 
-                                        <div class="d-flex align-items-center flex-wrap mt-3">
-                                            @foreach (var item in Model.Data)
-                                            {
-                                                <label id="lblLimitType" class="font-weight-normal">@item.TypeOfLimit:</label>
-                                                @if (item.CheckUncheckId == "0")
-                                                {
-                                                    <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" value="@item.CheckUncheckId">
-                                                }
-                                                @if (item.CheckUncheckId == "1")
-                                                {
-                                                    <input type="checkbox" class="col-md-1 align-content-start" id="@item.LimitId" name="@item.TypeOfLimit" checked value="@item.CheckUncheckId">
-                                                }
+                            <tr>
+                                <td style="display:none">@i</td>
+                                <td>@item.ServiceName</td>
+                                @if (item.ServiceStatus == "1")
+                                {
+                                    <td><input type="checkbox" id="allowedCheck_@i" checked /></td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" id="allowedCheck_@i" /></td>
+                                }
+                                <td style="display:none">@item.ServieId</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-                                            }
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                                <div class="col-12 d-flex align-items-center justify-content-center mt-3">
-                                    <div class="px-2">
-                                        <button class="btn btn_primary" id="btnConfigure" type="button">CONFIGURE LIMITS</button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
+                <div class="clearfix"></div>
+                <div class="col-12 d-flex align-items-center justify-content-center mt-3">
+                    <div class="px-2">
+                        <button class="btn btn_primary" id="btnConfigure" type="button">SUBMIT</button>
                     </div>
+
                 </div>
             }
             else
@@ -96,13 +101,11 @@
                 {
                     <div id="reason" class="mb-3 text-center alert alert-danger">@Model.Data.First().Reason</div>
                 }
-                @if (Model.Data.First().Status == "1")
-                {
-                    <div id="reason" class="mb-3 text-center alert alert-success">@Model.Data.First().Reason</div>
-                }
+
             }
         }
         else
+
         {
             @if (Model.Message != "" && Model.Message!=null)
             {
@@ -122,9 +125,9 @@
 
          var customerId = $("#CustomerID").val();
              if (customerId.trim() != "") {
-                 if (!(customerId.match(corporateCustomerCheck))) {
+                 if (!(customerId.match(mappedCustomerId))) {
                      $("#customerId_error").attr("style", "display:block");
-                     $("#customerId_error").html("Customer ID should be 10 digit number and start with 28.");
+                     $("#customerId_error").html("Invalid Customer ID");
                      flag="N";
                  }
                  else{
@@ -134,7 +137,7 @@
              }
              else{
                  $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Enter Customer ID");
+                 $("#customerId_error").html("Please enter Customer ID");
                  flag="N";
              }
 
@@ -145,9 +148,9 @@
      $("#CustomerID").on("blur", function () {
              var customerId = $("#CustomerID").val();
              if (customerId.trim() != "") {
-                 if (!(customerId.match(corporateCustomerCheck))) {
+                 if (!(customerId.match(mappedCustomerId))) {
                      $("#customerId_error").attr("style", "display:block");
-                     $("#customerId_error").html("Customer ID should be 10 digit number and start with 28.");
+                     $("#customerId_error").html("Invalid Customer ID");
                  }
                  else{
                      $("#customerId_error").attr("style", "display:none");
@@ -156,16 +159,16 @@
              }
              else{
                  $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Enter Customer ID");
+                 $("#customerId_error").html("Please enter Customer ID");
              }
          });
     $("#btnConfigure").on("click", (function (e) {
         var flag="Y";
          var customerId = $("#CustomerID").val();
          if (customerId.trim() != "") {
-             if (!(customerId.match(corporateCustomerCheck))) {
+             if (!(customerId.match(mappedCustomerId))) {
                  $("#customerId_error").attr("style", "display:block");
-                 $("#customerId_error").html("Customer ID should be 10 digit number and start with 28.");
+                 $("#customerId_error").html("Invalid Customer ID");
                  flag="N";
              }
              else{
@@ -175,31 +178,33 @@
          }
          else{
              $("#customerId_error").attr("style", "display:block");
-             $("#customerId_error").html("Enter Customer ID");
+             $("#customerId_error").html("Please enter Customer ID");
              flag="N";
          }
          if (flag == "N")
              e.preventDefault();
          else{
 
-             LimitConfig=[];
-             $('input[type=checkbox]').each(function() {
+             EmailConfig=[];
+             $("#tblConfigureEmail tbody tr").each(function () {
                  debugger;
-                 var statusFlag=0;
-                 if(this.checked)
-                     statusFlag=1;
-                 var limitType=this.id;
-                 LimitConfig.push({ CustomerID: customerId, Limittype: limitType, StatusFlag:statusFlag});
+                  var row = $(this);
+                 var allowedStatus=0;
+                 if (row.find('input[type="checkbox"]').is(":checked")) {
+                     allowedStatus=1
+                 }
+                 var serviceId = row[0].cells[3].textContent;
+                 EmailConfig.push({ ServiceId: serviceId, AllowedStatus: allowedStatus });
              });
 
-               if (confirm('Are you sure you want to configure these limits.')) {
-                 var LimitReqmodel = {  ObjLimitConfig: LimitConfig };
+               if (confirm('Are you sure you want to submit?')) {
+                 var reqmodel = {CustomerId: customerId, objConfigureEmailAlert: EmailConfig };
                  $.ajax({
                      type: 'POST',
-                     url: '@Url.Action("ConfigureLimits", "Cards")',
+                     url: '@Url.Action("UpdateConfigureEmailAlert", "CustomerRequest")',
                      contentType: "application/json; charset=utf-8",
                      dataType: 'json',
-                     data: JSON.stringify(LimitReqmodel),
+                     data: JSON.stringify(reqmodel),
                      success: function (data) {
                         if(data.length>0){
                                if(data[0].status=="0"){

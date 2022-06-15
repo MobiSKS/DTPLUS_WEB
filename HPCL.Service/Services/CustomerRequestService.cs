@@ -1,9 +1,11 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerRequest;
 using HPCL.Common.Models.ViewModel.CustomerRequest;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -278,6 +280,46 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateHotlistCardRes> reasonList = jarr.ToObject<List<UpdateHotlistCardRes>>();
             return reasonList;
+        }
+        public async Task<ConfigureEmailAlertViewModel> ConfigureEmailAlerts(string CustomerId)
+        {
+            ConfigureEmailAlertViewModel configureEmailAlertViewModel = new ConfigureEmailAlertViewModel();
+            var reqBody = new ConfigureEmailAlertRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getconfigureemailalerts);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            configureEmailAlertViewModel = obj.ToObject<ConfigureEmailAlertViewModel>();
+            return configureEmailAlertViewModel;
+        }
+        public async Task<List<SuccessResponse>> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel)
+        {
+            var reqBody = new ConfigureEmailAlertRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId=reqModel.CustomerId,
+                objConfigureEmailAlert = reqModel.objConfigureEmailAlert
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateconfigureemailalert);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
         }
     }
 }
