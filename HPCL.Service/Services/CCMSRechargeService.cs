@@ -5,6 +5,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,14 +23,15 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<GetDetailsByMobRes> GetDetailsByMObNo(string mobNo)
+        public async Task<GetDetailsByMobRes> GetDetailsByMObNoCust(string mobNo, string customerId)
         {
             var searchBody = new GetDetailsByMob
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MobileNo = mobNo
+                MobileNo = mobNo,
+                customerId = customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -39,18 +41,17 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<RedirectToPGResponse> RedirectToPG(RedirectToPGRequest entity)
+        public async Task<RedirectToPGResponse> RedirectToPG(string customerId, string mobNo, string controlCardNo, string amount)
         {
             var searchBody = new RedirectToPGRequest
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MobileNo = entity.MobileNo,
-                Amount = entity.Amount,
-                orderId = entity.orderId,
-                controlCardNo = entity.controlCardNo,
-                customerId = entity.customerId
+                MobileNo = mobNo,
+                Amount = Convert.ToDecimal(amount),
+                controlCardNo = controlCardNo,
+                customerId = customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
