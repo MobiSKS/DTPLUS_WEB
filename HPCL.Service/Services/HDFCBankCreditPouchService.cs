@@ -163,5 +163,23 @@ namespace HPCL.Service.Services
             GetEnrollStatusReportRes searchList = obj.ToObject<GetEnrollStatusReportRes>();
             return searchList;
         }
+
+        public async Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount)
+        {
+            var searchBody = new CcmsRechargeHdfc
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                Amount = Convert.ToDecimal(amount)
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
+            return searchList;
+        }
     }
 }
