@@ -1,272 +1,312 @@
-﻿<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="favicon.ico">
-<meta name="theme-color" content="#74cbcb" />
-<link rel="manifest" href="assets/manifest.json">
-<title>HP Pay : DT Plus</title>
-<!-- Bootstrap core CSS -->
-<link href="assets/css/bootstrap.min.css" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="assets/aos/aos.css" rel="stylesheet">
-<link href="assets/css/style.css" rel="stylesheet">
-<link href="assets/css/responsive.css" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-<link rel="stylesheet" href="assets/css/owl.theme.default.css">
-</head>
+﻿<div class="bg-white p-md-5 p-4">
+    <div class="CCMSRechargePaygateway">
+        <h3 class="">CCMS Recharge through Payment gateway</h3>
+        <div class="payment_gateway_form">
+            <form id="submitForm">
+                <div class="py-4 pr-4 pl-0 pr-md-4">
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Mobile Number </label>
+                        <div class="col-md-8 col-12">
+                            <div class="custom_select">
+                                <input type="text" maxlength="10" id="mobNoVal" class="form-control" onkeypress = "return isNumberKey(event)">
+                                @Html.ValidationMessage("mobNoVal", "", new { @id = "mobNoError", @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                        <div class="col-md-8 col-12">
+                            <div class="custom_select">
+                                <input type="text" id="customerIdVal" class="form-control" onkeypress = "return isNumberKey(event)">
+                                @Html.ValidationMessage("customerIdVal", "", new { @id = "customerIdValErr", @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Control Card Number <sup class="text-danger">*</sup></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" id="controlCardNoVal" class="form-control" onkeypress = "return isNumberKey(event)">
+                            @Html.ValidationMessage("controlCardNoVal", "", new { @id = "controlCardNoValErr", @class = "text-danger" })
+                        </div>
+                    </div>
 
-<body>	
+                    <div class="form-group align-items-center flex-wrap" style="display:none;" id="cutomerName">
+                        <label class="font-weight-normal col-md-4 col-12">Customer Name <sup class="text-danger">*</sup></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" id="customerNameVal" class="form-control">
+                        </div>
+                    </div>
 
-	<div class="bg-white p-md-5 p-4">
-		<div class="CCMSRechargePaygateway">
-			<h3 class="">CCMS Recharge through Payment gateway</h3>
-			<div class="payment_gateway_form">
-			<form>
-				<div class="py-4 pr-4 pl-0 pr-md-4">
-				  <div class="form-group d-flex align-items-center flex-wrap">
-					<label class="font-weight-normal col-md-4 col-12">Mobile Number </label>
-					<div class="col-md-8 col-12">
-					  <div class="custom_select">
-						<input type="text" maxlength="10" id="mobNoVal" class="form-control">
-						@Html.ValidationMessage("mobNoVal", "", new { @id = "mobNoError", @class = "text-danger" })
-					  </div>
-					</div>
-				  </div>
-				  <div class="form-group d-flex align-items-center flex-wrap">
-					<label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
-					<div class="col-md-8 col-12">
-					  <div class="custom_select">
-						<input type="text" name="" class="form-control">
-					  </div>
-					</div>
-				  </div>
-				  <div class="form-group d-flex align-items-center flex-wrap">
-					<label class="font-weight-normal col-md-4 col-12">Control Card Number <sup class="text-danger">*</sup></label>
-					<div class="col-md-8 col-12">
-					  <input type="text" name="" class="form-control">
-					</div>
-				  </div>
-				  <div class="form-group d-flex align-items-center flex-wrap">
-					<label class="font-weight-normal col-md-4 col-12">Amount <sup class="text-danger">*</sup></label>
-					<div class="col-md-8 col-12">
-					  <input type="text" name="" class="form-control">
-					</div>
-				  </div>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Amount <sup class="text-danger">*</sup></label>
+                        <div class="col-md-8 col-12">
+                            <input type="text" id="amountVal" class="form-control" onkeypress = "return isNumberKey(event)">
+                            @Html.ValidationMessage("amountVal", "", new { @id = "amountValErr", @class = "text-danger" })
+                        </div>
+                    </div>
 
-				  <table id="mobNoSearchRes" class="table table-bordered" style="display:none;">
-					  <tr>
-						  <td>Action</td>
-						  <td>Customer ID</td>
-						  <td>Customer Name</td>
-						  <td>Customer Type</td>
-					  </tr>
-				  </table>
+                    <table id="mobNoSearchRes" class="table table-bordered" style="display:none;">
+                        <tr>
+                            <th>Action</th>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Customer Type</th>
+                        </tr>
+                    </table>
 
 
-			  <div class="form-group d-flex align-items-center flex-wrap">
-				<label class="font-weight-normal col-md-4 col-12">Payment Gateway </label>
-				<div class="col-md-8 col-12">
-				  <div class="custom_select">
-					<div class="form-check">
-					  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-					  <label class="form-check-label" for="exampleRadios1">
-						<strong>HDFC PG </strong>
-					  </label>
-					</div>
-				  </div>
-			   </div>
-			  </div>
-			  <div class="form-group d-flex align-items-center flex-wrap">
-				<label class="font-weight-normal col-md-4 col-12"></label>
-				<div class="col-md-8 col-12">
-				  <div class="custom_select">
-					<div class="form-check form-check-inline">
-					  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-					  <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions">Terms &amp; Conditions</a> and <a data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
-					</div>
-				  </div>
-				</div>
-			  </div>
-			  <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
-			   <div class="offset-md-4 col-md-8 col-12">
-				<div class="px-0 float-left mr-3">
-					<button class="btn btn_primary" type="submit" id="btnSave" name="submit">SUBMIT</button>
-				</div>
-				<div class="px-0 float-left">
-					<button class="btn btn_primary" id="btnCancel" name="cancel">RESET</button>
-				</div>
-				</div>
-			</div>
-			</div>
-			</form>
-		</div>	
-		</div>
-	</div>
-	
-	<!-- Terms & Conditions Modal -->
-	<div class="termsConditionsarea">
-	<div class="modal fade" id="termsConditions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			  <span aria-hidden="true">&times;</span>
-			</button>
-		  </div>
-		  <div class="modal-body">
-			<h4 class="terms_con_text">Terms and Conditions for Online-Payments</h4>
-			<p>The Terms and Conditions contained herein shall apply to any person <strong>("User")</strong> using the services for making payments through an online payment gateway service <strong>("Service")</strong> offered jointly by HDFC Bank Ltd. and Avenues India Pvt Ltd (Payment Gateway Service provider), through DriveTrack Plus website i.e. www.drivetrackplus.com Each User is therefore deemed to have read and accepted these Terms and Conditions.</p>
-			<p><strong>A. Privacy Policy</strong></p>
-			<p>HPCL respects and protects the privacy of the individuals that access the information and use the services provided through them. Individually identifiable information about the User is not willfully disclosed to any third party without first receiving the User’s permission, as covered in this Privacy Policy.</p>
-			<p>This Privacy Policy describes HPCL’s treatment of personally identifiable information that HPCL collects when User on the HPCL’s DriveTrack Plus website. HPCL does not collect any unique information about the User (such as User’s name, email address, age, gender etc.) except when the User specifically and knowingly provide such information on the Website. Like any business interested in offering the highest quality of service to clients, HPCL may, from time to time, send email and other communication to the User tell them about the various services, features, functionality and content offered by HPCL’s DriveTrack Plus website or seek voluntary information from you.</p>
-			<p>Please be aware, however, that HPCL will release specific personal information about the User if required to do so in the following circumstances:</p>
-			<ul>
-				<li>a)	in order to comply with any valid legal process such as a search warrant, statute, or court order, or</li>
-				<li>b)	if any of User’s actions on HPCL’s DriveTrack Plus website violate the Terms of Service or any of HPCL’s guidelines for specific services, or</li>
-				<li>c)	to protect or defend HPCL’s legal rights or property, the HPCL’s DriveTrack Plus site, or HPCL Users; or</li>
-				<li>d)	to investigate, prevent, or take action regarding illegal activities, suspected fraud, situations involving potential threats to the security, integrity of HPCL website/offerings.</li>
-			</ul>
-			<p><strong>B. General Terms and Conditions For Online-Payments</strong></p>
-			<ul>
-			<li>1.	Once a User has accepted these Terms and Conditions, he/ she may register and avail the Services. A User may either register on HPCL’s DriveTrack Plus website or alternatively enter in any other manner as may be specified by HPCL from time to time.</li>
-			<li>2.	HPCL's rights, obligations, undertakings shall be subject to the laws in force in India, as well as any directives/ procedures of Government of India, and nothing contained in these Terms and Conditions shall be in derogation of HPCL's right to comply with any law enforcement agencies request or requirements relating to any User’s use of the website or information provided to or gathered by HPCL with respect to such use. Each User accepts and agrees that the provision of details of his/ her use of the Website to regulators or police or to any other third party in order to resolve disputes or complaints which relate to the Website shall be at the absolute discretion of HPCL.</li>
-			<li>3.	If any part of these Terms and Conditions are determined to be invalid or unenforceable pursuant to applicable law including, but not limited to, the warranty disclaimers and liability limitations set forth herein, then the invalid or unenforceable provision will be deemed superseded by a valid, enforceable provision that most closely matches the intent of the original provision and the remainder of these Terms and Conditions shall continue in effect.</li>
-			<li>4.	These Terms and Conditions constitute the entire agreement between the User and HPCL. These Terms and Conditions supersede all prior or contemporaneous communications and proposals, whether electronic, oral, or written, between the User and HPCL. A printed version of these Terms and Conditions and of any notice given in electronic form shall be admissible in judicial or administrative proceedings based upon or relating to these Terms and Conditions to the same extent and subject to the same conditions as other business documents and records originally generated and maintained in printed form.</li>
-			<li>5.	The entries in the books of HPCL and/or the Payment Service Providers kept in the ordinary course of business of HPCL and/or the Payment Service Providers with regard to transactions covered under these Terms and Conditions and matters therein appearing shall be binding on the User and shall be conclusive proof of the genuineness and accuracy of the transaction.</li>
-			<li><strong>6.	Refund For Charge Back Transaction:</strong> In the event there is any claim for/ of charge back by the User for any reason whatsoever, such User shall immediately approach HPCL with his/ her claim details and claim refund from HPCL alone. Such refund (if any) shall be effected only by HPCL via payment gateway or by means of a demand draft or such other means as HPCL deems appropriate. No claims for refund/ charge back shall be made by any User to the Payment Service Provider(s) and in the event such claim is made it shall not be entertained.</li>
-			<li>7.	In these Terms and Conditions, the term <strong>“Charge back”</strong> means approved and settled card (Debit or Credit) or netbanking purchase transactions which are at any time refused, debited or charged back to Merchant account (shall also include similar debits to Payment Gateway Service Provider’s accounts, if any) by the Acquiring Bank for any reason whatsoever, together with the bank fees, penalties and other charges incidental thereto.</li>
-			<li>8.	Refund for fraudulent/duplicate transaction(s): The User shall directly contact HPCL for any fraudulent transaction(s) on account of misuse of Card/ Bank details by a fraudulent individual/party and such issues shall be suitably addressed by HPCL alone in line with their policies and rules.</li>
-			<li>9.	Server Slow Down/Session Timeout: In case the Website or Payment Service Provider’s webpage, that is linked to the Website, is experiencing any server related issues like ‘slow down’ or ‘failure’ or ‘session timeout’, the User shall, before initiating the second payment,, check whether his/her Bank Account has been debited or not and accordingly resort to one of the following options:</li>
-			<li>(I)	In case the Bank Account appears to be debited, ensure that he/ she does not make the payment twice and immediately thereafter contact HPCL via e-mail or any other mode of contact as provided by HPCL to confirm payment.</li>
-			<li>(ii)	In case the Bank Account is not debited, the User may initiate a fresh transaction to make payment.<li>
-			<li>However, the User agrees that under no circumstances the Payment Gateway Service Provider shall be held responsible for such fraudulent/duplicate transactions and hence no claims should be raised to Payment Gateway Service Provider No communication received by the Payment Service Provider(s) in this regards shall be entertained by the Payment Service Provider(s).</li>
-			</ul>
-			<p><strong>C. Limitation of Liability</strong></p>
-			<ul>
-				<li>1.	HPCL has made this Service available to the User as a matter of convenience. HPCL expressly disclaims any claim or liability arising out of the provision of this Service. The User agrees and acknowledges that he/ she shall be solely responsible for his/ her conduct and that HPCL reserves the right to terminate the rights to use of the Service immediately without giving any prior notice thereof.</li>
-				<li>2.	HPCL and/or the Payment Service Providers shall not be liable for any inaccuracy, error or delay in, or omission of (a) any data, information or message, or (b) the transmission or delivery of any such data, information or message; or (c) any loss or damage arising from or occasioned by any such inaccuracy, error, delay or omission, non-performance or interruption in any such data, information or message. Under no circumstances shall the HPCL and/or the Payment Service Providers, its employees, directors, and its third party agents involved in processing, delivering or managing the Services, be liable for any direct, indirect, incidental, special or consequential damages, or any damages whatsoever, including punitive or exemplary arising out of or in any way connected with the provision of or any inadequacy or deficiency in the provision of the Services or resulting from unauthorized access or alteration of transmissions of data or arising from suspension or termination of the Services.</li>
-				<li>3.	HPCL and the Payment Service Provider(s) assume no liability whatsoever for any monetary or other damage suffered by the User on account of:<br><br>
-					<ul>
-						<li>(I)	the delay, failure, interruption, or corruption of any data or other information transmitted in connection with use of the Payment Gateway or Services in connection thereto; and/ or</li>
-						<li>(ii) any interruption or errors in the operation of the Payment Gateway.</li>
-					</ul>
-				</li>
-				<li>4. The User shall indemnify and hold harmless the Payment Service Provider(s) and HPCL and their respective officers, directors, agents, and employees, from any claim or demand, or actions arising out of or in connection with the utilization of the Services.</li>
-				<li>5. The User agrees that HPCL or any of its employees will not be held liable by the User for any loss or damages arising from your use of, or reliance upon the information contained on the Website, or any failure to comply with these Terms and Conditions where such failure is due to circumstance beyond HPCL’s reasonable control.</li>
-			</ul>
-			<p><strong>D. Miscellaneous Conditions :</strong></p>
-			<ul>
-				<li>1. Any waiver of any rights available to HPCL under these Terms and Conditions shall not mean that those rights are automatically waived.</li>
-				<li>2. The User agrees, understands and confirms that his/ her personal data including without limitation details relating to debit card/ credit card transmitted over the Internet may be susceptible to misuse, hacking, theft and/ or fraud and that HPCL or the Payment Service Provider(s) have no control over such matters.</li>
-				<li>3. Although all reasonable care has been taken towards guarding against unauthorized use of any information transmitted by the User, HPCL does not represent or guarantee that the use of the Services provided by/ through it will not result in theft and/or unauthorized use of data over the Internet.</li>
-				<li>4. HPCL, the Payment Service Provider(s) and its affiliates and associates shall not be liable, at any time, for any failure of performance, error, omission, interruption, deletion, defect, delay in operation or transmission, computer virus, communications line failure, theft or destruction or unauthorized access to, alteration of, or use of information contained on the Website.</li>
-				<li>5. The User may be required to create his/ her own User ID and Password in order to register and/ or use the Services provided by HPCL on the DriveTrack Plus Website. By accepting these Terms and Conditions the User aggress that his/ her User ID and Password are very important pieces of information and it shall be the User’s own responsibility to keep them secure and confidential. In furtherance hereof, the User agrees to;</li>
-				<li>i. Choose a new password, whenever required for security reasons.</li>
-				<li>ii.	Keep his/ her User ID & Password strictly confidential.</li>
-				<li>iii. Be responsible for any transactions made by User under such User ID and Password.</li>
-				<li>The User is hereby informed that HPCL will never ask the User for the User’s password in an unsolicited phone call or in an unsolicited email. The User is hereby required to sign out of his/ her HPCL account on the Website and close the web browser window when the transaction(s) have been completed. This is to ensure that others cannot access the User’s personal information and correspondence when the User happens to share a computer with someone else or is using a computer in a public place like a library or Internet café.</li>
-			</ul>
-			<p><strong>E. Debit/Credit Card, Bank Account Details</strong></p>
-			<ul>
-			<li>1. The User agrees that the debit/credit card details provided by him/ her for use of the aforesaid Service(s) must be correct and accurate and that the User shall not use a debit/ credit card, that is not lawfully owned by him/ her or the use of which is not authorized by the lawful owner thereof. The User further agrees and undertakes to provide correct and valid debit/credit card details.</li>
-			<li>2. The User may pay to HPCL by using a debit/credit card or through online banking account. The User warrants, agrees and confirms that when he/ she initiates a payment transaction and/or issues an online payment instruction and provides his/ her card / bank details:<br><br>
-			<ul>
-				<li>i. The User is fully and lawfully entitled to use such credit / debit card, bank account for such transactions;</li>
-				<li>ii. The User is responsible to ensure that the card/ bank account details provided by him/ her are accurate;</li>
-				<li>iii. The User is authorizing debit of the nominated card/ bank account for the payment selected by such User along with the applicable Fees.</li>
-				<li>iv.	The User is responsible to ensure sufficient credit is available on the nominated card/ bank account at the time of making the payment to permit the payment of the dues payable or the bill(s) selected by the User inclusive of the applicable Fee.</li>
-			</ul>
-			</li>
-			</ul>
-			<p><strong>F. Personal Information</strong></p>
-			<ul>
-				<li>1. The User agrees that, to the extent required or permitted by law, HPCL and/ or the Payment Service Provider(s) may also collect, use and disclose personal information in connection with security related or law enforcement investigations or in the course of cooperating with authorities or complying with legal requirements.</li>
-				<li>2. The User agrees that any communication sent by the User vide e-mail, shall imply release of information therein/ therewith to HPCL. The User agrees to be contacted via e-mail on such mails initiated by him/ her.</li>
-				<li>3. In addition to the information already in the possession of HPCL and/ or the Payment Service Provider(s), HPCL may have collected similar information from the User in the past. By entering the Website the User consents to the terms of HPCL’s information privacy policy and to HPCL’s continued use of previously collected information. By submitting the User’s personal information to HPCL, the User will be treated as having given his/her permission for the processing of the User’s personal data as set out herein.</li>
-				<li>4. The User acknowledges and agrees that his/ her information will be managed in accordance with the laws for the time in force.</li>
-			</ul>
-			<p><strong>G. Payment Gateway Disclaimer</strong></p>
-			<ul>
-				<li>The Service is provided in order to facilitate access to view and do CCMS Recharge online. HPCL or the Payment Service Provider(s) do not make any representation of any kind, express or implied, as to the operation of the Payment Gateway other than what is specified in the Website for this purpose. By accepting/ agreeing to these Terms and Conditions, the User expressly agrees that his/ her use of the aforesaid online payment Service is entirely at own risk and responsibility of the User.</li>
-			</ul>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	</div>
-	
-	<div class="ApplicationsArea">
-	<div class="modal fade" id="App_charges" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			  <span aria-hidden="true">&times;</span>
-			</button>
-		  </div>
-		  <div class="modal-body">
-			<h4 class="terms_con_text text-left"><u>Applicable Charges</u></h4>
-			<ul>
-				<li>Domestic Credit Cards ( Charge to Customers ) – Master / Visa / Rupay 1%</li>
-				<li>Debit Card – 0’ upto Rs. 2,000/- and 0.90% above Rs. 2,000/-</li>
-				<li>Net Banking –<br><br>
-					<ul style="margin-bottom: 25px;">
-						<li>Rs 10 for ICICI Bank and Axis Bank</li>
-						<li>Rs 8 for HDFC Bank</li>
-						<li>Rs 16 for SBI</li>
-						<li>Rs 6 for all other Banks</li>
-					</ul>
-				</li>
-				<li>Wallet Payzapp for Business – 1%</li>
-				<li>UPI – ‘0’ upto Rs. 2,000/- and 0.65% above Rs. 2,000/-</li>
-				<li>All rates are excluding Tax</li>
-			</ul>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	</div>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Payment Gateway </label>
+                        <div class="col-md-8 col-12">
+                            <div class="custom_select">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        <strong>HDFC PG </strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12"></label>
+                        <div class="col-md-8 col-12">
+                            <div class="custom_select">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxTC" value="option1">
+                                    <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions">Terms &amp; Conditions</a> and <a data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
+                        <div class="offset-md-4 col-md-8 col-12">
+                            <div class="px-0 float-left mr-3">
+                                <button class="btn btn_primary" type="button" onclick="submitRec()">SUBMIT</button>
+                            </div>
+                            <div class="px-0 float-left">
+                                <button class="btn btn_primary" onclick="resetClick()">RESET</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-<!-- Bootstrap core JavaScript
-    ================================================== --> 
-<!-- Placed at the end of the document so the pages load faster --> 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> 
-<script>window.jQuery || document.write('<script src="assets/js/vendor/jquery-slim.min.js"><\/script>')</script> 
-<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script> 
-<script src="assets/js/vendor/popper.min.js"></script> 
-<script src="assets/aos/aos.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<link rel="stylesheet" href="assets/css/jquery.es-drawermenu.min.css">
-<script src="assets/js/jquery.slidereveal.min.js" type="text/javascript"></script>
-<script src="assets/js/jquery.es-drawermenu.js"></script>
+            <div id="customerDetailsSection" style="display:none;">
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID: </label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select" id="customerIdFinal">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">Control Card Number: </label>
+                            <div class="col-md-6 col-12">
+                                <div class="custom_select" id="controlCardNoFinal">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">Customer Name: </label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select" id="customerNameFinal">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">Amount: </label>
+                            <div class="col-md-7 col-12">
+                                <div class="custom_select" id="amountValFinal">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <label class="font-weight-normal col-md-4 col-12 mb-0">Payment throught: </label>
+                            <div class="col-md-6 col-12">
+                                <div class="custom_select">
+                                    HDFCPG
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-12">
+                        <div class="d-flex align-items-center justify-content-center flex-wrap mb-2">
+                            <div class="offset-md-4 col-md-8 col-12">
+                                <div class="px-0 float-left mr-3">
+                                    <button class="btn btn_primary" type="button" onclick="redirectToOTP()">CONFIRM</button>
+                                </div>
+                                <div class="px-0 float-left">
+                                    <button class="btn btn_primary" onclick="cancelClick()">CANCEL</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<script src="assets/js/mloyal.js"></script>
-	
+            <div id="otpSection" style="display:none;">
+                <div class="py-4 pr-4 pl-0 pr-md-4">
+                    <p style="color:green;">OTP has been sent to customer registered Mobile No.</p>
+                    <div class="form-group d-flex align-items-center flex-wrap">
+                        <label class="font-weight-normal col-md-4 col-12">Enter OTP </label>
+                        <div class="col-md-8 col-12">
+                            <div class="custom_select">
+                                <input type="text" maxlength="4" id="otpVal" class="form-control">
+                                <span><a style="color:#0012ff;outline:none;">Resend OTP</a> Maximum three attempt</span>
+                                @Html.ValidationMessage("otpVal", "", new { @id = "otpValErr", @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
 
-</body>
-</html>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
+                        <div class="offset-md-4 col-md-8 col-12">
+                            <div class="px-0 float-left mr-3">
+                                <button class="btn btn_primary" type="button" onclick="confirmOTP()">CONTINUE</button>
+                            </div>
+                            <div class="px-0 float-left">
+                                <button class="btn btn_primary" onclick="cancelOtpClick()">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 
 <script>
 
-	$("#mobNoVal").on("blur", function (){
+    $(document).ready(function () {
 
-		var mobNo = $("#mobNoVal").val();
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+    });
+
+    function cancelOtpClick(){
+        locaion.reload();
+    }
+
+    function cancelClick(){
+        locaion.reload();
+    }
+
+    function resetClick(){
+        location.reload();
+        $("#mobNoVal").attr("readonly", false);
+        $("#customerIdVal").attr("readonly", false);
+        $("#controlCardNoVal").attr("readonly", false);
+    }
+
+    $("#mobNoVal").on("blur", function (){
+
+        var mobNo = $("#mobNoVal").val();
 
         var flag = "Y";
 
-        if (mobNo.trim() == "") {
-            $('#mobNoError').text("Please enter Mobile Number");
-            flag = "N";
-        }
         if(mobNo.trim() != ''){
             if(!mobNo.trim().match(/^[6789]\d{9}$/)){
                 $('#mobNoError').text("Invalid Mobile Number");
                 flag = "N";
+            }else{
+                $('#mobNoError').text("");
+            }
+        }
+
+
+        if (flag == "N")
+            e.preventDefault();
+
+
+        if(flag == "Y"){
+
+            $('#mobNoError').text("");
+
+            document.getElementById("mobNoSearchRes").style.display = "none";
+            $("#cutomerName").removeClass("d-flex");
+            document.getElementById("cutomerName").style.display = "none";
+
+            $.ajax({
+                url: "@Url.Action("CCMSRechargePage","CCMSRecharge")",
+                type: "POST",
+                dataType: "JSON",
+                data: { mobNo: mobNo, customerId: null },
+                success: function (res) {
+
+                    console.log(res,"res");
+
+                    if(res.searchList.success == true){
+
+                        $("#mobNoSearchRes td").parent().remove();
+
+                        for (var i = 0; i < res.searchList.data.length; i++) {
+
+                            var rows = "<tbody><tr>"
+                                + "<td><input type='radio' class='merchantRow' name='merchantCheck'></td>"
+                                + "<td><span class='customerIdVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
+                                + "<td><span class='customerNameVal'>" + (res.searchList.data[i].customerName || '') + "</span></td>"
+                                + "<td><span class='customerTypeVal'>" + (res.searchList.data[i].customerType || '') + "</span><span style='display:none;' class='conCardNoVal'>"+(res.searchList.data[i].controlCardNo || '')+"</span></td>"
+                                + "</tr ></tbody>";
+
+                            $('#mobNoSearchRes').append(rows);
+                        }
+
+                        document.getElementById("mobNoSearchRes").style.display = "block";
+
+                        $("#mobNoVal").attr("readonly", true);
+                        $("#customerIdVal").attr("readonly", true);
+                        $("#controlCardNoVal").attr("readonly", true);
+
+                    }else{
+                        $("#cutomerName").removeClass("d-flex");
+                        document.getElementById("cutomerName").style.display = "none";
+                        alert(res.searchList.message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
+
+    $("#customerIdVal").on("blur", function (){
+
+        var customerId = $("#customerIdVal").val();
+
+        var flag = "Y";
+
+        if(customerId == ""){
+            $('#customerIdValErr').text("Please enter Customer ID");
+            flag = "N";
+        }
+        if(customerId.trim() != ''){
+            if(!customerId.trim().match(mappedCustomerId)){
+                $('#customerIdValErr').text("Invalid Customer ID");
+                flag = "N";
+            }else{
+                $('#customerIdValErr').text("");
             }
         }
 
@@ -275,45 +315,184 @@
 
 
         if(flag == "Y"){
-    
+
             $('#mobNoError').text("");
 
-			document.getElementById("mobNoSearchRes").style.display = "none";
+            document.getElementById("mobNoSearchRes").style.display = "none";
+            $("#cutomerName").removeClass("d-flex");
+            document.getElementById("cutomerName").style.display = "none";
 
-			$.ajax({
-				url: "@Url.Action("CCMSRechargePage","CCMSRecharge")",
-				type: "POST",
-				dataType: "JSON",
-				data: { mobNo: mobNo },
-				success: function (res) {
+            $.ajax({
+                url: "@Url.Action("CCMSRechargePage","CCMSRecharge")",
+                type: "POST",
+                dataType: "JSON",
+                data: { mobNo: null, customerId: customerId },
+                success: function (res) {
 
-					console.log(res,"res");
+                    console.log(res,"res");
 
-					if(res.searchList.success == true){
+                    if(res.searchList.success == true){
 
-						$("#mobNoSearchRes td").parent().remove();
+                        $("#customerIdVal").val(res.searchList.data[0].customerID);
+                        $("#customerNameVal").val(res.searchList.data[0].customerName);
+                        $("#controlCardNoVal").val(res.searchList.data[0].controlCardNo);
+                        
+                        $("#mobNoVal").attr("readonly", true);
+                        $("#customerIdVal").attr("readonly", true);
+                        $("#controlCardNoVal").attr("readonly", true);
 
-						for (var i = 0; i < res.searchList.data.length; i++) {
+                    }else{
+                        $("#cutomerName").removeClass("d-flex");
+                        document.getElementById("cutomerName").style.display = "none";
+                        alert(res.searchList.message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
 
-							var rows = "<tbody><tr>"
-								+ "<td><input type='radio' class='merchantRow' name='merchantCheck'></td>"
-								+ "<td><span class='merchantIdVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
-								+ "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
-								+ "<td>" + (res.searchList.data[i].customerType || '') + "</td>"
-								+ "</tr ></tbody>";
+    $("#mobNoSearchRes").on('click', '.merchantRow', function (e) {
 
-							$('#mobNoSearchRes').append(rows);
-						}
-						document.getElementById("mobNoSearchRes").style.display = "block";
+        var currentRow = $(this).closest("tr");
 
-					}else{
-						alert(res.searchList.message);
-					}
-				},
-				error: function (ex) {
-					alert('Failed' + ex);
-				}
-			});
-		}
-	});
+        if ($(this).is(':checked')) {
+
+            $("#cutomerName").addClass("d-flex");
+            document.getElementById("cutomerName").style.display = "block";
+            document.getElementById("mobNoSearchRes").style.display = "none";
+            $("#customerIdVal").val(currentRow.find('.customerIdVal').text());
+            $("#customerNameVal").val(currentRow.find('.customerNameVal').text());
+            $("#controlCardNoVal").val(currentRow.find('.conCardNoVal').text());
+
+        }
+    });
+
+    function submitRec(){
+
+        var flag = "Y";
+
+       var mobNo = $("#mobNoVal").val();
+       var customerId = $("#customerIdVal").val();
+       var controlCardNo = $("#controlCardNoVal").val();
+       var amount = $("#amountVal").val();
+
+        if(mobNo.trim() != ''){
+            if(!mobNo.trim().match(/^[6789]\d{9}$/)){
+                $('#mobNoError').text("Invalid Mobile Number");
+                flag = "N";
+            }
+        }
+
+        if(customerId == ""){
+            $('#customerIdValErr').text("Please enter Customer ID");
+            flag = "N";
+        }
+        if(customerId.trim() != ''){
+            if(!customerId.trim().match(mappedCustomerId)){
+                $('#customerIdValErr').text("Invalid Customer ID");
+                flag = "N";
+            }
+        }
+
+        if(controlCardNo == ""){
+            $('#controlCardNoValErr').text("Please enter ControlCard Number");
+            flag = "N";
+        }
+
+        if(amount == ""){
+            $('#amountValErr').text("Please enter Amount");
+            flag = "N";
+        }
+
+        if($("#inlineCheckboxTC").prop('checked') == false){
+            alert("Please accept the terms and conditions.");
+            flag = "N";
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+
+        if(flag == "Y"){
+            if (confirm('Are you sure you want to initiate for CCMS Recharge by Payment Gateway.?')) {
+                console.log('ok');
+
+                $("#submitForm").hide();
+
+                $("#customerIdFinal").append("<span style='font-weight:bold'>"+$("#customerIdVal").val()+"</span>");
+                $("#controlCardNoFinal").append("<span>"+$("#controlCardNoVal").val()+"</span>");
+                $("#customerNameFinal").append("<span>"+$("#customerNameVal").val()+"</span>");
+                $("#amountValFinal").append("<span>"+$("#amountVal").val()+"</span>");
+
+                document.getElementById("customerDetailsSection").style.display = "block";
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+
+    function redirectToOTP(){
+        document.getElementById("customerDetailsSection").style.display = "none";
+        document.getElementById("otpSection").style.display = "block";
+    }
+
+    function confirmOTP(){
+
+        var otpVal = $("#otpVal").val();
+
+        var flag = "Y";
+
+        if(otpVal == ""){
+            $("#otpValErr").text("Please enter Valid OTP");
+            flag = "N";
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+
+        if(flag == "Y"){
+            if (confirm('Are you sure you want to initiate For CCMS Recharge by Payment Gateway?')) {
+                console.log('ok');
+
+                var customerId = $("#customerIdVal").val();
+                var mobNo = $("#mobNoVal").val();
+                var controlCardNo = $("#controlCardNoVal").val();
+                var amount = $("#amountVal").val();
+
+                $.ajax({
+                    url: "@Url.Action("RedirectToPG","CCMSRecharge")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { customerId: customerId, mobNo: mobNo, controlCardNo: controlCardNo, amount: amount },
+                    success: function (res) {
+
+                        console.log(res,"res");
+
+                        var ress = JSON.stringify(res.redirectDetails.data);
+
+                        if(res.redirectDetails.success == true){
+                          
+                            var url = '@Html.Raw(@Url.Action("RedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
+
+                            url = url.replace("dd", encodeURIComponent(ress));
+
+                            window.location.href = url;
+                        }
+                        
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
 </script>
