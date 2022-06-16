@@ -280,8 +280,10 @@ namespace HPCL.Service.Services
 
             
         }
-        public async Task<List<string>> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
+        public async Task<List<SuccessResponseTatkalCustomer>> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
         {
+            List<SuccessResponseTatkalCustomer> mapResponseList = new List<SuccessResponseTatkalCustomer>();
+
             var RequestForms = new MapTatkalCardtoCustomerUpdateModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -299,17 +301,14 @@ namespace HPCL.Service.Services
             if (mapResponseObj["Status_Code"].ToString() == "200")
             {
                 var mapResponseJarr = mapResponseObj["Data"].Value<JArray>();
-                List<SuccessResponse> mapResponseList = mapResponseJarr.ToObject<List<SuccessResponse>>();
-                messageList.Add(mapResponseList[0].Status.ToString());
-                foreach (var item in mapResponseList)
-                    messageList.Add(item.ActionName);
-                
+                mapResponseList = mapResponseJarr.ToObject<List<SuccessResponseTatkalCustomer>>();
             }
             else
             {
-                messageList.Add(mapResponseObj["Message"].ToString());
+                var mapResponseJarr = mapResponseObj["Data"].Value<JArray>();
+                mapResponseList = mapResponseJarr.ToObject<List<SuccessResponseTatkalCustomer>>();
             }
-            return messageList;
+            return mapResponseList;
         }
         public async Task<ViewTatkalCardsResponseModel> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity)
         {

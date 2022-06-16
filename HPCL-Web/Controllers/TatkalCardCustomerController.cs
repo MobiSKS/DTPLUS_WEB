@@ -173,7 +173,7 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
         {
             var result = await _tatkalCardCustomerService.UpdateTatkalCardtoCustomer(UpdateDetails);
-            return Json(result);
+            return Json(new { commonResponseData = result });
         }
         [HttpPost]
         public async Task<IActionResult> GetViewTatkalCards([FromBody] ViewTatkalCardRequestModel entity)
