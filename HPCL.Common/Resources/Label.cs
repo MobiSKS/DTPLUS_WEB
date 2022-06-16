@@ -103,7 +103,7 @@
         public const string BranchLocation = "Branch Location";
         public const string DtpCautionLimitInRs = "DTP Caution Limit in RS";
         public const string HpPayCautionLimitInRs = "HPPay Caution Limit in RS";
-        public const string SerialNumber = "S No.";
+        public const string SerialNumber = "S.No.";
         public const string Regions = "Regions";
         public const string MarketingOfficerName = "Marketing Officer Name";
         public const string MarketingOfficerEmail = "Marketing Officer Email";
