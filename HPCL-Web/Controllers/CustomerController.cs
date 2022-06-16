@@ -804,16 +804,11 @@ namespace HPCL_Web.Controllers
             CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
             return View(modals);
         }
-        [HttpPost]
-        public async Task<IActionResult> CustomerResetPassword(CustomerResetPasswordViewModel reqModel)
+       
+        public async Task<JsonResult> GetCustomerResetPassword(string CustomerId)
         {
-            CustomerResetPasswordViewModel modals = new CustomerResetPasswordViewModel();
-            if (reqModel != null)
-            {
-                if (reqModel.CustomerId != null)
-                    modals = await _customerService.CustomerResetPassword(reqModel.CustomerId);
-            }
-            return View(modals);
+            var  modals = await _customerService.CustomerResetPassword(CustomerId);
+            return Json(modals);
         }
         [HttpPost]
         public async Task<JsonResult> UpdateEmailResetPassword([FromBody] CustomerResetPasswordViewModel reqModel)
