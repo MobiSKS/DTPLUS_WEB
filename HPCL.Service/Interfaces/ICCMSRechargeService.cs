@@ -6,7 +6,7 @@ namespace HPCL.Service.Interfaces
 {
     public interface ICCMSRechargeService
     {
-        Task<GetDetailsByMobRes> GetDetailsByMObNo(string mobNo);
-        Task<RedirectToPGResponse> RedirectToPG(RedirectToPGRequest entity);
+        Task<GetDetailsByMobRes> GetDetailsByMObNoCust(string mobNo, string customerId);
+        Task<RedirectToPGResponse> RedirectToPG(string customerId, string mobNo, string controlCardNo, string amount);
     }
 }

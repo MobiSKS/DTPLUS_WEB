@@ -457,7 +457,7 @@
 
         #region "CCMS Recharge"
         public static string GetDetailsByMobNoUrl = "api/dtplus/RechargeCCMS/get_details";
-        public static string RedirectToPGUrl = "api/dtplus/RechargeCCMS/init_ccms_rcharge";
+        public static string RedirectToPGUrl = "api/dtplus/RechargeCCMS/init_ccms_recharge";
         #endregion
     }
 }
