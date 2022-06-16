@@ -15,5 +15,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> SubmitRequestApproval(string bankEntryDetail);
         Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity);
         Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId);
+        Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount);
     }
 }

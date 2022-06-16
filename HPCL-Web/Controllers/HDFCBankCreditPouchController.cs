@@ -1,6 +1,8 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch;
 using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -105,6 +107,30 @@ namespace HPCL_Web.Controllers
 
         public IActionResult RequestAuthorization()
         {
+            return View();
+        }
+
+        public IActionResult CCMSRechargeThroughCreditPouch()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
+        {
+            var searchList = await _hDFCBankCreditPouchService.CCMSRechargeHDFC(customerId, amount);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> HdfcRedirectToPaymentGateway(string inputTxtValues)
+        {
+            CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
+
+            HttpContext.Session.SetString("hdfcpgurl", arrs.response.apiurl);
+            HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
+            HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
+
             return View();
         }
     }

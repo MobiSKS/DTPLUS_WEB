@@ -1,8 +1,9 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 
 namespace HPCL.Common.Models.ResponseModel.CCMSRecharge
 {
-    public class RedirectToPGResponse : BaseEntity
+    public class RedirectToPGResponse : ResponseMsg
     {
         public RedirectToPGResponseData data { get; set; }
     }
