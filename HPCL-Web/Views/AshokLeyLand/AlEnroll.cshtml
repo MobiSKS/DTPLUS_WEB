@@ -16,14 +16,14 @@
                             <div class="border-1 rounded border-grey pb-0">
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Enrollment</p>
                                 <div class="col-lg-12 col-md-12 col-12 py-3">
-                                    <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom:1px solid #ccc;">Search/Add Dealer</p>
+                                    <p class="text-dark font-weight-bold">Search/Add Dealer</p>
                                     <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="d-flex align-items-center flex-wrap mb-3">
                                                 <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        <input class="form-control" id="dealerCdVal" name="DealerCode" type="text" value="" maxlength="25" autocomplete="off">
+                                                        <input class="form-control" id="dealerCdVal" name="DealerCode" type="text" value="" maxlength="25" autocomplete="off" onkeydown="return IsAlphaNumeric(event.keyCode)">
                                                         @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -95,7 +95,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control", maxlength="25" })
+                                                        @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control", maxlength="25", onkeydown="return IsAlphaNumeric(event.keyCode)" })
                                                         @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeError", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -107,7 +107,7 @@
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">Dealer Name <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.DealerName, new { @id = "dealerNameFetchVal", @class = "form-control", maxlength="50" })
+                                                        @Html.TextBoxFor(m => m.DealerName, new { @id = "dealerNameFetchVal", @class = "form-control", maxlength="50", onkeydown="return AlphaNumericWithSpace(event.keyCode)" })
                                                         @Html.ValidationMessageFor(m => m.DealerName, "", new { @id = "DealerNameErrorMsg", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -298,8 +298,9 @@
 
 <script type="text/javascript">
 
-    function thisPageLoad() {
-        window.location.reload(true);
+    function thisPageLoad() 
+    {
+        window.location.href = '@Url.Action("AlEnroll", "AshokLeyLand")';
     }
 
     $(document).ready(function () {
@@ -523,7 +524,8 @@
     };
 
 
-    function searchDealer() {
+    function searchDealer() 
+    {
         debugger;
         document.getElementById("responseMsg").style.display = "none";
         document.getElementById("failureMsg").style.display = "none";
@@ -534,6 +536,11 @@
         if ($('#dealerCdVal').val() == "" && $('#DTPDealerCdVal').val() == "") 
         {
             $('#dealerCodeErr').text("Please enter either Dealer Code or DTP Dealer Code");
+            return false;
+        }
+        else if ($('#dealerCdVal').val()!="" && !($('#dealerCdVal').val().match(forVehicleNo)))
+        {
+            $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
             return false;
         }
         else
@@ -632,7 +639,7 @@
             if (!(dealerCode.match(forVehicleNo)))
             {
                 $("#dealerCodeError").attr("style", "display:block");
-                $("#dealerCodeError").html("Enter a valid Dealer Code");
+                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
                 ret=false;
             }
             else
@@ -970,7 +977,7 @@
             if (!(dealerCode.match(forVehicleNo)))
             {
                 $("#dealerCodeError").attr("style", "display:block");
-                $("#dealerCodeError").html("Enter a valid Dealer Code");
+                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
                 ret=false;
             }
             else
@@ -1301,11 +1308,15 @@
             $("#dealerCodeErr").attr("style", "display:block");
             $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
         }
+        else if (dealerCdVal!="" && !(dealerCdVal.match(forVehicleNo)))
+        {
+            $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
+        }
         else if(dealerCdVal != "")
         {
              document.getElementById("dealerCodeErr").innerHTML = "";
         }
-        else if(dealerCdVal != "")
+        else if(dTPDealerCode != "")
         {
              document.getElementById("dealerCodeErr").innerHTML = "";
         }
@@ -1323,7 +1334,7 @@
         var dealerCdVal = $("#dealerCdVal").val().trim();
         var dTPDealerCode = $("#DTPDealerCdVal").val().trim();
 
-        if(dealerCdVal == "" && dealerCdVal == "")
+        if(dealerCdVal == "" && dTPDealerCode == "")
         {
             $("#dealerCodeErr").attr("style", "display:block");
             $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
@@ -1332,7 +1343,7 @@
         {
              document.getElementById("dealerCodeErr").innerHTML = "";
         }
-        else if(dealerCdVal != "")
+        else if(dTPDealerCode != "")
         {
              document.getElementById("dealerCodeErr").innerHTML = "";
         }
