@@ -1,0 +1,260 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerApprovalModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "CustomerApproval")" class="text_primary">Approval</a> </li>
+            <li class="breadcrumb-item font-weight-light">Parent Customer Authorization</li>
+        </ul>
+        @*<div id="reason" class="mb-3 text-center displayNone alert"> </div>*@
+        <div id="reason" class="alert displayNone text-center"> </div>
+        @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "form1", @class = "tobehiddenonSuccess" }))
+        {
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Authorization</p>
+                                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                   
+                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
+                                            <label class="font-weight-normal col-md-4 col-12">From Date</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                </div>
+                                                <span class="error" id="fromDate_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
+                                            <label class="font-weight-normal col-md-4 col-12">To Date</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                </div>
+                                                <span class="error" id="toDate"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                        <div class="col-12 d-flex align-items-center justify-content-center">
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="submit" id="searchBtn">Search</button>
+                                            </div>
+                                            <div class="px-2">
+                                                <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("AuthorizeParentCustomer", "ParentCustomer", new { reset="Y" })'">Reset</button>
+                                            </div>
+                                        </div>
+                                   
+                                   
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        }
+        @if (ViewBag.Reset == "")
+        {
+            <div id="show_Table" class="mt-2 tobehiddenonSuccess">
+                @if (Model.Data.Count() > 0)
+                {
+                    <div>
+                        <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="ApprovalDetails">
+                            <thead style="background-color:lightgray;">
+                                <tr>
+                                    <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
+                                    <th style="width:8%;">Customer Name</th>
+                                    <th style="width:10%;">ZO</th>
+                                    <th style="width:10%;">RO</th>
+                                    <th style="width:10%;">City</th>
+                                    <th style="width:10%;">Created Date</th>
+                                    <th style="width:10%;">Created By</th>
+                                    <th style="width:19%;">Comments</th>
+                                    <th style="display:none">CustomerId</th>
+                                    <th style="display:none">FormNumber</th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchMerchantTableBody">
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model.Data)
+                                {
+                                    i = i + 1;
+                                    <tr>
+                                        <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.ZO</td>
+                                        <td>@item.RO</td>
+                                        <td>@item.CityName</td>
+                                        <td>@item.CreatedDate</td>
+                                        <td>@item.CreatedBy</td>
+                                        <td><input type="text" id="comments_@i" class="form-control comments" maxlength="50" disabled /><span class="comment_error"></span></td>
+                                        <td style="display:none">@item.Id</td>
+                                        <td style="display:none">@item.FormNumber</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+         
+                    <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
+                        <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
+                            <div class="pr-2">
+                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Approve');">APPROVE</button>
+                            </div>
+                            <div class="pl-2">
+                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Reject');">REJECT</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="alert alert-danger text-center">@Model.Message</div>
+
+                }
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        if ($(this).is(':checked')) {
+            $("#ApprovalDetails tr").each(function () {
+                $(this).find("input:text").attr("disabled", false);
+            });
+        }
+        else{
+            $("#ApprovalDetails tr").each(function () {
+                $(this).find("input:text").attr("disabled", true);
+                $(this).find("input:text").val("");
+                $(this).find('.comment_error').html("");
+                $(this).find('.comment_error').attr("style","dispaly:none");
+            });
+        }
+
+    });
+
+    $("#ApprovalDetails").on('click', '.checkEnable', function (e) {
+                 currentRow = $(this).closest("tr");
+                 if ($(this).is(':checked')) {
+                     currentRow.find('input:text').attr("disabled", false);
+                 }
+                 if (!$(this).is(':checked')) {
+                     currentRow.find('input:text').attr("disabled", true);
+                      currentRow.find('input:text').val("");
+                     currentRow.find('.comment_error').html("");
+                     currentRow.find('.comment_error').attr("style","dispaly:none");
+                 }
+             });
+    function approvalOrReject(action) {
+        var flag = "Y";
+
+        objParentCustomerDtl = [];
+        $("#ApprovalDetails tr").each(function () {
+            $(this).find(".comment_error").html("");
+            if ($(this).find('input[type="checkbox"]').is(":checked")) {
+                debugger;
+                let comment = $(this).find(".comments").val();
+                if (comment != undefined)
+                {
+                    if (comment.trim() == "") {
+                        $(this).find(".comment_error").html("Please enter comment.");
+                        flag = "N";
+                    }
+                    else{
+                        if (comment.trim().length>50){
+                            $(this).find(".comment_error").html("Comment should not be greater than 50");
+                            flag = "N";
+                        }
+                    }
+                    var customerId = $(this)[0].cells[8].textContent;
+                    var formNumber = $(this)[0].cells[9].textContent;
+                    objParentCustomerDtl.push({ Id:customerId,FormNumber:formNumber, Comment: comment });
+                    
+                }
+              
+            }
+
+        });
+        if (objParentCustomerDtl.length == 0){
+         
+            if(action=="Approve")
+                alert("Please select atleast one Customer to authorize.");
+            if(action=="Reject")
+                alert("Please select atleast one Customer to reject.");
+                
+        }
+     
+
+        if (ObjParentCustomerDtl.length > 0 && flag == "Y") {
+            var reqModel = {  ObjParentCustomerDtl: objParentCustomerDtl, Action: action};
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ActionParentCustomerAuthorize", "ParentCustomer")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(reqModel),
+                    success: function (data) {
+                        debugger;
+                       $("#reason").removeClass("displayNone");
+                       if(data.length>0){
+                            $("#reason").html("");
+                            for(var i=0;i<data.length;i++){
+                                $("#reason").append("<span>" +data[i] + "</span></br>");
+                            }
+                       }
+                       $("#reason").removeClass("alert-danger");
+                        $("#reason").addClass("alert-success");
+
+                        $(".tobehiddenonSuccess").hide();
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+        }
+    };
+       $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+    $("#searchBtn").on("click", (function (e) {
+        var flag="Y";
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+        if (flag == "N")
+            e.preventDefault();
+    }));
+       $("#merchantApprovalDetails").on("blur", "td .comments", function(e) {
+          var comments = $(this).val();
+           var row=$(this).closest('td').closest('tr');
+           var count=row[0].rowIndex-1;
+           if (row.find('input[type="checkbox"]').is(":checked")) {
+                if(comments!=""){
+                    row.find(".comment_error").html("")
+
+                }
+                else{
+                    row.find(".comment_error").html("Please enter comment.");
+
+                }
+           }
+      });
+</script>
