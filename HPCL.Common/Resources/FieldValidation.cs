@@ -44,7 +44,7 @@
         public const string ValidAmountErrMsg = "Only digit allowed";
 
         public const string ValidDealerCode = @"^[a-zA-Z0-9]*$";
-        public const string ValidDealerCodeErrMsg = "Enter a valid Dealer Code";
+        public const string ValidDealerCodeErrMsg = "Dealer Code should be alphanumeric";
 
         public const string ValidCardNo = @"^(?!(0))[0-9]{16}$";
         public const string ValidCardNoErrMsg = "Invalid Card Number";
