@@ -460,5 +460,14 @@
         public static string GetDetailsByMobNoUrl = "api/dtplus/RechargeCCMS/get_details";
         public static string RedirectToPGUrl = "api/dtplus/RechargeCCMS/init_ccms_recharge";
         #endregion
+
+        #region Parent Customer
+        public static string insertparentcustomer = "api/dtplus/ParentCustomer/insert_parent_customer";
+        public static string actionparentcustomerapproval = "api/dtplus/ParentCustomer/action_parent_customer_approval";
+        public static string getparentcustomerapproval = "api/dtplus/ParentCustomer/get_parent_customer_approval";
+        public static string getparentcustomerauth="api/dtplus/ParentCustomer/get_parent_customer_auth";
+        public static string actionparentcustomerauth = "api/dtplus/ParentCustomer/action_parent_customer_auth";
+
+        #endregion
     }
 }

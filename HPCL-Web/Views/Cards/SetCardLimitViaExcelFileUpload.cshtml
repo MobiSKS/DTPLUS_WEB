@@ -89,6 +89,7 @@
                                             Unsuccessful Transactions
                                         </p>
                                         <div id="excel_data"></div>
+                                        <div class="mb-3 text-center alert alert-danger" id="checkRecordU"></div>
                                     </div>
                                 </div>
                             </div>
@@ -257,6 +258,22 @@
                         $("tr:first").append("<td class ='errMsg'>Error Msg</td>");
                         $("tr:not(:first)").append("<td class ='errMsg'></td>");
 
+                         $('#ExcelTable tr').each(function(index, tr) {
+                                var cardno = $(tr).find(':nth-child(1)').text();
+                                var saletxnlimit = $(tr).find(':nth-child(2)').text();
+                                var dailysalelimit = $(tr).find(':nth-child(3)').text();
+                                var monthlysalelimit = $(tr).find(':nth-child(4)').text();
+
+                                 console.log(cardno+"         "+saletxnlimit+"      "+dailysalelimit+"      "+monthlysalelimit);
+
+                                 if(cardno != "Card Number" || saletxnlimit != "Sale Transaction Limit" || dailysalelimit != "Daily Sale Limit" || monthlysalelimit != "Monthly Sale Limit"){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Columns are mismatch</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                 }
+                         });
 
                         if(rows.length != 0){
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
@@ -380,6 +397,8 @@
 
     function uploadBulkLimitRow(){
 
+        document.getElementById("checkRecordU").style.display = "none";
+
         document.getElementById("reponseErr").style.display = "none";
         document.getElementById("ExcelDataError").style.display = "none";
 
@@ -387,7 +406,7 @@
 
         if($("#excel_file").val() == ''){
              $("#excel_file_error").attr("style", "display:block");
-             $("#excel_file_error").html("Please add a CSV file.");
+             $("#excel_file_error").html("Please Select File");
              flag = "N";
         }
 
@@ -416,6 +435,17 @@
                     });
                 })
 
+                if(updateArray.length == 0){
+                    $("#checkRecord").html('');
+                    $("#checkRecord").append("<span>No Record Found</span>");
+                    $("#checkRecordU").html('');
+                    $("#checkRecordU").append("<span>No Record Found</span>");
+                    $("#excel_data").hide();
+                    document.getElementById("checkRecordU").style.display = "block";
+                    document.getElementById("reponseErr").style.display = "block";
+                    return false;
+                }
+
                 $.ajax({
                     url: "@Url.Action("UpdateCards", "Cards")",
                     type: "POST",
@@ -433,7 +463,7 @@
                         }else{
 
                             $("#checkRecord").html('');
-                            $("#checkRecord").append("<span>"+res.updateResponse.message+"</span>")
+                            $("#checkRecord").append("<span>"+res.updateResponse.message+"</span>");
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
                                 var currentIndex = index + 1;
@@ -459,6 +489,7 @@
                             });
 
                             $("#excel_file").val('');
+                            $("#excel_data").show();
                             document.getElementById("reponseErr").style.display = "grid";
 
                         }

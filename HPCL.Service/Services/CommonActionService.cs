@@ -607,6 +607,7 @@ namespace HPCL.Service.Services
                 {
                     if (item.StatusId == 4)
                     {
+                        lsts.Add(new StatusResponseModal { StatusId = -1, StatusName = "All" });
                         lsts.Add(item);
                     }
                 }
