@@ -248,7 +248,7 @@
     function OnSuccess(res) {
 
         document.getElementById("noRecord").style.display = "none";
-        document.getElementById("noRecord").style.display = "none";
+        document.getElementById("AlreadyEnroll").style.display = "none";
 
         console.log(res);
 
@@ -266,8 +266,20 @@
                 $("#custRegional").append("<span>"+(res.searchList.data[0].ro || '')+"</span>");
                 $("#custName").append("<span>"+(res.searchList.data[0].customerName || '')+"</span>");
                 $("#nameOnCard").append("<span>"+(res.searchList.data[0].nameOnCard || '')+"</span>");
-                $("#transDate").append("<span>"+(res.searchList.data[0].lastTransactionDate || '')+"</span>");
-                $("#lastQuaterSpend").append("<span>"+(res.searchList.data[0].totalSpend || '')+"</span>");
+
+                var transDate;
+
+                if(((res.searchList.data[0].lastTransactionDate) == "01/01/0001 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == "01/01/1900 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == null)){
+                    transDate = "";
+                }else{
+                    transDate = moment(res.searchList.data[0].lastTransactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                }
+
+                 $("#transDate").append("<span>"+(transDate)+"</span>");
+
+                 var lstSpend = (res.searchList.data[0].totalSpend == 0) ? lstSpend = "" : lstSpend = (res.searchList.data[0].totalSpend);
+
+                $("#lastQuaterSpend").append("<span>"+(lstSpend)+"</span>");
                 $("#custType").append("<span>"+(res.searchList.data[0].customerType || '')+"</span>")
 
                 document.getElementById("customerDetailsSection").style.display = "block";
@@ -280,12 +292,12 @@
                 document.getElementById("AlreadyEnroll").style.display = "block";
             }
         }else{
-                document.getElementById("customerDetailsSection").style.display = "none";
-                document.getElementById("custEnrollUpdateSection").style.display = "none";
-                $("#noRecord").html("");
-                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                document.getElementById("noRecord").style.display = "block";
-            }
+            document.getElementById("customerDetailsSection").style.display = "none";
+            document.getElementById("custEnrollUpdateSection").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
         
     }
 
