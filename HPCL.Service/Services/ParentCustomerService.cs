@@ -261,7 +261,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                ActionType = approveParentCustomer.ActionType,
+                ActionType = approveParentCustomer.Action == "Approve"?1 :13,
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjParentCustomerDtl = approveParentCustomer.ObjParentCustomerDtl
             };
@@ -327,7 +327,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                ActionType = approveParentCustomer.ActionType,
+                ActionType = approveParentCustomer.Action == "Approve" ? 22 : 21,
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjParentCustomerDtl = approveParentCustomer.ObjParentCustomerDtl,
                

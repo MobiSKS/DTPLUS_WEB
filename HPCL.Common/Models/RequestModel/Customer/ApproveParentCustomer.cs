@@ -17,7 +17,8 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string Approvedby { get; set; }
-        public string ActionType { get; set; }
+        public string Action { get; set; }
+        public int ActionType { get; set; }
         public List<ApproveParentCustomerRequest> ObjParentCustomerDtl { get; set; }
     }
     public class ApproveParentCustomerRequest
