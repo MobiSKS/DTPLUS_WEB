@@ -24,7 +24,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string CustomerName { get; set; }
         public string ZO { get; set; }
         public string RO { get; set; }
-        public string City { get; set; }
+        public string CityName { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public string Comments { get; set; }
