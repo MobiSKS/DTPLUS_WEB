@@ -207,5 +207,11 @@ namespace HPCL_Web.Controllers
             modals.RoleName = RoleName;
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> UpdateManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel)
+        {
+            var result = await _securityService.UpdateManageRole(manageRolesRequestModel);
+            return Json(result);
+        }
     }
 }
