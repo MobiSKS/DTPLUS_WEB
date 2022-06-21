@@ -199,7 +199,37 @@ else
              $("#comment_error").html("Please enter a comment for Deinstallation");
              return;
         }
-         if (terminalDetail.length > 0 && flag == "Y") {
+         if (terminalDetail.length > 0 && flag == "Y" &&(deInstallationTypeID == "1" || checkedAll)) {
+             if (confirm(confirmstring)) {
+                 if(confirm("Do you want to Deinstall the selected Terminal?")){
+                     $("#comment_error").html("");
+                     var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
+                     $.ajax({
+                         type: 'POST',
+                         url: '@Url.Action("SubmitDeinstallRequest", "TerminalManagement")',
+                         contentType: "application/json; charset=utf-8",
+                         dataType: 'json',
+                         data: JSON.stringify(terminationReqmodel),
+                         success: function (data) {
+                             if(data.length>0){
+                                if(data[0]=="0")
+                                    $("#reason").addClass("alert-danger");
+                                else
+                                    $("#reason").addClass("alert-success");
+                                $("#reason").html(data[1]);
+                                $("#reason").attr("style","display:block");
+                                $(".toBeHiddenOnSuccess").hide();
+                            }
+
+                         },
+                         error: function (ex) {
+                             alert('Error.' + ex);
+                         }
+                     });
+                 }
+             }
+        }
+        if (terminalDetail.length > 0 && flag == "Y" &&(deInstallationTypeID == "2" && !checkedAll)) {
              if (confirm(confirmstring)) {
                  $("#comment_error").html("");
                  var terminationReqmodel = { MerchantId: merchantID, DeinstallationType: deInstallationType, Comments: comments, ObjUpdateTerminalDeInstalRequest: terminalDetail };
@@ -227,7 +257,6 @@ else
                  });
              }
         }
-
 
     };
      $("#txtComments").on("blur", function () {
