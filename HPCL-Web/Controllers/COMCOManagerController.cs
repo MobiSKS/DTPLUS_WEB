@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.COMCOManager;
 using HPCL.Common.Models.ViewModel.COMCOManager;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,14 @@ namespace HPCL_Web.Controllers
         public IActionResult Profile()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateCOMCOMapCustomer([FromBody] UpdateCOMCOMapCustomerRequest model)
+        {
+            var updateKycResponse = await _comCOManagerService.UpdateCOMCOMapCustomer(model);
+
+            return Json(new { customer = updateKycResponse });
         }
 
     }

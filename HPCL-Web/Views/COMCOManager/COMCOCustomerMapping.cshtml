@@ -6,6 +6,16 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Map Customer</a></li>
             <li class="breadcrumb-item font-weight-light">Map Customer</li>
         </ul>
+        @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+        {
+            <div id="reason" class="mb-0 mt-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
+        @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+        {
+            <div id="reason" class="mb-0 mt-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        <div id="dvSuccess" class="mb-3 text-center alert alert-success mt-3" style="display:none;"></div>
+        <div id="dvFailure" style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3"></div>
         @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "formValid", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
@@ -150,11 +160,11 @@
                                             <td><input type="checkbox" id="check_@i" /></td>
                                             <td class='cardNo'>@item.ZonalOfficeName</td>
                                             <td class='vechileNo'>@item.RegionalOfficeName</td>
-                                            <td class='mobileno1'>@item.CustomerID</td>
-                                            <td class='mobileno1'>@item.IndividualOrgName</td>
-                                            <td class='mobileno1'>@item.NameOnCard</td>
-                                            <td class='mobileno1'>@item.CustomerAddress</td>
-                                            <td class='mobileno1'>@item.CommunicationPincode</td>
+                                            <td class='customerID'>@item.CustomerID</td>
+                                            <td>@item.IndividualOrgName</td>
+                                            <td>@item.NameOnCard</td>
+                                            <td>@item.CustomerAddress</td>
+                                            <td>@item.CommunicationPincode</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -163,7 +173,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="UpdateSMSAlertstoIndividualCardUsers();">MAP CUSTOMERS</button>
+                                    <button class="btn btn_primary" type="button" onclick="MAPCustomers();">MAP CUSTOMERS</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" onclick="UnselectAllRows();">CANCEL</button>
@@ -201,6 +211,18 @@
                 "info": "Showing _START_ to _END_ of _TOTAL_ Records",
             }
         });
+
+        var count = $('#CardEdit tr').length;
+        //alert(count);
+
+        if (count > 0)
+        {
+            $("#MerchantID").attr("readonly",true);
+        }
+        else
+        {
+            $("#MerchantID").removeAttr("readonly");
+        }
 
     });
 
@@ -299,4 +321,69 @@
     {
         $('input:checkbox').prop('checked', false);
     }
+
+    function MAPCustomers() 
+    {
+        //alert("inside submit");
+        var flag = "Y";
+        typeCOMCOMapCustomer = [];
+        var count=0;
+         $("#CardEdit tbody tr").each(function () {
+             //debugger;
+            
+            var row = $(this);
+            if (row.find('input[type="checkbox"]').is(":checked")) 
+            {
+                 var i = row[0].cells[0].textContent;
+                 var customerID = row.find("td.customerID").text();
+
+                 count=count+1;
+
+                 typeCOMCOMapCustomer.push({ CustomerID: customerID });
+            }
+         });
+     
+         if(count==0)
+         {
+             alert("Please select at least one customer to Map.");
+         }
+
+        if (typeCOMCOMapCustomer.length > 0 && flag == "Y") {
+            if (confirm('Are you sure you want to map selected customer(s) with this merchant?')) {
+                $("#reason_error").html("");
+                var updateReqmodel = { MerchantID: $("#MerchantID").val(), TypeCOMCOMapCustomer: typeCOMCOMapCustomer };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateCOMCOMapCustomer", "COMCOManager")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(updateReqmodel),
+                    success: function (res) 
+                    {
+                        console.log(res);
+                        console.log(res.customer.reason);
+                        if(res.customer.internel_Status_Code == 1000)
+                        {
+                            $("#dvSuccess").html(res.customer.reason);
+                            $(".toBeHiddenOnSuccess").hide();
+                            document.getElementById("dvSuccess").style.display = "block";
+                            document.getElementById("dvFailure").style.display = "none";
+                        }
+                        else
+                        {
+                            $("#dvFailure").html(res.customer.reason);
+                            document.getElementById("dvFailure").style.display = "block";
+                            document.getElementById("dvSuccess").style.display = "none";
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Error.' + ex);
+                    }
+                });
+            }
+        }
+
+
+    };
 </script>
