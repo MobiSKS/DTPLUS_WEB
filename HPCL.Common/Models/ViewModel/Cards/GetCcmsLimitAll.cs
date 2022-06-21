@@ -22,7 +22,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string CustomerId { get; set; }
         public int LimitType { get; set; }
         [Required(ErrorMessage = FieldValidation.AmountNotEmpty)]
-        [StringLength(10)]
+        [MaxLength(10)]
         [RegularExpression(FieldValidation.ValidAmount, ErrorMessage = FieldValidation.ValidAmountErrMsg)]
         public int Amount { get; set; }
     }

@@ -18,11 +18,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public HDFCBankCreditPouchService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public HDFCBankCreditPouchService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<CustomerDetailsRes> GetCustomerDetails(CustomerDetailsReq entity)
@@ -127,6 +129,18 @@ namespace HPCL.Service.Services
 
         public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity)
         {
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
             var searchBody = new SearchEnrollStatus
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),

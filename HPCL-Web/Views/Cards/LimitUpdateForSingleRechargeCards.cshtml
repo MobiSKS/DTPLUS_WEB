@@ -131,6 +131,20 @@
         }
     });
 
+    $("#CardSearch").on('keydown', '.cgl', function (event) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        debugger;
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+     });
+
      $(document).ready(function () {
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -192,7 +206,7 @@
                     var expiryDate = expDts;
                     var cardStatus = (searchGrid[i].cardStatus || '');
                     var typeOfLimit = "<select class='form-control limitTyp' readonly='readonly' disabled='disabled'><option value='"+searchGrid[i].limitId+"'>"+searchGrid[i].typeOfLimit+"</option></select>"
-                    var ccmsLimitValue = "<div style='width:160px;display:flex;'><input maxlength='10' onkeypress='return isNumberKey(event)' class='form-control cgl amt' id='ccmslimitId_"+i+"' onchange='ccmslimitChange(this," + (i) + ")' name='" + (searchGrid[i].ccmsLimitValue || '') + "' type='text' value='" + (searchGrid[i].ccmsLimitValue.toFixed(2) || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errsss' id='ccmslimit_error_"+i+"' aria-hidden='true'></i></div>";
+                    var ccmsLimitValue = "<div style='width:160px;display:flex;'><input maxlength='10' class='form-control cgl amt' id='ccmslimitId_"+i+"' onblur='ccmslimitChange(this," + (i) + ")' name='" + (searchGrid[i].ccmsLimitValue || '') + "' type='text' value='" + (searchGrid[i].ccmsLimitValue.toFixed(2) || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errsss' id='ccmslimit_error_"+i+"' aria-hidden='true'></i></div>";
 
                     tbl.row.add([
                         srNumber,
@@ -323,6 +337,7 @@
             document.getElementById("searchSection").style.display = "none";
             document.getElementById("UpdateGrid").style.display = "none";
             document.getElementById("okIdBtn").style.display = "none"
+            document.getElementById("searchBoxLock").style.display = "none";      
             document.getElementById("confirmIdBtn").style.display = "block"
             document.getElementById("responseTblSection").style.display = "block";
         }

@@ -20,8 +20,8 @@
                                 <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
                                 <fieldset class="border-1 rounded border-grey pb-3">
-                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search</legend>
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap pt-3 ">
+@*                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search</legend>
+*@                                    <div class="d-flex align-items-center justify-content-between flex-wrap pt-3 ">
                                         <div class="col-md-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
@@ -175,7 +175,7 @@
                 var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
                 var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].ownedORAttachedId || '') + "'>" + (searchGrid[i].ownedORAttachedName || '') + "</option></select>";
                 var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].cardCategory || '') + "'>" + (searchGrid[i].cardCategory || '') + "</option></select>";
-                var hotlistReason = "<div style='width:160px;display:flex;'><select readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
+                var hotlistReason = "<div style='width:160px;display:flex;'><select onblur='reasonOnChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
 
                 tbl.row.add([
                     srNumber,
@@ -337,5 +337,16 @@
         }
     }
 
+    function reasonOnChange(o, rowSelected){
+        var StatusId = o.value;
 
+        if(StatusId == 0){
+            document.getElementById('hotlistreason_error_'+rowSelected).title="Please Select Hotlist Reason";
+            document.getElementById('hotlistreason_error_'+rowSelected).style.display = "block";
+            return false;
+        }else{
+            document.getElementById('hotlistreason_error_'+rowSelected).title="";
+            document.getElementById('hotlistreason_error_'+rowSelected).style.display = "none";
+        }
+    }
 </script>
