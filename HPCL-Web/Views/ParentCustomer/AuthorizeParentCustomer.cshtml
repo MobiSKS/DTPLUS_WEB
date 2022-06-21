@@ -4,7 +4,7 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "CustomerApproval")" class="text_primary">Approval</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "ParentCustomer")" class="text_primary">Approval</a> </li>
             <li class="breadcrumb-item font-weight-light">Parent Customer Authorization</li>
         </ul>
         @*<div id="reason" class="mb-3 text-center displayNone alert"> </div>*@
@@ -98,8 +98,9 @@
                                         <td>@item.CreatedDate</td>
                                         <td>@item.CreatedBy</td>
                                         <td><input type="text" id="comments_@i" class="form-control comments" maxlength="50" disabled /><span class="comment_error"></span></td>
-                                        <td style="display:none">@item.CustomerId</td>
+                                        <td style="display:none">@item.Id</td>
                                         <td style="display:none">@item.FormNumber</td>
+                                        <td style="display:none">@item.ReferenceId</td>
                                     </tr>
                                 }
                             </tbody>
@@ -109,7 +110,7 @@
                     <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
                         <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
                             <div class="pr-2">
-                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Approve');">APPROVE</button>
+                                <button class="btn btn_primary" type="button" onclick="approvalOrReject('Approve');">AUTHORIZE</button>
                             </div>
                             <div class="pl-2">
                                 <button class="btn btn_primary" type="button" onclick="approvalOrReject('Reject');">REJECT</button>
@@ -182,7 +183,10 @@
                     }
                     var customerId = $(this)[0].cells[8].textContent;
                     var formNumber = $(this)[0].cells[9].textContent;
-                    objParentCustomerDtl.push({ Id:customerId,FormNumber:formNumber, Comments: comment });
+                    var referenceId = $(this)[0].cells[10].textContent;
+                    
+                    
+                    objParentCustomerDtl.push({ Id:customerId,FormNumber:formNumber, Comment: comment ,ReferenceId:referenceId});
                     
                 }
               
@@ -192,15 +196,15 @@
         if (objParentCustomerDtl.length == 0){
          
             if(action=="Approve")
-                alert("Please select atleast one Customer to approve.");
+                alert("Please select atleast one customer to authorize.");
             if(action=="Reject")
-                alert("Please select atleast one Customer to reject.");
+                alert("Please select atleast one customer to reject.");
                 
         }
      
 
-        if (ObjParentCustomerDtl.length > 0 && flag == "Y") {
-            var reqModel = {  ObjParentCustomerDtl: objParentCustomerDtl, ActionType: action};
+        if (objParentCustomerDtl.length > 0 && flag == "Y") {
+            var reqModel = {  ObjParentCustomerDtl: objParentCustomerDtl, Action: action};
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("ActionParentCustomerAuthorize", "ParentCustomer")',
@@ -242,7 +246,7 @@
         if (flag == "N")
             e.preventDefault();
     }));
-       $("#merchantApprovalDetails").on("blur", "td .comments", function(e) {
+       $("#ApprovalDetails").on("blur", "td .comments", function(e) {
           var comments = $(this).val();
            var row=$(this).closest('td').closest('tr');
            var count=row[0].rowIndex-1;

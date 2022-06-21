@@ -31,6 +31,8 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string CustomerId { get; set; }
         public string FormNumber { get; set; }
         public string Id { get; set; }
+        public string ReferenceId { get; set; }
+        
 
 
     }

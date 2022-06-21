@@ -81,7 +81,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control restrictPaste", @onchange = "ccmsLimitValidate(this)", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control restrictPaste", @onblur = "ccmsLimitValidate(this)" })
                                                         @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -140,6 +140,21 @@
             event.preventDefault();
         }
     });
+
+
+    $("#CcmsLimitRs").on('keydown', function (event) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        debugger;
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+     });
 
     $(document).ready(function () {
 
@@ -229,6 +244,7 @@
 
         if((selectedValue == "Unlimited") || (selectedValue == "--Select Limit--")){
             $('#CcmsLimitRs').val('');
+            $("#CcmsLimitRsErr").text('');
             $('#CcmsLimitRs').attr("readonly", true);
         }else{
             $('#CcmsLimitRs').attr("readonly", false);
