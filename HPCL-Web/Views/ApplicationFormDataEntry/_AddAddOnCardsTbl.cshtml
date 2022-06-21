@@ -1246,9 +1246,15 @@
                     $("#NoofVechileforAllCardsErrMsg").attr("style", "display:block");
                     ret=false;
                 }
-                else if (Number(noOfVehiclesAllCards) <=0 || Number(noOfVehiclesAllCards) >10)
+                //else if (Number(noOfVehiclesAllCards) <=0 || Number(noOfVehiclesAllCards) >10)
+                //{
+                //    $("#NoofVechileforAllCardsErrMsg").text("No. of Vehicles May be 1 to 10");
+                //    $("#NoofVechileforAllCardsErrMsg").attr("style", "display:block");
+                //    ret=false;
+                //}
+                else if (Number(noOfVehiclesAllCards) <=0)
                 {
-                    $("#NoofVechileforAllCardsErrMsg").text("No. of Vehicles May be 1 to 10");
+                    $("#NoofVechileforAllCardsErrMsg").text("No. of Vehicles must be greater than zero");
                     $("#NoofVechileforAllCardsErrMsg").attr("style", "display:block");
                     ret=false;
                 }
@@ -2433,6 +2439,7 @@
         var cardPreference = $('input[name="CardPreference"]:checked').val();
         var noOfVehiclesAllCards = $("#NoofVechileforAllCards").val().trim();
         var cardsCount = $("#NoOfCards").val();
+        var isValid=true;
 
         document.getElementById("reponseErr").style.display = "none";
         $("#excel_file_error").attr("style", "display:none");
@@ -2640,6 +2647,7 @@
                             $("#ExcelDataError").append("<span>Vehicle Number/Card Identifier mismatching with No. of cards.</span>");
                             $("#excel_file").val('');
                             document.getElementById("ExcelDataError").style.display = "block";
+                            isValid=false;
                             return false;
                         }
                         else
@@ -2652,6 +2660,7 @@
                                     $("#ExcelDataError").append("<span>Vehicle Number/Card Identifier mismatching with No. of Vehicles</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
+                                    isValid=false;
                                     return false;
                                 }
 
@@ -2664,6 +2673,7 @@
                                     $("#ExcelDataError").append("<span>Vehicle Number/Card Identifier mismatching with No. of Cards</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
+                                    isValid=false;
                                     return false;
                                 }
                             }
@@ -2695,12 +2705,13 @@
 
                                     var currentIndex = index + 1;
 
-                                    if(cardIdentifier.trim() == '' || cardIdentifier == "undefined")
+                                    if(cardIdentifier.trim() == '' || cardIdentifier == "undefined" || cardIdentifier == undefined)
                                     {
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Card Identifier is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else
@@ -2711,6 +2722,7 @@
                                             $("#ExcelDataError").append("<span>Invalid Card Identifier. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                         else if (cardIdentifier.length < 2 || cardIdentifier.length > 16) 
@@ -2719,16 +2731,18 @@
                                             $("#ExcelDataError").append("<span>Invalid Card Identifier. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                     }
 
-                                      if (vehicleNo == '' || vehicleNo == "undefined") 
+                                      if (vehicleNo == '' || vehicleNo == "undefined" || vehicleNo == undefined) 
                                       {
                                             $("#ExcelDataError").html('');
                                             $("#ExcelDataError").append("<span>Vehicle Number is required. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                       }
                                       else 
@@ -2739,26 +2753,29 @@
                                                 $("#ExcelDataError").append("<span>Invalid Vehicle Number. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                                                                       
                                       }
 
-                                      if (vehicleType == '' || vehicleType == "undefined") 
+                                      if (vehicleType == '' || vehicleType == "undefined" || vehicleType == undefined) 
                                       {
                                             $("#ExcelDataError").html('');
                                             $("#ExcelDataError").append("Vehicle Type field should not be blank. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                       }
 
-                                    if(vehicleMake.trim()=='' || vehicleMake == "undefined")
+                                    if(vehicleMake.trim()=='' || vehicleMake == "undefined" || vehicleMake == undefined) 
                                     {
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Vehicle Make is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else if (!vehicleMake.match(atLeastOneAlphabet)) 
@@ -2767,15 +2784,17 @@
                                         $("#ExcelDataError").append("<span>Invalid Vehicle Make. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
 
-                                    if(yearReg.trim()=='' || yearReg == "undefined")
+                                    if(yearReg.trim()=='' || yearReg == "undefined" || yearReg == undefined)
                                     {
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Year Of Registation is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else
@@ -2788,6 +2807,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (yearReg.length < 4 || yearReg.length > 4) 
@@ -2796,6 +2816,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (yearReg < 1980 || yearReg > curYear) 
@@ -2804,6 +2825,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                
@@ -2813,12 +2835,13 @@
 
                                     if (cardPreference == "Cardless")
                                     {
-                                        if(mobile.trim()=='' || mobile == "undefined")
+                                        if(mobile.trim()=='' || mobile == "undefined" || mobile == undefined)
                                         {
                                             $("#ExcelDataError").html('');
                                             $("#ExcelDataError").append("<span>Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                         else
@@ -2829,6 +2852,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (mobile.length < 10 || mobile.length > 10) 
@@ -2837,6 +2861,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if(!mobile.match(phoneno)) 
@@ -2845,6 +2870,7 @@
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                         
@@ -2877,6 +2903,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Vehicle Number is required. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                       }
                                       else 
@@ -2887,6 +2914,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Vehicle Number. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                       }
@@ -2897,6 +2925,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Vehicle Type field should not be blank. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                       }
 
@@ -2906,6 +2935,7 @@ debugger;
                                         $("#ExcelDataError").append("<span>Vehicle Make is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else if (!vehicleMake.match(atLeastOneAlphabet)) 
@@ -2914,6 +2944,7 @@ debugger;
                                         $("#ExcelDataError").append("<span>Invalid Vehicle Make. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
 
@@ -2923,6 +2954,7 @@ debugger;
                                         $("#ExcelDataError").append("<span>Year Of Registation is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else
@@ -2935,6 +2967,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (yearReg.length < 4 || yearReg.length > 4) 
@@ -2943,6 +2976,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+ "</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (yearReg < 1980 || yearReg > curYear) 
@@ -2951,6 +2985,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Year Of Registation. Row Number: "+currentIndex+ "</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                
@@ -2966,6 +3001,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                         else
@@ -2976,6 +3012,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (mobile.length < 10 || mobile.length > 10) 
@@ -2984,6 +3021,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if(!mobile.match(phoneno)) 
@@ -2992,6 +3030,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                         
@@ -3022,6 +3061,7 @@ debugger;
                                         $("#ExcelDataError").append("<span>Card Identifier is required. Row Number: "+currentIndex+"</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
+                                        isValid=false;
                                         return false;
                                     }
                                     else
@@ -3032,6 +3072,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Invalid Card Identifier. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                         else if (cardIdentifier.length < 2 || cardIdentifier.length > 16) 
@@ -3040,6 +3081,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Invalid Card Identifier. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                     }
@@ -3053,6 +3095,7 @@ debugger;
                                             $("#ExcelDataError").append("<span>Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                             $("#excel_file").val('');
                                             document.getElementById("ExcelDataError").style.display = "block";
+                                            isValid=false;
                                             return false;
                                         }
                                         else
@@ -3063,6 +3106,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if (mobile.length < 10 || mobile.length > 10) 
@@ -3071,6 +3115,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                             else if(!mobile.match(phoneno)) 
@@ -3079,6 +3124,7 @@ debugger;
                                                 $("#ExcelDataError").append("<span>Invalid Mobile Number is required. Row Number: "+currentIndex+"</span>");
                                                 $("#excel_file").val('');
                                                 document.getElementById("ExcelDataError").style.display = "block";
+                                                isValid=false;
                                                 return false;
                                             }
                                         
@@ -3092,12 +3138,11 @@ debugger;
                             })
 
 debugger;
-                            if (customerTypeId == "902" || customerTypeId == "917") //Corporate,Non Fleet
+                            if ((customerTypeId == "902" || customerTypeId == "917") && isValid==true) //Corporate,Non Fleet
                             {
                                     $("#ExcelDataError").html('');
                                     var j=0;i=0;
                                     var cnt=0;
-                                    var isValid=true;
                                     console.log('Before Checking For Duplicate Card Identifier');
                                     $('#ExcelTable tr:gt(0)').each(function(index, tr) 
                                     {
@@ -3182,13 +3227,12 @@ debugger;
                             }
 
 
-                            if (customerTypeId == "901" || customerTypeId == "906") //Fleet, Credit
+                            if ((customerTypeId == "901" || customerTypeId == "906") && isValid==true) //Fleet, Credit
                             {
                                     $("#ExcelDataError").html('');
                                     document.getElementById("ExcelDataError").style.display = "none";
                                     var j=0;i=0;
                                     var cnt=0;
-                                    var isValid=true;
                                     console.log('Before Checking For Duplicate Vehicle Number');
                                     $('#ExcelTable tr:gt(0)').each(function(index, tr) 
                                     {
@@ -3273,13 +3317,12 @@ debugger;
                             }
 
 
-                            if (customerTypeId == "905" || customerTypeId == "909") //Attached, Generic
+                            if ((customerTypeId == "905" || customerTypeId == "909") && isValid==true) //Attached, Generic
                             {
                                     $("#ExcelDataError").html('');
                                     document.getElementById("ExcelDataError").style.display = "none";
                                     var j=0;i=0;
                                     var cnt=0;
-                                    var isValid=true;
                                     console.log('Before Checking For Duplicate Vehicle Number');
                                     $('#ExcelTable tr:gt(0)').each(function(index, tr) 
                                     {
