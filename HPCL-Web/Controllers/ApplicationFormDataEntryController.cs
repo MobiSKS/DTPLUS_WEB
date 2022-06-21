@@ -1,5 +1,6 @@
 ﻿
 
+using ClosedXML.Excel;
 using ClosedXML.Extensions;
 using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
@@ -92,9 +93,14 @@ namespace HPCL_Web.Controllers
             if (CustomerType == "902" || CustomerType == "917")//Corporate,Non Fleet
             {
                 ws.Cell("A1").Value = "Card Identifier";
+                IXLCell c = ws.Cell(1, 1);
+                c.Style.Font.Bold = true;
+
                 if (CardOrCardLess == "Cardless")
                 {
                     ws.Cell("B1").Value = "Mobile Number";
+                    IXLCell c1 = ws.Cell(1, 2);
+                    c1.Style.Font.Bold = true;
                 }
 
                 int i = 999;
@@ -113,9 +119,23 @@ namespace HPCL_Web.Controllers
                 ws.Cell("C1").Value = "Vehicle Type";
                 ws.Cell("D1").Value = "Vehicle Make";
                 ws.Cell("E1").Value = "Year of Registration";
+
+                IXLCell c = ws.Cell(1, 1);
+                c.Style.Font.Bold = true;
+                IXLCell c1 = ws.Cell(1, 2);
+                c1.Style.Font.Bold = true;
+                IXLCell c2 = ws.Cell(1, 3);
+                c2.Style.Font.Bold = true;
+                IXLCell c3 = ws.Cell(1, 4);
+                c3.Style.Font.Bold = true;
+                IXLCell c4 = ws.Cell(1, 5);
+                c4.Style.Font.Bold = true;
+
                 if (CardOrCardLess == "Cardless")
                 {
                     ws.Cell("F1").Value = "Mobile Number";
+                    IXLCell c5 = ws.Cell(1, 6);
+                    c5.Style.Font.Bold = true;
                 }
 
                 int i = 999;
@@ -133,9 +153,21 @@ namespace HPCL_Web.Controllers
                 ws.Cell("B1").Value = "Vehicle Type";
                 ws.Cell("C1").Value = "Vehicle Make";
                 ws.Cell("D1").Value = "Year of Registration";
+
+                IXLCell c = ws.Cell(1, 1);
+                c.Style.Font.Bold = true;
+                IXLCell c1 = ws.Cell(1, 2);
+                c1.Style.Font.Bold = true;
+                IXLCell c2 = ws.Cell(1, 3);
+                c2.Style.Font.Bold = true;
+                IXLCell c3 = ws.Cell(1, 4);
+                c3.Style.Font.Bold = true;
+
                 if (CardOrCardLess == "Cardless")
                 {
                     ws.Cell("E1").Value = "Mobile Number";
+                    IXLCell c4 = ws.Cell(1, 5);
+                    c4.Style.Font.Bold = true;
                 }
 
                 int i = 999;
