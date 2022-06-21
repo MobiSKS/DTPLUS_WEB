@@ -3273,6 +3273,56 @@ debugger;
                             }
 
 
+                            if (customerTypeId == "905" || customerTypeId == "909") //Attached, Generic
+                            {
+                                    $("#ExcelDataError").html('');
+                                    document.getElementById("ExcelDataError").style.display = "none";
+                                    var j=0;i=0;
+                                    var cnt=0;
+                                    var isValid=true;
+                                    console.log('Before Checking For Duplicate Vehicle Number');
+                                    $('#ExcelTable tr:gt(0)').each(function(index, tr) 
+                                    {
+                                        var PrevIdent = $(tr).find(':nth-child(2)').text();
+                                        j=0;
+                                        i=i+1;
+//debugger;                                        
+                                        $('#ExcelTable tr:gt(0)').each(function(index1, tr1)
+                                        {
+                                            var CurIdent = $(tr1).find(':nth-child(2)').text();
+//debugger;
+                                            j=j+1;
+                                            if(i>0 && j>1 && j>i)
+                                            {
+                                                if(PrevIdent!="" && CurIdent!="")
+                                                {
+//debugger;
+                                                    var currentIndex = index1 + 1;
+                                                    if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                                                    {
+//debugger;
+                                                        $("#ExcelDataError").append("<span>Duplicate Vehicle Number Found. Row Number: "+currentIndex+"</span><br/>");
+                                                        $("#excel_file").val('');
+                                                        document.getElementById("ExcelDataError").style.display = "block";
+                                                        isValid=false;
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+
+
+                                        });
+
+                                    });
+
+
+                                if(isValid==false)
+                                {
+                                    return false;
+                                }
+
+                            }
+
 
                         }
                     }
