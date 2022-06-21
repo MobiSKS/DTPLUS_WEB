@@ -470,5 +470,10 @@
         public static string actionparentcustomerauth = "api/dtplus/ParentCustomer/action_parent_customer_auth";
 
         #endregion
+        #region Volvo Eicher
+        public static string viewvolvoeicherdealerotccardstatus = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_status";
+        public static string getvolvoeichercustomerdetail = "api/dtplus/VE/get_volvo_eicher_customer_detail";
+
+        #endregion
     }
 }
