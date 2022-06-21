@@ -195,5 +195,24 @@ namespace HPCL.Service.Services
             CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
             return searchList;
         }
+
+        public async Task<string> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
+        {
+            var searchBody = new GetRequestAuthorizationReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId,
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetRequestAuthorizationDetailsUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
+            return "";
+        }
     }
 }
