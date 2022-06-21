@@ -43,6 +43,7 @@ namespace HPCL.Service
             services.AddTransient<IValidateAddOnCardsService, ValidateAddOnCardsService>();
             services.AddTransient<ICCMSRechargeService, CCMSRechargeService>();
             services.AddTransient<IParentCustomerService, ParentCustomerService>();
+            services.AddTransient<ICOMCOManagerService, COMCOManagerService>();
             return services;
         }
     }
