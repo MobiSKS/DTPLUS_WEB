@@ -100,12 +100,12 @@ namespace HPCL.Service.Services
 
             if (obj["Internel_Status_Code"].ToString() == "1000")
             {
-                string msg = "";
-                foreach (CommonResponseData item in updateResponse)
-                {
-                    msg = msg + item.Reason + " ";
-                }
-                responseData.Reason = msg;
+                //string msg = "";
+                //foreach (CommonResponseData item in updateResponse)
+                //{
+                //    msg = msg + item.Reason + " ";
+                //}
+                //responseData.Reason = msg;
                 if (responseData.Status != 1)
                 {
                     responseData.Internel_Status_Code = responseData.Internel_Status_Code + 1;
@@ -115,12 +115,12 @@ namespace HPCL.Service.Services
             {
                 responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
                 responseData.Status = Convert.ToInt32(obj["Status_Code"].ToString());
-                string msg = "";
-                foreach (CommonResponseData item in updateResponse)
-                {
-                    msg = msg + item.Reason + " ";
-                }
-                responseData.Reason = msg;
+                //string msg = "";
+                //foreach (CommonResponseData item in updateResponse)
+                //{
+                //    msg = msg + item.Reason + " ";
+                //}
+                //responseData.Reason = msg;
             }
             return responseData;
         }

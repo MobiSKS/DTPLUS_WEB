@@ -22,7 +22,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> COMCOCustomerMapping(COMCOCustomerMappingViewModel model, string reset, string success, string error, string CustomerID, string CardNo)
+        public async Task<IActionResult> COMCOCustomerMapping(COMCOCustomerMappingViewModel model, string reset, string success, string error, string CustomerID, string MerchantID)
         {
             var searchResult = await _comCOManagerService.COMCOCustomerMapping(model);
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
