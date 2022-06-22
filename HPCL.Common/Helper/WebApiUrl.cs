@@ -475,5 +475,10 @@
         public static string getvolvoeichercustomerdetail = "api/dtplus/VE/get_volvo_eicher_customer_detail";
 
         #endregion
+
+        #region COMCO Manager
+        public static string getComcoMapCustomerDetails = "api/dtplus/COMCO/get_comco_map_customer_details";
+        public static string updateComcoMapCustomer = "api/dtplus/COMCO/update_comco_map_customer";
+        #endregion
     }
 }
