@@ -11,7 +11,7 @@ var erpCodeCheck = /^(?=(1))[0-9]{8}$/;
 var nameCheck = /^[A-Za-z]{2,40}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
 var mappedterminalID = /^(?=(5))[0-9]{10}$/;
-var mappedCustomerId = /^(?=(2))[0-9]{10}$/;
+var mappedCustomerId = /^[24]\d{9}$/;
 var noOfTerminalsCheck = /^[1-2]{1}$/;
 var nameWithNumCheck = /^[A-Za-z0-9]{2,40}$/;
 var nameCheckwithSpace = /^[A-Za-z ]{2,40}$/;

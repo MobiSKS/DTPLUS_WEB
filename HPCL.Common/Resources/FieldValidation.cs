@@ -34,7 +34,7 @@
         public const string ValidMobileNumber = @"^[6789]\d{9}$";
         public const string ValidMobileNumberErrMsg = "Invalid Mobile Number";
 
-        public const string ValidCustomerId = @"^(?=(4))[0-9]{10}$";
+        public const string ValidCustomerId = @"^[24]\d{9}$";
         public const string ValidCustomerIdErrMsg = "Invalid Customer ID";
 
         public const string ValidMerchantId = @"^(?=(3))[0-9]{10}$";
