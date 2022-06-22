@@ -11,6 +11,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
             CreatedMerchant = "N";
             UpdateFlag = "N";
             OutletCategoryVal = "";
+            MerchantTypeIdVal = "";
             MerchantTypes = new List<MerchantTypeResponseModal>();
             OutletCategories = new List<OutletCategoryResponseModal>();
             SBUTypes = new List<SbuTypeResponseModal>();
@@ -80,6 +81,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public string DealerMobileNo { get; set; }
         public string OutletCategoryId { get; set; }
         public string OutletCategoryVal { get; set; }
+        public string MerchantTypeIdVal { get; set; }
         public string OutletCategoryName { get; set; }
         public string HighwayNo1 { get; set; }
         [StringLength(50)]

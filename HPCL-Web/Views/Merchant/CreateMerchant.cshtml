@@ -685,13 +685,9 @@
                 </div>
                 <div class="tab-pane fade" id="summaryDetails" role="tabpanel" aria-labelledby="summaryDetails-tab">
                     <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none">@Html.Raw(ViewBag.Reason)</div>
-                    @if (Model.Success != "" && Model.Success != null )
-                    {
-                        <div class="alert alert-success">@Model.Success</div>
-                    }
                     @if (Model.Error != "" && Model.Error != null)
                     {
-                        <div class="alert alert-danger">@Model.Error</div>
+                        <div class="alert alert-danger text-center">@Model.Error</div>
                     }
                     <div class="border-1 rounded border-grey w-100">
 
@@ -1049,6 +1045,7 @@
                             <div style="display:none;">@Html.TextBoxFor(m => m.MerchantId)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.UpdateFlag)</div>
                             <div style="display:none;">@Html.TextBoxFor(m => m.OutletCategoryVal)</div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.MerchantTypeIdVal)</div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="px-2">
@@ -1075,6 +1072,7 @@
     var zonalID = $("#ZonalOfficeId").val();
     var regionalID = $("#RegionalOfcIdVal").val();
     var salesAreaID = $("#SalesAreaIdVal").val();
+    var merchantTypeID = document.applicationForm.MerchantTypeId.value;
     var action = $("#Action").val();
     var reason = '@ViewBag.Reason';
     var status = '@ViewBag.Status';
@@ -1096,7 +1094,7 @@
             search: true,
             searchText: 'Enter Text here.'
         });
-
+        merchantTypeID = document.applicationForm.MerchantTypeId.value;
         if ($('#MerchantTypeId :selected').text() == "Mobile Dispenser"){
             $(".mappedMerchId").removeClass("displayNone");
             $("#OutletCategoryId").SumoSelect().sumo.disable();
@@ -2700,6 +2698,7 @@
     });
 
     $("#MerchantTypeId").on("change",function () {
+        merchantTypeID = document.applicationForm.MerchantTypeId.value;
         if (document.applicationForm.MerchantTypeId.value == "0") {
             document.getElementById("merchantType_error").innerHTML = "Merchant Type field cannot be left blank";
             if (ret != "N") {
