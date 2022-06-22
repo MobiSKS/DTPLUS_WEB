@@ -1,0 +1,187 @@
+﻿@model HPCL.Common.Models.ViewModel.VolvoEicher.VEDealerOTCCardStatusViewModel
+@using HPCL.Common.Resources
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "VolvoEicher")" class="text_primary">My HP(OTC)Card Profile</a> </li>
+            <li class="breadcrumb-item font-weight-light">View VE Dealer OTC Card Status</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View VE Dealer OTC Card Status</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                         
+                            
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Dealer Code</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "30"})
+                                                <span style="display:none" class="error" id="DealerCode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                           
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="searchCardActivationandAllocation()">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnDownload" onclick="tableToCSVDwld()" type="button">EXPORT TO EXCEL</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="DealerOTCCardStatus" style="padding:1%">
+
+        </div>
+        
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+  
+    $(document).ready(function () {
+        $(".toBeHiddenOnSuccess").show();
+    });
+
+    $("#btnReset").click(function () {
+        window.location.reload(true);
+    });
+
+
+   
+
+    function searchCardActivationandAllocation() {
+
+        var dealerCode = $("#DealerCode").val();
+
+        var flag = "Y";
+        if (dealerCode != "") {
+            //if (!customerId.match(mappedCustomerId)) {
+            //    $("#DealerCode_error").attr("style", "display:block");
+            //    $("#DealerCode_error").html("Invalid Customer ID");
+            //    flag = "N";
+            //}
+        }
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+             
+                $("#DealerCode_error").attr("style", "display:none");
+                $("#DealerCode_error").html("");
+
+                $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetVEDealerCardStatus", "VolvoEicher")',
+                    contentType: "application/json; charset=utf-8",
+                    data: {  DealerCode: dealerCode },
+                    dataType: "text",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+
+                            $("#DealerOTCCardStatus").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#DealerOTCCardStatus").offset().top
+                            }, 2000);
+                        }
+                        else {
+                            console.log(v);
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error");
+                    }
+                });
+            }
+        }
+    }
+    
+   
+
+
+    function tableToCSVDwld() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+
+        console.log("rows", rows);
+
+        if (rows.length > 0) {
+
+            for (var i = 0; i < rows.length; i++) {
+
+                var cols = rows[i].querySelectorAll('td,th');
+
+                console.log("cols", cols);
+
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    csvrow.push("'" + cols[j].innerHTML);
+                }
+                csv_data.push(csvrow.join(","));
+            }
+
+            csv_data = csv_data.join('\n');
+
+            downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+        var temp_link = document.createElement('a');
+        temp_link.download = "VEDealerOTCCardStatus.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+    $("#DealerCode").on("blur", function () {
+         var dealerCode = $("#DealerCode").val();
+         if (dealerCode != "") {
+            //if (!customerId.match(mappedCustomerId)) {
+            //    $("#DealerCode_error").attr("style", "display:block");
+            //    $("#DealerCode_error").html("Invalid Customer ID");
+            //}
+            // else{
+            //    $("#DealerCode_error").attr("style", "display:none");
+            //    $("#DealerCode_error").html("");
+            //}
+         }
+         else{
+             $("#DealerCode_error").attr("style", "display:none");
+             $("#DealerCode_error").html("");
+         }
+     });
+</script>

@@ -44,6 +44,7 @@ namespace HPCL.Service
             services.AddTransient<ICCMSRechargeService, CCMSRechargeService>();
             services.AddTransient<IParentCustomerService, ParentCustomerService>();
             services.AddTransient<ICOMCOManagerService, COMCOManagerService>();
+            services.AddTransient<IVolvoEicherService, VolvoEicherService>();
             return services;
         }
     }
