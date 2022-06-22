@@ -479,6 +479,7 @@
         #region COMCO Manager
         public static string getComcoMapCustomerDetails = "api/dtplus/COMCO/get_comco_map_customer_details";
         public static string updateComcoMapCustomer = "api/dtplus/COMCO/update_comco_map_customer";
+        public static string getComcoViewMappedCustomer = "api/dtplus/COMCO/get_comco_view_mapped_customer";
         #endregion
     }
 }

@@ -43,6 +43,19 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
+        public async Task<IActionResult> ViewMappedCreditCustomers(ViewMappedCreditCustomersModel model, string reset, string success, string error, string UserName, string Status, string FromDate, string ToDate)
+        {
+            var searchResult = await _comCOManagerService.ViewMappedCreditCustomers(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
+        }
 
     }
 }
