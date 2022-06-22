@@ -140,6 +140,7 @@ namespace HPCL.Service.Services
             merchantMdl.SalesAreaIdVal = merchantMdl.SalesAreaId;
             merchantMdl.CommDistrictIdVal = merchantMdl.CommunicationDistrictId;
             merchantMdl.OutletCategoryVal = merchantMdl.OutletCategoryId;
+            merchantMdl.MerchantTypeIdVal = merchantMdl.MerchantTypeId;
 
             merchantMdl.Action = actionFlow;
 
@@ -165,7 +166,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
-                    MerchantTypeId = merchantMdl.MerchantTypeId,
+                    MerchantTypeId = string.IsNullOrEmpty(merchantMdl.MerchantTypeIdVal) ? merchantMdl.MerchantTypeId : merchantMdl.MerchantTypeIdVal,
                     DealerName = merchantMdl.DealerName,
                     DealerMobileNo = merchantMdl.DealerMobileNo,
                     OutletCategoryId = merchantMdl.OutletCategoryId,
@@ -221,7 +222,7 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
-                    MerchantTypeId = merchantMdl.MerchantTypeId,
+                    MerchantTypeId = string.IsNullOrEmpty(merchantMdl.MerchantTypeIdVal) ? merchantMdl.MerchantTypeId : merchantMdl.MerchantTypeIdVal,
                     DealerName = merchantMdl.DealerName,
                     MappedMerchantId = String.IsNullOrEmpty(merchantMdl.MappedMerchantId) ? "" : merchantMdl.MappedMerchantId,
                     DealerMobileNo = merchantMdl.DealerMobileNo,
