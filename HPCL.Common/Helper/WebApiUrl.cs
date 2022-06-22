@@ -468,6 +468,11 @@
         public static string getparentcustomerapproval = "api/dtplus/ParentCustomer/get_parent_customer_approval";
         public static string getparentcustomerauth="api/dtplus/ParentCustomer/get_parent_customer_auth";
         public static string actionparentcustomerauth = "api/dtplus/ParentCustomer/action_parent_customer_auth";
+        public static string getparentcustomerforUpdate = "api/dtplus/ParentCustomer/get_parent_customer_for_Update";
+        public static string getparentcustomercarddetails = "api/dtplus/ParentCustomer/get_parent_customer_card_details";
+        public static string getparentcustomerdispatchdetails = "api/dtplus/ParentCustomer/get_parent_customer_dispatch_details";
+        public static string updateparentcustomer = "api/dtplus/ParentCustomer/update_parent_customer";
+        public static string getparentcustomertoupdate = "api/dtplus/ParentCustomer/get_parent_customer_to_update";
 
         #endregion
         #region Volvo Eicher
