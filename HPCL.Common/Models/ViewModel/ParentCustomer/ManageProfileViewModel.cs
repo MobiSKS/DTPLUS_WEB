@@ -103,6 +103,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
             CustomerDateOfApplication = DateTime.Now.ToString("dd-MM-yyyy");
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            Data = new List<SearchCustomerData>();
         }
 
         public virtual List<OTCCardDetails> CardDetailsMdl { get; set; }
@@ -119,7 +120,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
 
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
         public virtual List<OfficerDistrictModel> PerOrRegAddressDistrictMdl { get; set; }
-        public virtual List<GetAggregatorCustomer> Data { get; set; }
+        public virtual List<SearchCustomerData> Data { get; set; }
 
         [Required(ErrorMessage = "Customer Type is Required")]
         public int CustomerTypeID { get; set; }
@@ -318,5 +319,14 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string Message { get; set; }
         public string CustomerId { get; set; }
         public string NameOnCard { get; set; }
+    }
+    public class SearchCustomerData
+    {
+        public string CustomerId { get; set; }
+        public string NameOnCard { get; set; }
+        public string CustomerName { get; set; }
+        public string FormNumber { get; set; }
+        public string FormReceiptDate { get; set; }
+        public string StatusName { get; set; }
     }
 }

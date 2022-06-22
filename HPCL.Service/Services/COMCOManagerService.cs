@@ -124,6 +124,77 @@ namespace HPCL.Service.Services
             }
             return responseData;
         }
+        public async Task<ViewMappedCreditCustomersModel> ViewMappedCreditCustomers(ViewMappedCreditCustomersModel model)
+        {
+            if (!string.IsNullOrEmpty(model.MerchantID) || !string.IsNullOrEmpty(model.CustomerID))
+            {
+                if (string.IsNullOrEmpty(model.FromDate))
+                {
+                    model.FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                    model.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+                }
+
+                string strFromDate = "";
+                string strToDate = "";
+                if (!string.IsNullOrEmpty(model.FromDate))
+                {
+                    string[] frmDate = model.FromDate.Split("-");
+                    strFromDate = frmDate[2] + "-" + frmDate[1] + "-" + frmDate[0];
+                }
+                if (!string.IsNullOrEmpty(model.ToDate))
+                {
+                    string[] toDate = model.ToDate.Split("-");
+                    strToDate = toDate[2] + "-" + toDate[1] + "-" + toDate[0];
+                }
+
+                var reqBody = new GetCOMCOViewMappedCustomerRequest
+                {
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CustomerID = string.IsNullOrEmpty(model.CustomerID) ? "" : model.CustomerID,
+                    MerchantID = string.IsNullOrEmpty(model.MerchantID) ? "" : model.MerchantID,
+                    FromDate = strFromDate,
+                    ToDate = strToDate
+                };
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+                var response = await _requestService.CommonRequestService(content, WebApiUrl.getComcoViewMappedCustomer);
+
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+                ViewMappedCreditCustomersModel res = obj.ToObject<ViewMappedCreditCustomersModel>();
+
+                model.Message = res.Message;
+                model.Internel_Status_Code = res.Internel_Status_Code;
+
+                if (res != null && res.Data != null)
+                {
+                    model.Data = res.Data;
+                }
+
+                if (res != null && res.Data != null && res.Data.MerchantDetails.Count > 0 && !string.IsNullOrEmpty(res.Data.MerchantDetails[0].RegionalOfficeName))
+                {
+                    model.RegionalOfficeName = res.Data.MerchantDetails[0].RegionalOfficeName;
+                    model.ZonalOfficeName = res.Data.MerchantDetails[0].ZonalOfficeName;
+                    model.RetailOutletName = res.Data.MerchantDetails[0].RetailOutletName;
+                }
+                else
+                {
+                    model.RegionalOfficeName = "";
+                    model.ZonalOfficeName = "";
+                    model.RetailOutletName = "";
+                    model.Data = new GetCOMCOViewMappedCustomer();
+                }
+
+            }
+            else
+            {
+                model.MerchantID = "";
+                model.CustomerID = "";
+            }
+
+            return model;
+        }
 
     }
 }
